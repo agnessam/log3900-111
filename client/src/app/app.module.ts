@@ -77,7 +77,6 @@ import { ToolParameterModule } from "./components/tool-parameters/tool-parameter
     OpenDrawingComponent,
     ErrorMessageComponent,
     AlertMessageComponent,
-    MatSnackBarContainer,
   ],
   providers: [],
   bootstrap: [AppComponent],
