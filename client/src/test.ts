@@ -1,5 +1,5 @@
 // This file is required by karma.conf.js and loads recursively all the .spec and framework files
-import 'zone.js/dist/zone-testing';
+import 'zone.js/testing';
 /* Disable puisque lorsque certain test sont rouler sur jasmine une erreur :'TypeError: Cannot read
 property 'assertPresent' of undefined:' s'affiche et l'une des solution trouver sur github etait de
 mettre le zone.js au debut : 'The zone import must come before all other imports.' */
