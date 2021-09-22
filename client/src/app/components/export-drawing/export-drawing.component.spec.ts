@@ -1,4 +1,4 @@
-import { async, ComponentFixture, getTestBed, TestBed } from '@angular/core/testing';
+import { ComponentFixture, getTestBed, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
@@ -20,7 +20,7 @@ describe('ExportDrawingComponent', () => {
     close: null,
   });
   dialogRefSpyObj.componentInstance = { body: '' };
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
 
     const spyExportService: jasmine.Spy = jasmine.createSpyObj('ExportService', ['exportToFormat']);
 

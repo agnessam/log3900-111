@@ -1,5 +1,5 @@
 import { Renderer2 } from "@angular/core";
-import { async, ComponentFixture, TestBed } from "@angular/core/testing";
+import { ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
 import { DrawingService } from "../../services/drawing/drawing.service";
 import { CanvasComponent } from "./canvas.component";
 
@@ -10,7 +10,7 @@ describe("CanvasComponent", () => {
 
   let rendererSpy: jasmine.SpyObj<Renderer2>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [CanvasComponent],
     }).compileComponents();

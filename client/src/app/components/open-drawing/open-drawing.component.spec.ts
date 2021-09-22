@@ -1,6 +1,6 @@
 import { HttpClientModule } from '@angular/common/http';
 import { Renderer2 } from '@angular/core';
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { MatChipInputEvent } from '@angular/material/chips';
@@ -38,7 +38,7 @@ describe('OpenDrawingComponent', () => {
   });
   dialogRefSpyObj.componentInstance = { body: '' };
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     const spyRenderer = jasmine.createSpyObj('Renderer2',
       ['createElement', 'setProperty', 'setAttribute', 'appendChild', 'setStyle', 'removeChild']);
     const spyDrawingService = jasmine.createSpyObj('DrawingService', ['newDrawing', 'addDrawingObjectList', 'openDrawing']);

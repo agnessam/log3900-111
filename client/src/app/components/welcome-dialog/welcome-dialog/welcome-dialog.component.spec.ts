@@ -1,4 +1,4 @@
-import { async, ComponentFixture, fakeAsync, TestBed } from '@angular/core/testing';
+import { ComponentFixture, fakeAsync, TestBed, waitForAsync } from '@angular/core/testing';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { By } from '@angular/platform-browser';
@@ -31,7 +31,7 @@ describe('DialogComponent', () => {
 
   });
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     welcomeDialogService.form = form;
     TestBed.configureTestingModule({
       imports: [MaterialModules, BrowserAnimationsModule, ReactiveFormsModule, FormsModule],

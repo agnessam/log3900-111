@@ -1,4 +1,4 @@
-import { async, ComponentFixture, fakeAsync, TestBed } from '@angular/core/testing';
+import { ComponentFixture, fakeAsync, TestBed, waitForAsync } from '@angular/core/testing';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -23,7 +23,7 @@ describe('ControlMenuComponent', () => {
     close: null,
   });
   dialogRefSpyObj.componentInstance = { body: '' };
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     let spyCommandInvokerService = jasmine.createSpyObj('CommandInvokerService', ['undo', 'redo']);
     spyCommandInvokerService = { ...spyCommandInvokerService, isUndo: true, isRedo: true };
     const spySaveDrawingService = jasmine.createSpyObj('SaveDrawingDialogService', ['openDialog']);

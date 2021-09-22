@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonToggleChange, MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatCheckboxChange } from '@angular/material/checkbox';
@@ -12,7 +12,7 @@ describe('GridParameterComponent', () => {
   let fixture: ComponentFixture<GridParameterComponent>;
   let gridService: { parameters: FormGroup };
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     const mockGridService = {
       parameters: new FormGroup({
         sizeCell: new FormControl(100),
