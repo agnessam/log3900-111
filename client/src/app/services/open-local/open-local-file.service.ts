@@ -1,4 +1,4 @@
-import { Injectable } from "@angular/core";
+import { Inject, Injectable } from "@angular/core";
 import { Observable, Subscriber } from "rxjs";
 
 @Injectable({
@@ -7,7 +7,7 @@ import { Observable, Subscriber } from "rxjs";
 export class OpenLocalService {
   constructor(private reader: FileReader) {}
 
-  handleFile(files: FileList): Observable<any> {
+  handleFile(@Inject("files") files: FileList): Observable<any> {
     const file = files[0];
     // Code fourni par  Anes Belfodil dans le cadre du cours de LOG2990
     return new Observable((subscriber) => {
