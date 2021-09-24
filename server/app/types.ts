@@ -1,4 +1,5 @@
 export const TYPES = {
-    Application: Symbol('Application'),
-    Server: Symbol('Server')
-}
+	Application: Symbol('Application'),
+	Server: Symbol('Server'),
+	HelloWorldController: Symbol('HelloWorldController'),
+};
