@@ -2,6 +2,8 @@
 /.vscode/chrome
 /.vs/
 
+out/
+
 # Keep the package-lock.json !
 !client/package-lock.json
 !server/package-lock.json
