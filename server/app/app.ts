@@ -19,7 +19,7 @@ export class Application {
 	}
 
 	bindRoutes(): void {
-		this.app.use('/api/hello', this.helloWorldController.router);
+		this.app.use('/api/v1/hello', this.helloWorldController.router);
 		this.errorHandling();
 	}
 
