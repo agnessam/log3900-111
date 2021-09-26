@@ -1,13 +1,13 @@
-import { TestBed } from '@angular/core/testing';
+import { TestBed } from "@angular/core/testing";
 
-import { Renderer2 } from '@angular/core';
-import { DrawingService } from 'src/app/services/drawing/drawing.service';
-import { RendererProviderService } from 'src/app/services/renderer-provider/renderer-provider.service';
-import { RotateFromCenterCommand } from './rotate-from-center-command';
-import { RotateOnItselfCommand } from './rotate-on-itself-command';
-import { RotateSelectionService } from './rotate-selection.service';
+import { Renderer2 } from "@angular/core";
+import { DrawingService } from "src/app/services/drawing/drawing.service";
+import { RendererProviderService } from "src/app/services/renderer-provider/renderer-provider.service";
+import { RotateFromCenterCommand } from "./rotate-from-center-command";
+import { RotateOnItselfCommand } from "./rotate-on-itself-command";
+import { RotateSelectionService } from "./rotate-selection.service";
 
-describe('RotateSelectionService', () => {
+describe("RotateSelectionService", () => {
   let rendererSpy: jasmine.SpyObj<Renderer2>;
   let rendererServiceSpy: { renderer: Renderer2 };
   let rotateOnItselfCommandMock: RotateOnItselfCommand;
@@ -16,12 +16,12 @@ describe('RotateSelectionService', () => {
   let svgContour: SVGPolygonElement;
 
   beforeEach(() => {
-    let spyDrawing = jasmine.createSpyObj('DrawingService', ['']);
+    let spyDrawing = jasmine.createSpyObj("DrawingService", [""]);
     spyDrawing = {
       ...spyDrawing,
-      drawing: document.createElement('svg') as Element as SVGElement,
+      drawing: document.createElement("svg") as Element as SVGElement,
     };
-    rendererSpy = jasmine.createSpyObj('Renderer2', ['setAttribute']);
+    rendererSpy = jasmine.createSpyObj("Renderer2", ["setAttribute"]);
     rendererServiceSpy = {
       renderer: rendererSpy,
     };
@@ -35,21 +35,23 @@ describe('RotateSelectionService', () => {
 
     rotateOnItselfCommandMock = new RotateOnItselfCommand(rendererSpy, [], 0);
     rotateFromCenterCommandMock = new RotateFromCenterCommand(rendererSpy, []);
-    svgContour = document.createElement('polygon') as Element as SVGPolygonElement;
+    svgContour = document.createElement(
+      "polygon"
+    ) as Element as SVGPolygonElement;
   });
 
-  it('should be created', () => {
+  it("should be created", () => {
     const service: RotateSelectionService = TestBed.get(RotateSelectionService);
     expect(service).toBeTruthy();
   });
 
-  it('#createRotateCommand should create a rotate command', () => {
+  it("#createRotateCommand should create a rotate command", () => {
     const service: RotateSelectionService = TestBed.get(RotateSelectionService);
     service.createRotateCommand(svgContour, []);
     expect(service.hasCommand()).toBeTruthy();
   });
 
-  it('#endCommand should put the rotate command to null', () => {
+  it("#endCommand should put the rotate command to null", () => {
     const service: RotateSelectionService = TestBed.get(RotateSelectionService);
 
     service.createRotateCommand(svgContour, []);
@@ -59,33 +61,33 @@ describe('RotateSelectionService', () => {
     expect(service.hasCommand()).toBeFalsy();
   });
 
-  it('#getCommand should get the rotateFromCenter command', () => {
+  it("#getCommand should get the rotateFromCenter command", () => {
     let service: RotateSelectionService;
     service = {
       ...TestBed.get(RotateSelectionService),
       getCommand: TestBed.get(RotateSelectionService).getCommand,
       rotateFromCenterCommand: rotateFromCenterCommandMock,
       rotateOnItselfCommand: rotateOnItselfCommandMock,
-      lastRotation: 'all',
+      lastRotation: "all",
     };
     expect(service.getCommand()).toEqual(rotateFromCenterCommandMock);
     expect(service.getCommand()).not.toEqual(rotateOnItselfCommandMock);
   });
 
-  it('#getCommand should get the rotateOnItself command', () => {
+  it("#getCommand should get the rotateOnItself command", () => {
     let service: RotateSelectionService;
     service = {
       ...TestBed.get(RotateSelectionService),
       getCommand: TestBed.get(RotateSelectionService).getCommand,
       rotateFromCenterCommand: rotateFromCenterCommandMock,
       rotateOnItselfCommand: rotateOnItselfCommandMock,
-      lastRotation: 'self',
+      lastRotation: "self",
     };
     expect(service.getCommand()).not.toEqual(rotateFromCenterCommandMock);
     expect(service.getCommand()).toEqual(rotateOnItselfCommandMock);
   });
 
-  it('#rotate should call rotate of the rotateFromCenter command with alt to false', () => {
+  it("#rotate should call rotate of the rotateFromCenter command with alt to false", () => {
     let service: RotateSelectionService;
     service = {
       ...TestBed.get(RotateSelectionService),
@@ -98,9 +100,11 @@ describe('RotateSelectionService', () => {
       oldRectBox: svgContour.getBoundingClientRect(),
       xFactor: 0,
     };
-    service.setCtrlPointList([document.createElement('rect') as Element as SVGRectElement]);
-    const spyCenter = spyOn(rotateFromCenterCommandMock, 'rotate');
-    const spySelf = spyOn(rotateOnItselfCommandMock, 'rotate');
+    service.setCtrlPointList([
+      document.createElement("rect") as Element as SVGRectElement,
+    ]);
+    const spyCenter = spyOn(rotateFromCenterCommandMock, "rotate");
+    const spySelf = spyOn(rotateOnItselfCommandMock, "rotate");
 
     service.rotate(1, svgContour);
 
@@ -108,7 +112,7 @@ describe('RotateSelectionService', () => {
     expect(spySelf).not.toHaveBeenCalled();
   });
 
-  it('#rotate should call rotate of the rotateOnItself command with alt to true and angle over 360', () => {
+  it("#rotate should call rotate of the rotateOnItself command with alt to true and angle over 360", () => {
     let service: RotateSelectionService;
     service = {
       ...TestBed.get(RotateSelectionService),
@@ -122,8 +126,8 @@ describe('RotateSelectionService', () => {
       xFactor: 0,
     };
     service.setCtrlPointList([]);
-    const spyCenter = spyOn(rotateFromCenterCommandMock, 'rotate');
-    const spySelf = spyOn(rotateOnItselfCommandMock, 'rotate');
+    const spyCenter = spyOn(rotateFromCenterCommandMock, "rotate");
+    const spySelf = spyOn(rotateOnItselfCommandMock, "rotate");
 
     service.rotate(370, svgContour);
 
@@ -131,7 +135,7 @@ describe('RotateSelectionService', () => {
     expect(spySelf).toHaveBeenCalledWith(370 - 360);
   });
 
-  it('#rotate should call rotate of the rotateOnItself command with alt to true and angle under 0', () => {
+  it("#rotate should call rotate of the rotateOnItself command with alt to true and angle under 0", () => {
     let service: RotateSelectionService;
     service = {
       ...TestBed.get(RotateSelectionService),
@@ -145,8 +149,8 @@ describe('RotateSelectionService', () => {
       xFactor: 0,
     };
     service.setCtrlPointList([]);
-    const spyCenter = spyOn(rotateFromCenterCommandMock, 'rotate');
-    const spySelf = spyOn(rotateOnItselfCommandMock, 'rotate');
+    const spyCenter = spyOn(rotateFromCenterCommandMock, "rotate");
+    const spySelf = spyOn(rotateOnItselfCommandMock, "rotate");
 
     service.rotate(-50, svgContour);
 
@@ -154,7 +158,7 @@ describe('RotateSelectionService', () => {
     expect(spySelf).toHaveBeenCalledWith(-50 + 360);
   });
 
-  it('#rotate should not call rotate of the rotate command', () => {
+  it("#rotate should not call rotate of the rotate command", () => {
     let service: RotateSelectionService;
     service = {
       ...TestBed.get(RotateSelectionService),
@@ -162,12 +166,12 @@ describe('RotateSelectionService', () => {
       rotateFromCenterCommand: null,
       rotateOnItselfCommand: null,
     };
-    const spyCenter = spyOn(rotateFromCenterCommandMock, 'rotate');
-    const spySelf = spyOn(rotateOnItselfCommandMock, 'rotate');
+    const spyCenter = spyOn(rotateFromCenterCommandMock, "rotate");
+    const spySelf = spyOn(rotateOnItselfCommandMock, "rotate");
 
     service.rotate(5, svgContour);
 
     expect(spyCenter).not.toHaveBeenCalled();
-    expect(spySelf).not.toHaveBeenCalledWith();
+    expect(spySelf).not.toHaveBeenCalledWith(5);
   });
 });
