@@ -33,9 +33,6 @@ export class Application {
 	}
 
 	bindRoutes(): void {
-		this.app.use('/', (req, res) => {
-			res.send('Hi!');
-		});
 		this.app.use(
 			'/api/v1/docs',
 			swaggerUi.serve,
