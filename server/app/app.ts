@@ -1,11 +1,14 @@
 import cors from 'cors';
 import express from 'express';
+import swaggerJSDoc from 'swagger-jsdoc';
+import swaggerUi from 'swagger-ui-express';
 import { inject, injectable } from 'inversify';
 import { helloWorldController } from './controllers/hello-world.controller';
 import { TYPES } from './types';
 
 @injectable()
 export class Application {
+	private readonly swaggerOptions: swaggerJSDoc.Options;
 	private readonly internalError: number = 500;
 	app: express.Application;
 
@@ -14,11 +17,30 @@ export class Application {
 		private helloWorldController: helloWorldController,
 	) {
 		this.app = express();
+		this.swaggerOptions = {
+			definition: {
+				openapi: '3.0.0',
+				info: {
+					title: 'ColorImage',
+					version: '1.0.0',
+				},
+			},
+			apis: ['**/*.ts'],
+		};
+
 		this.config();
 		this.bindRoutes();
 	}
 
 	bindRoutes(): void {
+		this.app.use('/', (req, res) => {
+			res.send('Hi!');
+		});
+		this.app.use(
+			'/api/v1/docs',
+			swaggerUi.serve,
+			swaggerUi.setup(swaggerJSDoc(this.swaggerOptions)),
+		);
 		this.app.use('/api/v1/hello', this.helloWorldController.router);
 		this.errorHandling();
 	}

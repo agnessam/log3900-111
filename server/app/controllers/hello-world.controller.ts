@@ -1,4 +1,4 @@
-import { Router } from 'express';
+import { NextFunction, Request, Response, Router } from 'express';
 import { injectable } from 'inversify';
 
 @injectable()
@@ -12,8 +12,20 @@ export class helloWorldController {
 	private configureRouter(): void {
 		this.router = Router();
 
-		this.router.get('/', (req, res) => {
-			res.send('Hello World');
-		});
+		/**
+		 * @openapi
+		 * /api/v1/hello:
+		 *  get:
+		 *    description: Hello World!
+		 *    responses:
+		 *      200:
+		 *        description: Returns Hello World!
+		 */
+		this.router.get(
+			'/',
+			(_req: Request, res: Response, _next: NextFunction) => {
+				res.send('Hello World');
+			},
+		);
 	}
 }
