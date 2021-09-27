@@ -36,8 +36,10 @@ class LoginActivity : AppCompatActivity() {
 
             // check if input is valid
             if (usernameInput.text.length === 0) {
-                errorElement.text = "Error! Please enter a valid username!!!"
+                errorElement.text = "Error! Please enter a valid username!"
             }
+
+            // make HTTP request to update users
         })
     }
 }
