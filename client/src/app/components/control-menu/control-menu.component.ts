@@ -3,11 +3,6 @@ import { MatDialog } from "@angular/material/dialog";
 import { CommandInvokerService } from "src/app/services/command-invoker/command-invoker.service";
 import { DrawingService } from "src/app/services/drawing/drawing.service";
 import { NewDrawingComponent } from "../../components/new-drawing/new-drawing.component";
-import { HelpDialogComponent } from "../welcome-dialog/help-dialog/help-dialog.component";
-import {
-  DIALOG_PROPERTIES,
-  WelcomeDialogComponent,
-} from "../welcome-dialog/welcome-dialog/welcome-dialog.component";
 
 /// Component pour afficher les options fichiers
 @Component({
@@ -32,23 +27,6 @@ export class ControlMenuComponent {
   /// Ouvre une nouveau dialog de creation de dessin
   openNewDrawing(): void {
     this.dialog.open(NewDrawingComponent, {});
-  }
-
-  /// Ouvre le message d'aide
-  openHelp(): void {
-    this.dialog.open(HelpDialogComponent, {
-      hasBackdrop: true,
-      autoFocus: false,
-      disableClose: true,
-      minWidth: 750,
-      maxWidth: 750,
-      maxHeight: 600,
-    });
-  }
-
-  /// Ouvre le message de bienvenue
-  openWelcomeMessage(): void {
-    this.dialog.open(WelcomeDialogComponent, DIALOG_PROPERTIES);
   }
 
   get canUndo(): boolean {
