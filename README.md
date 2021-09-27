@@ -71,13 +71,18 @@ Cette section énumère les technologies principales utilisées afin de construi
 
 ### lancement
 
-- exécuter: `npm start` ou `yarn start` dans le dossier `client` et `server`
-
 Pour le client :
+- exécuter: `npm start` ou `yarn start` dans le dossier `client`
+
 Une page menant vers `http://localhost:4200/` s'ouvrira automatiquement.
 
 Pour le serveur :
-Votre serveur est accessible sur `http://localhost:3000`. Par défaut, votre client fait une requête `GET` vers le serveur pour obtenir un message.
+- exécuter: `npm run dev` dans le dossier `server`
+
+Votre serveur est accessible sur `http://localhost:3000`. 
+La page swagger de l'API REST est accessible sur `http://localhost:3000/api/v1/docs/`.
+
+Par défaut, votre client fait une requête `GET` vers le serveur pour obtenir un message.
 
 <!-- USAGE EXAMPLES -->
 
