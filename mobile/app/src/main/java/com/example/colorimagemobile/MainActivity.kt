@@ -23,6 +23,7 @@ class MainActivity : AppCompatActivity() {
         // redirect to login page
         startActivity(Intent(this, LoginActivity::class.java))
         finish()
+        
 
 //        val navView: BottomNavigationView = binding.navView
 //
