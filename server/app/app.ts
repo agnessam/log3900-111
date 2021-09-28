@@ -17,7 +17,6 @@ export class Application {
 	private readonly mongoUri: string =
 		'mongodb+srv://dbUser:2cJY8n4wFBxmvlFu@cluster0.dnwf5.mongodb.net/myFirstDatabase?retryWrites=true&w=majority';
 
-	private readonly onlineUsers: Set<string> = new Set();
 	private readonly swaggerOptions: swaggerJSDoc.Options;
 	private readonly internalError: number = 500;
 	app: express.Application;
@@ -133,18 +132,24 @@ export class Application {
 					passwordField: 'password',
 				},
 				async (username, password, done) => {
-					console.log(this.onlineUsers);
-					console.log(username);
-					console.log(passport);
 					try {
-						if (this.onlineUsers.has(username)) {
+						if (
+							this.authenticationController.onlineUsers.has(
+								username,
+							)
+						) {
 							console.log('Username already exists');
 							return done(null, null, {
 								message: 'User already exists',
 							});
 						}
 
-						this.onlineUsers.add(username);
+						this.authenticationController.onlineUsers.add(username);
+
+						console.log(
+							'Users online' +
+								this.authenticationController.onlineUsers,
+						);
 
 						return done(null, username, {
 							message: 'Logged in succesfully ',
