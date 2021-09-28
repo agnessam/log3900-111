@@ -2,13 +2,13 @@ import { io } from "socket.io-client";
 import { ROOM_EVENT_NAME } from "src/app/services/socket/socket.constant";
 
 export abstract class AbstractSocketService {
-  readonly BASE_URL: string = "http://localhost:3000";
+  readonly SERVER_URL: string = "http://localhost:3000";
   protected namespaceSocket: any;
 
   // Initialisation du socket namespace ainsi que toutes les
   // réponses socket.
   protected init(namespaceName: string) {
-    this.namespaceSocket = io(`${this.BASE_URL}/${namespaceName}`);
+    this.namespaceSocket = io(`${this.SERVER_URL}/${namespaceName}`);
     this.setSocketListens();
   }
 
