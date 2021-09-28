@@ -77,7 +77,9 @@ export class Server {
 
   // Initialise tous les services reliés à SocketIO
   private initalizeSocketServices(): void {
-    this.socketServer = new SocketServer(this.server);
+    this.socketServer = new SocketServer(this.server, {
+      cors: {},
+    });
     this.chatSocketService.init(this.socketServer);
   }
 }
