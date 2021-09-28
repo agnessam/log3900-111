@@ -68,16 +68,20 @@ export class AuthenticationService {
       );
   }
 
-  logout() {
+  logout(username: string | null) {
     const logoutEndpont = this.endpointUrl + "logout";
-    return this.httpClient.post<any>(logoutEndpont, {}).pipe(
-      map((response) => {
-        localStorage.removeItem("username");
-        localStorage.removeItem("user_token");
+    return this.httpClient
+      .post<any>(logoutEndpont, { username: username })
+      .pipe(
+        map((response) => {
+          console.log(response);
+          localStorage.removeItem("username");
+          localStorage.removeItem("user_token");
 
-        this.authTokenSubject.next(null);
-        this.currentUserSubject.next(null);
-      })
-    );
+          this.authTokenSubject.next(null);
+          this.currentUserSubject.next(null);
+          return response;
+        })
+      );
   }
 }
