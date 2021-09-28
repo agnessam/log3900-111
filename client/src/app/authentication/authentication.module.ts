@@ -8,6 +8,9 @@ import { MatCardModule } from "@angular/material/card";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { ReactiveFormsModule } from "@angular/forms";
 import { MatInputModule } from "@angular/material/input";
+import { HTTP_INTERCEPTORS } from "@angular/common/http";
+import { JwtInterceptor } from "./jwt.interceptor";
+import { AuthGuard } from "./auth.guard";
 
 @NgModule({
   declarations: [LoginComponent],
@@ -20,6 +23,14 @@ import { MatInputModule } from "@angular/material/input";
     MatFormFieldModule,
     MatInputModule,
     ReactiveFormsModule,
+  ],
+  providers: [
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: JwtInterceptor,
+      multi: true,
+    },
+    AuthGuard,
   ],
 })
 export class AuthenticationModule {}

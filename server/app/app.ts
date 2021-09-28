@@ -10,7 +10,6 @@ import swaggerUi from 'swagger-ui-express';
 import { helloWorldController } from './controllers/hello-world.controller';
 import { TYPES } from './types';
 import { AuthenticationController } from './controllers/authentication.controller';
-import { UserModel } from './models/User';
 import mongoose from 'mongoose';
 
 @injectable()
@@ -18,6 +17,7 @@ export class Application {
 	private readonly mongoUri: string =
 		'mongodb+srv://dbUser:2cJY8n4wFBxmvlFu@cluster0.dnwf5.mongodb.net/myFirstDatabase?retryWrites=true&w=majority';
 
+	private readonly onlineUsers: Set<string> = new Set();
 	private readonly swaggerOptions: swaggerJSDoc.Options;
 	private readonly internalError: number = 500;
 	app: express.Application;
@@ -132,17 +132,21 @@ export class Application {
 					usernameField: 'username',
 					passwordField: 'password',
 				},
-				async (username, password = '', done) => {
+				async (username, password, done) => {
+					console.log(this.onlineUsers);
+					console.log(username);
+					console.log(passport);
 					try {
-						const user = await UserModel.create({ username });
-						console.log(user);
-
-						if (!user) {
-							return done(null, false, {
-								message: 'User not found',
+						if (this.onlineUsers.has(username)) {
+							console.log('Username already exists');
+							return done(null, null, {
+								message: 'User already exists',
 							});
 						}
-						return done(null, user, {
+
+						this.onlineUsers.add(username);
+
+						return done(null, username, {
 							message: 'Logged in succesfully ',
 						});
 					} catch (error) {

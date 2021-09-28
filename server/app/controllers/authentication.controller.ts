@@ -22,13 +22,20 @@ export class AuthenticationController {
 			passport.authenticate('login', async (err, user, info) => {
 				try {
 					if (err || !user) {
-						const error = new Error('An error occurred.');
-						return next(error);
+						return res.json({
+							username: null,
+							token: null,
+							error: info,
+						});
 					}
 					const body = { _id: user._id, username: user.username };
 					const token = jwt.sign({ user: body }, 'TOP_SECRET');
 
-					return res.json({ user, token });
+					return res.json({
+						username: user,
+						token: token,
+						error: err,
+					});
 				} catch (error) {
 					return next(error);
 				}
