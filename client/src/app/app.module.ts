@@ -10,7 +10,7 @@ import { AppRoutingModule } from "./app-routing.module";
 import { ColorPickerModule } from "./color-picker/color-picker.module";
 import { AlertMessageComponent } from "./components/alert-message/alert-message.component";
 import { AppComponent } from "./components/app/app.component";
-import { AuthenticationModule } from "./components/authentication/authentication.module";
+import { AuthenticationModule } from "./authentication/authentication.module";
 import { CanvasComponent } from "./components/canvas/canvas.component";
 import { ControlMenuComponent } from "./components/control-menu/control-menu.component";
 import { ErrorMessageComponent } from "./components/error-message/error-message.component";
