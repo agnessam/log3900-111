@@ -10,13 +10,9 @@ import swaggerUi from 'swagger-ui-express';
 import { helloWorldController } from './controllers/hello-world.controller';
 import { TYPES } from './types';
 import { AuthenticationController } from './controllers/authentication.controller';
-import mongoose from 'mongoose';
 
 @injectable()
 export class Application {
-	private readonly mongoUri: string =
-		'mongodb+srv://dbUser:2cJY8n4wFBxmvlFu@cluster0.dnwf5.mongodb.net/myFirstDatabase?retryWrites=true&w=majority';
-
 	private readonly swaggerOptions: swaggerJSDoc.Options;
 	private readonly internalError: number = 500;
 	app: express.Application;
@@ -60,10 +56,6 @@ export class Application {
 
 	// Middleware configuration
 	private config(): void {
-		mongoose.connect(this.mongoUri);
-		mongoose.connection.on('error', (error) => console.log(error));
-		mongoose.Promise = global.Promise;
-
 		this.app.use(express.json());
 		this.app.use(express.urlencoded({ extended: false }));
 		this.app.use(cors());
