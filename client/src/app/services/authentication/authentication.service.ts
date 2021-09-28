@@ -42,6 +42,13 @@ export class AuthenticationService {
   }
 
   public isAuthenticated(): boolean {
+    // Covers the case where the user deletes the token himself.
+    if (!localStorage.getItem("user_token")) {
+      this.authTokenSubject.next(null);
+      this.currentUserSubject.next(null);
+      return false;
+    }
+
     if (this.authToken == null) {
       return false;
     }
