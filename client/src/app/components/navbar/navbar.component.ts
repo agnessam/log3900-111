@@ -1,4 +1,5 @@
 import { Component, OnInit } from "@angular/core";
+import { Router } from "@angular/router";
 import { AuthenticationService } from "src/app/services/authentication/authentication.service";
 
 @Component({
@@ -8,11 +9,19 @@ import { AuthenticationService } from "src/app/services/authentication/authentic
 })
 export class NavbarComponent implements OnInit {
   public username: string | null;
-  constructor(private authenticationService: AuthenticationService) {
+  constructor(
+    private router: Router,
+    private authenticationService: AuthenticationService
+  ) {
     this.authenticationService.currentUserObservable.subscribe(
       (username) => (this.username = username)
     );
   }
 
   ngOnInit(): void {}
+
+  logout(): void {
+    this.authenticationService.logout();
+    this.router.navigate(["/users/login"]);
+  }
 }

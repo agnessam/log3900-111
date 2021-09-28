@@ -67,4 +67,17 @@ export class AuthenticationService {
         })
       );
   }
+
+  logout() {
+    const logoutEndpont = this.endpointUrl + "logout";
+    return this.httpClient.post<any>(logoutEndpont, {}).pipe(
+      map((response) => {
+        localStorage.removeItem("username");
+        localStorage.removeItem("user_token");
+
+        this.authTokenSubject.next(null);
+        this.currentUserSubject.next(null);
+      })
+    );
+  }
 }
