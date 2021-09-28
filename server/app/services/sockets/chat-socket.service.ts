@@ -13,11 +13,11 @@ export class ChatSocketService extends SocketServiceInterface {
     super.init(io, CHAT_NAMESPACE_NAME);
   }
 
-  protected setupSocketOns(socket: Socket) {
-    this.setOnMessage(socket);
+  protected setSocketListens(socket: Socket) {
+    this.listenMessage(socket);
   }
 
-  private setOnMessage(socket: Socket): void {
+  private listenMessage(socket: Socket): void {
     socket.on(TEXT_MESSAGE_EVENT_NAME, (message: Message) => {
       console.log(
         `${message.author} at ${message.timestamp}: ${message.message}`

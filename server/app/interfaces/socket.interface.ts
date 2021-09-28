@@ -17,17 +17,17 @@ export abstract class SocketServiceInterface {
     this.namespace = io.of(namespaceName);
     this.namespace.on(CONNECTION_EVENT_NAME, (socket: Socket) => {
       console.log(`${namespaceName} socket user has connected.`);
-      this.setOnRoom(socket);
-      this.setupSocketOns(socket);
-      this.setOnDisconnect(socket);
+      this.listenRoom(socket);
+      this.setSocketListens(socket);
+      this.listenDisconnect(socket);
     });
   }
 
   // Défini tous les socket.on du socket en question.
-  protected abstract setupSocketOns(socket: Socket): void;
+  protected abstract setSocketListens(socket: Socket): void;
 
   // Configuration du room en fonction du nom du room envoyé par le client
-  protected setOnRoom(socket: Socket) {
+  protected listenRoom(socket: Socket) {
     socket.on(ROOM_EVENT_NAME, (roomName: string) => {
       console.log(`User has joined room ${roomName}`);
       socket.join(roomName);
@@ -35,7 +35,7 @@ export abstract class SocketServiceInterface {
   }
 
   // Méthode par défaut sur déconnexion d'un utilisateur sur le namespace.
-  protected setOnDisconnect(socket: Socket) {
+  protected listenDisconnect(socket: Socket) {
     socket.on(DISCONNECTION_EVENT_NAME, () => {
       console.log(`User from namespace ${this.namespace} disconnected`);
     });
