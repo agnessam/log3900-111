@@ -1,13 +1,23 @@
 import cors from 'cors';
 import express from 'express';
+import { inject, injectable } from 'inversify';
+import passport from 'passport';
+import localStrategy from 'passport-local';
+import JWTstrategy from 'passport-jwt';
+import { ExtractJwt } from 'passport-jwt';
 import swaggerJSDoc from 'swagger-jsdoc';
 import swaggerUi from 'swagger-ui-express';
-import { inject, injectable } from 'inversify';
 import { helloWorldController } from './controllers/hello-world.controller';
 import { TYPES } from './types';
+import { AuthenticationController } from './controllers/authentication.controller';
+import { UserModel } from './models/User';
+import mongoose from 'mongoose';
 
 @injectable()
 export class Application {
+	private readonly mongoUri: string =
+		'mongodb+srv://dbUser:2cJY8n4wFBxmvlFu@cluster0.dnwf5.mongodb.net/myFirstDatabase?retryWrites=true&w=majority';
+
 	private readonly swaggerOptions: swaggerJSDoc.Options;
 	private readonly internalError: number = 500;
 	app: express.Application;
@@ -15,6 +25,8 @@ export class Application {
 	constructor(
 		@inject(TYPES.HelloWorldController)
 		private helloWorldController: helloWorldController,
+		@inject(TYPES.AuthenticationController)
+		private authenticationController: AuthenticationController,
 	) {
 		this.app = express();
 		this.swaggerOptions = {
@@ -38,13 +50,26 @@ export class Application {
 			swaggerUi.serve,
 			swaggerUi.setup(swaggerJSDoc(this.swaggerOptions)),
 		);
-		this.app.use('/api/v1/hello', this.helloWorldController.router);
+		this.app.use('/api/v1/', this.authenticationController.router);
+		this.app.use(
+			'/api/v1/hello',
+			passport.authenticate('jwt', { session: false }),
+			this.helloWorldController.router,
+		);
 		this.errorHandling();
 	}
 
 	// Middleware configuration
 	private config(): void {
+		mongoose.connect(this.mongoUri);
+		mongoose.connection.on('error', (error) => console.log(error));
+		mongoose.Promise = global.Promise;
+
+		this.app.use(express.json());
+		this.app.use(express.urlencoded({ extended: false }));
 		this.app.use(cors());
+		this.app.use(passport.initialize());
+		this.configurePassport();
 	}
 
 	private errorHandling(): void {
@@ -96,6 +121,52 @@ export class Application {
 					error: {},
 				});
 			},
+		);
+	}
+
+	private configurePassport() {
+		passport.use(
+			'login',
+			new localStrategy.Strategy(
+				{
+					usernameField: 'username',
+					passwordField: 'password',
+				},
+				async (username, password = '', done) => {
+					try {
+						const user = await UserModel.create({ username });
+						console.log(user);
+
+						if (!user) {
+							return done(null, false, {
+								message: 'User not found',
+							});
+						}
+						return done(null, user, {
+							message: 'Logged in succesfully ',
+						});
+					} catch (error) {
+						return done(error);
+					}
+				},
+			),
+		);
+
+		passport.use(
+			'jwt',
+			new JWTstrategy.Strategy(
+				{
+					secretOrKey: 'TOP_SECRET',
+					jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+				},
+				async (token, done) => {
+					try {
+						return done(null, token.user);
+					} catch (error) {
+						done(error);
+					}
+				},
+			),
 		);
 	}
 }
