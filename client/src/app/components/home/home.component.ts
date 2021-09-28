@@ -1,3 +1,4 @@
+import { HttpClient } from "@angular/common/http";
 import { Component, OnInit } from "@angular/core";
 
 @Component({
@@ -6,7 +7,15 @@ import { Component, OnInit } from "@angular/core";
   styleUrls: ["./home.component.scss"],
 })
 export class HomeComponent implements OnInit {
-  constructor() {}
+  constructor(private httpClient: HttpClient) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.HelloWorld();
+  }
+
+  public HelloWorld() {
+    this.httpClient
+      .get("http://localhost:3000/api/v1/hello")
+      .subscribe((data) => console.log(data));
+  }
 }

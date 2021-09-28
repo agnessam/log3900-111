@@ -23,8 +23,12 @@ export class helloWorldController {
 		 */
 		this.router.get(
 			'/',
-			(_req: Request, res: Response, _next: NextFunction) => {
-				res.send('Hello World');
+			(req: Request, res: Response, _next: NextFunction) => {
+				res.json({
+					message: 'Hello World!',
+					user: req.user,
+					token: req.query.secret_token,
+				});
 			},
 		);
 	}
