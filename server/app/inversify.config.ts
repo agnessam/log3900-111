@@ -1,7 +1,7 @@
 import { Container } from 'inversify';
 import { Application } from './app';
 import { helloWorldController } from './controllers/hello-world.controller';
-import { ChatSocketService } from './services/socket-namespaces/chat-socket.service';
+import { ChatSocketService } from './services/sockets/chat-socket.service';
 import { Server } from './server';
 import { TYPES } from './types';
 

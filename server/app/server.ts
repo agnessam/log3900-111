@@ -1,7 +1,7 @@
 import http from 'http';
 import { inject, injectable } from 'inversify';
 import { Application } from './app';
-import { ChatSocketService } from './services/socket-namespaces/chat-socket.service';
+import { ChatSocketService } from './services/sockets/chat-socket.service';
 import { TYPES } from './types';
 import { Server as SocketServer} from 'socket.io';
 
