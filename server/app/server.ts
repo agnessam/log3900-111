@@ -1,7 +1,9 @@
 import http from 'http';
 import { inject, injectable } from 'inversify';
 import { Application } from './app';
+import { ChatSocketService } from './services/socket-namespaces/chat-socket.service';
 import { TYPES } from './types';
+import { Server as SocketServer} from 'socket.io';
 
 @injectable()
 export class Server {
@@ -10,8 +12,10 @@ export class Server {
 	);
 	private readonly baseTen: number = 10;
 	private server: http.Server;
+	private socketServer: SocketServer;
 
-	constructor(@inject(TYPES.Application) private application: Application) {}
+	constructor(@inject(TYPES.Application) private application: Application,
+			    @inject(TYPES.ChatSocketService) private chatSocketService: ChatSocketService) {}
 
 	init(): void {
 		this.application.app.set('port', this.appPort);
@@ -23,6 +27,9 @@ export class Server {
 			this.onError(error),
 		);
 		this.server.on('listening', () => this.onListening());
+		
+		this.socketServer = new SocketServer(this.server);
+		this.chatSocketService.init(this.socketServer);
 	}
 
 	private normalizePort(val: number | string): number | string | boolean {
