@@ -3,4 +3,5 @@ export const TYPES = {
 	Server: Symbol('Server'),
 	HelloWorldController: Symbol('HelloWorldController'),
 	AuthenticationController: Symbol('AuthenticationController'),
+	ChatSocketService: Symbol('ChatSocketService'),
 };
