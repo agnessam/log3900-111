@@ -19,6 +19,7 @@ export abstract class SocketServiceInterface {
       console.log(`${namespaceName} socket user has connected.`);
       this.setOnRoom(socket);
       this.setupSocketOns(socket);
+      this.setOnDisconnect(socket);
     });
   }
 
