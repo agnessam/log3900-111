@@ -7,10 +7,10 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.colorimagemobile.databinding.MessageReceivedTextBinding
 import com.example.colorimagemobile.databinding.MessageSentTextBinding
-import com.example.colorimagemobile.ui.Message
+import com.example.colorimagemobile.ui.MessageWithType
 
 
-class ChatRoomAdapter(private val layoutInflater: LayoutInflater, private val chatList : ArrayList<Message>) : RecyclerView.Adapter<ChatRoomAdapter.ViewHolder>() {
+class ChatRoomAdapter(private val layoutInflater: LayoutInflater, private val chatList : ArrayList<MessageWithType>) : RecyclerView.Adapter<ChatRoomAdapter.ViewHolder>() {
     inner class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
         val message = itemView.findViewById<TextView>(R.id.messageContent)
         val timestamp = itemView.findViewById<TextView>(R.id.timestamp)
@@ -36,9 +36,8 @@ class ChatRoomAdapter(private val layoutInflater: LayoutInflater, private val ch
         val userName = messageData.author
         val content = messageData.message
         val timestamp = messageData.timestamp
-        val viewType = messageData.viewType
 
-        when(viewType) {
+        when(messageData.viewType) {
 
             MessageType.MESSAGE_SENT.ordinal -> {
                 holder.author.setText(userName)

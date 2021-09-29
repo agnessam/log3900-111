@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
+import org.jetbrains.anko.startActivity
 
 class LoginActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,10 +43,8 @@ class LoginActivity : AppCompatActivity() {
             // make HTTP request to update users
 
             // redirect to chatroom page
-            val intent = Intent(this, ChatRoomActivity::class.java).apply {
-                putExtra("username", usernameInput.text)
-            }
-            startActivity(intent)
+            val username = usernameInput.toString()
+            startActivity<ChatRoomActivity>("username" to username)
         })
     }
 }
