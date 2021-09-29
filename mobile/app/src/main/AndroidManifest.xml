@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.colorimagemobile">
+
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
@@ -11,6 +12,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ColorImageMobile"
         android:usesCleartextTraffic="true">
+        <activity
+            android:name=".ChatRoomActivity"
+            android:exported="true" />
         <activity
             android:name=".LoginActivity"
             android:exported="true" />

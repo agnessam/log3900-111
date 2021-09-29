@@ -40,6 +40,12 @@ class LoginActivity : AppCompatActivity() {
             }
 
             // make HTTP request to update users
+
+            // redirect to chatroom page
+            val intent = Intent(this, ChatRoomActivity::class.java).apply {
+                putExtra("username", usernameInput.text)
+            }
+            startActivity(intent)
         })
     }
 }
