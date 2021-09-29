@@ -1,10 +1,15 @@
 import cors from 'cors';
 import express from 'express';
+import { inject, injectable } from 'inversify';
+import passport from 'passport';
+import localStrategy from 'passport-local';
+import JWTstrategy from 'passport-jwt';
+import { ExtractJwt } from 'passport-jwt';
 import swaggerJSDoc from 'swagger-jsdoc';
 import swaggerUi from 'swagger-ui-express';
-import { inject, injectable } from 'inversify';
 import { helloWorldController } from './controllers/hello-world.controller';
 import { TYPES } from './types';
+import { AuthenticationController } from './controllers/authentication.controller';
 
 @injectable()
 export class Application {
@@ -15,6 +20,8 @@ export class Application {
 	constructor(
 		@inject(TYPES.HelloWorldController)
 		private helloWorldController: helloWorldController,
+		@inject(TYPES.AuthenticationController)
+		private authenticationController: AuthenticationController,
 	) {
 		this.app = express();
 		this.swaggerOptions = {
@@ -38,13 +45,22 @@ export class Application {
 			swaggerUi.serve,
 			swaggerUi.setup(swaggerJSDoc(this.swaggerOptions)),
 		);
-		this.app.use('/api/v1/hello', this.helloWorldController.router);
+		this.app.use('/api/v1/', this.authenticationController.router);
+		this.app.use(
+			'/api/v1/hello',
+			passport.authenticate('jwt', { session: false }),
+			this.helloWorldController.router,
+		);
 		this.errorHandling();
 	}
 
 	// Middleware configuration
 	private config(): void {
+		this.app.use(express.json());
+		this.app.use(express.urlencoded({ extended: false }));
 		this.app.use(cors());
+		this.app.use(passport.initialize());
+		this.configurePassport();
 	}
 
 	private errorHandling(): void {
@@ -96,6 +112,62 @@ export class Application {
 					error: {},
 				});
 			},
+		);
+	}
+
+	private configurePassport() {
+		passport.use(
+			'login',
+			new localStrategy.Strategy(
+				{
+					usernameField: 'username',
+					passwordField: 'password',
+				},
+				async (username, password, done) => {
+					try {
+						if (
+							this.authenticationController.onlineUsers.has(
+								username,
+							)
+						) {
+							console.log('Username already exists');
+							return done(null, null, {
+								message: 'User already exists',
+							});
+						}
+
+						this.authenticationController.onlineUsers.add(username);
+
+						console.log(
+							'Users online' +
+								this.authenticationController.onlineUsers,
+						);
+
+						return done(null, username, {
+							message: 'Logged in succesfully ',
+						});
+					} catch (error) {
+						return done(error);
+					}
+				},
+			),
+		);
+
+		passport.use(
+			'jwt',
+			new JWTstrategy.Strategy(
+				{
+					secretOrKey: 'TOP_SECRET',
+					jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+				},
+				async (token, done) => {
+					try {
+						return done(null, token.user);
+					} catch (error) {
+						done(error);
+					}
+				},
+			),
 		);
 	}
 }

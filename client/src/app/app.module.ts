@@ -10,9 +10,12 @@ import { AppRoutingModule } from "./app-routing.module";
 import { ColorPickerModule } from "./color-picker/color-picker.module";
 import { AlertMessageComponent } from "./components/alert-message/alert-message.component";
 import { AppComponent } from "./components/app/app.component";
+import { AuthenticationModule } from "./authentication/authentication.module";
 import { CanvasComponent } from "./components/canvas/canvas.component";
 import { ControlMenuComponent } from "./components/control-menu/control-menu.component";
 import { ErrorMessageComponent } from "./components/error-message/error-message.component";
+import { HomeComponent } from "./components/home/home.component";
+import { NavbarComponent } from "./components/navbar/navbar.component";
 import { NewDrawingAlertComponent } from "./components/new-drawing/new-drawing-alert/new-drawing-alert.component";
 import { NewDrawingFormComponent } from "./components/new-drawing/new-drawing-form/new-drawing-form.component";
 import { NewDrawingComponent } from "./components/new-drawing/new-drawing.component";
@@ -23,8 +26,6 @@ import { ToolParameterModule } from "./components/tool-parameters/tool-parameter
 import { ToolsColorPickerComponent } from "./components/tools-color-picker/tools-color-picker.component";
 import { ToolsColorComponent } from "./components/tools-color/tools-color.component";
 import { WorkspaceComponent } from "./components/workspace/workspace.component";
-import { HomeComponent } from "./components/home/home.component";
-import { NavbarComponent } from "./components/navbar/navbar.component";
 
 @NgModule({
   declarations: [
@@ -60,6 +61,7 @@ import { NavbarComponent } from "./components/navbar/navbar.component";
     FontAwesomeModule,
     ToolParameterModule,
     MomentModule,
+    AuthenticationModule,
     AppRoutingModule,
   ],
   exports: [],
