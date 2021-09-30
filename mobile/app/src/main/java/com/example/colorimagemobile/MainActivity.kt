@@ -1,14 +1,15 @@
 package com.example.colorimagemobile
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import com.google.android.material.bottomnavigation.BottomNavigationView
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
-import androidx.navigation.findNavController
-import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.setupActionBarWithNavController
-import androidx.navigation.ui.setupWithNavController
 import com.example.colorimagemobile.databinding.ActivityMainBinding
+import com.example.colorimagemobile.utils.CommonFun.Companion.redirectTo
+import com.example.colorimagemobile.utils.Constants
+import com.example.colorimagemobile.utils.Constants.Companion.LOCAL_STORAGE_KEY
+import com.example.colorimagemobile.utils.Constants.Companion.SHARED_TOKEN_KEY
 
 class MainActivity : AppCompatActivity() {
 
@@ -20,10 +21,16 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // redirect to login page
-        startActivity(Intent(this, LoginActivity::class.java))
-        finish()
-        
+        val sharedPref = getSharedPreferences(LOCAL_STORAGE_KEY, Context.MODE_PRIVATE)
+        val token = sharedPref.getString(SHARED_TOKEN_KEY, "").toString()
+
+        if (token == "" || token == null) {
+            // redirect to /login
+            redirectTo(this, LoginActivity::class.java)
+        } else {
+            // redirect to /chat
+            redirectTo(this, ChatActivity::class.java)
+        }
 
 //        val navView: BottomNavigationView = binding.navView
 //
