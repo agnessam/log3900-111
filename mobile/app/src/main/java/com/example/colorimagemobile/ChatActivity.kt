@@ -47,6 +47,7 @@ class ChatActivity : AppCompatActivity() {
     private lateinit var mSocket: Socket
 
     // layout manager and adapter
+    private lateinit var recyclerView: RecyclerView
     private var layoutManager: RecyclerView.LayoutManager? = null
     private var adapter: RecyclerView.Adapter<RecyclerAdapter.ViewHolder>? = null
 
@@ -81,7 +82,7 @@ class ChatActivity : AppCompatActivity() {
 
         // chat adapters
         layoutManager = LinearLayoutManager(this)
-        val recyclerView = findViewById<RecyclerView>(R.id.recyclerView)
+        recyclerView = findViewById<RecyclerView>(R.id.recyclerView)
         recyclerView.layoutManager = layoutManager
 
         adapter = RecyclerAdapter(messageArray, this.username)
@@ -174,5 +175,6 @@ class ChatActivity : AppCompatActivity() {
     private fun addMessage(newMessage: Message) {
         messageArray.add(newMessage)
         adapter?.notifyDataSetChanged()
+        recyclerView.scrollToPosition(messageArray.size - 1);
     }
 }
