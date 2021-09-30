@@ -149,6 +149,9 @@ class ChatActivity : AppCompatActivity() {
 
             mSocket.emit("room", DEFAULT_ROOM_NAME)
             mSocket.emit(TEXT_MESSAGE_EVENT_NAME, jsonData)
+
+            // clear text
+            chatText.text = null
         })
     }
 
