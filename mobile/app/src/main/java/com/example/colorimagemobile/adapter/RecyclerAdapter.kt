@@ -9,18 +9,31 @@ import com.example.colorimagemobile.R
 import com.example.colorimagemobile.model.Message
 import kotlin.collections.ArrayList
 
-class RecyclerAdapter(message: ArrayList<Message>): RecyclerView.Adapter<RecyclerAdapter.ViewHolder>() {
+
+class RecyclerAdapter(message: ArrayList<Message>, currentAuthor: String): RecyclerView.Adapter<RecyclerAdapter.ViewHolder>() {
     // our card arrays
     var message: ArrayList<Message>
+    var currentAuthor: String
+
+    private val THEIR_CHAT = 0
+    private val OWN_CHAT = 1
 
     init {
         this.message = message
+        this.currentAuthor = currentAuthor
     }
 
     // creates card view referencing to individual cards
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerAdapter.ViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.card_own_chat, parent, false)
-        return ViewHolder(view)
+        return if (viewType === OWN_CHAT) {
+            val view: View = LayoutInflater.from(parent.context)
+                .inflate(R.layout.card_own_chat, parent, false)
+            ViewHolder(view)
+        } else {
+            val view: View = LayoutInflater.from(parent.context)
+                .inflate(R.layout.card_other_chat, parent, false)
+            ViewHolder(view)
+        }
     }
 
     // populate our data to card view - iterates over getItemCount() ?
@@ -35,6 +48,15 @@ class RecyclerAdapter(message: ArrayList<Message>): RecyclerView.Adapter<Recycle
         return message.size
     }
 
+    // calculate whose chat it is
+    override fun getItemViewType(position: Int): Int {
+        return if (message.get(position).author.equals(this.currentAuthor)) {
+            OWN_CHAT
+        } else {
+            THEIR_CHAT
+        }
+    }
+
     inner class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
         var author: TextView
         var message: TextView
@@ -46,7 +68,4 @@ class RecyclerAdapter(message: ArrayList<Message>): RecyclerView.Adapter<Recycle
             timestamp = itemView.findViewById(R.id.timestamp)
         }
     }
-
-
-
 }

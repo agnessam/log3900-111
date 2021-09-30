@@ -1,6 +1,5 @@
 package com.example.colorimagemobile.model
 
-
 class Message(message: String, timestamp: String, author: String, roomName: String) {
     var message: String = ""
     var timestamp: String = ""

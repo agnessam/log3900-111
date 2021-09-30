@@ -49,16 +49,16 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1">
-            
+
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="1"
-                android:padding="8dp"
-                android:background="@color/teal_200"
                 android:layout_above="@id/chatTextInputLayout"
-                android:layout_alignParentTop="true">
+                android:layout_alignParentTop="true"
+                android:layout_weight="1"
+                android:background="#eeeeee"
+                android:padding="8dp">
 
             </androidx.recyclerview.widget.RecyclerView>
 

@@ -67,9 +67,8 @@ class ChatActivity : AppCompatActivity() {
         // update chat text by showing username
         val chatText: TextView = findViewById(R.id.chatText)
         chatText.append(" ${this.username}!")
-        Log.d("MESSAGE", "START")
 
-        // socket
+        // init socket
         SocketHandler.setSocket()
         mSocket = SocketHandler.getSocket()
         mSocket.connect()
@@ -85,7 +84,7 @@ class ChatActivity : AppCompatActivity() {
         val recyclerView = findViewById<RecyclerView>(R.id.recyclerView)
         recyclerView.layoutManager = layoutManager
 
-        adapter = RecyclerAdapter(messageArray)
+        adapter = RecyclerAdapter(messageArray, this.username)
         recyclerView.adapter = adapter
     }
 
@@ -129,6 +128,12 @@ class ChatActivity : AppCompatActivity() {
 
         sendChatBtn.setOnClickListener(View.OnClickListener {
             val chatText: EditText = findViewById(R.id.chatTextInput)
+            val chatTextInput = chatText.text.toString()
+
+            if (chatTextInput.length === 0) {
+                printToast(applicationContext, "Please enter a message first!")
+                return@OnClickListener
+            }
 
             val currentTimestamp =
                 DateTimeFormatter
@@ -136,15 +141,10 @@ class ChatActivity : AppCompatActivity() {
                     .withZone(ZoneOffset.UTC)
                     .format(Instant.now())
 
-            val sharedPref = getSharedPreferences(LOCAL_STORAGE_KEY, Context.MODE_PRIVATE)
-            val username = sharedPref.getString(SHARED_USERNAME_KEY, "").toString()
-
             val newMessage =
-                Message("chatText.text.toString()", currentTimestamp, username, DEFAULT_ROOM_NAME)
+                Message(chatText.text.toString(), currentTimestamp, this.username, DEFAULT_ROOM_NAME)
 
-            messageArray.add(newMessage)
-            adapter?.notifyDataSetChanged()
-
+            // convert message class to JSON format
             val jsonData = JSONObject(newMessage.toString())
 
             mSocket.emit("room", DEFAULT_ROOM_NAME)
@@ -160,12 +160,16 @@ class ChatActivity : AppCompatActivity() {
                 val message = gson.fromJson(args[0].toString(), Message::class.java)
 
                 try {
-                    messageArray.add(message)
-                    adapter?.notifyDataSetChanged()
+                    this.addMessage(message)
                 } catch (e: JSONException) {
-                    Log.d(DEBUG_KEY, "Error occurred while receving incoming message ${e.message}")
+                    Log.d(DEBUG_KEY, "Error occurred while receiving incoming message ${e.message}")
                     return@Runnable
                 }
             })
         }
+
+    private fun addMessage(newMessage: Message) {
+        messageArray.add(newMessage)
+        adapter?.notifyDataSetChanged()
+    }
 }
