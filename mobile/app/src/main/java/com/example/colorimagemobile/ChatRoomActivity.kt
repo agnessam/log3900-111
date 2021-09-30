@@ -3,6 +3,7 @@ package com.example.colorimagemobile
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.colorimagemobile.databinding.ActivityChatRoomBinding
@@ -40,33 +41,39 @@ class ChatRoomActivity : AppCompatActivity() {
 
         try {
             username = intent.getStringExtra("username")!!
+            Log.d("Oncreate","Oncreate fonction username= "+username) // add for test purpose
         } catch (e: Exception) {
+            Log.d("Oncreate","error message= "+e)
             e.printStackTrace()
         }
 
         SocketHandler.setSocket()
+      //  socket.connect()
+        SocketHandler.establishConnection()
         socket = SocketHandler.getSocket()
-        socket.connect()
+        Log.d("Oncreate","+++++++++++++++++++++++++++++contenu du socket= "+ socket)
         socket.on(Socket.EVENT_CONNECT, onConnect)
-        socket.on("text message", onNewMessageReception)
 
         chatRoomBinding.sendButton.setOnClickListener { sendMessage() }
+
+        socket.on("text message", onNewMessageReception)
     }
 
     private var onConnect = Emitter.Listener {
         //TODO remove this default
         roomName = "chatRoom"
         socket.emit("room", roomName)
-        print("CONNECTEDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD")
+        Log.d("Connected server","CONNECTEDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD")
     }
 
     private var onNewMessageReception = Emitter.Listener {
         val message: MessageWithType = gson.fromJson(it[0].toString(), MessageWithType::class.java)
+        Log.d("Onnewmessage","GOT NEW MESSAGEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE"+message)
         message.viewType = MessageType.MESSAGE_RECEIVED.ordinal
         chatList.add(message)
         chatRoomAdapter.notifyItemInserted(chatList.size)
         chatRoomBinding.recyclerView.smoothScrollToPosition(chatList.size - 1)
-        print("GOT NEW MESSAGEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE"+message)
+
     }
 
 //    override fun OnClick() {
@@ -79,8 +86,9 @@ class ChatRoomActivity : AppCompatActivity() {
         //TODO replace roomname
         val message = Message(content, LocalTime.now().toString(), username, "chatRoom")
         val jsonMessage = gson.toJson(message)
-        socket.emit("text message", jsonMessage)
-        print("SENDINGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG"+jsonMessage)
+        socket.emit("text message", message)
+        Log.d("sendmessage","SENDINGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG"+jsonMessage)
+        Log.d("autheur","SENDINGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG"+ username.toString())
     }
 
 }

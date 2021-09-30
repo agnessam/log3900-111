@@ -1,5 +1,6 @@
 package com.example.colorimagemobile
 
+import android.util.Log
 import io.socket.client.IO
 import io.socket.client.Socket
 import java.net.URISyntaxException
@@ -21,20 +22,43 @@ import java.net.URISyntaxException
 * */
 
 object SocketHandler {
-    private const val SERVER_URL = "https://localhost:3000/api/chat"
+    private const val SERVER_URL = "http://10.0.2.2:3000"
     private lateinit var mSocket: Socket
 
     @Synchronized
     fun setSocket() {
         try {
             mSocket = IO.socket(SERVER_URL)
+            Log.d("setting socket good","setting socket done")
         } catch (e: URISyntaxException) {
-            print("Error setting up socket $e")
+            Log.d("setting socket error","Error setting up socket $e")
+            throw  RuntimeException(e) // by beatrice
         }
     }
-
+/*
     @Synchronized
     fun getSocket(): Socket {
         return mSocket
+    }*/
+
+    @Synchronized
+    fun getSocket(): Socket {
+        Log.d("get socket","get socket function")
+        return mSocket
+
     }
+
+    @Synchronized
+    fun establishConnection() {
+        Log.d("establish connexion","connect socket function")
+        mSocket.connect()
+    }
+/*
+    @Synchronized
+    fun closeConnection() {
+        print("disconnected socket")
+        mSocket.disconnect()
+    }
+   */
+
 }

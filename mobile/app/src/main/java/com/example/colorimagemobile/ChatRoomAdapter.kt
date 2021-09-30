@@ -1,8 +1,10 @@
 package com.example.colorimagemobile
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.colorimagemobile.databinding.MessageReceivedTextBinding
@@ -11,6 +13,8 @@ import com.example.colorimagemobile.ui.MessageWithType
 
 // message data parse to views
 class ChatRoomAdapter(private val layoutInflater: LayoutInflater, private val chatList : ArrayList<MessageWithType>) : RecyclerView.Adapter<ChatRoomAdapter.ViewHolder>() {
+
+
     inner class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
         val message  = itemView.findViewById<TextView>(R.id.messageContent)
         val timestamp = itemView.findViewById<TextView>(R.id.timestamp)
@@ -19,16 +23,18 @@ class ChatRoomAdapter(private val layoutInflater: LayoutInflater, private val ch
 
     // create separate views
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+
         var view: View? = null
+        Log.d("onCreateViewHolder","+++++++++++viewtype= "+viewType)
         when (viewType) {
             MessageType.MESSAGE_SENT.ordinal -> {
                 view = MessageSentTextBinding.inflate(layoutInflater).root
-                print("Message send.ordinal oncreateviewholder Message type send create view")
+               Log.d("message sent ordinal","Message send.ordinal oncreateviewholder Message type send create view")
             }
 
             MessageType.MESSAGE_RECEIVED.ordinal -> {
                 view = MessageReceivedTextBinding.inflate(layoutInflater).root
-                print("Message receive.ordinal oncreateviewholder message type receive create view")
+                Log.d("messagereceive ordinal","Message receive.ordinal oncreateviewholder message type receive create view")
             }
         }
         return ViewHolder(view!!)
@@ -39,6 +45,7 @@ class ChatRoomAdapter(private val layoutInflater: LayoutInflater, private val ch
         val userName = messageData.author
         val content = messageData.message
         val timestamp = messageData.timestamp
+        Log.d("onviewholder","=============================setting = "+messageData.viewType +" messagedata= "+messageData)
 
         when(messageData.viewType) {
 
@@ -53,13 +60,20 @@ class ChatRoomAdapter(private val layoutInflater: LayoutInflater, private val ch
                 holder.timestamp.setText(timestamp)
             }
         }
+        Log.d("auteur setext","=============================auteur setext "+userName)
+        Log.d("message settext","=============================message settext "+content)
+        Log.d("timestamp settext","=============================timestamp settext "+timestamp)
+
     }
 
     override fun getItemCount(): Int {
+        Log.d("getitemcount","=============================getitemcount "+chatList.size)
         return chatList.size
+
     }
 
     override fun getItemViewType(position: Int): Int {
+        Log.d("getitemview","=============================getitemview "+chatList[position].viewType)
         return chatList[position].viewType
     }
 }
