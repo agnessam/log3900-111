@@ -47,4 +47,6 @@ class RecyclerAdapter(message: ArrayList<Message>): RecyclerView.Adapter<Recycle
         }
     }
 
+
+
 }

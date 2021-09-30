@@ -1,7 +1,6 @@
 package com.example.colorimagemobile
 
 import android.content.Context
-import android.content.Intent
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -9,7 +8,6 @@ import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
-import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -22,10 +20,13 @@ import com.example.colorimagemobile.model.User
 import com.example.colorimagemobile.utils.CommonFun.Companion.printToast
 import com.example.colorimagemobile.utils.CommonFun.Companion.redirectTo
 import com.example.colorimagemobile.utils.Constants
+import com.example.colorimagemobile.utils.Constants.Companion.DEBUG_KEY
 import com.example.colorimagemobile.utils.Constants.Companion.DEFAULT_ROOM_NAME
 import com.example.colorimagemobile.utils.Constants.Companion.LOCAL_STORAGE_KEY
 import com.example.colorimagemobile.utils.Constants.Companion.SHARED_TOKEN_KEY
 import com.example.colorimagemobile.utils.Constants.Companion.SHARED_USERNAME_KEY
+import com.example.colorimagemobile.utils.Constants.Companion.TEXT_MESSAGE_EVENT_NAME
+import com.google.gson.Gson
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -36,7 +37,8 @@ import org.json.JSONObject
 import java.time.Instant
 import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
-
+import org.json.JSONException
+import io.socket.emitter.Emitter
 
 class ChatActivity : AppCompatActivity() {
     var username: String = ""
@@ -65,15 +67,18 @@ class ChatActivity : AppCompatActivity() {
         // update chat text by showing username
         val chatText: TextView = findViewById(R.id.chatText)
         chatText.append(" ${this.username}!")
-
-        // listeners
-        setLogOutListener()
-        this.setAddChatListener()
+        Log.d("MESSAGE", "START")
 
         // socket
         SocketHandler.setSocket()
         mSocket = SocketHandler.getSocket()
         mSocket.connect()
+        mSocket.emit("room", DEFAULT_ROOM_NAME)
+        mSocket.on(TEXT_MESSAGE_EVENT_NAME, onNewMessage)
+
+        // listeners
+        setLogOutListener()
+        setAddChatListener()
 
         // chat adapters
         layoutManager = LinearLayoutManager(this)
@@ -127,14 +132,15 @@ class ChatActivity : AppCompatActivity() {
 
             val currentTimestamp =
                 DateTimeFormatter
-                .ofPattern("yyyy-MM-dd HH:mm:ss.SSSSSS")
-                .withZone(ZoneOffset.UTC)
-                .format(Instant.now())
+                    .ofPattern("yyyy-MM-dd HH:mm:ss.SSSSSS")
+                    .withZone(ZoneOffset.UTC)
+                    .format(Instant.now())
 
             val sharedPref = getSharedPreferences(LOCAL_STORAGE_KEY, Context.MODE_PRIVATE)
             val username = sharedPref.getString(SHARED_USERNAME_KEY, "").toString()
 
-            val newMessage = Message("chatText.text.toString()", currentTimestamp, username, DEFAULT_ROOM_NAME)
+            val newMessage =
+                Message("chatText.text.toString()", currentTimestamp, username, DEFAULT_ROOM_NAME)
 
             messageArray.add(newMessage)
             adapter?.notifyDataSetChanged()
@@ -142,7 +148,24 @@ class ChatActivity : AppCompatActivity() {
             val jsonData = JSONObject(newMessage.toString())
 
             mSocket.emit("room", DEFAULT_ROOM_NAME)
-            mSocket.emit("text message", jsonData)
+            mSocket.emit(TEXT_MESSAGE_EVENT_NAME, jsonData)
         })
     }
+
+    // listens for incoming messages
+    private val onNewMessage =
+        Emitter.Listener { args ->
+            runOnUiThread(Runnable {
+                val gson: Gson = Gson()
+                val message = gson.fromJson(args[0].toString(), Message::class.java)
+
+                try {
+                    messageArray.add(message)
+                    adapter?.notifyDataSetChanged()
+                } catch (e: JSONException) {
+                    Log.d(DEBUG_KEY, "Error occurred while receving incoming message ${e.message}")
+                    return@Runnable
+                }
+            })
+        }
 }
