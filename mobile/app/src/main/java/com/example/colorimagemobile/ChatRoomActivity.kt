@@ -66,7 +66,7 @@ class ChatRoomActivity : AppCompatActivity() {
         chatList.add(message)
         chatRoomAdapter.notifyItemInserted(chatList.size)
         chatRoomBinding.recyclerView.smoothScrollToPosition(chatList.size - 1)
-        print("GOT NEW MESSAGEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE")
+        print("GOT NEW MESSAGEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE"+message)
     }
 
 //    override fun OnClick() {
@@ -77,10 +77,10 @@ class ChatRoomActivity : AppCompatActivity() {
     private fun sendMessage() {
         val content = chatRoomBinding.editMessage.text.toString()
         //TODO replace roomname
-        val message = Message(content, LocalTime.now().toString(), username, "chatroom")
+        val message = Message(content, LocalTime.now().toString(), username, "chatRoom")
         val jsonMessage = gson.toJson(message)
         socket.emit("text message", jsonMessage)
-        print("SENDINGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG")
+        print("SENDINGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG"+jsonMessage)
     }
 
 }

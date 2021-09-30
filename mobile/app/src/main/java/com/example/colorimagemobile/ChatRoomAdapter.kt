@@ -9,23 +9,26 @@ import com.example.colorimagemobile.databinding.MessageReceivedTextBinding
 import com.example.colorimagemobile.databinding.MessageSentTextBinding
 import com.example.colorimagemobile.ui.MessageWithType
 
-
+// message data parse to views
 class ChatRoomAdapter(private val layoutInflater: LayoutInflater, private val chatList : ArrayList<MessageWithType>) : RecyclerView.Adapter<ChatRoomAdapter.ViewHolder>() {
     inner class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
-        val message = itemView.findViewById<TextView>(R.id.messageContent)
+        val message  = itemView.findViewById<TextView>(R.id.messageContent)
         val timestamp = itemView.findViewById<TextView>(R.id.timestamp)
         val author = itemView.findViewById<TextView>(R.id.username)
     }
 
+    // create separate views
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         var view: View? = null
         when (viewType) {
             MessageType.MESSAGE_SENT.ordinal -> {
                 view = MessageSentTextBinding.inflate(layoutInflater).root
+                print("Message send.ordinal oncreateviewholder Message type send create view")
             }
 
             MessageType.MESSAGE_RECEIVED.ordinal -> {
                 view = MessageReceivedTextBinding.inflate(layoutInflater).root
+                print("Message receive.ordinal oncreateviewholder message type receive create view")
             }
         }
         return ViewHolder(view!!)
@@ -53,7 +56,7 @@ class ChatRoomAdapter(private val layoutInflater: LayoutInflater, private val ch
     }
 
     override fun getItemCount(): Int {
-        return chatList.size;
+        return chatList.size
     }
 
     override fun getItemViewType(position: Int): Int {
