@@ -14,13 +14,15 @@
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Message..."
+        android:hint="@string/message"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:id="@+id/editMessage"/>
+        android:id="@+id/editMessage"
+        android:inputType="text"
+        android:autofillHints="no" />
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Send"
+        android:text="@string/sendbutton"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:id="@+id/sendButton"/>
