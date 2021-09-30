@@ -11,4 +11,5 @@
 <!--    custom colors-->
     <color name="userLog">#6d6875</color>
     <color name="chatSend">#b5838d</color>
+    <color name="ownChat">#fefae0</color>
 </resources>
