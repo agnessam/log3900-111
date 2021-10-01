@@ -41,6 +41,7 @@ import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
 import org.json.JSONException
 import io.socket.emitter.Emitter
+import java.text.SimpleDateFormat
 
 class ChatActivity : AppCompatActivity() {
     var username: String = ""
@@ -165,13 +166,8 @@ class ChatActivity : AppCompatActivity() {
                 return@OnClickListener
             }
 
-            val currentTimestamp =
-                DateTimeFormatter
-                    .ofPattern("yyyy-MM-dd HH:mm:ss.SSSSSS")
-                    .withZone(ZoneOffset.UTC)
-                    .format(Instant.now())
-
-            val newMessage = Message(chatTextInput, currentTimestamp, this.username, DEFAULT_ROOM_NAME)
+            val currentTime: String = SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(Date())
+            val newMessage = Message(chatTextInput, currentTime, this.username, DEFAULT_ROOM_NAME)
 
             // convert message class to JSON format
             val jsonData = JSONObject(newMessage.toString())
