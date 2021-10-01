@@ -22,7 +22,7 @@ export class NavbarComponent implements OnInit {
 
   logout(): void {
     this.authenticationService.logout(this.username).subscribe((response) => {
-      console.log("Hlelo");
+      console.log(response);
     });
     this.router.navigate(["/users/login"]);
   }
