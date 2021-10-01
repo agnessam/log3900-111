@@ -7,6 +7,7 @@ import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.colorimagemobile.databinding.ActivityChatRoomBinding
+import com.example.colorimagemobile.handler.SocketHandler
 import com.example.colorimagemobile.ui.Message
 import com.example.colorimagemobile.ui.MessageWithType
 import io.socket.client.Socket
@@ -75,10 +76,6 @@ class ChatRoomActivity : AppCompatActivity() {
         chatRoomBinding.recyclerView.smoothScrollToPosition(chatList.size - 1)
 
     }
-
-//    override fun OnClick() {
-//
-//    }
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun sendMessage() {

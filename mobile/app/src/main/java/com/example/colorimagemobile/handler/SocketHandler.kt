@@ -22,7 +22,7 @@ import java.net.URISyntaxException
 * */
 
 object SocketHandler {
-    private const val SERVER_URL = "http://10.0.2.2:3000"
+    private const val SERVER_URL = "http://10.0.2.2:3000/api/chat"
     private lateinit var mSocket: Socket
 
     @Synchronized
