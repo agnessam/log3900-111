@@ -35,6 +35,7 @@ class LoginActivity : AppCompatActivity() {
         val loginBtn: Button = findViewById(R.id.loginBtn)
         loginBtn.setOnClickListener { executeLogin() }
 
+        // when pressed on Enter
         val editText: EditText = findViewById(R.id.usernameInput)
         editText.setOnKeyListener(View.OnKeyListener { v, keyCode, event ->
             if (keyCode == KeyEvent.KEYCODE_ENTER && event.action == KeyEvent.ACTION_UP) {
