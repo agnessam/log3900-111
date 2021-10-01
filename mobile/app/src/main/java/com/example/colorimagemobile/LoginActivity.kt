@@ -8,13 +8,16 @@ import android.util.Log
 import android.view.KeyEvent
 import android.view.View
 import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
 import com.example.colorimagemobile.handler.RetrofitInstance
 import com.example.colorimagemobile.model.LoginResponse
 import com.example.colorimagemobile.model.User
 import com.example.colorimagemobile.utils.CommonFun
+import com.example.colorimagemobile.utils.CommonFun.Companion.closeKeyboard
 import com.example.colorimagemobile.utils.CommonFun.Companion.printToast
 import com.example.colorimagemobile.utils.CommonFun.Companion.redirectTo
 import com.example.colorimagemobile.utils.Constants.Companion.LOCAL_STORAGE_KEY
@@ -40,6 +43,11 @@ class LoginActivity : AppCompatActivity() {
             }
             return@OnKeyListener false
         })
+
+        val loginMain: ConstraintLayout = findViewById(R.id.loginMain)
+        loginMain.setOnTouchListener { v, event ->
+            closeKeyboard(this)
+        }
     }
 
     fun setSignUpListener() {

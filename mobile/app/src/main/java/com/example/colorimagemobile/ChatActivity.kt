@@ -10,6 +10,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import androidx.annotation.RequiresApi
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.colorimagemobile.adapter.RecyclerAdapter
@@ -17,6 +18,7 @@ import com.example.colorimagemobile.handler.RetrofitInstance
 import com.example.colorimagemobile.handler.SocketHandler
 import com.example.colorimagemobile.model.Message
 import com.example.colorimagemobile.model.User
+import com.example.colorimagemobile.utils.CommonFun.Companion.closeKeyboard
 import com.example.colorimagemobile.utils.CommonFun.Companion.printToast
 import com.example.colorimagemobile.utils.CommonFun.Companion.redirectTo
 import com.example.colorimagemobile.utils.Constants
@@ -87,12 +89,25 @@ class ChatActivity : AppCompatActivity() {
 
         adapter = RecyclerAdapter(messageArray, this.username)
         recyclerView.adapter = adapter
+
+        setOnScreenTapListener()
     }
 
     override fun onDestroy() {
         super.onDestroy()
         mSocket.disconnect()
         mSocket.off(TEXT_MESSAGE_EVENT_NAME, onNewMessage)
+    }
+
+    private fun setOnScreenTapListener() {
+        val chatMain: ConstraintLayout = findViewById(R.id.chatMain)
+        chatMain.setOnTouchListener { v, event ->
+            closeKeyboard(this)
+        }
+
+        recyclerView.setOnTouchListener { v, event ->
+            closeKeyboard(this)
+        }
     }
 
     private fun setLogOutListener() {
@@ -134,6 +149,8 @@ class ChatActivity : AppCompatActivity() {
         val sendChatBtn: Button = findViewById(R.id.sendBtn)
 
         sendChatBtn.setOnClickListener(View.OnClickListener {
+            closeKeyboard(this@ChatActivity)
+
             val chatText: EditText = findViewById(R.id.chatTextInput)
             val chatTextInput = chatText.text.toString()
 
