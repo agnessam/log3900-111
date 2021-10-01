@@ -89,6 +89,12 @@ class ChatActivity : AppCompatActivity() {
         recyclerView.adapter = adapter
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        mSocket.disconnect()
+        mSocket.off(TEXT_MESSAGE_EVENT_NAME, onNewMessage)
+    }
+
     private fun setLogOutListener() {
         val logOutBtn: Button = findViewById(R.id.logoutBtn)
 
@@ -131,6 +137,12 @@ class ChatActivity : AppCompatActivity() {
             val chatText: EditText = findViewById(R.id.chatTextInput)
             val chatTextInput = chatText.text.toString()
 
+            // not connected to server
+            if (!mSocket.isActive || !mSocket.connected()) {
+                printToast(applicationContext, "Error: Server is offline!")
+                return@OnClickListener
+            }
+
             if (chatTextInput.length === 0) {
                 printToast(applicationContext, "Please enter a message first!")
                 return@OnClickListener
@@ -142,8 +154,7 @@ class ChatActivity : AppCompatActivity() {
                     .withZone(ZoneOffset.UTC)
                     .format(Instant.now())
 
-            val newMessage =
-                Message(chatText.text.toString(), currentTimestamp, this.username, DEFAULT_ROOM_NAME)
+            val newMessage = Message(chatTextInput, currentTimestamp, this.username, DEFAULT_ROOM_NAME)
 
             // convert message class to JSON format
             val jsonData = JSONObject(newMessage.toString())
@@ -172,9 +183,14 @@ class ChatActivity : AppCompatActivity() {
             })
         }
 
+    // add new chat message
     private fun addMessage(newMessage: Message) {
         messageArray.add(newMessage)
         adapter?.notifyDataSetChanged()
-        recyclerView.scrollToPosition(messageArray.size - 1);
+
+        // if only we send a msg, scroll down
+        if(newMessage.author.equals(this.username)) {
+            recyclerView.scrollToPosition(messageArray.size - 1);
+        }
     }
 }
