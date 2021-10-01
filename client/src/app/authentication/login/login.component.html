@@ -1,5 +1,7 @@
-<mat-grid-list cols="2" rowHeight="1:1">
-  <mat-grid-tile>Bienvenue sur ColorImage</mat-grid-tile>
+<mat-grid-list cols="2">
+  <mat-grid-tile
+    ><mat-card-title>Bienvenue sur ColorImage!</mat-card-title></mat-grid-tile
+  >
   <mat-grid-tile>
     <mat-card>
       <mat-card-title>Login</mat-card-title>
@@ -17,7 +19,9 @@
           </p>
 
           <div class="button">
-            <button type="submit" mat-button>Login</button>
+            <button type="submit" mat-raised-button color="primary">
+              Login
+            </button>
           </div>
         </form>
       </mat-card-content>
