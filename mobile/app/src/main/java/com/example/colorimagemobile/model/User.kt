@@ -1,8 +1,5 @@
 package com.example.colorimagemobile.model
 
-import com.google.gson.annotations.SerializedName
-import kotlin.properties.Delegates
-
 class User(username: String, password: String) {
     var username: String = ""
     var password: String = ""

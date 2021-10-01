@@ -1,13 +1,10 @@
 package com.example.colorimagemobile
 
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.example.colorimagemobile.databinding.ActivityMainBinding
 import com.example.colorimagemobile.utils.CommonFun.Companion.redirectTo
-import com.example.colorimagemobile.utils.Constants
 import com.example.colorimagemobile.utils.Constants.Companion.LOCAL_STORAGE_KEY
 import com.example.colorimagemobile.utils.Constants.Companion.SHARED_TOKEN_KEY
 

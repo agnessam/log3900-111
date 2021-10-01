@@ -16,5 +16,10 @@ class Constants {
 
         // debug log key
         const val DEBUG_KEY = "DEBUG"
+
+        // chat
+        const val DEFAULT_ROOM_NAME = "default"
+        const val CHAT_NAMESPACE_NAME = "chat"
+        const val TEXT_MESSAGE_EVENT_NAME = "text"
     }
 }
