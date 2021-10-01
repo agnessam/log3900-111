@@ -62,6 +62,7 @@
                 android:layout_alignParentTop="true"
                 android:layout_weight="1"
                 android:background="#eeeeee"
+                android:layout_marginBottom="5px"
                 android:padding="8dp">
 
             </androidx.recyclerview.widget.RecyclerView>
