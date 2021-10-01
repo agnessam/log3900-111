@@ -28,6 +28,7 @@ export class AuthenticationController {
 					}
 
 					req.login(user, async (error) => {
+						console.log(user + ' just logged in!');
 						const body = {
 							_id: user._id,
 							username: user.username,
@@ -49,7 +50,11 @@ export class AuthenticationController {
 		this.router.post('/logout', async (req, res, next) => {
 			this.onlineUsers.delete(req.body.username);
 			req.logout();
-			console.log(this.onlineUsers);
+			console.log(req.body.username + ' just logged out.');
+			console.log('Online users: ');
+			this.onlineUsers.forEach((user) => {
+				console.log(user);
+			});
 			return res.send(true);
 		});
 	}
