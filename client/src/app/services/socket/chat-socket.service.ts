@@ -8,7 +8,7 @@ import { Message } from "src/app/services/socket/message.model";
 import { Subject } from "rxjs";
 
 @Injectable({
-  providedIn: "root", // just before your class
+  providedIn: "root",
 })
 export class ChatSocketService extends AbstractSocketService {
   public chatSubject: Subject<Message>;
@@ -24,7 +24,6 @@ export class ChatSocketService extends AbstractSocketService {
   }
 
   sendMessage(message: Message): void {
-    this.joinRoom(message.roomName);
     this.emit(TEXT_MESSAGE_EVENT_NAME, message);
   }
 

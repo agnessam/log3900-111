@@ -1,4 +1,5 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnDestroy, OnInit } from "@angular/core";
+import { Subscription } from "rxjs";
 import { AuthenticationService } from "src/app/services/authentication/authentication.service";
 import { ChatSocketService } from "src/app/services/socket/chat-socket.service";
 
@@ -7,8 +8,9 @@ import { ChatSocketService } from "src/app/services/socket/chat-socket.service";
   templateUrl: "./chat.component.html",
   styleUrls: ["./chat.component.scss"],
 })
-export class ChatComponent implements OnInit {
-  public username:string | null;
+export class ChatComponent implements OnInit, OnDestroy {
+  public username: string | null;
+  public chatSubscribiption: Subscription;
 
   constructor(
     private authenticationService: AuthenticationService,
@@ -22,32 +24,39 @@ export class ChatComponent implements OnInit {
   ngOnInit(): void {
     this.keyListener();
     this.receiveMessage();
+    this.chatSocketService.connect();
+    this.chatSocketService.joinRoom("default");
+  }
+
+  ngOnDestroy(): void {
+    this.chatSocketService.leaveRoom("default");
+    this.chatSocketService.disconnect();
+    this.chatSubscribiption.unsubscribe();
   }
 
   public keyListener() {
-    window.addEventListener('keydown', (event) => {
+    window.addEventListener("keydown", (event) => {
       if (event.key === "Enter") {
         this.sendMessage();
       }
     });
   }
 
-
   public receiveMessage() {
-    this.chatSocketService.chatSubject.subscribe({
+    this.chatSubscribiption = this.chatSocketService.chatSubject.subscribe({
       next: (message) => {
-        let messageBox = (<HTMLInputElement>document.getElementById("chatbox"));
+        let messageBox = <HTMLInputElement>document.getElementById("chatbox");
         const p = document.createElement("div");
-        p.textContent =  `(${message.timestamp}) ${message.author}: ${message.message}`;
+        p.textContent = `(${message.timestamp}) ${message.author}: ${message.message}`;
         messageBox.appendChild(p);
         messageBox.scrollTop = messageBox.scrollHeight;
-        },
+      },
     });
   }
 
   sendMessage() {
     let mes = (<HTMLInputElement>document.getElementById("usermsg")).value;
-    if ( mes === null || mes.match(/^ *$/) !== null) return;
+    if (mes === null || mes.match(/^ *$/) !== null) return;
 
     let name = "";
     if (this.username === null) return;
