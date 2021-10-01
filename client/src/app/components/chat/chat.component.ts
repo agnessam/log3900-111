@@ -47,7 +47,7 @@ export class ChatComponent implements OnInit {
 
   sendMessage() {
     let mes = (<HTMLInputElement>document.getElementById("usermsg")).value;
-    if (mes === "") return;
+    if ( mes === null || mes.match(/^ *$/) !== null) return;
 
     let name = "";
     if (this.username === null) return;
