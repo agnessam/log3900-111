@@ -4,14 +4,14 @@
 
     <div id="wrapper">
       <div id="menu">
-        <p class="welcome">Welcome, <b>{{ username }}</b></p>
+        <p class="welcome">Hello <b>{{ username }}</b> !</p>
         <div style="clear:both"></div>
       </div>
 
       <div id="chatbox"></div>
 
       <div id="message">
-        <input type="text" id="usermsg">
+        <input type="text" id="usermsg" autocomplete="off" spellcheck="false" placeholder="Enter you message here">
         <button mat-icon-button color="primary" (click)="sendMessage()">
           <mat-icon>send</mat-icon>
         </button>
