@@ -3,7 +3,8 @@ package com.example.colorimagemobile.utils
 class Constants {
 
     companion object {
-        const val SERVER_URL = "http://10.0.2.2:3000/"
+//        const val SERVER_URL = "http://10.0.2.2:3000/"
+        const val SERVER_URL = "http://colorimage.us-east-1.elasticbeanstalk.com"
 
         // routes
         const val LOGIN_POST_USER = "api/v1/login"

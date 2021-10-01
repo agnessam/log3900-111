@@ -12,7 +12,7 @@ object SocketHandler {
     @Synchronized
     fun setSocket() {
         try {
-            mSocket = IO.socket("$SERVER_URL$CHAT_NAMESPACE_NAME")
+            mSocket = IO.socket("$SERVER_URL/$CHAT_NAMESPACE_NAME")
         } catch (e: URISyntaxException) {
             print("Error setting up socket $e")
         }
