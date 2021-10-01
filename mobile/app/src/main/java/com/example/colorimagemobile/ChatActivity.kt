@@ -189,11 +189,12 @@ class ChatActivity : AppCompatActivity() {
         val currentTime: String = SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(Date())
         val newMessage = Message(chatTextInput, currentTime, this.username, DEFAULT_ROOM_NAME)
 
-        // convert message class to JSON format
-        val jsonData = JSONObject(newMessage.toString())
+        // convert message class to JSON format but server receives it as String
+        val gson = Gson()
+        val jsonMessageData = gson.toJson(newMessage)
 
         mSocket.emit("room", DEFAULT_ROOM_NAME)
-        mSocket.emit(TEXT_MESSAGE_EVENT_NAME, jsonData)
+        mSocket.emit(TEXT_MESSAGE_EVENT_NAME, jsonMessageData)
 
         // clear text
         chatText.text = null
