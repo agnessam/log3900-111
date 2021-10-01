@@ -15,6 +15,6 @@ class Message(message: String, timestamp: String, author: String, roomName: Stri
 
     // simulate a JSON object
     override fun toString(): String {
-        return "{'message': '$message}', 'timestamp': '$timestamp', 'author': '$author', 'roomName': '$roomName'}";
+        return "{'message': '$message', 'timestamp': '$timestamp', 'author': '$author', 'roomName': '$roomName'}";
     }
 }
