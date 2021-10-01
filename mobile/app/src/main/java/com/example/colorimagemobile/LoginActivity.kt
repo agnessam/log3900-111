@@ -5,8 +5,11 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.KeyEvent
 import android.view.View
+import android.view.inputmethod.EditorInfo
 import android.widget.Button
+import android.widget.EditText
 import android.widget.TextView
 import com.example.colorimagemobile.handler.RetrofitInstance
 import com.example.colorimagemobile.model.LoginResponse
@@ -26,9 +29,17 @@ class LoginActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
-        //setSignUpListener()
-        setLoginListener()
+        val loginBtn: Button = findViewById(R.id.loginBtn)
+        loginBtn.setOnClickListener { executeLogin() }
 
+        val editText: EditText = findViewById(R.id.usernameInput)
+        editText.setOnKeyListener(View.OnKeyListener { v, keyCode, event ->
+            if (keyCode == KeyEvent.KEYCODE_ENTER && event.action == KeyEvent.ACTION_UP) {
+                executeLogin()
+                return@OnKeyListener true
+            }
+            return@OnKeyListener false
+        })
     }
 
     fun setSignUpListener() {
@@ -40,52 +51,49 @@ class LoginActivity : AppCompatActivity() {
 //        })
     }
 
-    private fun setLoginListener() {
-        val loginBtn: Button = findViewById(R.id.loginBtn)
-        loginBtn.setOnClickListener(View.OnClickListener {
+    private fun executeLogin() {
+        val usernameInput: TextView = findViewById(R.id.usernameInput)
 
-            val usernameInput: TextView = findViewById(R.id.usernameInput)
+        // check if input is valid
+        if (usernameInput.text.length === 0) {
+            printToast(applicationContext, "Error! Please enter a valid username!")
+            return
+        }
 
-            // check if input is valid
-            if (usernameInput.text.length === 0) {
-                printToast(applicationContext, "Error! Please enter a valid username!")
-                return@OnClickListener
+        val user = User(usernameInput.text.toString(), "kesh")
+
+        // username ok -> make HTTP POST request
+        RetrofitInstance.HTTP.loginUser(user).enqueue(object : Callback<LoginResponse> {
+            override fun onResponse(call: Call<LoginResponse>, response: Response<LoginResponse>) {
+                if (!response.isSuccessful) {
+                    Log.d("HTTP request error", response.message())
+                    printToast(applicationContext, "An error occurred!")
+                    return
+                }
+
+                // new user
+                printToast(applicationContext, "Login successful!")
+                val token = response.body()?.token.toString()
+                val username = response.body()?.username.toString()
+
+                // save credentials to "local storage"
+                val sharedPref = getSharedPreferences(LOCAL_STORAGE_KEY, Context.MODE_PRIVATE)
+                val editor = sharedPref.edit()
+                editor.apply {
+                    putString(SHARED_USERNAME_KEY, username)
+                    putString(SHARED_TOKEN_KEY, token)
+                }.apply()
+
+                // redirect to /chat
+                redirectTo(this@LoginActivity, ChatActivity::class.java)
             }
 
-            val user = User(usernameInput.text.toString(), "kesh")
-
-            // username ok -> make HTTP POST request
-            RetrofitInstance.HTTP.loginUser(user).enqueue(object : Callback<LoginResponse> {
-                override fun onResponse(call: Call<LoginResponse>, response: Response<LoginResponse>) {
-                    if (!response.isSuccessful) {
-                        Log.d("HTTP request error", response.message())
-                        printToast(applicationContext, "An error occurred!")
-                        return
-                    }
-
-                    // new user
-                    printToast(applicationContext, "Login successful!")
-                    val token = response.body()?.token.toString()
-                    val username = response.body()?.username.toString()
-
-                    // save credentials to "local storage"
-                    val sharedPref = getSharedPreferences(LOCAL_STORAGE_KEY, Context.MODE_PRIVATE)
-                    val editor = sharedPref.edit()
-                    editor.apply {
-                        putString(SHARED_USERNAME_KEY, username)
-                        putString(SHARED_TOKEN_KEY, token)
-                    }.apply()
-
-                    // redirect to /chat
-                    redirectTo(this@LoginActivity, ChatActivity::class.java)
-                }
-
-                // duplicate username is coming through here
-                override fun onFailure(call: Call<LoginResponse>, t: Throwable) {
-                    Log.d("User failed to login", t.message!!)
-                    printToast(applicationContext, "Username possibly already exists!")
-                }
-            })
+            // duplicate username is coming through here
+            override fun onFailure(call: Call<LoginResponse>, t: Throwable) {
+                Log.d("User failed to login", t.message!!)
+                printToast(applicationContext, "Username possibly already exists!")
+            }
         })
+
     }
 }
