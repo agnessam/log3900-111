@@ -64,7 +64,7 @@ class LoginActivity : AppCompatActivity() {
         val usernameInput: TextView = findViewById(R.id.usernameInput)
 
         // check if input is valid
-        if (usernameInput.text.length === 0) {
+        if (usernameInput.text.toString().trim().length === 0) {
             printToast(applicationContext, "Error! Please enter a valid username!")
             return
         }

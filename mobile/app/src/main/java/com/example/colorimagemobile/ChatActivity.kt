@@ -181,7 +181,7 @@ class ChatActivity : AppCompatActivity() {
             return
         }
 
-        if (chatTextInput.length === 0) {
+        if (chatTextInput.trim().length === 0) {
             printToast(applicationContext, "Please enter a message first!")
             return
         }
