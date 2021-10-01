@@ -11,6 +11,7 @@ import { MatInputModule } from "@angular/material/input";
 import { HTTP_INTERCEPTORS } from "@angular/common/http";
 import { JwtInterceptor } from "./jwt.interceptor";
 import { AuthGuard } from "./auth.guard";
+import { MatButtonModule } from "@angular/material/button";
 
 @NgModule({
   declarations: [LoginComponent],
@@ -23,6 +24,7 @@ import { AuthGuard } from "./auth.guard";
     MatFormFieldModule,
     MatInputModule,
     ReactiveFormsModule,
+    MatButtonModule,
   ],
   providers: [
     {
