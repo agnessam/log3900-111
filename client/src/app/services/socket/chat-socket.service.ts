@@ -24,7 +24,6 @@ export class ChatSocketService extends AbstractSocketService {
   }
 
   sendMessage(message: Message): void {
-    this.joinRoom(message.roomName);
     this.emit(TEXT_MESSAGE_EVENT_NAME, message);
   }
 
