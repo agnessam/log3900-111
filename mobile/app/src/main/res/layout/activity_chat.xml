@@ -62,6 +62,7 @@
                 android:layout_alignParentTop="true"
                 android:layout_weight="1"
                 android:background="#eeeeee"
+                android:layout_marginBottom="5px"
                 android:padding="8dp">
 
             </androidx.recyclerview.widget.RecyclerView>
@@ -87,7 +88,8 @@
                     android:id="@+id/chatTextInput"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:minLines="2"
+                    android:maxLines="1"
+                    android:inputType="text"
                     android:hint="Enter your message here"
                     android:layout_marginRight="15dp"
                     android:layout_weight="1"/>

@@ -5,6 +5,7 @@ import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.KeyEvent
 import android.view.MotionEvent
 import android.view.View
 import android.widget.Button
@@ -80,9 +81,9 @@ class ChatActivity : AppCompatActivity() {
         mSocket.emit("room", DEFAULT_ROOM_NAME)
         mSocket.on(TEXT_MESSAGE_EVENT_NAME, onNewMessage)
 
-        // listeners
-        setLogOutListener()
-        setAddChatListener()
+
+
+
 
         // chat adapters
         layoutManager = LinearLayoutManager(this)
@@ -92,7 +93,23 @@ class ChatActivity : AppCompatActivity() {
         adapter = RecyclerAdapter(messageArray, this.username)
         recyclerView.adapter = adapter
 
+        // listeners
+        setLogOutListener()
         setOnScreenTapListener()
+
+        // send button
+        val sendChatBtn: Button = findViewById(R.id.sendBtn)
+        sendChatBtn.setOnClickListener { executeChatSend() }
+
+        // when pressed on Enter
+        val editText: EditText = findViewById(R.id.chatTextInput)
+        editText.setOnKeyListener(View.OnKeyListener { v, keyCode, event ->
+            if (keyCode == KeyEvent.KEYCODE_ENTER && event.action == KeyEvent.ACTION_UP) {
+                executeChatSend()
+                return@OnKeyListener true
+            }
+            return@OnKeyListener false
+        })
     }
 
     override fun onDestroy() {
@@ -152,39 +169,35 @@ class ChatActivity : AppCompatActivity() {
         })
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
-    private fun setAddChatListener() {
-        val sendChatBtn: Button = findViewById(R.id.sendBtn)
+    private fun executeChatSend() {
+        val chatText: EditText = findViewById(R.id.chatTextInput)
+        val chatTextInput = chatText.text.toString()
 
-        sendChatBtn.setOnClickListener(View.OnClickListener {
-            val chatText: EditText = findViewById(R.id.chatTextInput)
-            val chatTextInput = chatText.text.toString()
+        closeKeyboard(this@ChatActivity)
 
-            closeKeyboard(this@ChatActivity)
+        // not connected to server
+        if (!mSocket.isActive || !mSocket.connected()) {
+            printToast(applicationContext, "Error: Server is offline!")
+            return
+        }
 
-            // not connected to server
-            if (!mSocket.isActive || !mSocket.connected()) {
-                printToast(applicationContext, "Error: Server is offline!")
-                return@OnClickListener
-            }
+        if (chatTextInput.trim().length === 0) {
+            printToast(applicationContext, "Please enter a message first!")
+            return
+        }
 
-            if (chatTextInput.length === 0) {
-                printToast(applicationContext, "Please enter a message first!")
-                return@OnClickListener
-            }
+        val currentTime: String = SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(Date())
+        val newMessage = Message(chatTextInput, currentTime, this.username, DEFAULT_ROOM_NAME)
 
-            val currentTime: String = SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(Date())
-            val newMessage = Message(chatTextInput, currentTime, this.username, DEFAULT_ROOM_NAME)
+        // convert message class to JSON format but server receives it as String
+        val gson = Gson()
+        val jsonMessageData = gson.toJson(newMessage)
 
-            // convert message class to JSON format
-            val jsonData = JSONObject(newMessage.toString())
+        mSocket.emit("room", DEFAULT_ROOM_NAME)
+        mSocket.emit(TEXT_MESSAGE_EVENT_NAME, jsonMessageData)
 
-            mSocket.emit("room", DEFAULT_ROOM_NAME)
-            mSocket.emit(TEXT_MESSAGE_EVENT_NAME, jsonData)
-
-            // clear text
-            chatText.text = null
-        })
+        // clear text
+        chatText.text = null
     }
 
     // listens for incoming messages
