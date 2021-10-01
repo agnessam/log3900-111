@@ -1,23 +1,31 @@
 <div class="hero-body">
   <div class="container">
-    <h1 class="title">Chat Page!</h1>
+    <h1 class="title">Chatroom</h1>
+    <br />
 
     <div id="wrapper">
       <div id="menu">
-        <p class="welcome">Hello <b>{{ username }}</b> !</p>
-        <div style="clear:both"></div>
+        <p class="welcome">
+          Hello <b>{{ username }}</b
+          >!
+        </p>
+        <div style="clear: both"></div>
       </div>
 
       <div id="chatbox"></div>
 
       <div id="message">
-        <input type="text" id="usermsg" autocomplete="off" spellcheck="false" placeholder="Enter you message here">
+        <input
+          type="text"
+          id="usermsg"
+          autocomplete="off"
+          spellcheck="false"
+          placeholder="Enter you message here"
+        />
         <button mat-icon-button color="primary" (click)="sendMessage()">
           <mat-icon>send</mat-icon>
         </button>
-     </div>
-
+      </div>
     </div>
-
   </div>
 </div>
