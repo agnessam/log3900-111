@@ -5,6 +5,7 @@ import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.MotionEvent
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
@@ -103,12 +104,18 @@ class ChatActivity : AppCompatActivity() {
     private fun setOnScreenTapListener() {
         val chatMain: ConstraintLayout = findViewById(R.id.chatMain)
         chatMain.setOnTouchListener { v, event ->
-            closeKeyboard(this)
+            closeKeyboard(this@ChatActivity)
         }
 
-        recyclerView.setOnTouchListener { v, event ->
-            closeKeyboard(this)
-        }
+        recyclerView.setOnTouchListener(object : View.OnTouchListener {
+            override fun onTouch(v: View?, event: MotionEvent?): Boolean {
+                when (event?.action) {
+                    MotionEvent.ACTION_DOWN -> closeKeyboard(this@ChatActivity)
+                }
+
+                return v?.onTouchEvent(event) ?: true
+            }
+        })
     }
 
     private fun setLogOutListener() {
@@ -150,10 +157,10 @@ class ChatActivity : AppCompatActivity() {
         val sendChatBtn: Button = findViewById(R.id.sendBtn)
 
         sendChatBtn.setOnClickListener(View.OnClickListener {
-            closeKeyboard(this@ChatActivity)
-
             val chatText: EditText = findViewById(R.id.chatTextInput)
             val chatTextInput = chatText.text.toString()
+
+            closeKeyboard(this@ChatActivity)
 
             // not connected to server
             if (!mSocket.isActive || !mSocket.connected()) {
