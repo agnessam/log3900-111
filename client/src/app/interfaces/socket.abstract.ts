@@ -5,8 +5,8 @@ import {
 } from "src/app/services/socket/socket.constant";
 
 export abstract class AbstractSocketService {
-  readonly SERVER_URL: string = "http://localhost:3000";
-  // "http://colorimage.us-east-1.elasticbeanstalk.com";
+  readonly SERVER_URL: string =
+     "http://colorimage.us-east-1.elasticbeanstalk.com";
   protected namespaceSocket: any;
   protected isConnected: boolean;
 
