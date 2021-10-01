@@ -36,7 +36,7 @@ export class LoginComponent implements OnInit {
         if (!user.token) {
           this.snackBar.open("Username already exists");
         } else {
-          this.router.navigate(["/"]);
+          this.router.navigate(["/chat"]);
         }
       });
   }
