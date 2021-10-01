@@ -16,6 +16,7 @@ import { ControlMenuComponent } from "./components/control-menu/control-menu.com
 import { ErrorMessageComponent } from "./components/error-message/error-message.component";
 import { HomeComponent } from "./components/home/home.component";
 import { NavbarComponent } from "./components/navbar/navbar.component";
+import { ChatComponent } from "./components/chat/chat.component";
 import { NewDrawingAlertComponent } from "./components/new-drawing/new-drawing-alert/new-drawing-alert.component";
 import { NewDrawingFormComponent } from "./components/new-drawing/new-drawing-form/new-drawing-form.component";
 import { NewDrawingComponent } from "./components/new-drawing/new-drawing.component";
@@ -49,6 +50,7 @@ import { WorkspaceComponent } from "./components/workspace/workspace.component";
     AlertMessageComponent,
     HomeComponent,
     NavbarComponent,
+    ChatComponent
   ],
   imports: [
     BrowserModule,
