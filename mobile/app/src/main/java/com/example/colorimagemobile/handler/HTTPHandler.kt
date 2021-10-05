@@ -1,7 +1,7 @@
 package com.example.colorimagemobile.handler
 
-import com.example.colorimagemobile.model.LoginResponse
-import com.example.colorimagemobile.model.User
+import com.example.colorimagemobile.models.LoginResponseModel
+import com.example.colorimagemobile.models.User
 import com.example.colorimagemobile.utils.Constants.Companion.LOGIN_POST_USER
 import com.example.colorimagemobile.utils.Constants.Companion.LOGOUT_POST_USER
 import retrofit2.Call
@@ -14,7 +14,7 @@ interface HTTPHandler {
 
     @Headers("Content-Type: application/json")
     @POST(LOGIN_POST_USER)
-    fun loginUser(@Body user: User): Call<LoginResponse>
+    fun loginUser(@Body user: User): Call<LoginResponseModel>
 
     @Headers("Content-Type: application/json")
     @POST(LOGOUT_POST_USER)

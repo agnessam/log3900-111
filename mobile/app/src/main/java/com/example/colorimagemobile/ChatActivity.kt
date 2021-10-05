@@ -18,8 +18,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.colorimagemobile.adapter.RecyclerAdapter
 import com.example.colorimagemobile.handler.RetrofitInstance
 import com.example.colorimagemobile.handler.SocketHandler
-import com.example.colorimagemobile.model.Message
-import com.example.colorimagemobile.model.User
+import com.example.colorimagemobile.models.Message
+import com.example.colorimagemobile.models.User
 import com.example.colorimagemobile.utils.CommonFun.Companion.closeKeyboard
 import com.example.colorimagemobile.utils.CommonFun.Companion.printToast
 import com.example.colorimagemobile.utils.CommonFun.Companion.redirectTo
@@ -37,10 +37,6 @@ import retrofit2.Response
 import java.util.*
 import kotlin.collections.ArrayList
 import io.socket.client.Socket
-import org.json.JSONObject
-import java.time.Instant
-import java.time.ZoneOffset
-import java.time.format.DateTimeFormatter
 import org.json.JSONException
 import io.socket.emitter.Emitter
 import java.text.SimpleDateFormat
