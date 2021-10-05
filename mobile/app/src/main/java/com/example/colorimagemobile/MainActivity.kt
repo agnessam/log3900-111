@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.example.colorimagemobile.databinding.ActivityMainBinding
 import com.example.colorimagemobile.services.SharedPreferencesService
+import com.example.colorimagemobile.ui.home.HomeActivity
 import com.example.colorimagemobile.utils.CommonFun.Companion.redirectTo
 import com.example.colorimagemobile.utils.Constants.Companion.SHARED_TOKEN_KEY
 
@@ -25,18 +26,8 @@ class MainActivity : AppCompatActivity() {
             // redirect to /login
             redirectTo(this, LoginActivity::class.java)
         } else {
-            // redirect to /chat
-            redirectTo(this, ChatActivity::class.java)
+            // redirect to /home
+            redirectTo(this, HomeActivity::class.java)
         }
-
-//        val navView: BottomNavigationView = binding.navView
-//
-//        val navController = findNavController(R.id.nav_host_fragment_activity_main)
-//        // Passing each menu ID as a set of Ids because each
-//        // menu should be considered as top level destinations.
-//        val appBarConfiguration = AppBarConfiguration(setOf(
-//                R.id.navigation_home, R.id.navigation_dashboard, R.id.navigation_notifications))
-//        setupActionBarWithNavController(navController, appBarConfiguration)
-//        navView.setupWithNavController(navController)
     }
 }
