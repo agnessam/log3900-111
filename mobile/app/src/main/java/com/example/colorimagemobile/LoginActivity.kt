@@ -18,6 +18,7 @@ import com.example.colorimagemobile.model.LoginResponse
 import com.example.colorimagemobile.model.User
 import com.example.colorimagemobile.utils.CommonFun
 import com.example.colorimagemobile.utils.CommonFun.Companion.closeKeyboard
+import com.example.colorimagemobile.utils.CommonFun.Companion.onEnterKeyPressed
 import com.example.colorimagemobile.utils.CommonFun.Companion.printToast
 import com.example.colorimagemobile.utils.CommonFun.Companion.redirectTo
 import com.example.colorimagemobile.utils.Constants.Companion.LOCAL_STORAGE_KEY
@@ -32,44 +33,29 @@ class LoginActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
+        setListeners()
+    }
+
+    private fun setListeners() {
         val loginBtn: Button = findViewById(R.id.loginBtn)
         loginBtn.setOnClickListener { executeLogin() }
 
-        // when pressed on Enter
         val editText: EditText = findViewById(R.id.usernameInput)
-        editText.setOnKeyListener(View.OnKeyListener { v, keyCode, event ->
-            if (keyCode == KeyEvent.KEYCODE_ENTER && event.action == KeyEvent.ACTION_UP) {
-                executeLogin()
-                return@OnKeyListener true
-            }
-            return@OnKeyListener false
-        })
+        onEnterKeyPressed(editText) { executeLogin() }
 
         val loginMain: ConstraintLayout = findViewById(R.id.loginMain)
-        loginMain.setOnTouchListener { v, event ->
-            closeKeyboard(this)
-        }
-    }
-
-    fun setSignUpListener() {
-        // sign up listener -> redirect to sign up page
-//        val signUpBtn: TextView = findViewById(R.id.signUpLink)
-//        signUpBtn.setOnClickListener(View.OnClickListener { view ->
-//            startActivity(Intent(this, SignUpActivity::class.java))
-//            finish()
-//        })
+        loginMain.setOnTouchListener { v, event -> closeKeyboard(this) }
     }
 
     private fun executeLogin() {
         val usernameInput: TextView = findViewById(R.id.usernameInput)
+        val user = User(usernameInput.text.toString(), "kesh")
 
         // check if input is valid
-        if (usernameInput.text.toString().trim().length === 0) {
+        if (user.username.trim().length === 0) {
             printToast(applicationContext, "Error! Please enter a valid username!")
             return
         }
-
-        val user = User(usernameInput.text.toString(), "kesh")
 
         // username ok -> make HTTP POST request
         RetrofitInstance.HTTP.loginUser(user).enqueue(object : Callback<LoginResponse> {

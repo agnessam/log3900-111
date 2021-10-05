@@ -5,7 +5,10 @@ import android.content.Context
 import android.content.Context.INPUT_METHOD_SERVICE
 import android.content.Intent
 import android.view.Gravity
+import android.view.KeyEvent
+import android.view.View
 import android.view.inputmethod.InputMethodManager
+import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat.getSystemService
@@ -14,16 +17,19 @@ import com.example.colorimagemobile.LoginActivity
 
 class CommonFun {
     companion object {
+        // display snackbar/message at the bottom of the app
         fun printToast(applicationContext: Context, message: String) {
             Toast.makeText(applicationContext, message, Toast.LENGTH_LONG).show()
         }
 
+        // close Activity and start another one
         fun redirectTo(currentActivity: Activity, destinationClass: Class<*>?) {
             val intent: Intent = Intent(currentActivity, destinationClass)
             currentActivity.startActivity(intent)
             currentActivity.finish()
         }
 
+        // close/hide Android keyboard
         fun closeKeyboard(currentActivity: Activity): Boolean {
             return try {
                 val inputMethodManager =
@@ -33,6 +39,17 @@ class CommonFun {
             } catch (e: Exception) {
                 false
             }
+        }
+
+        // when pressed on Enter key, execute callback function
+        fun onEnterKeyPressed(editText: EditText, callback: () -> Unit) {
+            editText.setOnKeyListener(View.OnKeyListener { v, keyCode, event ->
+                if (keyCode == KeyEvent.KEYCODE_ENTER && event.action == KeyEvent.ACTION_UP) {
+                    callback()
+                    return@OnKeyListener true
+                }
+                return@OnKeyListener false
+            })
         }
     }
 }
