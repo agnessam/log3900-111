@@ -16,8 +16,8 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.colorimagemobile.adapter.ChatMessageRecyclerAdapter
-import com.example.colorimagemobile.handler.RetrofitInstance
-import com.example.colorimagemobile.handler.SocketHandler
+import com.example.colorimagemobile.services.RetrofitInstance
+import com.example.colorimagemobile.services.SocketHandler
 import com.example.colorimagemobile.models.Message
 import com.example.colorimagemobile.models.User
 import com.example.colorimagemobile.utils.CommonFun.Companion.closeKeyboard

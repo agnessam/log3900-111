@@ -2,7 +2,7 @@ package com.example.colorimagemobile.repositories
 
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
-import com.example.colorimagemobile.handler.RetrofitInstance
+import com.example.colorimagemobile.services.RetrofitInstance
 import com.example.colorimagemobile.models.DataWrapper
 import com.example.colorimagemobile.models.LoginResponseModel
 import com.example.colorimagemobile.models.User

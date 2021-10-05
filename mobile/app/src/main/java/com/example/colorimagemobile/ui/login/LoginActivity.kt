@@ -1,6 +1,5 @@
 package com.example.colorimagemobile
 
-import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
@@ -11,23 +10,26 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.colorimagemobile.models.DataWrapper
 import com.example.colorimagemobile.models.LoginResponseModel
 import com.example.colorimagemobile.models.User
+import com.example.colorimagemobile.services.SharedPreferencesService
 import com.example.colorimagemobile.ui.login.LoginActivityViewModel
 import com.example.colorimagemobile.utils.CommonFun.Companion.closeKeyboard
 import com.example.colorimagemobile.utils.CommonFun.Companion.onEnterKeyPressed
 import com.example.colorimagemobile.utils.CommonFun.Companion.printToast
 import com.example.colorimagemobile.utils.CommonFun.Companion.redirectTo
-import com.example.colorimagemobile.utils.Constants.Companion.LOCAL_STORAGE_KEY
 import com.example.colorimagemobile.utils.Constants.Companion.SHARED_TOKEN_KEY
 import com.example.colorimagemobile.utils.Constants.Companion.SHARED_USERNAME_KEY
 
 class LoginActivity : AppCompatActivity() {
     private lateinit var loginViewModel: LoginActivityViewModel
+    private lateinit var sharedPreferencesService: SharedPreferencesService
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
         loginViewModel = ViewModelProvider(this).get(LoginActivityViewModel::class.java)
+        sharedPreferencesService = SharedPreferencesService(this)
+
         setListeners()
     }
 
@@ -67,16 +69,12 @@ class LoginActivity : AppCompatActivity() {
         }
 
         val userResponse = it.data as LoginResponseModel
-        val token = userResponse.token
-        val username = userResponse.username
+        val token = userResponse.token.toString()
+        val username = userResponse.username.toString()
 
         // save credentials to "local storage"
-        val sharedPref = getSharedPreferences(LOCAL_STORAGE_KEY, Context.MODE_PRIVATE)
-        val editor = sharedPref.edit()
-        editor.apply {
-            putString(SHARED_USERNAME_KEY, username)
-            putString(SHARED_TOKEN_KEY, token)
-        }.apply()
+        sharedPreferencesService.setItem(SHARED_USERNAME_KEY, username)
+        sharedPreferencesService.setItem(SHARED_TOKEN_KEY, token)
 
         // redirect to /chat
         redirectTo(this@LoginActivity, ChatActivity::class.java)

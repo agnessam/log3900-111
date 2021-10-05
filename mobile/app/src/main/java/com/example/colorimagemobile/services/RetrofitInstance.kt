@@ -1,4 +1,4 @@
-package com.example.colorimagemobile.handler
+package com.example.colorimagemobile.services
 
 import com.example.colorimagemobile.utils.Constants.Companion.SERVER_URL
 import retrofit2.Retrofit

@@ -1,16 +1,16 @@
 package com.example.colorimagemobile
 
-import android.content.Context
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.example.colorimagemobile.databinding.ActivityMainBinding
+import com.example.colorimagemobile.services.SharedPreferencesService
 import com.example.colorimagemobile.utils.CommonFun.Companion.redirectTo
-import com.example.colorimagemobile.utils.Constants.Companion.LOCAL_STORAGE_KEY
 import com.example.colorimagemobile.utils.Constants.Companion.SHARED_TOKEN_KEY
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
+    private lateinit var sharedPreferencesService: SharedPreferencesService
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -18,10 +18,10 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val sharedPref = getSharedPreferences(LOCAL_STORAGE_KEY, Context.MODE_PRIVATE)
-        val token = sharedPref.getString(SHARED_TOKEN_KEY, "").toString()
+        sharedPreferencesService = SharedPreferencesService(this)
+        val token = sharedPreferencesService.getItem(SHARED_TOKEN_KEY)
 
-        if (token == "" || token == null) {
+        if (token.isNullOrEmpty()) {
             // redirect to /login
             redirectTo(this, LoginActivity::class.java)
         } else {
