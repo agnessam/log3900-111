@@ -13,6 +13,7 @@ import com.example.colorimagemobile.models.User
 import com.example.colorimagemobile.services.SharedPreferencesService
 import com.example.colorimagemobile.ui.home.HomeActivity
 import com.example.colorimagemobile.ui.login.LoginActivityViewModel
+import com.example.colorimagemobile.ui.signUp.SignUpActivity
 import com.example.colorimagemobile.utils.CommonFun.Companion.closeKeyboard
 import com.example.colorimagemobile.utils.CommonFun.Companion.onEnterKeyPressed
 import com.example.colorimagemobile.utils.CommonFun.Companion.printToast
@@ -37,6 +38,9 @@ class LoginActivity : AppCompatActivity() {
     private fun setListeners() {
         val loginBtn: Button = findViewById(R.id.loginBtn)
         loginBtn.setOnClickListener { executeLogin() }
+
+        val signUpText: TextView = findViewById(R.id.signUpText)
+        signUpText.setOnClickListener { redirectTo(this, SignUpActivity::class.java) }
 
         val editText: EditText = findViewById(R.id.usernameInput)
         onEnterKeyPressed(editText) { executeLogin() }
