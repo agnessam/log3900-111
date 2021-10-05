@@ -7,7 +7,7 @@ import com.example.colorimagemobile.utils.Constants.Companion.LOGOUT_POST_USER
 import retrofit2.Call
 import retrofit2.http.*
 
-interface HTTPHandler {
+interface API {
 
     @GET("api/v1")
     fun getUser(): Call<User>

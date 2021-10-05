@@ -16,7 +16,7 @@ object RetrofitInstance {
             .build()
     }
 
-    val HTTP: HTTPHandler by lazy {
-        retrofit.create(HTTPHandler::class.java)
+    val HTTP: API by lazy {
+        retrofit.create(API::class.java)
     }
 }

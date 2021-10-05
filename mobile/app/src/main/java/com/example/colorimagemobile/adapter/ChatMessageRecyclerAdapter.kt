@@ -10,7 +10,7 @@ import com.example.colorimagemobile.models.Message
 import kotlin.collections.ArrayList
 
 
-class RecyclerAdapter(message: ArrayList<Message>, currentAuthor: String): RecyclerView.Adapter<RecyclerAdapter.ViewHolder>() {
+class ChatMessageRecyclerAdapter(message: ArrayList<Message>, currentAuthor: String): RecyclerView.Adapter<ChatMessageRecyclerAdapter.ViewHolder>() {
     // our card arrays
     var message: ArrayList<Message>
     var currentAuthor: String
@@ -24,7 +24,7 @@ class RecyclerAdapter(message: ArrayList<Message>, currentAuthor: String): Recyc
     }
 
     // creates card view referencing to individual cards
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerAdapter.ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ChatMessageRecyclerAdapter.ViewHolder {
         return if (viewType === OWN_CHAT) {
             val view: View = LayoutInflater.from(parent.context)
                 .inflate(R.layout.card_own_chat, parent, false)
@@ -37,7 +37,7 @@ class RecyclerAdapter(message: ArrayList<Message>, currentAuthor: String): Recyc
     }
 
     // populate our data to card view - iterates over getItemCount() ?
-    override fun onBindViewHolder(holder: RecyclerAdapter.ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ChatMessageRecyclerAdapter.ViewHolder, position: Int) {
         holder.author.text = message[position].author
         holder.message.text = message[position].message
         holder.timestamp.text = message[position].timestamp
