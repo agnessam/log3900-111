@@ -3,8 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/sidebar"
-    app:startDestination="@id/chatFragment">
+    app:startDestination="@id/drawingFragment">
 
+    <fragment
+        android:id="@+id/drawingFragment"
+        android:name="com.example.colorimagemobile.DrawingFragment"
+        android:label="Drawing zone"
+        tools:layout="@layout/fragment_drawing" />
     <fragment
         android:id="@+id/chatFragment"
         android:name="com.example.colorimagemobile.ChatFragment"
@@ -20,4 +25,5 @@
         android:name="com.example.colorimagemobile.UserProfileFragment"
         android:label="User Profile"
         tools:layout="@layout/fragment_user_profile" />
+
 </navigation>
