@@ -8,7 +8,7 @@ import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.ViewModelProvider
 import com.example.colorimagemobile.models.DataWrapper
-import com.example.colorimagemobile.models.LoginResponseModel
+import com.example.colorimagemobile.models.HTTPResponseModel
 import com.example.colorimagemobile.models.User
 import com.example.colorimagemobile.services.SharedPreferencesService
 import com.example.colorimagemobile.ui.home.HomeActivity
@@ -61,7 +61,7 @@ class LoginActivity : AppCompatActivity() {
     }
 
     // response from HTTP request
-    private fun handleLoginResponse(it: DataWrapper<LoginResponseModel>) {
+    private fun handleLoginResponse(it: DataWrapper<HTTPResponseModel>) {
         printToast(applicationContext, it.message as String)
 
         // some error occurred during HTTP request
@@ -69,7 +69,7 @@ class LoginActivity : AppCompatActivity() {
             return
         }
 
-        val userResponse = it.data as LoginResponseModel
+        val userResponse = it.data as HTTPResponseModel
         val token = userResponse.token.toString()
         val username = userResponse.username.toString()
 

@@ -2,7 +2,6 @@ package com.example.colorimagemobile.ui.home
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import androidx.lifecycle.ViewModelProvider
@@ -13,7 +12,7 @@ import androidx.navigation.ui.setupWithNavController
 import com.example.colorimagemobile.LoginActivity
 import com.example.colorimagemobile.R
 import com.example.colorimagemobile.models.DataWrapper
-import com.example.colorimagemobile.models.LoginResponseModel
+import com.example.colorimagemobile.models.HTTPResponseModel
 import com.example.colorimagemobile.models.User
 import com.example.colorimagemobile.services.SharedPreferencesService
 import com.example.colorimagemobile.utils.CommonFun.Companion.printToast
@@ -73,7 +72,7 @@ class HomeActivity : AppCompatActivity() {
         logOutObserver.observe(this, { handleLogOutResponse(it) })
     }
 
-    private fun handleLogOutResponse(it: DataWrapper<LoginResponseModel>) {
+    private fun handleLogOutResponse(it: DataWrapper<HTTPResponseModel>) {
         printToast(applicationContext, it.message as String)
 
         // some error occurred during HTTP request

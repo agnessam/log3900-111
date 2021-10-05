@@ -4,25 +4,25 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.colorimagemobile.models.DataWrapper
-import com.example.colorimagemobile.models.LoginResponseModel
+import com.example.colorimagemobile.models.HTTPResponseModel
 import com.example.colorimagemobile.models.User
 import com.example.colorimagemobile.repositories.AuthRepository
 
 class LoginActivityViewModel: ViewModel() {
 
-    private val loginResponseLiveData: MutableLiveData<DataWrapper<LoginResponseModel>>
+    private val HTTPResponseLiveData: MutableLiveData<DataWrapper<HTTPResponseModel>>
     private val authRepository: AuthRepository
 
     init {
-        loginResponseLiveData = MutableLiveData()
+        HTTPResponseLiveData = MutableLiveData()
         authRepository = AuthRepository()
     }
 
-    fun getLoginResponseLiveData(): LiveData<DataWrapper<LoginResponseModel>> {
-        return loginResponseLiveData
+    fun getLoginResponseLiveData(): LiveData<DataWrapper<HTTPResponseModel>> {
+        return HTTPResponseLiveData
     }
 
-    fun loginUser(user: User): LiveData<DataWrapper<LoginResponseModel>> {
+    fun loginUser(user: User): LiveData<DataWrapper<HTTPResponseModel>> {
         return authRepository.loginUser(user)
     }
 }

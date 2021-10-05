@@ -4,7 +4,7 @@ import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
 // model class for API Response
-class LoginResponseModel {
+class HTTPResponseModel {
     @SerializedName("username")
     @Expose
     val username: String? = null
