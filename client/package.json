@@ -11,8 +11,8 @@
     "test-ci": "ng test --browsers=ChromeHeadless",
     "coverage": "ng test --code-coverage --sourceMap=true",
     "lint": "ng lint --type-check --format stylish",
-    "build-electron":"ng build --base-href ./ && electron .",
-    "package-electron":  "electron-packager ."
+    "build-electron": "ng build --base-href ./ && electron .",
+    "package-electron": "electron-packager ."
   },
   "private": true,
   "dependencies": {
@@ -32,6 +32,7 @@
     "@fortawesome/free-solid-svg-icons": "^5.11.2",
     "@types/file-saver": "^2.0.1",
     "@types/mocha": "^5.2.7",
+    "electron-packager": "^15.4.0",
     "gitinspector": "^0.5.0-dev-2",
     "jwt-decode": "^3.1.2",
     "material-community-components": "^11.0.0",
