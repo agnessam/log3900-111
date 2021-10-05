@@ -11,6 +11,7 @@ import com.example.colorimagemobile.models.DataWrapper
 import com.example.colorimagemobile.models.LoginResponseModel
 import com.example.colorimagemobile.models.User
 import com.example.colorimagemobile.services.SharedPreferencesService
+import com.example.colorimagemobile.ui.home.HomeActivity
 import com.example.colorimagemobile.ui.login.LoginActivityViewModel
 import com.example.colorimagemobile.utils.CommonFun.Companion.closeKeyboard
 import com.example.colorimagemobile.utils.CommonFun.Companion.onEnterKeyPressed
@@ -77,6 +78,6 @@ class LoginActivity : AppCompatActivity() {
         sharedPreferencesService.setItem(SHARED_TOKEN_KEY, token)
 
         // redirect to /chat
-        redirectTo(this@LoginActivity, ChatActivity::class.java)
+        redirectTo(this@LoginActivity, HomeActivity::class.java)
     }
 }

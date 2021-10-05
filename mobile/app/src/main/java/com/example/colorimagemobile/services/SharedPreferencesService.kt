@@ -26,4 +26,10 @@ class SharedPreferencesService(context: Context) {
     fun getItem(key: String): String {
         return sharedPreferences.getString(key, "").toString()
     }
+
+    // removes everything from localStorage
+    fun clear() {
+        val editor = sharedPreferences.edit()
+        editor.clear().apply()
+    }
 }
