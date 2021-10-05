@@ -7,22 +7,22 @@
 
     <fragment
         android:id="@+id/drawingFragment"
-        android:name="com.example.colorimagemobile.DrawingFragment"
+        android:name="com.example.colorimagemobile.ui.home.fragments.drawing.DrawingFragment"
         android:label="Drawing zone"
         tools:layout="@layout/fragment_drawing" />
     <fragment
         android:id="@+id/chatFragment"
-        android:name="com.example.colorimagemobile.ChatFragment"
+        android:name="com.example.colorimagemobile.ui.home.fragments.chat.ChatFragment"
         android:label="Chat"
         tools:layout="@layout/fragment_chat" />
     <fragment
         android:id="@+id/notificationFragment"
-        android:name="com.example.colorimagemobile.NotificationFragment"
+        android:name="com.example.colorimagemobile.ui.home.fragments.notification.NotificationFragment"
         android:label="Notification"
         tools:layout="@layout/fragment_notification" />
     <fragment
         android:id="@+id/userProfileFragment"
-        android:name="com.example.colorimagemobile.UserProfileFragment"
+        android:name="com.example.colorimagemobile.ui.home.fragments.userProfile.UserProfileFragment"
         android:label="User Profile"
         tools:layout="@layout/fragment_user_profile" />
 
