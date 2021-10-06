@@ -27,6 +27,7 @@ import { ToolParameterModule } from "./components/tool-parameters/tool-parameter
 import { ToolsColorPickerComponent } from "./components/tools-color-picker/tools-color-picker.component";
 import { ToolsColorComponent } from "./components/tools-color/tools-color.component";
 import { WorkspaceComponent } from "./components/workspace/workspace.component";
+import { TestDatabaseComponent } from './components/test-database/test-database.component';
 
 @NgModule({
   declarations: [
@@ -50,7 +51,8 @@ import { WorkspaceComponent } from "./components/workspace/workspace.component";
     AlertMessageComponent,
     HomeComponent,
     NavbarComponent,
-    ChatComponent
+    ChatComponent,
+    TestDatabaseComponent
   ],
   imports: [
     BrowserModule,
@@ -75,6 +77,7 @@ import { WorkspaceComponent } from "./components/workspace/workspace.component";
     ControlMenuComponent,
     ErrorMessageComponent,
     AlertMessageComponent,
+    TestDatabaseComponent,
   ],
   providers: [],
   bootstrap: [AppComponent],

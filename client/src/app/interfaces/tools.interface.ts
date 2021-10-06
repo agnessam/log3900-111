@@ -1,7 +1,6 @@
 import { FormGroup } from '@angular/forms';
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import { ICommand } from 'src/app/interfaces/command.interface';
-
 /// Interface pour tous les outils
 export interface Tools {
     readonly id: number;
