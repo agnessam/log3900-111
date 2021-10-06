@@ -1,4 +1,4 @@
-package com.example.colorimagemobile.handler
+package com.example.colorimagemobile.services
 
 import com.example.colorimagemobile.utils.Constants.Companion.SERVER_URL
 import retrofit2.Retrofit
@@ -16,7 +16,7 @@ object RetrofitInstance {
             .build()
     }
 
-    val HTTP: HTTPHandler by lazy {
-        retrofit.create(HTTPHandler::class.java)
+    val HTTP: API by lazy {
+        retrofit.create(API::class.java)
     }
 }
