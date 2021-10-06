@@ -9,7 +9,9 @@ import swaggerJSDoc from 'swagger-jsdoc';
 import swaggerUi from 'swagger-ui-express';
 import { helloWorldController } from './controllers/hello-world.controller';
 import { TYPES } from './types';
+import logger from 'morgan';
 import { AuthenticationController } from './controllers/authentication.controller';
+import { DatabaseController } from './controllers/database.controller';
 
 @injectable()
 export class Application {
@@ -22,6 +24,8 @@ export class Application {
 		private helloWorldController: helloWorldController,
 		@inject(TYPES.AuthenticationController)
 		private authenticationController: AuthenticationController,
+		@inject(TYPES.DatabaseController) 
+		private databaseController: DatabaseController,
 	) {
 		this.app = express();
 		this.swaggerOptions = {
@@ -51,13 +55,15 @@ export class Application {
 			passport.authenticate('jwt', { session: false }),
 			this.helloWorldController.router,
 		);
+		this.app.use('/api/v1/database', this.databaseController.router);
 		this.errorHandling();
 	}
 
 	// Middleware configuration
 	private config(): void {
+		this.app.use(logger('dev'));
 		this.app.use(express.json());
-		this.app.use(express.urlencoded({ extended: false }));
+		this.app.use(express.urlencoded({ extended: true }));
 		this.app.use(cors());
 		this.app.use(passport.initialize());
 		this.configurePassport();

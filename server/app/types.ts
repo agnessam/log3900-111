@@ -4,4 +4,6 @@ export const TYPES = {
 	HelloWorldController: Symbol('HelloWorldController'),
 	AuthenticationController: Symbol('AuthenticationController'),
 	ChatSocketService: Symbol('ChatSocketService'),
+	DatabaseController: Symbol('DatabaseController'),
+    DatabaseService: Symbol('DatabaseService'),
 };
