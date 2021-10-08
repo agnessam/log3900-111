@@ -6,6 +6,7 @@ import com.example.colorimagemobile.services.RetrofitInstance
 import com.example.colorimagemobile.models.DataWrapper
 import com.example.colorimagemobile.models.HTTPResponseModel
 import com.example.colorimagemobile.models.User
+import com.example.colorimagemobile.utils.Constants.Companion.DEBUG_KEY
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -23,7 +24,7 @@ class AuthRepository {
         httpClient.loginUser(user).enqueue(object : Callback<HTTPResponseModel> {
             override fun onResponse(call: Call<HTTPResponseModel>, response: Response<HTTPResponseModel>) {
                 if (!response.isSuccessful) {
-                    Log.d("HTTP request error", response.message())
+                    Log.d(DEBUG_KEY, response.message())
                     authLiveData.value = DataWrapper(null, "An error occurred!", true)
                     return
                 }
@@ -34,7 +35,7 @@ class AuthRepository {
 
             // duplicate username is coming through here
             override fun onFailure(call: Call<HTTPResponseModel>, t: Throwable) {
-                Log.d("User failed to login", t.message!!)
+                Log.d(DEBUG_KEY, "User failed to login ${t.message!!}")
                 authLiveData.value = DataWrapper(null, "Username possibly already exists!", true)
             }
         })
@@ -47,7 +48,7 @@ class AuthRepository {
         httpClient.logoutUser(user).enqueue(object : Callback<Boolean> {
             override fun onResponse(call: Call<Boolean>, response: Response<Boolean>) {
                 if (!response.isSuccessful) {
-                    Log.d("HTTP request error", response.message())
+                    Log.d(DEBUG_KEY, response.message())
                     authLiveData.value = DataWrapper(null, "An error occurred!", true)
                     return
                 }
@@ -56,7 +57,7 @@ class AuthRepository {
             }
 
             override fun onFailure(call: Call<Boolean>, t: Throwable) {
-                Log.d("User failed to log out", t.message!!)
+                Log.d(DEBUG_KEY,"User failed to log out ${t.message!!}")
                 authLiveData.value = DataWrapper(null, "Failed to logout!\nAn error occurred", true)
             }
         })
