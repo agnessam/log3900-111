@@ -38,4 +38,10 @@ class FormValidator(layouts: ArrayList<TextInputLayout>, inputs: ArrayList<TextI
         return isInputInvalid
     }
 
+    // check if email is valid: must pass email index of the form
+    fun validateEmail(emailIndex: Int) {
+        val email = this.inputs[emailIndex].text.toString()
+        val isEmailValid = android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
+        this.layouts[emailIndex].error = if (isEmailValid) "" else "Invalid Email Address"
+    }
 }

@@ -69,7 +69,7 @@ class LoginActivity : AppCompatActivity() {
         val containsError = formValidator.containsError()
         val invalidInputLength = formValidator.isInputEmpty(resources.getString(R.string.required))
 
-        // activate/deactivate login button if form contains error or one of the inputs is empty
+        // activate/deactivate login button if form contains error or isEmpty
         canSubmit = !containsError && !invalidInputLength
         toggleButton(binding.loginBtn, canSubmit)
     }
