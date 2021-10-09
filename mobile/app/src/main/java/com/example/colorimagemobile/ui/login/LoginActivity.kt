@@ -63,8 +63,7 @@ class LoginActivity : AppCompatActivity() {
 
     // handles UI error messages depending on form errors
     private fun handleInputError(text: CharSequence?, inputLayout: TextInputLayout) {
-        val message = if (text!!.contains(" ")) "No spaces are allowed!" else ""
-        inputLayout.error = message
+        inputLayout.error = formValidator.getWhitespaceText(text)
 
         val containsError = formValidator.containsError()
         val invalidInputLength = formValidator.isInputEmpty(resources.getString(R.string.required))

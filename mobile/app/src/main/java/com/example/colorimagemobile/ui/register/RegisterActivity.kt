@@ -49,8 +49,7 @@ class RegisterActivity : AppCompatActivity() {
     }
 
     private fun handleInputError(text: CharSequence?, inputLayout: TextInputLayout) {
-        val message = if (text!!.contains(" ")) "No spaces are allowed!" else ""
-        inputLayout.error = message
+        inputLayout.error = formValidator.getWhitespaceText(text)
 
         formValidator.validateEmail(EMAIL_INDEX)
         val containsError = formValidator.containsError()

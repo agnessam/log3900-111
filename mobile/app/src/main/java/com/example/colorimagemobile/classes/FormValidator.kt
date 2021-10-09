@@ -7,6 +7,11 @@ class FormValidator(layouts: ArrayList<TextInputLayout>, inputs: ArrayList<TextI
     private var layouts: ArrayList<TextInputLayout> = layouts
     private var inputs: ArrayList<TextInputEditText> = inputs
 
+    // returns default error message underneath input: checks if text contains a space
+    fun getWhitespaceText(text: CharSequence?): String {
+        return if (text!!.contains(" ")) "No spaces are allowed!" else ""
+    }
+
     // contains some kind of error in the form
     fun containsError(): Boolean {
         for (layout in this.layouts) {
