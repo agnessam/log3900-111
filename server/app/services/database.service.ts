@@ -1,35 +1,34 @@
 import { injectable } from 'inversify';
 import { Collection, MongoClient, Filter} from 'mongodb';
-import 'reflect-metadata';
-import * as CONSTANTS from '../../../client/src/app/constants';
 import { User } from '../../../client/src/app/interfaces/interface';
-
-const DATABASE_URL = 'mongodb+srv://team111:polymtl2020@cluster0.dnwf5.mongodb.net/myFirstDatabase?retryWrites=true&w=majority';
-const DATABASE_NAME = 'ColorImage'; 
-const DATABASE_COLLECTION : string[] = ["UserParameter","GroupParameter","Drawing","Follower","ChatChanel","InstantMessage"]
+import * as ENV from '../environnement/env';
+import 'reflect-metadata';
 
 @injectable()
-export class DatabaseService {
-
-    // the alert and/or console.log will be delete when we finish coding the part that use them
-    
+export class DatabaseService {   
     UserCollection: Collection<User>;
+    ExistingUserData : User ;
+    logginCredential : string [];
+    UniquePseudo : boolean;
+    UserDataLenght : boolean;
+
 
     constructor() {
-        MongoClient.connect(DATABASE_URL)
-            .then((client: MongoClient) => {
-                this.UserCollection = client.db(DATABASE_NAME).collection(DATABASE_COLLECTION[0]);
-                console.log('Connexion a la base de donnée reussie'); // to be replace after by windows alert
+     // Connexion a la base de données MongoDb et la collection UserParametrer      
+        MongoClient.connect(ENV.DATABASE_URL)
+            .then((client: MongoClient) => {            
+                this.UserCollection = client.db(ENV.DATABASE_NAME).collection(ENV.DATABASE_COLLECTION[0]);
+                console.log('Connexion a la base de donnée reussie'); 
             })
             .catch(() => {
-                console.error('Erreur de connexion. Impossible de se connecter a la base de donnée');// to be replace after by windows alert
+                console.log('Erreur de connexion. Impossible de se connecter a la base de donnée');
                 process.exit(1);
             });
 
     }
-    // create user account
+    // creation de compte utilisateur
         async addUserData(data: User): Promise<void> {
-            if (this.validatedrawingdata(data)) {
+            if (this.validateUserdata(data)) {
                 this.UserCollection.insertOne(data).catch((error: Error) => {
                     throw error;
                 });
@@ -37,7 +36,8 @@ export class DatabaseService {
                 alert('Invalide user data');
             }
         }
-    // get all user parameter from database
+
+    // Recuperer tous les utilisateurs existants aainsi que leurs parametres
         async getAll(): Promise<User[]> {
             return  this.UserCollection.find({}).toArray()
                     .then((USERPARAM: User[]) => {
@@ -48,10 +48,10 @@ export class DatabaseService {
                     });
         }
 
-    // delete user from database : delete account from user parameter
-        async deleteDrawing(pseudo: string): Promise<void> {
+    // Supprimer un compte  utilisateur 
+        async deleteuseraccount(pseudo: string): Promise<void> {
             return this.UserCollection
-                .findOneAndDelete({ name: pseudo })
+                .findOneAndDelete({ username: pseudo })
             .then(() => {
                 alert('dessin supprimer de la base de donnée');
             })
@@ -61,24 +61,25 @@ export class DatabaseService {
         }
 
 
-    // get user search by pseudo in all document in the collection 
-    // verification client side for matching pseudo and mdp with form control : loggin verification
-    async getUserbyPseudo(pseudo:string): Promise <User[]> {
+    // Chercher utilisateur dans la base de donnees a partir de pseudonyme
+    async getUserbyPseudo(pseudo:string): Promise <User> {
             const filter: Filter<User> = {pseudonyme: pseudo };
-            return  this.UserCollection.find(filter).toArray()
-                .then((user: User[]) => {
+            return  this.UserCollection.findOne(filter)
+                .then((user: User) => {
+                    this.ExistingUserData = user;
                     return user;
                 })
                 .catch((error: Error) => {
                     throw error;
                 });
 
-        }
+        }      
+        
 
-    // Update user data : find user by pseudo and update all field modify
+    // Chercher utilisateur a partir du pseudo et faire une mise a jour des donnees
     async modifyUserData(data: User): Promise<void> {
             const filter: Filter<User> = {pseudonyme: data.pseudonyme};
-            if (this.validatedrawingdata(data)) {
+            if (this.validateUserdata(data)) {
                 this.UserCollection.findOneAndUpdate(filter,data).catch((error: Error) => {
                      throw error;
                  });
@@ -87,24 +88,58 @@ export class DatabaseService {
                 }
             }
 
-// second verification server side field not empty required
-    private validatedrawingdata(data: User): boolean {
-        return this.validatePseudonyme(data.pseudonyme) && 
-               this.validateFirsName(data.firstName) && 
-               this.validateLastName(data.lastName) && 
-               this.validateEmail(data.email) ;
+// Fonction verifiant le pseudonyme et le mot de passe    
+    async  ValidateUserlogin (userdata: string[]) : Promise<string[]> {
+        this.getUserbyPseudo(userdata[0]);
+        if (this.ValidateUniquePseudo (userdata[0]) && (userdata[1] == this.ExistingUserData.password) ){    
+            this.logginCredential[0]=userdata[0];
+            this.logginCredential[1]=userdata[1];                   
+        }
+        else{
+           alert("Le pseudonyme ou le mot de passe est erronné.")
+        }
+        return this.logginCredential;
+    }  
+
+// second verification server side 
+    private validateUserdata(data: User): boolean {
+        return  this.validateDataLenght(data) && 
+                this.validateEmail(data.email)  && 
+                this.ValidateUniquePseudo(data.pseudonyme);
     }
-    private validatePseudonyme(pseudo: string ): boolean {
-        return pseudo !== CONSTANTS.EMPTY_STRING ;
-    }
-    private validateFirsName(firstname: string ): boolean {
-        return firstname !== CONSTANTS.EMPTY_STRING  ;
-    }
-    private validateLastName(lastname: string ): boolean {
-        return lastname !== CONSTANTS.EMPTY_STRING  ;
-    }
+ // verification email    
     private validateEmail(email: string ): boolean {
-        return email !== CONSTANTS.EMPTY_STRING  ;
+            const regularExpression = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+            return regularExpression.test(String(email).toLowerCase());
     }
+
+ // Validation de la longueur des champs minimal et maximal   
+    private validateDataLenght(userdata : User ): boolean {
+        if ((userdata.firstName.length > 0 && userdata.firstName.length <=15) &&
+            (userdata.lastName.length > 0 && userdata.lastName.length <=15) &&
+            (userdata.pseudonyme.length > 0 && userdata.pseudonyme.length <=15) &&
+            (userdata.email.length > 0 && userdata.email.length <=15) &&
+            (userdata.password.length > 0 && userdata.password.length <=15))
+            {
+                this.UserDataLenght = true;
+            }
+        else {
+                this.UserDataLenght = false;
+       }
+       return this.UserDataLenght;
+
+    }
+
+   // validation pseudo existant dans la base de donnees 
+    private ValidateUniquePseudo(pseudo: string ): boolean {
+        if (this.ExistingUserData.pseudonyme.length == 1)
+        {
+            this.UniquePseudo = true;
+        }
+        else{
+            this.UniquePseudo = false;
+        }
+                return this.UniquePseudo ;
+    } 
   
 }

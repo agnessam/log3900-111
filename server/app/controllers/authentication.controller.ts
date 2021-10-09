@@ -2,19 +2,25 @@ import { Router } from 'express';
 import { injectable } from 'inversify';
 import passport from 'passport';
 import jwt from 'jsonwebtoken';
+//import DatabaseController from './database.controller';
 
 @injectable()
 export class AuthenticationController {
 	onlineUsers: Set<string>;
 	router: Router;
 
-	constructor() {
+	constructor(
+		//private DatabaseController: DatabaseController
+		) {
 		this.onlineUsers = new Set();
 		this.configureRouter();
 	}
 
 	private configureRouter() {
 		this.router = Router();
+
+		//this.DatabaseController.userIsLog[0] = username = pseudo
+		///this.DatabaseController.userIsLog[1] = passsword
 
 		this.router.post('/login', async (req, res, next) => {
 			passport.authenticate('login', async (err, user, info) => {
