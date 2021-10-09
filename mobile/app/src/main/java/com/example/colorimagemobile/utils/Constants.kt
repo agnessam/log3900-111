@@ -7,8 +7,9 @@ class Constants {
 //        const val SERVER_URL = "http://colorimage.us-east-1.elasticbeanstalk.com"
 
         // routes
-        const val LOGIN_POST_USER = "api/v1/login"
-        const val LOGOUT_POST_USER = "api/v1/logout"
+        const val LOGIN_USER = "api/users/login"
+        const val LOGOUT_USER = "api/users/logout"
+        const val REGISTER_USER = "api/users/register"
 
         // sharedPreferences keys
         const val LOCAL_STORAGE_KEY = "localStorage"

@@ -84,15 +84,15 @@ class LoginActivity : AppCompatActivity() {
     }
 
     // response from HTTP request
-    private fun handleLoginResponse(it: DataWrapper<HTTPResponseModel>) {
-        printToast(applicationContext, it.message as String)
+    private fun handleLoginResponse(response: DataWrapper<HTTPResponseModel>) {
+        printToast(applicationContext, response.message as String)
 
         // some error occurred during HTTP request
-        if (it.isError as Boolean) {
+        if (response.isError as Boolean) {
             return
         }
 
-        val userResponse = it.data as HTTPResponseModel
+        val userResponse = response.data as HTTPResponseModel
         val token = userResponse.token.toString()
         val username = userResponse.username.toString()
 
@@ -100,7 +100,7 @@ class LoginActivity : AppCompatActivity() {
         sharedPreferencesService.setItem(SHARED_USERNAME_KEY, username)
         sharedPreferencesService.setItem(SHARED_TOKEN_KEY, token)
 
-        // redirect to /chat
+        // redirect to /home
         redirectTo(this@LoginActivity, HomeActivity::class.java)
     }
 }

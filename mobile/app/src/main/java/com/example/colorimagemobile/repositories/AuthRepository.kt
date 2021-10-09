@@ -3,6 +3,7 @@ package com.example.colorimagemobile.repositories
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.example.colorimagemobile.classes.LoginUser
+import com.example.colorimagemobile.classes.RegisterNewUser
 import com.example.colorimagemobile.services.RetrofitInstance
 import com.example.colorimagemobile.models.DataWrapper
 import com.example.colorimagemobile.models.HTTPResponseModel
@@ -59,6 +60,30 @@ class AuthRepository {
             override fun onFailure(call: Call<Boolean>, t: Throwable) {
                 Log.d(DEBUG_KEY,"User failed to log out ${t.message!!}")
                 authLiveData.value = DataWrapper(null, "Failed to logout!\nAn error occurred", true)
+            }
+        })
+
+        return authLiveData
+    }
+
+    // create new user: TO CHANGE
+    fun registerUser(newUserData: RegisterNewUser): MutableLiveData<DataWrapper<HTTPResponseModel>> {
+        httpClient.registerUser(newUserData).enqueue(object : Callback<HTTPResponseModel> {
+            override fun onResponse(call: Call<HTTPResponseModel>, response: Response<HTTPResponseModel>) {
+                if (!response.isSuccessful) {
+                    Log.d(DEBUG_KEY, response.message())
+                    authLiveData.value = DataWrapper(null, "An error occurred!", true)
+                    return
+                }
+
+                // account successfully created
+                authLiveData.value = DataWrapper(response.body(), "Account successfully created", false)
+            }
+
+            // duplicate username is coming through here
+            override fun onFailure(call: Call<HTTPResponseModel>, t: Throwable) {
+                Log.d(DEBUG_KEY, "Failed to create account ${t.message!!}")
+                authLiveData.value = DataWrapper(null, "Failed to create account!", true)
             }
         })
 
