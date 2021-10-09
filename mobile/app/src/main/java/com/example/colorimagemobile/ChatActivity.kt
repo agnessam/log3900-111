@@ -18,8 +18,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.colorimagemobile.adapter.ChatMessageRecyclerAdapter
 import com.example.colorimagemobile.services.RetrofitInstance
 import com.example.colorimagemobile.services.SocketHandler
-import com.example.colorimagemobile.models.Message
-import com.example.colorimagemobile.models.User
+import com.example.colorimagemobile.classes.Message
+import com.example.colorimagemobile.classes.User
+import com.example.colorimagemobile.ui.login.LoginActivity
 import com.example.colorimagemobile.utils.CommonFun.Companion.closeKeyboard
 import com.example.colorimagemobile.utils.CommonFun.Companion.printToast
 import com.example.colorimagemobile.utils.CommonFun.Companion.redirectTo

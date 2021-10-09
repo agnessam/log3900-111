@@ -1,4 +1,4 @@
-package com.example.colorimagemobile.models
+package com.example.colorimagemobile.classes
 
 class User(username: String, password: String) {
     var username: String = ""

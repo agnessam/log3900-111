@@ -1,4 +1,4 @@
-package com.example.colorimagemobile.models
+package com.example.colorimagemobile.classes
 
 class Message(message: String, timestamp: String, author: String, roomName: String) {
     var message: String = ""

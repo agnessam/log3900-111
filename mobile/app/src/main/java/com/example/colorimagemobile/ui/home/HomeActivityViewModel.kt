@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import com.example.colorimagemobile.models.DataWrapper
 import com.example.colorimagemobile.models.HTTPResponseModel
-import com.example.colorimagemobile.models.User
+import com.example.colorimagemobile.classes.User
 import com.example.colorimagemobile.repositories.AuthRepository
 
 class HomeActivityViewModel : ViewModel() {

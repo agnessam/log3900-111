@@ -10,7 +10,7 @@ import com.example.colorimagemobile.R
 import com.example.colorimagemobile.databinding.ActivityLoginBinding
 import com.example.colorimagemobile.models.DataWrapper
 import com.example.colorimagemobile.models.HTTPResponseModel
-import com.example.colorimagemobile.models.User
+import com.example.colorimagemobile.classes.User
 import com.example.colorimagemobile.services.SharedPreferencesService
 import com.example.colorimagemobile.ui.home.HomeActivity
 import com.example.colorimagemobile.ui.signUp.SignUpActivity
