@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.colorimagemobile.databinding.ActivityMainBinding
 import com.example.colorimagemobile.services.SharedPreferencesService
 import com.example.colorimagemobile.ui.home.HomeActivity
+import com.example.colorimagemobile.ui.login.LoginActivity
 import com.example.colorimagemobile.utils.CommonFun.Companion.redirectTo
 import com.example.colorimagemobile.utils.Constants.Companion.SHARED_TOKEN_KEY
 

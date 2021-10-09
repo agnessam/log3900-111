@@ -2,13 +2,9 @@ package com.example.colorimagemobile.ui.signUp
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.Button
-import android.widget.EditText
 import android.widget.TextView
-import androidx.constraintlayout.widget.ConstraintLayout
-import com.example.colorimagemobile.LoginActivity
+import com.example.colorimagemobile.ui.login.LoginActivity
 import com.example.colorimagemobile.R
-import com.example.colorimagemobile.utils.CommonFun
 import com.example.colorimagemobile.utils.CommonFun.Companion.redirectTo
 
 class SignUpActivity : AppCompatActivity() {

@@ -9,7 +9,7 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
-import com.example.colorimagemobile.LoginActivity
+import com.example.colorimagemobile.ui.login.LoginActivity
 import com.example.colorimagemobile.R
 import com.example.colorimagemobile.models.DataWrapper
 import com.example.colorimagemobile.models.HTTPResponseModel

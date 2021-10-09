@@ -9,7 +9,7 @@
     android:focusable="true"
     android:focusableInTouchMode="true"
     android:background="@drawable/ic_home_theme"
-    tools:context=".LoginActivity">
+    tools:context=".ui.login.LoginActivity">
 
     <LinearLayout
         app:layout_constraintRight_toRightOf="parent"
@@ -94,6 +94,8 @@
                             android:id="@+id/usernameInputText"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:maxLines="1"
+                            android:inputType="text"
                             android:maxLength="@integer/maxInputLength" />
 
                     </com.google.android.material.textfield.TextInputLayout>
@@ -117,6 +119,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:inputType="textPassword"
+                            android:maxLines="1"
                             android:maxLength="@integer/maxInputLength"/>
 
                     </com.google.android.material.textfield.TextInputLayout>
