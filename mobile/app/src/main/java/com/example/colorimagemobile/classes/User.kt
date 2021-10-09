@@ -1,11 +1,6 @@
 package com.example.colorimagemobile.classes
 
-class User(username: String, password: String) {
-    var username: String = ""
-    var password: String = ""
+// classes for different uses related to User
 
-    init {
-        this.username = username
-        this.password = password
-    }
-}
+data class LoginUser(val username: String, val password: String)
+data class RegisterNewUser(val firstName: String, val lastName: String, val username: String, val email: String, val password: String)

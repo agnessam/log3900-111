@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">ColorImage</string>
 
-<!--    Fragments-->
+    <!--    Fragments-->
     <string name="title_notifications">Notifications</string>
     <string name="title_drawing">Drawing</string>
     <string name="title_chat">Chat</string>
@@ -10,6 +10,8 @@
 
     <string name="new_message">New to ColorImage?</string>
     <string name="get_started"><u>Get Started</u></string>
+    <string name="existing_account">Already have an account?</string>
+    <string name="login_action"><u>Log In</u></string>
 
     <string name="required">* Required</string>
 </resources>

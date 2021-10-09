@@ -2,18 +2,16 @@ package com.example.colorimagemobile.ui.login
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.Button
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.ViewModelProvider
 import com.example.colorimagemobile.R
+import com.example.colorimagemobile.classes.LoginUser
 import com.example.colorimagemobile.databinding.ActivityLoginBinding
 import com.example.colorimagemobile.models.DataWrapper
 import com.example.colorimagemobile.models.HTTPResponseModel
-import com.example.colorimagemobile.classes.User
 import com.example.colorimagemobile.services.SharedPreferencesService
 import com.example.colorimagemobile.ui.home.HomeActivity
-import com.example.colorimagemobile.ui.signUp.SignUpActivity
+import com.example.colorimagemobile.ui.register.RegisterActivity
 import com.example.colorimagemobile.utils.CommonFun.Companion.closeKeyboard
 import com.example.colorimagemobile.utils.CommonFun.Companion.onEnterKeyPressed
 import com.example.colorimagemobile.utils.CommonFun.Companion.printToast
@@ -43,15 +41,11 @@ class LoginActivity : AppCompatActivity() {
 
     private fun setListeners() {
         binding.loginBtn.setOnClickListener { executeLogin() }
-
-        val registerBtn: Button = findViewById(R.id.registerBtn)
-        registerBtn.setOnClickListener { redirectTo(this, SignUpActivity::class.java) }
+        binding.registerBtn.setOnClickListener { redirectTo(this, RegisterActivity::class.java) }
+        binding.loginMain.setOnTouchListener { v, event -> closeKeyboard(this) }
 
         onEnterKeyPressed(binding.usernameInputText) { executeLogin() }
         onEnterKeyPressed(binding.passwordInputText) { executeLogin() }
-
-        val loginMain: ConstraintLayout = findViewById(R.id.loginMain)
-        loginMain.setOnTouchListener { v, event -> closeKeyboard(this) }
 
         // inputs error handling
         binding.usernameInputText.doOnTextChanged { text, start, before, count ->  handleInputError(text, binding.usernameInputLayout) }
@@ -84,7 +78,7 @@ class LoginActivity : AppCompatActivity() {
     private fun executeLogin() {
         if (!canSubmit) return
 
-        val user = User(binding.usernameInputText.text.toString(), binding.passwordInputText.text.toString())
+        val user = LoginUser(binding.usernameInputText.text.toString(), binding.passwordInputText.text.toString())
 
         // username ok -> make HTTP POST request
         val loginObserver = loginViewModel.loginUser(user)

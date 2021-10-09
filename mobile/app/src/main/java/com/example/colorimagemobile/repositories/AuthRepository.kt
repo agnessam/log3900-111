@@ -2,10 +2,10 @@ package com.example.colorimagemobile.repositories
 
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
+import com.example.colorimagemobile.classes.LoginUser
 import com.example.colorimagemobile.services.RetrofitInstance
 import com.example.colorimagemobile.models.DataWrapper
 import com.example.colorimagemobile.models.HTTPResponseModel
-import com.example.colorimagemobile.classes.User
 import com.example.colorimagemobile.utils.Constants.Companion.DEBUG_KEY
 import retrofit2.Call
 import retrofit2.Callback
@@ -20,7 +20,7 @@ class AuthRepository {
         authLiveData = MutableLiveData()
     }
 
-    fun loginUser(user: User): MutableLiveData<DataWrapper<HTTPResponseModel>> {
+    fun loginUser(user: LoginUser): MutableLiveData<DataWrapper<HTTPResponseModel>> {
         httpClient.loginUser(user).enqueue(object : Callback<HTTPResponseModel> {
             override fun onResponse(call: Call<HTTPResponseModel>, response: Response<HTTPResponseModel>) {
                 if (!response.isSuccessful) {
@@ -44,7 +44,7 @@ class AuthRepository {
     }
 
     // when user logs out
-    fun logoutUser(user: User): MutableLiveData<DataWrapper<HTTPResponseModel>>  {
+    fun logoutUser(user: LoginUser): MutableLiveData<DataWrapper<HTTPResponseModel>>  {
         httpClient.logoutUser(user).enqueue(object : Callback<Boolean> {
             override fun onResponse(call: Call<Boolean>, response: Response<Boolean>) {
                 if (!response.isSuccessful) {

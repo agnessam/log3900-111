@@ -3,9 +3,9 @@ package com.example.colorimagemobile.ui.login
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.colorimagemobile.classes.LoginUser
 import com.example.colorimagemobile.models.DataWrapper
 import com.example.colorimagemobile.models.HTTPResponseModel
-import com.example.colorimagemobile.classes.User
 import com.example.colorimagemobile.repositories.AuthRepository
 
 class LoginActivityViewModel: ViewModel() {
@@ -22,7 +22,7 @@ class LoginActivityViewModel: ViewModel() {
         return HTTPResponseLiveData
     }
 
-    fun loginUser(user: User): LiveData<DataWrapper<HTTPResponseModel>> {
+    fun loginUser(user: LoginUser): LiveData<DataWrapper<HTTPResponseModel>> {
         return authRepository.loginUser(user)
     }
 }

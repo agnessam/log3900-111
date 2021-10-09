@@ -11,9 +11,9 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.colorimagemobile.ui.login.LoginActivity
 import com.example.colorimagemobile.R
+import com.example.colorimagemobile.classes.LoginUser
 import com.example.colorimagemobile.models.DataWrapper
 import com.example.colorimagemobile.models.HTTPResponseModel
-import com.example.colorimagemobile.classes.User
 import com.example.colorimagemobile.services.SharedPreferencesService
 import com.example.colorimagemobile.utils.CommonFun.Companion.printToast
 import com.example.colorimagemobile.utils.CommonFun.Companion.redirectTo
@@ -66,7 +66,7 @@ class HomeActivity : AppCompatActivity() {
 
     private fun logUserOut() {
         val username = sharedPreferencesService.getItem(SHARED_USERNAME_KEY)
-        val user = User(username, "")
+        val user = LoginUser(username, "")
 
         val logOutObserver = homeViewModel.logoutUser(user)
         logOutObserver.observe(this, { handleLogOutResponse(it) })
