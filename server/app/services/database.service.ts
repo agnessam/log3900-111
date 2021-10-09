@@ -29,6 +29,7 @@ export class DatabaseService {
     // creation de compte utilisateur
         async addUserData(data: User): Promise<void> {
             if (this.validateUserdata(data)) {
+                console.log("creation de user dans le if")
                 this.UserCollection.insertOne(data).catch((error: Error) => {
                     throw error;
                 });

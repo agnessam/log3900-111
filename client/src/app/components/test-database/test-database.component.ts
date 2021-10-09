@@ -49,7 +49,7 @@ export class TestDatabaseComponent implements OnInit {
 
 
   save(): void {
-      this.databaseurl = 'http://localhost:3000/api/v1/database/userparam';
+      this.databaseurl = 'http://localhost:3000/api/v1/database/useraccountcreation';
       const body = {
         firstName: this.f.firstName.value,
         lastName: this.f.lastName.value,

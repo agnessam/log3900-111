@@ -30,6 +30,7 @@ export class DatabaseController {
                     res.sendStatus(Httpstatus.StatusCodes.CREATED).send();
                 })
                 .catch((error: Error) => {
+                    console.log ("why error ? body = "+req.body);
                     res.status(Httpstatus.StatusCodes.NOT_FOUND).send(error.message);
                 });
         });
