@@ -77,7 +77,15 @@ class LoginActivity : AppCompatActivity() {
         // contains some kind of error
         val containsError = usernameInputLayout.error.isNullOrEmpty() && passwordInputLayout.error.isNullOrEmpty()
 
-        val invalidInputLength = usernameEditText.text.isNullOrEmpty() || passwordEditText.text.isNullOrEmpty()
+        // check if inputs is empty
+        val isUsernameInvalid = usernameEditText.text.isNullOrEmpty()
+        val isPasswordInvalid = passwordEditText.text.isNullOrEmpty()
+        val invalidInputLength = isUsernameInvalid || isPasswordInvalid
+
+        // show or hide required keyword below inputs
+        val requiredString = resources.getString(R.string.required);
+        usernameInputLayout.helperText = if (isUsernameInvalid) requiredString else ""
+        passwordInputLayout.helperText = if (isPasswordInvalid) requiredString else ""
 
         // deactivate login button if form contains error or isEmpty
         toggleButton(loginBtn, containsError && !invalidInputLength)

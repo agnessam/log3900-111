@@ -10,4 +10,6 @@
 
     <string name="new_message">New to ColorImage?</string>
     <string name="get_started"><u>Get Started</u></string>
+
+    <string name="required">* Required</string>
 </resources>
