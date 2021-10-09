@@ -42,7 +42,7 @@ class LoginActivity : AppCompatActivity() {
 
         val loginLayouts = arrayListOf<TextInputLayout>(binding.usernameInputLayout, binding.passwordInputLayout)
         val loginInputs = arrayListOf<TextInputEditText>(binding.usernameInputText, binding.passwordInputText)
-        formValidator = FormValidator(loginLayouts, loginInputs, resources.getString(R.string.required))
+        formValidator = FormValidator(loginLayouts, loginInputs)
 
         toggleButton(binding.loginBtn, false) // deactivate login button by default
         setListeners()
@@ -66,7 +66,11 @@ class LoginActivity : AppCompatActivity() {
         val message = if (text!!.contains(" ")) "No spaces are allowed!" else ""
         inputLayout.error = message
 
-        canSubmit = formValidator.canSubmit()
+        val containsError = formValidator.containsError()
+        val invalidInputLength = formValidator.isInputEmpty(resources.getString(R.string.required))
+
+        // activate/deactivate login button if form contains error or one of the inputs is empty
+        canSubmit = !containsError && !invalidInputLength
         toggleButton(binding.loginBtn, canSubmit)
     }
 
