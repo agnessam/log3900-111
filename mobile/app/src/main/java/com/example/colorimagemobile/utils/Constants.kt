@@ -6,7 +6,7 @@ class Constants {
         const val SERVER_URL = "http://10.0.2.2:3000"
 //        const val SERVER_URL = "http://colorimage.us-east-1.elasticbeanstalk.com"
 
-        // routes
+        // endpoints
         const val LOGIN_USER = "api/users/login"
         const val LOGOUT_USER = "api/users/logout"
         const val REGISTER_USER = "api/users/register"
