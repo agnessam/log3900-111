@@ -2,9 +2,11 @@ package com.example.colorimagemobile.ui.login
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.ViewModelProvider
 import com.example.colorimagemobile.R
+import com.example.colorimagemobile.classes.FormValidator
 import com.example.colorimagemobile.classes.LoginUser
 import com.example.colorimagemobile.databinding.ActivityLoginBinding
 import com.example.colorimagemobile.models.DataWrapper
@@ -17,14 +19,17 @@ import com.example.colorimagemobile.utils.CommonFun.Companion.onEnterKeyPressed
 import com.example.colorimagemobile.utils.CommonFun.Companion.printToast
 import com.example.colorimagemobile.utils.CommonFun.Companion.redirectTo
 import com.example.colorimagemobile.utils.CommonFun.Companion.toggleButton
+import com.example.colorimagemobile.utils.Constants.Companion.DEBUG_KEY
 import com.example.colorimagemobile.utils.Constants.Companion.SHARED_TOKEN_KEY
 import com.example.colorimagemobile.utils.Constants.Companion.SHARED_USERNAME_KEY
+import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 
 class LoginActivity : AppCompatActivity() {
     private lateinit var loginViewModel: LoginActivityViewModel
     private lateinit var sharedPreferencesService: SharedPreferencesService
     private lateinit var binding: ActivityLoginBinding
+    private lateinit var formValidator: FormValidator
     private var canSubmit: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -34,6 +39,10 @@ class LoginActivity : AppCompatActivity() {
 
         sharedPreferencesService = SharedPreferencesService(this)
         loginViewModel = ViewModelProvider(this).get(LoginActivityViewModel::class.java)
+
+        val loginLayouts = arrayListOf<TextInputLayout>(binding.usernameInputLayout, binding.passwordInputLayout)
+        val loginInputs = arrayListOf<TextInputEditText>(binding.usernameInputText, binding.passwordInputText)
+        formValidator = FormValidator(loginLayouts, loginInputs, resources.getString(R.string.required))
 
         toggleButton(binding.loginBtn, false) // deactivate login button by default
         setListeners()
@@ -57,21 +66,7 @@ class LoginActivity : AppCompatActivity() {
         val message = if (text!!.contains(" ")) "No spaces are allowed!" else ""
         inputLayout.error = message
 
-        // contains some kind of error
-        val containsError = binding.usernameInputLayout.error.isNullOrEmpty() && binding.passwordInputLayout.error.isNullOrEmpty()
-
-        // check if inputs is empty
-        val isUsernameInvalid = binding.usernameInputText.text.isNullOrEmpty()
-        val isPasswordInvalid = binding.passwordInputText.text.isNullOrEmpty()
-        val invalidInputLength = isUsernameInvalid || isPasswordInvalid
-
-        // show or hide required keyword below inputs
-        val requiredString = resources.getString(R.string.required);
-        binding.usernameInputLayout.helperText = if (isUsernameInvalid) requiredString else ""
-        binding.passwordInputLayout.helperText = if (isPasswordInvalid) requiredString else ""
-
-        // activate/deactivate login button if form contains error or isEmpty
-        canSubmit = containsError && !invalidInputLength
+        canSubmit = formValidator.canSubmit()
         toggleButton(binding.loginBtn, canSubmit)
     }
 
