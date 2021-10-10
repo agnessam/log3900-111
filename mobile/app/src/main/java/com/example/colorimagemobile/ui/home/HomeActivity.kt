@@ -17,7 +17,7 @@ import com.example.colorimagemobile.models.HTTPResponseModel
 import com.example.colorimagemobile.services.SharedPreferencesService
 import com.example.colorimagemobile.utils.CommonFun.Companion.printToast
 import com.example.colorimagemobile.utils.CommonFun.Companion.redirectTo
-import com.example.colorimagemobile.utils.Constants.Companion.SHARED_USERNAME_KEY
+import com.example.colorimagemobile.utils.Constants
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class HomeActivity : AppCompatActivity() {
@@ -65,7 +65,7 @@ class HomeActivity : AppCompatActivity() {
     }
 
     private fun logUserOut() {
-        val username = sharedPreferencesService.getItem(SHARED_USERNAME_KEY)
+        val username = sharedPreferencesService.getItem(Constants.STORAGE_KEY.USERNAME)
         val user = User.Logout(username)
 
         val logOutObserver = homeViewModel.logoutUser(user)

@@ -2,14 +2,14 @@ package com.example.colorimagemobile.services
 
 import android.content.Context
 import android.content.SharedPreferences
-import com.example.colorimagemobile.utils.Constants.Companion.LOCAL_STORAGE_KEY
+import com.example.colorimagemobile.utils.Constants
 
 class SharedPreferencesService(context: Context) {
 
     private var sharedPreferences: SharedPreferences
 
     init {
-        sharedPreferences = context.getSharedPreferences(LOCAL_STORAGE_KEY, Context.MODE_PRIVATE)
+        sharedPreferences = context.getSharedPreferences(Constants.STORAGE_KEY.MAIN, Context.MODE_PRIVATE)
     }
 
     // saves an item with a key to localStorage

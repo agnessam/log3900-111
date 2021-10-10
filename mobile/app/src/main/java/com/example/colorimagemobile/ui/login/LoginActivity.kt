@@ -18,8 +18,7 @@ import com.example.colorimagemobile.utils.CommonFun.Companion.onEnterKeyPressed
 import com.example.colorimagemobile.utils.CommonFun.Companion.printToast
 import com.example.colorimagemobile.utils.CommonFun.Companion.redirectTo
 import com.example.colorimagemobile.utils.CommonFun.Companion.toggleButton
-import com.example.colorimagemobile.utils.Constants.Companion.SHARED_TOKEN_KEY
-import com.example.colorimagemobile.utils.Constants.Companion.SHARED_USERNAME_KEY
+import com.example.colorimagemobile.utils.Constants
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 
@@ -95,8 +94,8 @@ class LoginActivity : AppCompatActivity() {
         val username = userResponse.username.toString()
 
         // save credentials to "local storage"
-        sharedPreferencesService.setItem(SHARED_USERNAME_KEY, username)
-        sharedPreferencesService.setItem(SHARED_TOKEN_KEY, token)
+        sharedPreferencesService.setItem(Constants.STORAGE_KEY.USERNAME, username)
+        sharedPreferencesService.setItem(Constants.STORAGE_KEY.TOKEN, token)
 
         // redirect to /home
         redirectTo(this@LoginActivity, HomeActivity::class.java)

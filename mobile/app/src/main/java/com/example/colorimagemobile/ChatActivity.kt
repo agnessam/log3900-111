@@ -27,9 +27,6 @@ import com.example.colorimagemobile.utils.CommonFun.Companion.redirectTo
 import com.example.colorimagemobile.utils.Constants
 import com.example.colorimagemobile.utils.Constants.Companion.DEBUG_KEY
 import com.example.colorimagemobile.utils.Constants.Companion.DEFAULT_ROOM_NAME
-import com.example.colorimagemobile.utils.Constants.Companion.LOCAL_STORAGE_KEY
-import com.example.colorimagemobile.utils.Constants.Companion.SHARED_TOKEN_KEY
-import com.example.colorimagemobile.utils.Constants.Companion.SHARED_USERNAME_KEY
 import com.example.colorimagemobile.utils.Constants.Companion.TEXT_MESSAGE_EVENT_NAME
 import com.google.gson.Gson
 import retrofit2.Call
@@ -58,9 +55,9 @@ class ChatActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chat)
 
-        val sharedPref = getSharedPreferences(Constants.LOCAL_STORAGE_KEY, Context.MODE_PRIVATE)
-        val token = sharedPref.getString(SHARED_TOKEN_KEY, "")
-        this.username = sharedPref.getString(SHARED_USERNAME_KEY, "") as String
+        val sharedPref = getSharedPreferences(Constants.STORAGE_KEY.MAIN, Context.MODE_PRIVATE)
+        val token = sharedPref.getString(Constants.STORAGE_KEY.TOKEN, "")
+        this.username = sharedPref.getString(Constants.STORAGE_KEY.USERNAME, "") as String
 
         // check if token is valid! if not, redirect to /login
         if (token == "" || token == null) {
@@ -150,7 +147,7 @@ class ChatActivity : AppCompatActivity() {
                     printToast(applicationContext, "Logging you out ${user.username}!")
 
                     // remove items from "local storage"
-                    val sharedPref = getSharedPreferences(LOCAL_STORAGE_KEY, Context.MODE_PRIVATE)
+                    val sharedPref = getSharedPreferences(Constants.STORAGE_KEY.MAIN, Context.MODE_PRIVATE)
                     val editor = sharedPref.edit()
                     editor.clear().apply()
 

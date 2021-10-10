@@ -7,7 +7,7 @@ import com.example.colorimagemobile.services.SharedPreferencesService
 import com.example.colorimagemobile.ui.home.HomeActivity
 import com.example.colorimagemobile.ui.login.LoginActivity
 import com.example.colorimagemobile.utils.CommonFun.Companion.redirectTo
-import com.example.colorimagemobile.utils.Constants.Companion.SHARED_TOKEN_KEY
+import com.example.colorimagemobile.utils.Constants
 
 class MainActivity : AppCompatActivity() {
 
@@ -21,7 +21,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         sharedPreferencesService = SharedPreferencesService(this)
-        val token = sharedPreferencesService.getItem(SHARED_TOKEN_KEY)
+        val token = sharedPreferencesService.getItem(Constants.STORAGE_KEY.TOKEN)
 
         if (token.isNullOrEmpty()) {
             // redirect to /login
