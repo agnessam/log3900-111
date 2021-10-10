@@ -8,7 +8,7 @@ import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.ViewModelProvider
 import com.example.colorimagemobile.R
 import com.example.colorimagemobile.classes.FormValidator
-import com.example.colorimagemobile.classes.RegisterNewUser
+import com.example.colorimagemobile.classes.User
 import com.example.colorimagemobile.databinding.ActivityRegisterBinding
 import com.example.colorimagemobile.models.DataWrapper
 import com.example.colorimagemobile.models.HTTPResponseModel
@@ -21,7 +21,7 @@ import com.example.colorimagemobile.utils.Constants.Companion.DEBUG_KEY
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 
-enum class FORM_INDEXES(val index: Int) {
+enum class FormIndexes(val index: Int) {
     FIRST_NAME(0),
     LAST_NAME(1),
     USERNAME(2),
@@ -70,7 +70,7 @@ class RegisterActivity : AppCompatActivity() {
     private fun handleInputError(text: CharSequence?, inputLayout: TextInputLayout) {
         inputLayout.error = formValidator.getWhitespaceText(text)
 
-        formValidator.validateEmail(FORM_INDEXES.EMAIL.index)
+        formValidator.validateEmail(FormIndexes.EMAIL.index)
         val containsError = formValidator.containsError()
         val invalidInputLength = formValidator.isInputEmpty(resources.getString(R.string.required))
 
@@ -81,12 +81,12 @@ class RegisterActivity : AppCompatActivity() {
 
     private fun doPasswordsMatch(): Boolean {
         val unmatchedPasswordsText = "Passwords did not match"
-        val password = registerInputs[FORM_INDEXES.PASSWORD.index].text.toString()
-        val passwordConfirmation = registerInputs[FORM_INDEXES.PASSWORD_CONFIRMATION.index].text.toString()
+        val password = registerInputs[FormIndexes.PASSWORD.index].text.toString()
+        val passwordConfirmation = registerInputs[FormIndexes.PASSWORD_CONFIRMATION.index].text.toString()
 
         if (password != passwordConfirmation) {
-            registerLayouts[FORM_INDEXES.PASSWORD.index].error = unmatchedPasswordsText
-            registerLayouts[FORM_INDEXES.PASSWORD_CONFIRMATION.index].error = unmatchedPasswordsText
+            registerLayouts[FormIndexes.PASSWORD.index].error = unmatchedPasswordsText
+            registerLayouts[FormIndexes.PASSWORD_CONFIRMATION.index].error = unmatchedPasswordsText
             toggleButton(binding.registerBtn, false)
             return false
         }
@@ -98,14 +98,14 @@ class RegisterActivity : AppCompatActivity() {
         if (!canSubmit || !doPasswordsMatch()) return
 
         // get input texts
-        val firstName = registerInputs[FORM_INDEXES.FIRST_NAME.index].text.toString()
-        val lastName = registerInputs[FORM_INDEXES.LAST_NAME.index].text.toString()
-        val username = registerInputs[FORM_INDEXES.USERNAME.index].text.toString()
-        val email = registerInputs[FORM_INDEXES.EMAIL.index].text.toString()
-        val password = registerInputs[FORM_INDEXES.PASSWORD.index].text.toString()
+        val firstName = registerInputs[FormIndexes.FIRST_NAME.index].text.toString()
+        val lastName = registerInputs[FormIndexes.LAST_NAME.index].text.toString()
+        val username = registerInputs[FormIndexes.USERNAME.index].text.toString()
+        val email = registerInputs[FormIndexes.EMAIL.index].text.toString()
+        val password = registerInputs[FormIndexes.PASSWORD.index].text.toString()
 
         // form body to make HTTP request
-        val newUserData = RegisterNewUser(firstName, lastName, username, email, password)
+        val newUserData = User.Register(firstName, lastName, username, email, password)
         val registerObserver = registerViewModel.registerUser(newUserData)
         registerObserver.observe(this, { handleRegisterResponse(it) })
     }

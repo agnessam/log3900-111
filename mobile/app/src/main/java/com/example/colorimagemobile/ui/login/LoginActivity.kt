@@ -2,12 +2,11 @@ package com.example.colorimagemobile.ui.login
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.ViewModelProvider
 import com.example.colorimagemobile.R
 import com.example.colorimagemobile.classes.FormValidator
-import com.example.colorimagemobile.classes.LoginUser
+import com.example.colorimagemobile.classes.User
 import com.example.colorimagemobile.databinding.ActivityLoginBinding
 import com.example.colorimagemobile.models.DataWrapper
 import com.example.colorimagemobile.models.HTTPResponseModel
@@ -19,7 +18,6 @@ import com.example.colorimagemobile.utils.CommonFun.Companion.onEnterKeyPressed
 import com.example.colorimagemobile.utils.CommonFun.Companion.printToast
 import com.example.colorimagemobile.utils.CommonFun.Companion.redirectTo
 import com.example.colorimagemobile.utils.CommonFun.Companion.toggleButton
-import com.example.colorimagemobile.utils.Constants.Companion.DEBUG_KEY
 import com.example.colorimagemobile.utils.Constants.Companion.SHARED_TOKEN_KEY
 import com.example.colorimagemobile.utils.Constants.Companion.SHARED_USERNAME_KEY
 import com.google.android.material.textfield.TextInputEditText
@@ -76,7 +74,7 @@ class LoginActivity : AppCompatActivity() {
     private fun executeLogin() {
         if (!canSubmit) return
 
-        val user = LoginUser(binding.usernameInputText.text.toString(), binding.passwordInputText.text.toString())
+        val user = User.Login(binding.usernameInputText.text.toString(), binding.passwordInputText.text.toString())
 
         // username ok -> make HTTP POST request
         val loginObserver = loginViewModel.loginUser(user)

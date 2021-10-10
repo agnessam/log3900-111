@@ -2,8 +2,7 @@ package com.example.colorimagemobile.repositories
 
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
-import com.example.colorimagemobile.classes.LoginUser
-import com.example.colorimagemobile.classes.RegisterNewUser
+import com.example.colorimagemobile.classes.User
 import com.example.colorimagemobile.services.RetrofitInstance
 import com.example.colorimagemobile.models.DataWrapper
 import com.example.colorimagemobile.models.HTTPResponseModel
@@ -21,7 +20,7 @@ class AuthRepository {
         authLiveData = MutableLiveData()
     }
 
-    fun loginUser(user: LoginUser): MutableLiveData<DataWrapper<HTTPResponseModel>> {
+    fun loginUser(user: User.Login): MutableLiveData<DataWrapper<HTTPResponseModel>> {
         httpClient.loginUser(user).enqueue(object : Callback<HTTPResponseModel> {
             override fun onResponse(call: Call<HTTPResponseModel>, response: Response<HTTPResponseModel>) {
                 if (!response.isSuccessful) {
@@ -45,7 +44,7 @@ class AuthRepository {
     }
 
     // when user logs out
-    fun logoutUser(user: LoginUser): MutableLiveData<DataWrapper<HTTPResponseModel>>  {
+    fun logoutUser(user: User.Logout): MutableLiveData<DataWrapper<HTTPResponseModel>>  {
         httpClient.logoutUser(user).enqueue(object : Callback<Boolean> {
             override fun onResponse(call: Call<Boolean>, response: Response<Boolean>) {
                 if (!response.isSuccessful) {
@@ -67,7 +66,7 @@ class AuthRepository {
     }
 
     // create new user: TO CHANGE
-    fun registerUser(newUserData: RegisterNewUser): MutableLiveData<DataWrapper<HTTPResponseModel>> {
+    fun registerUser(newUserData: User.Register): MutableLiveData<DataWrapper<HTTPResponseModel>> {
         httpClient.registerUser(newUserData).enqueue(object : Callback<HTTPResponseModel> {
             override fun onResponse(call: Call<HTTPResponseModel>, response: Response<HTTPResponseModel>) {
                 if (!response.isSuccessful) {
