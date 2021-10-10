@@ -8,7 +8,7 @@ import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.ViewModelProvider
 import com.example.colorimagemobile.R
 import com.example.colorimagemobile.classes.FormValidator
-import com.example.colorimagemobile.classes.User
+import com.example.colorimagemobile.models.UserModel
 import com.example.colorimagemobile.databinding.ActivityRegisterBinding
 import com.example.colorimagemobile.models.DataWrapper
 import com.example.colorimagemobile.models.HTTPResponseModel
@@ -105,7 +105,7 @@ class RegisterActivity : AppCompatActivity() {
         val password = registerInputs[FormIndexes.PASSWORD.index].text.toString()
 
         // form body to make HTTP request
-        val newUserData = User.Register(firstName, lastName, username, email, password)
+        val newUserData = UserModel.Register(firstName, lastName, username, email, password)
         val registerObserver = registerViewModel.registerUser(newUserData)
         registerObserver.observe(this, { handleRegisterResponse(it) })
     }

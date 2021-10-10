@@ -6,7 +6,7 @@ import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.ViewModelProvider
 import com.example.colorimagemobile.R
 import com.example.colorimagemobile.classes.FormValidator
-import com.example.colorimagemobile.classes.User
+import com.example.colorimagemobile.models.UserModel
 import com.example.colorimagemobile.databinding.ActivityLoginBinding
 import com.example.colorimagemobile.models.DataWrapper
 import com.example.colorimagemobile.models.HTTPResponseModel
@@ -73,7 +73,7 @@ class LoginActivity : AppCompatActivity() {
     private fun executeLogin() {
         if (!canSubmit) return
 
-        val user = User.Login(binding.usernameInputText.text.toString(), binding.passwordInputText.text.toString())
+        val user = UserModel.Login(binding.usernameInputText.text.toString(), binding.passwordInputText.text.toString())
 
         // username ok -> make HTTP POST request
         val loginObserver = loginViewModel.loginUser(user)

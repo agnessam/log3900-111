@@ -1,12 +1,16 @@
 package com.example.colorimagemobile.classes
 
-// class for different uses related to User
-class User {
-    data class Login(val username: String, val password: String)
-    data class Register(val firstName: String, val lastName: String, val username: String, val email: String, val password: String)
-    data class Logout(val username: String)
+import com.example.colorimagemobile.models.UserModel
 
-    // holds all the data of User
-    data class AllInfo(val username: String)
+// Singleton User object which is accessible globally
+object User {
+    private lateinit var info: UserModel.AllInfo
+
+    fun setUserInfo(newUserInfo: UserModel.AllInfo) {
+        this.info = newUserInfo
+    }
+
+    fun getUserInfo(): UserModel.AllInfo {
+        return this.info
+    }
 }
-

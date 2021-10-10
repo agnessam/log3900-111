@@ -3,7 +3,7 @@ package com.example.colorimagemobile.ui.register
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.colorimagemobile.classes.User
+import com.example.colorimagemobile.models.UserModel
 import com.example.colorimagemobile.models.DataWrapper
 import com.example.colorimagemobile.models.HTTPResponseModel
 import com.example.colorimagemobile.repositories.AuthRepository
@@ -17,7 +17,7 @@ class RegisterActivityViewModel: ViewModel() {
         authRepository = AuthRepository()
     }
 
-    fun registerUser(newUserData: User.Register): LiveData<DataWrapper<HTTPResponseModel>> {
+    fun registerUser(newUserData: UserModel.Register): LiveData<DataWrapper<HTTPResponseModel>> {
         return authRepository.registerUser(newUserData)
     }
 }

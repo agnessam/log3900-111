@@ -2,7 +2,7 @@ package com.example.colorimagemobile.ui.home
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
-import com.example.colorimagemobile.classes.User
+import com.example.colorimagemobile.models.UserModel
 import com.example.colorimagemobile.models.DataWrapper
 import com.example.colorimagemobile.models.HTTPResponseModel
 import com.example.colorimagemobile.repositories.AuthRepository
@@ -15,7 +15,7 @@ class HomeActivityViewModel : ViewModel() {
         authRepository = AuthRepository()
     }
 
-    fun logoutUser(user: User.Logout): LiveData<DataWrapper<HTTPResponseModel>> {
+    fun logoutUser(user: UserModel.Logout): LiveData<DataWrapper<HTTPResponseModel>> {
         return authRepository.logoutUser(user)
     }
 }

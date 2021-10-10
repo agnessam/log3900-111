@@ -19,7 +19,7 @@ import com.example.colorimagemobile.adapter.ChatMessageRecyclerAdapter
 import com.example.colorimagemobile.services.RetrofitInstance
 import com.example.colorimagemobile.services.SocketHandler
 import com.example.colorimagemobile.classes.Message
-import com.example.colorimagemobile.classes.User
+import com.example.colorimagemobile.models.UserModel
 import com.example.colorimagemobile.ui.login.LoginActivity
 import com.example.colorimagemobile.utils.CommonFun.Companion.closeKeyboard
 import com.example.colorimagemobile.utils.CommonFun.Companion.printToast
@@ -134,7 +134,7 @@ class ChatActivity : AppCompatActivity() {
 
         logOutBtn.setOnClickListener(View.OnClickListener {
             // log out -> POST /logout
-            val user = User.Logout(this.username)
+            val user = UserModel.Logout(this.username)
 
             RetrofitInstance.HTTP.logoutUser(user).enqueue(object : Callback<Boolean> {
                 override fun onResponse(call: Call<Boolean>, response: Response<Boolean>) {

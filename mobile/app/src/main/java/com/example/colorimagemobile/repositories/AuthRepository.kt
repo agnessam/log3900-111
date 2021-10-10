@@ -2,7 +2,7 @@ package com.example.colorimagemobile.repositories
 
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
-import com.example.colorimagemobile.classes.User
+import com.example.colorimagemobile.models.UserModel
 import com.example.colorimagemobile.services.RetrofitInstance
 import com.example.colorimagemobile.models.DataWrapper
 import com.example.colorimagemobile.models.HTTPResponseModel
@@ -20,7 +20,7 @@ class AuthRepository {
         authLiveData = MutableLiveData()
     }
 
-    fun loginUser(user: User.Login): MutableLiveData<DataWrapper<HTTPResponseModel>> {
+    fun loginUser(user: UserModel.Login): MutableLiveData<DataWrapper<HTTPResponseModel>> {
         httpClient.loginUser(user).enqueue(object : Callback<HTTPResponseModel> {
             override fun onResponse(call: Call<HTTPResponseModel>, response: Response<HTTPResponseModel>) {
                 if (!response.isSuccessful) {
@@ -44,7 +44,7 @@ class AuthRepository {
     }
 
     // when user logs out
-    fun logoutUser(user: User.Logout): MutableLiveData<DataWrapper<HTTPResponseModel>>  {
+    fun logoutUser(user: UserModel.Logout): MutableLiveData<DataWrapper<HTTPResponseModel>>  {
         httpClient.logoutUser(user).enqueue(object : Callback<Boolean> {
             override fun onResponse(call: Call<Boolean>, response: Response<Boolean>) {
                 if (!response.isSuccessful) {
@@ -66,8 +66,8 @@ class AuthRepository {
     }
 
     // create new user: TO CHANGE
-    fun registerUser(newUserData: User.Register): MutableLiveData<DataWrapper<HTTPResponseModel>> {
-        httpClient.registerUser(newUserData).enqueue(object : Callback<HTTPResponseModel> {
+    fun registerUser(newUser: UserModel.Register): MutableLiveData<DataWrapper<HTTPResponseModel>> {
+        httpClient.registerUser(newUser).enqueue(object : Callback<HTTPResponseModel> {
             override fun onResponse(call: Call<HTTPResponseModel>, response: Response<HTTPResponseModel>) {
                 if (!response.isSuccessful) {
                     Log.d(DEBUG_KEY, response.message())
