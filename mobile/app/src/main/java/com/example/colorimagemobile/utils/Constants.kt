@@ -21,9 +21,9 @@ class Constants {
 
     class ENDPOINTS {
         companion object {
-            const val LOGIN_USER = "api/v1/login"
-            const val LOGOUT_USER = "api/v1/logout"
-            const val REGISTER_USER = "api/v1/register"
+            const val LOGIN_USER = "api/users/login"
+            const val LOGOUT_USER = "api/users/logout"
+            const val REGISTER_USER = "api/users/register"
         }
     }
 
