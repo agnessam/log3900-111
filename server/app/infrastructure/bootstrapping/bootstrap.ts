@@ -4,7 +4,8 @@ import express from 'express';
 import { Container, ContainerModule } from 'inversify';
 import { InversifyExpressServer } from 'inversify-express-utils';
 import passport from 'passport';
-
+import { Server as SocketServer } from 'socket.io';
+import { ChatSocketService } from '../../domain/services/sockets/chat-socket.service';
 import '../../api/controllers/hello-world.controller';
 
 export const boostrap = async (
@@ -33,7 +34,16 @@ export const boostrap = async (
 		const app = server.build();
 
 		console.log(`Application listening on port ${appPort}`);
-		app.listen(appPort);
+		let serverInstance = app.listen(appPort);
+
+		let socketServer = new SocketServer(serverInstance, {
+			cors: {
+				origin: '*',
+				methods: ['GET', 'POST'],
+			},
+		});
+		const chatSocketService: ChatSocketService = container.get(TYPES.ChatSocketService);
+		chatSocketService.init(socketServer);
 
 		container
 			.bind<express.Application>(TYPES.Application)
