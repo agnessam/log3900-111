@@ -1,9 +1,9 @@
 import { Router } from 'express';
-import { injectable } from 'inversify';
 import passport from 'passport';
 import jwt from 'jsonwebtoken';
+import { controller } from 'inversify-express-utils';
 
-@injectable()
+@controller('/login')
 export class AuthenticationController {
 	onlineUsers: Set<string>;
 	router: Router;
