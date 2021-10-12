@@ -1,17 +1,17 @@
 import { Injectable } from "@angular/core";
+import { Subject } from "rxjs";
 import { AbstractSocketService } from "src/app/interfaces/socket.abstract";
+import { Message } from "src/app/services/socket/message.model";
 import {
   CHAT_NAMESPACE_NAME,
   TEXT_MESSAGE_EVENT_NAME,
 } from "src/app/services/socket/socket.constant";
-import { Message } from "src/app/services/socket/message.model";
-import { Subject } from "rxjs";
 
 @Injectable({
-  providedIn: "root",
+  providedIn: 'root',
 })
 export class ChatSocketService extends AbstractSocketService {
-  public chatSubject: Subject<Message>;
+  chatSubject: Subject<Message>;
 
   constructor() {
     super();

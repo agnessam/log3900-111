@@ -3,29 +3,35 @@
     <h1 class="title">Chatroom</h1>
     <br />
 
-    <div id="wrapper">
-      <div id="menu">
-        <p class="welcome">
-          Hello <b>{{ username }}</b
-          >!
-        </p>
-        <div style="clear: both"></div>
-      </div>
+    <ng-container *ngIf="window && !window.isCollapsed" >
+      <div id="wrapper">
+        <div id="menu">
+          <p class="welcome">
+            Hello <b>{{ username }}</b
+            >!
+          </p>
+          <div style="clear: both"></div>
+        </div>
 
-      <div id="chatbox"></div>
-
-      <div id="message">
-        <input
-          type="text"
-          id="usermsg"
-          autocomplete="off"
-          spellcheck="false"
-          placeholder="Enter you message here"
-        />
-        <button mat-icon-button color="primary" (click)="sendMessage()">
-          <mat-icon>send</mat-icon>
-        </button>
+        <div id="chatbox" *ngFor="let message of window.messages" ></div>
+        <div id="message">
+          <!-- <div id="image-upload"> 
+            <input id="upload-button" type="file" (onChange)="previewFile()">
+            <img id="image-preview" src="" height="200" alt="Image preview...">
+          </div> -->
+          <input
+            type="text"
+            id="usermsg"
+            autocomplete="off"
+            spellcheck="false"
+            placeholder="Enter your message here"
+          />
+          <button mat-icon-button color="primary" (click)="sendMessage()">
+            <mat-icon>send</mat-icon>
+          </button>
+        </div>
       </div>
-    </div>
+    </ng-container>
+    
   </div>
 </div>

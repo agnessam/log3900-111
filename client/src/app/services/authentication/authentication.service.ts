@@ -7,8 +7,8 @@ import { map } from "rxjs/operators";
   providedIn: "root",
 })
 export class AuthenticationService {
-  private endpointUrl: string =
-    "http://colorimage.us-east-1.elasticbeanstalk.com/api/v1/";
+  private endpointUrl: string = "http://10.0.2.2:3000/";
+    // "http://colorimage.us-east-1.elasticbeanstalk.com/api/v1/";
   private authTokenSubject: BehaviorSubject<string | null>;
   public authTokenObservable: Observable<string | null>;
 

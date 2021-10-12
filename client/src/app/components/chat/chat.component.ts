@@ -1,80 +1,104 @@
-import { Component, OnDestroy, OnInit } from "@angular/core";
-import { Subscription } from "rxjs";
-import { AuthenticationService } from "src/app/services/authentication/authentication.service";
-import { ChatSocketService } from "src/app/services/socket/chat-socket.service";
+// tslint:disable: linebreak-style
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Subscription } from 'rxjs';
+import { ChatParticipant } from 'src/app/model/chat-participant.model';
+import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
+import { ChatSocketService } from 'src/app/services/socket/chat-socket.service';
+import { ChatWindow } from './chat-window/chat-window';
 
 @Component({
-  selector: "chat",
-  templateUrl: "./chat.component.html",
-  styleUrls: ["./chat.component.scss"],
+  selector: 'chat',
+  templateUrl: './chat.component.html',
+  styleUrls: ['./chat.component.scss'],
 })
 export class ChatComponent implements OnInit, OnDestroy {
-  public username: string | null;
-  public chatSubscribiption: Subscription;
+  username: string | null;
+  chatSubscription: Subscription;
+
+  window: ChatWindow;
 
   constructor(
     private authenticationService: AuthenticationService,
-    private chatSocketService: ChatSocketService
+    private chatSocketService: ChatSocketService,
   ) {
     this.authenticationService.currentUserObservable.subscribe(
       (username) => (this.username = username)
     );
+    this.window = new ChatWindow('Default Channel Name', {id: '666', username: this.username?.toString()} as ChatParticipant, false);
   }
 
   ngOnInit(): void {
     this.keyListener();
     this.receiveMessage();
     this.chatSocketService.connect();
-    this.chatSocketService.joinRoom("default");
+    this.chatSocketService.joinRoom('default');
   }
 
   ngOnDestroy(): void {
-    this.chatSocketService.leaveRoom("default");
+    this.chatSocketService.leaveRoom('default');
     this.chatSocketService.disconnect();
-    this.chatSubscribiption.unsubscribe();
+    this.chatSubscription.unsubscribe();
   }
 
-  public keyListener() {
-    window.addEventListener("keydown", (event) => {
-      if (event.key === "Enter") {
+  keyListener() {
+    window.addEventListener('keydown', (event) => {
+      if (event.key === 'Enter') {
         this.sendMessage();
       }
     });
   }
 
-  public receiveMessage() {
-    this.chatSubscribiption = this.chatSocketService.chatSubject.subscribe({
+  receiveMessage() {
+    this.chatSubscription = this.chatSocketService.chatSubject.subscribe({
       next: (message) => {
-        let messageBox = <HTMLInputElement>document.getElementById("chatbox");
-        const p = document.createElement("div");
-        p.textContent = `(${message.timestamp}) ${message.author}: ${message.message}`;
-        messageBox.appendChild(p);
-        messageBox.scrollTop = messageBox.scrollHeight;
+        // const messageBox = document.getElementById('chatbox') as HTMLInputElement;
+        // const p = document.createElement('div');
+        // p.textContent = `(${message.timestamp}) ${message.author}: ${message.message}`;
+        // messageBox.appendChild(p);
+        // messageBox.scrollTop = messageBox.scrollHeight;
+        this.window.messages.push(message);
       },
     });
   }
 
   sendMessage() {
-    let mes = (<HTMLInputElement>document.getElementById("usermsg")).value;
+    const mes = (document.getElementById('usermsg') as HTMLInputElement).value;
     if (mes === null || mes.match(/^ *$/) !== null) return;
 
-    let name = "";
+    let name = '';
     if (this.username === null) return;
     name = this.username;
 
-    let hour = new Date().getHours().toString();
-    let minute = new Date().getMinutes().toString();
-    let second = new Date().getSeconds().toString();
-    let time = hour + ":" + minute + ":" + second;
+    const hour = new Date().getHours().toString();
+    const minute = new Date().getMinutes().toString();
+    const second = new Date().getSeconds().toString();
+    const time = hour + ':' + minute + ':' + second;
 
-    let message = {
+    const message = {
       message: mes,
       timestamp: time,
       author: name,
-      roomName: "default",
+      roomName: 'default',
     };
 
     this.chatSocketService.sendMessage(message);
-    (<HTMLInputElement>document.getElementById("usermsg")).value = "";
+    (document.getElementById('usermsg') as HTMLInputElement).value = '';
+  }
+
+  previewFile() {
+    const preview = (document.getElementById('image-preview') as HTMLInputElement);
+    // @ts-ignore: Object is possibly 'null'.
+    // tslint:disable-next-line: no-non-null-assertion
+    const file = (document.getElementById('upload-button')! as HTMLInputElement).files[0];
+    const reader = new FileReader();
+
+    reader.addEventListener('load', () => {
+      // convert image file to base64 string
+      preview.src = reader.result as string;
+    }, false);
+
+    if (file) {
+      reader.readAsDataURL(file);
+    }
   }
 }
