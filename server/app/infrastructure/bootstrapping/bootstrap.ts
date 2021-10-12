@@ -17,17 +17,23 @@ import {
 // express application.
 import '../../api/controllers/hello-world.controller';
 import '../../api/controllers/authentication.controller';
+import { DbClient, getDatabaseClient } from '../data_access/db_client';
 
 export const boostrap = async (
 	container: Container,
 	appPort: number | string | boolean,
-	dbHost: string,
-	dbName: string,
+	dbUsername: string,
+	dbPassword: string,
+	dbCluster: string,
 	...modules: ContainerModule[]
 ) => {
-	// TODO: Add database client here connection here using dbHost and dbName.
-
 	if (container.isBound(TYPES.Application) === false) {
+		const dbClient = await getDatabaseClient(
+			dbUsername,
+			dbPassword,
+			dbCluster,
+		);
+		container.bind<DbClient>(TYPES.DbClient).toConstantValue(dbClient);
 		container.load(...modules);
 		const server = new InversifyExpressServer(container, null, {
 			rootPath: '/api',

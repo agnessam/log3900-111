@@ -4,6 +4,9 @@
 node_modules/
 false/
 
+# Exclusion of environment variables
+.env
+
 # Exclusion des fichiers Javascripts
 dist/
 
