@@ -1,6 +1,10 @@
 <resources>
     <string name="app_name">ColorImage Mobile</string>
-    <string name="title_home">Home</string>
-    <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
+    <string name="title_drawing">Drawing</string>
+    <string name="title_chat">Chat</string>
+    <string name="title_user_profile">User Profile</string>
+    <string name="title_activity_home">HomeActivity</string>
+    <string name="create_account">Don\'t have an account? <br /><u>Create One</u></string>
+    <string name="log_in"><u>Log in</u></string>
 </resources>
