@@ -8,7 +8,7 @@ import {
 } from 'inversify-express-utils';
 import passport from 'passport';
 
-@controller('/hello', passport.authenticate('jwt', { session: false }))
+@controller('/', passport.authenticate('jwt', { session: false }))
 export class HelloWorldController implements interfaces.Controller {
 	@httpGet('/')
 	public get(@request() req: Request, @response() res: Response) {
