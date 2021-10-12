@@ -20,12 +20,12 @@ import '../../api/controllers/authentication.controller';
 
 export const boostrap = async (
 	container: Container,
-	appPort: number,
+	appPort: number | string | boolean,
 	dbHost: string,
 	dbName: string,
 	...modules: ContainerModule[]
 ) => {
-	// TODO: Add database client here connection here.
+	// TODO: Add database client here connection here using dbHost and dbName.
 
 	if (container.isBound(TYPES.Application) === false) {
 		container.load(...modules);
@@ -78,5 +78,18 @@ export const boostrap = async (
 		return app;
 	} else {
 		return container.get<express.Application>(TYPES.Application);
+	}
+};
+
+export const normalizePort = (
+	val: number | string,
+): number | string | boolean => {
+	const port: number = typeof val === 'string' ? parseInt(val, 10) : val;
+	if (isNaN(port)) {
+		return val;
+	} else if (port >= 0) {
+		return port;
+	} else {
+		return false;
 	}
 };
