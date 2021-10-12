@@ -9,7 +9,6 @@ export const getDatabaseClient = async (
 ) => {
 	return new Promise<DbClient>((resolve, reject) => {
 		const connectionString = `mongodb+srv://${dbUsername}:${dbPassword}@${dbCluster}.mongodb.net/colorimagedb?retryWrites=true&w=majority`;
-		console.log(connectionString);
 		mongoose.connect(connectionString);
 		const db = mongoose.connection;
 
