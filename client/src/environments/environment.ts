@@ -6,7 +6,7 @@ import { IEnvironment } from './IEnvironment';
 
 export const environment: IEnvironment = {
   production: false,
-  serverURL: 'http://localhost:3000/api',
+  serverURL: 'http://localhost:3000/api/v1',
   serverRawURL: 'http://localhost:3000',
 };
 
