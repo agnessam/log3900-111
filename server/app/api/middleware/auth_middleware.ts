@@ -1,10 +1,33 @@
-import { container } from '@app/infrastructure/ioc/ioc_container';
 import { NextFunction, Request, Response } from 'express';
-import { Container } from 'inversify';
 import jwt from 'jsonwebtoken';
 import passport from 'passport';
 import JWTstrategy, { ExtractJwt } from 'passport-jwt';
 import localStrategy from 'passport-local';
+import { User } from '../../domain/models/user';
+
+export const passportRegisterMiddleware = () => {
+	passport.use(
+		'register',
+		new localStrategy.Strategy(
+			{
+				usernameField: 'username',
+				passwordField: 'password',
+				passReqToCallback: true,
+			},
+			async (req, username, password, done) => {
+				try {
+					const user = await User.create(req.body);
+					return done(null, user, {
+						message: 'Account created succesfully.',
+					});
+				} catch (error) {
+					// TODO: Better error handling
+					done(error, null, undefined);
+				}
+			},
+		),
+	);
+};
 
 // This middleware function is performed first in the login
 // middleware function calls. It verifies the credentials of user
@@ -19,8 +42,26 @@ export const passportLoginMiddleware = () => {
 			},
 			async (username, password, done) => {
 				try {
-					// TODO: Define logic for database fetching
-					return done(null, username, {
+					const user = await User.findOne({ username });
+					if (!user) {
+						return done(
+							{ message: 'Username not found' },
+							false,
+							undefined,
+						);
+					}
+
+					const validate = await user.isValidPassword(password);
+
+					if (!validate) {
+						return done(
+							{ message: 'Wrong password' },
+							false,
+							undefined,
+						);
+					}
+
+					return done(null, user, {
 						message: 'Logged in succesfully',
 					});
 				} catch (error) {
@@ -53,19 +94,21 @@ export const jwtStrategyMiddleware = () => {
 };
 
 // Provides the middleware function that will be called when the
-// /auth/login endpoint is hit.
-const authLoginMiddlewareFactory = (container: Container) => {
-	return async (req: Request, res: Response, next: NextFunction) => {
-		passport.authenticate('login', async (err, user, info) => {
+// /auth/register endpoint is hit.
+const authRegisterMiddlewareFactory = () => {
+	return (req: Request, res: Response, next: NextFunction) => {
+		passport.authenticate('register', (err, user, info) => {
 			try {
+				// TODO: Better error handling.
 				if (err || !user) {
 					return res.json({
-						username: null,
+						user: null,
 						token: null,
-						error: info,
+						info: null,
+						error: err,
 					});
 				}
-				req.login(user, async (error) => {
+				req.login(user, { session: false }, (error) => {
 					const body = {
 						id: user.id,
 						username: user.username,
@@ -74,9 +117,46 @@ const authLoginMiddlewareFactory = (container: Container) => {
 					const token = jwt.sign({ user: body }, 'SIMPSRISE');
 
 					return res.json({
-						username: user,
+						user: user,
 						token: token,
+						info: info,
+						error: null,
+					});
+				});
+			} catch (err) {
+				return next(err);
+			}
+		})(req, res, next);
+	};
+};
+
+// Provides the middleware function that will be called when the
+// /auth/login endpoint is hit.
+const authLoginMiddlewareFactory = () => {
+	return async (req: Request, res: Response, next: NextFunction) => {
+		passport.authenticate('login', async (err, user, info) => {
+			try {
+				if (err || !user) {
+					return res.json({
+						user: null,
+						token: null,
+						info: null,
 						error: err,
+					});
+				}
+				req.login(user, { session: false }, async (error) => {
+					const body = {
+						id: user.id,
+						user: user.username,
+					};
+
+					const token = jwt.sign({ user: body }, 'SIMPSRISE');
+
+					return res.json({
+						user: user,
+						token: token,
+						info: info,
+						error: null,
 					});
 				});
 			} catch (error) {
@@ -86,6 +166,7 @@ const authLoginMiddlewareFactory = (container: Container) => {
 	};
 };
 
-const authLoginMiddleware = authLoginMiddlewareFactory(container);
+const authRegisterMiddleware = authRegisterMiddlewareFactory();
+const authLoginMiddleware = authLoginMiddlewareFactory();
 
-export { authLoginMiddleware };
+export { authRegisterMiddleware, authLoginMiddleware };
