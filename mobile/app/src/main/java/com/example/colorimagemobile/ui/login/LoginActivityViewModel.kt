@@ -22,7 +22,7 @@ class LoginActivityViewModel: ViewModel() {
         return HTTPResponseLiveData
     }
 
-    fun loginUser(user: UserModel.Login): LiveData<DataWrapper<HTTPResponseModel>> {
+    fun loginUser(user: UserModel.Login): LiveData<DataWrapper<HTTPResponseModel.LoginResponse>> {
         return authRepository.loginUser(user)
     }
 }

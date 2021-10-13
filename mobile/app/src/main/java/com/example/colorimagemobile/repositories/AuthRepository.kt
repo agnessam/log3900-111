@@ -19,25 +19,35 @@ class AuthRepository {
     init {
     }
 
-    fun loginUser(user: UserModel.Login): MutableLiveData<DataWrapper<HTTPResponseModel>> {
-        val authLiveData: MutableLiveData<DataWrapper<HTTPResponseModel>> = MutableLiveData()
+    fun loginUser(user: UserModel.Login): MutableLiveData<DataWrapper<HTTPResponseModel.LoginResponse>> {
+        val authLiveData: MutableLiveData<DataWrapper<HTTPResponseModel.LoginResponse>> = MutableLiveData()
 
-        httpClient.loginUser(user).enqueue(object : Callback<HTTPResponseModel> {
-            override fun onResponse(call: Call<HTTPResponseModel>, response: Response<HTTPResponseModel>) {
+        httpClient.loginUser(user).enqueue(object : Callback<HTTPResponseModel.LoginResponse> {
+            override fun onResponse(call: Call<HTTPResponseModel.LoginResponse>, response: Response<HTTPResponseModel.LoginResponse>) {
+                // some HTTP error
                 if (!response.isSuccessful) {
-                    Log.d(DEBUG_KEY, response.message())
+                    printMsg(response.message())
                     authLiveData.value = DataWrapper(null, "An error occurred!", true)
                     return
                 }
 
+                val body = response.body() as HTTPResponseModel.LoginResponse
+
+                // unsuccessful authentication
+                if (!body.error.isNullOrEmpty()) {
+                    printMsg(body.error)
+                    authLiveData.value = DataWrapper(null, body.error, true)
+                    return
+                }
+
                 // user logged in successfully
-                authLiveData.value = DataWrapper(response.body(), "Login Successful", false)
+                authLiveData.value = DataWrapper(body, body.info, false)
             }
 
-            // duplicate username is coming through here
-            override fun onFailure(call: Call<HTTPResponseModel>, t: Throwable) {
-                Log.d(DEBUG_KEY, "User failed to login ${t.message!!}")
-                authLiveData.value = DataWrapper(null, "Username possibly already exists!", true)
+            // HTTP failure
+            override fun onFailure(call: Call<HTTPResponseModel.LoginResponse>, t: Throwable) {
+                printMsg("User failed to login ${t.message!!}")
+                authLiveData.value = DataWrapper(null, "An error occurred while logging you in!", true)
             }
         })
 

@@ -13,7 +13,7 @@ interface API {
 
     @Headers("Content-Type: application/json")
     @POST(Constants.ENDPOINTS.LOGIN_USER)
-    fun loginUser(@Body user: UserModel.Login): Call<HTTPResponseModel>
+    fun loginUser(@Body user: UserModel.Login): Call<HTTPResponseModel.LoginResponse>
 
     @Headers("Content-Type: application/json")
     @POST(Constants.ENDPOINTS.LOGOUT_USER)
