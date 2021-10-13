@@ -17,9 +17,12 @@ export const passportRegisterMiddleware = () => {
 			async (req, username, password, done) => {
 				try {
 					const user = await User.create(req.body);
-					return done(null, user);
+					return done(null, user, {
+						message: 'Account created succesfully.',
+					});
 				} catch (error) {
-					done(error);
+					// TODO: Better error handling
+					done(error, null, undefined);
 				}
 			},
 		),
@@ -41,20 +44,24 @@ export const passportLoginMiddleware = () => {
 				try {
 					const user = await User.findOne({ username });
 					if (!user) {
-						return done(null, false, {
-							message: 'Username not found.',
-						});
+						return done(
+							{ message: 'Username not found' },
+							false,
+							undefined,
+						);
 					}
 
 					const validate = await user.isValidPassword(password);
 
 					if (!validate) {
-						return done(null, false, {
-							message: 'Wrong password.',
-						});
+						return done(
+							{ message: 'Wrong password' },
+							false,
+							undefined,
+						);
 					}
 
-					return done(null, username, {
+					return done(null, user, {
 						message: 'Logged in succesfully',
 					});
 				} catch (error) {
@@ -97,6 +104,7 @@ const authRegisterMiddlewareFactory = () => {
 					return res.json({
 						user: null,
 						token: null,
+						info: null,
 						error: err,
 					});
 				}
@@ -111,7 +119,8 @@ const authRegisterMiddlewareFactory = () => {
 					return res.json({
 						user: user,
 						token: token,
-						error: info,
+						info: info,
+						error: null,
 					});
 				});
 			} catch (err) {
@@ -131,7 +140,8 @@ const authLoginMiddlewareFactory = () => {
 					return res.json({
 						user: null,
 						token: null,
-						error: info,
+						info: null,
+						error: err,
 					});
 				}
 				req.login(user, { session: false }, async (error) => {
@@ -143,9 +153,10 @@ const authLoginMiddlewareFactory = () => {
 					const token = jwt.sign({ user: body }, 'SIMPSRISE');
 
 					return res.json({
-						user: user.username,
+						user: user,
 						token: token,
-						error: err,
+						info: info,
+						error: null,
 					});
 				});
 			} catch (error) {
