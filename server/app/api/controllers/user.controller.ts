@@ -10,8 +10,9 @@ import {
 	httpPost,
 	request,
 } from 'inversify-express-utils';
+import passport from 'passport';
 
-@controller('/users')
+@controller('/users', passport.authenticate('jwt', { session: false }))
 export class UserController {
 	@inject(TYPES.UserRepository) public userRepository: UserRepository;
 
