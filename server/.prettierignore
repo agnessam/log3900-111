@@ -4,9 +4,6 @@
 node_modules/
 false/
 
-# Exclusion of environment variables
-.env
-
 # Exclusion des fichiers Javascripts
 dist/
 
@@ -27,16 +24,3 @@ npm-debug.log
 !tsconfig.json
 !package-lock.json
 
-# Artifacts
-*.zip
-
-# VSCode
-.vscode/*
-!.vscode/settings.json
-!.vscode/tasks.json
-!.vscode/launch.json
-!.vscode/extensions.json
-*.code-workspace
-
-# Local History for Visual Studio Code
-.history/
