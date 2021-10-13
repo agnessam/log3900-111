@@ -10,6 +10,7 @@ import { exceptionLoggerMiddleware, reqMiddleware } from './middleware';
 import {
 	jwtStrategyMiddleware,
 	passportLoginMiddleware,
+	passportRegisterMiddleware,
 } from '../../api/middleware/auth_middleware';
 import { DbClient, getDatabaseClient } from '../data_access/db_client';
 
@@ -58,6 +59,7 @@ export const boostrap = async (
 		});
 
 		// Set passport middleware
+		passportRegisterMiddleware();
 		passportLoginMiddleware();
 		jwtStrategyMiddleware();
 
