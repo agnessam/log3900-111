@@ -17,11 +17,6 @@ export const passportRegisterMiddleware = () => {
 			async (req, username, password, done) => {
 				try {
 					const user = await User.create(req.body);
-					req.login(user, (err) => {
-						if (err) {
-							console.log(err);
-						}
-					});
 					return done(null, user);
 				} catch (error) {
 					done(error);
@@ -96,16 +91,16 @@ export const jwtStrategyMiddleware = () => {
 const authRegisterMiddlewareFactory = () => {
 	return (req: Request, res: Response, next: NextFunction) => {
 		passport.authenticate('register', (err, user, info) => {
-			console.log(user);
 			try {
+				// TODO: Better error handling.
 				if (err || !user) {
 					return res.json({
 						user: null,
 						token: null,
-						error: info,
+						error: err,
 					});
 				}
-				req.login(user, (error) => {
+				req.login(user, { session: false }, (error) => {
 					const body = {
 						id: user.id,
 						username: user.username,
@@ -116,7 +111,7 @@ const authRegisterMiddlewareFactory = () => {
 					return res.json({
 						user: user,
 						token: token,
-						error: err,
+						error: info,
 					});
 				});
 			} catch (err) {
@@ -139,7 +134,7 @@ const authLoginMiddlewareFactory = () => {
 						error: info,
 					});
 				}
-				req.login(user, async (error) => {
+				req.login(user, { session: false }, async (error) => {
 					const body = {
 						id: user.id,
 						user: user.username,
