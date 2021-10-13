@@ -7,6 +7,13 @@ class UserModel {
     data class Logout(val username: String)
 
     // holds all the data of User
-    data class AllInfo(val username: String)
+    data class AllInfo(
+        val _id: String,
+        val username: String,
+        val firstName: String,
+        val lastName: String,
+        val password: String,
+        val email: String,
+    )
 }
 

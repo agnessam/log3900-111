@@ -17,7 +17,7 @@ class RegisterActivityViewModel: ViewModel() {
         authRepository = AuthRepository()
     }
 
-    fun registerUser(newUserData: UserModel.Register): LiveData<DataWrapper<HTTPResponseModel>> {
+    fun registerUser(newUserData: UserModel.Register): LiveData<DataWrapper<HTTPResponseModel.RegisterResponse>> {
         return authRepository.registerUser(newUserData)
     }
 }

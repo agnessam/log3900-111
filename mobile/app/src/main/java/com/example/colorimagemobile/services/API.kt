@@ -21,5 +21,5 @@ interface API {
 
     @Headers("Content-Type: application/json")
     @POST(Constants.ENDPOINTS.REGISTER_USER)
-    fun registerUser(@Body newUser: UserModel.Register): Call<HTTPResponseModel>
+    fun registerUser(@Body newUser: UserModel.Register): Call<HTTPResponseModel.RegisterResponse>
 }

@@ -8,15 +8,20 @@ import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.ViewModelProvider
 import com.example.colorimagemobile.R
 import com.example.colorimagemobile.classes.FormValidator
+import com.example.colorimagemobile.classes.User
 import com.example.colorimagemobile.models.UserModel
 import com.example.colorimagemobile.databinding.ActivityRegisterBinding
 import com.example.colorimagemobile.models.DataWrapper
 import com.example.colorimagemobile.models.HTTPResponseModel
+import com.example.colorimagemobile.services.SharedPreferencesService
+import com.example.colorimagemobile.ui.home.HomeActivity
 import com.example.colorimagemobile.ui.login.LoginActivity
 import com.example.colorimagemobile.utils.CommonFun.Companion.closeKeyboard
+import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
 import com.example.colorimagemobile.utils.CommonFun.Companion.printToast
 import com.example.colorimagemobile.utils.CommonFun.Companion.redirectTo
 import com.example.colorimagemobile.utils.CommonFun.Companion.toggleButton
+import com.example.colorimagemobile.utils.Constants
 import com.example.colorimagemobile.utils.Constants.Companion.DEBUG_KEY
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
@@ -33,6 +38,7 @@ enum class FormIndexes(val index: Int) {
 class RegisterActivity : AppCompatActivity() {
     private lateinit var registerViewModel: RegisterActivityViewModel
     private lateinit var binding: ActivityRegisterBinding
+    private lateinit var sharedPreferencesService: SharedPreferencesService
     private lateinit var formValidator: FormValidator
     private var canSubmit: Boolean = false
     private lateinit var registerLayouts: ArrayList<TextInputLayout>
@@ -44,6 +50,7 @@ class RegisterActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         registerViewModel = ViewModelProvider(this).get(RegisterActivityViewModel::class.java)
+        sharedPreferencesService = SharedPreferencesService(this)
 
         registerLayouts = arrayListOf<TextInputLayout>(binding.firstNameInputLayout, binding.lastNameInputLayout, binding.usernameInputLayout, binding.emailInputLayout, binding.passwordInputLayout, binding.confirmPasswordInputLayout)
         registerInputs = arrayListOf<TextInputEditText>(binding.firstNameInputText, binding.lastNameInputText, binding.usernameInputText, binding.emailInputText, binding.passwordInputText, binding.confirmPasswordInputText)
@@ -81,8 +88,8 @@ class RegisterActivity : AppCompatActivity() {
 
     private fun doPasswordsMatch(): Boolean {
         val unmatchedPasswordsText = "Passwords did not match"
-        val password = registerInputs[FormIndexes.PASSWORD.index].text.toString()
-        val passwordConfirmation = registerInputs[FormIndexes.PASSWORD_CONFIRMATION.index].text.toString()
+        val password = getInputText(FormIndexes.PASSWORD.index)
+        val passwordConfirmation = getInputText(FormIndexes.PASSWORD_CONFIRMATION.index)
 
         if (password != passwordConfirmation) {
             registerLayouts[FormIndexes.PASSWORD.index].error = unmatchedPasswordsText
@@ -98,11 +105,11 @@ class RegisterActivity : AppCompatActivity() {
         if (!canSubmit || !doPasswordsMatch()) return
 
         // get input texts
-        val firstName = registerInputs[FormIndexes.FIRST_NAME.index].text.toString()
-        val lastName = registerInputs[FormIndexes.LAST_NAME.index].text.toString()
-        val username = registerInputs[FormIndexes.USERNAME.index].text.toString()
-        val email = registerInputs[FormIndexes.EMAIL.index].text.toString()
-        val password = registerInputs[FormIndexes.PASSWORD.index].text.toString()
+        val firstName = getInputText(FormIndexes.FIRST_NAME.index)
+        val lastName = getInputText(FormIndexes.LAST_NAME.index)
+        val username = getInputText(FormIndexes.USERNAME.index)
+        val email = getInputText(FormIndexes.EMAIL.index)
+        val password = getInputText(FormIndexes.PASSWORD.index)
 
         // form body to make HTTP request
         val newUserData = UserModel.Register(firstName, lastName, username, email, password)
@@ -110,14 +117,25 @@ class RegisterActivity : AppCompatActivity() {
         registerObserver.observe(this, { handleRegisterResponse(it) })
     }
 
-    private fun handleRegisterResponse(response: DataWrapper<HTTPResponseModel>) {
-        printToast(applicationContext, response.message as String)
+    // returns the text of an input depending on the field index
+    private fun getInputText(index: Int): String {
+        return registerInputs[index].text.toString()
+    }
 
+    private fun handleRegisterResponse(HTTPResponse: DataWrapper<HTTPResponseModel.RegisterResponse>) {
         // some error occurred during HTTP request
-        if (response.isError as Boolean) {
+        if (HTTPResponse.isError as Boolean) {
+            printToast(applicationContext, HTTPResponse.message as String)
             return
         }
 
-        Log.d(DEBUG_KEY, response.data.toString())
+        // account created successfully
+        val response = HTTPResponse.data as HTTPResponseModel.RegisterResponse
+        printToast(applicationContext, response.info)
+
+        // save users info and token and redirect to /Home
+        User.setUserInfo(response.user)
+        sharedPreferencesService.setItem(Constants.STORAGE_KEY.TOKEN, response.token)
+        redirectTo(this@RegisterActivity, HomeActivity::class.java)
     }
 }
