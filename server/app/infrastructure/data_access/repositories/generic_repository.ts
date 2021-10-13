@@ -1,33 +1,24 @@
-import { Repository } from '../../../domain/interfaces/repository.interface';
-import { inject, injectable, unmanaged } from 'inversify';
+import { injectable, unmanaged } from 'inversify';
 import { Document, Model } from 'mongoose';
-import { DbClient } from '../db_client';
-import { TYPES } from '@app/domain/constants/types';
+import { Repository } from '../../../domain/interfaces/repository.interface';
 
 @injectable()
 export abstract class GenericRepository<TModel extends Document>
 	implements Repository<TModel>
 {
-	private name: string;
-	private Model: Model<TModel>;
-	private dbClient: DbClient;
+	private model: Model<TModel>;
 
-	constructor(
-		@inject(TYPES.DbClient) dbClient: DbClient,
-		@unmanaged() name: string,
-		schema: Model<TModel>,
-	) {
-		this.dbClient = dbClient;
-		this.name = name;
-		this.Model = schema;
+	constructor(@unmanaged() schema: Model<TModel>) {
+		this.model = schema;
 	}
+
 	save(doc: TModel): Promise<TModel> {
 		throw new Error('Method not implemented.');
 	}
 
-	create(model: TModel): Promise<TModel> {
+	public async create(item: TModel): Promise<TModel> {
 		return new Promise<TModel>((resolve, reject) => {
-			this.Model.create(model, (error, data) => {
+			this.model.create(item, (error, data) => {
 				if (error) {
 					reject(error);
 				}
@@ -38,7 +29,7 @@ export abstract class GenericRepository<TModel extends Document>
 
 	public async findAll() {
 		return new Promise<TModel[]>((resolve, reject) => {
-			this.Model.find({}, (err, data: TModel[]) => {
+			this.model.find({}, (err, data: TModel[]) => {
 				if (err) {
 					reject(err);
 				}
@@ -49,7 +40,7 @@ export abstract class GenericRepository<TModel extends Document>
 
 	findById(id: string): Promise<TModel> {
 		return new Promise<TModel>((resolve, reject) => {
-			this.Model.findById(id, (err: Error, data: TModel) => {
+			this.model.findById(id, (err: Error, data: TModel) => {
 				if (err) {
 					reject(err);
 				}
@@ -59,24 +50,20 @@ export abstract class GenericRepository<TModel extends Document>
 	}
 
 	// https://masteringjs.io/tutorials/mongoose/update
-	updateById(id: string, model: {}): Promise<TModel> {
+	updateById(id: string, item: {}): Promise<TModel> {
 		return new Promise<TModel>((resolve, reject) => {
-			this.Model.findByIdAndUpdate(
-				id,
-				model,
-				(err: any, data: TModel) => {
-					if (err) {
-						reject(err);
-					}
-					resolve(data);
-				},
-			);
+			this.model.findByIdAndUpdate(id, item, (err: any, data: TModel) => {
+				if (err) {
+					reject(err);
+				}
+				resolve(data);
+			});
 		});
 	}
 
 	deleteById(id: string): Promise<TModel> {
 		return new Promise<TModel>((resolve, reject) => {
-			this.Model.findByIdAndDelete(id, (err: any, data: TModel) => {
+			this.model.findByIdAndDelete(id, (err: any, data: TModel) => {
 				if (err) {
 					reject(err);
 				}

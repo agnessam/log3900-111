@@ -11,13 +11,14 @@ import {
 	jwtStrategyMiddleware,
 	passportLoginMiddleware,
 } from '../../api/middleware/auth_middleware';
+import { DbClient, getDatabaseClient } from '../data_access/db_client';
 
 // Controller injection is done through imports
 // Simply add the controller import here, and it should register within our
 // express application.
 import '../../api/controllers/hello-world.controller';
 import '../../api/controllers/authentication.controller';
-import { DbClient, getDatabaseClient } from '../data_access/db_client';
+import '../../api/controllers/user.controller';
 
 export const boostrap = async (
 	container: Container,
