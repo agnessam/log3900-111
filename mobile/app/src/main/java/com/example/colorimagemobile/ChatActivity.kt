@@ -130,37 +130,6 @@ class ChatActivity : AppCompatActivity() {
     }
 
     private fun setLogOutListener() {
-        val logOutBtn: Button = findViewById(R.id.logoutBtn)
-
-        logOutBtn.setOnClickListener(View.OnClickListener {
-            // log out -> POST /logout
-            val user = UserModel.Logout(this.username)
-
-            RetrofitInstance.HTTP.logoutUser(user).enqueue(object : Callback<Boolean> {
-                override fun onResponse(call: Call<Boolean>, response: Response<Boolean>) {
-                    if (!response.isSuccessful) {
-                        Log.d("HTTP request error", response.message())
-                        printToast(applicationContext, "An error occurred!")
-                        return
-                    }
-
-                    printToast(applicationContext, "Logging you out ${user.username}!")
-
-                    // remove items from "local storage"
-                    val sharedPref = getSharedPreferences(Constants.STORAGE_KEY.MAIN, Context.MODE_PRIVATE)
-                    val editor = sharedPref.edit()
-                    editor.clear().apply()
-
-                    // redirect to /login
-                    redirectTo(this@ChatActivity, LoginActivity::class.java)
-                }
-
-                override fun onFailure(call: Call<Boolean>, t: Throwable) {
-                    Log.d("User failed to log out", t.message!!)
-                    printToast(applicationContext, "Failed to logout!\nAn error occurred")
-                }
-            })
-        })
     }
 
     private fun executeChatSend() {

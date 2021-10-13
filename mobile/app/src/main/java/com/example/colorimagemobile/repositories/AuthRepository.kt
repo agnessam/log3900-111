@@ -61,7 +61,7 @@ class AuthRepository {
         httpClient.logoutUser(user).enqueue(object : Callback<Boolean> {
             override fun onResponse(call: Call<Boolean>, response: Response<Boolean>) {
                 if (!response.isSuccessful) {
-                    Log.d(DEBUG_KEY, response.message())
+                    printMsg(response.message())
                     authLiveData.value = DataWrapper(null, "An error occurred!", true)
                     return
                 }
@@ -70,8 +70,8 @@ class AuthRepository {
             }
 
             override fun onFailure(call: Call<Boolean>, t: Throwable) {
-                Log.d(DEBUG_KEY,"User failed to log out ${t.message!!}")
-                authLiveData.value = DataWrapper(null, "Failed to logout!\nAn error occurred", true)
+                printMsg("User failed to log out ${t.message!!}")
+                authLiveData.value = DataWrapper(null, "Failed to you logout!", true)
             }
         })
 

@@ -11,10 +11,12 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.colorimagemobile.ui.login.LoginActivity
 import com.example.colorimagemobile.R
+import com.example.colorimagemobile.classes.User
 import com.example.colorimagemobile.models.UserModel
 import com.example.colorimagemobile.models.DataWrapper
 import com.example.colorimagemobile.models.HTTPResponseModel
 import com.example.colorimagemobile.services.SharedPreferencesService
+import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
 import com.example.colorimagemobile.utils.CommonFun.Companion.printToast
 import com.example.colorimagemobile.utils.CommonFun.Companion.redirectTo
 import com.example.colorimagemobile.utils.Constants
@@ -28,8 +30,13 @@ class HomeActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
 
+        // get user info here
+//        printMsg("INNN: " + User.getUserInfo()._id)
+//        printMsg("INNN: " + User.getUserInfo().username)
+
         homeViewModel = ViewModelProvider(this).get(HomeActivityViewModel::class.java)
         sharedPreferencesService = SharedPreferencesService(this)
+
         setBottomNavigationView()
     }
 
@@ -56,18 +63,14 @@ class HomeActivity : AppCompatActivity() {
             logUserOut()
             true
         }
-
         else -> {
-            // If we got here, the user's action was not recognized.
-            // Invoke the superclass to handle it.
             super.onOptionsItemSelected(item)
         }
     }
 
     private fun logUserOut() {
-        val username = sharedPreferencesService.getItem(Constants.STORAGE_KEY.USERNAME)
-        val user = UserModel.Logout(username)
-
+//        val user = UserModel.Logout(User.getUserInfo().username)
+        val user = UserModel.Logout("yo")
         val logOutObserver = homeViewModel.logoutUser(user)
         logOutObserver.observe(this, { handleLogOutResponse(it) })
     }
@@ -81,7 +84,7 @@ class HomeActivity : AppCompatActivity() {
         }
 
         // remove items from "local storage"
-        sharedPreferencesService.clear()
+        sharedPreferencesService.removeItem(Constants.STORAGE_KEY.TOKEN)
         redirectTo(this, LoginActivity::class.java)
     }
 }
