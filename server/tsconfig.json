@@ -24,6 +24,6 @@
 			"@common/*": ["../common/*"]
 		}
 	},
-	"include": ["app/**/*.ts"],
+	"include": ["app/**/*.ts", "app/api/controllers/..ts"],
 	"exclude": ["node_modules", "dist", "**/*.spec.ts", "test/*"]
 }
