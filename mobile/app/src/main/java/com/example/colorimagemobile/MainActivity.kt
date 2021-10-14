@@ -5,8 +5,9 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.colorimagemobile.databinding.ActivityMainBinding
 import com.example.colorimagemobile.services.SharedPreferencesService
 import com.example.colorimagemobile.ui.home.HomeActivity
+import com.example.colorimagemobile.ui.login.LoginActivity
 import com.example.colorimagemobile.utils.CommonFun.Companion.redirectTo
-import com.example.colorimagemobile.utils.Constants.Companion.SHARED_TOKEN_KEY
+import com.example.colorimagemobile.utils.Constants
 
 class MainActivity : AppCompatActivity() {
 
@@ -20,14 +21,10 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         sharedPreferencesService = SharedPreferencesService(this)
-        val token = sharedPreferencesService.getItem(SHARED_TOKEN_KEY)
+        val token = sharedPreferencesService.getItem(Constants.STORAGE_KEY.TOKEN)
 
-        if (token.isNullOrEmpty()) {
-            // redirect to /login
-            redirectTo(this, LoginActivity::class.java)
-        } else {
-            // redirect to /home
-            redirectTo(this, HomeActivity::class.java)
-        }
+        // if token exists, go to Home else go to Login for auth verification
+        val destinationActivity: Class<*> = if (token.isNullOrEmpty()) LoginActivity::class.java else HomeActivity::class.java
+        redirectTo(this, destinationActivity)
     }
 }

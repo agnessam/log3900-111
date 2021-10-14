@@ -1,63 +1,81 @@
-package com.example.colorimagemobile
+package com.example.colorimagemobile.ui.login
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.Button
-import android.widget.EditText
-import android.widget.TextView
-import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.ViewModelProvider
+import com.example.colorimagemobile.R
+import com.example.colorimagemobile.classes.FormValidator
+import com.example.colorimagemobile.classes.User
+import com.example.colorimagemobile.models.UserModel
+import com.example.colorimagemobile.databinding.ActivityLoginBinding
 import com.example.colorimagemobile.models.DataWrapper
 import com.example.colorimagemobile.models.HTTPResponseModel
-import com.example.colorimagemobile.models.User
 import com.example.colorimagemobile.services.SharedPreferencesService
 import com.example.colorimagemobile.ui.home.HomeActivity
-import com.example.colorimagemobile.ui.login.LoginActivityViewModel
-import com.example.colorimagemobile.ui.signUp.SignUpActivity
+import com.example.colorimagemobile.ui.register.RegisterActivity
 import com.example.colorimagemobile.utils.CommonFun.Companion.closeKeyboard
 import com.example.colorimagemobile.utils.CommonFun.Companion.onEnterKeyPressed
+import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
 import com.example.colorimagemobile.utils.CommonFun.Companion.printToast
 import com.example.colorimagemobile.utils.CommonFun.Companion.redirectTo
-import com.example.colorimagemobile.utils.Constants.Companion.SHARED_TOKEN_KEY
-import com.example.colorimagemobile.utils.Constants.Companion.SHARED_USERNAME_KEY
+import com.example.colorimagemobile.utils.CommonFun.Companion.toggleButton
+import com.example.colorimagemobile.utils.Constants
+import com.google.android.material.textfield.TextInputEditText
+import com.google.android.material.textfield.TextInputLayout
 
 class LoginActivity : AppCompatActivity() {
     private lateinit var loginViewModel: LoginActivityViewModel
     private lateinit var sharedPreferencesService: SharedPreferencesService
+    private lateinit var binding: ActivityLoginBinding
+    private lateinit var formValidator: FormValidator
+    private var canSubmit: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_login)
+        binding = ActivityLoginBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        loginViewModel = ViewModelProvider(this).get(LoginActivityViewModel::class.java)
         sharedPreferencesService = SharedPreferencesService(this)
+        loginViewModel = ViewModelProvider(this).get(LoginActivityViewModel::class.java)
 
+        val loginLayouts = arrayListOf<TextInputLayout>(binding.usernameInputLayout, binding.passwordInputLayout)
+        val loginInputs = arrayListOf<TextInputEditText>(binding.usernameInputText, binding.passwordInputText)
+        formValidator = FormValidator(loginLayouts, loginInputs)
+
+        toggleButton(binding.loginBtn, false) // deactivate login button by default
         setListeners()
     }
 
     private fun setListeners() {
-        val loginBtn: Button = findViewById(R.id.loginBtn)
-        loginBtn.setOnClickListener { executeLogin() }
+        binding.loginBtn.setOnClickListener { executeLogin() }
+        binding.registerBtn.setOnClickListener { redirectTo(this, RegisterActivity::class.java) }
+        binding.loginMain.setOnTouchListener { v, event -> closeKeyboard(this) }
 
-        val signUpText: TextView = findViewById(R.id.signUpText)
-        signUpText.setOnClickListener { redirectTo(this, SignUpActivity::class.java) }
+        onEnterKeyPressed(binding.usernameInputText) { executeLogin() }
+        onEnterKeyPressed(binding.passwordInputText) { executeLogin() }
 
-        val editText: EditText = findViewById(R.id.usernameInput)
-        onEnterKeyPressed(editText) { executeLogin() }
+        // inputs error handling
+        binding.usernameInputText.doOnTextChanged { text, start, before, count ->  handleInputError(text, binding.usernameInputLayout) }
+        binding.passwordInputText.doOnTextChanged { text, start, before, count ->  handleInputError(text, binding.passwordInputLayout) }
+    }
 
-        val loginMain: ConstraintLayout = findViewById(R.id.loginMain)
-        loginMain.setOnTouchListener { v, event -> closeKeyboard(this) }
+    // handles UI error messages depending on form errors
+    private fun handleInputError(text: CharSequence?, inputLayout: TextInputLayout) {
+        inputLayout.error = formValidator.getWhitespaceText(text)
+
+        val containsError = formValidator.containsError()
+        val invalidInputLength = formValidator.isInputEmpty(resources.getString(R.string.required))
+
+        // activate/deactivate login button if form contains error or isEmpty
+        canSubmit = !containsError && !invalidInputLength
+        toggleButton(binding.loginBtn, canSubmit)
     }
 
     private fun executeLogin() {
-        val usernameInput: TextView = findViewById(R.id.usernameInput)
-        val user = User(usernameInput.text.toString(), "kesh")
+        if (!canSubmit) return
 
-        // check if input is valid
-        if (user.username.trim().length === 0) {
-            printToast(applicationContext, "Error! Please enter a valid username!")
-            return
-        }
+        val user = UserModel.Login(binding.usernameInputText.text.toString(), binding.passwordInputText.text.toString())
 
         // username ok -> make HTTP POST request
         val loginObserver = loginViewModel.loginUser(user)
@@ -65,23 +83,19 @@ class LoginActivity : AppCompatActivity() {
     }
 
     // response from HTTP request
-    private fun handleLoginResponse(it: DataWrapper<HTTPResponseModel>) {
-        printToast(applicationContext, it.message as String)
+    private fun handleLoginResponse(HTTPResponse: DataWrapper<HTTPResponseModel.LoginResponse>) {
+        printToast(applicationContext, HTTPResponse.message as String)
 
         // some error occurred during HTTP request
-        if (it.isError as Boolean) {
+        if (HTTPResponse.isError as Boolean) {
             return
         }
 
-        val userResponse = it.data as HTTPResponseModel
-        val token = userResponse.token.toString()
-        val username = userResponse.username.toString()
+        val response = HTTPResponse.data as HTTPResponseModel.LoginResponse
 
-        // save credentials to "local storage"
-        sharedPreferencesService.setItem(SHARED_USERNAME_KEY, username)
-        sharedPreferencesService.setItem(SHARED_TOKEN_KEY, token)
-
-        // redirect to /chat
+        // save users info and token and redirect to /Home
+        User.setUserInfo(response.user)
+        sharedPreferencesService.setItem(Constants.STORAGE_KEY.TOKEN, response.token)
         redirectTo(this@LoginActivity, HomeActivity::class.java)
     }
 }

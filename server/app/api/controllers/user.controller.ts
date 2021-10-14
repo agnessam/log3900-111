@@ -1,43 +1,49 @@
 import { TYPES } from '@app/domain/constants/types';
 import { UserRepository } from '@app/infrastructure/data_access/repositories/user_repository';
-import { Request } from 'express';
+import { Request, Response } from 'express';
 import { inject } from 'inversify';
 import {
-	controller,
-	httpDelete,
-	httpGet,
-	httpPatch,
-	httpPost,
-	request,
+  controller,
+  httpDelete,
+  httpGet,
+  httpPatch,
+  httpPost,
+  request,
+  response,
 } from 'inversify-express-utils';
 import passport from 'passport';
 
 @controller('/users', passport.authenticate('jwt', { session: false }))
 export class UserController {
-	@inject(TYPES.UserRepository) public userRepository: UserRepository;
+  @inject(TYPES.UserRepository) public userRepository: UserRepository;
 
-	@httpGet('/')
-	public async get() {
-		return await this.userRepository.findAll();
-	}
+  @httpGet('/')
+  public async get() {
+    return await this.userRepository.findAll();
+  }
 
-	@httpGet('/:id')
-	public async getUserById(@request() req: Request) {
-		return await this.userRepository.findById(req.params.id);
-	}
+  @httpGet('/me')
+  public async getMe(@request() req: Request, @response() res: Response) {
+    return await this.userRepository.getMe(req, res);
+  }
 
-	@httpPost('/')
-	public async createUser(@request() req: Request) {
-		return await this.userRepository.create(req.body);
-	}
+  @httpGet('/:id')
+  public async getUserById(@request() req: Request) {
+    return await this.userRepository.findById(req.params.id);
+  }
 
-	@httpPatch('/:id')
-	public async updateUser(@request() req: Request) {
-		return await this.userRepository.updateById(req.params.id, req.body);
-	}
+  @httpPost('/')
+  public async createUser(@request() req: Request) {
+    return await this.userRepository.create(req.body);
+  }
 
-	@httpDelete('/:id')
-	public async deleteUser(@request() req: Request) {
-		return await this.userRepository.deleteById(req.params.id);
-	}
+  @httpPatch('/:id')
+  public async updateUser(@request() req: Request) {
+    return await this.userRepository.updateById(req.params.id, req.body);
+  }
+
+  @httpDelete('/:id')
+  public async deleteUser(@request() req: Request) {
+    return await this.userRepository.deleteById(req.params.id);
+  }
 }

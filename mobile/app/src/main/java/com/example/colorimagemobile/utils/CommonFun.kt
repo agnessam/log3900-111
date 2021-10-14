@@ -4,14 +4,22 @@ import android.app.Activity
 import android.content.Context
 import android.content.Context.INPUT_METHOD_SERVICE
 import android.content.Intent
+import android.util.Log
 import android.view.KeyEvent
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
+import com.example.colorimagemobile.utils.Constants.Companion.DEBUG_KEY
 
 class CommonFun {
     companion object {
+        // print in the terminal with the tag: DEBUG
+        fun printMsg(msg: String) {
+            Log.d(DEBUG_KEY, msg)
+        }
+
         // display snackbar/message at the bottom of the app
         fun printToast(applicationContext: Context, message: String) {
             Toast.makeText(applicationContext, message, Toast.LENGTH_LONG).show()
@@ -45,6 +53,13 @@ class CommonFun {
                 }
                 return@OnKeyListener false
             })
+        }
+
+        // enables or disables button
+        fun toggleButton(button: Button, shouldEnable: Boolean) {
+            button.alpha = if (shouldEnable) 1f else .4f
+            button.isClickable = shouldEnable
+            button.isEnabled = shouldEnable
         }
     }
 }

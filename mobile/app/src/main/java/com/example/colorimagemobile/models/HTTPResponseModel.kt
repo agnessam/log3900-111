@@ -5,15 +5,8 @@ import com.google.gson.annotations.SerializedName
 
 // model class for API Response
 class HTTPResponseModel {
-    @SerializedName("username")
-    @Expose
-    val username: String? = null
+    data class LoginResponse(val user: UserModel.AllInfo, val token: String, val info: String, val error: String)
+    data class RegisterResponse(val user: UserModel.AllInfo, val token: String, val info: String, val error: String)
 
-    @SerializedName("token")
-    @Expose
-    val token: String? = null
-
-    @SerializedName("error")
-    @Expose
-    val error: String? = null
+    data class GetUserMe(val user: UserModel.AllInfo, val err: String)
 }

@@ -1,4 +1,4 @@
-package com.example.colorimagemobile.ui.login
+package com.example.colorimagemobile.ui.register
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -8,8 +8,7 @@ import com.example.colorimagemobile.models.DataWrapper
 import com.example.colorimagemobile.models.HTTPResponseModel
 import com.example.colorimagemobile.repositories.AuthRepository
 
-class LoginActivityViewModel: ViewModel() {
-
+class RegisterActivityViewModel: ViewModel() {
     private val HTTPResponseLiveData: MutableLiveData<DataWrapper<HTTPResponseModel>>
     private val authRepository: AuthRepository
 
@@ -18,11 +17,7 @@ class LoginActivityViewModel: ViewModel() {
         authRepository = AuthRepository()
     }
 
-    fun getLoginResponseLiveData(): LiveData<DataWrapper<HTTPResponseModel>> {
-        return HTTPResponseLiveData
-    }
-
-    fun loginUser(user: UserModel.Login): LiveData<DataWrapper<HTTPResponseModel.LoginResponse>> {
-        return authRepository.loginUser(user)
+    fun registerUser(newUserData: UserModel.Register): LiveData<DataWrapper<HTTPResponseModel.RegisterResponse>> {
+        return authRepository.registerUser(newUserData)
     }
 }
