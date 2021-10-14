@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import androidx.appcompat.view.menu.ActionMenuItemView
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
@@ -51,6 +52,12 @@ class HomeActivity : AppCompatActivity() {
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         val inflater = menuInflater
         inflater.inflate(R.menu.toolbar_actions_menu, menu)
+
+        if (!User.isNull()) {
+            val usernameMenuItem: MenuItem = (menu as Menu).findItem(R.id.username_menu_item)
+            usernameMenuItem.title = User.getUserInfo().username
+        }
+
         return true
     }
 
@@ -67,15 +74,23 @@ class HomeActivity : AppCompatActivity() {
 
     // check if User exists! If not, make HTTP request to init the User
     private fun checkCurrentUser() {
+        // user is null -> GET user
         if (User.isNull()) {
             val token = sharedPreferencesService.getItem(Constants.STORAGE_KEY.TOKEN)
-            homeViewModel.getUserByToken(token).observe(this, { User.setUserInfo(it.data?.user as UserModel.AllInfo) })
+            homeViewModel.getUserByToken(token).observe(this, { handleGetUserMe(it) })
         }
     }
 
+    private fun handleGetUserMe(response: DataWrapper<HTTPResponseModel.GetUserMe>) {
+        User.setUserInfo(response.data?.user as UserModel.AllInfo)
+
+        // update username in menu item
+        val usernameMenuItem: ActionMenuItemView = findViewById(R.id.username_menu_item)
+        usernameMenuItem.text = User.getUserInfo().username
+    }
+
     private fun logUserOut() {
-//        val user = UserModel.Logout(User.getUserInfo().username)
-        val user = UserModel.Logout("yo")
+        val user = UserModel.Logout(User.getUserInfo().username)
         val logOutObserver = homeViewModel.logoutUser(user)
         logOutObserver.observe(this, { handleLogOutResponse(it) })
     }
