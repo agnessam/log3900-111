@@ -57,7 +57,7 @@ class ChatActivity : AppCompatActivity() {
 
         val sharedPref = getSharedPreferences(Constants.STORAGE_KEY.MAIN, Context.MODE_PRIVATE)
         val token = sharedPref.getString(Constants.STORAGE_KEY.TOKEN, "")
-        this.username = sharedPref.getString(Constants.STORAGE_KEY.USERNAME, "") as String
+        this.username = ""
 
         // check if token is valid! if not, redirect to /login
         if (token == "" || token == null) {

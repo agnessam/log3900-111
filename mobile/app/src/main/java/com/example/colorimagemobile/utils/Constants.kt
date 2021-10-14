@@ -24,6 +24,8 @@ class Constants {
             const val LOGIN_USER = "api/auth/login"
             const val LOGOUT_USER = "api/auth/logout"
             const val REGISTER_USER = "api/auth/register"
+
+            const val GET_USER_BY_TOKEN = "api/users/me"
         }
     }
 
@@ -31,7 +33,6 @@ class Constants {
     class STORAGE_KEY {
         companion object {
             const val MAIN = "localStorage"
-            const val USERNAME = "username"
             const val TOKEN = "token"
         }
     }

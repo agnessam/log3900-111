@@ -13,4 +13,8 @@ object User {
     fun getUserInfo(): UserModel.AllInfo {
         return this.info
     }
+
+    fun isNull(): Boolean {
+        return !::info.isInitialized
+    }
 }

@@ -30,14 +30,11 @@ class HomeActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
 
-        // get user info here
-//        printMsg("INNN: " + User.getUserInfo()._id)
-//        printMsg("INNN: " + User.getUserInfo().username)
-
         homeViewModel = ViewModelProvider(this).get(HomeActivityViewModel::class.java)
         sharedPreferencesService = SharedPreferencesService(this)
 
         setBottomNavigationView()
+        checkCurrentUser()
     }
 
     // side navigation navbar: upon click, change to new fragment
@@ -65,6 +62,17 @@ class HomeActivity : AppCompatActivity() {
         }
         else -> {
             super.onOptionsItemSelected(item)
+        }
+    }
+
+    // check if User exists! If not, make HTTP request to init the User
+    private fun checkCurrentUser() {
+        if (User.isNull()) {
+            val token = sharedPreferencesService.getItem(Constants.STORAGE_KEY.TOKEN)
+            homeViewModel.getUserByToken(token).observe(this, {
+                val user = it.data?.user as UserModel.AllInfo
+                User.setUserInfo(user)
+            })
         }
     }
 

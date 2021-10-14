@@ -8,9 +8,6 @@ import retrofit2.http.*
 
 interface API {
 
-    @GET("api/v1")
-    fun getUser(): Call<UserModel.Login>
-
     @Headers("Content-Type: application/json")
     @POST(Constants.ENDPOINTS.LOGIN_USER)
     fun loginUser(@Body user: UserModel.Login): Call<HTTPResponseModel.LoginResponse>
@@ -22,4 +19,7 @@ interface API {
     @Headers("Content-Type: application/json")
     @POST(Constants.ENDPOINTS.REGISTER_USER)
     fun registerUser(@Body newUser: UserModel.Register): Call<HTTPResponseModel.RegisterResponse>
+
+    @GET(Constants.ENDPOINTS.GET_USER_BY_TOKEN)
+    fun getUserByToken(@Header("Authorization") token: String): Call<HTTPResponseModel.GetUserMe>
 }
