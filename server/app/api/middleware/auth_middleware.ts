@@ -105,9 +105,10 @@ const authRegisterMiddlewareFactory = () => {
 						user: null,
 						token: null,
 						info: null,
-						error: err,
+						error: err.message,
 					});
 				}
+
 				req.login(user, { session: false }, (error) => {
 					const body = {
 						id: user.id,
@@ -119,7 +120,7 @@ const authRegisterMiddlewareFactory = () => {
 					return res.json({
 						user: user,
 						token: token,
-						info: info,
+						info: info.message,
 						error: null,
 					});
 				});
@@ -141,7 +142,7 @@ const authLoginMiddlewareFactory = () => {
 						user: null,
 						token: null,
 						info: null,
-						error: err,
+						error: err.message,
 					});
 				}
 				req.login(user, { session: false }, async (error) => {
@@ -155,7 +156,7 @@ const authLoginMiddlewareFactory = () => {
 					return res.json({
 						user: user,
 						token: token,
-						info: info,
+						info: info.message,
 						error: null,
 					});
 				});
