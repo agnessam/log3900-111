@@ -69,10 +69,7 @@ class HomeActivity : AppCompatActivity() {
     private fun checkCurrentUser() {
         if (User.isNull()) {
             val token = sharedPreferencesService.getItem(Constants.STORAGE_KEY.TOKEN)
-            homeViewModel.getUserByToken(token).observe(this, {
-                val user = it.data?.user as UserModel.AllInfo
-                User.setUserInfo(user)
-            })
+            homeViewModel.getUserByToken(token).observe(this, { User.setUserInfo(it.data?.user as UserModel.AllInfo) })
         }
     }
 

@@ -25,7 +25,7 @@ class UserRepository {
                 }
 
                 val body = response.body() as HTTPResponseModel.GetUserMe
-                if (body.err.isNotEmpty()) {
+                if (!body.err.isNullOrEmpty()) {
                     userLiveData.value = DataWrapper(null, body.err, true)
                     return
                 }
