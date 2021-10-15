@@ -1,7 +1,7 @@
 import { Renderer2 } from "@angular/core";
 import { ICommand } from "../../../interfaces/command.interface";
 import { Point } from "../../../models/point.model";
-import { DrawingService } from "../../../../canvas/services/drawing/drawing.service";
+import { DrawingService } from "../../drawing/drawing.service";
 import { Pencil } from "../pencil-tool/pencil.model";
 
 /// Commande pour ajouter un objet de type brush sur le dessin
