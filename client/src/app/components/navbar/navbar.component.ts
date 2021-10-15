@@ -24,5 +24,6 @@ export class NavbarComponent implements OnInit {
       console.log(response);
     });
     this.router.navigate(["/users/login"]);
+    console.log("LOGOUT");
   }
 }
