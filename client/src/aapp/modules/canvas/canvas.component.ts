@@ -6,7 +6,7 @@ import {
   ViewChild,
 } from "@angular/core";
 import { Subscription } from "rxjs";
-import { DrawingService } from "../../services/drawing/drawing.service";
+import { DrawingService } from "./services/drawing/drawing.service";
 
 /// S'occupe d'afficher le svg dans un component
 @Component({
