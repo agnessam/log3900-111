@@ -13,4 +13,11 @@
     <color name="chatSend">#b5838d</color>
     <color name="ownChat">#056162</color>
     <color name="otherChat">#c2c5aa</color>
+
+    <color name="mainTheme">#FCEDEA</color>
+    <color name="navItemColor">#5B4D5A</color>
+    <color name="mainColor">#000000</color>
+    <color name="titleColor">#924642</color>
+    <color name="container">#FEF9F7</color>
+    <color name="primary">#DA7E70</color>
 </resources>

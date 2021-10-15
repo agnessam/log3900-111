@@ -2,13 +2,13 @@ import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { BehaviorSubject, Observable } from "rxjs";
 import { map } from "rxjs/operators";
+import { environment } from "src/environments/environment";
 
 @Injectable({
   providedIn: "root",
 })
 export class AuthenticationService {
-  private endpointUrl: string =
-    "http://colorimage.us-east-1.elasticbeanstalk.com/api/v1/";
+  private endpointUrl: string = environment.serverURL + "/auth/";
   private authTokenSubject: BehaviorSubject<string | null>;
   public authTokenObservable: Observable<string | null>;
 

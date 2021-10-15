@@ -1,8 +1,23 @@
 import 'reflect-metadata';
-import { container } from './inversify.config';
-import { Server } from './server';
-import { TYPES } from './types';
+import { container } from './infrastructure/ioc/ioc_container';
+import {
+	boostrap,
+	normalizePort,
+} from './infrastructure/bootstrapping/bootstrap';
+import { referenceDataIoCModule } from './inversify.config';
 
-const server: Server = container.get<Server>(TYPES.Server);
+const runApp = async () => {
+	const app = await boostrap(
+		container,
+		normalizePort(process.env.PORT || '3000'),
+		process.env.DB_USERNAME || 'dbUser',
+		process.env.DB_PASSWORD || 'dbUser',
+		process.env.DB_CLUSTER || 'localhost',
+		referenceDataIoCModule,
+	);
+	return app;
+};
 
-server.init();
+(async () => {
+	await runApp();
+})();
