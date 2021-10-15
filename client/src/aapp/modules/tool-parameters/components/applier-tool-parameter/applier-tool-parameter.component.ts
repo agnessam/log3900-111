@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { ToolsApplierColorsService } from '../../../services/tools/tools-applier-colors/tools-applier-colors.service';
+import { ToolsApplierColorsService } from 'src/aapp/modules/workspace/services/tools/tools-applier-colors/tools-applier-colors.service';
 
 @Component({
   selector: 'app-applier-tool-parameter',
