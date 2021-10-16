@@ -1,4 +1,4 @@
-import { RGB } from 'src/app/model/rgb.model';
+import { RGB } from './rgb.model';
 
 export const DEFAULT_ALPHA = 1;
 export interface RGBA {

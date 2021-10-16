@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { HSL, MAX_HUE, MAX_LIGHTNESS, MAX_SATURATION } from 'src/app/model/hsl.model';
-import { RGB, RGB_MAX_VALUE } from 'src/app/model/rgb.model';
+import { HSL, MAX_HUE, MAX_LIGHTNESS, MAX_SATURATION } from '../../models/hsl.model';
+import { RGB, RGB_MAX_VALUE } from 'src/app/shared';
 
 /// Service qui permet de faire la conversion entre les differente forme de couleur
 /// Supporte RGB, HSL, HEX, HUE

@@ -1,6 +1,6 @@
 import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { ErrorMessage } from '../../model/error-message.model';
+import { ErrorMessage } from 'src/app/core/models/error-message.model';
 
 @Component({
   selector: 'app-error-message',

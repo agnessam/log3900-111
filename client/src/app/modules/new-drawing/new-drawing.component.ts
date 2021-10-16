@@ -5,8 +5,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { ColorPickerService } from 'src/app/modules/color-picker';
 import { DEFAULT_RGB_COLOR, DEFAULT_ALPHA } from 'src/app/shared';
 import { DrawingService } from 'src/app/modules/workspace';
-import { NewDrawingService } from 'src/app/services/new-drawing/new-drawing.service';
-import { GridService } from 'src/app/services/tools/grid-tool/grid.service';
+import { NewDrawingService } from 'src/app/modules/new-drawing';
+import { GridService } from 'src/app/modules/workspace';
 import { NewDrawingAlertComponent } from './new-drawing-alert/new-drawing-alert.component';
 
 const ONE_SECOND = 1000;

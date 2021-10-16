@@ -52,3 +52,4 @@ export * from "./services/tools/tool-rectangle/tool-rectangle.service";
 export * from "./services/tools/tools-applier-colors/color-applier-command";
 export * from "./services/tools/tools-applier-colors/tools-applier-colors.service";
 export * from "./services/hotkeys/hotkeys.service";
+export * from "./workspace.service";
