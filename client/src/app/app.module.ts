@@ -6,47 +6,15 @@ import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { FontAwesomeModule } from "@fortawesome/angular-fontawesome";
 import { MomentModule } from "ngx-moment";
 import { MaterialModules } from "./app-material.module";
+import { NavbarModule } from "./navbar/navbar.module";
 import { AppRoutingModule } from "./app-routing.module";
-import { ColorPickerModule } from "./color-picker/color-picker.module";
-import { AlertMessageComponent } from "./components/alert-message/alert-message.component";
-import { AppComponent } from "./components/app/app.component";
-import { AuthenticationModule } from "./authentication/authentication.module";
-import { CanvasComponent } from "./components/canvas/canvas.component";
-import { ControlMenuComponent } from "./components/control-menu/control-menu.component";
-import { ErrorMessageComponent } from "./components/error-message/error-message.component";
-import { HomeComponent } from "./components/home/home.component";
-import { NavbarComponent } from "./components/navbar/navbar.component";
-import { ChatComponent } from "./components/chat/chat.component";
-import { NewDrawingAlertComponent } from "./components/new-drawing/new-drawing-alert/new-drawing-alert.component";
-import { NewDrawingFormComponent } from "./components/new-drawing/new-drawing-form/new-drawing-form.component";
-import { NewDrawingComponent } from "./components/new-drawing/new-drawing.component";
-import { ParameterMenuComponent } from "./components/parameter-menu/parameter-menu.component";
-import { ParameterDirective } from "./components/parameter-menu/parameter.directive";
-import { SidenavComponent } from "./components/sidenav/sidenav.component";
-import { ToolParameterModule } from "./components/tool-parameters/tool-parameter.module";
-import { ToolsColorPickerComponent } from "./components/tools-color-picker/tools-color-picker.component";
-import { ToolsColorComponent } from "./components/tools-color/tools-color.component";
-import { WorkspaceComponent } from "./components/workspace/workspace.component";
+import { AppComponent } from "./app.component";
+import { AuthenticationModule } from "./modules/authentication/authentication.module";
+import { ToolParameterModule } from "./modules/tool-parameters/tool-parameter.module";
 
 @NgModule({
   declarations: [
-    AppComponent,
-    ParameterMenuComponent,
-    WorkspaceComponent,
-    SidenavComponent,
-    CanvasComponent,
-    NewDrawingComponent,
-    NewDrawingFormComponent,
-    NewDrawingAlertComponent,
-    ToolsColorComponent,
-    ToolsColorPickerComponent,
-    ControlMenuComponent,
-    ParameterDirective,
-    ErrorMessageComponent,
-    AlertMessageComponent,
-    HomeComponent,
-    NavbarComponent,
-    ChatComponent,
+    AppComponent
   ],
   imports: [
     BrowserModule,
@@ -55,12 +23,12 @@ import { WorkspaceComponent } from "./components/workspace/workspace.component";
     HttpClientModule,
     ReactiveFormsModule,
     MaterialModules,
-    ColorPickerModule,
     FontAwesomeModule,
     ToolParameterModule,
     MomentModule,
     AuthenticationModule,
     AppRoutingModule,
+    NavbarModule
   ],
   exports: [],
   providers: [],
