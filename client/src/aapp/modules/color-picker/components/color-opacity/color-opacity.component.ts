@@ -6,7 +6,7 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { ColorPickerService } from 'src/app/color-picker/color-picker.service';
 import { RGB_MAX_VALUE } from 'src/app/model/rgb.model';
 import { ColorTransformerService } from 'src/app/services/color-transformer/color-transformer.service';
-import { HSL_GRADIENT_WIDTH, OPACITY_HEIGHT } from '../color-picker.constant';
+import { HSL_GRADIENT_WIDTH, OPACITY_HEIGHT } from '../../constants/color-picker.constant';
 
 const GRADIENT_START = 0;
 const GRADIENT_END = 1;

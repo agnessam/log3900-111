@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { ToolsApplierColorsService } from 'src/app/services/tools/tools-applier-colors/tools-applier-colors.service';
+import { ToolsApplierColorsService } from "src/aapp/modules/workspace/services/tools/tools-applier-colors/tools-applier-colors.service"
 import { ApplierToolParameterComponent } from './applier-tool-parameter.component';
 
 describe('ApplierToolParameterComponent', () => {

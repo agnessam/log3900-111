@@ -2,11 +2,11 @@ import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MaterialModules } from 'src/app/app-material.module';
-import { RendererProviderService } from 'src/app/services/renderer-provider/renderer-provider.service';
+import { MaterialModules } from 'src/aapp/app-material.module';
+import { RendererProviderService } from 'src/aapp/modules/workspace/services/renderer-provider/renderer-provider.service';
 import { TexturesService } from 'src/app/services/textures/textures.service';
-import { BrushToolService } from 'src/app/services/tools/brush-tool/brush-tool.service';
-import { BrushToolParameterComponent } from './brush-tool-parameter.component';
+import { BrushToolService } from 'src/aapp/modules/workspace/services/tools/brush-tool/brush-tool.service';
+import { BrushToolParameterComponent } from 'src/aapp/modules/tool-parameters/components/brush-tool-parameter/brush-tool-parameter.component';
 
 describe('BrushToolParameterComponent', () => {
   let component: BrushToolParameterComponent;
