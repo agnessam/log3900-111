@@ -20,6 +20,7 @@ import { SelectionToolParameterComponent } from "./components/selection-tool-par
 import { SprayToolParameterComponent } from "./components/spray-tool-parameter/spray-tool-parameter.component";
 import { StampToolParameterComponent } from "./components/stamp-tool-parameter/stamp-tool-parameter.component";
 import { TextToolParameterComponent } from "./components/text-tool-parameter/text-tool-parameter.component";
+import { WorkspaceModule } from "src/aapp/modules/workspace/workspace.module";
 
 @NgModule({
   declarations: [
@@ -47,8 +48,9 @@ import { TextToolParameterComponent } from "./components/text-tool-parameter/tex
     ReactiveFormsModule,
     MaterialModules,
     FontAwesomeModule,
+    WorkspaceModule,
   ],
-  exports: [],
+  exports: [BrushToolParameterComponent, PencilToolParameterComponent],
   entryComponents: [
     BrushToolParameterComponent,
     PencilToolParameterComponent,

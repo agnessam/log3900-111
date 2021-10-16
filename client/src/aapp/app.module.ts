@@ -13,8 +13,6 @@ import { ColorPickerModule } from "src/app/color-picker/color-picker.module";
 import { AlertMessageComponent } from "src/app/components/alert-message/alert-message.component";
 import { AppComponent } from "src/app/components/app/app.component";
 import { AuthenticationModule } from "src/app/authentication/authentication.module";
-import { CanvasComponent } from "src/app/components/canvas/canvas.component";
-import { ControlMenuComponent } from "src/app/components/control-menu/control-menu.component";
 import { ErrorMessageComponent } from "src/app/components/error-message/error-message.component";
 import { HomeComponent } from "src/app/components/home/home.component";
 import { NavbarComponent } from "src/app/components/navbar/navbar.component";
@@ -33,13 +31,11 @@ import { ToolsColorComponent } from "src/app/components/tools-color/tools-color.
   declarations: [
     AppComponent,
     SidenavComponent,
-    CanvasComponent,
     NewDrawingComponent,
     NewDrawingFormComponent,
     NewDrawingAlertComponent,
     ToolsColorComponent,
     ToolsColorPickerComponent,
-    ControlMenuComponent,
     ParameterDirective,
     ErrorMessageComponent,
     AlertMessageComponent,
@@ -62,8 +58,7 @@ import { ToolsColorComponent } from "src/app/components/tools-color/tools-color.
     AppRoutingModule,
     // Modules from our app
     ParameterMenuModule,
-    WorkspaceModule
-
+    WorkspaceModule,
   ],
   exports: [],
   providers: [],

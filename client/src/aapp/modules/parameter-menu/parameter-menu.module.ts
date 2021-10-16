@@ -4,8 +4,10 @@ import { MaterialModules } from "../../app-material.module";
 import { ParameterMenuComponent } from "./parameter-menu.component";
 import { WorkspaceModule } from "../workspace/workspace.module";
 import { ToolParameterModule } from "../tool-parameters/tool-parameter.module";
+import { ControlMenuComponent } from "./components/control-menu/control-menu.component";
 
 @NgModule({
+  providers: [ControlMenuComponent],
   declarations: [ParameterMenuComponent],
   imports: [
     CommonModule,
