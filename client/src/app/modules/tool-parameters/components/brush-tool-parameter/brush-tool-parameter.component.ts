@@ -7,9 +7,7 @@ import {
 } from "@angular/core";
 import { FormControl, FormGroup } from "@angular/forms";
 import { TextureOptions } from "src/app/model/texture-options.model";
-import { RendererProviderService } from "src/app/modules/workspace/services/renderer-provider/renderer-provider.service";
-import { TexturesService } from "src/app/modules/workspace/services/textures/textures.service";
-import { BrushToolService } from "src/app/modules/workspace/services/tools/brush-tool/brush-tool.service";
+import { RendererProviderService, TexturesService, BrushToolService } from "src/app/modules/workspace";
 import {
   TEXTURE_FIVE,
   TEXTURE_FOUR,
