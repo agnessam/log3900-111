@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { FormControl, FormGroup } from '@angular/forms';
-import { RGB, RGB_MAX_VALUE } from 'src/app/model/rgb.model';
+import { RGB, RGB_MAX_VALUE } from 'src/app/shared';
 import { ColorTransformerService } from 'src/app/services/color-transformer/color-transformer.service';
 import { ColorPickerService } from '../color-picker.service';
 import { ColorPaletteComponent } from './color-palette.component';

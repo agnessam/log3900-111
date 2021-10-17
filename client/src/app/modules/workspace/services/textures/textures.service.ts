@@ -1,5 +1,5 @@
 import { Injectable, Renderer2 } from '@angular/core';
-import { RGBA } from 'src/app/model/rgba.model';
+import { RGBA } from 'src/app/shared';
 import { TextureOptions } from '../../model/texture-options.model';
 import { Texture } from '../../interfaces/texture.interface';
 import { TEXTURE_FIVE, TEXTURE_FOUR, TEXTURE_ONE, TEXTURE_THREE, TEXTURE_TWO } from '../../classes/textures/texture-id';

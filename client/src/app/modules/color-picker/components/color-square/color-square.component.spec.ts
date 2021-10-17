@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
-import { RGB } from 'src/app/model/rgb.model';
+import { RGB } from 'src/app/shared';
 import { ColorPickerService } from '../color-picker.service';
 import { ColorSquareComponent } from './color-square.component';
 

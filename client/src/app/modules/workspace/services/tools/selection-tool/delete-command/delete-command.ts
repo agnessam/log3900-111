@@ -1,4 +1,5 @@
-import { ICommand } from 'src/app/interfaces/command.interface';
+
+import { ICommand } from '../../../../interfaces/command.interface';
 import { DrawingService } from '../../../drawing/drawing.service';
 
 /// Commande permettant le retrait d'une liste d'element svg du dessin

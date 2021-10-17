@@ -1,7 +1,7 @@
 import { Renderer2 } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { FormControl } from '@angular/forms';
-import { RGBA } from 'src/app/model/rgba.model';
+import { RGBA } from 'src/app/shared';
 import { DrawingService } from '../../drawing/drawing.service';
 import { OffsetManagerService } from '../../offset-manager/offset-manager.service';
 import { RendererProviderService } from '../../renderer-provider/renderer-provider.service';

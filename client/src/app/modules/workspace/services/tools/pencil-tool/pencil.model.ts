@@ -1,4 +1,4 @@
-import { Point } from 'src/app/model/point.model';
+import { Point } from 'src/app/shared';
 
 export interface Pencil {
     pointsList: Point[];

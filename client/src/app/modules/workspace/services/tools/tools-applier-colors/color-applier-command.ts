@@ -1,5 +1,5 @@
 import { Renderer2 } from '@angular/core';
-import { ICommand } from 'src/app/interfaces/command.interface';
+import { ICommand } from '../../../interfaces/command.interface';;
 import { OBJECT_ATTRIBUTE_STRUCTURE } from 'src/app/model/object-structure.model';
 export class ColorApplierCommand implements ICommand {
 

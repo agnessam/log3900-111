@@ -1,7 +1,7 @@
 import { Renderer2 } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { DEFAULT_RGB_COLOR, RGB } from 'src/app/model/rgb.model';
-import { RGBA } from 'src/app/model/rgba.model';
+import { DEFAULT_RGB_COLOR, RGB } from 'src/app/shared';
+import { RGBA } from 'src/app/shared';
 import { RendererProviderService } from '../renderer-provider/renderer-provider.service';
 import { DrawingService } from './drawing.service';
 

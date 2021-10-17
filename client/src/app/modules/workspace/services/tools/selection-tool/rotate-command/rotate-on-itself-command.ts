@@ -1,5 +1,5 @@
 import { Renderer2 } from '@angular/core';
-import { ICommand } from 'src/app/interfaces/command.interface';
+import { ICommand } from '../../../../interfaces/command.interface';
 
 export class RotateOnItselfCommand implements ICommand {
     private previousTransformation: Map<string, string> = new Map<string, string>();

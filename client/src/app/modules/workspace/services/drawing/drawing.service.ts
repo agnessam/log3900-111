@@ -1,6 +1,5 @@
 import { EventEmitter, Injectable, Output, Renderer2, Directive } from '@angular/core';
-import { DEFAULT_RGB_COLOR, RGB } from 'src/app/model/rgb.model';
-import { DEFAULT_ALPHA, RGBA } from 'src/app/model/rgba.model';
+import { DEFAULT_RGB_COLOR, RGB, DEFAULT_ALPHA, RGBA } from 'src/app/shared';
 
 /// Service qui contient les fonction pour dessiner a l'écran
 @Directive()

@@ -1,6 +1,6 @@
 import { Renderer2 } from '@angular/core';
-import { ICommand } from 'src/app/interfaces/command.interface';
-import { Point } from 'src/app/model/point.model';
+import { ICommand } from '../../../interfaces/command.interface';
+import { Point } from 'src/app/shared';
 import { DrawingService } from '../../drawing/drawing.service';
 import { DEFAULT_SCALE_COEFFICIENT } from '../tools-constants';
 import { Stamp } from './stamp.model';

@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
-import { ICommand } from 'src/app/interfaces/command.interface';
-import { Point } from 'src/app/model/point.model';
-import { DrawingService } from 'src/app/services/drawing/drawing.service';
-import { RendererProviderService } from 'src/app/services/renderer-provider/renderer-provider.service';
+import { ICommand } from '../../../../interfaces/command.interface';
+import { Point } from 'src/app/shared';
+import { DrawingService, RendererProviderService } from 'src/app/modules/workspace';
 import { ResizeCommand } from './resize-command';
 
 const DOUBLING_SCALE_MODIFIER = 2;

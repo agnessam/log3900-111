@@ -1,5 +1,5 @@
 import { Renderer2 } from '@angular/core';
-import { ICommand } from 'src/app/interfaces/command.interface';
+import { ICommand } from '../../../interfaces/command.interface';
 import { DrawingService } from '../../drawing/drawing.service';
 import { Text } from './text.model';
 

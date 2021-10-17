@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Point } from 'src/app/model/point.model';
+import { Point } from 'src/app/shared';
 import { OffsetManagerService } from '../offset-manager/offset-manager.service';
 import { GridService } from '../tools/grid-tool/grid.service';
 

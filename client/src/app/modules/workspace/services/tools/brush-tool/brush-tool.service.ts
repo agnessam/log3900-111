@@ -4,8 +4,8 @@ import {
   faPaintBrush,
   IconDefinition,
 } from "@fortawesome/free-solid-svg-icons";
-import { ICommand } from "src/app/interfaces/command.interface";
-import { TexturesService } from "src/app/services/textures/textures.service";
+import { ICommand } from '../../../interfaces/command.interface';
+import { TexturesService } from "src/app/modules/workspace";
 import { DrawingService } from "../../drawing/drawing.service";
 import { OffsetManagerService } from "../../offset-manager/offset-manager.service";
 import { RendererProviderService } from "../../renderer-provider/renderer-provider.service";
