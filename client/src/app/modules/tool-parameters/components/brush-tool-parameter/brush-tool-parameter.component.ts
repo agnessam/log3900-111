@@ -6,7 +6,7 @@ import {
   ViewChild,
 } from "@angular/core";
 import { FormControl, FormGroup } from "@angular/forms";
-import { TextureOptions } from "src/app/model/texture-options.model";
+import { TextureOptions } from "src/app/shared";
 import { RendererProviderService, TexturesService, BrushToolService } from "src/app/modules/workspace";
 import {
   TEXTURE_FIVE,
@@ -14,7 +14,7 @@ import {
   TEXTURE_ONE,
   TEXTURE_THREE,
   TEXTURE_TWO,
-} from "src/app/classes/textures/texture-id";
+} from "src/app/modules/workspace";
 
 /// Le component d'affichage des paramètres du pinceau
 @Component({

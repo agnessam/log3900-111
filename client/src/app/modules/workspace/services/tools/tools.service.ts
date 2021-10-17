@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ICommand } from 'src/app/interfaces/command.interface';
-import { CommandInvokerService } from 'src/app/services/command-invoker/command-invoker.service';
+import { CommandInvokerService } from 'src/app/modules/workspace';
 import { DrawingService } from '../drawing/drawing.service';
 import { BrushToolService } from './brush-tool/brush-tool.service';
 import { BucketFillToolService } from './bucket-fill-tool/bucket-fill-tool.service';

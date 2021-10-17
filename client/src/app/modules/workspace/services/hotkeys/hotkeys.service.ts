@@ -1,9 +1,9 @@
 import { Injectable } from "@angular/core";
 import { MatDialog } from "@angular/material/dialog";
-import { NewDrawingComponent } from "src/app/components/new-drawing/new-drawing.component";
-import { CommandInvokerService } from "src/app/services/command-invoker/command-invoker.service";
+import { NewDrawingComponent } from "src/app/modules/new-drawing";
+import { CommandInvokerService } from "src/app/modules/workspace";
 import { MagnetismService } from "../magnetism/magnetism.service";
-import { SidenavService } from "../sidenav/sidenav.service";
+import { SidenavService } from "src/app/modules/sidenav";
 import { CopyPasteToolService } from "../tools/copy-paste-tool/copy-paste-tool.service";
 import { GridService } from "../tools/grid-tool/grid.service";
 import { DeletingToolService } from "../tools/selection-tool/delete-command/delete-tool.service";

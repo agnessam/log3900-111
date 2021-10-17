@@ -9,7 +9,7 @@ import { By } from "@angular/platform-browser";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { of } from "rxjs";
 import { MaterialModules } from "src/app/app-material.module";
-import { CommandInvokerService } from "src/app/services/command-invoker/command-invoker.service";
+import { CommandInvokerService } from "src/app/modules/workspace";
 import { DrawingService } from "src/app/services/drawing/drawing.service";
 import { ControlMenuComponent } from "./control-menu.component";
 
