@@ -1,19 +1,18 @@
-import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
-import { PencilToolService } from 'src/app/services/tools/pencil-tool/pencil-tool.service';
+import { Component, OnInit } from "@angular/core";
+import { FormControl, FormGroup } from "@angular/forms";
+import { PencilToolService } from "src/app/modules/workspace";
 
 @Component({
-  selector: 'app-pencil-tool-parameter',
-  templateUrl: './pencil-tool-parameter.component.html',
-  styleUrls: ['./pencil-tool-parameter.component.scss'],
+  selector: "app-pencil-tool-parameter",
+  templateUrl: "./pencil-tool-parameter.component.html",
+  styleUrls: ["./pencil-tool-parameter.component.scss"],
 })
 
 /// Le component d'affichage des paramètres du crayon
 export class PencilToolParameterComponent implements OnInit {
-
   form: FormGroup;
 
-  constructor(private pencilToolService: PencilToolService) { }
+  constructor(private pencilToolService: PencilToolService) {}
 
   ngOnInit() {
     this.form = this.pencilToolService.parameters;
@@ -24,6 +23,6 @@ export class PencilToolParameterComponent implements OnInit {
   }
 
   get strokeWidthValue(): number {
-    return (this.form.get('strokeWidth') as FormControl).value;
+    return (this.form.get("strokeWidth") as FormControl).value;
   }
 }

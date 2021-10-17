@@ -1,8 +1,8 @@
-import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
-import { RectangleStyle } from 'src/app/model/rectangle-style.model';
-import { TextToolService } from 'src/app/modules/workspace';
-import { Polices } from './polices.model';
+import { Component, OnInit } from "@angular/core";
+import { FormControl, FormGroup } from "@angular/forms";
+import { RectangleStyle } from "src/app/shared";
+import { TextToolService } from "src/app/modules/workspace";
+import { Polices } from "./polices.model";
 
 const START = 0;
 const MIDDLE = 1;
@@ -12,31 +12,29 @@ const BOLD = 1;
 const ITALIC = 2;
 
 @Component({
-  selector: 'app-text-tool-parameter',
-  templateUrl: './text-tool-parameter.component.html',
-  styleUrls: ['./text-tool-parameter.component.scss'],
+  selector: "app-text-tool-parameter",
+  templateUrl: "./text-tool-parameter.component.html",
+  styleUrls: ["./text-tool-parameter.component.scss"],
 })
 export class TextToolParameterComponent implements OnInit {
-
   get toolName(): string {
     return this.textToolService.toolName;
   }
 
   get policeSize(): number {
-
-    return (this.form.get('fontSize') as FormControl).value;
+    return (this.form.get("fontSize") as FormControl).value;
   }
 
   get police(): string {
-    return (this.form.get('fontFamily') as FormControl).value;
+    return (this.form.get("fontFamily") as FormControl).value;
   }
 
   get textStyle(): string {
-    return (this.form.get('textStyle') as FormControl).value;
+    return (this.form.get("textStyle") as FormControl).value;
   }
 
   get textAlignment(): string {
-    return (this.form.get('textAlignment') as FormControl).value;
+    return (this.form.get("textAlignment") as FormControl).value;
   }
 
   form: FormGroup;
@@ -48,40 +46,40 @@ export class TextToolParameterComponent implements OnInit {
   alignment: RectangleStyle[] = [
     {
       id: START,
-      type: 'start',
-      tooltip: 'start',
+      type: "start",
+      tooltip: "start",
     },
     {
       id: MIDDLE,
-      type: 'middle',
-      tooltip: 'middle',
+      type: "middle",
+      tooltip: "middle",
     },
     {
       id: END,
-      type: 'end',
-      tooltip: 'end',
+      type: "end",
+      tooltip: "end",
     },
   ];
 
   style: RectangleStyle[] = [
     {
       id: NORMAL,
-      type: 'normal',
-      tooltip: 'normal',
+      type: "normal",
+      tooltip: "normal",
     },
     {
       id: BOLD,
-      type: 'bold',
-      tooltip: 'bold',
+      type: "bold",
+      tooltip: "bold",
     },
     {
       id: ITALIC,
-      type: 'italic',
-      tooltip: 'italic',
+      type: "italic",
+      tooltip: "italic",
     },
   ];
 
-  constructor(private textToolService: TextToolService) { }
+  constructor(private textToolService: TextToolService) {}
 
   ngOnInit() {
     this.form = this.textToolService.parameters;
@@ -108,5 +106,4 @@ export class TextToolParameterComponent implements OnInit {
       fontFamily: this.police[id],
     });
   }
-
 }
