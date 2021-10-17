@@ -1,8 +1,8 @@
 import { TestBed } from '@angular/core/testing';
 
 import { Renderer2 } from '@angular/core';
-import { DrawingService } from 'src/app/services/drawing/drawing.service';
-import { RendererProviderService } from 'src/app/services/renderer-provider/renderer-provider.service';
+import { DrawingService } from 'src/app/modules/workspace';
+import { RendererProviderService } from 'src/app/modules/workspace';
 import { ResizeCommand } from './resize-command';
 import { ResizeSelectionService } from './resize-selection.service';
 

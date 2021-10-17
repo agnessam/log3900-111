@@ -7,7 +7,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { of } from 'rxjs';
 import { MaterialModules } from 'src/app/app-material.module';
-import { DrawingService } from 'src/app/services/drawing/drawing.service';
+import { DrawingService } from 'src/app/modules/workspace';
 import { GridService } from 'src/app/services/tools/grid-tool/grid.service';
 import { NewDrawingAlertComponent } from './new-drawing-alert/new-drawing-alert.component';
 import { NewDrawingComponent } from './new-drawing.component';

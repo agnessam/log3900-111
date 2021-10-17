@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { faFeather, IconDefinition } from '@fortawesome/free-solid-svg-icons';
-import { ICommand } from 'src/app/interfaces/command.interface';
+import { ICommand } from 'src/app/modules/workspace/interfaces/command.interface';
 import { Point } from 'src/app/shared';
 import { DrawingService } from '../../drawing/drawing.service';
 import { KeyCodes } from '../../hotkeys/hotkeys-constants';

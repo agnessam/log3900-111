@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { faPencilAlt, IconDefinition } from '@fortawesome/free-solid-svg-icons';
-import { ICommand } from 'src/app/interfaces/command.interface';
+import { ICommand } from 'src/app/modules/workspace/interfaces/command.interface';
 import { DrawingService } from '../../drawing/drawing.service';
 import { OffsetManagerService } from '../../offset-manager/offset-manager.service';
 import { RendererProviderService } from '../../renderer-provider/renderer-provider.service';

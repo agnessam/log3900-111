@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import { faTint } from '@fortawesome/free-solid-svg-icons';
-import { ICommand } from 'src/app/interfaces/command.interface';
+import { ICommand } from 'src/app/modules/workspace/interfaces/command.interface';
 import { RendererProviderService } from '../../renderer-provider/renderer-provider.service';
 import { ToolsColorService } from '../../tools-color/tools-color.service';
 import { Tools } from '../../../interfaces/tools.interface';

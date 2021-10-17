@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { ICommand } from 'src/app/interfaces/command.interface';
-import { DrawingService } from 'src/app/services/drawing/drawing.service';
-import { RendererProviderService } from 'src/app/services/renderer-provider/renderer-provider.service';
+import { ICommand } from 'src/app/modules/workspace/interfaces/command.interface';
+import { DrawingService } from 'src/app/modules/workspace';
+import { RendererProviderService } from 'src/app/modules/workspace';
 import { RotateFromCenterCommand } from './rotate-from-center-command';
 import { RotateOnItselfCommand } from './rotate-on-itself-command';
 

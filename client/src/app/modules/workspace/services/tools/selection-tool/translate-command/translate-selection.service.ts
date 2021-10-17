@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { ICommand } from 'src/app/interfaces/command.interface';
-import { RendererProviderService } from 'src/app/services/renderer-provider/renderer-provider.service';
+import { ICommand } from 'src/app/modules/workspace/interfaces/command.interface';
+import { RendererProviderService } from 'src/app/modules/workspace';
 import { TranslateCommand } from './translate-command';
 
 @Injectable({

@@ -1,6 +1,6 @@
 import { EventEmitter, Injectable } from "@angular/core";
 import { DEFAULT_RGB_COLOR, RGB } from "src/app/shared";
-import { DEFAULT_ALPHA, RGBA } from "../../models/rgba.model";
+import { DEFAULT_ALPHA, RGBA } from "src/app/shared";
 
 /// Service permettant de choisir des couleurs pour les outils
 @Injectable({

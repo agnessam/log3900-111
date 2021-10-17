@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ICommand } from 'src/app/interfaces/command.interface';
+import { ICommand } from 'src/app/modules/workspace/interfaces/command.interface';
 import { Point } from 'src/app/shared';
 import { SelectionCommandConstants } from './command-type-constant';
 import { ResizeSelectionService } from './resize-command/resize-selection.service';

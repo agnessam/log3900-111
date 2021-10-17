@@ -1,4 +1,4 @@
-import { ICommand } from 'src/app/interfaces/command.interface';
+import { ICommand } from 'src/app/modules/workspace/interfaces/command.interface';
 
 export class RotateTranslateCompositeCommand implements ICommand {
     private subCommand: ICommand[] = [];

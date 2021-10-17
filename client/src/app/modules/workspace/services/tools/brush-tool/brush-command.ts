@@ -1,6 +1,6 @@
 import { Renderer2 } from "@angular/core";
 import { ICommand } from "../../../interfaces/command.interface";
-import { Point } from "../../../models/point.model";
+import { Point } from "src/app/shared";
 import { DrawingService } from "../../drawing/drawing.service";
 import { Pencil } from "../pencil-tool/pencil.model";
 

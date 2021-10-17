@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 
 import { Renderer2 } from '@angular/core';
-import { RendererProviderService } from 'src/app/services/renderer-provider/renderer-provider.service';
+import { RendererProviderService } from 'src/app/modules/workspace';
 import { RotateFromCenterCommand } from './rotate-from-center-command';
 
 describe('RotateFromCenterCommand', () => {

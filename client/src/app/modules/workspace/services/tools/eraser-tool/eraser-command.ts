@@ -1,4 +1,4 @@
-import { ICommand } from 'src/app/interfaces/command.interface';
+import { ICommand } from 'src/app/modules/workspace/interfaces/command.interface';
 import { DrawingService } from '../../drawing/drawing.service';
 
 const NOT_FOUND = -1;
