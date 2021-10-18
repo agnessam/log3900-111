@@ -1,29 +1,36 @@
 import {
-  AfterViewInit, Component, ElementRef, HostListener,
-  OnInit, ViewChild
-} from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
-import { ColorPickerService } from 'src/app/color-picker/color-picker.service';
-import { RGB_MAX_VALUE } from 'src/app/shared';
-import { ColorTransformerService } from 'src/app/services/color-transformer/color-transformer.service';
-import { HSL_GRADIENT_WIDTH, OPACITY_HEIGHT } from '../../constants/color-picker.constant';
+  AfterViewInit,
+  Component,
+  ElementRef,
+  HostListener,
+  OnInit,
+  ViewChild,
+} from "@angular/core";
+import { FormControl, FormGroup } from "@angular/forms";
+import { ColorPickerService } from "../../color-picker.service";
+import { RGB_MAX_VALUE } from "src/app/shared";
+import { ColorTransformerService } from "../../services/color-transformer/color-transformer.service";
+import {
+  HSL_GRADIENT_WIDTH,
+  OPACITY_HEIGHT,
+} from "../../constants/color-picker.constant";
 
 const GRADIENT_START = 0;
 const GRADIENT_END = 1;
 const SELECTOR_WIDTH = 3;
-const MID_GREY_HEX_COLOR = '#AAAAAA';
+const MID_GREY_HEX_COLOR = "#AAAAAA";
 
 @Component({
-  selector: 'app-color-opacity',
-  templateUrl: './color-opacity.component.html',
-  styleUrls: ['./color-opacity.component.scss'],
+  selector: "app-color-opacity",
+  templateUrl: "./color-opacity.component.html",
+  styleUrls: ["./color-opacity.component.scss"],
 })
 export class ColorOpacityComponent implements AfterViewInit, OnInit {
   /// Valeur pour l'affichage
   readonly width = HSL_GRADIENT_WIDTH;
   readonly height = OPACITY_HEIGHT;
 
-  @ViewChild('canvas')
+  @ViewChild("canvas")
   opacityCanvas: ElementRef<HTMLCanvasElement>;
 
   private ctx: CanvasRenderingContext2D;
@@ -32,8 +39,8 @@ export class ColorOpacityComponent implements AfterViewInit, OnInit {
 
   constructor(
     private colorTransformer: ColorTransformerService,
-    private colorPickerService: ColorPickerService,
-  ) { }
+    private colorPickerService: ColorPickerService
+  ) {}
 
   /// Définit les subscriptions lors des changements de valeurs pour changer son affichage
   ngOnInit(): void {
@@ -63,7 +70,9 @@ export class ColorOpacityComponent implements AfterViewInit, OnInit {
   /// Cette section de code est inspiré de : https://malcoded.com/posts/angular-color-picker/
   draw(): void {
     if (!this.ctx) {
-      this.ctx = this.opacityCanvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
+      this.ctx = this.opacityCanvas.nativeElement.getContext(
+        "2d"
+      ) as CanvasRenderingContext2D;
     }
 
     const width = this.opacityCanvas.nativeElement.width;
@@ -75,8 +84,14 @@ export class ColorOpacityComponent implements AfterViewInit, OnInit {
 
     const gradient = this.ctx.createLinearGradient(0, 0, width, 0);
     const rgb = this.colorTransformer.hsl2rgb(this.hsl.value);
-    gradient.addColorStop(GRADIENT_START, 'rgba(' + rgb.r + ', ' + rgb.g + ', ' + rgb.b + ', 0)');
-    gradient.addColorStop(GRADIENT_END, 'rgba(' + rgb.r + ', ' + rgb.g + ', ' + rgb.b + ', 1)');
+    gradient.addColorStop(
+      GRADIENT_START,
+      "rgba(" + rgb.r + ", " + rgb.g + ", " + rgb.b + ", 0)"
+    );
+    gradient.addColorStop(
+      GRADIENT_END,
+      "rgba(" + rgb.r + ", " + rgb.g + ", " + rgb.b + ", 1)"
+    );
     this.ctx.beginPath();
     this.ctx.rect(0, 0, width, height);
     this.ctx.fillStyle = gradient;
@@ -84,11 +99,19 @@ export class ColorOpacityComponent implements AfterViewInit, OnInit {
     this.ctx.closePath();
 
     this.ctx.beginPath();
-    const selectedPercentageOfWidth = (1 - (this.selectedWidth / width));
-    const colorValue = (RGB_MAX_VALUE - Math.floor(RGB_MAX_VALUE * selectedPercentageOfWidth * 0.9));
-    this.ctx.strokeStyle = 'rgba(' + colorValue + ', ' + colorValue + ',' + colorValue + ', 1) ';
+    const selectedPercentageOfWidth = 1 - this.selectedWidth / width;
+    const colorValue =
+      RGB_MAX_VALUE -
+      Math.floor(RGB_MAX_VALUE * selectedPercentageOfWidth * 0.9);
+    this.ctx.strokeStyle =
+      "rgba(" + colorValue + ", " + colorValue + "," + colorValue + ", 1) ";
     this.ctx.lineWidth = SELECTOR_WIDTH;
-    this.ctx.rect(this.selectedWidth - SELECTOR_WIDTH, 0, SELECTOR_WIDTH * 2, height);
+    this.ctx.rect(
+      this.selectedWidth - SELECTOR_WIDTH,
+      0,
+      SELECTOR_WIDTH * 2,
+      height
+    );
     this.ctx.stroke();
     this.ctx.closePath();
   }
@@ -132,7 +155,8 @@ export class ColorOpacityComponent implements AfterViewInit, OnInit {
     if (x < 0) {
       x = 0;
     }
-    const percentage = Math.round(x / this.opacityCanvas.nativeElement.width * 100) / 100;
+    const percentage =
+      Math.round((x / this.opacityCanvas.nativeElement.width) * 100) / 100;
     return percentage;
   }
 
@@ -150,7 +174,7 @@ export class ColorOpacityComponent implements AfterViewInit, OnInit {
   }
 
   /// Assure que lorsqu'on relâche la souris, on arrete la prise d'information des évenements de souris
-  @HostListener('window:mouseup', ['$event'])
+  @HostListener("window:mouseup", ["$event"])
   onMouseUp(event: MouseEvent): void {
     this.isMouseDown = false;
   }

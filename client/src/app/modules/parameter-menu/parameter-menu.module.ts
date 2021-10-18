@@ -9,12 +9,17 @@ import { ParameterDirective } from "./directives/parameter.directive";
 
 @NgModule({
   providers: [ControlMenuComponent],
-  declarations: [ParameterMenuComponent, ParameterDirective],
+  declarations: [
+    ParameterMenuComponent,
+    ParameterDirective,
+    ControlMenuComponent,
+  ],
   imports: [
     CommonModule,
     MaterialModules,
     ToolParameterModule,
     WorkspaceModule,
   ],
+  exports: [ParameterMenuComponent],
 })
 export class ParameterMenuModule {}
