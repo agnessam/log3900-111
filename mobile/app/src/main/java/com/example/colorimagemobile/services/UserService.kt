@@ -1,9 +1,9 @@
-package com.example.colorimagemobile.classes
+package com.example.colorimagemobile.services
 
 import com.example.colorimagemobile.models.UserModel
 
 // Singleton User object which is accessible globally
-object User {
+object UserService {
     private lateinit var info: UserModel.AllInfo
 
     fun setUserInfo(newUserInfo: UserModel.AllInfo) {

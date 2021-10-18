@@ -3,12 +3,11 @@ package com.example.colorimagemobile.ui.register
 import android.annotation.SuppressLint
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.ViewModelProvider
 import com.example.colorimagemobile.R
 import com.example.colorimagemobile.classes.FormValidator
-import com.example.colorimagemobile.classes.User
+import com.example.colorimagemobile.services.UserService
 import com.example.colorimagemobile.models.UserModel
 import com.example.colorimagemobile.databinding.ActivityRegisterBinding
 import com.example.colorimagemobile.models.DataWrapper
@@ -17,12 +16,10 @@ import com.example.colorimagemobile.services.SharedPreferencesService
 import com.example.colorimagemobile.ui.home.HomeActivity
 import com.example.colorimagemobile.ui.login.LoginActivity
 import com.example.colorimagemobile.utils.CommonFun.Companion.closeKeyboard
-import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
 import com.example.colorimagemobile.utils.CommonFun.Companion.printToast
 import com.example.colorimagemobile.utils.CommonFun.Companion.redirectTo
 import com.example.colorimagemobile.utils.CommonFun.Companion.toggleButton
 import com.example.colorimagemobile.utils.Constants
-import com.example.colorimagemobile.utils.Constants.Companion.DEBUG_KEY
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 
@@ -134,7 +131,7 @@ class RegisterActivity : AppCompatActivity() {
         printToast(applicationContext, response.info)
 
         // save users info and token and redirect to /Home
-        User.setUserInfo(response.user)
+        UserService.setUserInfo(response.user)
         sharedPreferencesService.setItem(Constants.STORAGE_KEY.TOKEN, response.token)
         redirectTo(this@RegisterActivity, HomeActivity::class.java)
     }
