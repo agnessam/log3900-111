@@ -1,7 +1,7 @@
 package com.example.colorimagemobile.services
 
+import com.example.colorimagemobile.utils.Constants
 import com.example.colorimagemobile.utils.Constants.Companion.CHAT_NAMESPACE_NAME
-import com.example.colorimagemobile.utils.Constants.Companion.SERVER_URL
 import io.socket.client.IO
 import io.socket.client.Socket
 import java.net.URISyntaxException
@@ -12,7 +12,7 @@ object SocketHandler {
     @Synchronized
     fun setSocket() {
         try {
-            mSocket = IO.socket("$SERVER_URL/$CHAT_NAMESPACE_NAME")
+            mSocket = IO.socket("${Constants.URL.SERVER}/$CHAT_NAMESPACE_NAME")
         } catch (e: URISyntaxException) {
             print("Error setting up socket $e")
         }

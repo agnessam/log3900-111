@@ -3,10 +3,10 @@ import {
   LEAVE_ROOM_EVENT_NAME,
   ROOM_EVENT_NAME,
 } from "src/app/services/socket/socket.constant";
+import { environment } from 'src/environments/environment';
 
 export abstract class AbstractSocketService {
-  readonly SERVER_URL: string = 'http://10.0.2.2:3000/';
-    //  "http://colorimage.us-east-1.elasticbeanstalk.com";
+  readonly SERVER_URL: string = environment.serverRawURL;
   protected namespaceSocket: any;
   protected isConnected: boolean;
 

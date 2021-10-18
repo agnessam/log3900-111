@@ -2,8 +2,12 @@
   <div class="container">
     <h1 class="title">Chatroom</h1>
     <br />
+    <button (click)="openPopout()">open me!</button>
+    <!-- <app-chat-window *ngIf="isPopout">
+      <p> HELLO FROM PORTAL</p>
+    </app-chat-window> -->
 
-    <ng-container *ngIf="window && !window.isCollapsed" >
+    <ng-container>
       <div id="wrapper">
         <div id="menu">
           <p class="welcome">
@@ -13,19 +17,24 @@
           <div style="clear: both"></div>
         </div>
 
-        <div id="chatbox" *ngFor="let message of window.messages" ></div>
+        <div id="chatbox"></div>
         <div id="message">
-          <!-- <div id="image-upload"> 
-            <input id="upload-button" type="file" (onChange)="previewFile()">
-            <img id="image-preview" src="" height="200" alt="Image preview...">
-          </div> -->
-          <input
-            type="text"
-            id="usermsg"
-            autocomplete="off"
-            spellcheck="false"
-            placeholder="Enter your message here"
-          />
+          <div id="image-upload"> 
+            <label for="upload-button" class="custom-file-upload">
+              <mat-icon>add_photo_alternate</mat-icon>
+            </label>
+            <input id="upload-button" type="file" (change)="previewFile()">     
+          </div>
+          <div id="message-container">
+            <img id="image-preview" src="" height="200">
+            <input
+              type="text"
+              id="usermsg"
+              autocomplete="off"
+              spellcheck="false"
+              placeholder="Enter your message here"
+            />
+          </div>
           <button mat-icon-button color="primary" (click)="sendMessage()">
             <mat-icon>send</mat-icon>
           </button>

@@ -1,30 +1,32 @@
-// tslint:disable: linebreak-style
+
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { ChatParticipant } from 'src/app/model/chat-participant.model';
 import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
+import { PopoutChatService } from 'src/app/services/popout-chat/popout-chat.service';
 import { ChatSocketService } from 'src/app/services/socket/chat-socket.service';
-import { ChatWindow } from './chat-window/chat-window';
 
 @Component({
   selector: 'chat',
   templateUrl: './chat.component.html',
   styleUrls: ['./chat.component.scss'],
 })
+
 export class ChatComponent implements OnInit, OnDestroy {
   username: string | null;
   chatSubscription: Subscription;
 
-  window: ChatWindow;
+  // parameters to format chat into window
+  isPopout: boolean;
 
   constructor(
     private authenticationService: AuthenticationService,
     private chatSocketService: ChatSocketService,
+    private popoutChatService: PopoutChatService,
   ) {
     this.authenticationService.currentUserObservable.subscribe(
-      (username) => (this.username = username)
+      (username) => (this.username = username),
     );
-    this.window = new ChatWindow('Default Channel Name', {id: '666', username: this.username?.toString()} as ChatParticipant, false);
+    this.isPopout = false;
   }
 
   ngOnInit(): void {
@@ -51,20 +53,16 @@ export class ChatComponent implements OnInit, OnDestroy {
   receiveMessage() {
     this.chatSubscription = this.chatSocketService.chatSubject.subscribe({
       next: (message) => {
-        // const messageBox = document.getElementById('chatbox') as HTMLInputElement;
-        // const p = document.createElement('div');
-        // p.textContent = `(${message.timestamp}) ${message.author}: ${message.message}`;
-        // messageBox.appendChild(p);
-        // messageBox.scrollTop = messageBox.scrollHeight;
-        this.window.messages.push(message);
+        const messageBox = document.getElementById('chatbox') as HTMLInputElement;
+        const p = document.createElement('div');
+        p.textContent = `(${message.timestamp}) ${message.author}: ${message.message}`;
+        messageBox.appendChild(p);
+        messageBox.scrollTop = messageBox.scrollHeight;
       },
     });
   }
 
   sendMessage() {
-    const mes = (document.getElementById('usermsg') as HTMLInputElement).value;
-    if (mes === null || mes.match(/^ *$/) !== null) return;
-
     let name = '';
     if (this.username === null) return;
     name = this.username;
@@ -74,22 +72,50 @@ export class ChatComponent implements OnInit, OnDestroy {
     const second = new Date().getSeconds().toString();
     const time = hour + ':' + minute + ':' + second;
 
-    const message = {
-      message: mes,
-      timestamp: time,
-      author: name,
-      roomName: 'default',
+    const uploadButton = document.getElementById('upload-button') as HTMLInputElement;
+    let file;
+    if (uploadButton) {
+      // @ts-ignore: Object is possibly 'null'.
+      file = uploadButton.files[0];
+    }
+    const reader = new FileReader();
+
+    reader.onloadend = () => {
+      const img = reader.result as string;
+      const message = {
+        message: img,
+        timestamp: time,
+        author: name,
+        roomName: 'default',
+      };
+      this.chatSocketService.sendMessage(message);
     };
 
-    this.chatSocketService.sendMessage(message);
+    if (file) {
+      reader.readAsDataURL(file);
+    } else {
+      const mes = (document.getElementById('usermsg') as HTMLInputElement).value;
+      if (mes === null || mes.match(/^ *$/) !== null) return;
+      const message = {
+        message: mes,
+        timestamp: time,
+        author: name,
+        roomName: 'default',
+      };
+      this.chatSocketService.sendMessage(message);
+    }
+
     (document.getElementById('usermsg') as HTMLInputElement).value = '';
   }
 
   previewFile() {
     const preview = (document.getElementById('image-preview') as HTMLInputElement);
-    // @ts-ignore: Object is possibly 'null'.
-    // tslint:disable-next-line: no-non-null-assertion
-    const file = (document.getElementById('upload-button')! as HTMLInputElement).files[0];
+    const uploadButton = document.getElementById('upload-button') as HTMLInputElement;
+    let file;
+    if (uploadButton) {
+      // @ts-ignore: Object is possibly 'null'.
+      file = uploadButton.files[0];
+    }
     const reader = new FileReader();
 
     reader.addEventListener('load', () => {
@@ -100,5 +126,9 @@ export class ChatComponent implements OnInit, OnDestroy {
     if (file) {
       reader.readAsDataURL(file);
     }
+  }
+
+  openPopout() {
+    this.popoutChatService.openPopout();
   }
 }

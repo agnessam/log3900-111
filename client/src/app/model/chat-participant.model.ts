@@ -1,5 +1,5 @@
 export interface ChatParticipant {
     id: string;
-    avatar: string;
+    avatar?: string;
     username: string;
 }

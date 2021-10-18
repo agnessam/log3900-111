@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
-import { UploadImageService } from './upload-image.service';
+import { PopoutChatService } from './popout-chat.service';
 
-describe('UploadImageService', () => {
-  let service: UploadImageService;
+describe('PopoutChatService', () => {
+  let service: PopoutChatService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(UploadImageService);
+    service = TestBed.inject(PopoutChatService);
   });
 
   it('should be created', () => {

@@ -1,32 +1,31 @@
-import { HttpClient } from "@angular/common/http";
-import { Injectable } from "@angular/core";
-import { BehaviorSubject, Observable } from "rxjs";
-import { map } from "rxjs/operators";
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 @Injectable({
-  providedIn: "root",
+  providedIn: 'root',
 })
 export class AuthenticationService {
-  private endpointUrl: string = "http://10.0.2.2:3000/";
-    // "http://colorimage.us-east-1.elasticbeanstalk.com/api/v1/";
+  private endpointUrl = 'http://colorimage.us-east-1.elasticbeanstalk.com/api/v1/';
   private authTokenSubject: BehaviorSubject<string | null>;
-  public authTokenObservable: Observable<string | null>;
+  authTokenObservable: Observable<string | null>;
 
   // TODO: Seperate into different class
   private currentUserSubject: BehaviorSubject<string | null>;
-  public currentUserObservable: Observable<string | null>;
+  currentUserObservable: Observable<string | null>;
 
   constructor(private httpClient: HttpClient) {
-    const userToken = localStorage.getItem("user_token");
+    const userToken = localStorage.getItem('user_token');
     if (!userToken) {
       this.authTokenSubject = new BehaviorSubject<string | null>(null);
       this.currentUserSubject = new BehaviorSubject<string | null>(null);
     } else {
       this.authTokenSubject = new BehaviorSubject<string | null>(
-        JSON.parse(userToken)
+        JSON.parse(userToken),
       );
       this.currentUserSubject = new BehaviorSubject<string | null>(
-        JSON.parse(localStorage.getItem("username")!)
+        JSON.parse(localStorage.getItem('username')!),
       );
     }
 
@@ -34,17 +33,17 @@ export class AuthenticationService {
     this.currentUserObservable = this.currentUserSubject.asObservable();
   }
 
-  public get authToken(): string | null {
+  get authToken(): string | null {
     return this.authTokenSubject.value;
   }
 
-  public get username(): string | null {
+  get username(): string | null {
     return this.currentUserSubject.value;
   }
 
-  public isAuthenticated(): boolean {
+  isAuthenticated(): boolean {
     // Covers the case where the user deletes the token himself.
-    if (!localStorage.getItem("user_token")) {
+    if (!localStorage.getItem('user_token')) {
       this.authTokenSubject.next(null);
       this.currentUserSubject.next(null);
       return false;
@@ -58,38 +57,38 @@ export class AuthenticationService {
   }
 
   login(username: string, password: string) {
-    const loginEndpoint = this.endpointUrl + "login";
+    const loginEndpoint = this.endpointUrl + 'login';
     return this.httpClient
-      .post<any>(loginEndpoint, { username: username, password: password })
+      .post<any>(loginEndpoint, { username, password })
       .pipe(
         map((user) => {
           if (!user.token) {
             return user;
           }
-          localStorage.setItem("user_token", JSON.stringify(user.token));
-          localStorage.setItem("username", JSON.stringify(user.username));
+          localStorage.setItem('user_token', JSON.stringify(user.token));
+          localStorage.setItem('username', JSON.stringify(user.username));
 
           this.authTokenSubject.next(user.token);
           this.currentUserSubject.next(user.username);
           return user;
-        })
+        }),
       );
   }
 
   logout(username: string | null) {
-    const logoutEndpont = this.endpointUrl + "logout";
+    const logoutEndpont = this.endpointUrl + 'logout';
     return this.httpClient
-      .post<any>(logoutEndpont, { username: username })
+      .post<any>(logoutEndpont, { username })
       .pipe(
         map((response) => {
           console.log(response);
-          localStorage.removeItem("username");
-          localStorage.removeItem("user_token");
+          localStorage.removeItem('username');
+          localStorage.removeItem('user_token');
 
           this.authTokenSubject.next(null);
           this.currentUserSubject.next(null);
           return response;
-        })
+        }),
       );
   }
 }

@@ -18,17 +18,15 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.colorimagemobile.adapter.ChatMessageRecyclerAdapter
 import com.example.colorimagemobile.services.RetrofitInstance
 import com.example.colorimagemobile.services.SocketHandler
-import com.example.colorimagemobile.models.Message
-import com.example.colorimagemobile.models.User
+import com.example.colorimagemobile.classes.Message
+import com.example.colorimagemobile.models.UserModel
+import com.example.colorimagemobile.ui.login.LoginActivity
 import com.example.colorimagemobile.utils.CommonFun.Companion.closeKeyboard
 import com.example.colorimagemobile.utils.CommonFun.Companion.printToast
 import com.example.colorimagemobile.utils.CommonFun.Companion.redirectTo
 import com.example.colorimagemobile.utils.Constants
 import com.example.colorimagemobile.utils.Constants.Companion.DEBUG_KEY
 import com.example.colorimagemobile.utils.Constants.Companion.DEFAULT_ROOM_NAME
-import com.example.colorimagemobile.utils.Constants.Companion.LOCAL_STORAGE_KEY
-import com.example.colorimagemobile.utils.Constants.Companion.SHARED_TOKEN_KEY
-import com.example.colorimagemobile.utils.Constants.Companion.SHARED_USERNAME_KEY
 import com.example.colorimagemobile.utils.Constants.Companion.TEXT_MESSAGE_EVENT_NAME
 import com.google.gson.Gson
 import retrofit2.Call
@@ -57,9 +55,9 @@ class ChatActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chat)
 
-        val sharedPref = getSharedPreferences(Constants.LOCAL_STORAGE_KEY, Context.MODE_PRIVATE)
-        val token = sharedPref.getString(SHARED_TOKEN_KEY, "")
-        this.username = sharedPref.getString(SHARED_USERNAME_KEY, "") as String
+        val sharedPref = getSharedPreferences(Constants.STORAGE_KEY.MAIN, Context.MODE_PRIVATE)
+        val token = sharedPref.getString(Constants.STORAGE_KEY.TOKEN, "")
+        this.username = ""
 
         // check if token is valid! if not, redirect to /login
         if (token == "" || token == null) {
@@ -132,37 +130,6 @@ class ChatActivity : AppCompatActivity() {
     }
 
     private fun setLogOutListener() {
-        val logOutBtn: Button = findViewById(R.id.logoutBtn)
-
-        logOutBtn.setOnClickListener(View.OnClickListener {
-            // log out -> POST /logout
-            val user = User(this.username, "kesh")
-
-            RetrofitInstance.HTTP.logoutUser(user).enqueue(object : Callback<Boolean> {
-                override fun onResponse(call: Call<Boolean>, response: Response<Boolean>) {
-                    if (!response.isSuccessful) {
-                        Log.d("HTTP request error", response.message())
-                        printToast(applicationContext, "An error occurred!")
-                        return
-                    }
-
-                    printToast(applicationContext, "Logging you out ${user.username}!")
-
-                    // remove items from "local storage"
-                    val sharedPref = getSharedPreferences(LOCAL_STORAGE_KEY, Context.MODE_PRIVATE)
-                    val editor = sharedPref.edit()
-                    editor.clear().apply()
-
-                    // redirect to /login
-                    redirectTo(this@ChatActivity, LoginActivity::class.java)
-                }
-
-                override fun onFailure(call: Call<Boolean>, t: Throwable) {
-                    Log.d("User failed to log out", t.message!!)
-                    printToast(applicationContext, "Failed to logout!\nAn error occurred")
-                }
-            })
-        })
     }
 
     private fun executeChatSend() {

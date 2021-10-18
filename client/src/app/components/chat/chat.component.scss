@@ -48,6 +48,19 @@ input {
   padding-left: 13px;
 }
 
+#upload-button {
+  display: none;
+  cursor: pointer;
+}
+
+#message-container {
+  position: relative;
+}
+
+#image-preview {
+  position: absolute;
+}
+
 #usermsg {
   width: 87%;
   border: 1px solid #acd8f0;
