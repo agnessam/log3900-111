@@ -11,8 +11,8 @@
     "test-ci": "ng test --browsers=ChromeHeadless",
     "coverage": "ng test --code-coverage --sourceMap=true",
     "lint": "ng lint --type-check --format stylish",
-    "build-electron":"ng build --base-href ./ && electron .",
-    "package-electron":  "electron-packager .",
+    "build-electron": "ng build --base-href ./ && electron .",
+    "package-electron": "electron-packager .",
     "prod": "ng serve --open --host 0.0.0.0 --configuration=production"
   },
   "private": true,
@@ -40,7 +40,7 @@
     "ngx-moment": "^3.5.0",
     "rxjs": "~6.6.7",
     "socket.io-client": "^4.2.0",
-    "tslib": "^2.0.0",
+    "tslib": "^2.3.1",
     "zone.js": "~0.11.4"
   },
   "devDependencies": {
