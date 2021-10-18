@@ -1,7 +1,7 @@
 import { NgModule } from "@angular/core";
 import { RouterModule, Routes } from "@angular/router";
 import { AuthGuard } from "./modules/authentication/";
-// import { PageNotFoundComponent } from "./components/error/page-not-found/page-not-found.component";
+import { PageNotFoundComponent } from "./modules/error/";
 import { SidenavComponent } from "./modules/sidenav/sidenav.component";
 import { ChatComponent } from "./modules/chat/chat.component";
 
@@ -21,13 +21,18 @@ const routes: Routes = [
     canActivate: [AuthGuard],
   },
   {
-    path: "blah",
+    path: "",
     component: ChatComponent,
     loadChildren: () =>
       import("./modules/chat/chat.module").then((m) => m.ChatModule),
     canActivate: [AuthGuard],
   },
-  // { path: "**", component: PageNotFoundComponent },
+  {
+    path: "**",
+    component: PageNotFoundComponent,
+    loadChildren: () =>
+      import("./modules/error/error.module").then((m) => m.ErrorModule),
+  },
 ];
 
 @NgModule({

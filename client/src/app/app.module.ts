@@ -19,6 +19,7 @@ import { ColorPickerModule } from "./modules/color-picker/color-picker.module";
 import { SharedModule } from "./shared/shared.module";
 import { ToolsColorModule } from "./modules/tools-color/tools-color.module";
 import { ParameterMenuModule } from "./modules/parameter-menu/parameter-menu.module";
+import { ErrorModule } from "./modules/error/error.module";
 @NgModule({
   declarations: [AppComponent],
   imports: [
@@ -42,6 +43,7 @@ import { ParameterMenuModule } from "./modules/parameter-menu/parameter-menu.mod
     SharedModule,
     ToolsColorModule,
     ParameterMenuModule,
+    ErrorModule,
   ],
   exports: [],
   providers: [],
