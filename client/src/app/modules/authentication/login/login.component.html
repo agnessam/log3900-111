@@ -6,7 +6,11 @@
     <mat-card>
       <mat-card-title>Login</mat-card-title>
       <mat-card-content>
-        <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+        <form
+          [formGroup]="loginForm"
+          (ngSubmit)="onSubmit()"
+          class="roundedCorners"
+        >
           <p>
             <mat-form-field>
               <input

@@ -63,6 +63,7 @@ export class AuthenticationService {
       .post<any>(loginEndpoint, { username: username, password: password })
       .pipe(
         map((user) => {
+          console.log(user);
           if (!user.token) {
             return user;
           }
