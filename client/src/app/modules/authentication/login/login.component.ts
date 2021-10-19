@@ -21,6 +21,7 @@ export class LoginComponent implements OnInit {
   ngOnInit(): void {
     this.loginForm = new FormGroup({
       username: new FormControl(""),
+      password: new FormControl(""),
     });
   }
 
@@ -30,11 +31,12 @@ export class LoginComponent implements OnInit {
     }
 
     this.authenticationService
-      // Setting a default password, TODO: Change for when we add real authentication
-      .login(this.loginForm.value.username, "default")
+      .login(this.loginForm.value.username, this.loginForm.value.password)
       .subscribe((user) => {
         if (!user.token) {
-          this.snackBar.open("Username already exists");
+          this.snackBar.open("Username already exists", "Close", {
+            duration: 3000,
+          });
         } else {
           this.router.navigate(["/chat"]);
         }
