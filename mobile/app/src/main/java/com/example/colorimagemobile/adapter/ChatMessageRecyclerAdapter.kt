@@ -6,7 +6,6 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.colorimagemobile.R
-import com.example.colorimagemobile.classes.Message
 import kotlin.collections.ArrayList
 
 

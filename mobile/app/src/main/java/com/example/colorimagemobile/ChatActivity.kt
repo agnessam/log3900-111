@@ -16,10 +16,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.colorimagemobile.adapter.ChatMessageRecyclerAdapter
-import com.example.colorimagemobile.services.RetrofitInstance
 import com.example.colorimagemobile.services.SocketHandler
-import com.example.colorimagemobile.classes.Message
-import com.example.colorimagemobile.models.UserModel
 import com.example.colorimagemobile.ui.login.LoginActivity
 import com.example.colorimagemobile.utils.CommonFun.Companion.closeKeyboard
 import com.example.colorimagemobile.utils.CommonFun.Companion.printToast
@@ -29,9 +26,6 @@ import com.example.colorimagemobile.utils.Constants.Companion.DEBUG_KEY
 import com.example.colorimagemobile.utils.Constants.Companion.DEFAULT_ROOM_NAME
 import com.example.colorimagemobile.utils.Constants.Companion.TEXT_MESSAGE_EVENT_NAME
 import com.google.gson.Gson
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 import java.util.*
 import kotlin.collections.ArrayList
 import io.socket.client.Socket
@@ -42,7 +36,7 @@ import java.text.SimpleDateFormat
 class ChatActivity : AppCompatActivity() {
     var username: String = ""
 
-    private var messageArray: ArrayList<Message> = arrayListOf<Message>()
+//    private var messageArray: ArrayList<Message> = arrayListOf<Message>()
     private lateinit var mSocket: Socket
 
     // layout manager and adapter
@@ -84,7 +78,7 @@ class ChatActivity : AppCompatActivity() {
         recyclerView = findViewById<RecyclerView>(R.id.recyclerView)
         recyclerView.layoutManager = layoutManager
 
-        adapterChatMessage = ChatMessageRecyclerAdapter(messageArray, this.username)
+//        adapterChatMessage = ChatMessageRecyclerAdapter(messageArray, this.username)
         recyclerView.adapter = adapterChatMessage
 
         // listeners
@@ -150,11 +144,11 @@ class ChatActivity : AppCompatActivity() {
         }
 
         val currentTime: String = SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(Date())
-        val newMessage = Message(chatTextInput, currentTime, this.username, DEFAULT_ROOM_NAME)
+//        val newMessage = Message(chatTextInput, currentTime, this.username, DEFAULT_ROOM_NAME)
 
         // convert message class to JSON format but server receives it as String
         val gson = Gson()
-        val jsonMessageData = gson.toJson(newMessage)
+        val jsonMessageData = gson.toJson(null)
 
         mSocket.emit("room", DEFAULT_ROOM_NAME)
         mSocket.emit(TEXT_MESSAGE_EVENT_NAME, jsonMessageData)
@@ -168,10 +162,11 @@ class ChatActivity : AppCompatActivity() {
         Emitter.Listener { args ->
             runOnUiThread(Runnable {
                 val gson: Gson = Gson()
-                val message = gson.fromJson(args[0].toString(), Message::class.java)
+//                val message = gson.fromJson(args[0].toString(), Message::class.java)
 
+                val message = null
                 try {
-                    this.addMessage(message)
+//                    this.addMessage(message)
                 } catch (e: JSONException) {
                     Log.d(DEBUG_KEY, "Error occurred while receiving incoming message ${e.message}")
                     return@Runnable
@@ -180,13 +175,13 @@ class ChatActivity : AppCompatActivity() {
         }
 
     // add new chat message
-    private fun addMessage(newMessage: Message) {
-        messageArray.add(newMessage)
-        adapterChatMessage?.notifyDataSetChanged()
-
-        // if only we send a msg, scroll down
-        if(newMessage.author.equals(this.username)) {
-            recyclerView.scrollToPosition(messageArray.size - 1);
-        }
-    }
+//    private fun addMessage(newMessage: Message) {
+//        messageArray.add(newMessage)
+//        adapterChatMessage?.notifyDataSetChanged()
+//
+//        // if only we send a msg, scroll down
+//        if(newMessage.author.equals(this.username)) {
+//            recyclerView.scrollToPosition(messageArray.size - 1);
+//        }
+//    }
 }
