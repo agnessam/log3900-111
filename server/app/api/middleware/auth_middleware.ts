@@ -42,6 +42,8 @@ export const passportLoginMiddleware = () => {
 			},
 			async (username, password, done) => {
 				try {
+          console.log(username);
+          console.log(password);
 					const user = await User.findOne({ username });
 					if (!user) {
 						return done(

@@ -1,5 +1,6 @@
 import { Component, OnInit, ViewEncapsulation } from "@angular/core";
-import { FormControl, FormGroup } from "@angular/forms";
+import { FormControl, FormGroup, Validators } from "@angular/forms";
+import { MatSnackBar } from "@angular/material/snack-bar";
 import { Router } from "@angular/router";
 import { AuthenticationService } from "../services/authentication/authentication.service";
 
@@ -10,26 +11,59 @@ import { AuthenticationService } from "../services/authentication/authentication
   encapsulation: ViewEncapsulation.None,
 })
 export class RegisterComponent implements OnInit {
-  registerForm: FormGroup;
+  userRegistration: FormGroup;
 
   constructor(
+    private authenticationService: AuthenticationService,
     private router: Router,
-    private authenticationService: AuthenticationService
+    private snackBar: MatSnackBar
   ) {}
 
   ngOnInit(): void {
-    this.registerForm = new FormGroup({
-      username: new FormControl(""),
-      password: new FormControl(""),
-      confirmPassword: new FormControl(""),
-      email: new FormControl(""),
-      firstName: new FormControl(""),
-      lastName: new FormControl(""),
+    this.userRegistration = new FormGroup({
+      username: new FormControl("", [
+        Validators.required,
+        Validators.minLength(4),
+      ]),
+      password: new FormControl("", [
+        Validators.required,
+        Validators.minLength(8),
+      ]),
+      confirmPassword: new FormControl("", Validators.required),
+      email: new FormControl("", [
+        Validators.required,
+        Validators.pattern("^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$"),
+      ]),
+      firstName: new FormControl("", [Validators.required]),
+      lastName: new FormControl("", [Validators.required]),
     });
   }
 
   onSubmit(): void {
-    this.authenticationService.isAuthenticated();
-    this.router.navigate(["/chat"]);
+    if (this.userRegistration.invalid) {
+      this.openSnackBar("Something's wrong...");
+      return;
+    }
+    this.authenticationService
+      .register(
+        this.userRegistration.value.username,
+        this.userRegistration.value.password,
+        this.userRegistration.value.email,
+        this.userRegistration.value.firstName,
+        this.userRegistration.value.lastName
+      )
+      .subscribe((response) => {
+        if (response.error) {
+          this.openSnackBar(response.error);
+        } else {
+          this.router.navigate(["/chat"]);
+        }
+      });
+  }
+
+  openSnackBar(message: string): void {
+    this.snackBar.open(message, "Close", {
+      duration: 3000,
+    });
   }
 }

@@ -3,32 +3,23 @@ import { Injectable } from "@angular/core";
 import { BehaviorSubject, Observable } from "rxjs";
 import { map } from "rxjs/operators";
 import { environment } from "src/environments/environment";
+import { User } from "../../models/user";
 
 @Injectable({
   providedIn: "root",
 })
 export class AuthenticationService {
   private endpointUrl: string = environment.serverURL + "/auth/";
+
   private authTokenSubject: BehaviorSubject<string | null>;
   public authTokenObservable: Observable<string | null>;
 
-  // TODO: Seperate into different class
-  private currentUserSubject: BehaviorSubject<string | null>;
-  public currentUserObservable: Observable<string | null>;
+  private currentUserSubject: BehaviorSubject<User | null>;
+  public currentUserObservable: Observable<User | null>;
 
   constructor(private httpClient: HttpClient) {
-    const userToken = localStorage.getItem("user_token");
-    if (!userToken) {
-      this.authTokenSubject = new BehaviorSubject<string | null>(null);
-      this.currentUserSubject = new BehaviorSubject<string | null>(null);
-    } else {
-      this.authTokenSubject = new BehaviorSubject<string | null>(
-        JSON.parse(userToken)
-      );
-      this.currentUserSubject = new BehaviorSubject<string | null>(
-        JSON.parse(localStorage.getItem("username")!)
-      );
-    }
+    this.authTokenSubject = new BehaviorSubject<string | null>(null);
+    this.currentUserSubject = new BehaviorSubject<User | null>(null);
 
     this.authTokenObservable = this.authTokenSubject.asObservable();
     this.currentUserObservable = this.currentUserSubject.asObservable();
@@ -39,12 +30,12 @@ export class AuthenticationService {
   }
 
   public get username(): string | null {
-    return this.currentUserSubject.value;
+    return this.currentUserSubject.value!.username;
   }
 
   public isAuthenticated(): boolean {
     // Covers the case where the user deletes the token himself.
-    if (!localStorage.getItem("user_token")) {
+    if (!localStorage.getItem("token")) {
       this.authTokenSubject.next(null);
       this.currentUserSubject.next(null);
       return false;
@@ -57,40 +48,70 @@ export class AuthenticationService {
     return true;
   }
 
-  login(username: string, password: string) {
+  public login(username: string, password: string) {
     const loginEndpoint = this.endpointUrl + "login";
     return this.httpClient
       .post<any>(loginEndpoint, { username: username, password: password })
       .pipe(
-        map((user) => {
-          console.log(user);
-          if (!user.token) {
-            return user;
+        map((response) => {
+          if (response.error) {
+            return response;
           }
-          localStorage.setItem("user_token", JSON.stringify(user.token));
-          localStorage.setItem("username", JSON.stringify(user.username));
 
-          this.authTokenSubject.next(user.token);
-          this.currentUserSubject.next(user.username);
-          return user;
+          localStorage.setItem("token", JSON.stringify(response.token));
+          localStorage.setItem("userId", JSON.stringify(response.user._id));
+
+          this.authTokenSubject.next(response.token);
+          this.currentUserSubject.next(response.user);
+
+          return response;
         })
       );
   }
 
-  logout(username: string | null) {
-    const logoutEndpont = this.endpointUrl + "logout";
+  public register(
+    username: string,
+    password: string,
+    email: string,
+    firstName: string,
+    lastName: string
+  ) {
+    const registerEndpoint = this.endpointUrl + "register";
     return this.httpClient
-      .post<any>(logoutEndpont, { username: username })
+      .post<any>(registerEndpoint, {
+        username: username,
+        password: password,
+        email: email,
+        firstName: firstName,
+        lastName: lastName,
+      })
       .pipe(
         map((response) => {
-          console.log(response);
-          localStorage.removeItem("username");
-          localStorage.removeItem("user_token");
+          if (response.error) {
+            return response;
+          }
 
-          this.authTokenSubject.next(null);
-          this.currentUserSubject.next(null);
+          localStorage.setItem("token", JSON.stringify(response.token));
+          localStorage.setItem("userId", JSON.stringify(response.user._id));
+
+          this.authTokenSubject.next(response.token);
+          this.currentUserSubject.next(response.user);
           return response;
         })
       );
+  }
+
+  public logout() {
+    const logoutEndpoint = this.endpointUrl + "logout";
+    return this.httpClient.post<any>(logoutEndpoint, {}).pipe(
+      map((response) => {
+        localStorage.removeItem("userId");
+        localStorage.removeItem("token");
+
+        this.authTokenSubject.next(null);
+        this.currentUserSubject.next(null);
+        return response;
+      })
+    );
   }
 }

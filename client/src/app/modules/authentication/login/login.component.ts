@@ -32,8 +32,8 @@ export class LoginComponent implements OnInit {
 
     this.authenticationService
       .login(this.loginForm.value.username, this.loginForm.value.password)
-      .subscribe((user) => {
-        if (!user.token) {
+      .subscribe((response) => {
+        if (response.error) {
           this.snackBar.open("Username already exists", "Close", {
             duration: 3000,
           });
