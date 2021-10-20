@@ -2,12 +2,74 @@
   width: 100%;
 }
 
-.no-padding .mat-form-field-wrapper {
-  margin-bottom: -1.25em;
-}
-
 .roundedCorners {
   border-radius: 20px;
+}
+
+.mat-card:not([class*="mat-elevation-z"]) {
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+}
+
+.form-input {
+  display: block;
+  width: 100%;
+  margin: auto;
+  position: relative;
+}
+
+.form-input .mat-form-field-wrapper {
+  padding-bottom: 0;
+}
+
+.filled-form-input {
+  width: 100%;
+}
+
+.input-table {
+  border-collapse: collapse;
+}
+
+.input-table td {
+  padding: 0;
+  margin: 0;
+}
+
+#register-form {
+  width: 650px;
+  height: 300px;
+}
+
+#register-mat-card.mat-card {
+  border-radius: 15px;
+  background-color: #fef9f7;
+}
+
+#title-card {
+  color: #924642;
+  font-size: 36px;
+  padding-top: 3%;
+  padding-bottom: 3%;
+}
+
+#register-card {
+  color: #5b4d5a;
+  font-size: 24px;
+  padding-bottom: 3%;
+}
+
+#loginRedirect {
+  font-size: 18px;
+}
+
+#loginLink .button {
+  color: #924642;
+}
+
+#registerButton {
+  text-align: right;
+  position: relative;
 }
 
 body {

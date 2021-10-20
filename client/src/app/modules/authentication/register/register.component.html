@@ -1,22 +1,20 @@
 <mat-grid-list cols="2">
-  <mat-grid-tile
-    ><mat-card-title>Welcome to ColorImage!</mat-card-title></mat-grid-tile
-  >
+  <mat-grid-tile><mat-card-title></mat-card-title></mat-grid-tile>
   <mat-grid-tile>
-    <mat-card>
-      <mat-card-title>ColorImage</mat-card-title>
-      <mat-card-title>Register</mat-card-title>
+    <mat-card id="register-mat-card">
+      <mat-card-title id="title-card">ColorImage</mat-card-title>
+      <mat-card-title id="register-card">Register</mat-card-title>
       <mat-card-content>
         <form
           [formGroup]="userRegistration"
           (ngSubmit)="onSubmit()"
-          class="roundedCorners"
+          class="register-form"
         >
-          <table style="border-collapse: collapse">
+          <table class="input-table">
             <tr>
-              <td style="padding: 0">
+              <td>
                 <p>
-                  <mat-form-field appearance="outline" class="no-padding">
+                  <mat-form-field appearance="outline" class="form-input">
                     <mat-label>First Name</mat-label>
                     <input
                       type="text"
@@ -29,7 +27,7 @@
               </td>
               <td>
                 <p>
-                  <mat-form-field appearance="outline" class="no-padding">
+                  <mat-form-field appearance="outline" class="form-input">
                     <mat-label>Last Name</mat-label>
                     <input
                       type="text"
@@ -43,7 +41,7 @@
             </tr>
           </table>
           <p>
-            <mat-form-field appearance="outline" class="filledInput">
+            <mat-form-field appearance="outline" class="form-input">
               <mat-label>Username</mat-label>
               <input
                 type="text"
@@ -54,7 +52,7 @@
             </mat-form-field>
           </p>
           <p>
-            <mat-form-field appearance="outline" class="filledInput">
+            <mat-form-field appearance="outline" class="form-input">
               <mat-label>Email Address</mat-label>
               <input
                 type="text"
@@ -69,7 +67,7 @@
             <tr>
               <td>
                 <p>
-                  <mat-form-field appearance="outline">
+                  <mat-form-field appearance="outline" class="form-input">
                     <mat-label>Password</mat-label>
                     <input
                       type="password"
@@ -82,7 +80,7 @@
               </td>
               <td>
                 <p>
-                  <mat-form-field appearance="outline">
+                  <mat-form-field appearance="outline" class="form-input">
                     <mat-label>Confirm Password</mat-label>
                     <input
                       type="password"
@@ -95,7 +93,14 @@
               </td>
             </tr>
           </table>
-
+          <div id="loginRedirect">
+            <p>
+              Already have an account?
+              <button mat-button id="loginLink" routerLink="/users/login">
+                LOG IN
+              </button>
+            </p>
+          </div>
           <div class="button">
             <button type="submit" mat-raised-button color="primary">
               Register
