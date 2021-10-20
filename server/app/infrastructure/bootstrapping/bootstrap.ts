@@ -20,6 +20,8 @@ import { DbClient, getDatabaseClient } from '../data_access/db_client';
 import '../../api/controllers/hello-world.controller';
 import '../../api/controllers/authentication.controller';
 import '../../api/controllers/user.controller';
+import '../../api/controllers/textchannel.controller';
+
 
 export const boostrap = async (
 	container: Container,
