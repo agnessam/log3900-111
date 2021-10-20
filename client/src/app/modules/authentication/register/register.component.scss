@@ -9,3 +9,12 @@
 .roundedCorners {
   border-radius: 20px;
 }
+
+body {
+  background-image: url("../../../../assets/backgrounds/auth-background.png");
+  background-position: center;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}
