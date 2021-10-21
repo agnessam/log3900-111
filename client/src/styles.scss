@@ -53,3 +53,14 @@ body {
 .mat-stroked-button {
   color: #da7e70;
 }
+
+.mat-card:not([class*="mat-elevation-z"]) {
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+}
+
+.mat-card {
+  border-radius: 15px;
+  background-color: #fef9f7;
+}
