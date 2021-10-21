@@ -1,4 +1,4 @@
-<mat-toolbar color="primary" *ngIf="username">
+<mat-toolbar color="primary" *ngIf="user">
   <span>ColorImage</span>
   <span class="menu-spacer"></span>
   <div>
@@ -9,7 +9,7 @@
   <span class="user-properties"></span>
 
   <div>
-    {{ username }}
+    {{ user.username }}
   </div>
   <div>
     <a mat-button (click)="logout()">Logout</a>

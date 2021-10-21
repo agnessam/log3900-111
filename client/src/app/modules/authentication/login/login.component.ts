@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, ViewEncapsulation } from "@angular/core";
 import { FormGroup, FormControl } from "@angular/forms";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { Router } from "@angular/router";
@@ -8,6 +8,7 @@ import { AuthenticationService } from "../services/authentication/authentication
   selector: "app-login",
   templateUrl: "./login.component.html",
   styleUrls: ["./login.component.scss"],
+  encapsulation: ViewEncapsulation.None,
 })
 export class LoginComponent implements OnInit {
   loginForm: FormGroup;
@@ -21,6 +22,7 @@ export class LoginComponent implements OnInit {
   ngOnInit(): void {
     this.loginForm = new FormGroup({
       username: new FormControl(""),
+      password: new FormControl(""),
     });
   }
 
@@ -30,11 +32,12 @@ export class LoginComponent implements OnInit {
     }
 
     this.authenticationService
-      // Setting a default password, TODO: Change for when we add real authentication
-      .login(this.loginForm.value.username, "default")
-      .subscribe((user) => {
-        if (!user.token) {
-          this.snackBar.open("Username already exists");
+      .login(this.loginForm.value.username, this.loginForm.value.password)
+      .subscribe((response) => {
+        if (response.error) {
+          this.snackBar.open("Username already exists", "Close", {
+            duration: 3000,
+          });
         } else {
           this.router.navigate(["/chat"]);
         }

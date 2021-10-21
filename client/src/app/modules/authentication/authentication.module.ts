@@ -12,9 +12,10 @@ import { HTTP_INTERCEPTORS } from "@angular/common/http";
 import { JwtInterceptor } from "./jwt.interceptor";
 import { AuthGuard } from "./auth.guard";
 import { MatButtonModule } from "@angular/material/button";
+import { RegisterComponent } from './register/register.component';
 
 @NgModule({
-  declarations: [LoginComponent],
+  declarations: [LoginComponent, RegisterComponent],
   imports: [
     CommonModule,
     FormsModule,

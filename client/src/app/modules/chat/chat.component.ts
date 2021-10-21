@@ -1,6 +1,7 @@
 import { Component, OnDestroy, OnInit } from "@angular/core";
 import { Subscription } from "rxjs";
 import { AuthenticationService } from "src/app/modules/authentication";
+import { User } from "../authentication/models/user";
 import { ChatSocketService } from "./services/chat-socket.service";
 
 @Component({
@@ -9,7 +10,7 @@ import { ChatSocketService } from "./services/chat-socket.service";
   styleUrls: ["./chat.component.scss"],
 })
 export class ChatComponent implements OnInit, OnDestroy {
-  public username: string | null;
+  public user: User | null;
   public chatSubscribiption: Subscription;
 
   constructor(
@@ -17,7 +18,7 @@ export class ChatComponent implements OnInit, OnDestroy {
     private chatSocketService: ChatSocketService
   ) {
     this.authenticationService.currentUserObservable.subscribe(
-      (username) => (this.username = username)
+      (user) => (this.user = user)
     );
   }
 
@@ -59,8 +60,8 @@ export class ChatComponent implements OnInit, OnDestroy {
     if (mes === null || mes.match(/^ *$/) !== null) return;
 
     let name = "";
-    if (this.username === null) return;
-    name = this.username;
+    if (this.user?.username === null) return;
+    name = this.user!.username;
 
     let hour = new Date().getHours().toString();
     let minute = new Date().getMinutes().toString();
