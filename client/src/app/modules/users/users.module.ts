@@ -8,9 +8,10 @@ import { MatGridListModule } from "@angular/material/grid-list";
 import { MatInputModule } from "@angular/material/input";
 import { TellMeAboutYourselfComponent } from "./tell-me-about-yourself/tell-me-about-yourself/tell-me-about-yourself.component";
 import { UsersRoutingModule } from "./users-routing.module";
+import { UserProfileComponent } from './user-profile/user-profile.component';
 
 @NgModule({
-  declarations: [TellMeAboutYourselfComponent],
+  declarations: [TellMeAboutYourselfComponent, UserProfileComponent],
   imports: [
     MatCardModule,
     MatGridListModule,
