@@ -1,4 +1,4 @@
-export interface User {
+export class User {
   _id: string;
   username: string;
   password: string;
@@ -6,4 +6,8 @@ export interface User {
   lastName: string;
   email: string;
   description: string;
+
+  public constructor(init?: Partial<User>) {
+    Object.assign(this, init);
+  }
 }

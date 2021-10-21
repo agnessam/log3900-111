@@ -1,5 +1,8 @@
 import { Component, OnInit } from "@angular/core";
 import { FormControl, FormGroup } from "@angular/forms";
+import { Router } from "@angular/router";
+import { AuthenticationService } from "src/app/modules/authentication";
+import { User } from "src/app/modules/authentication/models/user";
 import { EditableUserParameters } from "../../models/user";
 import { UsersService } from "../../services/users.service";
 
@@ -9,11 +12,20 @@ import { UsersService } from "../../services/users.service";
   styleUrls: ["./tell-me-about-yourself.component.scss"],
 })
 export class TellMeAboutYourselfComponent implements OnInit {
+  currentUser: User | null;
   customizeProfileForm: FormGroup;
 
-  constructor(private userService: UsersService) {}
+  constructor(
+    private userService: UsersService,
+    private authenticationService: AuthenticationService,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
+    this.authenticationService.currentUserObservable.subscribe((user) => {
+      console.log(user);
+      this.currentUser = user;
+    });
     this.customizeProfileForm = new FormGroup({
       description: new FormControl(""),
     });
@@ -23,7 +35,11 @@ export class TellMeAboutYourselfComponent implements OnInit {
     const updatedUserParameters = new EditableUserParameters(
       this.customizeProfileForm.value
     );
-    console.log(updatedUserParameters);
-    this.userService.updateUser(updatedUserParameters);
+    this.userService
+      .updateUser(this.currentUser!._id, updatedUserParameters)
+      .subscribe((response) => {
+        console.log(response);
+        this.router.navigate([""]);
+      });
   }
 }

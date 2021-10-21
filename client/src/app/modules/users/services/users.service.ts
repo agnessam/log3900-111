@@ -1,8 +1,6 @@
-import { HttpClient, HttpParams } from "@angular/common/http";
+import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { environment } from "src/environments/environment";
-import { AuthenticationService } from "../../authentication";
-import { User } from "../../authentication/models/user";
 import { EditableUserParameters } from "../models/user";
 
 @Injectable({
@@ -10,24 +8,20 @@ import { EditableUserParameters } from "../models/user";
 })
 export class UsersService {
   private endpointUrl: string = environment.serverURL + "/users";
-  private currentUser: User | null;
+  private httpHeaders: HttpHeaders = new HttpHeaders().set(
+    "ContentType",
+    "application/x-www-form-urlencoded"
+  );
 
-  constructor(
-    private httpClient: HttpClient,
-    private authenticationService: AuthenticationService
-  ) {
-    this.authenticationService.currentUserObservable.subscribe((user) => {
-      console.log(user);
-      this.currentUser = user;
-    });
-  }
+  constructor(private httpClient: HttpClient) {}
 
-  updateUser(user: EditableUserParameters) {
-    const httpOptions = {
-      params: new HttpParams().set("id", this.currentUser!._id),
-    };
-    console.log(this.currentUser);
-    console.log(this.currentUser!._id);
-    this.httpClient.patch(this.endpointUrl, user, httpOptions);
+  updateUser(userId: string, user: EditableUserParameters) {
+    return this.httpClient
+      .patch(`${this.endpointUrl}/${userId}`, user, {
+        headers: this.httpHeaders,
+      })
+      .pipe((response) => {
+        return response;
+      });
   }
 }
