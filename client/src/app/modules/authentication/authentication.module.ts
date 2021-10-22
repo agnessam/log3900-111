@@ -12,10 +12,16 @@ import { HTTP_INTERCEPTORS } from "@angular/common/http";
 import { JwtInterceptor } from "./jwt.interceptor";
 import { AuthGuard } from "./auth.guard";
 import { MatButtonModule } from "@angular/material/button";
-import { RegisterComponent } from './register/register.component';
+import { RegisterComponent } from "./register/register.component";
+import { AuthenticationNavbarComponent } from "./auth-nav/authentication-navbar/authentication-navbar.component";
+import { MatToolbarModule } from "@angular/material/toolbar";
 
 @NgModule({
-  declarations: [LoginComponent, RegisterComponent],
+  declarations: [
+    LoginComponent,
+    RegisterComponent,
+    AuthenticationNavbarComponent,
+  ],
   imports: [
     CommonModule,
     FormsModule,
@@ -26,6 +32,7 @@ import { RegisterComponent } from './register/register.component';
     MatInputModule,
     ReactiveFormsModule,
     MatButtonModule,
+    MatToolbarModule,
   ],
   providers: [
     {

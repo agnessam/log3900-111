@@ -10,7 +10,13 @@ import { AuthenticationService } from "./services/authentication/authentication.
 
 @Injectable()
 export class JwtInterceptor implements HttpInterceptor {
-  constructor(private authenticationService: AuthenticationService) {}
+  jwtToken: string | null;
+
+  constructor(private authenticationService: AuthenticationService) {
+    this.authenticationService.authTokenObservable.subscribe(
+      (token) => (this.jwtToken = token)
+    );
+  }
 
   intercept(
     request: HttpRequest<unknown>,
@@ -20,7 +26,7 @@ export class JwtInterceptor implements HttpInterceptor {
     if (request.url.search(re) === -1) {
       request = request.clone({
         setHeaders: {
-          Authorization: `Bearer ${this.authenticationService.authToken}`,
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       });
     }

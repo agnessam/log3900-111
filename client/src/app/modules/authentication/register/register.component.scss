@@ -1,9 +1,3 @@
-.mat-card:not([class*="mat-elevation-z"]) {
-  -webkit-box-shadow: none;
-  -moz-box-shadow: none;
-  box-shadow: none;
-}
-
 .form-input {
   display: block;
   width: 100%;
@@ -59,7 +53,7 @@
   position: relative;
 }
 
-body {
+.register-body {
   background-image: url("../../../../assets/backgrounds/auth-background.png");
   background-position: center;
   -webkit-background-size: cover;
