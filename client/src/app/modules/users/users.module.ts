@@ -12,9 +12,10 @@ import { UserProfileComponent } from "./user-profile/user-profile.component";
 import { JwtInterceptor } from "../authentication/jwt.interceptor";
 import { HTTP_INTERCEPTORS } from "@angular/common/http";
 import { AuthGuard } from "../authentication";
+import { UsersComponent } from './users/users.component';
 
 @NgModule({
-  declarations: [TellMeAboutYourselfComponent, UserProfileComponent],
+  declarations: [TellMeAboutYourselfComponent, UserProfileComponent, UsersComponent],
   imports: [
     MatCardModule,
     MatGridListModule,
