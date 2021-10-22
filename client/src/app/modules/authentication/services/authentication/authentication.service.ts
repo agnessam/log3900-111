@@ -59,7 +59,7 @@ export class AuthenticationService {
           }
 
           localStorage.setItem("token", response.token);
-          localStorage.setItem("userId", JSON.stringify(response.user._id));
+          localStorage.setItem("userId", response.user._id);
 
           this.authTokenSubject.next(response.token);
           this.currentUserSubject.next(response.user);
@@ -92,7 +92,7 @@ export class AuthenticationService {
           }
 
           localStorage.setItem("token", response.token);
-          localStorage.setItem("userId", JSON.stringify(response.user._id));
+          localStorage.setItem("userId", response.user._id);
 
           this.authTokenSubject.next(response.token);
           this.currentUserSubject.next(response.user);
