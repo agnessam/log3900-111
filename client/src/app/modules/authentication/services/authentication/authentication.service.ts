@@ -61,8 +61,10 @@ export class AuthenticationService {
           localStorage.setItem("token", response.token);
           localStorage.setItem("userId", response.user._id);
 
+          const currentUser = new User(response.user);
+          this.currentUserSubject.next(currentUser);
           this.authTokenSubject.next(response.token);
-          this.currentUserSubject.next(response.user);
+          console.log(this.authToken);
 
           return response;
         })

@@ -57,7 +57,7 @@ export class RegisterComponent implements OnInit {
         if (response.error) {
           this.openSnackBar(response.error);
         } else {
-          this.router.navigate(["/chat"]);
+          this.router.navigate(["/users/customize"]);
         }
       });
   }

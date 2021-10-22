@@ -5,11 +5,6 @@
   position: relative;
 }
 
-.login-mat-card.mat-card {
-  border-radius: 15px;
-  background-color: #fef9f7;
-}
-
 .mat-card:not([class*="mat-elevation-z"]) {
   -webkit-box-shadow: none;
   -moz-box-shadow: none;
@@ -47,7 +42,7 @@
   color: #924642;
 }
 
-body {
+.login-body {
   background-image: url(../../../../assets/backgrounds/auth-background.png);
   background-position: center;
   -webkit-background-size: cover;
