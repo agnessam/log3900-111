@@ -26,6 +26,11 @@ const routes: Routes = [
       import("./modules/users/users.module").then((m) => m.UsersModule),
   },
   {
+    path: "gallery",
+    loadChildren: () =>
+      import("./modules/gallery/gallery.module").then((m) => m.GalleryModule),
+  },
+  {
     path: "",
     component: ChatComponent,
     loadChildren: () =>
