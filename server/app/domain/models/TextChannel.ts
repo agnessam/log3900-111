@@ -1,4 +1,4 @@
-import mongoose, { Document, Model } from 'mongoose';
+import mongoose, { Document, Model, Schema } from 'mongoose';
 import { Message } from '../interfaces/message.interface';
 
 export interface TextChannelInterface extends Document{
@@ -13,8 +13,8 @@ const TextChannelSchema = new mongoose.Schema({
 	description: String,
 
 	owner: { type: String, required: true, index: { unique: true } },
-    // TODO: look for custom types in mongoose
-	messages: { type: Message[], required: true },
+    // Type translates to 'any'
+	messages: { type: Schema.Types.Mixed, required: true },
 });
 
 export const TextChannel: Model<TextChannelInterface> = mongoose.model('TextChannels', TextChannelSchema);
