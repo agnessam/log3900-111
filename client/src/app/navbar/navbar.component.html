@@ -1,19 +1,21 @@
-<mat-toolbar color="primary" *ngIf="username">
-  <span>ColorImage</span>
+<mat-toolbar id="nav-bar" color="primary" *ngIf="user">
+  <div>
+    <span id="main-logo">ColorImage</span>
+  </div>
+  <span class="menu-spacer"></span>
+  <span class="menu-spacer"></span>
   <span class="menu-spacer"></span>
   <div>
-    <a mat-button routerLink="/drawing">Drawing</a>
-    <a mat-button routerLink="/chat">Chat</a>
+    <a mat-button routerLink="/drawing" class="page-link">Drawing</a>
+    <a mat-button routerLink="/chat" class="page-link">Chat</a>
   </div>
 
   <span class="user-properties"></span>
 
-  <div>
-    {{ username }}
+  <div class="page-link">
+    {{ user.username }}
   </div>
   <div>
-    <a mat-button (click)="logout()">Logout</a>
+    <a mat-button (click)="logout()" id="logout-button">Logout</a>
   </div>
 </mat-toolbar>
-
-<router-outlet></router-outlet>

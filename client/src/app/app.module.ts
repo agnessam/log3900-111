@@ -20,6 +20,7 @@ import { SharedModule } from "./shared/shared.module";
 import { ToolsColorModule } from "./modules/tools-color/tools-color.module";
 import { ParameterMenuModule } from "./modules/parameter-menu/parameter-menu.module";
 import { ErrorModule } from "./modules/error/error.module";
+import { UsersModule } from "./modules/users/users.module";
 @NgModule({
   declarations: [AppComponent],
   imports: [
@@ -43,6 +44,7 @@ import { ErrorModule } from "./modules/error/error.module";
     SharedModule,
     ToolsColorModule,
     ParameterMenuModule,
+    UsersModule,
     ErrorModule,
   ],
   exports: [],

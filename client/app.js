@@ -6,14 +6,13 @@ let mainWindow
 
 function createWindow() {
     mainWindow = new BrowserWindow({
-        width: 800,
-        height: 800,
         autoHideMenuBar: true,
         webPreferences: {
             nodeIntegration: true
         }
-    })
-
+    });
+    mainWindow.maximize();
+    mainWindow.setResizable(false);
     mainWindow.loadURL(
         url.format({
             pathname: path.join(__dirname, `/dist/client/index.html`),
