@@ -5,13 +5,13 @@ import android.graphics.*
 import android.view.MotionEvent
 import android.view.View
 import com.example.colorimagemobile.services.drawing.CustomPaint
+import com.example.colorimagemobile.services.drawing.PaintPath
 import com.example.colorimagemobile.services.drawing.PathService
 
 abstract class CanvasView(context: Context?): View(context) {
     private lateinit var extraCanvas: Canvas
     private lateinit var extraBitmap: Bitmap
-    protected var path: Path = Path()
-    protected var customPaint: CustomPaint = CustomPaint()
+    protected val paintPath: PaintPath = PaintPath(CustomPaint(), Path())
 
     override fun onSizeChanged(width: Int, height: Int, oldWidth: Int, oldHeight: Int) {
         super.onSizeChanged(width, height, oldWidth, oldHeight)
@@ -33,9 +33,11 @@ abstract class CanvasView(context: Context?): View(context) {
         super.onDraw(canvas)
         canvas.drawBitmap(extraBitmap, 0f, 0f, null)
 
-        // draw only newly added element
-        val lastPaintPathElement = PathService.getPaintPath().last()
-        canvas.drawPath(lastPaintPathElement.path, lastPaintPathElement.paint.getPaint())
+        // draw only newly added element if the list contains some points initially
+        if (!PathService.isPaintPathEmpty()) {
+            val lastPaintPathElement = PathService.getLastPaintPath()
+            canvas.drawPath(lastPaintPathElement.path, lastPaintPathElement.paint.getPaint())
+        }
     }
 
     // when taking an action on canvas

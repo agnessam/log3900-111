@@ -25,6 +25,10 @@ class CustomPaint() {
         paint.color = newColor
     }
 
+    fun setStrokeWidth(newWidth: Float) {
+        paint.strokeWidth = newWidth
+    }
+
     fun getPaint(): Paint {
         return paint
     }
@@ -40,5 +44,13 @@ object PathService {
 
     fun getPaintPath(): ArrayList<PaintPath> {
         return paintPath
+    }
+
+    fun getLastPaintPath(): PaintPath {
+        return paintPath.last()
+    }
+
+    fun isPaintPathEmpty(): Boolean {
+        return paintPath.isEmpty()
     }
 }
