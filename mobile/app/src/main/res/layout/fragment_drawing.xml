@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/drawingFragment"
     tools:context=".ui.home.fragments.drawing.DrawingFragment">
 
@@ -11,19 +12,25 @@
         android:layout_height="match_parent"
         android:orientation="horizontal">
 
-<!--        Tools-->
-        <LinearLayout
-            android:id="@+id/canvas_tools"
-            android:layout_width="50dp"
+        <androidx.cardview.widget.CardView
+            android:layout_width="60dp"
             android:layout_height="match_parent"
-            android:orientation="vertical">
-        </LinearLayout>
+            app:cardElevation="4dp">
+
+            <!--        Tools-->
+            <LinearLayout
+                android:id="@+id/canvas_tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical" />
+
+        </androidx.cardview.widget.CardView>
 
 <!--        canvas-->
         <RelativeLayout
             android:id="@+id/canvas_view"
-            android:layout_width="800dp"
-            android:layout_height="500dp" />
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

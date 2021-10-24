@@ -2,12 +2,15 @@ package com.example.colorimagemobile.ui.home.fragments.drawing
 
 import android.graphics.Color
 import android.os.Bundle
+import android.view.Gravity
 import androidx.fragment.app.Fragment
 import android.view.View
 import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.ContextCompat
+import androidx.core.graphics.drawable.DrawableCompat
 import com.example.colorimagemobile.R
 import com.example.colorimagemobile.services.drawing.ToolService
 import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
@@ -30,11 +33,13 @@ class DrawingFragment : Fragment(R.layout.fragment_drawing) {
         ToolService.getAllTools().forEach { tool ->
             val toolBtn = Button(context)
             toolBtn.layoutParams = LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
             )
-            toolBtn.text = tool.tool
-            toolBtn.setBackgroundColor(Color.GREEN)
+
+            toolBtn.setCompoundDrawablesWithIntrinsicBounds(tool.icon, 0, 0, 0)
+            toolBtn.setBackgroundColor(Color.rgb(245, 245, 245))
+            toolBtn.gravity = Gravity.CENTER
             toolBtn.setOnClickListener { ToolService.setCurrentTool(tool.index) }
 
             val toolSidebar = drawingFragment.findViewById<LinearLayout>(R.id.canvas_tools)

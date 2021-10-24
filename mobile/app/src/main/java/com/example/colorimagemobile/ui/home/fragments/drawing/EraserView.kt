@@ -9,13 +9,18 @@ class EraserView(context: Context?): CanvasView(context) {
 
     override fun onSizeChanged(width: Int, height: Int, oldWidth: Int, oldHeight: Int) {
         super.onSizeChanged(width, height, oldWidth, oldHeight)
-
-        extraCanvas.drawColor(Color.rgb(150, 150, 150))
     }
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
 
         printMsg("ERASERR")
+    }
+
+
+    override fun onTouchDown(pointX: Float, pointY: Float) {
+    }
+
+    override fun onTouchMove(pointX: Float, pointY: Float) {
     }
 }
