@@ -2,23 +2,29 @@ package com.example.colorimagemobile.ui.home.fragments.drawing
 
 import android.graphics.Color
 import android.os.Bundle
+import android.transition.AutoTransition
+import android.transition.TransitionManager
 import android.view.Gravity
 import androidx.fragment.app.Fragment
 import android.view.View
 import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
+import android.widget.TextView
+import androidx.cardview.widget.CardView
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.example.colorimagemobile.R
 import com.example.colorimagemobile.services.drawing.ToolService
 
 class DrawingFragment : Fragment(R.layout.fragment_drawing) {
     private lateinit var drawingFragment: ConstraintLayout;
+    private lateinit var panelView: CardView
 
-      override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         drawingFragment = view.findViewById(R.id.drawingFragment)
+        panelView = drawingFragment.findViewById<CardView>(R.id.canvas_tools_attributes_cardview)
 
         addToolsOnSidebar()
         setToolsListener()
@@ -35,7 +41,11 @@ class DrawingFragment : Fragment(R.layout.fragment_drawing) {
 
             toolBtn.setCompoundDrawablesWithIntrinsicBounds(tool.icon, 0, 0, 0)
             toolBtn.setBackgroundColor(Color.rgb(245, 245, 245))
-            toolBtn.setOnClickListener { ToolService.setCurrentTool(tool.index) }
+            toolBtn.setOnClickListener {
+                // handle attribute panel when clicked on tool
+                togglePanel(tool.index)
+                panelView.findViewById<TextView>(R.id.tool_name).text = tool.toolName
+            }
 
             val toolSidebar = drawingFragment.findViewById<LinearLayout>(R.id.canvas_tools)
             toolSidebar.addView(toolBtn)
@@ -62,5 +72,19 @@ class DrawingFragment : Fragment(R.layout.fragment_drawing) {
             canvasLayout.removeAllViews()
             canvasLayout.addView(canvasView)
         })
+    }
+
+    private fun togglePanel(toolIndex: Int) {
+        // close panel because toggling on same tool
+        if (ToolService.getCurrentToolValue()?.index == toolIndex && panelView.visibility == View.VISIBLE) {
+            TransitionManager.beginDelayedTransition(panelView, AutoTransition())
+            panelView.visibility = View.GONE
+            return
+        }
+
+        // new tool clicked -> open panel
+        ToolService.setCurrentTool(toolIndex)
+        TransitionManager.beginDelayedTransition(panelView, AutoTransition())
+        panelView.visibility = View.VISIBLE
     }
 }

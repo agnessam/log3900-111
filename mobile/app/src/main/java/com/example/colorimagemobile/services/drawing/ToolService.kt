@@ -4,12 +4,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.colorimagemobile.R
 
-data class ToolsMap(val index: Int, val tool: String, val icon: Int)
+data class ToolsMap(val index: Int, val toolName: String, val icon: Int)
 
 /**
  * @todo: Add dynamic class View as param
  */
-enum class ToolType(val index: Int, val tool: String, val icon: Int) {
+enum class ToolType(val index: Int, val toolName: String, val icon: Int) {
     PENCIL(0, "Pencil", R.drawable.drawing_icon_pencil),
     ERASER(1, "Eraser", R.drawable.drawing_icon_eraser),
 }
@@ -20,7 +20,7 @@ object ToolService {
 
     init {
         enumValues<ToolType>().forEach {
-            tools.add(ToolsMap(it.index, it.tool, it.icon))
+            tools.add(ToolsMap(it.index, it.toolName, it.icon))
         }
 
         this.currentTool = MutableLiveData()
@@ -29,6 +29,10 @@ object ToolService {
 
     fun getCurrentTool(): LiveData<ToolsMap> {
         return this.currentTool
+    }
+
+    fun getCurrentToolValue(): ToolsMap? {
+        return this.currentTool.value
     }
 
     fun setCurrentTool(index: Int) {
