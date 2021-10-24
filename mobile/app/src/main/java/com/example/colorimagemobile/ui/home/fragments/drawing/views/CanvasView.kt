@@ -1,4 +1,4 @@
-package com.example.colorimagemobile.ui.home.fragments.drawing
+package com.example.colorimagemobile.ui.home.fragments.drawing.views
 
 import android.content.Context
 import android.graphics.*
@@ -11,7 +11,7 @@ import com.example.colorimagemobile.services.drawing.PathService
 abstract class CanvasView(context: Context?): View(context) {
     private lateinit var extraCanvas: Canvas
     private lateinit var extraBitmap: Bitmap
-    protected val paintPath: PaintPath = PaintPath(CustomPaint(), Path())
+    protected var paintPath: PaintPath = PaintPath(CustomPaint(), Path())
 
     override fun onSizeChanged(width: Int, height: Int, oldWidth: Int, oldHeight: Int) {
         super.onSizeChanged(width, height, oldWidth, oldHeight)

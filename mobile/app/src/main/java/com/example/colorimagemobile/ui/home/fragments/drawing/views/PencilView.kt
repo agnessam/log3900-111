@@ -1,15 +1,9 @@
-package com.example.colorimagemobile.ui.home.fragments.drawing
+package com.example.colorimagemobile.ui.home.fragments.drawing.views
 
 import android.content.Context
-import android.graphics.Color
 import com.example.colorimagemobile.services.drawing.PathService
 
-class EraserView(context: Context?): CanvasView(context) {
-
-    init {
-        paintPath.paint.setColor(Color.WHITE)
-        paintPath.paint.setStrokeWidth(20F)
-    }
+class PencilView(context: Context?): CanvasView(context) {
 
     override fun onTouchDown(pointX: Float, pointY: Float) {
         PathService.addPaintPath(paintPath)
@@ -20,6 +14,5 @@ class EraserView(context: Context?): CanvasView(context) {
         paintPath.path.lineTo(pointX, pointY)
     }
 
-    override fun onTouchUp() {
-    }
+    override fun onTouchUp() { }
 }

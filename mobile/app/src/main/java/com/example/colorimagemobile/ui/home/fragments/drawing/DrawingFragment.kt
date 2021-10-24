@@ -4,17 +4,18 @@ import android.graphics.Color
 import android.os.Bundle
 import android.transition.AutoTransition
 import android.transition.TransitionManager
-import android.view.Gravity
 import androidx.fragment.app.Fragment
 import android.view.View
-import android.widget.Button
-import android.widget.LinearLayout
-import android.widget.RelativeLayout
-import android.widget.TextView
+import android.widget.*
 import androidx.cardview.widget.CardView
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.example.colorimagemobile.R
 import com.example.colorimagemobile.services.drawing.ToolService
+import com.example.colorimagemobile.ui.home.fragments.drawing.attributes.eraser.EraserFragment
+import com.example.colorimagemobile.ui.home.fragments.drawing.attributes.pencil.PencilFragment
+import com.example.colorimagemobile.ui.home.fragments.drawing.views.CanvasView
+import com.example.colorimagemobile.ui.home.fragments.drawing.views.EraserView
+import com.example.colorimagemobile.ui.home.fragments.drawing.views.PencilView
 
 class DrawingFragment : Fragment(R.layout.fragment_drawing) {
     private lateinit var drawingFragment: ConstraintLayout;
@@ -44,6 +45,7 @@ class DrawingFragment : Fragment(R.layout.fragment_drawing) {
             toolBtn.setOnClickListener {
                 // handle attribute panel when clicked on tool
                 togglePanel(tool.index)
+                setPanelAttribute(tool.index)
                 panelView.findViewById<TextView>(R.id.tool_name).text = tool.toolName
             }
 
@@ -86,5 +88,18 @@ class DrawingFragment : Fragment(R.layout.fragment_drawing) {
         ToolService.setCurrentTool(toolIndex)
         TransitionManager.beginDelayedTransition(panelView, AutoTransition())
         panelView.visibility = View.VISIBLE
+    }
+
+    private fun setPanelAttribute(toolIndex: Int) {
+        val fragment = when (toolIndex) {
+            0 -> PencilFragment()
+            1 -> EraserFragment()
+
+            else -> PencilFragment()// default is pencil
+        }
+
+        activity?.supportFragmentManager?.beginTransaction()
+            ?.replace(R.id.tool_attribute_fragment, fragment)
+            ?.commitAllowingStateLoss()
     }
 }

@@ -47,14 +47,12 @@
                     android:layout_marginBottom="5dp"/>
 
                 <!--        Tools Panel Attribute -->
-                <androidx.cardview.widget.CardView
+                <FrameLayout
+                    android:id="@+id/tool_attribute_fragment"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
-                    android:layout_weight="1"
-                    app:cardElevation="3dp"
-                    app:cardUseCompatPadding="true">
+                    android:layout_weight="1"/>
 
-                </androidx.cardview.widget.CardView>
             </LinearLayout>
 
         </androidx.cardview.widget.CardView>
