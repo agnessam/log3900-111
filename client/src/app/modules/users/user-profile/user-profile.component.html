@@ -1,0 +1,45 @@
+<div *ngIf="user" class="user-profile">
+  <mat-grid-list cols="1" rowHeight="4rem">
+    <mat-grid-tile [rowspan]="4">
+      <div id="user-information">
+        <mat-grid-list cols="3" rowHeight="200px">
+          <mat-grid-tile>
+            <div id="profile-picture">
+              <img
+                mat-card-avatar
+                src="https://material.angular.io/assets/img/examples/shiba1.jpg"
+              />
+            </div>
+          </mat-grid-tile>
+          <mat-grid-tile>
+            <div id="user-description">
+              <mat-grid-list cols="1" rowHeight="30px">
+                <mat-grid-tile>
+                  <div id="username">
+                    <b> {{ user.username }}</b>
+                  </div>
+                </mat-grid-tile>
+                <mat-grid-tile>
+                  <div id="follower-information">4 followers</div>
+                </mat-grid-tile>
+                <mat-grid-tile>
+                  <div id="description">{{ user.description }}</div>
+                </mat-grid-tile>
+              </mat-grid-list>
+            </div>
+          </mat-grid-tile>
+          <mat-grid-tile>
+            <button mat-button>Follow</button>
+          </mat-grid-tile>
+        </mat-grid-list>
+      </div>
+    </mat-grid-tile>
+    <br />
+    <mat-grid-tile id="user-drawings" [rowspan]="8">
+      <!-- TODO: ADD THE USERS DRAWING HERE. -->
+      <mat-card>
+        {{ user.username }}
+      </mat-card>
+    </mat-grid-tile>
+  </mat-grid-list>
+</div>
