@@ -22,5 +22,6 @@ import { SidenavComponent } from ".";
   ],
   declarations: [SidenavComponent],
   entryComponents: [PencilToolParameterComponent, BrushToolParameterComponent],
+  exports: [SidenavComponent],
 })
 export class SidenavModule {}
