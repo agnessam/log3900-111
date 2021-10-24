@@ -1,4 +1,4 @@
-import { TextChannel, TextChannelInterface } from '@app/domain/models/TextChannel';
+import { TextChannel, TextChannelInterface } from '../../../domain/models/TextChannel';
 import { injectable } from 'inversify';
 import { GenericRepository } from './generic_repository';
 
