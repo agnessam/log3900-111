@@ -9,11 +9,8 @@ import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.content.ContextCompat
-import androidx.core.graphics.drawable.DrawableCompat
 import com.example.colorimagemobile.R
 import com.example.colorimagemobile.services.drawing.ToolService
-import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
 
 class DrawingFragment : Fragment(R.layout.fragment_drawing) {
     private lateinit var drawingFragment: ConstraintLayout;
@@ -21,14 +18,13 @@ class DrawingFragment : Fragment(R.layout.fragment_drawing) {
       override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val canvasView = context?.let { PencilView(it) }
-          drawingFragment = view.findViewById(R.id.drawingFragment)
-          view.findViewById<RelativeLayout>(R.id.canvas_view).addView(canvasView)
+        drawingFragment = view.findViewById(R.id.drawingFragment)
 
-          addToolsOnSidebar()
-          setToolsListener()
+        addToolsOnSidebar()
+        setToolsListener()
     }
 
+    // dynamically add tools on sidebar
     private fun addToolsOnSidebar() {
         ToolService.getAllTools().forEach { tool ->
             val toolBtn = Button(context)
@@ -39,7 +35,6 @@ class DrawingFragment : Fragment(R.layout.fragment_drawing) {
 
             toolBtn.setCompoundDrawablesWithIntrinsicBounds(tool.icon, 0, 0, 0)
             toolBtn.setBackgroundColor(Color.rgb(245, 245, 245))
-            toolBtn.gravity = Gravity.CENTER
             toolBtn.setOnClickListener { ToolService.setCurrentTool(tool.index) }
 
             val toolSidebar = drawingFragment.findViewById<LinearLayout>(R.id.canvas_tools)
@@ -47,6 +42,7 @@ class DrawingFragment : Fragment(R.layout.fragment_drawing) {
         }
     }
 
+    // update tool when changed tool
     private fun setToolsListener() {
         ToolService.getCurrentTool().observe(viewLifecycleOwner, { tool ->
             val canvasView: CanvasView;
@@ -59,7 +55,7 @@ class DrawingFragment : Fragment(R.layout.fragment_drawing) {
                 0 -> PencilView(context)
                 1 -> EraserView(context)
 
-                else -> PencilView(context)
+                else -> PencilView(context) // default is pencil
             }
 
             val canvasLayout = drawingFragment.findViewById<RelativeLayout>(R.id.canvas_view)
