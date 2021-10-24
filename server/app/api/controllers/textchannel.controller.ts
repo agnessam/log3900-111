@@ -1,21 +1,18 @@
 import { TYPES } from '@app/domain/constants/types';
 import { TextChannelRepository } from '@app/infrastructure/data_access/repositories/textchannel_repository';
-import { Request, Response } from 'express';
+import { Request } from 'express';
 import { inject } from 'inversify';
 import {
   controller,
   httpDelete,
   httpGet,
-  httpPatch,
-  httpPost,
   httpPut,
   request,
-  response,
 } from 'inversify-express-utils';
 import passport from 'passport';
 
 @controller('/channels', passport.authenticate('jwt', { session: false }))
-export class UserController {
+export class TextChannelController {
   @inject(TYPES.TextChannelRepository) public textChannelRepository: TextChannelRepository;
 
   @httpGet('/')
