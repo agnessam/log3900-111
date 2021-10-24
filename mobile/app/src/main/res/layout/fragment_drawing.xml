@@ -3,13 +3,27 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/drawingFragment"
     tools:context=".ui.home.fragments.drawing.DrawingFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:id="@+id/drawingFragment"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="Drawinnnnng" />
+        android:orientation="horizontal">
+
+<!--        Tools-->
+        <LinearLayout
+            android:id="@+id/canvas_tools"
+            android:layout_width="50dp"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+        </LinearLayout>
+
+<!--        canvas-->
+        <RelativeLayout
+            android:id="@+id/canvas_view"
+            android:layout_width="800dp"
+            android:layout_height="500dp" />
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

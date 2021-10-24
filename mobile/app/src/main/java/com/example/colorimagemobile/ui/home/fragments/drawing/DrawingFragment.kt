@@ -1,60 +1,65 @@
 package com.example.colorimagemobile.ui.home.fragments.drawing
 
+import android.graphics.Color
 import android.os.Bundle
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
+import android.widget.Button
+import android.widget.LinearLayout
+import android.widget.RelativeLayout
+import androidx.constraintlayout.widget.ConstraintLayout
 import com.example.colorimagemobile.R
+import com.example.colorimagemobile.services.drawing.ToolService
+import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
+class DrawingFragment : Fragment(R.layout.fragment_drawing) {
+    private lateinit var drawingFragment: ConstraintLayout;
 
-/**
- * A simple [Fragment] subclass.
- * Use the [DrawingFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
-class DrawingFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+      override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
+        val canvasView = context?.let { PencilView(it) }
+          drawingFragment = view.findViewById(R.id.drawingFragment)
+          view.findViewById<RelativeLayout>(R.id.canvas_view).addView(canvasView)
+
+          addToolsOnSidebar()
+          setToolsListener()
+    }
+
+    private fun addToolsOnSidebar() {
+        ToolService.getAllTools().forEach { tool ->
+            val toolBtn = Button(context)
+            toolBtn.layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            )
+            toolBtn.text = tool.tool
+            toolBtn.setBackgroundColor(Color.GREEN)
+            toolBtn.setOnClickListener { ToolService.setCurrentTool(tool.index) }
+
+            val toolSidebar = drawingFragment.findViewById<LinearLayout>(R.id.canvas_tools)
+            toolSidebar.addView(toolBtn)
         }
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_drawing, container, false)
-    }
+    private fun setToolsListener() {
+        ToolService.getCurrentTool().observe(viewLifecycleOwner, { tool ->
+            val canvasView: CanvasView;
+            val context = requireContext()
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment DrawingFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            DrawingFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
+            /**
+             * @todo: add corresponding class dynamically
+             */
+            canvasView = when (tool.index) {
+                0 -> PencilView(context)
+                1 -> EraserView(context)
+
+                else -> PencilView(context)
             }
+
+            val canvasLayout = drawingFragment.findViewById<RelativeLayout>(R.id.canvas_view)
+            canvasLayout.removeAllViews()
+            canvasLayout.addView(canvasView)
+        })
     }
 }
