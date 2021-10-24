@@ -6,7 +6,8 @@ import {
   controller,
   httpDelete,
   httpGet,
-  httpPut,
+  httpPatch,
+  httpPost,
   request,
 } from 'inversify-express-utils';
 import passport from 'passport';
@@ -20,26 +21,23 @@ export class TextChannelController {
     return await this.textChannelRepository.findAll();
   }
 
-  @httpGet('/:channelId')
+  @httpGet('/:id')
   public async getChannelById(@request() req: Request) {
     return await this.textChannelRepository.findById(req.params.id);
   }
 
-  @httpGet('/')
+  @httpPost('/')
   public async createChannel(@request() req: Request) {
     return await this.textChannelRepository.create(req.body);
   }
 
-  @httpDelete('/:channelId')
+  @httpDelete('/:id')
   public async deleteChannel(@request() req: Request) {
     return await this.textChannelRepository.deleteById(req.params.id);
   }
 
-  @httpPut('/:channelId')
+  @httpPatch('/:id')
   public async updateChannel(@request() req: Request) {
     return await this.textChannelRepository.updateById(req.params.id, req.body);
   }
-  // handle quand tout le monde part de la convo il faut save les messages
-  // par defaut seuls les messages envoyes deuis sa connexion sont affiches
-  // socket array save at certain length
 }
