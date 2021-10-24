@@ -10,9 +10,7 @@ export interface TextChannelInterface extends Document{
 // ajouter schema de message ici
 
 const TextChannelSchema = new mongoose.Schema({
-    // does the channel name have to be unique?
 	channelName: { type: String, required: true, index: { unique: true } },
-
 	ownerId: { type: String, required: true },
     // Type translates to 'any'
 	messages: { type: Schema.Types.Mixed },
