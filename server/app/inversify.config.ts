@@ -4,6 +4,9 @@ import { UserRepositoryInterface } from './domain/interfaces/repository.interfac
 import { SocketServiceInterface } from './domain/interfaces/socket.interface';
 import { ChatSocketService } from './domain/services/sockets/chat-socket.service';
 import { UserRepository } from './infrastructure/data_access/repositories/user_repository';
+import { TeamRepositoryInterface } from './domain/interfaces/repository.interface';
+import { TeamRepository } from './infrastructure/data_access/repositories/team_repository';
+
 
 export const referenceDataIoCModule = new ContainerModule((bind) => {
 	// Services
@@ -14,5 +17,9 @@ export const referenceDataIoCModule = new ContainerModule((bind) => {
 	// Repositories
 	bind<UserRepositoryInterface>(TYPES.UserRepository)
 		.to(UserRepository)
+		.inSingletonScope();
+
+	bind<TeamRepositoryInterface>(TYPES.TeamRepository)
+		.to(TeamRepository)
 		.inSingletonScope();
 });

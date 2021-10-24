@@ -34,4 +34,5 @@ export class UserRepository extends GenericRepository<UserInterface> {
       });
     }
   }
+  
 }
