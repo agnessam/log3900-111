@@ -3,7 +3,7 @@ import { Message } from '../interfaces/message.interface';
 
 export interface TextChannelInterface extends Document{
     channelName: string;
-    owner: string,
+    owner: string;
     messages: Message[];
 }
 
