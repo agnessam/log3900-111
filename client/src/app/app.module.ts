@@ -21,6 +21,7 @@ import { ToolsColorModule } from "./modules/tools-color/tools-color.module";
 import { ParameterMenuModule } from "./modules/parameter-menu/parameter-menu.module";
 import { ErrorModule } from "./modules/error/error.module";
 import { UsersModule } from "./modules/users/users.module";
+import { GalleryModule } from "./modules/gallery/gallery.module";
 @NgModule({
   declarations: [AppComponent],
   imports: [
@@ -38,6 +39,7 @@ import { UsersModule } from "./modules/users/users.module";
     AuthenticationModule,
     AppRoutingModule,
     NavbarModule,
+    GalleryModule,
     NewDrawingModule,
     SidenavModule,
     ColorPickerModule,
