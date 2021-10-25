@@ -34,5 +34,20 @@ export class UserRepository extends GenericRepository<UserInterface> {
       });
     }
   }
+
+  public async getDrawings(userId: string) {
+    try {
+      User.findOne({_id: userId}).populate('drawings').exec(
+        (err: Error, drawings) => {
+          if (err) {
+            return err;
+          }
+          return drawings;
+        }
+      );
+    } catch (err) {
+      return err;
+    }
+  }
   
 }

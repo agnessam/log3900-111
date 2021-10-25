@@ -4,4 +4,5 @@ export const TYPES = {
 	DbClient: Symbol('DbClient'),
 	UserRepository: Symbol('UserRepository'),
 	TeamRepository: Symbol('TeamRepository'),
+  DrawingRepository: Symbol('DrawingRepository'),
 };

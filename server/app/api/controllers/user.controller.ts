@@ -46,4 +46,9 @@ export class UserController {
   public async deleteUser(@request() req: Request) {
     return await this.userRepository.deleteById(req.params.id);
   }
+
+  @httpGet('/:id/drawings')
+  public async getDrawings(@request() req: Request) {
+    return await this.userRepository.getDrawings(req.params.id);
+  }
 }

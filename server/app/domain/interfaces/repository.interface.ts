@@ -1,5 +1,6 @@
 import { UserInterface } from '../models/user';
 import { TeamInterface } from '../models/teams';
+import { DrawingInterface } from '../models/Drawing';
 
 export interface Repository<T> {
 	save(doc: T): Promise<T>;
@@ -12,4 +13,4 @@ export interface Repository<T> {
 
 export type UserRepositoryInterface = Repository<UserInterface>;
 export type TeamRepositoryInterface = Repository<TeamInterface>;
-
+export type DrawingRepositoryInterface = Repository<DrawingInterface>;

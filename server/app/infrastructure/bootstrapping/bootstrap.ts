@@ -21,6 +21,7 @@ import '../../api/controllers/hello-world.controller';
 import '../../api/controllers/authentication.controller';
 import '../../api/controllers/user.controller';
 import '../../api/controllers/team.controller';
+import '../../api/controllers/drawing.controller';
 
 export const boostrap = async (
 	container: Container,
