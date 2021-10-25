@@ -46,7 +46,7 @@ export class TeamController {
   public async addMemberToTeam(@request() req: Request) {
     return await this.teamRepository.addMemberToTeam(
       req.params.teamId,
-      req.body,
+      req.body.userId,
     );
   }
 

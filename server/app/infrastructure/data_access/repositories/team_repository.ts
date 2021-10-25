@@ -33,6 +33,21 @@ export class TeamRepository extends GenericRepository<TeamInterface> {
   }
 
   // For custom request
+
+  public async getTeamMembers(teamId: string) {
+    return new Promise((resolve, reject) => {
+      Team.findById({ _id: teamId })
+        .populate(['members', 'owner'])
+        .exec((err, team) => {
+          if (err || !team) {
+            reject(err);
+          }
+          const allTeamMembers = team!.members.concat(team!.owner);
+          resolve(allTeamMembers);
+        });
+    });
+  }
+
   public async addMemberToTeam(teamId: string, userId: string) {
     return new Promise((resolve, reject) => {
       Team.findById({ _id: teamId }, (err: Error, team: TeamInterface) => {
@@ -56,19 +71,7 @@ export class TeamRepository extends GenericRepository<TeamInterface> {
     });
   }
 
-  public async getTeamMembers(teamId: string) {
-    return new Promise((resolve, reject) => {
-      Team.findById({ _id: teamId })
-        .populate(['members', 'owner'])
-        .exec((err, team) => {
-          if (err || !team) {
-            reject(err);
-          }
-          const allTeamMembers = team!.members.concat(team!.owner);
-          resolve(allTeamMembers);
-        });
-    });
-  }
+  public async removeMemberFromTeam(teamId: string, userId: string) {}
 
   public async getTeamDrawings(teamId: string) {
     return new Promise((resolve, reject) => {
