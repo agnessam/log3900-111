@@ -60,5 +60,11 @@ abstract class CanvasView(context: Context?): View(context) {
 
     abstract fun onTouchDown(pointX: Float, pointY: Float)
     abstract fun onTouchMove(pointX: Float, pointY: Float)
-    abstract fun onTouchUp()
+
+    // can be overridden by children
+    open fun onTouchUp() {
+        // add paintPath and reset it
+        PathService.addPaintPath(paintPath)
+        paintPath = PaintPath(CustomPaint(), Path())
+    }
 }

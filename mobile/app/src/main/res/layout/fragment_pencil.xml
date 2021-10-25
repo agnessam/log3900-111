@@ -18,7 +18,7 @@
             android:text="Width" />
 
         <NumberPicker
-            android:id="@+id/width_picker"
+            android:id="@+id/pencil_width_picker"
             android:layout_marginTop="30dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />

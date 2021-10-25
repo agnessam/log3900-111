@@ -29,9 +29,7 @@ class PencilView(context: Context?): CanvasView(context) {
     }
 
     override fun onTouchUp() {
-        // add paintPath and reset it
-        PathService.addPaintPath(paintPath)
-        paintPath = PaintPath(CustomPaint(), Path())
+        super.onTouchUp()
         paintPath.paint.setStrokeWidth(currentWidth)
     }
 }

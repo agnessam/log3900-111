@@ -14,7 +14,7 @@ class PencilFragment : Fragment(R.layout.fragment_pencil) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        widthPicker = view.findViewById(R.id.width_picker)
+        widthPicker = view.findViewById(R.id.pencil_width_picker)
         widthPicker.minValue = PencilService.MIN_VALUE
         widthPicker.maxValue = PencilService.MAX_VALUE
         widthPicker.value = PencilService.getCurrentWidth().value!!
