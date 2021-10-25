@@ -51,7 +51,10 @@
                     android:id="@+id/tool_attribute_fragment"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
-                    android:layout_weight="1"/>
+                    android:layout_weight="1"
+                    android:padding="10dp"
+                    android:background="@drawable/attributes_panel_border"
+                    android:elevation="8dp"/>
 
             </LinearLayout>
 

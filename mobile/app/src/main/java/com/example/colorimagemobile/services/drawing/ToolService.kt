@@ -1,17 +1,20 @@
 package com.example.colorimagemobile.services.drawing
 
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.colorimagemobile.R
+import com.example.colorimagemobile.ui.home.fragments.drawing.attributes.eraser.EraserFragment
+import com.example.colorimagemobile.ui.home.fragments.drawing.attributes.pencil.PencilFragment
 
-data class ToolsMap(val index: Int, val toolName: String, val icon: Int)
+data class ToolsMap(val index: Int, val toolName: String, val icon: Int, val fragment: Fragment)
 
 /**
  * @todo: Add dynamic class View as param
  */
-enum class ToolType(val index: Int, val toolName: String, val icon: Int) {
-    PENCIL(0, "Pencil", R.drawable.drawing_icon_pencil),
-    ERASER(1, "Eraser", R.drawable.drawing_icon_eraser),
+enum class ToolType(val index: Int, val toolName: String, val icon: Int, val fragment: Fragment) {
+    PENCIL(0, "Pencil", R.drawable.drawing_icon_pencil, PencilFragment()),
+    ERASER(1, "Eraser", R.drawable.drawing_icon_eraser, EraserFragment()),
 }
 
 object ToolService {
@@ -20,7 +23,7 @@ object ToolService {
 
     init {
         enumValues<ToolType>().forEach {
-            tools.add(ToolsMap(it.index, it.toolName, it.icon))
+            tools.add(ToolsMap(it.index, it.toolName, it.icon, it.fragment))
         }
 
         this.currentTool = MutableLiveData()

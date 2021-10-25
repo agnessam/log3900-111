@@ -45,7 +45,7 @@ class DrawingFragment : Fragment(R.layout.fragment_drawing) {
             toolBtn.setOnClickListener {
                 // handle attribute panel when clicked on tool
                 togglePanel(tool.index)
-                setPanelAttribute(tool.index)
+                setPanelAttribute(tool.index, tool.fragment)
                 panelView.findViewById<TextView>(R.id.tool_name).text = tool.toolName
             }
 
@@ -90,16 +90,10 @@ class DrawingFragment : Fragment(R.layout.fragment_drawing) {
         panelView.visibility = View.VISIBLE
     }
 
-    private fun setPanelAttribute(toolIndex: Int) {
-        val fragment = when (toolIndex) {
-            0 -> PencilFragment()
-            1 -> EraserFragment()
-
-            else -> PencilFragment()// default is pencil
-        }
-
+    // update tools attributes panel fragment
+    private fun setPanelAttribute(toolIndex: Int, newFragment: Fragment) {
         activity?.supportFragmentManager?.beginTransaction()
-            ?.replace(R.id.tool_attribute_fragment, fragment)
+            ?.replace(R.id.tool_attribute_fragment, newFragment)
             ?.commitAllowingStateLoss()
     }
 }
