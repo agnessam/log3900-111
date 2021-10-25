@@ -17,10 +17,10 @@ class PencilFragment : Fragment(R.layout.fragment_pencil) {
         widthPicker = view.findViewById(R.id.pencil_width_picker)
         widthPicker.minValue = PencilService.minWidth
         widthPicker.maxValue = PencilService.maxWidth
-        widthPicker.value = PencilService.getCurrentWidth()
+        widthPicker.value = PencilService.currentWidth
 
         widthPicker.setOnValueChangedListener { numberPicker, oldValue, newValue ->
-            PencilService.setCurrentWidth(newValue)
+            PencilService.currentWidth = newValue
         }
     }
 }

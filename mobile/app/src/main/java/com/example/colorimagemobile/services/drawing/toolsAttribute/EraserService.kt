@@ -1,27 +1,11 @@
 package com.example.colorimagemobile.services.drawing.toolsAttribute
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import kotlin.math.abs
-
-object EraserService {
-    const val MIN_VALUE = 1
-    const val MAX_VALUE = 40
-    private var currentWidth: MutableLiveData<Int> = MutableLiveData()
+object EraserService: Attributes {
+    override val minWidth = 1
+    override val maxWidth = 50
+    override var currentWidth: Int = 0
 
     init {
-        // default is the middle number of min and max
-        currentWidth.value = abs(
-            (MAX_VALUE - MIN_VALUE)/2
-        )
+        initCurrentWidth()
     }
-
-    fun setCurrentWidth(newWidth: Int) {
-        currentWidth.value = newWidth
-    }
-
-    fun getCurrentWidth(): LiveData<Int> {
-        return currentWidth
-    }
-
 }

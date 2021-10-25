@@ -17,12 +17,12 @@ class EraserFragment : Fragment(R.layout.fragment_eraser) {
         super.onViewCreated(view, savedInstanceState)
 
         widthPicker = view.findViewById(R.id.eraser_width_picker)
-        widthPicker.minValue = EraserService.MIN_VALUE
-        widthPicker.maxValue = EraserService.MAX_VALUE
-        widthPicker.value = EraserService.getCurrentWidth().value!!
+        widthPicker.minValue = EraserService.minWidth
+        widthPicker.maxValue = EraserService.maxWidth
+        widthPicker.value = EraserService.currentWidth
 
         widthPicker.setOnValueChangedListener { numberPicker, oldValue, newValue ->
-            EraserService.setCurrentWidth(newValue)
+            EraserService.currentWidth = newValue
         }
     }
 }
