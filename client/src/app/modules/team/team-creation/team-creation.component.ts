@@ -23,7 +23,7 @@ export class TeamCreationComponent implements OnInit {
   createTeam(): void {
     let newTeam = {
       name: this.name,
-      description: "",
+      description: this.description,
 
       owner: "BOB",
       members: [],

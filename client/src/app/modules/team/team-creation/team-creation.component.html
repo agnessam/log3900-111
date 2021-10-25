@@ -12,8 +12,24 @@
           >
             <mat-form-field appearance="fill">
               <mat-label>Team Name</mat-label>
-              <textarea matInput placeholder="TeamName"></textarea>
+              <textarea
+                matInput
+                placeholder="TeamName"
+                [(ngModel)]="name"
+                [ngModelOptions]="{ standalone: true }"
+              ></textarea>
             </mat-form-field>
+            <div id="team-description-input">
+              <mat-form-field appearance="outline">
+                <mat-label>Description</mat-label>
+                <textarea
+                  matInput
+                  placeholder="Description"
+                  [(ngModel)]="description"
+                  [ngModelOptions]="{ standalone: true }"
+                ></textarea>
+              </mat-form-field>
+            </div>
             <div id="customize-button" class="button">
               <button type="submit" mat-raised-button color="primary">
                 Create Team

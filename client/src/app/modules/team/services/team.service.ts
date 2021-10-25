@@ -44,10 +44,9 @@ export class TeamService {
   }
 
   createTeam(team: Team): Observable<Team> {
+    console.log(this.endpointUrl);
     return this.httpClient
-      .post(`${this.endpointUrl}`, team, {
-        headers: this.httpHeaders,
-      })
+      .post(`${this.endpointUrl}`, team)
       .pipe((response) => {
         return response;
       });
