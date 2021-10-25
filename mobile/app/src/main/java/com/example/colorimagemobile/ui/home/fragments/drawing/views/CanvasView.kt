@@ -32,12 +32,7 @@ abstract class CanvasView(context: Context?): View(context) {
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
         canvas.drawBitmap(extraBitmap, 0f, 0f, null)
-
-        // draw only newly added element if the list contains some points initially
-        if (!PathService.isPaintPathEmpty()) {
-            val lastPaintPathElement = PathService.getLastPaintPath()
-            canvas.drawPath(lastPaintPathElement.path, lastPaintPathElement.paint.getPaint())
-        }
+        extraCanvas.drawPath(paintPath.path, paintPath.paint.getPaint())
     }
 
     // when taking an action on canvas
