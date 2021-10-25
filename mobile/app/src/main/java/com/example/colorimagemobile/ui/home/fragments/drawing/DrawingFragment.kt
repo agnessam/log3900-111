@@ -45,7 +45,7 @@ class DrawingFragment : Fragment(R.layout.fragment_drawing) {
             toolBtn.setOnClickListener {
                 // handle attribute panel when clicked on tool
                 togglePanel(tool.index)
-                setPanelAttribute(tool.index, tool.fragment)
+                setPanelAttribute(tool.fragment)
                 panelView.findViewById<TextView>(R.id.tool_name).text = tool.toolName
             }
 
@@ -91,7 +91,7 @@ class DrawingFragment : Fragment(R.layout.fragment_drawing) {
     }
 
     // update tools attributes panel fragment
-    private fun setPanelAttribute(toolIndex: Int, newFragment: Fragment) {
+    private fun setPanelAttribute(newFragment: Fragment) {
         activity?.supportFragmentManager?.beginTransaction()
             ?.replace(R.id.tool_attribute_fragment, newFragment)
             ?.commitAllowingStateLoss()
