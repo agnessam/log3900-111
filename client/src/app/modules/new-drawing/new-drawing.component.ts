@@ -8,7 +8,6 @@ import { DrawingService } from "src/app/modules/workspace";
 import { NewDrawingService } from "./new-drawing.service";
 import { GridService } from "src/app/modules/workspace";
 import { NewDrawingAlertComponent } from "./new-drawing-alert/new-drawing-alert.component";
-import { Router } from "@angular/router";
 
 const ONE_SECOND = 1000;
 @Component({
@@ -26,8 +25,7 @@ export class NewDrawingComponent implements OnInit {
     private drawingService: DrawingService,
     private dialog: MatDialog,
     private colorPickerService: ColorPickerService,
-    private gridService: GridService,
-    private router: Router
+    private gridService: GridService
   ) {}
 
   /// Créer un nouveau form avec les dimensions et la couleur
@@ -74,7 +72,6 @@ export class NewDrawingComponent implements OnInit {
     this.snackBar.open("Nouveau dessin créé", "", { duration: ONE_SECOND });
     this.newDrawingService.form.reset();
     this.dialogRef.close();
-    this.router.navigate(["/drawings/327189"]);
   }
 
   /// Ferme le dialogue
