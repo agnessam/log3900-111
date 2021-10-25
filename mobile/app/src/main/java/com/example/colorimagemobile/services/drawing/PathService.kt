@@ -15,7 +15,6 @@ class CustomPaint() {
         // default attributes
         paint.color = Color.BLACK
         paint.isAntiAlias = true
-        paint.strokeWidth = 5F
         paint.style = Paint.Style.STROKE
         paint.strokeJoin = Paint.Join.ROUND
         paint.strokeCap = Paint.Cap.ROUND
@@ -44,13 +43,5 @@ object PathService {
 
     fun getPaintPath(): ArrayList<PaintPath> {
         return paintPath
-    }
-
-    fun getLastPaintPath(): PaintPath {
-        return paintPath.last()
-    }
-
-    fun isPaintPathEmpty(): Boolean {
-        return paintPath.isEmpty()
     }
 }

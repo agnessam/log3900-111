@@ -5,7 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.View
 import android.widget.NumberPicker
 import com.example.colorimagemobile.R
-import com.example.colorimagemobile.services.drawing.ToolSettingsService
+import com.example.colorimagemobile.services.drawing.toolsAttribute.PencilService
 
 class PencilFragment : Fragment(R.layout.fragment_pencil) {
 
@@ -15,12 +15,12 @@ class PencilFragment : Fragment(R.layout.fragment_pencil) {
         super.onViewCreated(view, savedInstanceState)
 
         widthPicker = view.findViewById(R.id.width_picker)
-        widthPicker.minValue = 2
-        widthPicker.maxValue = 30
-        widthPicker.value = ToolSettingsService.currentWidth.value!!
+        widthPicker.minValue = PencilService.MIN_VALUE
+        widthPicker.maxValue = PencilService.MAX_VALUE
+        widthPicker.value = PencilService.getCurrentWidth().value!!
 
         widthPicker.setOnValueChangedListener { numberPicker, oldValue, newValue ->
-            ToolSettingsService.setCurrentWidth(newValue)
+            PencilService.setCurrentWidth(newValue)
         }
     }
 }
