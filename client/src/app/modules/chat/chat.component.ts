@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from "@angular/core";
+import { Component, OnDestroy, OnInit, Input } from "@angular/core";
 import { Subscription } from "rxjs";
 import { AuthenticationService } from "src/app/modules/authentication";
 import { User } from "../authentication/models/user";
@@ -12,6 +12,7 @@ import { ChatSocketService } from "./services/chat-socket.service";
 export class ChatComponent implements OnInit, OnDestroy {
   public user: User | null;
   public chatSubscribiption: Subscription;
+  @Input() private chatRoomName: string = "default";
 
   constructor(
     private authenticationService: AuthenticationService,
@@ -26,11 +27,11 @@ export class ChatComponent implements OnInit, OnDestroy {
     this.keyListener();
     this.receiveMessage();
     this.chatSocketService.connect();
-    this.chatSocketService.joinRoom("default");
+    this.chatSocketService.joinRoom(this.chatRoomName);
   }
 
   ngOnDestroy(): void {
-    this.chatSocketService.leaveRoom("default");
+    this.chatSocketService.leaveRoom(this.chatRoomName);
     this.chatSocketService.disconnect();
     this.chatSubscribiption.unsubscribe();
   }
@@ -72,7 +73,7 @@ export class ChatComponent implements OnInit, OnDestroy {
       message: mes,
       timestamp: time,
       author: name,
-      roomName: "default",
+      roomName: this.chatRoomName,
     };
 
     this.chatSocketService.sendMessage(message);
