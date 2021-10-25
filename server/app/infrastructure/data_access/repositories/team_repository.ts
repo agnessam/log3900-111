@@ -71,7 +71,29 @@ export class TeamRepository extends GenericRepository<TeamInterface> {
     });
   }
 
-  public async removeMemberFromTeam(teamId: string, userId: string) {}
+  public async removeMemberFromTeam(teamId: string, userId: string) {
+    return new Promise((resolve, reject) => {
+      Team.findByIdAndUpdate(
+        { _id: teamId },
+        { $pull: { members: { $in: userId } } },
+        (err: Error, team: TeamInterface) => {
+          if (err) {
+            reject(err);
+          }
+          User.findByIdAndUpdate(
+            { _id: userId },
+            { $pull: { teams: { $in: teamId } } },
+            (err: Error, user: UserInterface) => {
+              if (err) {
+                reject(err);
+              }
+            },
+          );
+          resolve(team);
+        },
+      );
+    });
+  }
 
   public async getTeamDrawings(teamId: string) {
     return new Promise((resolve, reject) => {

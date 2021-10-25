@@ -41,6 +41,11 @@ export class TeamController {
     return await this.teamRepository.deleteById(req.params.teamId);
   }
 
+  @httpGet('/:teamId/members')
+  public async getTeamMembers(@request() req: Request) {
+    return await this.teamRepository.getTeamMembers(req.params.teamId);
+  }
+
   // Join a collaboration team
   @httpPost('/:teamId/join')
   public async addMemberToTeam(@request() req: Request) {
@@ -50,9 +55,12 @@ export class TeamController {
     );
   }
 
-  @httpGet('/:teamId/members')
-  public async getTeamMembers(@request() req: Request) {
-    return await this.teamRepository.getTeamMembers(req.params.teamId);
+  @httpPost('/:teamId/leave')
+  public async removeMemberFromTeam(@request() req: Request) {
+    return await this.teamRepository.removeMemberFromTeam(
+      req.params.teamId,
+      req.body.userId,
+    );
   }
 
   @httpGet('/:teamId/drawings')
