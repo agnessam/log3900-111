@@ -21,9 +21,9 @@ export class TeamController {
     return await this.teamRepository.findAll();
   }
 
-  @httpGet('/:id')
+  @httpGet('/:teamId')
   public async getTeamById(@request() req: Request) {
-    return await this.teamRepository.findById(req.params.id);
+    return await this.teamRepository.findById(req.params.teamId);
   }
 
   @httpPost('/')
@@ -31,18 +31,40 @@ export class TeamController {
     return await this.teamRepository.create(req.body);
   }
 
-  @httpPatch('/:id')
+  @httpPatch('/:teamId')
   public async updateTeam(@request() req: Request) {
-    return await this.teamRepository.updateById(req.params.id, req.body);
+    return await this.teamRepository.updateById(req.params.teamId, req.body);
   }
 
-  @httpDelete('/:id')
+  @httpDelete('/:teamId')
   public async deleteTeam(@request() req: Request) {
-    return await this.teamRepository.deleteById(req.params.id);
+    return await this.teamRepository.deleteById(req.params.teamId);
   }
 
-  @httpGet('/:id/drawings')
+  @httpGet('/:teamId/members')
+  public async getTeamMembers(@request() req: Request) {
+    return await this.teamRepository.getTeamMembers(req.params.teamId);
+  }
+
+  // Join a collaboration team
+  @httpPost('/:teamId/join')
+  public async addMemberToTeam(@request() req: Request) {
+    return await this.teamRepository.addMemberToTeam(
+      req.params.teamId,
+      req.body.userId,
+    );
+  }
+
+  @httpPost('/:teamId/leave')
+  public async removeMemberFromTeam(@request() req: Request) {
+    return await this.teamRepository.removeMemberFromTeam(
+      req.params.teamId,
+      req.body.userId,
+    );
+  }
+
+  @httpGet('/:teamId/drawings')
   public async getTeamDrawings(@request() req: Request) {
-    return await this.teamRepository.getTeamDrawings(req.params.id);
+    return await this.teamRepository.getTeamDrawings(req.params.teamId);
   }
 }
