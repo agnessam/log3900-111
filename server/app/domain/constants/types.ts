@@ -3,5 +3,6 @@ export const TYPES = {
 	ChatSocketService: Symbol('ChatSocketService'),
 	DbClient: Symbol('DbClient'),
 	UserRepository: Symbol('UserRepository'),
+	TextChannelRepository: Symbol('TextChannelRepository'),
 	TeamRepository: Symbol('TeamRepository'),
 };

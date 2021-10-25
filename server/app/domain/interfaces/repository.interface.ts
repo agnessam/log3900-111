@@ -1,4 +1,5 @@
 import { UserInterface } from '../models/user';
+import { TextChannelInterface } from '../models/TextChannel';
 import { TeamInterface } from '../models/teams';
 
 export interface Repository<T> {
@@ -11,5 +12,7 @@ export interface Repository<T> {
 }
 
 export type UserRepositoryInterface = Repository<UserInterface>;
-export type TeamRepositoryInterface = Repository<TeamInterface>;
 
+export type TextChannelRepositoryInterface = Repository<TextChannelInterface>;
+
+export type TeamRepositoryInterface = Repository<TeamInterface>;
