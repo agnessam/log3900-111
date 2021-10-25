@@ -1,8 +1,8 @@
+import { Request } from 'express';
+import { inject } from "inversify";
+import { controller, httpGet, httpPatch, httpPost, request } from "inversify-express-utils";
 import { TYPES } from "../../domain/constants/types";
 import { DrawingRepository } from "../../infrastructure/data_access/repositories/drawing_repository";
-import { inject } from "inversify";
-import { controller, httpGet, httpPatch, httpPost, request, response } from "inversify-express-utils";
-import { Request } from 'express';
 
 @controller('/drawings')
 export class DrawingController {
