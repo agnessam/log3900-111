@@ -9,8 +9,9 @@ import {
 } from 'inversify-express-utils';
 import { TYPES } from '../../domain/constants/types';
 import { DrawingRepository } from '../../infrastructure/data_access/repositories/drawing_repository';
+import passport from 'passport';
 
-@controller('/drawings')
+@controller('/drawings', passport.authenticate('jwt', { session: false }))
 export class DrawingController {
   @inject(TYPES.DrawingRepository) public drawingRepository: DrawingRepository;
 
