@@ -1,5 +1,6 @@
-import mongoose, { Document, Model } from 'mongoose';
+import mongoose, { Document, Model, Schema } from 'mongoose';
 import bcrypt from 'bcrypt';
+import { DrawingInterface } from './Drawing';
 
 export interface UserInterface extends Document {
 	username: string;
@@ -9,6 +10,8 @@ export interface UserInterface extends Document {
 	password: string;
 	firstName: string;
 	lastName: string;
+
+  drawings: string[] | DrawingInterface[];
 
 	isValidPassword(password: string): Promise<boolean>;
 }
@@ -21,6 +24,8 @@ const UserSchema = new mongoose.Schema({
 	password: { type: String, required: true },
 	firstName: { type: String, required: true },
 	lastName: { type: String, required: true },
+
+  drawings: [ {type: Schema.Types.ObjectId, ref: 'Drawing' }] 
 });
 
 UserSchema.pre('save', async function (next) {
@@ -35,4 +40,4 @@ UserSchema.methods.isValidPassword = async function (password) {
 	return compare;
 };
 
-export const User: Model<UserInterface> = mongoose.model('Users', UserSchema);
+export const User: Model<UserInterface> = mongoose.model('User', UserSchema);

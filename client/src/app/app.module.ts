@@ -14,7 +14,6 @@ import { ChatModule } from "./modules/chat/chat.module";
 import { WorkspaceModule } from "./modules/workspace/workspace.module";
 import { ToolParameterModule } from "./modules/tool-parameters/tool-parameter.module";
 import { NewDrawingModule } from "./modules/new-drawing/new-drawing.module";
-import { SidenavModule } from "./modules/sidenav/sidenav.module";
 import { ColorPickerModule } from "./modules/color-picker/color-picker.module";
 import { SharedModule } from "./shared/shared.module";
 import { ToolsColorModule } from "./modules/tools-color/tools-color.module";
@@ -22,6 +21,8 @@ import { ParameterMenuModule } from "./modules/parameter-menu/parameter-menu.mod
 import { ErrorModule } from "./modules/error/error.module";
 import { UsersModule } from "./modules/users/users.module";
 import { GalleryModule } from "./modules/gallery/gallery.module";
+import { SidenavModule } from "./modules/sidenav/sidenav.module";
+
 @NgModule({
   declarations: [AppComponent],
   imports: [
@@ -41,12 +42,12 @@ import { GalleryModule } from "./modules/gallery/gallery.module";
     NavbarModule,
     GalleryModule,
     NewDrawingModule,
-    SidenavModule,
     ColorPickerModule,
     SharedModule,
     ToolsColorModule,
     ParameterMenuModule,
     UsersModule,
+    SidenavModule,
     ErrorModule,
   ],
   exports: [],

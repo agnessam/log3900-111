@@ -1,17 +1,18 @@
-import { Component } from '@angular/core';
-import { MatButtonToggleChange } from '@angular/material/button-toggle';
-import { SidenavService } from './services/sidenav/sidenav.service';
-import { Tools, ToolsService } from 'src/app/modules/workspace';
+import { Component } from "@angular/core";
+import { MatButtonToggleChange } from "@angular/material/button-toggle";
+import { SidenavService } from "./services/sidenav/sidenav.service";
+import { Tools, ToolsService } from "src/app/modules/workspace";
 
 @Component({
-  selector: 'app-sidenav',
-  templateUrl: './sidenav.component.html',
-  styleUrls: ['./sidenav.component.scss'],
+  selector: "app-sidenav",
+  templateUrl: "./sidenav.component.html",
+  styleUrls: ["./sidenav.component.scss"],
 })
-
 export class SidenavComponent {
-
-  constructor(private sideNavService: SidenavService, private toolService: ToolsService) { }
+  constructor(
+    private sideNavService: SidenavService,
+    private toolService: ToolsService
+  ) {}
 
   get currentToolId(): number {
     return this.toolService.selectedToolId;
