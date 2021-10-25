@@ -1,0 +1,18 @@
+<mat-grid-list cols="1" id="title-card">
+  <mat-card>
+    <mat-card-title id="title-card"
+      >Teams
+      <button mat-raised-button color="primary" (click)="createTeam()">
+        Create Team
+      </button>
+    </mat-card-title>
+    <mat-card-content *ngFor="let teamName of teamNames">
+      <section class="team-card-content">
+        <h3>{{ teamName }}</h3>
+        <button mat-raised-button color="primary" (click)="joinTeam(teamName)">
+          join
+        </button>
+      </section>
+    </mat-card-content>
+  </mat-card>
+</mat-grid-list>
