@@ -1,4 +1,6 @@
 import { UserInterface } from '../models/user';
+import { TextChannelInterface } from '../models/TextChannel';
+import { TeamInterface } from '../models/teams';
 
 export interface Repository<T> {
 	save(doc: T): Promise<T>;
@@ -10,3 +12,7 @@ export interface Repository<T> {
 }
 
 export type UserRepositoryInterface = Repository<UserInterface>;
+
+export type TextChannelRepositoryInterface = Repository<TextChannelInterface>;
+
+export type TeamRepositoryInterface = Repository<TeamInterface>;
