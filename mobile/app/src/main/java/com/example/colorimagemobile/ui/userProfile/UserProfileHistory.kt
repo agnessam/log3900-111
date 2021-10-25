@@ -1,4 +1,4 @@
-package com.example.colorimagemobile.ui.home.fragments.userProfile
+package com.example.colorimagemobile.ui.userProfile
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -7,8 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.example.colorimagemobile.R
 
-
-class MotdePasseFragment : Fragment() {
+class UserProfileHistory : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -20,7 +19,7 @@ class MotdePasseFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_motde_passe, container, false)
+        return inflater.inflate(R.layout.fragment_user_profile_history, container, false)
     }
 
 }

@@ -1,4 +1,4 @@
-package com.example.colorimagemobile.ui.home.fragments.userProfile
+package com.example.colorimagemobile.ui.userProfile
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import com.example.colorimagemobile.R
 
 
-class ShowUserProfile : Fragment() {
+class EditProfileFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -18,8 +18,8 @@ class ShowUserProfile : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_show_user_profile, container, false)
+
+        return inflater.inflate(R.layout.fragment_edit_profile, container, false)
     }
 
 }

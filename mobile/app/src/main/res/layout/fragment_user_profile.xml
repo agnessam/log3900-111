@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:background="@drawable/ic_home_theme"
     android:orientation="horizontal"
-    tools:context=".ui.home.fragments.userProfile.UserProfileFragment">
+    tools:context=".ui.userProfile.UserProfileFragment">
 
     <LinearLayout
         android:layout_width="wrap_content"
