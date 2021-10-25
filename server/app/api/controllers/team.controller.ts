@@ -1,6 +1,6 @@
 import { TYPES } from '@app/domain/constants/types';
 import { TeamRepository } from '@app/infrastructure/data_access/repositories/team_repository';
-import { Request} from 'express';
+import { Request } from 'express';
 import { inject } from 'inversify';
 import {
   controller,
@@ -10,7 +10,7 @@ import {
   httpPost,
   request,
 } from 'inversify-express-utils';
- import passport from 'passport';
+import passport from 'passport';
 
 @controller('/teams', passport.authenticate('jwt', { session: false }))
 export class TeamController {

@@ -1,8 +1,14 @@
 import { Request } from 'express';
-import { inject } from "inversify";
-import { controller, httpGet, httpPatch, httpPost, request } from "inversify-express-utils";
-import { TYPES } from "../../domain/constants/types";
-import { DrawingRepository } from "../../infrastructure/data_access/repositories/drawing_repository";
+import { inject } from 'inversify';
+import {
+  controller,
+  httpGet,
+  httpPatch,
+  httpPost,
+  request,
+} from 'inversify-express-utils';
+import { TYPES } from '../../domain/constants/types';
+import { DrawingRepository } from '../../infrastructure/data_access/repositories/drawing_repository';
 
 @controller('/drawings')
 export class DrawingController {
@@ -20,11 +26,16 @@ export class DrawingController {
 
   @httpPost('/')
   public async createDrawing(@request() req: Request) {
-    return req.body.ownerModel === 'User' ? await this.drawingRepository.createUserDrawing(req.body) : await this.drawingRepository.createTeamDrawing(req.body);
+    return req.body.ownerModel === 'User'
+      ? await this.drawingRepository.createUserDrawing(req.body)
+      : await this.drawingRepository.createTeamDrawing(req.body);
   }
 
   @httpPatch('/:drawingId')
   public async updateDrawing(@request() req: Request) {
-    return await this.drawingRepository.updateById(req.params.drawingId, req.body);
+    return await this.drawingRepository.updateById(
+      req.params.drawingId,
+      req.body,
+    );
   }
 }

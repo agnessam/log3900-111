@@ -37,10 +37,14 @@ export class UserRepository extends GenericRepository<UserInterface> {
 
   public async getUserDrawings(userId: string) {
     return new Promise((resolve, reject) => {
-      User.findById({_id: userId}).populate('drawings').exec((err, user) => {
-        if (err || !user) { reject(err); }
-        resolve(user!.drawings);
-      });
+      User.findById({ _id: userId })
+        .populate('drawings')
+        .exec((err, user) => {
+          if (err || !user) {
+            reject(err);
+          }
+          resolve(user!.drawings);
+        });
     });
   }
 }
