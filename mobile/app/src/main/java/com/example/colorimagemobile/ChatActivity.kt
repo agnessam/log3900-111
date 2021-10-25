@@ -15,7 +15,7 @@ import androidx.annotation.RequiresApi
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.colorimagemobile.adapter.ChatMessageRecyclerAdapter
+//import com.example.colorimagemobile.adapter.ChatMessageRecyclerAdapter
 import com.example.colorimagemobile.services.SocketHandler
 import com.example.colorimagemobile.ui.login.LoginActivity
 import com.example.colorimagemobile.utils.CommonFun.Companion.closeKeyboard
@@ -42,7 +42,7 @@ class ChatActivity : AppCompatActivity() {
     // layout manager and adapter
     private lateinit var recyclerView: RecyclerView
     private var layoutManager: RecyclerView.LayoutManager? = null
-    private var adapterChatMessage: RecyclerView.Adapter<ChatMessageRecyclerAdapter.ViewHolder>? = null
+//    private var adapterChatMessage: RecyclerView.Adapter<ChatMessageRecyclerAdapter.ViewHolder>? = null
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -79,7 +79,7 @@ class ChatActivity : AppCompatActivity() {
         recyclerView.layoutManager = layoutManager
 
 //        adapterChatMessage = ChatMessageRecyclerAdapter(messageArray, this.username)
-        recyclerView.adapter = adapterChatMessage
+//        recyclerView.adapter = adapterChatMessage
 
         // listeners
         setLogOutListener()
