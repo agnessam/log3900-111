@@ -49,6 +49,6 @@ export class UserController {
 
   @httpGet('/:id/drawings')
   public async getDrawings(@request() req: Request) {
-    return await this.userRepository.getDrawings(req.params.id);
+    return await this.userRepository.getUserDrawings(req.params.id);
   }
 }

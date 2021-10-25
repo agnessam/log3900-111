@@ -20,4 +20,4 @@ const DrawingSchema = new mongoose.Schema({
   }
 }, { timestamps: true})
 
-export const Drawing: Model<DrawingInterface> = mongoose.model('Drawings', DrawingSchema);
+export const Drawing: Model<DrawingInterface> = mongoose.model('Drawing', DrawingSchema);

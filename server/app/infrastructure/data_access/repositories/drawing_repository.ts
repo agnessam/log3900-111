@@ -24,7 +24,7 @@ export class DrawingRepository extends GenericRepository<DrawingInterface> {
           if (err) {
             reject(err);
           }
-          user.drawings.push(drawing.ownerId);
+          user.drawings.push(drawing._id);
           user.save();
         });
       })
@@ -45,7 +45,7 @@ export class DrawingRepository extends GenericRepository<DrawingInterface> {
           if (err) {
             reject(err);
           }
-          team.drawings.push(drawing.ownerId);
+          team.drawings.push(drawing._id);
           team.save();
         });
       })

@@ -1,5 +1,6 @@
 import mongoose, { Document, Model, Schema } from 'mongoose';
 import bcrypt from 'bcrypt';
+import { DrawingInterface } from './Drawing';
 
 export interface UserInterface extends Document {
 	username: string;
@@ -10,7 +11,7 @@ export interface UserInterface extends Document {
 	firstName: string;
 	lastName: string;
 
-  drawings: string[];
+  drawings: string[] | DrawingInterface[];
 
 	isValidPassword(password: string): Promise<boolean>;
 }

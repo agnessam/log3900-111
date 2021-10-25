@@ -41,5 +41,8 @@ export class TeamController {
     return await this.teamRepository.deleteById(req.params.id);
   }
 
-
+  @httpGet('/:id/drawings')
+  public async getTeamDrawings(@request() req: Request) {
+    return await this.teamRepository.getTeamDrawings(req.params.id);
+  }
 }

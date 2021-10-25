@@ -1,8 +1,8 @@
+import { Request, Response } from 'express';
 import { injectable } from 'inversify';
+import { request, response } from 'inversify-express-utils';
 import { User, UserInterface } from '../../../domain/models/user';
 import { GenericRepository } from './generic_repository';
-import { Request, Response } from 'express';
-import { request, response } from 'inversify-express-utils';
 
 declare global {
   namespace Express {
@@ -35,19 +35,12 @@ export class UserRepository extends GenericRepository<UserInterface> {
     }
   }
 
-  public async getDrawings(userId: string) {
-    try {
-      User.findOne({_id: userId}).populate('drawings').exec(
-        (err: Error, drawings) => {
-          if (err) {
-            return err;
-          }
-          return drawings;
-        }
-      );
-    } catch (err) {
-      return err;
-    }
+  public async getUserDrawings(userId: string) {
+    return new Promise((resolve, reject) => {
+      User.findById({_id: userId}).populate('drawings').exec((err, user) => {
+        if (err || !user) { reject(err); }
+        resolve(user!.drawings);
+      });
+    });
   }
-  
 }

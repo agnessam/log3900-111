@@ -11,4 +11,15 @@ export class TeamRepository extends GenericRepository<TeamInterface> {
   
 // For custom request
 
+  public async getTeamDrawings(teamId: string) {
+    return new Promise((resolve, reject) => {
+      Team.findById({_id: teamId}).populate('drawings').exec((err, team) => {
+        if (err || !team) {
+          reject(err);
+        }
+        resolve(team!.drawings);
+      })
+    })
+  }
+
 }
