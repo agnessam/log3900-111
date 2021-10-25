@@ -7,6 +7,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.colorimagemobile.R
 import kotlin.collections.ArrayList
+import com.example.colorimagemobile.models.Message
 
 
 class ChatMessageRecyclerAdapter(message: ArrayList<Message>, currentAuthor: String): RecyclerView.Adapter<ChatMessageRecyclerAdapter.ViewHolder>() {
