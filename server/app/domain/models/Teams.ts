@@ -1,17 +1,23 @@
 import mongoose, { Document, Model, Schema } from 'mongoose';
 
 export interface TeamInterface extends Document {
-    teamName: string,
-    teamMembers: string[],
+  name: string;
+  description: string;
 
-    drawings: string[], 
+  owner: string;
+  members: string[];
+
+  drawings: string[];
 }
 
 const TeamSchema = new mongoose.Schema({
-    teamName: { type: String, required: true, index: { unique: true } },
-    teamMembers:  [String], 
+  name: { type: String, required: true, index: { unique: true } },
+  description: { type: String },
 
-    drawings: [{ type: Schema.Types.ObjectId, ref: 'Drawing' }]
+  owner: { type: Schema.Types.ObjectId, required: true, ref: 'User' },
+  members: [{ type: Schema.Types.ObjectId, ref: 'User' }],
+
+  drawings: [{ type: Schema.Types.ObjectId, ref: 'Drawing' }],
 });
 
 export const Team: Model<TeamInterface> = mongoose.model('Team', TeamSchema);
