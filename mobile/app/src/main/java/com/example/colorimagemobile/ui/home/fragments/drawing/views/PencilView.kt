@@ -11,25 +11,16 @@ import com.example.colorimagemobile.services.drawing.ToolService
 
 class PencilView(context: Context?): CanvasView(context) {
 
-    private var currentWidth: Float = PencilService.getCurrentWidth().value!!.toFloat()
-
     init {
-        PencilService.getCurrentWidth().observe((context as AppCompatActivity?)!!, {
-            currentWidth = it.toFloat()
-            paintPath.paint.setStrokeWidth(currentWidth)
-        })
+        paintPath.paint.setStrokeWidth(PencilService.getCurrentWidthAsFloat())
     }
 
     override fun onTouchDown(pointX: Float, pointY: Float) {
+        paintPath.paint.setStrokeWidth(PencilService.getCurrentWidthAsFloat())
         paintPath.path.moveTo(pointX, pointY)
     }
 
     override fun onTouchMove(pointX: Float, pointY: Float) {
         paintPath.path.lineTo(pointX, pointY)
-    }
-
-    override fun onTouchUp() {
-        super.onTouchUp()
-        paintPath.paint.setStrokeWidth(currentWidth)
     }
 }
