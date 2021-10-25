@@ -15,7 +15,7 @@ export class ChatComponent implements OnInit, OnDestroy {
 
   constructor(
     private authenticationService: AuthenticationService,
-    private chatSocketService: ChatSocketService
+    private chatSocketService: ChatSocketService,
   ) {
     this.authenticationService.currentUserObservable.subscribe(
       (user) => (this.user = user)

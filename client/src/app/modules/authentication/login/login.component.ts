@@ -39,7 +39,7 @@ export class LoginComponent implements OnInit {
             duration: 3000,
           });
         } else {
-          this.router.navigate(["/chat"]);
+          this.router.navigate(["/gallery"]);
         }
       });
   }

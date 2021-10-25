@@ -6,5 +6,6 @@ import { MatIconModule } from "@angular/material/icon";
 @NgModule({
   declarations: [ChatComponent],
   imports: [CommonModule, MatIconModule],
+  exports: [ChatComponent,]
 })
 export class ChatModule {}

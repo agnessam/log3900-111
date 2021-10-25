@@ -1,31 +1,26 @@
-<div class="hero-body">
-  <div class="container">
-    <h1 class="title">Chatroom</h1>
-    <br />
 
-    <div id="wrapper">
-      <div id="menu">
-        <p class="welcome">
-          Hello <b>{{ user!.username }}</b
-          >!
-        </p>
-        <div style="clear: both"></div>
-      </div>
+<div class="chat-body">
+  <div class="chatlist-container">
+    <p>Canaux</p>
+  </div>
 
-      <div id="chatbox"></div>
+  <div class="chatbox-container">
+    <p>Message</p>
 
-      <div id="message">
-        <input
-          type="text"
-          id="usermsg"
-          autocomplete="off"
-          spellcheck="false"
-          placeholder="Enter you message here"
-        />
-        <button mat-icon-button color="primary" (click)="sendMessage()">
-          <mat-icon>send</mat-icon>
-        </button>
-      </div>
+    <div id="chatbox"></div>
+
+    <div id="message">
+      <input
+        type="text"
+        id="usermsg"
+        autocomplete="off"
+        spellcheck="false"
+        placeholder="Enter you message here"
+      />
+      <button mat-icon-button color="#FEF9F7" (click)="sendMessage()">
+        <mat-icon>send</mat-icon>
+      </button>
     </div>
+
   </div>
 </div>

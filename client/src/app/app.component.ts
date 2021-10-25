@@ -12,9 +12,16 @@ export class AppComponent implements OnInit, OnDestroy {
     this.hotkeyService.hotkeysListener();
   }
 
+  public isChatOpen = false;
+
   openDialog() {}
 
   ngOnInit() {}
 
   ngOnDestroy(): void {}
+
+  childChatEventClicked(value: boolean) {
+    this.isChatOpen = value;
+    console.log("CHAT OPEN: " + this.isChatOpen);
+  }
 }

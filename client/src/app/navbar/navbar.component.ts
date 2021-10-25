@@ -1,7 +1,8 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit ,Output, EventEmitter} from "@angular/core";
 import { Router } from "@angular/router";
 import { AuthenticationService } from "src/app/modules/authentication";
 import { User } from "../modules/authentication/models/user";
+
 @Component({
   selector: "app-navbar",
   templateUrl: "./navbar.component.html",
@@ -9,6 +10,8 @@ import { User } from "../modules/authentication/models/user";
 })
 export class NavbarComponent implements OnInit {
   public user: User | null;
+  public isChatOpened: boolean;
+
   constructor(
     private router: Router,
     private authenticationService: AuthenticationService
@@ -16,6 +19,7 @@ export class NavbarComponent implements OnInit {
     this.authenticationService.currentUserObservable.subscribe(
       (user) => (this.user = user)
     );
+    this.isChatOpened=true;
   }
 
   ngOnInit(): void {}
@@ -26,4 +30,13 @@ export class NavbarComponent implements OnInit {
     });
     this.router.navigate(["/login"]);
   }
+
+
+  @Output() openChatEvent: EventEmitter<boolean> = new EventEmitter();
+
+  onChatClick(value: boolean) :void {
+    this.isChatOpened = !this.isChatOpened;
+    this.openChatEvent.emit(value);
+  }
+
 }
