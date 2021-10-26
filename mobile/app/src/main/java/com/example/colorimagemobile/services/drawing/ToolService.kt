@@ -4,6 +4,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.colorimagemobile.R
+import com.example.colorimagemobile.ui.home.fragments.drawing.attributes.colorPalette.ColorPaletteFragment
 import com.example.colorimagemobile.ui.home.fragments.drawing.attributes.eraser.EraserFragment
 import com.example.colorimagemobile.ui.home.fragments.drawing.attributes.pencil.PencilFragment
 
@@ -15,6 +16,7 @@ data class ToolsMap(val index: Int, val toolName: String, val icon: Int, val fra
 enum class ToolType(val index: Int, val toolName: String, val icon: Int, val fragment: Fragment) {
     PENCIL(0, "Pencil", R.drawable.drawing_icon_pencil, PencilFragment()),
     ERASER(1, "Eraser", R.drawable.drawing_icon_eraser, EraserFragment()),
+    COLOR_PALETTE(2, "Color Palette", R.drawable.drawing_icon_palette, ColorPaletteFragment())
 }
 
 object ToolService {

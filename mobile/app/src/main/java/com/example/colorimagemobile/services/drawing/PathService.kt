@@ -13,7 +13,6 @@ class CustomPaint() {
 
     init {
         // default attributes
-        paint.color = Color.BLACK
         paint.isAntiAlias = true
         paint.style = Paint.Style.STROKE
         paint.strokeJoin = Paint.Join.ROUND

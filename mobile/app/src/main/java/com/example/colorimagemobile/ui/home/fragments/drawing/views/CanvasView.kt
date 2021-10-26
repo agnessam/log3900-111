@@ -7,6 +7,7 @@ import android.view.View
 import com.example.colorimagemobile.services.drawing.CustomPaint
 import com.example.colorimagemobile.services.drawing.PaintPath
 import com.example.colorimagemobile.services.drawing.PathService
+import com.example.colorimagemobile.services.drawing.toolsAttribute.ColorService
 
 abstract class CanvasView(context: Context?): View(context) {
     private lateinit var extraCanvas: Canvas
@@ -47,6 +48,7 @@ abstract class CanvasView(context: Context?): View(context) {
             MotionEvent.ACTION_DOWN -> {
                 // reset paintPath
                 paintPath = PaintPath(CustomPaint(), Path())
+                paintPath.paint.setColor(ColorService.getColor())
                 onTouchDown(pointX, pointY)
             }
 
