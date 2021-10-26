@@ -10,6 +10,13 @@ class Constants {
         const val DEFAULT_ROOM_NAME = "default"
         const val CHAT_NAMESPACE_NAME = "chat"
         const val TEXT_MESSAGE_EVENT_NAME = "text"
+
+        //global
+        const val EMPTY_STRING =""
+
+        // USER LOG HISTORY
+        const val LAST_LOGIN_DATE = "lastLogin"
+        const val LAST_LOGOUT_DATE ="lastLogout"
     }
 
     class URL {
@@ -26,6 +33,9 @@ class Constants {
             const val REGISTER_USER = "api/auth/register"
 
             const val GET_USER_BY_TOKEN = "api/users/me"
+            const val GET_ALL_USER = "api/users/"
+
+
         }
     }
 
@@ -34,6 +44,7 @@ class Constants {
         companion object {
             const val MAIN = "localStorage"
             const val TOKEN = "token"
+            const val LAST_LOGIN = "lastLogin"
         }
     }
 }

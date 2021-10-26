@@ -1,7 +1,9 @@
 package com.example.colorimagemobile.ui.login
 
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.annotation.RequiresApi
 import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.ViewModelProvider
 import com.example.colorimagemobile.R
@@ -22,16 +24,25 @@ import com.example.colorimagemobile.utils.CommonFun.Companion.toggleButton
 import com.example.colorimagemobile.utils.Constants
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
+import java.time.LocalDateTime
 
 class LoginActivity : AppCompatActivity() {
+
     private lateinit var loginViewModel: LoginActivityViewModel
     private lateinit var sharedPreferencesService: SharedPreferencesService
     private lateinit var binding: ActivityLoginBinding
     private lateinit var formValidator: FormValidator
     private var canSubmit: Boolean = false
+    private lateinit var LoginDate : LocalDateTime
 
+
+
+
+
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -44,8 +55,11 @@ class LoginActivity : AppCompatActivity() {
 
         toggleButton(binding.loginBtn, false) // deactivate login button by default
         setListeners()
+
+
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun setListeners() {
         binding.loginBtn.setOnClickListener { executeLogin() }
         binding.registerBtn.setOnClickListener { redirectTo(this, RegisterActivity::class.java) }
@@ -71,14 +85,20 @@ class LoginActivity : AppCompatActivity() {
         toggleButton(binding.loginBtn, canSubmit)
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun executeLogin() {
         if (!canSubmit) return
-
+        LoginDate = LocalDateTime.now()
         val user = UserModel.Login(binding.usernameInputText.text.toString(), binding.passwordInputText.text.toString())
+
+        // Set lastLogin date to localtime
+        UserService.setLogHistory(Constants.LAST_LOGIN_DATE)
+
 
         // username ok -> make HTTP POST request
         val loginObserver = loginViewModel.loginUser(user)
         loginObserver.observe(this, { handleLoginResponse(it) })
+
     }
 
     // response from HTTP request

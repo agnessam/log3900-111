@@ -4,6 +4,7 @@
     android:layout_height="match_parent">
 
     <LinearLayout
+        android:id="@+id/thisContext"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="20dp"
@@ -13,63 +14,72 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="history"
+            android:text="Derniere connexion   "
             android:textSize="30sp" />
 
-        <LinearLayout
-            android:background="@color/otherChat"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="20dp"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_weight="1"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:text="TEST TEST TEST"
-                android:textSize="30sp" />
-
-            <TextView
-                android:layout_weight="1"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:text="TEST TEST TEST"
-                android:textSize="30sp" />
-
-
-        </LinearLayout>
         <TextView
-            android:layout_marginTop="30dp"
-            android:layout_width="match_parent"
+            android:layout_width="394dp"
             android:layout_height="wrap_content"
-            android:text="history of xx"
+            android:text="Derniere deconnexion"
+            android:layout_gravity="right"
             android:textSize="30sp" />
 
         <LinearLayout
-            android:background="@color/otherChat"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="20dp"
+            android:background="@color/otherChat"
             android:orientation="horizontal">
 
             <TextView
-                android:layout_weight="1"
+                android:id="@+id/lastLogin"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="TEST TEST TEST"
+                android:layout_weight="1"
+                android:text="TEST "
                 android:textSize="30sp" />
 
             <TextView
-                android:layout_weight="1"
+                android:id="@+id/lastLogout"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="TEST TEST TEST"
+                android:layout_weight="1"
+                android:text="bobo "
                 android:textSize="30sp" />
 
 
         </LinearLayout>
 
+        <TextView
+            android:layout_width="448dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:text="Historique edition"
+            android:textSize="30sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp"
+            android:background="@color/otherChat"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="mimi"
+                android:textSize="30sp" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="coco"
+                android:textSize="30sp" />
+
+
+        </LinearLayout>
 
 
     </LinearLayout>

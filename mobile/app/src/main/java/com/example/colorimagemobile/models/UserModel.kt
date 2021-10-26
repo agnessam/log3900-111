@@ -1,9 +1,11 @@
 package com.example.colorimagemobile.models
 
+import java.time.LocalDateTime
+
 // class for different uses related to User
 class UserModel {
     data class Login(val username: String, val password: String)
-    data class Register(val firstName: String, val lastName: String, val username: String, val email: String, val password: String)
+    data class Register(val firstName: String, val lastName: String, val username: String, val email: String, val password: String,val createdAt : String)
     data class Logout(val username: String)
 
     // holds all the data of User
@@ -14,6 +16,9 @@ class UserModel {
         val lastName: String,
         val password: String,
         val email: String,
+        val description: String,
     )
 }
+
+
 

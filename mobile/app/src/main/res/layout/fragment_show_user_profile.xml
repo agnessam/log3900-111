@@ -3,6 +3,7 @@
 android:layout_width="match_parent"
 android:layout_height="match_parent">
 
+
 <LinearLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -11,11 +12,13 @@ android:layout_height="match_parent">
     android:orientation="vertical">
 
 
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="20dp"
         android:orientation="horizontal">
+
 
         <LinearLayout
             android:layout_width="0dp"
@@ -30,10 +33,11 @@ android:layout_height="match_parent">
                 android:src="@drawable/ic_home_black_24dp" />
 
             <TextView
+                android:id="@+id/username"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="bobo@@@"
+                android:text='@{user.username}'
                 android:textSize="30sp" />
 
         </LinearLayout>
@@ -60,6 +64,7 @@ android:layout_height="match_parent">
                 android:textStyle="bold" />
 
             <TextView
+                android:id="@+id/description"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="20dp"
@@ -84,6 +89,7 @@ android:layout_height="match_parent">
             android:textSize="30sp" />
 
         <TextView
+            android:id="@+id/firstname"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -108,6 +114,7 @@ android:layout_height="match_parent">
             android:textSize="30sp" />
 
         <TextView
+            android:id="@+id/lastname"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -132,6 +139,7 @@ android:layout_height="match_parent">
             android:textSize="30sp" />
 
         <TextView
+            android:id="@+id/email"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"

@@ -7,7 +7,8 @@ import android.view.View
 import android.view.ViewGroup
 import com.example.colorimagemobile.R
 
-class UserProfileHistory : Fragment() {
+
+class PasswordFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -19,7 +20,7 @@ class UserProfileHistory : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_user_profile_history, container, false)
+        return inflater.inflate(R.layout.fragment_password, container, false)
     }
 
 }
