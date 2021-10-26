@@ -21,5 +21,5 @@ interface API {
     fun registerUser(@Body newUser: UserModel.Register): Call<HTTPResponseModel.RegisterResponse>
 
     @GET(Constants.ENDPOINTS.GET_USER_BY_TOKEN)
-    fun getUserByToken(@Header("Authorization") token: String): Call<HTTPResponseModel.GetUserMe>
+    fun getUserByToken(@Header("Authorization") token: String): Call<HTTPResponseModel.GetUser>
 }
