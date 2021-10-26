@@ -24,6 +24,7 @@ object UserService {
         return !::info.isInitialized
     }
 
+    // set login and logout history
     fun setLogHistory(logType : String){
 
         if (logType == Constants.LAST_LOGIN_DATE){
@@ -36,6 +37,8 @@ object UserService {
         this.date = arrayListOf(this.lastLogin, this.lastLogout)
 
     }
+
+    // get login and logout history
     fun getLogHistory(): ArrayList<String>{
         return this.date
     }

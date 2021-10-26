@@ -1,7 +1,5 @@
 package com.example.colorimagemobile.models
 
-import java.time.LocalDateTime
-
 // class for different uses related to User
 class UserModel {
     data class Login(val username: String, val password: String)

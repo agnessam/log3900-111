@@ -68,14 +68,14 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="mimi"
+                android:text="When we do edition"
                 android:textSize="30sp" />
 
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="coco"
+                android:text="When we do edition"
                 android:textSize="30sp" />
 
 

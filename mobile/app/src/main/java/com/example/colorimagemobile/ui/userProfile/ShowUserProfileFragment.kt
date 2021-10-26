@@ -13,6 +13,7 @@ import android.widget.TextView
 
 class ShowUserProfileFragment : Fragment() {
 
+    // get current user
     val user : UserModel.AllInfo = UserService.getUserInfo()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -25,14 +26,17 @@ class ShowUserProfileFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        // inflate layout
         val inf: View = inflater.inflate(R.layout.fragment_show_user_profile, container, false)
 
-        // initialize view user profile
+        // find the texView
         val username = inf.findViewById<View>(R.id.username) as TextView
         val firstname = inf.findViewById<View>(R.id.firstname) as TextView
         val lastname = inf.findViewById<View>(R.id.lastname) as TextView
         val description = inf.findViewById<View>(R.id.description) as TextView
         val email = inf.findViewById<View>(R.id.email) as TextView
+
+        // sets the derived data in the textView
         description.text = user.description
         username.text = user.username
         firstname.text = user.firstName

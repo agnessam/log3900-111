@@ -14,7 +14,7 @@ class Constants {
         //global
         const val EMPTY_STRING =""
 
-        // USER LOG HISTORY
+        // profile user log history
         const val LAST_LOGIN_DATE = "lastLogin"
         const val LAST_LOGOUT_DATE ="lastLogout"
     }
@@ -44,7 +44,6 @@ class Constants {
         companion object {
             const val MAIN = "localStorage"
             const val TOKEN = "token"
-            const val LAST_LOGIN = "lastLogin"
         }
     }
 }

@@ -33,13 +33,8 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var binding: ActivityLoginBinding
     private lateinit var formValidator: FormValidator
     private var canSubmit: Boolean = false
-    private lateinit var LoginDate : LocalDateTime
 
 
-
-
-
-    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -85,15 +80,12 @@ class LoginActivity : AppCompatActivity() {
         toggleButton(binding.loginBtn, canSubmit)
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     private fun executeLogin() {
         if (!canSubmit) return
-        LoginDate = LocalDateTime.now()
         val user = UserModel.Login(binding.usernameInputText.text.toString(), binding.passwordInputText.text.toString())
 
         // Set lastLogin date to localtime
         UserService.setLogHistory(Constants.LAST_LOGIN_DATE)
-
 
         // username ok -> make HTTP POST request
         val loginObserver = loginViewModel.loginUser(user)
