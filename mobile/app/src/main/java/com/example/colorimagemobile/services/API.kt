@@ -22,4 +22,7 @@ interface API {
 
     @GET(Constants.ENDPOINTS.GET_USER_BY_TOKEN)
     fun getUserByToken(@Header("Authorization") token: String): Call<HTTPResponseModel.GetUser>
+
+//    @GET(Constants.ENDPOINTS.GET_USER_BY_ID)
+//    fun getUserByToken(@Header("Authorization") token: String): Call<HTTPResponseModel.GetUser>
 }
