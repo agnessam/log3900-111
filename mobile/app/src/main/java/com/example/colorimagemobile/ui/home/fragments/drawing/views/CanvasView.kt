@@ -24,8 +24,8 @@ abstract class CanvasView(context: Context?): View(context) {
     }
 
     private fun drawPreviousCanvas() {
-        for (paintPath in PathService.getPaintPath()) {
-            extraCanvas.drawPath(paintPath.path, paintPath.paint.getPaint())
+        for (paintPathItem in PathService.getPaintPath()) {
+            extraCanvas.drawPath(paintPathItem.path, paintPathItem.paint.getPaint())
         }
     }
 
@@ -44,7 +44,11 @@ abstract class CanvasView(context: Context?): View(context) {
 
         when (event.action) {
             // when user first touches the screen
-            MotionEvent.ACTION_DOWN -> onTouchDown(pointX, pointY)
+            MotionEvent.ACTION_DOWN -> {
+                // reset paintPath
+                paintPath = PaintPath(CustomPaint(), Path())
+                onTouchDown(pointX, pointY)
+            }
 
             MotionEvent.ACTION_MOVE -> onTouchMove(pointX, pointY)
 
@@ -63,8 +67,6 @@ abstract class CanvasView(context: Context?): View(context) {
 
     // can be overridden by children
     open fun onTouchUp() {
-        // add paintPath and reset it
         PathService.addPaintPath(paintPath)
-        paintPath = PaintPath(CustomPaint(), Path())
     }
 }
