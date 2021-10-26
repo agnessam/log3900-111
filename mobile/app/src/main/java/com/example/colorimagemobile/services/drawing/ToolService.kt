@@ -3,30 +3,30 @@ package com.example.colorimagemobile.services.drawing
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.colorimagemobile.enumerators.ToolType
-import com.example.colorimagemobile.interfaces.IToolCommand
 
-object ToolService {
-    private var currentTool: MutableLiveData<IToolCommand> = MutableLiveData()
-    private var tools: ArrayList<IToolCommand> = arrayListOf()
+// only save the type of tools
+object ToolTypeService {
+    private var currentTool: MutableLiveData<ToolType> = MutableLiveData()
+    private var tools: ArrayList<ToolType> = arrayListOf()
 
     init {
         // add every tool in array
         enumValues<ToolType>().forEach {
-            tools.add(it.command)
+            tools.add(it)
         }
 
-        this.setCurrentTool(ToolType.PENCIL)
+        this.setCurrentToolType(ToolType.PENCIL)
     }
 
-    fun getCurrentTool(): LiveData<IToolCommand> {
+    fun getCurrentToolType(): LiveData<ToolType> {
         return this.currentTool
     }
 
-    fun setCurrentTool(toolType: ToolType) {
-        this.currentTool.value = toolType.command
+    fun setCurrentToolType(toolType: ToolType) {
+        this.currentTool.value = toolType
     }
 
-    fun getAllTools(): ArrayList<IToolCommand> {
+    fun getAllToolTypes(): ArrayList<ToolType> {
         return this.tools
     }
 }

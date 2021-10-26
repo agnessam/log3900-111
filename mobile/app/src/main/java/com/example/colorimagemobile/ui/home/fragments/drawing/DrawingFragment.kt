@@ -10,18 +10,21 @@ import android.widget.*
 import androidx.cardview.widget.CardView
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.example.colorimagemobile.R
+import com.example.colorimagemobile.classes.tools.ToolsFactory
 import com.example.colorimagemobile.enumerators.ToolType
-import com.example.colorimagemobile.services.drawing.ToolService
+import com.example.colorimagemobile.services.drawing.ToolTypeService
 
 class DrawingFragment : Fragment(R.layout.fragment_drawing) {
     private lateinit var drawingFragment: ConstraintLayout;
     private lateinit var panelView: CardView
+    private lateinit var toolsFactory: ToolsFactory
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         drawingFragment = view.findViewById(R.id.drawingFragment)
         panelView = drawingFragment.findViewById<CardView>(R.id.canvas_tools_attributes_cardview)
+        toolsFactory = ToolsFactory()
 
         addToolsOnSidebar()
         setToolsListener()
@@ -29,20 +32,19 @@ class DrawingFragment : Fragment(R.layout.fragment_drawing) {
 
     // dynamically add tools on sidebar
     private fun addToolsOnSidebar() {
-        ToolService.getAllTools().forEach { command ->
+        ToolTypeService.getAllToolTypes().forEach { toolType ->
             val toolBtn = Button(context)
-            toolBtn.layoutParams = LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-            )
+            toolBtn.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
 
-            toolBtn.setCompoundDrawablesWithIntrinsicBounds(command.getIcon(), 0, 0, 0)
+            val tool = toolsFactory.getTool(toolType)
+
+            toolBtn.setCompoundDrawablesWithIntrinsicBounds(tool.getIcon(), 0, 0, 0)
             toolBtn.setBackgroundColor(Color.rgb(245, 245, 245))
             toolBtn.setOnClickListener {
                 // handle attribute panel when clicked on tool
-                togglePanel(command.getType())
-                setPanelAttribute(command.getFragment())
-                panelView.findViewById<TextView>(R.id.tool_name).text = command.getType().title
+                togglePanel(tool.getType())
+                setPanelAttribute(tool.getFragment())
+                panelView.findViewById<TextView>(R.id.tool_name).text = tool.getTitle()
             }
 
             val toolSidebar = drawingFragment.findViewById<LinearLayout>(R.id.canvas_tools)
@@ -52,10 +54,12 @@ class DrawingFragment : Fragment(R.layout.fragment_drawing) {
 
     // update tool when changed tool
     private fun setToolsListener() {
-        ToolService.getCurrentTool().observe(viewLifecycleOwner, { command ->
+        ToolTypeService.getCurrentToolType().observe(viewLifecycleOwner, { toolType ->
             val context = requireContext()
 
-            val toolView = command.getView(context)
+            // client
+            val toolView = toolsFactory.getTool(toolType).getView(context)
+
             if (toolView != null) {
                 val canvasLayout = drawingFragment.findViewById<RelativeLayout>(R.id.canvas_view)
                 canvasLayout.removeAllViews()
@@ -65,15 +69,17 @@ class DrawingFragment : Fragment(R.layout.fragment_drawing) {
     }
 
     private fun togglePanel(toolType: ToolType) {
+        val currentToolType = ToolTypeService.getCurrentToolType().value
+
         // close panel because toggling on same tool
-        if (ToolService.getCurrentTool().value?.getType() == toolType && panelView.visibility == View.VISIBLE) {
+        if (currentToolType == toolType && panelView.visibility == View.VISIBLE) {
             TransitionManager.beginDelayedTransition(panelView, AutoTransition())
             panelView.visibility = View.GONE
             return
         }
 
         // new tool clicked -> open panel
-        ToolService.setCurrentTool(toolType)
+        ToolTypeService.setCurrentToolType(toolType)
         TransitionManager.beginDelayedTransition(panelView, AutoTransition())
         panelView.visibility = View.VISIBLE
     }

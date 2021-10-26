@@ -5,7 +5,8 @@ import androidx.fragment.app.Fragment
 import com.example.colorimagemobile.enumerators.ToolType
 import com.example.colorimagemobile.ui.home.fragments.drawing.views.CanvasView
 
-interface IToolCommand {
+interface ITool {
+    fun getTitle(): String
     fun getType(): ToolType
     fun getIcon(): Int
     fun getView(context: Context): CanvasView?
