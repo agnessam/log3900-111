@@ -10,12 +10,8 @@ import android.widget.*
 import androidx.cardview.widget.CardView
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.example.colorimagemobile.R
+import com.example.colorimagemobile.enumerators.ToolType
 import com.example.colorimagemobile.services.drawing.ToolService
-import com.example.colorimagemobile.ui.home.fragments.drawing.attributes.eraser.EraserFragment
-import com.example.colorimagemobile.ui.home.fragments.drawing.attributes.pencil.PencilFragment
-import com.example.colorimagemobile.ui.home.fragments.drawing.views.CanvasView
-import com.example.colorimagemobile.ui.home.fragments.drawing.views.EraserView
-import com.example.colorimagemobile.ui.home.fragments.drawing.views.PencilView
 
 class DrawingFragment : Fragment(R.layout.fragment_drawing) {
     private lateinit var drawingFragment: ConstraintLayout;
@@ -33,20 +29,20 @@ class DrawingFragment : Fragment(R.layout.fragment_drawing) {
 
     // dynamically add tools on sidebar
     private fun addToolsOnSidebar() {
-        ToolService.getAllTools().forEach { tool ->
+        ToolService.getAllTools().forEach { command ->
             val toolBtn = Button(context)
             toolBtn.layoutParams = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
             )
 
-            toolBtn.setCompoundDrawablesWithIntrinsicBounds(tool.icon, 0, 0, 0)
+            toolBtn.setCompoundDrawablesWithIntrinsicBounds(command.getIcon(), 0, 0, 0)
             toolBtn.setBackgroundColor(Color.rgb(245, 245, 245))
             toolBtn.setOnClickListener {
                 // handle attribute panel when clicked on tool
-                togglePanel(tool.index)
-                setPanelAttribute(tool.fragment)
-                panelView.findViewById<TextView>(R.id.tool_name).text = tool.toolName
+                togglePanel(command.getType())
+                setPanelAttribute(command.getFragment())
+                panelView.findViewById<TextView>(R.id.tool_name).text = command.getType().title
             }
 
             val toolSidebar = drawingFragment.findViewById<LinearLayout>(R.id.canvas_tools)
@@ -56,44 +52,36 @@ class DrawingFragment : Fragment(R.layout.fragment_drawing) {
 
     // update tool when changed tool
     private fun setToolsListener() {
-        ToolService.getCurrentTool().observe(viewLifecycleOwner, { tool ->
-            val canvasView: CanvasView;
+        ToolService.getCurrentTool().observe(viewLifecycleOwner, { command ->
             val context = requireContext()
 
-            /**
-             * @todo: add corresponding class dynamically
-             */
-            canvasView = when (tool.index) {
-                0 -> PencilView(context)
-                1 -> EraserView(context)
-
-                else -> PencilView(context) // default is pencil
+            val toolView = command.getView(context)
+            if (toolView != null) {
+                val canvasLayout = drawingFragment.findViewById<RelativeLayout>(R.id.canvas_view)
+                canvasLayout.removeAllViews()
+                canvasLayout.addView(toolView)
             }
-
-            val canvasLayout = drawingFragment.findViewById<RelativeLayout>(R.id.canvas_view)
-            canvasLayout.removeAllViews()
-            canvasLayout.addView(canvasView)
         })
     }
 
-    private fun togglePanel(toolIndex: Int) {
+    private fun togglePanel(toolType: ToolType) {
         // close panel because toggling on same tool
-        if (ToolService.getCurrentToolValue()?.index == toolIndex && panelView.visibility == View.VISIBLE) {
+        if (ToolService.getCurrentTool().value?.getType() == toolType && panelView.visibility == View.VISIBLE) {
             TransitionManager.beginDelayedTransition(panelView, AutoTransition())
             panelView.visibility = View.GONE
             return
         }
 
         // new tool clicked -> open panel
-        ToolService.setCurrentTool(toolIndex)
+        ToolService.setCurrentTool(toolType)
         TransitionManager.beginDelayedTransition(panelView, AutoTransition())
         panelView.visibility = View.VISIBLE
     }
 
     // update tools attributes panel fragment
-    private fun setPanelAttribute(newFragment: Fragment) {
+    private fun setPanelAttribute(fragment: Fragment) {
         activity?.supportFragmentManager?.beginTransaction()
-            ?.replace(R.id.tool_attribute_fragment, newFragment)
+            ?.replace(R.id.tool_attribute_fragment, fragment)
             ?.commitAllowingStateLoss()
     }
 }
