@@ -1,25 +1,27 @@
-import { Component, OnDestroy, OnInit, Input } from "@angular/core";
-import { Subscription } from "rxjs";
-import { AuthenticationService } from "src/app/modules/authentication";
-import { User } from "../authentication/models/user";
-import { ChatSocketService } from "./services/chat-socket.service";
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Subscription } from 'rxjs';
+import { AuthenticationService } from 'src/app/modules/authentication';
+import { PopoutChatService } from 'src/app/modules/chat/services/popout-chat.service';
+import { User } from '../authentication/models/user';
+import { ChatSocketService } from './services/chat-socket.service';
 
 @Component({
-  selector: "chat",
-  templateUrl: "./chat.component.html",
-  styleUrls: ["./chat.component.scss"],
+  selector: 'chat',
+  templateUrl: './chat.component.html',
+  styleUrls: ['./chat.component.scss'],
 })
 export class ChatComponent implements OnInit, OnDestroy {
-  public user: User | null;
-  public chatSubscribiption: Subscription;
-  @Input() private chatRoomName: string = "default";
+  user: User | null;
+  chatSubscribiption: Subscription;
+  @Input() private chatRoomName = 'default';
 
   constructor(
     private authenticationService: AuthenticationService,
     private chatSocketService: ChatSocketService,
+    private popoutChatService: PopoutChatService,
   ) {
     this.authenticationService.currentUserObservable.subscribe(
-      (user) => (this.user = user)
+      (user) => (this.user = user),
     );
   }
 
@@ -36,19 +38,19 @@ export class ChatComponent implements OnInit, OnDestroy {
     this.chatSubscribiption.unsubscribe();
   }
 
-  public keyListener() {
-    window.addEventListener("keydown", (event) => {
-      if (event.key === "Enter") {
+  keyListener() {
+    window.addEventListener('keydown', (event) => {
+      if (event.key === 'Enter') {
         this.sendMessage();
       }
     });
   }
 
-  public receiveMessage() {
+  receiveMessage() {
     this.chatSubscribiption = this.chatSocketService.chatSubject.subscribe({
       next: (message) => {
-        let messageBox = <HTMLInputElement>document.getElementById("chatbox");
-        const p = document.createElement("div");
+        const messageBox = document.getElementById('chatbox') as HTMLInputElement;
+        const p = document.createElement('div');
         p.textContent = `(${message.timestamp}) ${message.author}: ${message.message}`;
         messageBox.appendChild(p);
         messageBox.scrollTop = messageBox.scrollHeight;
@@ -57,19 +59,19 @@ export class ChatComponent implements OnInit, OnDestroy {
   }
 
   sendMessage() {
-    let mes = (<HTMLInputElement>document.getElementById("usermsg")).value;
+    const mes = (document.getElementById('usermsg') as HTMLInputElement).value;
     if (mes === null || mes.match(/^ *$/) !== null) return;
 
-    let name = "";
+    let name = '';
     if (this.user?.username === null) return;
     name = this.user!.username;
 
-    let hour = new Date().getHours().toString();
-    let minute = new Date().getMinutes().toString();
-    let second = new Date().getSeconds().toString();
-    let time = hour + ":" + minute + ":" + second;
+    const hour = new Date().getHours().toString();
+    const minute = new Date().getMinutes().toString();
+    const second = new Date().getSeconds().toString();
+    const time = hour + ':' + minute + ':' + second;
 
-    let message = {
+    const message = {
       message: mes,
       timestamp: time,
       author: name,
@@ -77,6 +79,10 @@ export class ChatComponent implements OnInit, OnDestroy {
     };
 
     this.chatSocketService.sendMessage(message);
-    (<HTMLInputElement>document.getElementById("usermsg")).value = "";
+    (document.getElementById('usermsg') as HTMLInputElement).value = '';
+  }
+
+  openPopout() {
+    this.popoutChatService.openPopout();
   }
 }

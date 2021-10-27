@@ -8,10 +8,22 @@ import { Message } from "../models/message.model";
 import { Subject } from "rxjs";
 
 @Injectable({
-  providedIn: "root",
+  providedIn: 'root',
 })
 export class ChatSocketService extends AbstractSocketService {
-  public chatSubject: Subject<Message>;
+  connect() {
+    throw new Error("Method not implemented.");
+  }
+  joinRoom(chatRoomName: string) {
+    throw new Error("Method not implemented.");
+  }
+  leaveRoom(chatRoomName: string) {
+    throw new Error("Method not implemented.");
+  }
+  disconnect() {
+    throw new Error("Method not implemented.");
+  }
+  chatSubject: Subject<Message>;
 
   constructor() {
     super();

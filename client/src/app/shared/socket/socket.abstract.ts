@@ -1,7 +1,6 @@
 import { io } from "socket.io-client";
 import {
-  ROOM_EVENT_NAME,
-  LEAVE_ROOM_EVENT_NAME,
+  LEAVE_ROOM_EVENT_NAME, ROOM_EVENT_NAME,
 } from "src/app/shared";
 import { environment } from 'src/environments/environment';
 
