@@ -2,6 +2,9 @@ package com.example.colorimagemobile.ui.home.fragments.drawing
 
 import android.graphics.Color
 import android.os.Bundle
+import android.text.Spannable
+import android.text.SpannableString
+import android.text.style.ImageSpan
 import android.transition.AutoTransition
 import android.transition.TransitionManager
 import androidx.fragment.app.Fragment
@@ -33,15 +36,20 @@ class DrawingFragment : Fragment(R.layout.fragment_drawing) {
     // dynamically add tools on sidebar
     private fun addToolsOnSidebar() {
         ToolTypeService.getAllToolTypes().forEach { toolType ->
-            val toolBtn = Button(context)
-            toolBtn.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
-
             val tool = toolsFactory.getTool(toolType)
 
-            toolBtn.setCompoundDrawablesWithIntrinsicBounds(tool.getIcon(), 0, 0, 0)
+            // create dynamic button for each tool
+            val toolBtn = Button(context)
+            toolBtn.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
             toolBtn.setBackgroundColor(Color.rgb(245, 245, 245))
+
+            // center button
+            toolBtn.text = SpannableString(" ").apply {
+                setSpan(ImageSpan(requireContext(), tool.getIcon()),0,1,Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+            }
+
+            // handle attribute panel when clicked on tool
             toolBtn.setOnClickListener {
-                // handle attribute panel when clicked on tool
                 togglePanel(tool.getType())
                 setPanelAttribute(tool.getFragment())
                 panelView.findViewById<TextView>(R.id.tool_name).text = tool.getTitle()
@@ -68,6 +76,7 @@ class DrawingFragment : Fragment(R.layout.fragment_drawing) {
         })
     }
 
+    // open/close side attributes panel
     private fun togglePanel(toolType: ToolType) {
         val currentToolType = ToolTypeService.getCurrentToolType().value
 
