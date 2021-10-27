@@ -1,6 +1,6 @@
 import { ComponentPortal, DomPortalOutlet } from '@angular/cdk/portal';
 import { ApplicationRef, ComponentFactoryResolver, ComponentRef, Injectable, Injector, OnDestroy } from '@angular/core';
-import { ChatComponent } from 'src/app/components/chat/chat.component';
+import { ChatComponent } from 'src/app/modules/chat/chat.component';
 
 @Injectable({
   providedIn: 'root',
