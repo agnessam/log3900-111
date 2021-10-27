@@ -6,11 +6,11 @@ import com.example.colorimagemobile.services.drawing.toolsAttribute.PencilServic
 class PencilView(context: Context?): CanvasView(context) {
 
     init {
-        paintPath.paint.setStrokeWidth(PencilService.getCurrentWidthAsFloat())
+        paintPath.brush.setStrokeWidth(PencilService.getCurrentWidthAsFloat())
     }
 
     override fun onTouchDown(pointX: Float, pointY: Float) {
-        paintPath.paint.setStrokeWidth(PencilService.getCurrentWidthAsFloat())
+        paintPath.brush.setStrokeWidth(PencilService.getCurrentWidthAsFloat())
         paintPath.path.moveTo(pointX, pointY)
     }
 

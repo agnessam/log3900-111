@@ -7,13 +7,13 @@ import com.example.colorimagemobile.services.drawing.toolsAttribute.EraserServic
 class EraserView(context: Context?): CanvasView(context) {
 
     init {
-        paintPath.paint.setColor(Color.WHITE)
-        paintPath.paint.setStrokeWidth(EraserService.getCurrentWidthAsFloat())
+        paintPath.brush.setColor(Color.WHITE)
+        paintPath.brush.setStrokeWidth(EraserService.getCurrentWidthAsFloat())
     }
 
     override fun onTouchDown(pointX: Float, pointY: Float) {
-        paintPath.paint.setColor(Color.WHITE)
-        paintPath.paint.setStrokeWidth(EraserService.getCurrentWidthAsFloat())
+        paintPath.brush.setColor(Color.WHITE)
+        paintPath.brush.setStrokeWidth(EraserService.getCurrentWidthAsFloat())
         paintPath.path.moveTo(pointX, pointY)
     }
 

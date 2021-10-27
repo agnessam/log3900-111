@@ -26,14 +26,14 @@ abstract class CanvasView(context: Context?): View(context) {
 
     private fun drawPreviousCanvas() {
         for (paintPathItem in PathService.getPaintPath()) {
-            extraCanvas.drawPath(paintPathItem.path, paintPathItem.paint.getPaint())
+            extraCanvas.drawPath(paintPathItem.path, paintPathItem.brush.getPaint())
         }
     }
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
         canvas.drawBitmap(extraBitmap, 0f, 0f, null)
-        extraCanvas.drawPath(paintPath.path, paintPath.paint.getPaint())
+        extraCanvas.drawPath(paintPath.path, paintPath.brush.getPaint())
     }
 
     // when taking an action on canvas
@@ -48,7 +48,7 @@ abstract class CanvasView(context: Context?): View(context) {
             MotionEvent.ACTION_DOWN -> {
                 // reset paintPath
                 paintPath = PaintPath(CustomPaint(), Path())
-                paintPath.paint.setColor(ColorService.getColor())
+                paintPath.brush.setColor(ColorService.getColor())
                 onTouchDown(pointX, pointY)
             }
 

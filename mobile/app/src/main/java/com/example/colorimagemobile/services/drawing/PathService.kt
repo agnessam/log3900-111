@@ -5,7 +5,7 @@ import android.graphics.Paint
 import android.graphics.Path
 
 // contains paint customizations and path's points
-data class PaintPath(val paint: CustomPaint, val path: Path)
+data class PaintPath(val brush: CustomPaint, val path: Path)
 
 // Paint customizations
 class CustomPaint() {
@@ -16,7 +16,7 @@ class CustomPaint() {
         paint.isAntiAlias = true
         paint.style = Paint.Style.STROKE
         paint.strokeJoin = Paint.Join.ROUND
-        paint.strokeCap = Paint.Cap.ROUND
+//        paint.strokeCap = Paint.Cap.ROUND
     }
 
     fun setColor(newColor: Int) {
