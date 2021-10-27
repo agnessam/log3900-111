@@ -1,22 +1,24 @@
 package com.example.colorimagemobile.services.drawing
 
-import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Path
 
 // contains paint customizations and path's points
 data class PaintPath(val brush: CustomPaint, val path: Path)
 
-// Paint customizations
+// Paint/brush customizations
 class CustomPaint() {
     private var paint: Paint = Paint()
 
     init {
-        // default attributes
+        setDefaultBrushAttributes()
+    }
+
+    private fun setDefaultBrushAttributes() {
         paint.isAntiAlias = true
+        paint.isDither = true
         paint.style = Paint.Style.STROKE
         paint.strokeJoin = Paint.Join.ROUND
-//        paint.strokeCap = Paint.Cap.ROUND
     }
 
     fun setColor(newColor: Int) {

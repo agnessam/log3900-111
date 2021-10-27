@@ -4,22 +4,29 @@ import android.content.Context
 import android.graphics.*
 import android.view.MotionEvent
 import android.view.View
+import android.view.ViewConfiguration
 import com.example.colorimagemobile.services.drawing.CustomPaint
 import com.example.colorimagemobile.services.drawing.PaintPath
 import com.example.colorimagemobile.services.drawing.PathService
 import com.example.colorimagemobile.services.drawing.toolsAttribute.ColorService
 
 abstract class CanvasView(context: Context?): View(context) {
-    private lateinit var extraCanvas: Canvas
     private lateinit var extraBitmap: Bitmap
+    protected lateinit var extraCanvas: Canvas
     protected var paintPath: PaintPath = PaintPath(CustomPaint(), Path())
+
+    protected var motionTouchEventX = 0f
+    protected var motionTouchEventY = 0f
+    protected var currentX = 0f
+    protected var currentY = 0f
+    protected val touchTolerance = ViewConfiguration.get(context).scaledTouchSlop
 
     override fun onSizeChanged(width: Int, height: Int, oldWidth: Int, oldHeight: Int) {
         super.onSizeChanged(width, height, oldWidth, oldHeight)
 
+        if (::extraBitmap.isInitialized) extraBitmap.recycle()
         extraBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
         extraCanvas = Canvas(extraBitmap)
-        if (!::extraBitmap.isInitialized) extraBitmap.recycle()
 
         drawPreviousCanvas()
     }
@@ -30,42 +37,37 @@ abstract class CanvasView(context: Context?): View(context) {
         }
     }
 
+    // called for each render/finger movement
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
         canvas.drawBitmap(extraBitmap, 0f, 0f, null)
-        extraCanvas.drawPath(paintPath.path, paintPath.brush.getPaint())
     }
 
     // when taking an action on canvas
     override fun onTouchEvent(event: MotionEvent?): Boolean {
         if (event == null) return false
 
-        val pointX = event.x
-        val pointY = event.y
+        motionTouchEventX = event.x
+        motionTouchEventY = event.y
 
         when (event.action) {
-            // when user first touches the screen
+            // when user first touches the screen, set new paintPath
             MotionEvent.ACTION_DOWN -> {
-                // reset paintPath
                 paintPath = PaintPath(CustomPaint(), Path())
                 paintPath.brush.setColor(ColorService.getColor())
-                onTouchDown(pointX, pointY)
+                onTouchDown()
             }
 
-            MotionEvent.ACTION_MOVE -> onTouchMove(pointX, pointY)
-
-            // when user lifts finger
-            MotionEvent.ACTION_UP -> onTouchUp()
-
+            MotionEvent.ACTION_MOVE -> onTouchMove()
+            MotionEvent.ACTION_UP -> onTouchUp() // when user lifts finger
             else -> return false
         }
 
-        postInvalidate()
         return true
     }
 
-    abstract fun onTouchDown(pointX: Float, pointY: Float)
-    abstract fun onTouchMove(pointX: Float, pointY: Float)
+    abstract fun onTouchDown()
+    abstract fun onTouchMove()
 
     // can be overridden by children
     open fun onTouchUp() {

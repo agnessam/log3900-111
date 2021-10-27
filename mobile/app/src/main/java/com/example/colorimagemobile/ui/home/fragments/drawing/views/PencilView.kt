@@ -2,6 +2,7 @@ package com.example.colorimagemobile.ui.home.fragments.drawing.views
 
 import android.content.Context
 import com.example.colorimagemobile.services.drawing.toolsAttribute.PencilService
+import kotlin.math.abs
 
 class PencilView(context: Context?): CanvasView(context) {
 
@@ -9,12 +10,26 @@ class PencilView(context: Context?): CanvasView(context) {
         paintPath.brush.setStrokeWidth(PencilService.getCurrentWidthAsFloat())
     }
 
-    override fun onTouchDown(pointX: Float, pointY: Float) {
+    override fun onTouchDown() {
         paintPath.brush.setStrokeWidth(PencilService.getCurrentWidthAsFloat())
-        paintPath.path.moveTo(pointX, pointY)
+        paintPath.path.moveTo(motionTouchEventX, motionTouchEventY)
+
+        currentX = motionTouchEventX
+        currentY = motionTouchEventY
     }
 
-    override fun onTouchMove(pointX: Float, pointY: Float) {
-        paintPath.path.lineTo(pointX, pointY)
+    override fun onTouchMove() {
+        val dx = abs(motionTouchEventX - currentX)
+        val dy = abs(motionTouchEventY - currentY)
+
+        // check if finger has moved for real
+        if (dx >= touchTolerance || dy >= touchTolerance) {
+            paintPath.path.quadTo(currentX, currentY, (motionTouchEventX + currentX) / 2, (motionTouchEventY + currentY) / 2)
+            currentX = motionTouchEventX
+            currentY = motionTouchEventY
+            extraCanvas.drawPath(paintPath.path, paintPath.brush.getPaint())
+        }
+
+        invalidate()
     }
 }

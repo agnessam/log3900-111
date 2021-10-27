@@ -11,13 +11,13 @@ class EraserView(context: Context?): CanvasView(context) {
         paintPath.brush.setStrokeWidth(EraserService.getCurrentWidthAsFloat())
     }
 
-    override fun onTouchDown(pointX: Float, pointY: Float) {
-        paintPath.brush.setColor(Color.WHITE)
-        paintPath.brush.setStrokeWidth(EraserService.getCurrentWidthAsFloat())
-        paintPath.path.moveTo(pointX, pointY)
+    override fun onTouchDown() {
+//        paintPath.brush.setColor(Color.WHITE)
+//        paintPath.brush.setStrokeWidth(EraserService.getCurrentWidthAsFloat())
+//        paintPath.path.moveTo(pointX, pointY)
     }
 
-    override fun onTouchMove(pointX: Float, pointY: Float) {
-        paintPath.path.lineTo(pointX, pointY)
+    override fun onTouchMove() {
+//        paintPath.path.lineTo(pointX, pointY)
     }
 }
