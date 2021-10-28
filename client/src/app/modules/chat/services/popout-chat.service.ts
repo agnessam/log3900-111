@@ -1,6 +1,7 @@
 import { ComponentPortal, DomPortalOutlet } from '@angular/cdk/portal';
 import { ApplicationRef, ComponentFactoryResolver, ComponentRef, Injectable, Injector, OnDestroy } from '@angular/core';
 import { ChatComponent } from 'src/app/modules/chat/chat.component';
+import { POPOUT_MODALS, POPOUT_MODAL_DATA } from '../models/popout.tokens';
 
 @Injectable({
   providedIn: 'root',
@@ -16,18 +17,18 @@ export class PopoutChatService implements OnDestroy {
 
   ngOnDestroy() {}
 
-  openPopout() {
+  openPopout(data: any) {
     // open window without url
     const windowInstance = window.open('' , '', '');
 
     // Wait for window instance to be created
     setTimeout(() => {
-      this.createCDKPortal(windowInstance);
+      this.createCDKPortal(data, windowInstance);
     }, 1000);
 
   }
 
-  createCDKPortal(windowInstance: Window | null) {
+  createCDKPortal(data: any, windowInstance: Window | null) {
     if (windowInstance) {
       // Create a PortalOutlet with the body of the new window document
       const outlet = new DomPortalOutlet(windowInstance.document.body, this.componentFactoryResolver, this.applicationRef, this.injector);
@@ -44,30 +45,35 @@ export class PopoutChatService implements OnDestroy {
         windowInstance.document.body.innerText = '';
 
         // Create an injector with modal data
-        // const injector = this.createInjector(data);
+        this.injector = this.createInjector(data);
 
         // Attach the portal
         windowInstance.document.title = 'Chat';
-        this.attachCustomerContainer(outlet, this.injector);
+        const componentInstance = this.attachContainer(outlet, this.injector);
 
-        // POPOUT_MODALS['windowInstance'] = windowInstance;
-        // POPOUT_MODALS['outlet'] = outlet;
-        // POPOUT_MODALS['componentInstance'] = componentInstance;
+        POPOUT_MODALS.windowInstance = windowInstance;
+        POPOUT_MODALS.outlet = outlet;
+        POPOUT_MODALS.componentInstance = componentInstance;
       };
     }
   }
 
-  attachCustomerContainer(outlet: DomPortalOutlet, injector: Injector | null | undefined) {
+  createInjector(data: any): Injector {
+    // const injectionTokens = new WeakMap();
+    // injectionTokens.set(POPOUT_MODAL_DATA, data);
+    return Injector.create({
+      parent: this.injector,
+      providers: [
+        {provide: POPOUT_MODAL_DATA, useValue: data}
+      ]
+    });
+  }
+
+  attachContainer(outlet: DomPortalOutlet, injector: Injector | null | undefined) {
     const containerPortal = new ComponentPortal(ChatComponent, null, injector);
     const containerRef: ComponentRef<ChatComponent> = outlet.attach(containerPortal);
     return containerRef.instance;
   }
-
-  // createInjector(data): PortalInjector {
-  //   const injectionTokens = new WeakMap();
-  //   injectionTokens.set(POPOUT_MODAL_DATA, data);
-  //   return new PortalInjector(this.injector, injectionTokens);
-  // }
 
   getStyleSheetElement() {
     const styleSheetElement = document.createElement('link');
@@ -79,5 +85,17 @@ export class PopoutChatService implements OnDestroy {
       }
     });
     return styleSheetElement;
+  }
+
+  isPopoutWindowOpen() {
+    return POPOUT_MODALS.windowInstance && !POPOUT_MODALS.windowInstance.closed;
+  }
+
+  closePopoutModal() {
+    Object.keys(POPOUT_MODALS).forEach(() => {
+      if (POPOUT_MODALS.windowInstance) {
+        POPOUT_MODALS.windowInstance.close();
+      }
+    });
   }
 }

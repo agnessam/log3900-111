@@ -1,28 +1,17 @@
-import { Injectable } from "@angular/core";
-import { AbstractSocketService } from "src/app/shared";
+import { Injectable } from '@angular/core';
+import { Subject } from 'rxjs';
+import { AbstractSocketService } from 'src/app/shared';
 import {
   CHAT_NAMESPACE_NAME,
   TEXT_MESSAGE_EVENT_NAME,
-} from "../constants/socket.constant";
-import { Message } from "../models/message.model";
-import { Subject } from "rxjs";
+} from '../constants/socket.constant';
+import { Message } from '../models/message.model';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ChatSocketService extends AbstractSocketService {
-  connect() {
-    throw new Error("Method not implemented.");
-  }
-  joinRoom(chatRoomName: string) {
-    throw new Error("Method not implemented.");
-  }
-  leaveRoom(chatRoomName: string) {
-    throw new Error("Method not implemented.");
-  }
-  disconnect() {
-    throw new Error("Method not implemented.");
-  }
+
   chatSubject: Subject<Message>;
 
   constructor() {

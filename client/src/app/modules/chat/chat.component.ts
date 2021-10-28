@@ -1,9 +1,11 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { AuthenticationService } from 'src/app/modules/authentication';
-import { PopoutChatService } from 'src/app/modules/chat/services/popout-chat.service';
 import { User } from '../authentication/models/user';
+// import { PopoutData, POPOUT_MODAL_DATA } from './models/popout.tokens';
 import { ChatSocketService } from './services/chat-socket.service';
+import { PopoutChatService } from './services/popout-chat.service';
+// import { TextChannelService } from './services/text-channel.service';
 
 @Component({
   selector: 'chat',
@@ -19,6 +21,8 @@ export class ChatComponent implements OnInit, OnDestroy {
     private authenticationService: AuthenticationService,
     private chatSocketService: ChatSocketService,
     private popoutChatService: PopoutChatService,
+    // private textChannelService: TextChannelService,
+    // @Inject(POPOUT_MODAL_DATA) public data: PopoutData,
   ) {
     this.authenticationService.currentUserObservable.subscribe(
       (user) => (this.user = user),
@@ -83,6 +87,11 @@ export class ChatComponent implements OnInit, OnDestroy {
   }
 
   openPopout() {
-    this.popoutChatService.openPopout();
+    const modalData = {
+      // id: string,
+      // owner: this.textChannelService.getChannel()
+      // chatRoomName: this.chatRoomName,
+    }
+    this.popoutChatService.openPopout(modalData);
   }
 }

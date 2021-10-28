@@ -1,19 +1,19 @@
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, throwError } from 'rxjs';
+import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { EditableChannelParameters } from '../models/editable-channel-parameters';
 import { TextChannel } from '../models/text-channel.model';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class TextChannelService {
 
-  private endpointUrl: string = environment.serverURL + "/channels/";
+  private endpointUrl: string = environment.serverURL + '/channels/';
   private httpHeaders: HttpHeaders = new HttpHeaders().set(
-    "ContentType",
-    "application/x-www-form-urlencoded",
+    'ContentType',
+    'application/x-www-form-urlencoded',
   );
 
   constructor(private httpClient: HttpClient) { }
@@ -37,7 +37,7 @@ export class TextChannelService {
   updateChannel(channelId: string, channel: EditableChannelParameters): Observable<TextChannel> {
     return this.httpClient
       .patch<TextChannel>(`${this.endpointUrl}/${channelId}`, channel, {
-        headers: this.httpHeaders
+        headers: this.httpHeaders,
       })
       .pipe((response) => {
         return response;
