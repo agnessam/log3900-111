@@ -9,7 +9,7 @@ export class TeamRepository extends GenericRepository<TeamInterface> {
     super(Team);
   }
 
-  public async create(team: TeamInterface): Promise<TeamInterface> {
+  public async create(team:TeamInterface): Promise<TeamInterface> {
     return new Promise<TeamInterface>((resolve, reject) => {
       Team.create(team, (err: Error, team: TeamInterface) => {
         if (err) {

@@ -24,13 +24,10 @@ export class TeamCreationComponent implements OnInit {
     let newTeam = {
       name: this.name,
       description: this.description,
-
-      owner: "BOB",
-      members: [],
-
-      drawings: [],
+      owner: "6176b7847d09884212d9bb8d",
     };
-    console.log(newTeam);
-    this.teamService.createTeam(newTeam);
+    this.teamService.createTeam(newTeam).subscribe((team)=> {
+      console.log(team);
+    });
   }
 }

@@ -44,10 +44,12 @@ export class TeamService {
   }
 
   createTeam(team: Team): Observable<Team> {
-    console.log(this.endpointUrl);
+    console.log("CREATE?");
     return this.httpClient
-      .post(`${this.endpointUrl}`, team)
+      .post(`${this.endpointUrl}`, team, {headers: this.httpHeaders})
       .pipe((response) => {
+        console.log("IT ANSWERED!");
+        console.log(response);
         return response;
       });
   }
