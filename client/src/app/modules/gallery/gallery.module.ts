@@ -7,7 +7,6 @@ import { MatButtonModule } from "@angular/material/button";
 import { NewDrawingModule } from "../new-drawing/new-drawing.module";
 import { MatDialogModule } from "@angular/material/dialog";
 import { WorkspaceModule } from "../workspace/workspace.module";
-import { DrawingService } from "../workspace";
 
 @NgModule({
   declarations: [GalleryComponent],
@@ -20,6 +19,5 @@ import { DrawingService } from "../workspace";
     NewDrawingModule,
     WorkspaceModule,
   ],
-  providers: [DrawingService],
 })
 export class GalleryModule {}

@@ -10,6 +10,7 @@ export class DrawingService {
 
   @Output()
   drawingEmit = new EventEmitter<SVGElement>();
+  CURRENT_TIME: number; // TODO: REMOVE AFTER 
   id: string;
   saved = false;
   renderer: Renderer2;
