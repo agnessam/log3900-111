@@ -22,6 +22,5 @@ import { NewDrawingService } from ".";
     ReactiveFormsModule,
     MatDialogModule,
   ],
-  exports: [NewDrawingComponent],
 })
 export class NewDrawingModule {}

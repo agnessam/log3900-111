@@ -1,6 +1,4 @@
 import { Component, OnInit } from "@angular/core";
-import { MatDialog } from "@angular/material/dialog";
-import { NewDrawingComponent } from "../../new-drawing";
 
 @Component({
   selector: "app-gallery",
@@ -8,13 +6,7 @@ import { NewDrawingComponent } from "../../new-drawing";
   styleUrls: ["./gallery.component.scss"],
 })
 export class GalleryComponent implements OnInit {
-  constructor(private dialog: MatDialog) {}
+  constructor() {}
 
   ngOnInit(): void {}
-
-  createNewDrawing() {
-    console.log("LMAO");
-    let newDrawingDialog = this.dialog.open(NewDrawingComponent, {});
-    console.log(newDrawingDialog);
-  }
 }
