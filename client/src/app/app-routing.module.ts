@@ -13,6 +13,13 @@ const routes: Routes = [
     canActivate: [AuthGuard],
   },
   {
+    path: "drawings",
+    loadChildren: () =>
+      import("./modules/drawings/drawings.module").then(
+        (m) => m.DrawingsModule
+      ),
+  },
+  {
     path: "users",
     loadChildren: () =>
       import("./modules/users/users.module").then((m) => m.UsersModule),

@@ -21,8 +21,7 @@ import { ParameterMenuModule } from "./modules/parameter-menu/parameter-menu.mod
 import { ErrorModule } from "./modules/error/error.module";
 import { UsersModule } from "./modules/users/users.module";
 import { GalleryModule } from "./modules/gallery/gallery.module";
-import { SidenavModule } from "./modules/sidenav/sidenav.module";
-
+import { DrawingsModule } from "./modules/drawings/drawings.module";
 @NgModule({
   declarations: [AppComponent],
   imports: [
@@ -47,7 +46,7 @@ import { SidenavModule } from "./modules/sidenav/sidenav.module";
     ToolsColorModule,
     ParameterMenuModule,
     UsersModule,
-    SidenavModule,
+    DrawingsModule,
     ErrorModule,
   ],
   exports: [],

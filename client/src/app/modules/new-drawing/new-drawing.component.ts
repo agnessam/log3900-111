@@ -28,7 +28,8 @@ export class NewDrawingComponent implements OnInit {
     private colorPickerService: ColorPickerService,
     private gridService: GridService,
     private router: Router
-  ) {}
+  ) {
+  }
 
   /// Créer un nouveau form avec les dimensions et la couleur
   ngOnInit(): void {
@@ -47,17 +48,18 @@ export class NewDrawingComponent implements OnInit {
 
   /// Ouvre le dialog pour l'alerte lorsque le service est creer
   onAccept(): void {
+    
     this.router.navigate(["/drawings/491"]);
     this.router.events.subscribe(() => {
       console.log("EVENT DETECTED!");
-    });
-
-    setTimeout(() => {
-      this.newDrawing();
+    })
+    
+    setTimeout(() => {  
+      this.newDrawing(); 
     }, 2000);
-
+    
     // setTimeout(() => {  this.newDrawing(); }, 10000);
-
+    
     // if (this.drawingService.isCreated) {
     //   const alert = this.dialog.open(NewDrawingAlertComponent, {
     //     role: "alertdialog",
