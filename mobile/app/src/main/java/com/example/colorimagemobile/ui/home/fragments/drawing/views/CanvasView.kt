@@ -6,14 +6,15 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.ViewConfiguration
 import com.example.colorimagemobile.services.drawing.CustomPaint
+import com.example.colorimagemobile.services.drawing.IDGenerator
 import com.example.colorimagemobile.services.drawing.PaintPath
 import com.example.colorimagemobile.services.drawing.PathService
 import com.example.colorimagemobile.services.drawing.toolsAttribute.ColorService
 
 abstract class CanvasView(context: Context?): View(context) {
-    private lateinit var extraBitmap: Bitmap
+    protected lateinit var extraBitmap: Bitmap
     protected lateinit var extraCanvas: Canvas
-    protected var paintPath: PaintPath = PaintPath(CustomPaint(), Path())
+    protected var paintPath: PaintPath = PaintPath(0, CustomPaint(), Path(), arrayListOf())
 
     protected var motionTouchEventX = 0f
     protected var motionTouchEventY = 0f
@@ -23,15 +24,14 @@ abstract class CanvasView(context: Context?): View(context) {
 
     override fun onSizeChanged(width: Int, height: Int, oldWidth: Int, oldHeight: Int) {
         super.onSizeChanged(width, height, oldWidth, oldHeight)
+        drawPreviousCanvas()
+    }
 
+    protected fun drawPreviousCanvas() {
         if (::extraBitmap.isInitialized) extraBitmap.recycle()
         extraBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
         extraCanvas = Canvas(extraBitmap)
 
-        drawPreviousCanvas()
-    }
-
-    private fun drawPreviousCanvas() {
         for (paintPathItem in PathService.getPaintPath()) {
             extraCanvas.drawPath(paintPathItem.path, paintPathItem.brush.getPaint())
         }
@@ -53,7 +53,7 @@ abstract class CanvasView(context: Context?): View(context) {
         when (event.action) {
             // when user first touches the screen, set new paintPath
             MotionEvent.ACTION_DOWN -> {
-                paintPath = PaintPath(CustomPaint(), Path())
+                paintPath = PaintPath(IDGenerator.getNewId(), CustomPaint(), Path(), arrayListOf())
                 paintPath.brush.setColor(ColorService.getColor())
                 onTouchDown()
             }
