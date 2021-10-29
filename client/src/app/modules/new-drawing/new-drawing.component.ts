@@ -1,13 +1,14 @@
 import { Component, HostListener, OnInit } from "@angular/core";
 import { FormGroup } from "@angular/forms";
-import { MatDialog, MatDialogRef } from "@angular/material/dialog";
+import { MatDialogRef } from "@angular/material/dialog";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { ColorPickerService } from "src/app/modules/color-picker";
 import { DEFAULT_RGB_COLOR, DEFAULT_ALPHA } from "src/app/shared";
 import { DrawingService } from "src/app/modules/workspace";
 import { NewDrawingService } from "./new-drawing.service";
 import { GridService } from "src/app/modules/workspace";
-import { NewDrawingAlertComponent } from "./new-drawing-alert/new-drawing-alert.component";
+// import { NewDrawingAlertComponent } from "./new-drawing-alert/new-drawing-alert.component";
+import { Router } from "@angular/router";
 
 const ONE_SECOND = 1000;
 @Component({
@@ -23,9 +24,9 @@ export class NewDrawingComponent implements OnInit {
     private snackBar: MatSnackBar,
     private newDrawingService: NewDrawingService,
     private drawingService: DrawingService,
-    private dialog: MatDialog,
     private colorPickerService: ColorPickerService,
-    private gridService: GridService
+    private gridService: GridService,
+    private router: Router
   ) {}
 
   /// Créer un nouveau form avec les dimensions et la couleur
@@ -45,18 +46,15 @@ export class NewDrawingComponent implements OnInit {
 
   /// Ouvre le dialog pour l'alerte lorsque le service est creer
   onAccept(): void {
-    if (this.drawingService.isCreated) {
-      const alert = this.dialog.open(NewDrawingAlertComponent, {
-        role: "alertdialog",
-      });
-      alert.afterClosed().subscribe((result: boolean) => {
-        if (result) {
-          this.newDrawing();
-        }
-      });
-    } else {
-      this.newDrawing();
-    }
+    this.newDrawingService.createNewDrawing().subscribe((response) => {
+      if (response._id) {
+        this.router.navigate([`/drawings/${response._id}`]).then(() => {
+          setTimeout(() => {
+            this.newDrawing();
+          }, 200);
+        });
+      }
+    });
   }
 
   /// Cree un nouveau dessin
