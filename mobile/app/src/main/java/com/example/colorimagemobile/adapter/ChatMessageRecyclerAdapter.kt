@@ -9,9 +9,9 @@ import com.example.colorimagemobile.R
 import kotlin.collections.ArrayList
 
 
-class ChatMessageRecyclerAdapter(message: ArrayList<Message>, currentAuthor: String): RecyclerView.Adapter<ChatMessageRecyclerAdapter.ViewHolder>() {
+class ChatMessageRecyclerAdapter(message: ArrayList<Boolean>, currentAuthor: String): RecyclerView.Adapter<ChatMessageRecyclerAdapter.ViewHolder>() {
     // our card arrays
-    var message: ArrayList<Message>
+    var message: ArrayList<Boolean>
     var currentAuthor: String
 
     private val THEIR_CHAT = 0
@@ -37,9 +37,9 @@ class ChatMessageRecyclerAdapter(message: ArrayList<Message>, currentAuthor: Str
 
     // populate our data to card view - iterates over getItemCount() ?
     override fun onBindViewHolder(holder: ChatMessageRecyclerAdapter.ViewHolder, position: Int) {
-        holder.author.text = message[position].author
-        holder.message.text = message[position].message
-        holder.timestamp.text = message[position].timestamp
+//        holder.author.text = message[position].author
+//        holder.message.text = message[position].message
+//        holder.timestamp.text = message[position].timestamp
     }
 
     // how many items we pass to our view holder
@@ -49,11 +49,12 @@ class ChatMessageRecyclerAdapter(message: ArrayList<Message>, currentAuthor: Str
 
     // calculate whose chat it is
     override fun getItemViewType(position: Int): Int {
-        return if (message.get(position).author.equals(this.currentAuthor)) {
-            OWN_CHAT
-        } else {
-            THEIR_CHAT
-        }
+//        return if (message.get(position).author.equals(this.currentAuthor)) {
+//            OWN_CHAT
+//        } else {
+//            THEIR_CHAT
+//        }
+        return 1
     }
 
     inner class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
