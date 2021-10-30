@@ -119,4 +119,8 @@ export class ChatComponent implements OnInit, OnDestroy {
     }
     else chat.style.display = "none";
   }
+
+  public openChatWindow(){
+
+  }
 }
