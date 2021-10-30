@@ -1,7 +1,8 @@
-import { Component, OnInit ,Output, EventEmitter} from "@angular/core";
+import { Component, OnInit} from "@angular/core";
 import { Router } from "@angular/router";
 import { AuthenticationService } from "src/app/modules/authentication";
 import { User } from "../modules/authentication/models/user";
+import { ChatService } from "../modules/chat/services/chat.service";
 
 @Component({
   selector: "app-navbar",
@@ -10,19 +11,21 @@ import { User } from "../modules/authentication/models/user";
 })
 export class NavbarComponent implements OnInit {
   public user: User | null;
-  public isChatOpened: boolean;
+  public chatStatus:boolean = false;
 
   constructor(
     private router: Router,
-    private authenticationService: AuthenticationService
+    private authenticationService: AuthenticationService,
+    private chatService:ChatService
   ) {
     this.authenticationService.currentUserObservable.subscribe(
       (user) => (this.user = user)
     );
-    this.isChatOpened=true;
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.chatService.toggle.subscribe(status=>this.chatStatus = status);
+  }
 
   logout(): void {
     this.authenticationService.logout().subscribe((response) => {
@@ -31,12 +34,8 @@ export class NavbarComponent implements OnInit {
     this.router.navigate(["/login"]);
   }
 
-
-  @Output() openChatEvent: EventEmitter<boolean> = new EventEmitter();
-
-  onChatClick(value: boolean) :void {
-    this.isChatOpened = !this.isChatOpened;
-    this.openChatEvent.emit(value);
+  onChatClick() :void {
+    this.chatService.toggle.emit(!this.chatStatus);
   }
 
 }
