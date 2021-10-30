@@ -1,12 +1,4 @@
 
-<app-navbar (openChatEvent)="childChatEventClicked($event)"></app-navbar>
-
-<mat-drawer-container id="mainDrawerContainer">
-
-  <router-outlet></router-outlet>
-
-  <mat-drawer mode="side" position="end" [opened]="isChatOpen">
-    <chat></chat>
-  </mat-drawer>
-
-</mat-drawer-container>
+<app-navbar></app-navbar>
+<router-outlet></router-outlet>
+<chat></chat>

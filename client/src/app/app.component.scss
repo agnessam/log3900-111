@@ -41,7 +41,11 @@ app-sidenav{
   height: 100%;
 }
 
-#mainDrawerContainer
+#mainDrawerContainer, #drawer
 {
   height: calc(100vh - 64px);
+}
+
+#drawer {
+  background:  #e79a90;
 }

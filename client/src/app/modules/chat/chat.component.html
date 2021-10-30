@@ -1,11 +1,30 @@
 
-<div class="chat-body">
+<!--<div class="chat-body">
   <div class="chatlist-container">
-    <p>Canaux</p>
+    <div class="headerChatList">
+      <h2>Canaux</h2>
+
+      <div class="dropdown">
+        <button class="dropbtn">
+          <mat-icon>more_vert</mat-icon>
+        </button>
+        <div class="dropdown-content">
+          <a><mat-icon>add_circle</mat-icon></a>
+          <a><mat-icon>open_in_new</mat-icon></a>
+        </div>
+      </div>
+
+
+    </div>
+
+    <div *ngFor="let canal of canals">
+      <div></div>
+      <p>{{canal}}</p>
+    </div>
   </div>
 
   <div class="chatbox-container">
-    <p>Message</p>
+    <h2>Message</h2>
 
     <div id="chatbox"></div>
 
@@ -23,4 +42,40 @@
     </div>
 
   </div>
+</div>-->
+
+<div id="chat-popup">
+
+  <div class=chat-top>
+    <p>{{canal}}</p>
+    <div class="chat-menu">
+      <button mat-icon-button class="btn" id="ArrowDown" (click)="reduceChat(true)">
+        <mat-icon>keyboard_arrow_down</mat-icon>
+      </button>
+      <button mat-icon-button class="btn" id="ArrowUp" (click)="reduceChat(false)">
+        <mat-icon>keyboard_arrow_up</mat-icon>
+      </button>
+      <button mat-icon-button class="btn" (click)="toggleDisplay(false)">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+  </div>
+
+  <div id="chat-bottom">
+    <div id="chatbox"></div>
+    <div id="message">
+      <input
+      type="text"
+      id="usermsg"
+      autocomplete="off"
+      spellcheck="false"
+      placeholder="Enter you message here"
+      />
+      <button mat-icon-button class="buttonContainer"  (click)="sendMessage()">
+        <mat-icon>send</mat-icon>
+      </button>
+    </div>
+  </div>
+
 </div>
+

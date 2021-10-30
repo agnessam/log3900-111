@@ -3,6 +3,7 @@ import { Subscription } from "rxjs";
 import { AuthenticationService } from "src/app/modules/authentication";
 import { User } from "../authentication/models/user";
 import { ChatSocketService } from "./services/chat-socket.service";
+import { ChatService } from "./services/chat.service";
 
 @Component({
   selector: "chat",
@@ -12,15 +13,27 @@ import { ChatSocketService } from "./services/chat-socket.service";
 export class ChatComponent implements OnInit, OnDestroy {
   public user: User | null;
   public chatSubscribiption: Subscription;
+  public canals: string[] = ["hello", "world", "patate"];
+  public canal: string;
+  public chatStatus:boolean;
+
   @Input() private chatRoomName: string = "default";
 
   constructor(
     private authenticationService: AuthenticationService,
     private chatSocketService: ChatSocketService,
+    private chatService: ChatService,
   ) {
     this.authenticationService.currentUserObservable.subscribe(
       (user) => (this.user = user)
     );
+    this.chatStatus = true;
+    this.chatService.toggle.subscribe(status=>{
+      this.chatStatus = status;
+      this.toggleDisplay(status);
+    });
+
+    this.canal = "Canal name";
   }
 
   ngOnInit(): void {
@@ -78,5 +91,32 @@ export class ChatComponent implements OnInit, OnDestroy {
 
     this.chatSocketService.sendMessage(message);
     (<HTMLInputElement>document.getElementById("usermsg")).value = "";
+  }
+
+  public reduceChat(isReduce:boolean){
+    let iconArrowDown = <HTMLInputElement>document.getElementById("ArrowDown");
+    let iconArrowUp = <HTMLInputElement>document.getElementById("ArrowUp");
+    let message = <HTMLInputElement>document.getElementById("chat-bottom");
+
+    if (!isReduce) {
+      iconArrowDown.style.display = "inline";
+      iconArrowUp.style.display = "none";
+      message.style.display = "block";
+    }
+    else {
+      iconArrowDown.style.display = "none";
+      iconArrowUp.style.display = "inline";
+      message.style.display = "none";
+    }
+  }
+
+  public toggleDisplay(showChat:boolean){
+    let chat = <HTMLInputElement>document.getElementById("chat-popup");
+
+    if(showChat) {
+      chat.style.display = "block";
+      this.reduceChat(false);
+    }
+    else chat.style.display = "none";
   }
 }
