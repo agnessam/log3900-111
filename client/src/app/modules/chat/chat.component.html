@@ -1,38 +1,49 @@
 <div id="chat-popup">
-
+<app-popout-window #popout>
   <div class=chat-top>
     <p>{{canal}}</p>
-    <div class="chat-menu">
-      <button mat-icon-button class="btn" id="ArrowDown" (click)="reduceChat(true)">
+    <div class="chat-menu" *ngIf="!isPopoutOpen; else openPopout">
+      <button mat-icon-button class="btn" id="ArrowDown" #arrowDown (click)="reduceChat(true)">
         <mat-icon>keyboard_arrow_down</mat-icon>
       </button>
-      <button mat-icon-button class="btn" id="ArrowUp" (click)="reduceChat(false)">
+      <button mat-icon-button class="btn" id="ArrowUp" #arrowUp (click)="reduceChat(false)">
         <mat-icon>keyboard_arrow_up</mat-icon>
       </button>
-      <button mat-icon-button class="btn" (click)="openChatWindow()">
+      <button mat-icon-button class="btn" (click)="openChatPopout(); popout.popOut()">
         <mat-icon>open_in_full</mat-icon>
       </button>
       <button mat-icon-button class="btn" (click)="toggleDisplay(false)">
         <mat-icon>close</mat-icon>
       </button>
     </div>
+    <ng-template #openPopout>
+      <div class="chat-menu-popout">
+        <button mat-icon-button class="btn" (click)="closeChatPopout(); popout.popIn()">
+          <mat-icon>close_fullscreen</mat-icon>
+        </button>
+      </div>
+    </ng-template>
   </div>
 
-  <div id="chat-bottom">
-    <div id="chatbox"></div>
+  
+  <div id="chat-bottom" #chatBottom>
+    <div id="chatbox" #chatBox></div>
     <div id="message">
       <input
       type="text"
+      #messageBody
       id="usermsg"
       autocomplete="off"
       spellcheck="false"
       placeholder="Enter you message here"
+      (input)="onInput($event)"
       />
       <button mat-icon-button class="buttonContainer"  (click)="sendMessage()">
         <mat-icon>send</mat-icon>
       </button>
     </div>
   </div>
+  </app-popout-window>
 
 </div>
 

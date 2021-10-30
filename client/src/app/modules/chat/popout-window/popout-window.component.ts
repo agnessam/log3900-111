@@ -1,4 +1,4 @@
-import { Component, ElementRef, HostListener, Input, OnDestroy, OnInit, Renderer2, ViewChild } from '@angular/core';
+import { Component, ElementRef, HostListener, Input, OnDestroy, Renderer2, ViewChild } from '@angular/core';
 
 @Component({
   selector: 'app-popout-window',
@@ -27,10 +27,10 @@ export class PopoutWindowComponent implements OnDestroy {
   private popoutWindow: Window;
   private isOut = false;
 
-  // @HostListener('window:beforeunload')
-  // private beforeunloadHandler(): void {
-  //   this.close();
-  // }
+  @HostListener('window:beforeunload')
+  private beforeunloadHandler(): void {
+    this.close();
+  }
 
   constructor(
     private renderer2: Renderer2,
@@ -38,6 +38,7 @@ export class PopoutWindowComponent implements OnDestroy {
   ) {}
 
   ngOnDestroy(): void {
+    this.beforeunloadHandler();
     this.close();
   }
 

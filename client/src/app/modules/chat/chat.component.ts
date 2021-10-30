@@ -15,11 +15,15 @@ export class ChatComponent implements OnInit, OnDestroy {
   chatSubscribiption: Subscription;
   @ViewChild('messageBody', { static: false }) private messageBody: ElementRef<HTMLInputElement>;
   @ViewChild('chatBox', { static: false }) private chatBox: ElementRef<HTMLInputElement>;
+  @ViewChild('arrowDown', { static: false }) private iconArrowDown: ElementRef<HTMLInputElement>;
+  @ViewChild('arrowUp', { static: false }) private iconArrowUp: ElementRef<HTMLInputElement>;
+  @ViewChild('chatBottom', { static: false }) private chatBottom: ElementRef<HTMLInputElement>;
   message = '';
   canals: string[] = ['hello', 'world', 'patate'];
   canal: string;
   chatStatus:boolean;
   isChatWindowOpen = false;
+  isPopoutOpen = false;
 
   @Input() private chatRoomName = 'default';
 
@@ -76,6 +80,7 @@ export class ChatComponent implements OnInit, OnDestroy {
   }
 
   sendMessage() {
+    console.log('send message : ' + this.message)
     if (this.message === null || this.message.match(/^ *$/) !== null) return;
 
     let name = '';
@@ -101,13 +106,12 @@ export class ChatComponent implements OnInit, OnDestroy {
 
   onInput(evt: Event): void {
     this.message = (evt.target as HTMLInputElement).value;
-
   }
 
   reduceChat(isReduce:boolean){
-    const iconArrowDown = document.getElementById('ArrowDown') as HTMLInputElement;
-    const iconArrowUp = document.getElementById('ArrowUp') as HTMLInputElement;
-    const message = document.getElementById('chat-bottom') as HTMLInputElement;
+    const iconArrowDown = this.iconArrowDown.nativeElement;
+    const iconArrowUp = this.iconArrowUp.nativeElement;
+    const message = this.chatBottom.nativeElement;
 
     if (!isReduce) {
       iconArrowDown.style.display = 'inline';
@@ -122,8 +126,6 @@ export class ChatComponent implements OnInit, OnDestroy {
   }
 
   toggleDisplay(showChat:boolean){
-    if (this.isChatWindowOpen)return;
-
     const chat = document.getElementById('chat-popup') as HTMLInputElement;
 
     if(showChat) {
@@ -133,11 +135,11 @@ export class ChatComponent implements OnInit, OnDestroy {
     else chat.style.display = 'none';
   }
 
-  openChatWindow(){
-    this.toggleDisplay(false);
-    this.isChatWindowOpen=true;
+  openChatPopout() {
+    this.isPopoutOpen = true;
+  }
 
-    // TODO ajout du code pour ouvrir le chat fenetré
-    // Si tu pouvais mettre la variable isChatWindowOpen a false lorsqu'on le ferme ca serait bien aussi
+  closeChatPopout() {
+    this.isPopoutOpen = false;
   }
 }
