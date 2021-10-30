@@ -16,6 +16,7 @@ export class ChatComponent implements OnInit, OnDestroy {
   public canals: string[] = ["hello", "world", "patate"];
   public canal: string;
   public chatStatus:boolean;
+  public isChatWindowOpen = false;
 
   @Input() private chatRoomName: string = "default";
 
@@ -111,6 +112,8 @@ export class ChatComponent implements OnInit, OnDestroy {
   }
 
   public toggleDisplay(showChat:boolean){
+    if (this.isChatWindowOpen)return;
+
     let chat = <HTMLInputElement>document.getElementById("chat-popup");
 
     if(showChat) {
@@ -121,6 +124,10 @@ export class ChatComponent implements OnInit, OnDestroy {
   }
 
   public openChatWindow(){
+    this.toggleDisplay(false);
+    this.isChatWindowOpen=true;
 
+    // TODO ajout du code pour ouvrir le chat fenetré
+    // Si tu pouvais mettre la variable isChatWindowOpen a false lorsqu'on le ferme ca serait bien aussi
   }
 }
