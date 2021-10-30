@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, Input } from "@angular/core";
+import { Component, OnDestroy, OnInit, Input, ElementRef, ViewChild } from "@angular/core";
 import { Subscription } from "rxjs";
 import { AuthenticationService } from "src/app/modules/authentication";
 import { User } from "../authentication/models/user";
@@ -12,7 +12,10 @@ import { ChatSocketService } from "./services/chat-socket.service";
 export class ChatComponent implements OnInit, OnDestroy {
   public user: User | null;
   public chatSubscribiption: Subscription;
-  @Input() private chatRoomName: string = "default";
+  @Input() public chatRoomName: string = "default";
+  @ViewChild('messageBody', { static: false }) private messageBody: ElementRef<HTMLInputElement>;
+  @ViewChild('chatBox', { static: false }) private chatBox: ElementRef<HTMLInputElement>;
+  mes = "";
 
   constructor(
     private authenticationService: AuthenticationService,
@@ -36,18 +39,29 @@ export class ChatComponent implements OnInit, OnDestroy {
     this.chatSubscribiption.unsubscribe();
   }
 
+  // Note: this event listener listens throughout the whole app
+
+  // @HostListener('window:keydown', ['$event'])
   public keyListener() {
+    console.log('entered key listener')
     window.addEventListener("keydown", (event) => {
+      console.log('entered event listener')
       if (event.key === "Enter") {
+        console.log('entered enter key')
         this.sendMessage();
       }
     });
+    // if (event.key === "Enter") {
+    //   console.log('enter key pressed')
+    //   this.sendMessage();
+    // }
   }
 
   public receiveMessage() {
     this.chatSubscribiption = this.chatSocketService.chatSubject.subscribe({
       next: (message) => {
-        let messageBox = <HTMLInputElement>document.getElementById("chatbox");
+        // let messageBox = <HTMLInputElement>document.getElementById("chatbox");
+        let messageBox = this.chatBox.nativeElement;
         const p = document.createElement("div");
         p.textContent = `(${message.timestamp}) ${message.author}: ${message.message}`;
         messageBox.appendChild(p);
@@ -57,8 +71,9 @@ export class ChatComponent implements OnInit, OnDestroy {
   }
 
   sendMessage() {
-    let mes = (<HTMLInputElement>document.getElementById("usermsg")).value;
-    if (mes === null || mes.match(/^ *$/) !== null) return;
+    // let mes = (<HTMLInputElement>document.getElementById("usermsg")).value;
+    // let mes = on
+    if (this.mes === null || this.mes.match(/^ *$/) !== null) return;
 
     let name = "";
     if (this.user?.username === null) return;
@@ -70,13 +85,20 @@ export class ChatComponent implements OnInit, OnDestroy {
     let time = hour + ":" + minute + ":" + second;
 
     let message = {
-      message: mes,
+      message: this.mes,
       timestamp: time,
       author: name,
       roomName: this.chatRoomName,
     };
 
     this.chatSocketService.sendMessage(message);
-    (<HTMLInputElement>document.getElementById("usermsg")).value = "";
+    this.messageBody.nativeElement.value = "";
+    this.mes = "";
+    // (<HTMLInputElement>document.getElementById("usermsg")).value = "";
+  }
+
+  onInput(evt: Event): void {
+    this.mes = (evt.target as HTMLInputElement).value;
+    
   }
 }
