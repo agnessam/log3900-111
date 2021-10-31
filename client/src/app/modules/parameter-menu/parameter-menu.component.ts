@@ -45,12 +45,14 @@ export class ParameterMenuComponent implements OnChanges {
 
   /// Charger le component pour l'outil en question
   private loadComponent() {
+    console.log(this.selectId);
     const componentFactory: ComponentFactory<any> =
       this.componentFactoryResolver.resolveComponentFactory(
         this.parameterComponentService.getComponent(this.selectId)
       );
     const viewContainerRef: ViewContainerRef =
       this.parameterHost.viewContainerRef;
+
     viewContainerRef.clear();
     viewContainerRef.createComponent(componentFactory);
   }

@@ -6,7 +6,6 @@ export * from "./components/eraser-tool-parameter/eraser-tool-parameter.componen
 export * from "./components/feather-tool-parameter/feather-tool-parameter.component";
 export * from "./components/grid-parameter/grid-parameter.component";
 export * from "./components/line-tool-parameter/line-tool-parameter.component";
-export * from "./components/pen-tool-parameter/pen-tool-parameter.component";
 export * from "./components/pencil-tool-parameter/pencil-tool-parameter.component";
 export * from "./components/pipette-tool-parameter/pipette-tool-parameter.component";
 export * from "./components/polygon-tool-parameter/polygon-tool-parameter.component";

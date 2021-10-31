@@ -11,7 +11,6 @@ import { EraserToolParameterComponent } from "./components/eraser-tool-parameter
 import { FeatherToolParameterComponent } from "./components/feather-tool-parameter/feather-tool-parameter.component";
 import { GridParameterComponent } from "./components/grid-parameter/grid-parameter.component";
 import { LineToolParameterComponent } from "./components/line-tool-parameter/line-tool-parameter.component";
-import { PenToolParameterComponent } from "./components/pen-tool-parameter/pen-tool-parameter.component";
 import { PencilToolParameterComponent } from "./components/pencil-tool-parameter/pencil-tool-parameter.component";
 import { PipetteToolParameterComponent } from "./components/pipette-tool-parameter/pipette-tool-parameter.component";
 import { PolygonToolParameterComponent } from "./components/polygon-tool-parameter/polygon-tool-parameter.component";
@@ -37,7 +36,6 @@ import { WorkspaceModule } from "src/app/modules/workspace/workspace.module";
     SelectionToolParameterComponent,
     EraserToolParameterComponent,
     TextToolParameterComponent,
-    PenToolParameterComponent,
     FeatherToolParameterComponent,
     BucketFillToolParameterComponent,
     SprayToolParameterComponent,
@@ -65,7 +63,6 @@ import { WorkspaceModule } from "src/app/modules/workspace/workspace.module";
     SelectionToolParameterComponent,
     EraserToolParameterComponent,
     TextToolParameterComponent,
-    PenToolParameterComponent,
     FeatherToolParameterComponent,
     BucketFillToolParameterComponent,
     SprayToolParameterComponent,

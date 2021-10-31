@@ -1,6 +1,7 @@
 import { Injectable, Type } from "@angular/core";
 import { ControlMenuComponent } from "../../components/control-menu/control-menu.component";
-import { ApplierToolParameterComponent,
+import {
+  ApplierToolParameterComponent,
   BrushToolParameterComponent,
   BucketFillToolParameterComponent,
   EllipseToolParameterComponent,
@@ -8,7 +9,6 @@ import { ApplierToolParameterComponent,
   FeatherToolParameterComponent,
   GridParameterComponent,
   LineToolParameterComponent,
-  PenToolParameterComponent,
   PencilToolParameterComponent,
   PipetteToolParameterComponent,
   PolygonToolParameterComponent,
@@ -16,7 +16,8 @@ import { ApplierToolParameterComponent,
   SelectionToolParameterComponent,
   SprayToolParameterComponent,
   StampToolParameterComponent,
-  TextToolParameterComponent} from "src/app/modules/tool-parameters";
+  TextToolParameterComponent,
+} from "src/app/modules/tool-parameters";
 
 /// Classe permettant d'offrir dyamiquement des component selon un index
 @Injectable({
@@ -31,7 +32,6 @@ export class ParameterComponentService {
       PencilToolParameterComponent,
       BrushToolParameterComponent,
       FeatherToolParameterComponent,
-      PenToolParameterComponent,
       RectangleToolParameterComponent,
       EllipseToolParameterComponent,
       PolygonToolParameterComponent,
