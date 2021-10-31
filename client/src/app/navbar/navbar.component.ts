@@ -11,7 +11,7 @@ import { ChatService } from "../modules/chat/services/chat.service";
 })
 export class NavbarComponent implements OnInit {
   public user: User | null;
-  public chatStatus:boolean = false;
+  public canalOverlayStatus:boolean = false;
 
   constructor(
     private router: Router,
@@ -24,7 +24,7 @@ export class NavbarComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.chatService.toggle.subscribe(status=>this.chatStatus = status);
+    this.chatService.toggleCanalOverlay.subscribe(status=>this.canalOverlayStatus = status);
   }
 
   logout(): void {
@@ -35,7 +35,7 @@ export class NavbarComponent implements OnInit {
   }
 
   onChatClick() :void {
-    this.chatService.toggle.emit(!this.chatStatus);
+    this.chatService.toggleCanalOverlay.emit(!this.canalOverlayStatus);
   }
 
 }

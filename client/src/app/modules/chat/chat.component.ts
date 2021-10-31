@@ -13,9 +13,7 @@ import { ChatService } from "./services/chat.service";
 export class ChatComponent implements OnInit, OnDestroy {
   public user: User | null;
   public chatSubscribiption: Subscription;
-  public canals: string[] = ["hello", "world", "patate"];
-  public canal: string;
-  public chatStatus:boolean;
+  public canalName: string;
   public isChatWindowOpen = false;
 
   @Input() private chatRoomName: string = "default";
@@ -28,13 +26,10 @@ export class ChatComponent implements OnInit, OnDestroy {
     this.authenticationService.currentUserObservable.subscribe(
       (user) => (this.user = user)
     );
-    this.chatStatus = true;
-    this.chatService.toggle.subscribe(status=>{
-      this.chatStatus = status;
-      this.toggleDisplay(status);
+    this.chatService.toggleChatOverlay.subscribe(canalName=>{
+      this.canalName=canalName;
+      this.openChat(canalName);
     });
-
-    this.canal = "Canal name";
   }
 
   ngOnInit(): void {
@@ -111,20 +106,21 @@ export class ChatComponent implements OnInit, OnDestroy {
     }
   }
 
-  public toggleDisplay(showChat:boolean){
+  public openChat(canalName:string){
     if (this.isChatWindowOpen)return;
 
     let chat = <HTMLInputElement>document.getElementById("chat-popup");
+    chat.style.display = "block";
+    this.reduceChat(false);
+  }
 
-    if(showChat) {
-      chat.style.display = "block";
-      this.reduceChat(false);
-    }
-    else chat.style.display = "none";
+  public closeChat(){
+    let chat = <HTMLInputElement>document.getElementById("chat-popup");
+    chat.style.display = "none";
   }
 
   public openChatWindow(){
-    this.toggleDisplay(false);
+    this.closeChat();
     this.isChatWindowOpen=true;
 
     // TODO ajout du code pour ouvrir le chat fenetré

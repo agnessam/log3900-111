@@ -1,7 +1,7 @@
 <div id="chat-popup">
 
   <div class=chat-top>
-    <p>{{canal}}</p>
+    <p>{{canalName}}</p>
     <div class="chat-menu">
       <button mat-icon-button class="btn" id="ArrowDown" (click)="reduceChat(true)">
         <mat-icon>keyboard_arrow_down</mat-icon>
@@ -12,7 +12,7 @@
       <button mat-icon-button class="btn" (click)="openChatWindow()">
         <mat-icon>open_in_full</mat-icon>
       </button>
-      <button mat-icon-button class="btn" (click)="toggleDisplay(false)">
+      <button mat-icon-button class="btn" (click)="closeChat()">
         <mat-icon>close</mat-icon>
       </button>
     </div>

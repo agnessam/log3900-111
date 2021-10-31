@@ -1,25 +1,20 @@
+<div id="canal-overlay">
+  <div class="canal-top">
+    <p>Canaux</p>
+    <button mat-icon-button class="btn" (click)="addCanal()">
+      <mat-icon>add</mat-icon>
+    </button>
+    <button mat-icon-button class="btn" (click)="searchCanal()">
+      <mat-icon>search</mat-icon>
+    </button>
+  </div>
 
-<!--
-  <div class="chatlist-container">
-    <div class="headerChatList">
-      <h2>Canaux</h2>
-
-      <div class="dropdown">
-        <button class="dropbtn">
-          <mat-icon>more_vert</mat-icon>
-        </button>
-        <div class="dropdown-content">
-          <a><mat-icon>add_circle</mat-icon></a>
-          <a><mat-icon>open_in_new</mat-icon></a>
-        </div>
-      </div>
-
-
-    </div>
-
+  <div class="canal-list">
     <div *ngFor="let canal of canals">
-      <div></div>
-      <p>{{canal}}</p>
+      <div class="canal" (click)="openCanal(canal)">
+        <p>{{canal}}</p>
+      </div>
     </div>
   </div>
--->
+
+</div>
