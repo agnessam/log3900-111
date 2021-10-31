@@ -2,8 +2,10 @@ import { Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@ang
 import { Subscription } from 'rxjs';
 import { AuthenticationService } from 'src/app/modules/authentication';
 import { User } from '../authentication/models/user';
+import { Message } from './models/message.model';
 import { ChatSocketService } from './services/chat-socket.service';
 import { ChatService } from './services/chat.service';
+import { TextChannelService } from './services/text-channel.service';
 
 @Component({
   selector: 'chat',
@@ -12,13 +14,14 @@ import { ChatService } from './services/chat.service';
 })
 export class ChatComponent implements OnInit, OnDestroy {
   user: User | null;
-  chatSubscribiption: Subscription;
+  chatSubscription: Subscription;
   @ViewChild('messageBody', { static: false }) private messageBody: ElementRef<HTMLInputElement>;
   @ViewChild('chatBox', { static: false }) private chatBox: ElementRef<HTMLInputElement>;
   @ViewChild('arrowDown', { static: false }) private iconArrowDown: ElementRef<HTMLInputElement>;
   @ViewChild('arrowUp', { static: false }) private iconArrowUp: ElementRef<HTMLInputElement>;
   @ViewChild('chatBottom', { static: false }) private chatBottom: ElementRef<HTMLInputElement>;
   message = '';
+  // messageHistory: Message[] = [];
   canals: string[] = ['hello', 'world', 'patate'];
   canal: string;
   chatStatus:boolean;
@@ -31,6 +34,7 @@ export class ChatComponent implements OnInit, OnDestroy {
     private authenticationService: AuthenticationService,
     private chatSocketService: ChatSocketService,
     private chatService: ChatService,
+    private textChannelService: TextChannelService,
   ) {
     this.authenticationService.currentUserObservable.subscribe(
       (user) => (this.user = user),
@@ -41,7 +45,7 @@ export class ChatComponent implements OnInit, OnDestroy {
       this.toggleDisplay(status);
     });
 
-    this.canal = 'Canal name';
+    
   }
 
   ngOnInit(): void {
@@ -49,38 +53,44 @@ export class ChatComponent implements OnInit, OnDestroy {
     this.receiveMessage();
     this.chatSocketService.connect();
     this.chatSocketService.joinRoom(this.chatRoomName);
+
+    // TODO: change this test to get accessed chat from channel list
+    this.textChannelService.getChannel('617e4fd7e58fe02f51d7524e').subscribe((channel) => {
+      this.canal = channel.name;
+    })
   }
 
   ngOnDestroy(): void {
+    // this.textChannelService.saveMessages(message);
     this.chatSocketService.leaveRoom(this.chatRoomName);
     this.chatSocketService.disconnect();
-    this.chatSubscribiption.unsubscribe();
+    this.chatSubscription.unsubscribe();
   }
 
   // Note: this event listener listens throughout the whole app
   keyListener() {
     window.addEventListener('keydown', (event) => {
       if (event.key === 'Enter') {
-        console.log('entered enter key');
         this.sendMessage();
       }
     });
   }
 
   receiveMessage() {
-    this.chatSubscribiption = this.chatSocketService.chatSubject.subscribe({
+    this.chatSubscription = this.chatSocketService.chatSubject.subscribe({
       next: (message) => {
         const messageBox = this.chatBox.nativeElement;
         const p = document.createElement('div');
         p.textContent = `(${message.timestamp}) ${message.author}: ${message.message}`;
         messageBox.appendChild(p);
         messageBox.scrollTop = messageBox.scrollHeight;
+
+        // this.messageHistory.push(message);
       },
     });
   }
 
   sendMessage() {
-    console.log('send message : ' + this.message)
     if (this.message === null || this.message.match(/^ *$/) !== null) return;
 
     let name = '';
