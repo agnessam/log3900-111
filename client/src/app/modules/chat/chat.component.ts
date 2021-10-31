@@ -1,26 +1,47 @@
-import { Component, OnDestroy, OnInit, Input } from "@angular/core";
-import { Subscription } from "rxjs";
-import { AuthenticationService } from "src/app/modules/authentication";
-import { User } from "../authentication/models/user";
-import { ChatSocketService } from "./services/chat-socket.service";
+import { Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Subscription } from 'rxjs';
+import { AuthenticationService } from 'src/app/modules/authentication';
+import { User } from '../authentication/models/user';
+import { ChatSocketService } from './services/chat-socket.service';
+import { ChatService } from './services/chat.service';
 
 @Component({
-  selector: "chat",
-  templateUrl: "./chat.component.html",
-  styleUrls: ["./chat.component.scss"],
+  selector: 'chat',
+  templateUrl: './chat.component.html',
+  styleUrls: ['./chat.component.scss'],
 })
 export class ChatComponent implements OnInit, OnDestroy {
-  public user: User | null;
-  public chatSubscribiption: Subscription;
-  @Input() private chatRoomName: string = "default";
+  user: User | null;
+  chatSubscribiption: Subscription;
+  @ViewChild('messageBody', { static: false }) private messageBody: ElementRef<HTMLInputElement>;
+  @ViewChild('chatBox', { static: false }) private chatBox: ElementRef<HTMLInputElement>;
+  @ViewChild('arrowDown', { static: false }) private iconArrowDown: ElementRef<HTMLInputElement>;
+  @ViewChild('arrowUp', { static: false }) private iconArrowUp: ElementRef<HTMLInputElement>;
+  @ViewChild('chatBottom', { static: false }) private chatBottom: ElementRef<HTMLInputElement>;
+  message = '';
+  canals: string[] = ['hello', 'world', 'patate'];
+  canal: string;
+  chatStatus:boolean;
+  isChatWindowOpen = false;
+  isPopoutOpen = false;
+
+  @Input() private chatRoomName = 'default';
 
   constructor(
     private authenticationService: AuthenticationService,
-    private chatSocketService: ChatSocketService
+    private chatSocketService: ChatSocketService,
+    private chatService: ChatService,
   ) {
     this.authenticationService.currentUserObservable.subscribe(
-      (user) => (this.user = user)
+      (user) => (this.user = user),
     );
+    this.chatStatus = true;
+    this.chatService.toggle.subscribe((status)=>{
+      this.chatStatus = status;
+      this.toggleDisplay(status);
+    });
+
+    this.canal = 'Canal name';
   }
 
   ngOnInit(): void {
@@ -36,19 +57,21 @@ export class ChatComponent implements OnInit, OnDestroy {
     this.chatSubscribiption.unsubscribe();
   }
 
-  public keyListener() {
-    window.addEventListener("keydown", (event) => {
-      if (event.key === "Enter") {
+  // Note: this event listener listens throughout the whole app
+  keyListener() {
+    window.addEventListener('keydown', (event) => {
+      if (event.key === 'Enter') {
+        console.log('entered enter key');
         this.sendMessage();
       }
     });
   }
 
-  public receiveMessage() {
+  receiveMessage() {
     this.chatSubscribiption = this.chatSocketService.chatSubject.subscribe({
       next: (message) => {
-        let messageBox = <HTMLInputElement>document.getElementById("chatbox");
-        const p = document.createElement("div");
+        const messageBox = this.chatBox.nativeElement;
+        const p = document.createElement('div');
         p.textContent = `(${message.timestamp}) ${message.author}: ${message.message}`;
         messageBox.appendChild(p);
         messageBox.scrollTop = messageBox.scrollHeight;
@@ -57,26 +80,66 @@ export class ChatComponent implements OnInit, OnDestroy {
   }
 
   sendMessage() {
-    let mes = (<HTMLInputElement>document.getElementById("usermsg")).value;
-    if (mes === null || mes.match(/^ *$/) !== null) return;
+    console.log('send message : ' + this.message)
+    if (this.message === null || this.message.match(/^ *$/) !== null) return;
 
-    let name = "";
+    let name = '';
     if (this.user?.username === null) return;
     name = this.user!.username;
 
-    let hour = new Date().getHours().toString();
-    let minute = new Date().getMinutes().toString();
-    let second = new Date().getSeconds().toString();
-    let time = hour + ":" + minute + ":" + second;
+    const hour = new Date().getHours().toString();
+    const minute = new Date().getMinutes().toString();
+    const second = new Date().getSeconds().toString();
+    const time = hour + ':' + minute + ':' + second;
 
-    let message = {
-      message: mes,
+    const message = {
+      message: this.message,
       timestamp: time,
       author: name,
       roomName: this.chatRoomName,
     };
 
     this.chatSocketService.sendMessage(message);
-    (<HTMLInputElement>document.getElementById("usermsg")).value = "";
+    this.messageBody.nativeElement.value = '';
+    this.message = '';
+  }
+
+  onInput(evt: Event): void {
+    this.message = (evt.target as HTMLInputElement).value;
+  }
+
+  reduceChat(isReduce:boolean){
+    const iconArrowDown = this.iconArrowDown.nativeElement;
+    const iconArrowUp = this.iconArrowUp.nativeElement;
+    const message = this.chatBottom.nativeElement;
+
+    if (!isReduce) {
+      iconArrowDown.style.display = 'inline';
+      iconArrowUp.style.display = 'none';
+      message.style.display = 'block';
+    }
+    else {
+      iconArrowDown.style.display = 'none';
+      iconArrowUp.style.display = 'inline';
+      message.style.display = 'none';
+    }
+  }
+
+  toggleDisplay(showChat:boolean){
+    const chat = document.getElementById('chat-popup') as HTMLInputElement;
+
+    if(showChat) {
+      chat.style.display = 'block';
+      this.reduceChat(false);
+    }
+    else chat.style.display = 'none';
+  }
+
+  openChatPopout() {
+    this.isPopoutOpen = true;
+  }
+
+  closeChatPopout() {
+    this.isPopoutOpen = false;
   }
 }

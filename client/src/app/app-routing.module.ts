@@ -1,15 +1,16 @@
+import { GalleryComponent } from './modules/gallery/gallery/gallery.component';
 import { NgModule } from "@angular/core";
 import { RouterModule, Routes } from "@angular/router";
 import { AuthGuard } from "./modules/authentication/";
 import { PageNotFoundComponent } from "./modules/error/";
-import { ChatComponent } from "./modules/chat/chat.component";
+import { SidenavComponent } from "./modules/sidenav/sidenav.component";
 
 const routes: Routes = [
   {
-    path: "chat",
-    component: ChatComponent,
+    path: "drawing",
+    component: SidenavComponent,
     loadChildren: () =>
-      import("./modules/chat/chat.module").then((m) => m.ChatModule),
+      import("./modules/sidenav/sidenav.module").then((m) => m.SidenavModule),
     canActivate: [AuthGuard],
   },
   {
@@ -24,9 +25,9 @@ const routes: Routes = [
   },
   {
     path: "",
-    component: ChatComponent,
+    component: GalleryComponent,
     loadChildren: () =>
-      import("./modules/chat/chat.module").then((m) => m.ChatModule),
+      import("./modules/gallery/gallery.module").then((m) => m.GalleryModule),
     canActivate: [AuthGuard],
   },
   {

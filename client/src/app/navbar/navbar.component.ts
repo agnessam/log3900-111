@@ -1,7 +1,9 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit} from "@angular/core";
 import { Router } from "@angular/router";
 import { AuthenticationService } from "src/app/modules/authentication";
 import { User } from "../modules/authentication/models/user";
+import { ChatService } from "../modules/chat/services/chat.service";
+
 @Component({
   selector: "app-navbar",
   templateUrl: "./navbar.component.html",
@@ -9,16 +11,21 @@ import { User } from "../modules/authentication/models/user";
 })
 export class NavbarComponent implements OnInit {
   public user: User | null;
+  public chatStatus:boolean = false;
+
   constructor(
     private router: Router,
-    private authenticationService: AuthenticationService
+    private authenticationService: AuthenticationService,
+    private chatService:ChatService
   ) {
     this.authenticationService.currentUserObservable.subscribe(
       (user) => (this.user = user)
     );
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.chatService.toggle.subscribe(status=>this.chatStatus = status);
+  }
 
   logout(): void {
     this.authenticationService.logout().subscribe((response) => {
@@ -26,4 +33,9 @@ export class NavbarComponent implements OnInit {
     });
     this.router.navigate(["/login"]);
   }
+
+  onChatClick() :void {
+    this.chatService.toggle.emit(!this.chatStatus);
+  }
+
 }

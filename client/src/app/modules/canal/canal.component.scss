@@ -1,0 +1,50 @@
+/*.chat-body {
+  padding: 10px;
+  height: 90%;
+}
+
+.chat-body > *{
+  height: 50%;
+}
+
+.headerChatList{
+  display: flex;
+  flex-wrap: nowrap;
+}
+.headerChatList:first-child{
+  width: 70%;
+}
+
+.dropbtn {
+  padding: 16px;
+  font-size: 16px;
+  border: none;
+}
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #FEF9F7;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(1,1,1,0.2);
+  z-index: 1;
+}
+
+.dropdown-content a {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+.dropdown-content a:hover {background-color: #ddd;}
+
+.dropdown:hover .dropdown-content {display: block;}
+
+
+*/
