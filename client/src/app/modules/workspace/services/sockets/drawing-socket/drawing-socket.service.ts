@@ -24,6 +24,10 @@ export class DrawingSocketService extends AbstractSocketService {
     this.listenDrawingCommand();
   }
 
+  sendDrawingCommand(drawingCommand: any): void {
+    this.emit(DRAW_EVENT_NAME, drawingCommand);
+  }
+
   private listenDrawingCommand(): void {
     this.namespaceSocket.on(DRAW_EVENT_NAME, (drawingCommand: any) => {
       this.drawingCommandSubject.next(drawingCommand);

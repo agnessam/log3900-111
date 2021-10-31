@@ -4,7 +4,7 @@ import {
   faPaintBrush,
   IconDefinition,
 } from "@fortawesome/free-solid-svg-icons";
-import { ICommand } from '../../../interfaces/command.interface';
+import { ICommand } from "../../../interfaces/command.interface";
 import { TexturesService } from "src/app/modules/workspace";
 import { DrawingService } from "../../drawing/drawing.service";
 import { OffsetManagerService } from "../../offset-manager/offset-manager.service";
@@ -53,6 +53,7 @@ export class BrushToolService implements Tools {
         const offset: { x: number; y: number } =
           this.offsetManager.offsetFromMouseEvent(event);
         this.brush = {
+          name: "Brush",
           pointsList: [offset],
           strokeWidth: this.strokeWidth.value,
           fill: "none",
