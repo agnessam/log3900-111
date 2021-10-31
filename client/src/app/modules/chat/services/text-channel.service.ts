@@ -18,9 +18,9 @@ export class TextChannelService {
 
   constructor(private httpClient: HttpClient) { }
 
-  getChannels(): Observable<TextChannel> {
+  getChannels(): Observable<TextChannel[]> {
     return this.httpClient
-      .get<TextChannel>(this.endpointUrl)
+      .get<TextChannel[]>(this.endpointUrl)
       .pipe((response) => {
         return response;
       });

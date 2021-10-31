@@ -1,0 +1,31 @@
+<div id="channel-overlay">
+  <div class="channel-top" *ngIf="!isSearchOpen; else searchBar">
+    <p>Channels</p>
+    <button mat-icon-button class="btn" (click)="addChannel()">
+      <mat-icon>add</mat-icon>
+    </button>
+    <button mat-icon-button class="btn" (click)="toggleSearchBar()">
+      <mat-icon>search</mat-icon>
+    </button>
+  </div>
+  <ng-template #searchBar>
+    <input type="search"
+            id="searchInput"
+            autocomplete="off"
+            spellcheck="false"
+            placeholder="Search groups..."
+            (input)="searchChannel($event)" >
+    <button mat-icon-button class="btn" (click)="toggleSearchBar()">
+      <mat-icon>close</mat-icon>
+    </button>
+  </ng-template>
+
+  <div class="channel-list">
+    <div *ngFor="let channel of channels">
+      <div class="channel" (click)="openChannel(channel)">
+        <p>{{channel.name}}</p>
+      </div>
+    </div>
+  </div>
+
+</div>

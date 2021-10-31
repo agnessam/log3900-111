@@ -22,7 +22,7 @@ import { ErrorModule } from "./modules/error/error.module";
 import { UsersModule } from "./modules/users/users.module";
 import { GalleryModule } from "./modules/gallery/gallery.module";
 import { SidenavModule } from "./modules/sidenav/sidenav.module";
-import { CanalModule } from "./modules/canal/canal.module";
+import { ChannelModule } from "./modules/channel/channel.module";
 
 @NgModule({
   declarations: [AppComponent],
@@ -50,7 +50,7 @@ import { CanalModule } from "./modules/canal/canal.module";
     UsersModule,
     SidenavModule,
     ErrorModule,
-    CanalModule,
+    ChannelModule,
   ],
   exports: [],
   providers: [],

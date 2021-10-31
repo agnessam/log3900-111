@@ -1,11 +1,11 @@
 import { NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
-import { CanalComponent } from "./canal.component";
+import { ChannelComponent } from "./channel.component";
 import { MatIconModule } from "@angular/material/icon";
 
 @NgModule({
-  declarations: [CanalComponent],
+  declarations: [ChannelComponent],
   imports: [CommonModule, MatIconModule],
-  exports: [CanalComponent,]
+  exports: [ChannelComponent,]
 })
-export class CanalModule {}
+export class ChannelModule {}

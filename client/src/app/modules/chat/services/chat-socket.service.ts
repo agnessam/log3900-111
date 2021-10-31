@@ -25,6 +25,7 @@ export class ChatSocketService extends AbstractSocketService {
 
   sendMessage(message: Message): void {
     this.emit(TEXT_MESSAGE_EVENT_NAME, message);
+    console.log('message sent');
   }
 
   protected setSocketListens(): void {

@@ -1,10 +1,10 @@
-import { Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { AuthenticationService } from 'src/app/modules/authentication';
 import { User } from '../authentication/models/user';
 import { ChatSocketService } from './services/chat-socket.service';
 import { ChatService } from './services/chat.service';
-import { TextChannelService } from './services/text-channel.service';
+// import { TextChannelService } from './services/text-channel.service';
 
 @Component({
   selector: 'chat',
@@ -21,26 +21,25 @@ export class ChatComponent implements OnInit, OnDestroy {
   @ViewChild('chatBottom', { static: false }) private chatBottom: ElementRef<HTMLInputElement>;
   message = '';
   // messageHistory: Message[] = [];
-  canals: string[] = ['hello', 'world', 'patate'];
-  canalName: string;
+  channels: string[] = ['hello', 'world', 'patate'];
   chatStatus:boolean;
-  isChatWindowOpen = false;
+  isMinimized = false;
   isPopoutOpen = false;
 
-  @Input() private chatRoomName = 'default';
+  chatRoomName = 'default';
 
   constructor(
     private authenticationService: AuthenticationService,
     private chatSocketService: ChatSocketService,
     private chatService: ChatService,
-    private textChannelService: TextChannelService,
+    // private textChannelService: TextChannelService,
   ) {
     this.authenticationService.currentUserObservable.subscribe(
       (user) => (this.user = user),
     );
-    this.chatService.toggleChatOverlay.subscribe(canalName=>{
-      this.canalName=canalName;
-      this.openChat(canalName);
+    this.chatService.toggleChatOverlay.subscribe(channel=>{
+      this.chatRoomName = channel.name;
+      this.openChat(this.chatRoomName);
     });
   }
 
@@ -49,11 +48,6 @@ export class ChatComponent implements OnInit, OnDestroy {
     this.receiveMessage();
     this.chatSocketService.connect();
     this.chatSocketService.joinRoom(this.chatRoomName);
-
-    // TODO: change this test to get accessed chat from channel list
-    this.textChannelService.getChannel('617e4fd7e58fe02f51d7524e').subscribe((channel) => {
-      this.canalName = channel.name;
-    })
   }
 
   ngOnDestroy(): void {
@@ -75,6 +69,8 @@ export class ChatComponent implements OnInit, OnDestroy {
   receiveMessage() {
     this.chatSubscription = this.chatSocketService.chatSubject.subscribe({
       next: (message) => {
+        console.log(message)
+        console.log("message reveicved")
         const messageBox = this.chatBox.nativeElement;
         const p = document.createElement('div');
         p.textContent = `(${message.timestamp}) ${message.author}: ${message.message}`;
@@ -104,6 +100,7 @@ export class ChatComponent implements OnInit, OnDestroy {
       author: name,
       roomName: this.chatRoomName,
     };
+    console.log("roomname: " + message.roomName);
 
     this.chatSocketService.sendMessage(message);
     this.messageBody.nativeElement.value = '';
@@ -114,12 +111,13 @@ export class ChatComponent implements OnInit, OnDestroy {
     this.message = (evt.target as HTMLInputElement).value;
   }
 
-  reduceChat(isReduce:boolean){
+  minimizeChat(isMinimized:boolean){
+    this.isMinimized = isMinimized;
     const iconArrowDown = this.iconArrowDown.nativeElement;
     const iconArrowUp = this.iconArrowUp.nativeElement;
     const message = this.chatBottom.nativeElement;
 
-    if (!isReduce) {
+    if (!isMinimized) {
       iconArrowDown.style.display = 'inline';
       iconArrowUp.style.display = 'none';
       message.style.display = 'block';
@@ -131,12 +129,10 @@ export class ChatComponent implements OnInit, OnDestroy {
     }
   }
 
-  public openChat(canalName:string){
-    if (this.isChatWindowOpen)return;
-
+  public openChat(channelName:string){
     let chat = <HTMLInputElement>document.getElementById("chat-popup");
     chat.style.display = "block";
-    this.reduceChat(false);
+    this.minimizeChat(false);
   }
 
   public closeChat(){
@@ -146,7 +142,6 @@ export class ChatComponent implements OnInit, OnDestroy {
 
   public openChatWindow(){
     this.closeChat();
-    this.isChatWindowOpen=true;
   }
 
   openChatPopout() {

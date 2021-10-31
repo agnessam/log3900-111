@@ -1,17 +1,19 @@
 <div id="chat-popup">
 <app-popout-window #popout>
   <div class=chat-top>
-    <p>{{canalName}}</p>
+    <p>{{chatRoomName}}</p>
     <div class="chat-menu" *ngIf="!isPopoutOpen; else openPopout">
-      <button mat-icon-button class="btn" id="ArrowDown" #arrowDown (click)="reduceChat(true)">
+      <button mat-icon-button class="btn" id="ArrowDown" #arrowDown (click)="minimizeChat(true)">
         <mat-icon>keyboard_arrow_down</mat-icon>
       </button>
-      <button mat-icon-button class="btn" id="ArrowUp" #arrowUp (click)="reduceChat(false)">
+      <button mat-icon-button class="btn" id="ArrowUp" #arrowUp (click)="minimizeChat(false)">
         <mat-icon>keyboard_arrow_up</mat-icon>
       </button>
-      <button mat-icon-button class="btn" (click)="openChatPopout(); popout.popOut()">
+      <div *ngIf="!isMinimized" style="display: inline;">
+        <button mat-icon-button class="btn" (click)="openChatPopout(); popout.popOut()">
         <mat-icon>open_in_full</mat-icon>
       </button>
+      </div>
       <button mat-icon-button class="btn" (click)="closeChat()">
         <mat-icon>close</mat-icon>
       </button>
@@ -35,7 +37,7 @@
       id="usermsg"
       autocomplete="off"
       spellcheck="false"
-      placeholder="Enter you message here"
+      placeholder="Enter your message here"
       (input)="onInput($event)"
       />
       <button mat-icon-button class="buttonContainer"  (click)="sendMessage()">

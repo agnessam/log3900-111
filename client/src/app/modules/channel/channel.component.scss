@@ -1,4 +1,4 @@
-#canal-overlay{
+#channel-overlay{
   display: none;
   position: fixed;
   top: 64px;
@@ -27,25 +27,25 @@
   background-color: #fae2dd;
 }
 
-.canal-top{
+.channel-top{
   display: flex;
   width: 100%;
   justify-content: space-between;
   align-items: center;
   background-color: rgba(#DEDEDE,0.4);
 }
-.canal-top>:nth-child(1){
+.channel-top>:nth-child(1){
   width: 70%;
   margin-left: 10px;
 }
-.canal-top>:nth-child(3){
+.channel-top>:nth-child(3){
   margin-right: 10px;
 }
 
-.canal{
+.channel{
   margin-left: 10px;
 }
-.canal:hover{
+.channel:hover{
   color: #da7e70;
   cursor: pointer;
 }
