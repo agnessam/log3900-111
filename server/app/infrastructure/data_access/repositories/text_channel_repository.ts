@@ -10,23 +10,14 @@ export class TextChannelRepository extends GenericRepository<TextChannelInterfac
 	}
 
 	public async getMessages(channelId: string) {
-		// not sure if necessary to find textchannel first since there's no message array
 		return new Promise((resolve, reject) => {
-		  TextChannel.findById({ _id: channelId }, (err: Error) => {
+		Message.find({ textChannel: channelId })
+		.exec((err, messages) => {
 			if (err) {
 				reject(err);
 			}
-			Message.find({ textChannel: channelId }, (err: Error) => {
-				if (err) {
-					reject(err);
-				}
-			})
-			.exec((messages) => {
-				resolve(messages);
-			})
-
-			
-		  })	
+			resolve(messages);
+		})
 		}
 	)};
 }
