@@ -8,11 +8,13 @@ export class MessageRepository extends GenericRepository<MessageInterface> {
 		super(Message);
 	}
 
-    public async getMessagesByChannelId(channelId: string) {
-        return new Promise((resolve, reject) => {
-        //   TODO: find all messages from channel 
-        // should this be done in channel repository?
+  // public async getMessages(channelId: string) {
+  //     return new Promise((resolve, reject) => {
+  //       // Message.find({textChannel: channelId})
+  //       // .populate()
+  //       // TextChannel.findById({ _id: channelId })
+  //       // .populate
 
-      });
-    }
+  //   });
+  }
 }
