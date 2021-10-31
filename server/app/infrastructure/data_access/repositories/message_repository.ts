@@ -7,14 +7,4 @@ export class MessageRepository extends GenericRepository<MessageInterface> {
 	constructor() {
 		super(Message);
 	}
-
-  // public async getMessages(channelId: string) {
-  //     return new Promise((resolve, reject) => {
-  //       // Message.find({textChannel: channelId})
-  //       // .populate()
-  //       // TextChannel.findById({ _id: channelId })
-  //       // .populate
-
-  //   });
-  // }
 }
