@@ -9,6 +9,7 @@ import { NewDrawingService } from "./new-drawing.service";
 import { GridService } from "src/app/modules/workspace";
 // import { NewDrawingAlertComponent } from "./new-drawing-alert/new-drawing-alert.component";
 import { Router } from "@angular/router";
+import { DrawingSocketService } from "../workspace/services/sockets/drawing-socket/drawing-socket.service";
 
 const ONE_SECOND = 1000;
 @Component({
@@ -27,9 +28,9 @@ export class NewDrawingComponent implements OnInit {
     // private dialog: MatDialog,
     private colorPickerService: ColorPickerService,
     private gridService: GridService,
+    private drawingSocketService: DrawingSocketService,
     private router: Router
-  ) {
-  }
+  ) {}
 
   /// Créer un nouveau form avec les dimensions et la couleur
   ngOnInit(): void {
@@ -48,18 +49,20 @@ export class NewDrawingComponent implements OnInit {
 
   /// Ouvre le dialog pour l'alerte lorsque le service est creer
   onAccept(): void {
-    
     this.router.navigate(["/drawings/491"]);
     this.router.events.subscribe(() => {
       console.log("EVENT DETECTED!");
-    })
-    
-    setTimeout(() => {  
-      this.newDrawing(); 
+    });
+
+    setTimeout(() => {
+      this.newDrawing();
     }, 2000);
-    
+
+    this.drawingSocketService.connect();
+    this.drawingSocketService.joinRoom("491");
+
     // setTimeout(() => {  this.newDrawing(); }, 10000);
-    
+
     // if (this.drawingService.isCreated) {
     //   const alert = this.dialog.open(NewDrawingAlertComponent, {
     //     role: "alertdialog",
