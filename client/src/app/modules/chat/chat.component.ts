@@ -2,7 +2,6 @@ import { Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@ang
 import { Subscription } from 'rxjs';
 import { AuthenticationService } from 'src/app/modules/authentication';
 import { User } from '../authentication/models/user';
-import { Message } from './models/message.model';
 import { ChatSocketService } from './services/chat-socket.service';
 import { ChatService } from './services/chat.service';
 import { TextChannelService } from './services/text-channel.service';
