@@ -23,6 +23,7 @@ import '../../api/controllers/user.controller';
 import '../../api/controllers/text-channel.controller';
 import '../../api/controllers/team.controller';
 import '../../api/controllers/drawing.controller';
+import '../../api/controllers/message.controller';
 
 export const boostrap = async (
 	container: Container,

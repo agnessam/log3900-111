@@ -29,6 +29,11 @@ export class CanalComponent implements OnInit, OnDestroy {
     this.canal = "Canal name";
   }
 
+  // Si tu veux creer un nouveau canal:
+  // this.textChannelService.createChannel('testname', this.user?._id as string).subscribe((channel) => {
+  //   console.log(channel);
+  // });
+
   ngOnInit(): void {
     this.chatService.toggleCanalOverlay.subscribe(status=>{
       this.canalOverlayStatus = status;

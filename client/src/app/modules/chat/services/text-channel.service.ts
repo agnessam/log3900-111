@@ -1,6 +1,6 @@
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, throwError } from 'rxjs';
+import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { EditableChannelParameters } from '../models/editable-channel-parameters';
 import { TextChannel } from '../models/text-channel.model';
@@ -10,7 +10,7 @@ import { TextChannel } from '../models/text-channel.model';
 })
 export class TextChannelService {
 
-  private endpointUrl: string = environment.serverURL + "/channels/";
+  private endpointUrl: string = environment.serverURL + "/channels";
   private httpHeaders: HttpHeaders = new HttpHeaders().set(
     "ContentType",
     "application/x-www-form-urlencoded",
@@ -34,10 +34,24 @@ export class TextChannelService {
       });
   }
 
+  // TODO: might need body as editable channel parameters
+  createChannel(newName: string, newOwnerId: string): Observable<TextChannel> {
+    return this.httpClient
+      .post<TextChannel>(this.endpointUrl, {
+        name: newName,
+        ownerId: newOwnerId,
+      }, {
+        headers: this.httpHeaders,
+      })
+      .pipe((response) => {
+        return response;
+      });
+  }
+
   updateChannel(channelId: string, channel: EditableChannelParameters): Observable<TextChannel> {
     return this.httpClient
       .patch<TextChannel>(`${this.endpointUrl}/${channelId}`, channel, {
-        headers: this.httpHeaders
+        headers: this.httpHeaders,
       })
       .pipe((response) => {
         return response;
@@ -47,6 +61,14 @@ export class TextChannelService {
   deleteChannel(channelId: string): Observable<TextChannel> {
     return this.httpClient
       .delete<TextChannel>(`${this.endpointUrl}/${channelId}`)
+      .pipe((response) => {
+        return response;
+      });
+  }
+
+  getMessages(channelId: string): Observable<TextChannel> {
+    return this.httpClient
+      .get<TextChannel>(`${this.endpointUrl}/${channelId}/messages`)
       .pipe((response) => {
         return response;
       });

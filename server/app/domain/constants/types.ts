@@ -5,5 +5,6 @@ export const TYPES = {
 	UserRepository: Symbol('UserRepository'),
 	TextChannelRepository: Symbol('TextChannelRepository'),
 	TeamRepository: Symbol('TeamRepository'),
-  DrawingRepository: Symbol('DrawingRepository'),
+  	DrawingRepository: Symbol('DrawingRepository'),
+	MessageRepository: Symbol('MessageRepository'),
 };
