@@ -8,9 +8,9 @@ import { Server as SocketServer } from 'socket.io';
 import { ChatSocketService } from '../../domain/services/sockets/chat-socket.service';
 import { exceptionLoggerMiddleware, reqMiddleware } from './middleware';
 import {
-	jwtStrategyMiddleware,
-	passportLoginMiddleware,
-	passportRegisterMiddleware,
+  jwtStrategyMiddleware,
+  passportLoginMiddleware,
+  passportRegisterMiddleware,
 } from '../../api/middleware/auth_middleware';
 import { DbClient, getDatabaseClient } from '../data_access/db_client';
 
@@ -20,85 +20,87 @@ import { DbClient, getDatabaseClient } from '../data_access/db_client';
 import '../../api/controllers/hello-world.controller';
 import '../../api/controllers/authentication.controller';
 import '../../api/controllers/user.controller';
+import { DrawingSocketService } from '@app/domain/services/sockets/drawing-socket.service';
 
 export const boostrap = async (
-	container: Container,
-	appPort: number | string | boolean,
-	dbUsername: string,
-	dbPassword: string,
-	dbCluster: string,
-	...modules: ContainerModule[]
+  container: Container,
+  appPort: number | string | boolean,
+  dbUsername: string,
+  dbPassword: string,
+  dbCluster: string,
+  ...modules: ContainerModule[]
 ) => {
-	if (container.isBound(TYPES.Application) === false) {
-		const dbClient = await getDatabaseClient(
-			dbUsername,
-			dbPassword,
-			dbCluster,
-		);
-		container.bind<DbClient>(TYPES.DbClient).toConstantValue(dbClient);
-		container.load(...modules);
-		const server = new InversifyExpressServer(container, null, {
-			rootPath: '/api',
-		});
+  if (container.isBound(TYPES.Application) === false) {
+    const dbClient = await getDatabaseClient(dbUsername, dbPassword, dbCluster);
+    container.bind<DbClient>(TYPES.DbClient).toConstantValue(dbClient);
+    container.load(...modules);
+    const server = new InversifyExpressServer(container, null, {
+      rootPath: '/api',
+    });
 
-		server.setConfig((app) => {
-			app.set('etag', false);
+    server.setConfig((app) => {
+      app.set('etag', false);
 
-			app.use(express.json());
-			app.use(express.urlencoded({ extended: false }));
+      app.use(express.json());
+      app.use(express.urlencoded({ extended: false }));
 
-			app.use(cors());
+      app.use(cors());
 
-			app.use(reqMiddleware);
+      app.use(reqMiddleware);
 
-			app.use(passport.initialize());
-		});
+      app.use(passport.initialize());
+    });
 
-		server.setErrorConfig((app) => {
-			app.use(exceptionLoggerMiddleware);
-		});
+    server.setErrorConfig((app) => {
+      app.use(exceptionLoggerMiddleware);
+    });
 
-		// Set passport middleware
-		passportRegisterMiddleware();
-		passportLoginMiddleware();
-		jwtStrategyMiddleware();
+    // Set passport middleware
+    passportRegisterMiddleware();
+    passportLoginMiddleware();
+    jwtStrategyMiddleware();
 
-		const app = server.build();
+    const app = server.build();
 
-		console.log(`Application listening on port ${appPort}`);
+    console.log(`Application listening on port ${appPort}`);
 
-		const serverInstance = app.listen(appPort);
+    const serverInstance = app.listen(appPort);
 
-		const socketServer = new SocketServer(serverInstance, {
-			cors: {
-				origin: '*',
-				methods: ['GET', 'POST'],
-			},
-		});
+    const socketServer = new SocketServer(serverInstance, {
+      cors: {
+        origin: '*',
+        methods: ['GET', 'POST'],
+      },
+    });
 
-		const chatSocketService: ChatSocketService = container.get(
-			TYPES.ChatSocketService,
-		);
-		chatSocketService.init(socketServer);
+    // Chat services
+    const chatSocketService: ChatSocketService = container.get(
+      TYPES.ChatSocketService,
+    );
+    chatSocketService.init(socketServer);
 
-		container
-			.bind<express.Application>(TYPES.Application)
-			.toConstantValue(app);
-		return app;
-	} else {
-		return container.get<express.Application>(TYPES.Application);
-	}
+    // Collaborative drawing sockets
+    const drawingSocketService: DrawingSocketService = container.get(
+      TYPES.DrawingSocketService,
+    );
+    drawingSocketService.init(socketServer);
+
+    container.bind<express.Application>(TYPES.Application).toConstantValue(app);
+    return app;
+  } else {
+    return container.get<express.Application>(TYPES.Application);
+  }
 };
 
 export const normalizePort = (
-	val: number | string,
+  val: number | string,
 ): number | string | boolean => {
-	const port: number = typeof val === 'string' ? parseInt(val, 10) : val;
-	if (isNaN(port)) {
-		return val;
-	} else if (port >= 0) {
-		return port;
-	} else {
-		return false;
-	}
+  const port: number = typeof val === 'string' ? parseInt(val, 10) : val;
+  if (isNaN(port)) {
+    return val;
+  } else if (port >= 0) {
+    return port;
+  } else {
+    return false;
+  }
 };

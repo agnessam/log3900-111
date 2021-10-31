@@ -13,7 +13,6 @@ export class DrawingSocketService extends SocketServiceInterface {
   }
 
   protected setSocketListens(socket: Socket): void {
-    console.log(socket);
     this.listenDrawingCommand(socket);
   }
 
