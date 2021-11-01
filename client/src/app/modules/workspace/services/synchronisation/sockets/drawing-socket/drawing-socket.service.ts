@@ -4,6 +4,7 @@ import {
   COLLABORATIVE_DRAWING_NAMESPACE,
   DRAW_EVENT,
 } from "src/app/shared";
+import { SocketTool } from "../../../tools/socket-tool";
 
 @Injectable({
   providedIn: "root",
@@ -29,8 +30,14 @@ export class DrawingSocketService extends AbstractSocketService {
     this.listenDrawingCommand();
   }
 
-  sendDrawingCommand(drawingCommand: any): void {
-    this.emit(DRAW_EVENT, drawingCommand);
+  sendDrawingCommand(drawingCommand: any, type: string): void {
+    let socketToolCommand: SocketTool = {
+      type: type,
+      roomName: this.roomName,
+      drawingCommand: drawingCommand
+    }
+
+    this.emit(DRAW_EVENT, socketToolCommand);
   }
 
   private listenDrawingCommand(): void {

@@ -67,8 +67,7 @@ export class PencilToolService implements Tools {
           this.drawingService
         );
         this.pencilCommand.execute();
-
-        this.drawingSocketService.sendDrawingCommand(this.pencil);
+        this.drawingSocketService.sendDrawingCommand(this.pencil, "Pencil");
       }
     }
   }
