@@ -2,10 +2,8 @@ import { Injectable } from "@angular/core";
 import { MatDialog } from "@angular/material/dialog";
 import { NewDrawingComponent } from "src/app/modules/new-drawing";
 import { CommandInvokerService } from "src/app/modules/workspace";
-import { MagnetismService } from "../magnetism/magnetism.service";
 import { SidenavService } from "src/app/modules/sidenav";
 import { CopyPasteToolService } from "../tools/copy-paste-tool/copy-paste-tool.service";
-import { GridService } from "../tools/grid-tool/grid.service";
 import { DeletingToolService } from "../tools/selection-tool/delete-command/delete-tool.service";
 import { SelectionToolService } from "../tools/selection-tool/selection-tool.service";
 import { ToolIdConstants } from "../tools/tool-id-constants";
@@ -25,8 +23,6 @@ export class HotkeysService {
     private dialog: MatDialog,
     private sideNavService: SidenavService,
     private toolsService: ToolsService,
-    private gridService: GridService,
-    private magnetismService: MagnetismService,
     private copyPasteService: CopyPasteToolService,
     private selectionTool: SelectionToolService,
     private deletingTool: DeletingToolService,
@@ -39,7 +35,6 @@ export class HotkeysService {
     this.subscribeToHotkeys();
 
     this.toolSelectorList.set(EmitReturn.PENCIL, ToolIdConstants.PENCIL_ID);
-    this.toolSelectorList.set(EmitReturn.BRUSH, ToolIdConstants.BRUSH_ID);
     this.toolSelectorList.set(
       EmitReturn.APPLICATEUR,
       ToolIdConstants.APPLIER_ID
@@ -50,21 +45,12 @@ export class HotkeysService {
     );
     this.toolSelectorList.set(EmitReturn.ELLIPSE, ToolIdConstants.ELLIPSE_ID);
     this.toolSelectorList.set(EmitReturn.LINE, ToolIdConstants.LINE_ID);
-    this.toolSelectorList.set(EmitReturn.PIPETTE, ToolIdConstants.PIPETTE_ID);
     this.toolSelectorList.set(
       EmitReturn.SELECTION,
       ToolIdConstants.SELECTION_ID
     );
-    this.toolSelectorList.set(EmitReturn.PEN, ToolIdConstants.PEN_ID);
     this.toolSelectorList.set(EmitReturn.POLYGON, ToolIdConstants.POLYGON_ID);
     this.toolSelectorList.set(EmitReturn.ERASER, ToolIdConstants.ERASER_ID);
-    this.toolSelectorList.set(EmitReturn.TEXT, ToolIdConstants.TEXT_ID);
-    this.toolSelectorList.set(EmitReturn.SPRAY, ToolIdConstants.SPRAY_ID);
-    this.toolSelectorList.set(
-      EmitReturn.BUCKET_FILL,
-      ToolIdConstants.FILLER_ID
-    );
-    this.toolSelectorList.set(EmitReturn.FEATHER, ToolIdConstants.FEATHER_ID);
 
     this.dialog.afterOpened.subscribe(() => {
       this.hotkeysEnablerService.disableHotkeys();
@@ -92,26 +78,7 @@ export class HotkeysService {
         this.sideNavService.isControlMenu = false;
         this.toolsService.selectTool(toolId);
       } else {
-        let size: number;
         switch (value) {
-          case EmitReturn.CONTROL_GRID:
-            this.gridService.toggleGrid();
-            break;
-          case EmitReturn.CONTROL_MAGNETISM:
-            this.magnetismService.toggleMagnetism();
-            break;
-          case EmitReturn.ADD5_GRID:
-            size = this.gridService.sizeCell.value;
-            this.gridService.sizeCell.setValue(size - (size % 5) + 5);
-            this.gridService.changeGridSize();
-            break;
-          case EmitReturn.SUB5_GRID:
-            size = this.gridService.sizeCell.value;
-            this.gridService.sizeCell.setValue(
-              size % 5 ? size + (5 - (size % 5)) - 5 : size - 5
-            );
-            this.gridService.changeGridSize();
-            break;
           case EmitReturn.NEW_DRAWING:
             this.dialog.open(NewDrawingComponent, {});
             break;
