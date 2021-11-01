@@ -79,10 +79,6 @@ class LoginActivity : AppCompatActivity() {
         if (!canSubmit) return
         val user = UserModel.Login(binding.usernameInputText.text.toString(), binding.passwordInputText.text.toString())
 
-<<<<<<< HEAD
-
-=======
->>>>>>> dbd93941bd50057e33c6e1da869451e0362138ec
         // username ok -> make HTTP POST request
         val loginObserver = loginViewModel.loginUser(user)
         loginObserver.observe(this, { handleLoginResponse(it) })

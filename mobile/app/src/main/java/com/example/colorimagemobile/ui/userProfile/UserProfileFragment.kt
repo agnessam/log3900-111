@@ -6,30 +6,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.LiveData
 import com.example.colorimagemobile.R
-import com.example.colorimagemobile.models.DataWrapper
-import com.example.colorimagemobile.models.HTTPResponseModel
-import com.example.colorimagemobile.models.UserModel
-import com.example.colorimagemobile.repositories.UserRepository
-import com.example.colorimagemobile.services.SharedPreferencesService
-import com.example.colorimagemobile.services.UserService
-import com.example.colorimagemobile.utils.Constants
 
 
 class UserProfileFragment : Fragment() {
-//    private lateinit var userRepository: UserRepository
-//    private lateinit var sharedPreferencesService: SharedPreferencesService
-//    private lateinit var token : String
-//    private lateinit var user : UserModel.AllInfo
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-//        userRepository = UserRepository()
-//        sharedPreferencesService = context?.let { SharedPreferencesService(it) }!!
-//        token = sharedPreferencesService.getItem(Constants.STORAGE_KEY.TOKEN)
-//        user = UserService.getUserInfo()
+
     }
 
     override fun onCreateView(
@@ -76,8 +60,5 @@ class UserProfileFragment : Fragment() {
 
     }
 
-//     fun updateUserInfo(newUserData: UserModel.UpdateUser): LiveData<DataWrapper<HTTPResponseModel.UpdateUser>> {
-//        return userRepository.updateUserData(token, user._id,newUserData)
-//    }
 
 }
