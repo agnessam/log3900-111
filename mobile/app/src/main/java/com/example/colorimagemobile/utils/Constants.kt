@@ -4,7 +4,7 @@ class Constants {
 
     // unspecific constants
     companion object {
-        const val DEBUG_KEY = "DEBUG"  // debug log key
+        const val DEBUG_KEY = "PRIVATE"  // debug log key
 
         // chat
         const val DEFAULT_ROOM_NAME = "default"

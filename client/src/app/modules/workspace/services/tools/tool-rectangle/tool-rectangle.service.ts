@@ -1,26 +1,26 @@
-import { Injectable } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { IconDefinition } from '@fortawesome/fontawesome-common-types';
-import { faSquareFull } from '@fortawesome/free-solid-svg-icons';
-import { ICommand } from 'src/app/modules/workspace/interfaces/command.interface';
-import { DrawingService } from '../../drawing/drawing.service';
-import { OffsetManagerService } from '../../offset-manager/offset-manager.service';
-import { RendererProviderService } from '../../renderer-provider/renderer-provider.service';
-import { ToolsColorService } from '../../tools-color/tools-color.service';
-import { Tools } from '../../../interfaces/tools.interface';
-import { ToolIdConstants } from '../tool-id-constants';
-import { LEFT_CLICK, RIGHT_CLICK } from '../tools-constants';
-import { FilledShape } from './filed-shape.model';
-import { RectangleCommand } from './rectangle-command';
+import { Injectable } from "@angular/core";
+import { FormControl, FormGroup, Validators } from "@angular/forms";
+import { IconDefinition } from "@fortawesome/fontawesome-common-types";
+import { faSquareFull } from "@fortawesome/free-solid-svg-icons";
+import { ICommand } from "src/app/modules/workspace/interfaces/command.interface";
+import { DrawingService } from "../../drawing/drawing.service";
+import { OffsetManagerService } from "../../offset-manager/offset-manager.service";
+import { RendererProviderService } from "../../renderer-provider/renderer-provider.service";
+import { ToolsColorService } from "src/app/modules/tools-color/services/tools-color.service";
+import { Tools } from "../../../interfaces/tools.interface";
+import { ToolIdConstants } from "../tool-id-constants";
+import { LEFT_CLICK, RIGHT_CLICK } from "../tools-constants";
+import { FilledShape } from "./filed-shape.model";
+import { RectangleCommand } from "./rectangle-command";
 
 /// Outil pour créer des rectangle, click suivis de bouge suivis de relache crée le rectangle
 /// et avec shift créer un carrée
 @Injectable({
-  providedIn: 'root',
+  providedIn: "root",
 })
 export class ToolRectangleService implements Tools {
   readonly faIcon: IconDefinition = faSquareFull;
-  readonly toolName = 'Outil Rectangle';
+  readonly toolName = "Outil Rectangle";
   readonly id = ToolIdConstants.RECTANGLE_ID;
 
   private rectangle: FilledShape | null = null;
@@ -41,10 +41,10 @@ export class ToolRectangleService implements Tools {
     private offsetManager: OffsetManagerService,
     private colorTool: ToolsColorService,
     private drawingService: DrawingService,
-    private rendererService: RendererProviderService,
+    private rendererService: RendererProviderService
   ) {
     this.strokeWidth = new FormControl(1, Validators.min(1));
-    this.rectStyle = new FormControl('fill');
+    this.rectStyle = new FormControl("fill");
     this.parameters = new FormGroup({
       strokeWidth: this.strokeWidth,
       rectStyle: this.rectStyle,
@@ -55,33 +55,43 @@ export class ToolRectangleService implements Tools {
   /// en sortie et est inceré dans l'objet courrant de l'outil.
   onPressed(event: MouseEvent): void {
     if (event.button === RIGHT_CLICK || event.button === LEFT_CLICK) {
-      const offset: { x: number, y: number } = this.offsetManager.offsetFromMouseEvent(event);
+      const offset: { x: number; y: number } =
+        this.offsetManager.offsetFromMouseEvent(event);
       this.x = offset.x;
       this.y = offset.y;
       this.oldX = offset.x;
       this.oldY = offset.y;
       this.rectangle = {
-        x: this.x, y: this.y,
-        width: 0, height: 0,
+        x: this.x,
+        y: this.y,
+        width: 0,
+        height: 0,
         strokeWidth: this.strokeWidth.value as number,
-        fill: 'none', stroke: 'none', fillOpacity: 'none', strokeOpacity: 'none',
+        fill: "none",
+        stroke: "none",
+        fillOpacity: "none",
+        strokeOpacity: "none",
       };
       if (event.button === LEFT_CLICK) {
         this.setStyle(
           this.colorTool.primaryColorString,
           this.colorTool.primaryAlpha.toString(),
           this.colorTool.secondaryColorString,
-          this.colorTool.secondaryAlpha.toString(),
+          this.colorTool.secondaryAlpha.toString()
         );
       } else {
         this.setStyle(
           this.colorTool.secondaryColorString,
           this.colorTool.secondaryAlpha.toString(),
           this.colorTool.primaryColorString,
-          this.colorTool.primaryAlpha.toString(),
+          this.colorTool.primaryAlpha.toString()
         );
       }
-      this.rectangleCommand = new RectangleCommand(this.rendererService.renderer, this.rectangle, this.drawingService);
+      this.rectangleCommand = new RectangleCommand(
+        this.rendererService.renderer,
+        this.rectangle,
+        this.drawingService
+      );
       this.rectangleCommand.execute();
     }
   }
@@ -100,7 +110,8 @@ export class ToolRectangleService implements Tools {
 
   /// Quand le bouton de la sourie est apuyé et on bouge celle-ci, l'objet courrant subit des modifications.
   onMove(event: MouseEvent): void {
-    const offset: { x: number, y: number } = this.offsetManager.offsetFromMouseEvent(event);
+    const offset: { x: number; y: number } =
+      this.offsetManager.offsetFromMouseEvent(event);
     this.setSize(offset.x, offset.y);
   }
 
@@ -132,7 +143,7 @@ export class ToolRectangleService implements Tools {
       return;
     }
     let strokeFactor = 0;
-    if (this.rectangle.stroke !== 'none') {
+    if (this.rectangle.stroke !== "none") {
       strokeFactor = this.strokeWidth.value;
     }
 
@@ -154,44 +165,59 @@ export class ToolRectangleService implements Tools {
     if (this.isSquare) {
       const minSide = Math.min(width, height);
       if (mouseX < this.x) {
-        xValue += (width - minSide);
+        xValue += width - minSide;
       }
       if (mouseY < this.y) {
-        yValue += (height - minSide);
+        yValue += height - minSide;
       }
       width = minSide;
       height = minSide;
     }
 
     this.rectangleCommand.setX(
-      (width - strokeFactor) <= 0 ? xValue + strokeFactor / 2 + (width - strokeFactor) : xValue + strokeFactor / 2);
+      width - strokeFactor <= 0
+        ? xValue + strokeFactor / 2 + (width - strokeFactor)
+        : xValue + strokeFactor / 2
+    );
     this.rectangleCommand.setY(
-      (height - strokeFactor) <= 0 ? yValue + strokeFactor / 2 + (height - strokeFactor) : yValue + strokeFactor / 2);
-    this.rectangleCommand.setHeight((height - strokeFactor) <= 0 ? 1 : (height - strokeFactor));
-    this.rectangleCommand.setWidth((width - strokeFactor) <= 0 ? 1 : (width - strokeFactor));
+      height - strokeFactor <= 0
+        ? yValue + strokeFactor / 2 + (height - strokeFactor)
+        : yValue + strokeFactor / 2
+    );
+    this.rectangleCommand.setHeight(
+      height - strokeFactor <= 0 ? 1 : height - strokeFactor
+    );
+    this.rectangleCommand.setWidth(
+      width - strokeFactor <= 0 ? 1 : width - strokeFactor
+    );
   }
 
   /// Pour definir le style du rectangle (complet, contour, centre)
-  private setStyle(primaryColor: string, primaryAlpha: string, secondaryColor: string, secondaryAlpha: string): void {
+  private setStyle(
+    primaryColor: string,
+    primaryAlpha: string,
+    secondaryColor: string,
+    secondaryAlpha: string
+  ): void {
     if (!this.rectangle) {
       return;
     }
     switch (this.rectStyle.value) {
-      case 'center':
+      case "center":
         this.rectangle.fill = primaryColor;
         this.rectangle.fillOpacity = primaryAlpha;
-        this.rectangle.stroke = 'none';
-        this.rectangle.strokeOpacity = 'none';
+        this.rectangle.stroke = "none";
+        this.rectangle.strokeOpacity = "none";
         break;
 
-      case 'border':
-        this.rectangle.fill = 'none';
-        this.rectangle.fillOpacity = 'none';
+      case "border":
+        this.rectangle.fill = "none";
+        this.rectangle.fillOpacity = "none";
         this.rectangle.stroke = secondaryColor;
         this.rectangle.strokeOpacity = secondaryAlpha;
         break;
 
-      case 'fill':
+      case "fill":
         this.rectangle.fill = primaryColor;
         this.rectangle.fillOpacity = primaryAlpha;
         this.rectangle.stroke = secondaryColor;
@@ -199,5 +225,4 @@ export class ToolRectangleService implements Tools {
         break;
     }
   }
-
 }
