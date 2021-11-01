@@ -38,6 +38,9 @@ class Constants {
             const val UPDATE_USER = "api/users/"
             const val DELETE_USER = "api/users/:id"
 
+            // drawings
+            const val GET_ALL_DRAWINGS = "api/drawings"
+
 
         }
     }

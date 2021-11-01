@@ -1,5 +1,6 @@
 package com.example.colorimagemobile.services
 
+import com.example.colorimagemobile.models.DrawingModel
 import com.example.colorimagemobile.models.UserModel
 import com.example.colorimagemobile.models.HTTPResponseModel
 import com.example.colorimagemobile.utils.Constants
@@ -27,4 +28,6 @@ interface API {
     @PATCH(Constants.ENDPOINTS.UPDATE_USER+"{id}")
     fun updateUser(@Header("Authorization")token: String, @Path ("id") id : String, @Body  newUser: UserModel.UpdateUser) : Call<HTTPResponseModel.UpdateUser>
 
+    @GET(Constants.ENDPOINTS.GET_ALL_DRAWINGS)
+    fun getAllDrawings(@Header("Authorization") token: String): Call<List<DrawingModel.AllDrawings>>
 }
