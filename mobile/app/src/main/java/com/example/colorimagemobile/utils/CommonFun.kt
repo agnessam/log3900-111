@@ -14,6 +14,8 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
+import com.example.colorimagemobile.R
+import com.example.colorimagemobile.ui.home.fragments.gallery.GalleryDrawingFragment
 import com.example.colorimagemobile.utils.Constants.Companion.DEBUG_KEY
 
 class CommonFun {
@@ -35,13 +37,12 @@ class CommonFun {
             currentActivity.finish()
         }
 
-        // close Activity and start another one
-        fun redirectTo_(currentActivity: FragmentActivity, destinationClass: Class<*>?) {
-            val intent: Intent = Intent(currentActivity, destinationClass)
-            currentActivity.startActivity(intent)
-            currentActivity.finish()
+        // replace a fragment with a new one
+        fun changeFragment(activity: FragmentActivity, oldFragmentID: Int, newFragmentClass: Fragment) {
+            activity?.supportFragmentManager?.beginTransaction()
+                ?.replace(oldFragmentID, newFragmentClass)
+                ?.commitAllowingStateLoss()
         }
-
 
         // close/hide Android keyboard
         fun closeKeyboard(currentActivity: Activity): Boolean {

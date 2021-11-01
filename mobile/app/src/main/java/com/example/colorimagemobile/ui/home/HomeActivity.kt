@@ -34,7 +34,6 @@ class HomeActivity : AppCompatActivity() {
         sharedPreferencesService = SharedPreferencesService(this)
 
         setBottomNavigationView()
-        checkCurrentUser()
     }
 
     // side navigation navbar: upon click, change to new fragment
@@ -55,6 +54,8 @@ class HomeActivity : AppCompatActivity() {
         if (!UserService.isNull()) {
             val usernameMenuItem: MenuItem = (menu as Menu).findItem(R.id.username_menu_item)
             usernameMenuItem.title = UserService.getUserInfo().username
+        } else {
+            checkCurrentUser()
         }
 
         return true
