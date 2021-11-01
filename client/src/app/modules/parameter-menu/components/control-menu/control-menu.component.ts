@@ -14,7 +14,8 @@ export class ControlMenuComponent {
   constructor(
     private dialog: MatDialog,
     private drawingService: DrawingService,
-    private commandInvoker: CommandInvokerService
+    private commandInvoker: CommandInvokerService,
+    
   ) {}
 
   get isSaved(): boolean {
@@ -45,5 +46,9 @@ export class ControlMenuComponent {
   /// Redo
   redo(): void {
     this.commandInvoker.redo();
+  }
+
+  saveDrawing(): void{
+    this.drawingService.saveDrawing();
   }
 }

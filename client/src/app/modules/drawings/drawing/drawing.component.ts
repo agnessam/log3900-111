@@ -8,7 +8,6 @@ import { DrawingHttpClientService } from '../../http-client';
   styleUrls: ['./drawing.component.scss']
 })
 export class DrawingComponent implements OnInit, AfterViewInit {
-  drawingId:string;
   constructor(
     private route:ActivatedRoute, 
     private drawingService:DrawingService,
@@ -17,12 +16,12 @@ export class DrawingComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void{
     this.route.params.subscribe((params) => {
-      this.drawingId = params["id"];
+      this.drawingService.drawingId = params["id"];
     });
   }
 
   ngAfterViewInit(): void{
-    this.drawingHttpClientService.getDrawing(this.drawingId).subscribe((response) => {
+    this.drawingHttpClientService.getDrawing(this.drawingService.drawingId).subscribe((response) => {
       this.drawingService.openSvgFromDataUri(response.dataUri);
     });
   }
