@@ -57,7 +57,7 @@ export class NewDrawingService {
   createNewDrawing(drawingDataUri: string ): Observable<any> {
     let newDrawing = {
       dataUri: drawingDataUri,
-      ownerId: "617832e99a8c22d106b37528",
+      ownerId: "617832e99a8c22d106b37528", // TODO: remove ownerID from all requests
       ownerModel: "User",
     };
     return this.httpClient
