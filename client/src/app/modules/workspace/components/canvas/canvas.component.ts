@@ -25,7 +25,7 @@ export class CanvasComponent implements AfterViewInit {
     private drawingService: DrawingService,
     public renderer: Renderer2
   ) {
-    this.drawingService.renderer = this.renderer;
+    this.renderer = this.drawingService.renderer;
   }
 
   /// À l'initialisation, le canvas s'abonne au service de dessin pour reçevoir en string le svg
