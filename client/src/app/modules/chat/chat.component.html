@@ -29,9 +29,16 @@
 
 
   <div id="chat-bottom" #chatBottom>
-    <div id="chatbox" #chatBox *ngFor="let message of currentMessageHistory | keyvalue">
-      <div><p>{{message.timestamp}} {{message.author}}: {{message.message}}</p></div>
+    <div id="chatbox" #chatBox >
+      <div *ngFor="let m of getMessages()">
+          <div [ngClass]="getMessageClass(m.author)">
+            <div class="authorName">{{m.author}}</div>
+            <div class="messageBox">{{m.message}}</div>
+            <div class="time">{{m.timestamp}}</div>
+          </div>
+      </div>
     </div>
+
     <div id="message">
       <input
       type="text"

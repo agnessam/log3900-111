@@ -23,13 +23,14 @@ export class ChatComponent implements OnInit, OnDestroy {
   message = '';
   // saves connected rooms and message history from connection
   currentMessageHistory: Map<string, Message[]> = new Map();
-  
+
   // connectedRooms: string[] = [];
   chatStatus:boolean;
   isMinimized = false;
   isPopoutOpen = false;
 
   chatRoomName = 'default';
+  messages: Map<string, Message[]> = new Map();
 
   constructor(
     private authenticationService: AuthenticationService,
@@ -49,12 +50,23 @@ export class ChatComponent implements OnInit, OnDestroy {
         this.chatSocketService.joinRoom(channel.name);
       }
     });
+
+    const hour = new Date().getHours().toString();
+    const minute = new Date().getMinutes().toString();
+    const second = new Date().getSeconds().toString();
+    const time = hour + ':' + minute + ':' + second;
+    const m1:Message = {message: "hello", timestamp: time, author: "meloo", roomName: "default"};
+    const m2:Message = {message: "yooo", timestamp: time, author: "joe", roomName: "default"};
+    const m3:Message = {message: "heyyyyy", timestamp: time, author: "patate", roomName: "default"};
+    let mes = [m1,m2,m3];
+    this.messages.set(this.chatRoomName, mes);
   }
 
   ngOnInit(): void {
     this.keyListener();
     this.receiveMessage();
     this.chatSocketService.connect();
+
   }
 
   ngOnDestroy(): void {
@@ -152,5 +164,21 @@ export class ChatComponent implements OnInit, OnDestroy {
   closeChatPopout() {
     // on close using browser doesn't toggle ispopoutopen
     this.isPopoutOpen = false;
+  }
+
+  getMessageClass(author:string): string{
+    //if(this.user?._id == author)
+    if("joe"== author)
+      return "user";
+    else
+      return "other";
+  }
+
+  getMessages():Message[]{
+    let messages = this.messages.get(this.chatRoomName);
+    if (messages != undefined)
+      return messages;
+    else
+      return [];
   }
 }
