@@ -1,4 +1,4 @@
-package com.example.colorimagemobile.ui.userProfile
+package com.example.colorimagemobile.ui.home.fragments.userProfile
 
 
 import android.os.Bundle
