@@ -11,7 +11,7 @@ import { ToolIdConstants } from "../tool-id-constants";
 import { INITIAL_WIDTH, LEFT_CLICK, RIGHT_CLICK } from "../tools-constants";
 import { PencilCommand } from "./pencil-command";
 import { Pencil } from "./pencil.model";
-import { DrawingSocketService } from "../../sockets/drawing-socket/drawing-socket.service";
+import { DrawingSocketService } from "../../synchronisation/sockets/drawing-socket/drawing-socket.service";
 
 /// Service de l'outil pencil, permet de créer des polyline en svg
 /// Il est possible d'ajuster le stroke width dans le form

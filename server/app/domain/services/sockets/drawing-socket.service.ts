@@ -28,3 +28,7 @@ export class DrawingSocketService extends SocketServiceInterface {
     this.namespace.to(drawingCommand.roomName).emit(DRAW_EVENT, drawingCommand);
   }
 }
+
+// SynchronisationService
+//  <- DrawingService
+//  <- ShapeFactory

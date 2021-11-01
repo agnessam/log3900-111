@@ -2,7 +2,7 @@ import { Component, AfterViewInit, OnInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { DrawingService } from "../../workspace";
 import { DrawingHttpClientService } from "../../backend-communication";
-import { DrawingSocketService } from "../../workspace/services/sockets/drawing-socket/drawing-socket.service";
+import { DrawingSocketService } from "../../workspace/services/synchronisation/sockets/drawing-socket/drawing-socket.service";
 @Component({
   selector: "app-drawing",
   templateUrl: "./drawing.component.html",
