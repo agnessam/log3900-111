@@ -10,7 +10,10 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
+import android.widget.TextView
 import android.widget.Toast
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
 import com.example.colorimagemobile.utils.Constants.Companion.DEBUG_KEY
 
 class CommonFun {
@@ -32,8 +35,27 @@ class CommonFun {
             currentActivity.finish()
         }
 
+        // close Activity and start another one
+        fun redirectTo_(currentActivity: FragmentActivity, destinationClass: Class<*>?) {
+            val intent: Intent = Intent(currentActivity, destinationClass)
+            currentActivity.startActivity(intent)
+            currentActivity.finish()
+        }
+
+
         // close/hide Android keyboard
         fun closeKeyboard(currentActivity: Activity): Boolean {
+            return try {
+                val inputMethodManager =
+                    currentActivity.getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+                inputMethodManager.hideSoftInputFromWindow(currentActivity.currentFocus!!.windowToken, 0)
+                true
+            } catch (e: Exception) {
+                false
+            }
+        }
+        // close/hide Android keyboard
+        fun closeKeyboard_(currentActivity: FragmentActivity): Boolean {
             return try {
                 val inputMethodManager =
                     currentActivity.getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
@@ -47,6 +69,17 @@ class CommonFun {
         // when pressed on Enter key, execute callback function
         fun onEnterKeyPressed(editText: EditText, callback: () -> Unit) {
             editText.setOnKeyListener(View.OnKeyListener { v, keyCode, event ->
+                if (keyCode == KeyEvent.KEYCODE_ENTER && event.action == KeyEvent.ACTION_UP) {
+                    callback()
+                    return@OnKeyListener true
+                }
+                return@OnKeyListener false
+            })
+        }
+
+        // when pressed on Enter key, execute callback function
+        fun onEnterKeyPressed_(textview: TextView, callback: () -> Unit) {
+            textview.setOnKeyListener(View.OnKeyListener { v, keyCode, event ->
                 if (keyCode == KeyEvent.KEYCODE_ENTER && event.action == KeyEvent.ACTION_UP) {
                     callback()
                     return@OnKeyListener true

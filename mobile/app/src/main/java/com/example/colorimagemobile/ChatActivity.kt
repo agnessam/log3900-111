@@ -15,7 +15,7 @@ import androidx.annotation.RequiresApi
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.colorimagemobile.adapter.ChatMessageRecyclerAdapter
+//import com.example.colorimagemobile.adapter.ChatMessageRecyclerAdapter
 import com.example.colorimagemobile.services.SocketHandler
 import com.example.colorimagemobile.ui.login.LoginActivity
 import com.example.colorimagemobile.utils.CommonFun.Companion.closeKeyboard
@@ -27,7 +27,6 @@ import com.example.colorimagemobile.utils.Constants.Companion.DEFAULT_ROOM_NAME
 import com.example.colorimagemobile.utils.Constants.Companion.TEXT_MESSAGE_EVENT_NAME
 import com.google.gson.Gson
 import java.util.*
-import kotlin.collections.ArrayList
 import io.socket.client.Socket
 import org.json.JSONException
 import io.socket.emitter.Emitter
@@ -42,7 +41,7 @@ class ChatActivity : AppCompatActivity() {
     // layout manager and adapter
     private lateinit var recyclerView: RecyclerView
     private var layoutManager: RecyclerView.LayoutManager? = null
-    private var adapterChatMessage: RecyclerView.Adapter<ChatMessageRecyclerAdapter.ViewHolder>? = null
+//    private var adapterChatMessage: RecyclerView.Adapter<ChatMessageRecyclerAdapter.ViewHolder>? = null
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -79,7 +78,7 @@ class ChatActivity : AppCompatActivity() {
         recyclerView.layoutManager = layoutManager
 
 //        adapterChatMessage = ChatMessageRecyclerAdapter(messageArray, this.username)
-        recyclerView.adapter = adapterChatMessage
+//        recyclerView.adapter = adapterChatMessage
 
         // listeners
         setLogOutListener()
