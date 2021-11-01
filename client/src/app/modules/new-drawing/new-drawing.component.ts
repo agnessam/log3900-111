@@ -60,20 +60,6 @@ export class NewDrawingComponent implements OnInit {
     this.dialogRef.close();
   }
 
-  /// Cree un nouveau dessin
-  // private newDrawing() {
-  //   this.drawingService.isCreated = true;
-  //   const size: { width: number; height: number } =
-  //     this.newDrawingService.sizeGroup.value;
-  //   this.drawingService.newDrawing(size.width, size.height, {
-  //     rgb: this.colorPickerService.rgb.value,
-  //     a: this.colorPickerService.a.value,
-  //   });
-  //   this.snackBar.open("Nouveau dessin créé", "", { duration: ONE_SECOND });
-  //   this.newDrawingService.form.reset();
-  //   this.dialogRef.close();
-  // }
-
   /// Ferme le dialogue
   onCancel(): void {
     this.dialogRef.close();
