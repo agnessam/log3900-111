@@ -35,7 +35,6 @@ export class HotkeysService {
     this.subscribeToHotkeys();
 
     this.toolSelectorList.set(EmitReturn.PENCIL, ToolIdConstants.PENCIL_ID);
-    this.toolSelectorList.set(EmitReturn.BRUSH, ToolIdConstants.BRUSH_ID);
     this.toolSelectorList.set(
       EmitReturn.APPLICATEUR,
       ToolIdConstants.APPLIER_ID
@@ -46,21 +45,12 @@ export class HotkeysService {
     );
     this.toolSelectorList.set(EmitReturn.ELLIPSE, ToolIdConstants.ELLIPSE_ID);
     this.toolSelectorList.set(EmitReturn.LINE, ToolIdConstants.LINE_ID);
-    this.toolSelectorList.set(EmitReturn.PIPETTE, ToolIdConstants.PIPETTE_ID);
     this.toolSelectorList.set(
       EmitReturn.SELECTION,
       ToolIdConstants.SELECTION_ID
     );
-    this.toolSelectorList.set(EmitReturn.PEN, ToolIdConstants.PEN_ID);
     this.toolSelectorList.set(EmitReturn.POLYGON, ToolIdConstants.POLYGON_ID);
     this.toolSelectorList.set(EmitReturn.ERASER, ToolIdConstants.ERASER_ID);
-    this.toolSelectorList.set(EmitReturn.TEXT, ToolIdConstants.TEXT_ID);
-    this.toolSelectorList.set(EmitReturn.SPRAY, ToolIdConstants.SPRAY_ID);
-    this.toolSelectorList.set(
-      EmitReturn.BUCKET_FILL,
-      ToolIdConstants.FILLER_ID
-    );
-    this.toolSelectorList.set(EmitReturn.FEATHER, ToolIdConstants.FEATHER_ID);
 
     this.dialog.afterOpened.subscribe(() => {
       this.hotkeysEnablerService.disableHotkeys();

@@ -12,8 +12,6 @@ export * from "./services/tools/eraser-tool/eraser-tool.service";
 export * from "./services/tools/eraser-tool/eraser-command";
 export * from "./services/tools/line-tool/line-tool.service";
 export * from "./services/tools/line-tool/line-command";
-export * from "./services/tools/pen-tool/pen-command";
-export * from "./services/tools/pen-tool/pen-tool.service";
 export * from "./services/tools/pencil-tool/pencil-command";
 export * from "./services/tools/pencil-tool/pencil-tool.service";
 export * from "./services/tools/polygon-tool/polygon-command";
