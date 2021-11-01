@@ -22,7 +22,6 @@ import { ErrorModule } from "./modules/error/error.module";
 import { UsersModule } from "./modules/users/users.module";
 import { GalleryModule } from "./modules/gallery/gallery.module";
 import { SidenavModule } from "./modules/sidenav/sidenav.module";
-import { ChannelModule } from "./modules/channel/channel.module";
 
 @NgModule({
   declarations: [AppComponent],
@@ -50,7 +49,6 @@ import { ChannelModule } from "./modules/channel/channel.module";
     UsersModule,
     SidenavModule,
     ErrorModule,
-    ChannelModule,
   ],
   exports: [],
   providers: [],

@@ -34,7 +34,6 @@ export class TextChannelService {
       });
   }
 
-  // TODO: might need body as editable channel parameters
   createChannel(newName: string, newOwnerId: string): Observable<TextChannel> {
     return this.httpClient
       .post<TextChannel>(this.endpointUrl, {
