@@ -71,8 +71,7 @@ class LoginActivity : AppCompatActivity() {
         val containsError = formValidator.containsError()
         val invalidInputLength = formValidator.isInputEmpty(resources.getString(R.string.required))
 
-        // activate/deactivate login button if form contains error or isEmpty
-        canSubmit = !containsError && !invalidInputLength
+        // activate/deactivate login button if form contains error or isEmpty canSubmit = !containsError && !invalidInputLength
         toggleButton(binding.loginBtn, canSubmit)
     }
 
@@ -80,7 +79,10 @@ class LoginActivity : AppCompatActivity() {
         if (!canSubmit) return
         val user = UserModel.Login(binding.usernameInputText.text.toString(), binding.passwordInputText.text.toString())
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> dbd93941bd50057e33c6e1da869451e0362138ec
         // username ok -> make HTTP POST request
         val loginObserver = loginViewModel.loginUser(user)
         loginObserver.observe(this, { handleLoginResponse(it) })
@@ -99,6 +101,9 @@ class LoginActivity : AppCompatActivity() {
         UserService.setLogHistory(Constants.LAST_LOGIN_DATE)
 
         val response = HTTPResponse.data as HTTPResponseModel.LoginResponse
+
+        // Set lastLogin date to localtime
+        UserService.setLogHistory(Constants.LAST_LOGIN_DATE)
 
         // save users info and token and redirect to /Home
         UserService.setUserInfo(response.user)

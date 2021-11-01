@@ -6,7 +6,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+<<<<<<< HEAD
 import androidx.lifecycle.LiveData
+=======
+>>>>>>> dbd93941bd50057e33c6e1da869451e0362138ec
 import com.example.colorimagemobile.R
 import com.example.colorimagemobile.models.DataWrapper
 import com.example.colorimagemobile.models.HTTPResponseModel
@@ -21,6 +24,7 @@ import com.example.colorimagemobile.utils.Constants
 
 class EditProfileFragment : Fragment() {
 
+<<<<<<< HEAD
     private lateinit var sharedPreferencesService: SharedPreferencesService
     private lateinit var userRepository: UserRepository
     private lateinit var edtDescription: String
@@ -32,6 +36,11 @@ class EditProfileFragment : Fragment() {
     private lateinit var token : String
     private lateinit var user : UserModel.AllInfo
 
+=======
+//    private lateinit var editViewBinding: View
+//    private lateinit var fName: TextView
+//    private lateinit var lName: TextView
+>>>>>>> dbd93941bd50057e33c6e1da869451e0362138ec
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,6 +56,7 @@ class EditProfileFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+<<<<<<< HEAD
         // inflate layout
         val inf = inflater.inflate(R.layout.fragment_edit_profile, container, false)
 
@@ -103,6 +113,40 @@ class EditProfileFragment : Fragment() {
     private fun updateUserInfo(newUserData: UserModel.UpdateUser): LiveData<DataWrapper<HTTPResponseModel.UpdateUser>> {
         return userRepository.updateUserData(token, user._id,newUserData)
     }
+=======
+//       editViewBinding = inflater.inflate(R.layout.fragment_edit_profile, container, false)
+
+            return inflater.inflate(R.layout.fragment_edit_profile, container, false)
+    }
+
+//    private fun areFieldEmpty(): Boolean {
+//
+////        val lastLogin= editViewBinding.findViewById<View>(R.id.lastLogin) as TextView
+//
+//        fName = editViewBinding.findViewById<View>(R.id.edtusername)
+//        lName = editViewBinding.edtdescription.text.toString()
+//        var required: Boolean = false
+//        var view: View? = null
+//
+//        if (fName.isEmpty()) {
+//            editViewBinding.edtFName.error = "Field is required"
+//            required = true
+//            view = editViewBinding.edtFName
+//
+//        } else if (lName.isEmpty()) {
+//            editViewBinding.edtLName.error = "Field is required"
+//            required = true
+//            view = editViewBinding.edtLName
+//
+//        }
+//
+//        return if (required) {
+//            view?.requestFocus()
+//            false
+//        } else true
+//    }
+
+>>>>>>> dbd93941bd50057e33c6e1da869451e0362138ec
 
 
 }
