@@ -23,6 +23,7 @@ export class ChatComponent implements OnInit, OnDestroy {
   message = '';
   // saves connected rooms and message history from connection
   currentMessageHistory: Map<string, Message[]> = new Map();
+  
   // connectedRooms: string[] = [];
   chatStatus:boolean;
   isMinimized = false;
@@ -41,7 +42,7 @@ export class ChatComponent implements OnInit, OnDestroy {
     );
     this.chatService.toggleChatOverlay.subscribe((channel) =>{
       this.chatRoomName = channel.name;
-      this.openChat();
+      if (!this.isPopoutOpen) this.openChat();
 
       if (!this.currentMessageHistory.has(channel.name)) {
         this.currentMessageHistory.set(channel.name, []);
@@ -149,6 +150,7 @@ export class ChatComponent implements OnInit, OnDestroy {
   }
 
   closeChatPopout() {
+    // on close using browser doesn't toggle ispopoutopen
     this.isPopoutOpen = false;
   }
 }
