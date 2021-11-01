@@ -24,14 +24,17 @@ import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 
 class LoginActivity : AppCompatActivity() {
+
     private lateinit var loginViewModel: LoginActivityViewModel
     private lateinit var sharedPreferencesService: SharedPreferencesService
     private lateinit var binding: ActivityLoginBinding
     private lateinit var formValidator: FormValidator
     private var canSubmit: Boolean = false
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -44,6 +47,8 @@ class LoginActivity : AppCompatActivity() {
 
         toggleButton(binding.loginBtn, false) // deactivate login button by default
         setListeners()
+
+
     }
 
     private fun setListeners() {
@@ -66,19 +71,18 @@ class LoginActivity : AppCompatActivity() {
         val containsError = formValidator.containsError()
         val invalidInputLength = formValidator.isInputEmpty(resources.getString(R.string.required))
 
-        // activate/deactivate login button if form contains error or isEmpty
-        canSubmit = !containsError && !invalidInputLength
+        // activate/deactivate login button if form contains error or isEmpty canSubmit = !containsError && !invalidInputLength
         toggleButton(binding.loginBtn, canSubmit)
     }
 
     private fun executeLogin() {
         if (!canSubmit) return
-
         val user = UserModel.Login(binding.usernameInputText.text.toString(), binding.passwordInputText.text.toString())
 
         // username ok -> make HTTP POST request
         val loginObserver = loginViewModel.loginUser(user)
         loginObserver.observe(this, { handleLoginResponse(it) })
+
     }
 
     // response from HTTP request
@@ -89,8 +93,13 @@ class LoginActivity : AppCompatActivity() {
         if (HTTPResponse.isError as Boolean) {
             return
         }
+        // Set lastLogin date to localtime
+        UserService.setLogHistory(Constants.LAST_LOGIN_DATE)
 
         val response = HTTPResponse.data as HTTPResponseModel.LoginResponse
+
+        // Set lastLogin date to localtime
+        UserService.setLogHistory(Constants.LAST_LOGIN_DATE)
 
         // save users info and token and redirect to /Home
         UserService.setUserInfo(response.user)
