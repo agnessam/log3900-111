@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild,  } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { AuthenticationService } from 'src/app/modules/authentication';
 import { User } from '../authentication/models/user';
@@ -29,7 +29,7 @@ export class ChatComponent implements OnInit, OnDestroy {
   isMinimized = false;
   isPopoutOpen = false;
 
-  chatRoomName = 'default';
+  chatRoomName = 'General!';
   messages: Map<string, Message[]> = new Map();
 
   constructor(
