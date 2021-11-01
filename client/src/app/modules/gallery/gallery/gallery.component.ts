@@ -1,7 +1,7 @@
 import { MatDialog } from "@angular/material/dialog";
 import { NewDrawingComponent } from "../../new-drawing";
 import { Component, AfterViewInit } from "@angular/core";
-import { DrawingHttpClientService } from "../../http-client";
+import { DrawingHttpClientService } from "../../backend-communication";
 import { Router } from "@angular/router";
 
 @Component({
@@ -21,6 +21,7 @@ export class GalleryComponent implements AfterViewInit {
   ngAfterViewInit(): void {
     this.drawingHttpClient.getDrawings().subscribe(
       (response) => {
+        console.log(response);
         for(let drawing of response){
           this.drawings.add(drawing._id);
         }

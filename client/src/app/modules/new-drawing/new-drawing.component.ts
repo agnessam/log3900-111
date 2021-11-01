@@ -7,7 +7,7 @@ import { DEFAULT_RGB_COLOR, DEFAULT_ALPHA } from "src/app/shared";
 import { DrawingService } from "src/app/modules/workspace";
 import { NewDrawingService } from "./new-drawing.service";
 import { Router } from "@angular/router";
-import { DrawingHttpClientService } from "../http-client";
+import { DrawingHttpClientService } from "../backend-communication";
 
 const ONE_SECOND = 1000;
 @Component({

@@ -1,7 +1,7 @@
 import { Component, AfterViewInit, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { DrawingService } from '../../workspace';
-import { DrawingHttpClientService } from '../../http-client';
+import { DrawingHttpClientService } from '../../backend-communication';
 @Component({
   selector: 'app-drawing',
   templateUrl: './drawing.component.html',
