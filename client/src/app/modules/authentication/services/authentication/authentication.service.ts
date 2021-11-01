@@ -64,7 +64,6 @@ export class AuthenticationService {
           const currentUser = new User(response.user);
           this.currentUserSubject.next(currentUser);
           this.authTokenSubject.next(response.token);
-          console.log(this.authToken);
 
           return response;
         })

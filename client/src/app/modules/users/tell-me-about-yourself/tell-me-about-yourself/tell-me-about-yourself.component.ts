@@ -23,7 +23,6 @@ export class TellMeAboutYourselfComponent implements OnInit {
 
   ngOnInit(): void {
     this.authenticationService.currentUserObservable.subscribe((user) => {
-      console.log(user);
       this.currentUser = user;
     });
     this.customizeProfileForm = new FormGroup({
@@ -38,7 +37,6 @@ export class TellMeAboutYourselfComponent implements OnInit {
     this.userService
       .updateUser(this.currentUser!._id, updatedUserParameters)
       .subscribe((response) => {
-        console.log(response);
         this.router.navigate([""]);
       });
   }

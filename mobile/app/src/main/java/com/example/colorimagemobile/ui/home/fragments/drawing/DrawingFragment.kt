@@ -1,60 +1,102 @@
 package com.example.colorimagemobile.ui.home.fragments.drawing
 
+import android.graphics.Color
 import android.os.Bundle
+import android.text.Spannable
+import android.text.SpannableString
+import android.text.style.ImageSpan
+import android.transition.AutoTransition
+import android.transition.TransitionManager
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
+import android.widget.*
+import androidx.cardview.widget.CardView
+import androidx.constraintlayout.widget.ConstraintLayout
 import com.example.colorimagemobile.R
+import com.example.colorimagemobile.classes.tools.ToolsFactory
+import com.example.colorimagemobile.enumerators.ToolType
+import com.example.colorimagemobile.services.drawing.ToolTypeService
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
+class DrawingFragment : Fragment(R.layout.fragment_drawing) {
+    private lateinit var drawingFragment: ConstraintLayout;
+    private lateinit var panelView: CardView
+    private lateinit var toolsFactory: ToolsFactory
 
-/**
- * A simple [Fragment] subclass.
- * Use the [DrawingFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
-class DrawingFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
+        drawingFragment = view.findViewById(R.id.drawingFragment)
+        panelView = drawingFragment.findViewById<CardView>(R.id.canvas_tools_attributes_cardview)
+        toolsFactory = ToolsFactory()
+
+        addToolsOnSidebar()
+        setToolsListener()
+    }
+
+    // dynamically add tools on sidebar
+    private fun addToolsOnSidebar() {
+        ToolTypeService.getAllToolTypes().forEach { toolType ->
+            val tool = toolsFactory.getTool(toolType)
+
+            // create dynamic button for each tool
+            val toolBtn = Button(context)
+            toolBtn.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+            toolBtn.setBackgroundColor(Color.rgb(245, 245, 245))
+
+            // center button
+            toolBtn.text = SpannableString(" ").apply {
+                setSpan(ImageSpan(requireContext(), tool.getIcon()),0,1,Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+            }
+
+            // handle attribute panel when clicked on tool
+            toolBtn.setOnClickListener {
+                togglePanel(tool.getType())
+                setPanelAttribute(tool.getFragment())
+                panelView.findViewById<TextView>(R.id.tool_name).text = tool.getTitle()
+            }
+
+            val toolSidebar = drawingFragment.findViewById<LinearLayout>(R.id.canvas_tools)
+            toolSidebar.addView(toolBtn)
         }
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_drawing, container, false)
+    // update tool when changed tool
+    private fun setToolsListener() {
+        ToolTypeService.getCurrentToolType().observe(viewLifecycleOwner, { toolType ->
+            val context = requireContext()
+
+            // client
+            val toolView = toolsFactory.getTool(toolType).getView(context)
+
+            if (toolView != null) {
+                val canvasLayout = drawingFragment.findViewById<RelativeLayout>(R.id.canvas_view)
+                canvasLayout.removeAllViews()
+                canvasLayout.addView(toolView)
+            }
+        })
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment DrawingFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            DrawingFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
+    // open/close side attributes panel
+    private fun togglePanel(toolType: ToolType) {
+        val currentToolType = ToolTypeService.getCurrentToolType().value
+
+        // close panel because toggling on same tool
+        if (currentToolType == toolType && panelView.visibility == View.VISIBLE) {
+            TransitionManager.beginDelayedTransition(panelView, AutoTransition())
+            panelView.visibility = View.GONE
+            return
+        }
+
+        // new tool clicked -> open panel
+        ToolTypeService.setCurrentToolType(toolType)
+        TransitionManager.beginDelayedTransition(panelView, AutoTransition())
+        panelView.visibility = View.VISIBLE
+    }
+
+    // update tools attributes panel fragment
+    private fun setPanelAttribute(fragment: Fragment) {
+        activity?.supportFragmentManager?.beginTransaction()
+            ?.replace(R.id.tool_attribute_fragment, fragment)
+            ?.commitAllowingStateLoss()
     }
 }
