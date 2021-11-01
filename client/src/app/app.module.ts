@@ -23,6 +23,7 @@ import { UsersModule } from "./modules/users/users.module";
 import { GalleryModule } from "./modules/gallery/gallery.module";
 import { SidenavModule } from "./modules/sidenav/sidenav.module";
 import { DrawingsModule } from "./modules/drawings/drawings.module";
+import {HttpClientModule as HeavyHttpClientModule}  from "./modules/http-client/http-client.module";
 
 @NgModule({
   declarations: [AppComponent],
@@ -51,6 +52,7 @@ import { DrawingsModule } from "./modules/drawings/drawings.module";
     SidenavModule,
     ErrorModule,
     DrawingsModule,
+    HeavyHttpClientModule
   ],
   exports: [],
   providers: [],

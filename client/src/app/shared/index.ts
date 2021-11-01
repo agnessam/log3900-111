@@ -9,4 +9,4 @@ export * from "./models/rectangle-style.model";
 export * from "./models/polygon-style.model";
 export * from "./socket/socket.constant";
 export * from "./models/texture-options.model";
-// export * from "./models/drawing.model";
+export * from "./models/drawing.model";

@@ -1,10 +1,6 @@
 import { Injectable } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { WorkspaceService } from "src/app/modules/workspace";
-import { HttpClient } from "@angular/common/http";
-import { Observable } from "rxjs";
-import { map } from "rxjs/operators";
-import { environment } from "src/environments/environment";
 
 /// Service pour créer des nouveau canvas de dessin
 @Injectable()
@@ -14,8 +10,7 @@ export class NewDrawingService {
 
   constructor(
     private formBuilder: FormBuilder,
-    private workspaceService: WorkspaceService,
-    private httpClient: HttpClient
+    private workspaceService: WorkspaceService
   ) {
     this.form = this.formBuilder.group({
       size: this.formBuilder.group({
@@ -52,20 +47,5 @@ export class NewDrawingService {
         height: this.workspaceService.height,
       });
     }
-  }
-
-  createNewDrawing(drawingDataUri: string, ownerModel:string, ownerId: string = "617832e99a8c22d106b37528"): Observable<any> {
-    let newDrawing = {
-      dataUri: drawingDataUri,
-      ownerId: ownerId, // TODO: remove ownerID from all requests
-      ownerModel: ownerModel, // TODO: Add option to toggle between 
-    };
-    return this.httpClient
-      .post<any>(`${environment.serverURL}/drawings/`, newDrawing)
-      .pipe(
-        map((response) => {
-          return response;
-        })
-      );
   }
 }

@@ -2,6 +2,7 @@ import {
   AfterViewInit,
   Component,
   ElementRef,
+  OnDestroy,
   Renderer2,
   ViewChild,
 } from "@angular/core";
@@ -14,7 +15,7 @@ import { DrawingService } from "src/app/modules/workspace";
   templateUrl: "./canvas.component.html",
   styleUrls: ["./canvas.component.scss"],
 })
-export class CanvasComponent implements AfterViewInit {
+export class CanvasComponent implements AfterViewInit, OnDestroy {
   @ViewChild("svgCanvas")
   canvasDiv: ElementRef;
 
@@ -25,7 +26,8 @@ export class CanvasComponent implements AfterViewInit {
     private drawingService: DrawingService,
     public renderer: Renderer2
   ) {
-    this.renderer = this.drawingService.renderer;
+    this.drawingService.renderer = this.renderer;
+    this.drawingService.isCreated = true;
   }
 
   /// À l'initialisation, le canvas s'abonne au service de dessin pour reçevoir en string le svg
@@ -37,6 +39,10 @@ export class CanvasComponent implements AfterViewInit {
       this.svg = el;
       this.renderer.appendChild(this.canvasDiv.nativeElement, this.svg);
     });
+  }
+
+  ngOnDestroy() {
+    this.drawingService.isCreated = false;
   }
 
   /// la longueur de la zone de dessin

@@ -7,6 +7,7 @@ import { DEFAULT_RGB_COLOR, DEFAULT_ALPHA } from "src/app/shared";
 import { DrawingService } from "src/app/modules/workspace";
 import { NewDrawingService } from "./new-drawing.service";
 import { Router } from "@angular/router";
+import { DrawingHttpClientService } from "../http-client";
 
 const ONE_SECOND = 1000;
 @Component({
@@ -23,6 +24,7 @@ export class NewDrawingComponent implements OnInit {
     private newDrawingService: NewDrawingService,
     private drawingService: DrawingService,
     private colorPickerService: ColorPickerService,
+    private drawingHttpClient: DrawingHttpClientService,
     private router: Router
   ) {}
 
@@ -51,7 +53,7 @@ export class NewDrawingComponent implements OnInit {
       a: this.colorPickerService.a.value,
     });
     let ownerModel:string = "User";
-    this.newDrawingService.createNewDrawing(drawingDataUri, ownerModel).subscribe((response) => {
+    this.drawingHttpClient.createNewDrawing(drawingDataUri, ownerModel).subscribe((response) => {
       if (response._id) {
         this.router.navigate([`/drawings/${response._id}`]);
         this.snackBar.open("Nouveau dessin créé", "", { duration: ONE_SECOND });

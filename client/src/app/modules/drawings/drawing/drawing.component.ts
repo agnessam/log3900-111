@@ -1,8 +1,7 @@
 import { Component, AfterViewInit, OnInit } from '@angular/core';
-import { HttpClient } from "@angular/common/http";
-import { environment } from "src/environments/environment";
 import { ActivatedRoute } from '@angular/router';
 import { DrawingService } from '../../workspace';
+import { DrawingHttpClientService } from '../../http-client';
 @Component({
   selector: 'app-drawing',
   templateUrl: './drawing.component.html',
@@ -12,8 +11,8 @@ export class DrawingComponent implements OnInit, AfterViewInit {
   drawingId:string;
   constructor(
     private route:ActivatedRoute, 
-    private httpClient:HttpClient, 
-    private drawingService:DrawingService
+    private drawingService:DrawingService,
+    private drawingHttpClientService: DrawingHttpClientService
   ) {}
 
   ngOnInit(): void{
@@ -23,9 +22,8 @@ export class DrawingComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void{
-    this.httpClient.get<any>(`${environment.serverURL}/drawings/${this.drawingId}`).subscribe((response) => {
+    this.drawingHttpClientService.getDrawing(this.drawingId).subscribe((response) => {
       this.drawingService.openSvgFromDataUri(response.dataUri);
     });
   }
-
 }

@@ -96,7 +96,7 @@ export class DrawingService {
     this.setDimension(width, height);
     this.setDrawingColor(rgba);
     this.drawingEmit.emit(this.drawing);
-    return this.getDrawingDataUriBase64()
+    return this.getDrawingDataUriBase64();
   }
 
   /// Get drawing svg uri
