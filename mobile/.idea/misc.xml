@@ -3,6 +3,10 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/User/Desktop/A_21/mobile/app/src/main/res/layout/activity_login.xml" value="0.1" />
+        <entry key="..\:/Users/User/Desktop/A_21/mobile/app/src/main/res/layout/fragment_edit_profile.xml" value="0.1962962962962963" />
+        <entry key="..\:/Users/User/Desktop/A_21/mobile/app/src/main/res/layout/fragment_password.xml" value="0.25677083333333334" />
+        <entry key="..\:/Users/User/Desktop/A_21/mobile/app/src/main/res/layout/fragment_user_profile.xml" value="0.25677083333333334" />
         <entry key="..\:/Users/User/Desktop/POLYMTL_AUT2021/Class/LOG3900/Projet_/mobile/app/src/main/res/layout/activity_home.xml" value="0.1703125" />
         <entry key="..\:/Users/User/Desktop/POLYMTL_AUT2021/Class/LOG3900/Projet_/mobile/app/src/main/res/layout/activity_login.xml" value="0.1703125" />
         <entry key="..\:/Users/User/Desktop/POLYMTL_AUT2021/Class/LOG3900/Projet_/mobile/app/src/main/res/layout/activity_main.xml" value="0.1703125" />

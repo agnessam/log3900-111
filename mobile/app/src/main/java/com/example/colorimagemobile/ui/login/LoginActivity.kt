@@ -1,9 +1,7 @@
 package com.example.colorimagemobile.ui.login
 
-import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import androidx.annotation.RequiresApi
 import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.ViewModelProvider
 import com.example.colorimagemobile.R
@@ -24,7 +22,6 @@ import com.example.colorimagemobile.utils.CommonFun.Companion.toggleButton
 import com.example.colorimagemobile.utils.Constants
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
-import java.time.LocalDateTime
 
 class LoginActivity : AppCompatActivity() {
 
@@ -54,7 +51,6 @@ class LoginActivity : AppCompatActivity() {
 
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     private fun setListeners() {
         binding.loginBtn.setOnClickListener { executeLogin() }
         binding.registerBtn.setOnClickListener { redirectTo(this, RegisterActivity::class.java) }
@@ -84,8 +80,6 @@ class LoginActivity : AppCompatActivity() {
         if (!canSubmit) return
         val user = UserModel.Login(binding.usernameInputText.text.toString(), binding.passwordInputText.text.toString())
 
-        // Set lastLogin date to localtime
-        UserService.setLogHistory(Constants.LAST_LOGIN_DATE)
 
         // username ok -> make HTTP POST request
         val loginObserver = loginViewModel.loginUser(user)
@@ -101,6 +95,8 @@ class LoginActivity : AppCompatActivity() {
         if (HTTPResponse.isError as Boolean) {
             return
         }
+        // Set lastLogin date to localtime
+        UserService.setLogHistory(Constants.LAST_LOGIN_DATE)
 
         val response = HTTPResponse.data as HTTPResponseModel.LoginResponse
 

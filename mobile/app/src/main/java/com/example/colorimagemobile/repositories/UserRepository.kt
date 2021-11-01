@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.example.colorimagemobile.models.DataWrapper
 import com.example.colorimagemobile.models.HTTPResponseModel
+import com.example.colorimagemobile.models.UserModel
 import com.example.colorimagemobile.services.RetrofitInstance
 import com.example.colorimagemobile.utils.Constants
 import retrofit2.Call
@@ -42,4 +43,32 @@ class UserRepository {
 
         return userLiveData
     }
+
+    // update user data
+    fun updateUserData(token: String, id: String, newUserdata: UserModel.UpdateUser): MutableLiveData<DataWrapper<HTTPResponseModel.UpdateUser>> {
+        val updateLiveData: MutableLiveData<DataWrapper<HTTPResponseModel.UpdateUser>> = MutableLiveData()
+
+        httpClient.updateUser(token = "Bearer $token",id, newUserdata).enqueue(object :
+            Callback<HTTPResponseModel.UpdateUser> {
+            override fun onResponse(call: Call<HTTPResponseModel.UpdateUser>, response: Response<HTTPResponseModel.UpdateUser>) {
+                if (!response.isSuccessful) {
+                    Log.d(Constants.DEBUG_KEY, response.message())
+                    updateLiveData.value = DataWrapper(null, "An error occurred!", true)
+                    return
+                }
+
+                // account successfully update
+                updateLiveData.value = DataWrapper(response.body(), "", false)
+            }
+
+            override fun onFailure(call: Call<HTTPResponseModel.UpdateUser>, t: Throwable) {
+                Log.d(Constants.DEBUG_KEY, "Failed update account ${t.message!!}")
+                updateLiveData.value = DataWrapper(null, "Failed to create account!", true)
+            }
+
+        })
+
+        return updateLiveData
+    }
+
 }

@@ -34,8 +34,8 @@ class Constants {
 
             const val GET_USER_BY_TOKEN = "api/users/me"
             const val GET_ALL_USER = "api/users/"
-            const val GET_USER_BY_ID = "api/users/:id"
-            const val UPDATE_USER = "api/users/:id"
+            const val GET_USER_BY_ID = "api/users/"
+            const val UPDATE_USER = "api/users/"
             const val DELETE_USER = "api/users/:id"
 
 

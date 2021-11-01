@@ -4,10 +4,11 @@
     android:layout_height="match_parent">
 
     <LinearLayout
+        android:id="@+id/editprofileview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="20dp"
-        android:background="@color/white"
+        android:background="@color/container"
         android:orientation="vertical">
 
 
@@ -44,7 +45,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="40dp"
                     android:layout_marginEnd="40dp"
-                    android:text="Change avatar" />
+                    android:text="Change avatar"
+                    android:backgroundTint="@color/primary"/>
 
 
 
@@ -66,6 +68,7 @@
                 android:textSize="30sp" />
 
             <EditText
+                android:id="@+id/edtusername"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
@@ -76,26 +79,34 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-
             android:layout_height="wrap_content"
             android:layout_margin="20dp"
             android:orientation="horizontal">
 
             <TextView
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="description"
+                android:text="Description"
                 android:textSize="30sp" />
 
             <EditText
+                android:id="@+id/edtdescription"
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:textSize="30sp" />
 
 
         </LinearLayout>
+
+        <Button
+            android:id="@+id/updatebutton"
+            android:layout_width="595dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Valider"
+            android:backgroundTint="@color/primary"/>
 
     </LinearLayout>
 </ScrollView>

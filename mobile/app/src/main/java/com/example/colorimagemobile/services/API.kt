@@ -23,6 +23,8 @@ interface API {
     @GET(Constants.ENDPOINTS.GET_USER_BY_TOKEN)
     fun getUserByToken(@Header("Authorization") token: String): Call<HTTPResponseModel.GetUser>
 
-//    @GET(Constants.ENDPOINTS.GET_USER_BY_ID)
-//    fun getUserByToken(@Header("Authorization") token: String): Call<HTTPResponseModel.GetUser>
+    @Headers("Content-Type: application/json")
+    @PATCH(Constants.ENDPOINTS.UPDATE_USER+"{id}")
+    fun updateUser(@Header("Authorization")token: String, @Path ("id") id : String, @Body  newUser: UserModel.UpdateUser) : Call<HTTPResponseModel.UpdateUser>
+
 }
