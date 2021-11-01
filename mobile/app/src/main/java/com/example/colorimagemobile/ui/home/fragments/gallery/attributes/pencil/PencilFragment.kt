@@ -1,4 +1,4 @@
-package com.example.colorimagemobile.ui.home.fragments.drawing.attributes.pencil
+package com.example.colorimagemobile.ui.home.fragments.gallery.attributes.pencil
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment

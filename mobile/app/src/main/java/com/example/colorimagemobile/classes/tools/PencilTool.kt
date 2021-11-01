@@ -5,9 +5,9 @@ import androidx.fragment.app.Fragment
 import com.example.colorimagemobile.R
 import com.example.colorimagemobile.enumerators.ToolType
 import com.example.colorimagemobile.interfaces.ITool
-import com.example.colorimagemobile.ui.home.fragments.drawing.attributes.pencil.PencilFragment
-import com.example.colorimagemobile.ui.home.fragments.drawing.views.CanvasView
-import com.example.colorimagemobile.ui.home.fragments.drawing.views.PencilView
+import com.example.colorimagemobile.ui.home.fragments.gallery.attributes.pencil.PencilFragment
+import com.example.colorimagemobile.ui.home.fragments.gallery.views.CanvasView
+import com.example.colorimagemobile.ui.home.fragments.gallery.views.PencilView
 
 class PencilTool: ITool {
     override fun getTitle(): String {

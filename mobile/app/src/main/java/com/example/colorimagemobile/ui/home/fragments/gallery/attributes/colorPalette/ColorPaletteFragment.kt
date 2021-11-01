@@ -1,4 +1,4 @@
-package com.example.colorimagemobile.ui.home.fragments.drawing.attributes.colorPalette
+package com.example.colorimagemobile.ui.home.fragments.gallery.attributes.colorPalette
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment

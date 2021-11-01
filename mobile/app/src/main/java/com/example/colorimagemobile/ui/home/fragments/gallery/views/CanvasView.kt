@@ -1,4 +1,4 @@
-package com.example.colorimagemobile.ui.home.fragments.drawing.views
+package com.example.colorimagemobile.ui.home.fragments.gallery.views
 
 import android.content.Context
 import android.graphics.*

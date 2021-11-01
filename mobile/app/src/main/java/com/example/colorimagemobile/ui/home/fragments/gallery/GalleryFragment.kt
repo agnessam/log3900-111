@@ -1,4 +1,4 @@
-package com.example.colorimagemobile.ui.home.fragments.drawing
+package com.example.colorimagemobile.ui.home.fragments.gallery
 
 import android.graphics.Color
 import android.os.Bundle
@@ -17,16 +17,16 @@ import com.example.colorimagemobile.classes.tools.ToolsFactory
 import com.example.colorimagemobile.enumerators.ToolType
 import com.example.colorimagemobile.services.drawing.ToolTypeService
 
-class DrawingFragment : Fragment(R.layout.fragment_drawing) {
-    private lateinit var drawingFragment: ConstraintLayout;
+class GalleryFragment : Fragment(R.layout.fragment_gallery) {
+    private lateinit var galleryFragment: ConstraintLayout;
     private lateinit var panelView: CardView
     private lateinit var toolsFactory: ToolsFactory
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        drawingFragment = view.findViewById(R.id.drawingFragment)
-        panelView = drawingFragment.findViewById<CardView>(R.id.canvas_tools_attributes_cardview)
+        galleryFragment = view.findViewById(R.id.galleryFragment)
+        panelView = galleryFragment.findViewById<CardView>(R.id.canvas_tools_attributes_cardview)
         toolsFactory = ToolsFactory()
 
         addToolsOnSidebar()
@@ -55,7 +55,7 @@ class DrawingFragment : Fragment(R.layout.fragment_drawing) {
                 panelView.findViewById<TextView>(R.id.tool_name).text = tool.getTitle()
             }
 
-            val toolSidebar = drawingFragment.findViewById<LinearLayout>(R.id.canvas_tools)
+            val toolSidebar = galleryFragment.findViewById<LinearLayout>(R.id.canvas_tools)
             toolSidebar.addView(toolBtn)
         }
     }
@@ -69,7 +69,7 @@ class DrawingFragment : Fragment(R.layout.fragment_drawing) {
             val toolView = toolsFactory.getTool(toolType).getView(context)
 
             if (toolView != null) {
-                val canvasLayout = drawingFragment.findViewById<RelativeLayout>(R.id.canvas_view)
+                val canvasLayout = galleryFragment.findViewById<RelativeLayout>(R.id.canvas_view)
                 canvasLayout.removeAllViews()
                 canvasLayout.addView(toolView)
             }
