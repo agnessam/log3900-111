@@ -4,6 +4,9 @@ import { GalleryComponent } from "./gallery/gallery.component";
 import { GalleryRoutingModule } from "./gallery-routing.module";
 import { MatGridListModule } from "@angular/material/grid-list";
 import { MatButtonModule } from "@angular/material/button";
+import { NewDrawingModule } from "../new-drawing/new-drawing.module";
+import { MatDialogModule } from "@angular/material/dialog";
+import { WorkspaceModule } from "../workspace/workspace.module";
 
 @NgModule({
   declarations: [GalleryComponent],
@@ -11,7 +14,10 @@ import { MatButtonModule } from "@angular/material/button";
     CommonModule,
     GalleryRoutingModule,
     MatButtonModule,
+    MatDialogModule,
     MatGridListModule,
+    NewDrawingModule,
+    WorkspaceModule,
   ],
 })
 export class GalleryModule {}

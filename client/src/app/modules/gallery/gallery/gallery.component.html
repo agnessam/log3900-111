@@ -11,16 +11,17 @@
               <button
                 mat-raised-button
                 color="primary"
+                (click)="createNewDrawing()"
               >
                 New Drawing
               </button>
-            </div></mat-grid-tile
-          >
+            </div></mat-grid-tile>
         </mat-grid-list>
       </div>
     </mat-grid-tile>
-    <mat-grid-tile rowspan="4">
-      <!-- TODO: Get all drawings and display them here.  -->
+    <mat-grid-tile class="drawing" *ngFor="let drawing of drawings">
+      <div>{{drawing}}</div>
+      <button (click)="goToDrawing(drawing)">Go to drawing</button>
     </mat-grid-tile>
   </mat-grid-list>
 </div>

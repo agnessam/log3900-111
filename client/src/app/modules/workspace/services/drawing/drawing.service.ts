@@ -7,12 +7,10 @@ import { DEFAULT_RGB_COLOR, RGB, DEFAULT_ALPHA, RGBA } from 'src/app/shared';
   providedIn: 'root',
 })
 export class DrawingService {
-
   @Output()
   drawingEmit = new EventEmitter<SVGElement>();
   id: string;
   saved = false;
-  renderer: Renderer2;
   svgString = new EventEmitter<string>();
   lastObjectId = 0;
   isCreated = false;
@@ -24,7 +22,7 @@ export class DrawingService {
 
   private objectList: Map<number, SVGElement>;
 
-  constructor() {
+  constructor(public renderer: Renderer2) {
     this.objectList = new Map<number, SVGElement>();
   }
   get rgbColorString(): string {
@@ -90,7 +88,7 @@ export class DrawingService {
   }
 
   /// Fonction pour appeller la cascade de bonne fonction pour réinitialisé un nouveau dessin
-  newDrawing(width: number, height: number, rgba: RGBA): void {
+  newDrawing(width: number, height: number, rgba: RGBA): string {
     this.saved = false;
     this.objectList.clear();
     this.lastObjectId = 0;
@@ -98,6 +96,21 @@ export class DrawingService {
     this.setDimension(width, height);
     this.setDrawingColor(rgba);
     this.drawingEmit.emit(this.drawing);
+    return this.getDrawingDataUriBase64();
+  }
+
+  /// Get drawing svg uri
+  private getDrawingDataUriBase64(): string {
+    return (
+      "data:image/svg+xml;base64," +
+      btoa(new XMLSerializer().serializeToString(this.drawing))
+    );
+  }
+
+  openSvgFromDataUri(dataUri: string): void{
+    let svgDomString = atob(dataUri.replace("data:image/svg+xml;base64,", ""));
+    const documentSvg = new DOMParser().parseFromString(svgDomString, 'image/svg+xml');
+    this.openDrawing(documentSvg.children[0] as SVGElement);
   }
 
   /// Permer l'ouverture d'un dessin sous la forme du model Drawing
