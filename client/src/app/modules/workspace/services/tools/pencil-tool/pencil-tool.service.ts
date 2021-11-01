@@ -79,6 +79,7 @@ export class PencilToolService implements Tools {
       const returnPencilCommand = this.pencilCommand;
       this.pencilCommand = null;
       return returnPencilCommand;
+      // TODO: Probably add a release event for socket that will put the pencil drawing into the real object list
     }
     return;
   }
@@ -89,6 +90,7 @@ export class PencilToolService implements Tools {
       this.pencilCommand.addPoint(
         this.offsetManager.offsetFromMouseEvent(event)
       );
+      this.drawingSocketService.sendDrawingCommand(this.pencil, "Pencil");
     }
   }
   onKeyUp(event: KeyboardEvent): void {
