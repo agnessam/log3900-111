@@ -54,11 +54,11 @@ export class NewDrawingService {
     }
   }
 
-  createNewDrawing(drawingDataUri: string ): Observable<any> {
+  createNewDrawing(drawingDataUri: string, ownerId: string = "617832e99a8c22d106b37528", ownerModel:string ="User" ): Observable<any> {
     let newDrawing = {
       dataUri: drawingDataUri,
-      ownerId: "617832e99a8c22d106b37528", // TODO: remove ownerID from all requests
-      ownerModel: "User",
+      ownerId: ownerId, // TODO: remove ownerID from all requests
+      ownerModel: ownerModel, // TODO: Add option to toggle between 
     };
     return this.httpClient
       .post<any>(`${environment.serverURL}/drawings/`, newDrawing)
