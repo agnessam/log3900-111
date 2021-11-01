@@ -48,17 +48,25 @@ export class NewDrawingComponent implements OnInit {
     this.drawingService.isCreated = true;
     const size: { width: number; height: number } =
       this.newDrawingService.sizeGroup.value;
-    let drawingDataUri = this.drawingService.newDrawing(size.width, size.height, {
-      rgb: this.colorPickerService.rgb.value,
-      a: this.colorPickerService.a.value,
-    });
-    let ownerModel:string = "User";
-    this.drawingHttpClient.createNewDrawing(drawingDataUri, ownerModel).subscribe((response) => {
-      if (response._id) {
-        this.router.navigate([`/drawings/${response._id}`]);
-        this.snackBar.open("Nouveau dessin créé", "", { duration: ONE_SECOND });
+    let drawingDataUri = this.drawingService.newDrawing(
+      size.width,
+      size.height,
+      {
+        rgb: this.colorPickerService.rgb.value,
+        a: this.colorPickerService.a.value,
       }
-    });
+    );
+    let ownerModel: string = "User";
+    this.drawingHttpClient
+      .createNewDrawing(drawingDataUri, ownerModel)
+      .subscribe((response) => {
+        if (response._id) {
+          this.router.navigate([`/drawings/${response._id}`]);
+          this.snackBar.open("Nouveau dessin créé", "", {
+            duration: ONE_SECOND,
+          });
+        }
+      });
     this.newDrawingService.form.reset();
     this.dialogRef.close();
   }
