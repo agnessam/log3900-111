@@ -24,10 +24,8 @@ export class GalleryComponent implements AfterViewInit {
     this.httpClient.get<any>(getDrawingsURL).subscribe(
       (response) => {
         for(let drawing of response){
-          console.log(drawing._id);
           this.drawings.add(drawing._id);
         }
-        console.log(response);
       }
     );
   }
@@ -37,8 +35,6 @@ export class GalleryComponent implements AfterViewInit {
   }
 
   goToDrawing(drawingId:string) {
-    console.log("hello?");
-    console.log(drawingId);
     this.router.navigate([`/drawings/${drawingId}`]);
   }
 }
