@@ -2,6 +2,7 @@ import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/co
 import { Subscription } from 'rxjs';
 import { AuthenticationService } from 'src/app/modules/authentication';
 import { User } from '../authentication/models/user';
+import { Message } from './models/message.model';
 import { ChatSocketService } from './services/chat-socket.service';
 import { ChatService } from './services/chat.service';
 // import { TextChannelService } from './services/text-channel.service';
@@ -15,13 +16,15 @@ export class ChatComponent implements OnInit, OnDestroy {
   user: User | null;
   chatSubscription: Subscription;
   @ViewChild('messageBody', { static: false }) private messageBody: ElementRef<HTMLInputElement>;
-  @ViewChild('chatBox', { static: false }) private chatBox: ElementRef<HTMLInputElement>;
+  // @ViewChild('chatBox', { static: false }) private chatBox: ElementRef<HTMLInputElement>;
   @ViewChild('arrowDown', { static: false }) private iconArrowDown: ElementRef<HTMLInputElement>;
   @ViewChild('arrowUp', { static: false }) private iconArrowUp: ElementRef<HTMLInputElement>;
   @ViewChild('chatBottom', { static: false }) private chatBottom: ElementRef<HTMLInputElement>;
   message = '';
-  // messageHistory: Message[] = [];
-  channels: string[] = ['hello', 'world', 'patate'];
+  // saves connected rooms and message history from connection
+  currentMessageHistory: Map<string, Message[]> = new Map();
+  
+  // connectedRooms: string[] = [];
   chatStatus:boolean;
   isMinimized = false;
   isPopoutOpen = false;
@@ -37,9 +40,14 @@ export class ChatComponent implements OnInit, OnDestroy {
     this.authenticationService.currentUserObservable.subscribe(
       (user) => (this.user = user),
     );
-    this.chatService.toggleChatOverlay.subscribe(channel=>{
+    this.chatService.toggleChatOverlay.subscribe((channel) =>{
       this.chatRoomName = channel.name;
-      this.openChat(this.chatRoomName);
+      if (!this.isPopoutOpen) this.openChat();
+
+      if (!this.currentMessageHistory.has(channel.name)) {
+        this.currentMessageHistory.set(channel.name, []);
+        this.chatSocketService.joinRoom(channel.name);
+      }
     });
   }
 
@@ -47,12 +55,12 @@ export class ChatComponent implements OnInit, OnDestroy {
     this.keyListener();
     this.receiveMessage();
     this.chatSocketService.connect();
-    this.chatSocketService.joinRoom(this.chatRoomName);
   }
 
   ngOnDestroy(): void {
-    // this.textChannelService.saveMessages(message);
-    this.chatSocketService.leaveRoom(this.chatRoomName);
+    this.currentMessageHistory.forEach((_messages, roomName) => {
+      this.chatSocketService.leaveRoom(roomName);
+    });
     this.chatSocketService.disconnect();
     this.chatSubscription.unsubscribe();
   }
@@ -67,17 +75,16 @@ export class ChatComponent implements OnInit, OnDestroy {
   }
 
   receiveMessage() {
+    // appends every message from every roomname
     this.chatSubscription = this.chatSocketService.chatSubject.subscribe({
       next: (message) => {
-        console.log(message)
-        console.log("message reveicved")
-        const messageBox = this.chatBox.nativeElement;
-        const p = document.createElement('div');
-        p.textContent = `(${message.timestamp}) ${message.author}: ${message.message}`;
-        messageBox.appendChild(p);
-        messageBox.scrollTop = messageBox.scrollHeight;
+        this.currentMessageHistory.get(message.roomName)?.push(message);
 
-        // this.messageHistory.push(message);
+        // const messageBox = this.chatBox.nativeElement;
+        // const p = document.createElement('div');
+        // p.textContent = `(${message.timestamp}) ${message.author}: ${message.message}`;
+        // messageBox.appendChild(p);
+        // messageBox.scrollTop = messageBox.scrollHeight;
       },
     });
   }
@@ -100,8 +107,6 @@ export class ChatComponent implements OnInit, OnDestroy {
       author: name,
       roomName: this.chatRoomName,
     };
-    console.log("roomname: " + message.roomName);
-
     this.chatSocketService.sendMessage(message);
     this.messageBody.nativeElement.value = '';
     this.message = '';
@@ -129,19 +134,15 @@ export class ChatComponent implements OnInit, OnDestroy {
     }
   }
 
-  public openChat(channelName:string){
-    let chat = <HTMLInputElement>document.getElementById("chat-popup");
-    chat.style.display = "block";
+  openChat(){
+    const chat = document.getElementById('chat-popup') as HTMLInputElement;
+    chat.style.display = 'block';
     this.minimizeChat(false);
   }
 
-  public closeChat(){
-    let chat = <HTMLInputElement>document.getElementById("chat-popup");
-    chat.style.display = "none";
-  }
-
-  public openChatWindow(){
-    this.closeChat();
+  closeChat(){
+    const chat = document.getElementById('chat-popup') as HTMLInputElement;
+    chat.style.display = 'none';
   }
 
   openChatPopout() {
@@ -149,6 +150,7 @@ export class ChatComponent implements OnInit, OnDestroy {
   }
 
   closeChatPopout() {
+    // on close using browser doesn't toggle ispopoutopen
     this.isPopoutOpen = false;
   }
 }

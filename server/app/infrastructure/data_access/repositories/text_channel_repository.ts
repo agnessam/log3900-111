@@ -21,15 +21,15 @@ export class TextChannelRepository extends GenericRepository<TextChannelInterfac
 		})
 	};
 
-	public async getChannelsByName(channelName: string) {
-		return new Promise((resolve, reject) => {
-			TextChannel.find({name: channelName})
-			.exec((err, channels) => {
-				if (err) {
-					reject(err);
-				}
-				resolve(channels);
-			})
-		})
-	}
+	// public async getChannelsByName(channelName: string) {
+	// 	return new Promise((resolve, reject) => {
+	// 		TextChannel.find({name: channelName})
+	// 		.exec((err, channels) => {
+	// 			if (err) {
+	// 				reject(err);
+	// 			}
+	// 			resolve(channels);
+	// 		})
+	// 	})
+	// }
 }

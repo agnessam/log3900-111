@@ -1,21 +1,19 @@
 import { Component, OnDestroy, OnInit, } from "@angular/core";
-import { Subscription } from "rxjs";
 import { AuthenticationService } from "src/app/modules/authentication";
-import { User } from "../authentication/models/user";
-import { ChatService } from "../chat/services/chat.service";
-import { TextChannel } from '../chat/models/text-channel.model';
-import { TextChannelService } from '../chat/services/text-channel.service';
+import { User } from "../../authentication/models/user";
+import { TextChannel } from '../models/text-channel.model';
+import { ChatService } from "../services/chat.service";
+import { TextChannelService } from '../services/text-channel.service';
 
 @Component({
-  selector: "channel",
-  templateUrl: "./channel.component.html",
-  styleUrls: ["./channel.component.scss"],
+  selector: 'channel',
+  templateUrl: './channel.component.html',
+  styleUrls: ['./channel.component.scss'],
 })
 export class ChannelComponent implements OnInit, OnDestroy {
-  public user: User | null;
-  public chatSubscription: Subscription;
-  public channels: TextChannel[];
-  public isSearchOpen: boolean;
+  user: User | null;
+  channels: TextChannel[];
+  isSearchOpen: boolean;
 
   public isChannelListOpen:boolean;
 
@@ -27,7 +25,7 @@ export class ChannelComponent implements OnInit, OnDestroy {
     private textChannelService: TextChannelService,
   ) {
     this.authenticationService.currentUserObservable.subscribe(
-      (user) => (this.user = user)
+      (user) => (this.user = user),
     );
     this.isSearchOpen = false;
   }
@@ -40,7 +38,7 @@ export class ChannelComponent implements OnInit, OnDestroy {
     this.textChannelService.getChannels().subscribe((channels) => {
       this.channels = channels;
       console.log(channels);
-    })
+    });
   }
 
   ngOnDestroy(): void {
@@ -54,7 +52,7 @@ export class ChannelComponent implements OnInit, OnDestroy {
 
   searchChannel(evt: Event):void {
     const search = (evt.target as HTMLInputElement).value;
-    console.log(search)
+    console.log(search);
   }
 
   toggleSearchBar(): void {
@@ -63,8 +61,8 @@ export class ChannelComponent implements OnInit, OnDestroy {
   }
 
   openChannel(channel: TextChannel):void {
-    let channelOverlay = <HTMLInputElement>document.getElementById("channel-overlay");
-    channelOverlay.style.display = "none";
+    const channelOverlay = document.getElementById('channel-overlay') as HTMLInputElement;
+    channelOverlay.style.display = 'none';
     this.chatService.toggleChatOverlay.emit(channel);
     this.toggleChannelOverlay(false);
     this.isChannelListOpen = false;

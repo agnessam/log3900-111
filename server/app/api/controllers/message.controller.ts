@@ -28,4 +28,9 @@ export class MessageController {
   public async createMessage(@request() req: Request) {
     return await this.messageRepository.create(req.body);
   }
+
+  @httpPost('/')
+  public async storeMessages(@request() req: Request) {
+    return await this.messageRepository.storeMessages(req.body);
+  }
 }
