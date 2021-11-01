@@ -55,9 +55,6 @@ export class NewDrawingService {
   }
 
   createNewDrawing(drawingDataUri: string ): Observable<any> {
-    // TODO: Find a way to get canvas dataUri
-    // TODO: Wait for changes in backend for ownerId
-    // TODO: Pick between user or team
     let newDrawing = {
       dataUri: drawingDataUri,
       ownerId: "617832e99a8c22d106b37528",
