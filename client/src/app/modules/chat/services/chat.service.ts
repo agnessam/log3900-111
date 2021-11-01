@@ -12,6 +12,6 @@ export class ChatService{
   constructor() {}
 
   toggleChatOverlay : EventEmitter<TextChannel> = new EventEmitter<TextChannel>()
-  toggleChannelOverlay : EventEmitter<boolean> = new EventEmitter<boolean>()
+  toggleChannelOverlay : EventEmitter<null> = new EventEmitter<null>()
 
 }

@@ -17,7 +17,7 @@ export class ChannelComponent implements OnInit, OnDestroy {
   public channels: TextChannel[];
   public isSearchOpen: boolean;
 
-  public channelOverlayStatus:boolean;
+  public isChannelListOpen:boolean;
 
   //@Input() private chatRoomName: string = "default";
 
@@ -34,8 +34,8 @@ export class ChannelComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.chatService.toggleChannelOverlay.subscribe(status=>{
-      this.channelOverlayStatus = status;
-      this.toggleChannelOverlay(status);
+      this.isChannelListOpen = !this.isChannelListOpen;
+      this.toggleChannelOverlay(this.isChannelListOpen);
     });
     this.textChannelService.getChannels().subscribe((channels) => {
       this.channels = channels;
@@ -66,14 +66,14 @@ export class ChannelComponent implements OnInit, OnDestroy {
     let channelOverlay = <HTMLInputElement>document.getElementById("channel-overlay");
     channelOverlay.style.display = "none";
     this.chatService.toggleChatOverlay.emit(channel);
-    this.toggleChannelOverlay(true);
-    this.channelOverlayStatus = false;
+    this.toggleChannelOverlay(false);
+    this.isChannelListOpen = false;
   }
 
-  toggleChannelOverlay(isOpen:boolean){
+  toggleChannelOverlay(open:boolean){
     let channelOverlay = <HTMLInputElement>document.getElementById("channel-overlay");
 
-    if(isOpen) channelOverlay.style.display = "none";
-    else channelOverlay.style.display = "block";
+    if(open) channelOverlay.style.display = "block";
+    else channelOverlay.style.display = "none";
   }
 }

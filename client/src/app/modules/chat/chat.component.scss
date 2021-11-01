@@ -24,10 +24,11 @@
   box-shadow :0 0 5px rgba(0,0,0,0.4);
   border-top-left-radius: 15px;
   border-top-right-radius: 15px;
+  background: rgba(255,255,255,0.8);
 }
 
 .chat-top{
-  background-color: rgba(#DEDEDE,0.4);
+  background-color: rgba(#DEDEDE,0.8);
   border-top-left-radius: 15px;
   border-top-right-radius: 15px;
   display:flex;
@@ -52,7 +53,7 @@
   width: 90%;
   overflow-x: hidden;
   overflow-y: auto;
-  background: rgba(255,255,255,0.4);
+  background: rgba(255,255,255,0.8);
 }
 
 .buttonContainer {
@@ -70,7 +71,7 @@
   width: 100%;
   justify-content: space-between;
   align-items: center;
-  background-color: rgba(255,255,255,0.4);
+  //background-color: rgba(255,255,255,0.4);
   border-top: 2px black;
 }
 
