@@ -20,7 +20,7 @@ export const referenceDataIoCModule = new ContainerModule((bind) => {
     .to(ChatSocketService)
     .inSingletonScope();
 
-  bind<SocketServiceInterface>(TYPES.DrawingSocketService)
+  bind<DrawingSocketService>(TYPES.DrawingSocketService)
     .to(DrawingSocketService)
     .inSingletonScope();
 

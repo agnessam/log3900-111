@@ -2,12 +2,12 @@ import { Component, HostListener, OnInit } from "@angular/core";
 import { FormGroup } from "@angular/forms";
 import { MatDialogRef } from "@angular/material/dialog";
 import { MatSnackBar } from "@angular/material/snack-bar";
-import { ColorPickerService } from "src/app/modules/color-picker";
-import { DEFAULT_RGB_COLOR, DEFAULT_ALPHA } from "src/app/shared";
-import { DrawingService } from "src/app/modules/workspace";
-import { NewDrawingService } from "./new-drawing.service";
 import { Router } from "@angular/router";
+import { ColorPickerService } from "src/app/modules/color-picker";
+import { DrawingService } from "src/app/modules/workspace";
+import { DEFAULT_ALPHA, DEFAULT_RGB_COLOR } from "src/app/shared";
 import { DrawingHttpClientService } from "../backend-communication";
+import { NewDrawingService } from "./new-drawing.service";
 
 const ONE_SECOND = 1000;
 @Component({

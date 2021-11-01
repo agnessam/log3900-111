@@ -1,6 +1,6 @@
 import {
   COLLABORATIVE_DRAWING_NAMESPACE,
-  DRAW_EVENT_NAME,
+  DRAW_EVENT,
 } from '../../constants/socket-constants';
 import { SocketServiceInterface } from '@app/domain/interfaces/socket.interface';
 import { injectable } from 'inversify';
@@ -18,14 +18,13 @@ export class DrawingSocketService extends SocketServiceInterface {
   }
 
   private listenDrawingCommand(socket: Socket): void {
-    socket.on(DRAW_EVENT_NAME, (drawingCommand: DrawingCommand) => {
+    socket.on(DRAW_EVENT, (drawingCommand: DrawingCommand) => {
+      console.log(drawingCommand);
       this.emitDrawingCommand(drawingCommand);
     });
   }
 
   private emitDrawingCommand(drawingCommand: DrawingCommand): void {
-    this.namespace
-      .to(drawingCommand.roomName)
-      .emit(DRAW_EVENT_NAME, drawingCommand);
+    this.namespace.to(drawingCommand.roomName).emit(DRAW_EVENT, drawingCommand);
   }
 }

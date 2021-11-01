@@ -9,9 +9,16 @@ import {
   providedIn: "root",
 })
 export class DrawingSocketService extends AbstractSocketService {
+  roomName: string;
+
   constructor() {
     super();
     this.init();
+  }
+
+  joinRoom(roomName: string) {
+    this.roomName = roomName;
+    super.joinRoom(roomName);
   }
 
   protected init(): void {
