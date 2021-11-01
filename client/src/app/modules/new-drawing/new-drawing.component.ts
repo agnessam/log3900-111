@@ -50,7 +50,8 @@ export class NewDrawingComponent implements OnInit {
       rgb: this.colorPickerService.rgb.value,
       a: this.colorPickerService.a.value,
     });
-    this.newDrawingService.createNewDrawing(drawingDataUri).subscribe((response) => {
+    let ownerModel:string = "User";
+    this.newDrawingService.createNewDrawing(drawingDataUri, ownerModel).subscribe((response) => {
       if (response._id) {
         this.router.navigate([`/drawings/${response._id}`]);
         this.snackBar.open("Nouveau dessin créé", "", { duration: ONE_SECOND });

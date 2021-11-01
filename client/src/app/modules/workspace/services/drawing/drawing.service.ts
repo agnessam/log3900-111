@@ -110,7 +110,6 @@ export class DrawingService {
   openSvgFromDataUri(dataUri: string): void{
     let svgDomString = atob(dataUri.replace("data:image/svg+xml;base64,", ""));
     const documentSvg = new DOMParser().parseFromString(svgDomString, 'image/svg+xml');
-    console.log(documentSvg.children[0]);
     this.openDrawing(documentSvg.children[0] as SVGElement);
   }
 
