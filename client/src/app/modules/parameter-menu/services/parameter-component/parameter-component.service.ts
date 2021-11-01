@@ -1,22 +1,15 @@
 import { Injectable, Type } from "@angular/core";
 import { ControlMenuComponent } from "../../components/control-menu/control-menu.component";
-import { ApplierToolParameterComponent,
-  BrushToolParameterComponent,
-  BucketFillToolParameterComponent,
+import {
+  ApplierToolParameterComponent,
   EllipseToolParameterComponent,
   EraserToolParameterComponent,
-  FeatherToolParameterComponent,
-  GridParameterComponent,
   LineToolParameterComponent,
-  PenToolParameterComponent,
   PencilToolParameterComponent,
-  PipetteToolParameterComponent,
   PolygonToolParameterComponent,
   RectangleToolParameterComponent,
   SelectionToolParameterComponent,
-  SprayToolParameterComponent,
-  StampToolParameterComponent,
-  TextToolParameterComponent} from "src/app/modules/tool-parameters";
+} from "src/app/modules/tool-parameters";
 
 /// Classe permettant d'offrir dyamiquement des component selon un index
 @Injectable({
@@ -29,22 +22,13 @@ export class ParameterComponentService {
       SelectionToolParameterComponent,
       EraserToolParameterComponent,
       PencilToolParameterComponent,
-      BrushToolParameterComponent,
-      FeatherToolParameterComponent,
-      PenToolParameterComponent,
       RectangleToolParameterComponent,
       EllipseToolParameterComponent,
       PolygonToolParameterComponent,
       LineToolParameterComponent,
-      StampToolParameterComponent,
-      SprayToolParameterComponent,
-      TextToolParameterComponent,
-      ApplierToolParameterComponent,
-      BucketFillToolParameterComponent,
-      PipetteToolParameterComponent
+      ApplierToolParameterComponent
     );
     // Le push se fait par la suite pour s'assurer qu'il s'agit de la derniere classe
-    this.parameterComponentList.push(GridParameterComponent);
     this.parameterComponentList.push(ControlMenuComponent);
   }
 

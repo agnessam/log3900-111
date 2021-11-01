@@ -51,6 +51,7 @@ export class ParameterMenuComponent implements OnChanges {
       );
     const viewContainerRef: ViewContainerRef =
       this.parameterHost.viewContainerRef;
+
     viewContainerRef.clear();
     viewContainerRef.createComponent(componentFactory);
   }
