@@ -4,7 +4,7 @@ import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 import { faTint } from "@fortawesome/free-solid-svg-icons";
 import { ICommand } from "src/app/modules/workspace/interfaces/command.interface";
 import { RendererProviderService } from "../../renderer-provider/renderer-provider.service";
-import { ToolsColorService } from "../../tools-color/tools-color.service";
+import { ToolsColorService } from "src/app/modules/tools-color/services/tools-color.service";
 import { Tools } from "../../../interfaces/tools.interface";
 import { ToolIdConstants } from "../tool-id-constants";
 import { LEFT_CLICK, RIGHT_CLICK } from "../tools-constants";
