@@ -40,7 +40,6 @@ export abstract class SocketServiceInterface {
   protected listenRoom(socket: Socket): void {
     socket.on(ROOM_EVENT_NAME, (roomName: string) => {
       console.log(`User has joined room ${roomName}`);
-      console.log(socket.id);
       socket.join(roomName);
     });
   }

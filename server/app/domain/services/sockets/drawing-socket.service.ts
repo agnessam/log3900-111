@@ -5,6 +5,7 @@ import {
 import { SocketServiceInterface } from '@app/domain/interfaces/socket.interface';
 import { injectable } from 'inversify';
 import { Server, Socket } from 'socket.io';
+import { DrawingCommand } from '@app/domain/interfaces/drawing-command.interface';
 
 @injectable()
 export class DrawingSocketService extends SocketServiceInterface {
@@ -17,8 +18,14 @@ export class DrawingSocketService extends SocketServiceInterface {
   }
 
   private listenDrawingCommand(socket: Socket): void {
-    socket.on(DRAW_EVENT_NAME, (shape) => {
-      console.log(shape);
+    socket.on(DRAW_EVENT_NAME, (drawingCommand: DrawingCommand) => {
+      this.emitDrawingCommand(drawingCommand);
     });
+  }
+
+  private emitDrawingCommand(drawingCommand: DrawingCommand): void {
+    this.namespace
+      .to(drawingCommand.roomName)
+      .emit(DRAW_EVENT_NAME, drawingCommand);
   }
 }
