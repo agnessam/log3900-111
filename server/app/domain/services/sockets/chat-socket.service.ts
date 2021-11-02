@@ -17,7 +17,6 @@ export class ChatSocketService extends SocketServiceInterface {
 	@inject(TYPES.MessageRepository) public messageRepository: MessageRepository;
 	messageHistory: Map<string, MessageInterface[]> = new Map();
 	connectedUsers: Map<string, number> = new Map();
-	
 
 	init(io: Server) {
 		this.namespace = io.of(CHAT_NAMESPACE_NAME);
@@ -63,13 +62,22 @@ export class ChatSocketService extends SocketServiceInterface {
 			console.log(`User has joined room ${roomName}`);
 			socket.join(roomName);
 
+			if (this.messageHistory.has(roomName)) {
+				this.emitHistory(roomName, this.messageHistory.get(roomName) as MessageInterface[]);
+			}
+
 			if (!this.connectedUsers.has(roomName)) {
 				this.connectedUsers.set(roomName, 1);
 			}
 			const numUsers = (this.connectedUsers.get(roomName) as number) + 1;
 			this.connectedUsers.set(roomName, numUsers);
-			console.log(`number of users in ${roomName} : ${this.connectedUsers.get(roomName)}`)
+			// console.log(`number of users in ${roomName} : ${this.connectedUsers.get(roomName)}`)
 		});
+	}
+
+	private emitHistory(roomName: string, history: MessageInterface[]) {
+		this.namespace.to(roomName).emit(ROOM_EVENT_NAME, history);
+		console.log(`message history: ${history}`);
 	}
 
 	protected listenLeaveRoom(socket: Socket) {
@@ -86,7 +94,7 @@ export class ChatSocketService extends SocketServiceInterface {
 			if (numUsers == 0) {
 				this.messageRepository.storeMessages(this.messageHistory.get(roomName) as MessageInterface[]);
 			}
-			console.log(`number of users in ${roomName} : ${this.connectedUsers.get(roomName)}`)
+			// console.log(`number of users in ${roomName} : ${this.connectedUsers.get(roomName)}`)
 		});
 	}
 

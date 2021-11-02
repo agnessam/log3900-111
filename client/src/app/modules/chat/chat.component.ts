@@ -16,53 +16,33 @@ export class ChatComponent implements OnInit, OnDestroy {
   user: User | null;
   chatSubscription: Subscription;
   @ViewChild('messageBody', { static: false }) private messageBody: ElementRef<HTMLInputElement>;
-  // @ViewChild('chatBox', { static: false }) private chatBox: ElementRef<HTMLInputElement>;
+  @ViewChild('chatBox', { static: false }) private chatBox: ElementRef<HTMLInputElement>;
   @ViewChild('arrowDown', { static: false }) private iconArrowDown: ElementRef<HTMLInputElement>;
   @ViewChild('arrowUp', { static: false }) private iconArrowUp: ElementRef<HTMLInputElement>;
   @ViewChild('chatBottom', { static: false }) private chatBottom: ElementRef<HTMLInputElement>;
   message = '';
   // saves connected rooms and message history from connection
-  currentMessageHistory: Map<string, Message[]> = new Map();
+  connectedMessageHistory: Map<string, Message[]> = new Map();
 
   // connectedRooms: string[] = [];
   chatStatus:boolean;
   isMinimized = false;
   isPopoutOpen = false;
 
-  chatRoomName = 'General!';
-  messages: Map<string, Message[]> = new Map();
+  chatRoomName = 'General';
 
   constructor(
     private authenticationService: AuthenticationService,
     private chatSocketService: ChatSocketService,
     private chatService: ChatService,
     // private textChannelService: TextChannelService,
-  ) {
+  ) {}
+
+  ngOnInit(): void {
     this.authenticationService.currentUserObservable.subscribe(
       (user) => (this.user = user),
     );
-    this.chatService.toggleChatOverlay.subscribe((channel) =>{
-      this.chatRoomName = channel.name;
-      if (!this.isPopoutOpen) this.openChat();
-
-      if (!this.currentMessageHistory.has(channel.name)) {
-        this.currentMessageHistory.set(channel.name, []);
-        this.chatSocketService.joinRoom(channel.name);
-      }
-    });
-
-    const hour = new Date().getHours().toString();
-    const minute = new Date().getMinutes().toString();
-    const second = new Date().getSeconds().toString();
-    const time = hour + ':' + minute + ':' + second;
-    const m1:Message = {message: "hello", timestamp: time, author: "meloo", roomName: "default"};
-    const m2:Message = {message: "yooo", timestamp: time, author: "joe", roomName: "default"};
-    const m3:Message = {message: "heyyyyy", timestamp: time, author: "patate", roomName: "default"};
-    let mes = [m1,m2,m3];
-    this.messages.set(this.chatRoomName, mes);
-  }
-
-  ngOnInit(): void {
+    this.joinRoom();
     this.keyListener();
     this.receiveMessage();
     this.chatSocketService.connect();
@@ -70,7 +50,7 @@ export class ChatComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.currentMessageHistory.forEach((_messages, roomName) => {
+    this.connectedMessageHistory.forEach((_messages, roomName) => {
       this.chatSocketService.leaveRoom(roomName);
     });
     this.chatSocketService.disconnect();
@@ -86,17 +66,30 @@ export class ChatComponent implements OnInit, OnDestroy {
     });
   }
 
+  joinRoom() {
+    this.chatService.toggleChatOverlay.subscribe((channel) =>{
+      this.chatRoomName = channel.name;
+      if (!this.isPopoutOpen) this.openChat();
+
+      if (!this.connectedMessageHistory.has(channel.name)) {
+        this.connectedMessageHistory.set(channel.name, []);
+        this.chatSocketService.joinRoom(channel.name);
+        this.chatSocketService.messageHistory.subscribe({
+          next: (history) => {
+            this.connectedMessageHistory.set(channel.name, history);
+          }
+        });
+      }
+    });
+  }
+
   receiveMessage() {
     // appends every message from every roomname
     this.chatSubscription = this.chatSocketService.chatSubject.subscribe({
       next: (message) => {
-        this.currentMessageHistory.get(message.roomName)?.push(message);
-
-        // const messageBox = this.chatBox.nativeElement;
-        // const p = document.createElement('div');
-        // p.textContent = `(${message.timestamp}) ${message.author}: ${message.message}`;
-        // messageBox.appendChild(p);
-        // messageBox.scrollTop = messageBox.scrollHeight;
+        this.connectedMessageHistory.get(message.roomName)?.push(message);
+        const messageBox = this.chatBox.nativeElement;
+        messageBox.scrollTop = messageBox.scrollHeight;
       },
     });
   }
@@ -106,7 +99,7 @@ export class ChatComponent implements OnInit, OnDestroy {
 
     let name = '';
     if (this.user?.username === null) return;
-    name = this.user!.username;
+    name = (this.user as User).username;
 
     const hour = new Date().getHours().toString();
     const minute = new Date().getMinutes().toString();
@@ -167,16 +160,15 @@ export class ChatComponent implements OnInit, OnDestroy {
   }
 
   getMessageClass(author:string): string{
-    //if(this.user?._id == author)
-    if("joe"== author)
-      return "user";
+    if(this.user?.username === author)
+      return 'user';
     else
-      return "other";
+      return 'other';
   }
 
   getMessages():Message[]{
-    let messages = this.messages.get(this.chatRoomName);
-    if (messages != undefined)
+    const messages = this.connectedMessageHistory.get(this.chatRoomName);
+    if (messages !== undefined)
       return messages;
     else
       return [];
