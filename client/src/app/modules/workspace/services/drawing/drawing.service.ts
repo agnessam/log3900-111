@@ -54,6 +54,7 @@ export class DrawingService {
 
   /// Ajout d'un objet dans la map d'objet du dessin
   addObject(obj: SVGElement): number {
+    console.log(this.objectList);
     this.saved = false;
     if (!obj.id) {
       this.lastObjectId++;

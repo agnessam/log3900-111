@@ -25,6 +25,7 @@ export class PencilToolService implements Tools {
   private strokeWidth: FormControl;
   private pencil: Pencil | null;
   private pencilCommand: PencilCommand | null;
+
   parameters: FormGroup;
 
   constructor(
@@ -54,6 +55,7 @@ export class PencilToolService implements Tools {
           fillOpacity: "none",
           strokeOpacity: "none",
         };
+
         if (event.button === LEFT_CLICK) {
           this.pencil.stroke = this.colorTool.primaryColorString;
           this.pencil.strokeOpacity = this.colorTool.primaryAlpha.toString();
@@ -93,6 +95,7 @@ export class PencilToolService implements Tools {
       this.drawingSocketService.sendDrawingCommand(this.pencil, "Pencil");
     }
   }
+
   onKeyUp(event: KeyboardEvent): void {
     return;
   }

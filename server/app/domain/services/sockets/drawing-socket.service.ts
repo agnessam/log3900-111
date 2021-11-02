@@ -20,11 +20,11 @@ export class DrawingSocketService extends SocketServiceInterface {
   private listenDrawingCommand(socket: Socket): void {
     socket.on(DRAW_EVENT, (drawingCommand: DrawingCommand) => {
       console.log(drawingCommand);
-      this.emitDrawingCommand(drawingCommand);
+      this.emitDrawingCommand(drawingCommand, socket);
     });
   }
 
-  private emitDrawingCommand(drawingCommand: DrawingCommand): void {
-    this.namespace.to(drawingCommand.roomName).emit(DRAW_EVENT, drawingCommand);
+  private emitDrawingCommand(drawingCommand: DrawingCommand, socket: Socket): void {
+    socket.to(drawingCommand.roomName).emit(DRAW_EVENT, drawingCommand);
   }
 }

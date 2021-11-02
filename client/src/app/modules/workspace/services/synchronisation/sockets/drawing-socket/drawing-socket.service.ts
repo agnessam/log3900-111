@@ -5,6 +5,7 @@ import {
   DRAW_EVENT,
 } from "src/app/shared";
 import { SocketTool } from "../../../tools/socket-tool";
+import { SynchronisationService } from "../../synchronisation.service";
 
 @Injectable({
   providedIn: "root",
@@ -12,7 +13,7 @@ import { SocketTool } from "../../../tools/socket-tool";
 export class DrawingSocketService extends AbstractSocketService {
   roomName: string;
 
-  constructor() {
+  constructor(private synchronisationService: SynchronisationService) {
     super();
     this.init();
   }
@@ -41,8 +42,8 @@ export class DrawingSocketService extends AbstractSocketService {
   }
 
   private listenDrawingCommand(): void {
-    this.namespaceSocket.on(DRAW_EVENT, (drawingCommand: any) => {
-      console.log(drawingCommand);
+    this.namespaceSocket.on(DRAW_EVENT, (drawingCommand: SocketTool) => {
+      this.synchronisationService.execute(drawingCommand); // TODO: Execute command based on drawing Command
     });
   }
 }
