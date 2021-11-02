@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewChild, ElementRef} from "@angular/core";
+import { Component, OnDestroy, OnInit, ViewChild, ElementRef } from "@angular/core";
 import { AuthenticationService } from "src/app/modules/authentication";
 import { User } from "../../authentication/models/user";
 import { TextChannel } from '../models/text-channel.model';
@@ -44,38 +44,36 @@ export class ChannelComponent implements OnInit, OnDestroy {
     this.textChannelService.getChannels().subscribe((channels) => {
       this.channels = channels;
     });
+    this.keyListener();
   }
 
   ngOnDestroy(): void {
   }
 
   addChannel():void {
-  // this.textChannelService.createChannel('testname', this.user?._id as string).subscribe((channel) => {
-  //   console.log(channel);
-  // });
     let name=this.newChannelName;
     this.newChannelName = '';
     this.newChannelNameInput.nativeElement.value = '';
 
     let isWhitespace = (name || '').trim().length === 0;
     if (isWhitespace){
-      this.snackBar.open("The name can not be empty", "Close", {
-        duration: 3000,
-      });
+      this.snackBar.open("The name can not be empty", "Close", { duration: 3000 });
       return;
     }
     else{
+      let isValid =true;
       this.channels.forEach(channel => {
         if(channel.name == name){
-          this.snackBar.open("This channel already exist", "Close", {
-            duration: 3000,
-          });
-          return;
+          this.snackBar.open("This channel already exist", "Close", { duration: 3000 });
+          isValid =false;
         }
       });
-      this.textChannelService.createChannel(name, this.user?._id as string).subscribe((channel) => {
-         console.log(channel);
-      });
+
+      if(isValid) {
+        this.textChannelService.createChannel(name, this.user?._id as string).subscribe((channel) => {
+          console.log(channel);
+       });
+      }
     }
   }
 
