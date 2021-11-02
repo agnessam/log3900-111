@@ -42,7 +42,7 @@ export class ChatComponent implements OnInit, OnDestroy {
     this.authenticationService.currentUserObservable.subscribe(
       (user) => (this.user = user),
     );
-    this.joinRoom();
+    this.openChatRoom();
     this.keyListener();
     this.receiveMessage();
     this.chatSocketService.connect();
@@ -66,28 +66,39 @@ export class ChatComponent implements OnInit, OnDestroy {
     });
   }
 
-  joinRoom() {
+  openChatRoom() {
     this.chatService.toggleChatOverlay.subscribe((channel) =>{
       this.chatRoomName = channel.name;
-      if (!this.isPopoutOpen) this.openChat();
-
-      if (!this.connectedMessageHistory.has(channel.name)) {
-        this.connectedMessageHistory.set(channel.name, []);
-        this.chatSocketService.joinRoom(channel.name);
-        this.chatSocketService.messageHistory.subscribe({
-          next: (history) => {
-            this.connectedMessageHistory.set(channel.name, history);
-          }
-        });
+      if (!this.isPopoutOpen) {
+        const chat = document.getElementById('chat-popup') as HTMLInputElement;
+        chat.style.display = 'block';
+        this.minimizeChat(false);
       }
+      this.joinRoom(channel.name);
     });
+  }
+
+  joinRoom(channelName: string) {
+    if (!this.connectedMessageHistory.has(channelName)) {
+      this.connectedMessageHistory.set(channelName, []);
+      this.chatSocketService.joinRoom(channelName);
+      this.chatSocketService.messageHistory.subscribe({
+        next: (history) => {
+          this.connectedMessageHistory.set(channelName, history);
+        }
+      });
+    }
   }
 
   receiveMessage() {
     // appends every message from every roomname
     this.chatSubscription = this.chatSocketService.chatSubject.subscribe({
       next: (message) => {
+        if (!this.connectedMessageHistory.has(message.roomName)) {
+          this.joinRoom(message.roomName);
+        }
         this.connectedMessageHistory.get(message.roomName)?.push(message);
+        console.log(this.connectedMessageHistory.get(message.roomName));
         const messageBox = this.chatBox.nativeElement;
         messageBox.scrollTop = messageBox.scrollHeight;
       },
@@ -139,12 +150,6 @@ export class ChatComponent implements OnInit, OnDestroy {
     }
   }
 
-  openChat(){
-    const chat = document.getElementById('chat-popup') as HTMLInputElement;
-    chat.style.display = 'block';
-    this.minimizeChat(false);
-  }
-
   closeChat(){
     const chat = document.getElementById('chat-popup') as HTMLInputElement;
     chat.style.display = 'none';
@@ -167,6 +172,7 @@ export class ChatComponent implements OnInit, OnDestroy {
   }
 
   getMessages():Message[]{
+    // console.log(`get messages from : ${this.chatRoomName}`);
     const messages = this.connectedMessageHistory.get(this.chatRoomName);
     if (messages !== undefined)
       return messages;
