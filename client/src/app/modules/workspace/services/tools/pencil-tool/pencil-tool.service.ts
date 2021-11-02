@@ -10,7 +10,7 @@ import { Tools } from "../../../interfaces/tools.interface";
 import { ToolIdConstants } from "../tool-id-constants";
 import { INITIAL_WIDTH, LEFT_CLICK, RIGHT_CLICK } from "../tools-constants";
 import { PencilCommand } from "./pencil-command";
-import { Pencil } from "./pencil.model";
+import { InProgressPencil, Pencil } from "./pencil.model";
 import { DrawingSocketService } from "../../synchronisation/sockets/drawing-socket/drawing-socket.service";
 import { UuidGeneratorService } from "src/app/shared/id-generator/uuid-generator.service";
 
@@ -26,6 +26,8 @@ export class PencilToolService implements Tools {
   private strokeWidth: FormControl;
   private pencil: Pencil | null;
   private pencilCommand: PencilCommand | null;
+
+  private inProgressPencil: InProgressPencil | null;
 
   parameters: FormGroup;
 
@@ -49,14 +51,21 @@ export class PencilToolService implements Tools {
       if (this.strokeWidth.valid) {
         const offset: { x: number; y: number } =
           this.offsetManager.offsetFromMouseEvent(event);
+
+        const shapeId = this.uuidGeneratorService.generateId();
         this.pencil = {
-          id: this.uuidGeneratorService.generateId(),
+          id: shapeId,
           pointsList: [offset],
           strokeWidth: this.strokeWidth.value,
           fill: "none",
           stroke: "none",
           fillOpacity: "none",
           strokeOpacity: "none",
+        };
+
+        this.inProgressPencil = {
+          id: shapeId,
+          point: offset,
         };
 
         if (event.button === LEFT_CLICK) {
@@ -83,6 +92,7 @@ export class PencilToolService implements Tools {
   /// Réinitialisation de l'outil après avoir laisser le clique de la souris
   onRelease(event: MouseEvent): void | ICommand {
     this.pencil = null;
+    this.inProgressPencil = null;
     if (this.pencilCommand) {
       const returnPencilCommand = this.pencilCommand;
       this.pencilCommand = null;
@@ -95,11 +105,11 @@ export class PencilToolService implements Tools {
   /// Ajout d'un point selon le déplacement de la souris
   onMove(event: MouseEvent): void {
     if (this.pencilCommand) {
-      this.pencilCommand.addPoint(
-        this.offsetManager.offsetFromMouseEvent(event)
-      );
+      const mousePosition = this.offsetManager.offsetFromMouseEvent(event);
+      this.pencilCommand.addPoint(mousePosition);
+      this.inProgressPencil!.point = mousePosition;
       this.drawingSocketService.sendInProgressDrawingCommand(
-        this.pencil,
+        this.inProgressPencil,
         "Pencil"
       );
     }

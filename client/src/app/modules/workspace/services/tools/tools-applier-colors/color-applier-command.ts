@@ -62,6 +62,10 @@ export class ColorApplierCommand implements ICommand {
     );
   }
 
+  update(drawingCommand: any): void {
+    throw new Error("Method not implemented.");
+  }
+
   undo(): void {
     this.changeColor(this.previousColor, this.previousAlpha);
   }

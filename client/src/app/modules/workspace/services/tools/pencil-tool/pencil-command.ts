@@ -2,7 +2,7 @@ import { Renderer2 } from "@angular/core";
 import { ICommand } from "src/app/modules/workspace/interfaces/command.interface";
 import { Point } from "src/app/shared";
 import { DrawingService } from "../../drawing/drawing.service";
-import { Pencil } from "./pencil.model";
+import { InProgressPencil, Pencil } from "./pencil.model";
 
 /// Commande pour ajouter un objet de type pencil sur le dessin
 export class PencilCommand implements ICommand {
@@ -129,5 +129,7 @@ export class PencilCommand implements ICommand {
     }
   }
 
-  update(drawingShape: any): void {}
+  update(pencilAttributes: InProgressPencil): void {
+    this.addPoint(pencilAttributes.point);
+  }
 }

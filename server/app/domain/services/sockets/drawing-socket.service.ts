@@ -1,6 +1,7 @@
 import {
   COLLABORATIVE_DRAWING_NAMESPACE,
-  DRAW_EVENT,
+  CONFIRM_DRAW_EVENT,
+  IN_PROGRESS_DRAW_EVENT,
 } from '../../constants/socket-constants';
 import { SocketServiceInterface } from '@app/domain/interfaces/socket.interface';
 import { injectable } from 'inversify';
@@ -14,17 +15,39 @@ export class DrawingSocketService extends SocketServiceInterface {
   }
 
   protected setSocketListens(socket: Socket): void {
-    this.listenDrawingCommand(socket);
+    this.listenInProgressDrawingCommand(socket);
+    this.listenConfirmDrawingCommand(socket);
   }
 
-  private listenDrawingCommand(socket: Socket): void {
-    socket.on(DRAW_EVENT, (drawingCommand: DrawingCommand) => {
+  private listenInProgressDrawingCommand(socket: Socket): void {
+    socket.on(IN_PROGRESS_DRAW_EVENT, (drawingCommand: DrawingCommand) => {
       console.log(drawingCommand);
-      this.emitDrawingCommand(drawingCommand, socket);
+      this.emitInProgressDrawingCommand(drawingCommand, socket);
     });
   }
 
-  private emitDrawingCommand(drawingCommand: DrawingCommand, socket: Socket): void {
-    socket.to(drawingCommand.roomName).emit(DRAW_EVENT, drawingCommand);
+  // Will be used to store all the drawn shapes since the join of the drawing.
+  // Allows users to load what was there.
+  private listenConfirmDrawingCommand(socket: Socket): void {
+    socket.on(CONFIRM_DRAW_EVENT, (drawingCommand: DrawingCommand) => {
+      console.log(drawingCommand);
+      this.emitConfirmDrawingCommand(drawingCommand, socket);
+    });
+  }
+
+  private emitInProgressDrawingCommand(
+    drawingCommand: DrawingCommand,
+    socket: Socket,
+  ): void {
+    socket
+      .to(drawingCommand.roomName)
+      .emit(IN_PROGRESS_DRAW_EVENT, drawingCommand);
+  }
+
+  private emitConfirmDrawingCommand(
+    drawingCommand: DrawingCommand,
+    socket: Socket,
+  ): void {
+    socket.to(drawingCommand.roomName).emit(CONFIRM_DRAW_EVENT, drawingCommand);
   }
 }

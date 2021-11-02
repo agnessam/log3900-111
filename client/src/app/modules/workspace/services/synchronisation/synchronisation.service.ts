@@ -7,21 +7,26 @@ import { CommandFactoryService } from "./factories/command-factory/command-facto
   providedIn: "root",
 })
 export class SynchronisationService {
-  previewShapes: Map<string, ICommand>;
+  previewShapes: Map<string, ICommand> = new Map<string, ICommand>();
 
   constructor(private commandFactory: CommandFactoryService) {}
 
   execute(drawingCommand: SocketTool) {
-    // if (this.previewShapes.has(drawingCommand.drawingCommand.id)) {
-    //   let inProgressShape = this.previewShapes.get(drawingCommand.drawingCommand.id);
-    //   inProgressShape.update(drawingCommand.drawingCommand);
-    // }
+    const commandId = drawingCommand.drawingCommand.id;
+    let command: ICommand | undefined;
 
-    let command: ICommand | null = this.commandFactory.createCommand(
-      drawingCommand.type,
-      drawingCommand.drawingCommand
-    ); // TODO: factory returns command
+    if (this.previewShapes.has(commandId)) {
+      command = this.previewShapes.get(commandId);
+      command!.update(drawingCommand.drawingCommand);
+    } else {
+      command = this.commandFactory.createCommand(
+        drawingCommand.type,
+        drawingCommand.drawingCommand
+      );
+    }
+
     if (command) {
+      this.previewShapes.set(commandId, command);
       command.execute();
     }
   }

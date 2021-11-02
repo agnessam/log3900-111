@@ -7,4 +7,5 @@ export const LEAVE_ROOM_EVENT_NAME = 'leaveRoom';
 
 // Constants for collaborative drawing
 export const COLLABORATIVE_DRAWING_NAMESPACE = 'drawing';
-export const DRAW_EVENT = 'draw';
+export const IN_PROGRESS_DRAW_EVENT = 'draw-in-progress';
+export const CONFIRM_DRAW_EVENT = 'draw-confirm';

@@ -9,3 +9,8 @@ export interface Pencil {
   fillOpacity: string;
   strokeOpacity: string;
 }
+
+export interface InProgressPencil {
+  id: string;
+  point: Point;
+}

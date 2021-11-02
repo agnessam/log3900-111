@@ -48,6 +48,7 @@ export class DrawingSocketService extends AbstractSocketService {
       IN_PROGRESS_DRAWING_EVENT,
       (drawingCommand: SocketTool) => {
         console.log(drawingCommand);
+        this.synchronisationService.execute(drawingCommand);
       }
     );
   }
