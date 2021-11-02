@@ -1,7 +1,7 @@
 <div id="channel-overlay">
   <div class="channel-top" *ngIf="!isSearchOpen; else searchBar">
     <p>Channels</p>
-    <button mat-icon-button class="btn" (click)="addChannel()">
+    <button mat-icon-button class="btn" (click)="openAddChannelModal()">
       <mat-icon>add</mat-icon>
     </button>
     <button mat-icon-button class="btn" (click)="toggleSearchBar()">
@@ -27,5 +27,29 @@
       </div>
     </div>
   </div>
+</div>
 
+<div #addChannelModal class="modal">
+  <div class="modal-content">
+    <div class="headerModal">
+      <h2>Create a new channel!</h2>
+      <button mat-icon-button class="btn" (click)="closeAddChannelModal()">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+    <div class="bottomModal">
+      <input
+      type="text"
+      #newChannelNameInput
+      id="channelName"
+      autocomplete="off"
+      spellcheck="false"
+      placeholder="Enter a channel name"
+      (input)="onInput($event)"
+      />
+      <button mat-icon-button class="btn" (click)="addChannel()">
+        <mat-icon>send</mat-icon>
+      </button>
+    </div>
+  </div>
 </div>
