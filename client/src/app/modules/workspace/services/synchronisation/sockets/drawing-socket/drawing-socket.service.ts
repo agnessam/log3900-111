@@ -2,7 +2,8 @@ import { Injectable } from "@angular/core";
 import {
   AbstractSocketService,
   COLLABORATIVE_DRAWING_NAMESPACE,
-  DRAW_EVENT,
+  CONFIRM_DRAWING_EVENT,
+  IN_PROGRESS_DRAWING_EVENT,
 } from "src/app/shared";
 import { SocketTool } from "../../../tools/socket-tool";
 import { SynchronisationService } from "../../synchronisation.service";
@@ -28,22 +29,35 @@ export class DrawingSocketService extends AbstractSocketService {
   }
 
   protected setSocketListens(): void {
+    this.listenInProgressDrawingCommand();
     this.listenDrawingCommand();
   }
 
-  sendDrawingCommand(drawingCommand: any, type: string): void {
+  sendInProgressDrawingCommand(drawingCommand: any, type: string): void {
     let socketToolCommand: SocketTool = {
       type: type,
       roomName: this.roomName,
-      drawingCommand: drawingCommand
-    }
+      drawingCommand: drawingCommand,
+    };
 
-    this.emit(DRAW_EVENT, socketToolCommand);
+    this.emit(IN_PROGRESS_DRAWING_EVENT, socketToolCommand);
+  }
+
+  private listenInProgressDrawingCommand(): void {
+    this.namespaceSocket.on(
+      IN_PROGRESS_DRAWING_EVENT,
+      (drawingCommand: SocketTool) => {
+        console.log(drawingCommand);
+      }
+    );
   }
 
   private listenDrawingCommand(): void {
-    this.namespaceSocket.on(DRAW_EVENT, (drawingCommand: SocketTool) => {
-      this.synchronisationService.execute(drawingCommand); // TODO: Execute command based on drawing Command
-    });
+    this.namespaceSocket.on(
+      CONFIRM_DRAWING_EVENT,
+      (drawingCommand: SocketTool) => {
+        this.synchronisationService.execute(drawingCommand); // TODO: Execute command based on drawing Command
+      }
+    );
   }
 }

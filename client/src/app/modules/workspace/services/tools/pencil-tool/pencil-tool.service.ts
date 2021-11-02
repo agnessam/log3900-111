@@ -12,6 +12,7 @@ import { INITIAL_WIDTH, LEFT_CLICK, RIGHT_CLICK } from "../tools-constants";
 import { PencilCommand } from "./pencil-command";
 import { Pencil } from "./pencil.model";
 import { DrawingSocketService } from "../../synchronisation/sockets/drawing-socket/drawing-socket.service";
+import { UuidGeneratorService } from "src/app/shared/id-generator/uuid-generator.service";
 
 /// Service de l'outil pencil, permet de créer des polyline en svg
 /// Il est possible d'ajuster le stroke width dans le form
@@ -33,7 +34,8 @@ export class PencilToolService implements Tools {
     private colorTool: ToolsColorService,
     private drawingService: DrawingService,
     private rendererService: RendererProviderService,
-    private drawingSocketService: DrawingSocketService
+    private drawingSocketService: DrawingSocketService,
+    private uuidGeneratorService: UuidGeneratorService
   ) {
     this.strokeWidth = new FormControl(INITIAL_WIDTH);
     this.parameters = new FormGroup({
@@ -48,6 +50,7 @@ export class PencilToolService implements Tools {
         const offset: { x: number; y: number } =
           this.offsetManager.offsetFromMouseEvent(event);
         this.pencil = {
+          id: this.uuidGeneratorService.generateId(),
           pointsList: [offset],
           strokeWidth: this.strokeWidth.value,
           fill: "none",
@@ -69,7 +72,10 @@ export class PencilToolService implements Tools {
           this.drawingService
         );
         this.pencilCommand.execute();
-        this.drawingSocketService.sendDrawingCommand(this.pencil, "Pencil");
+        this.drawingSocketService.sendInProgressDrawingCommand(
+          this.pencil,
+          "Pencil"
+        );
       }
     }
   }
@@ -92,7 +98,10 @@ export class PencilToolService implements Tools {
       this.pencilCommand.addPoint(
         this.offsetManager.offsetFromMouseEvent(event)
       );
-      this.drawingSocketService.sendDrawingCommand(this.pencil, "Pencil");
+      this.drawingSocketService.sendInProgressDrawingCommand(
+        this.pencil,
+        "Pencil"
+      );
     }
   }
 

@@ -7,4 +7,5 @@ export const LEAVE_ROOM_EVENT_NAME = "leaveRoom";
 
 // Drawing synchronisation
 export const COLLABORATIVE_DRAWING_NAMESPACE = "drawing";
-export const DRAW_EVENT = "draw";
+export const IN_PROGRESS_DRAWING_EVENT = "draw-in-progress";
+export const CONFIRM_DRAWING_EVENT = "draw-confirm";
