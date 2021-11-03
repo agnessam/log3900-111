@@ -30,7 +30,7 @@ export class DrawingSocketService extends AbstractSocketService {
 
   protected setSocketListens(): void {
     this.listenInProgressDrawingCommand();
-    this.listenDrawingCommand();
+    this.listenConfirmDrawingCommand();
   }
 
   sendInProgressDrawingCommand(drawingCommand: any, type: string): void {
@@ -48,16 +48,16 @@ export class DrawingSocketService extends AbstractSocketService {
       IN_PROGRESS_DRAWING_EVENT,
       (drawingCommand: SocketTool) => {
         console.log(drawingCommand);
-        this.synchronisationService.execute(drawingCommand);
+        this.synchronisationService.draw(drawingCommand);
       }
     );
   }
 
-  private listenDrawingCommand(): void {
+  private listenConfirmDrawingCommand(): void {
     this.namespaceSocket.on(
       CONFIRM_DRAWING_EVENT,
       (drawingCommand: SocketTool) => {
-        this.synchronisationService.execute(drawingCommand); // TODO: Execute command based on drawing Command
+        this.synchronisationService.draw(drawingCommand);
       }
     );
   }

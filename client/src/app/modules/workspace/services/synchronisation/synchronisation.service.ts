@@ -11,7 +11,7 @@ export class SynchronisationService {
 
   constructor(private commandFactory: CommandFactoryService) {}
 
-  execute(drawingCommand: SocketTool) {
+  draw(drawingCommand: SocketTool) {
     const commandId = drawingCommand.drawingCommand.id;
     let command: ICommand | undefined;
 

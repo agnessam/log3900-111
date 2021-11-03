@@ -5,6 +5,8 @@ import {
   PencilCommand,
   RendererProviderService,
 } from "src/app/modules/workspace";
+import { Tool } from "../../../tools/tool.model";
+import { Pencil } from "../../../tools/pencil-tool/pencil.model";
 
 @Injectable({
   providedIn: "root",
@@ -15,12 +17,12 @@ export class CommandFactoryService {
     private rendererService: RendererProviderService
   ) {}
 
-  createCommand(commandType: string, commandParameters: any): ICommand {
+  createCommand(commandType: string, commandParameters: Tool): ICommand {
     switch (commandType) {
       case "Pencil":
         return new PencilCommand(
           this.rendererService.renderer,
-          commandParameters,
+          commandParameters as Pencil,
           this.drawingService
         );
       default:
