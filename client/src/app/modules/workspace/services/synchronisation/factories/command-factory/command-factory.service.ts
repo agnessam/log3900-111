@@ -3,7 +3,6 @@ import { DrawingService } from "../../../drawing/drawing.service";
 import { ICommand } from "src/app/modules/workspace/interfaces/command.interface";
 import {
   EllipseCommand,
-  EraserCommand,
   PencilCommand,
   RectangleCommand,
   RendererProviderService,
@@ -21,7 +20,7 @@ export class CommandFactoryService {
     private rendererService: RendererProviderService
   ) {}
 
-  createCommand(commandType: string, commandParameters: Tool | string[]): ICommand {
+  createCommand(commandType: string, commandParameters: Tool): ICommand {
     switch (commandType) {
       case "Pencil":
         return new PencilCommand(
@@ -39,18 +38,6 @@ export class CommandFactoryService {
         return new EllipseCommand(
           this.rendererService.renderer,
           commandParameters as Ellipse,
-          this.drawingService
-        );
-      case "Eraser":
-        let itemsToDelete = new Map<string, SVGElement>();
-        for(const id of <string[]>commandParameters){
-          const svgElement = this.drawingService.getObject(parseInt(id))
-          if(svgElement){
-            itemsToDelete.set(id, svgElement);
-          }
-        }
-        return new EraserCommand(
-          itemsToDelete,
           this.drawingService
         );
       default:

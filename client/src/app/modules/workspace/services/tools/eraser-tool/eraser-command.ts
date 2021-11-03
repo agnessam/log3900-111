@@ -6,7 +6,7 @@ const NOT_FOUND = -1;
 export class EraserCommand implements ICommand {
   private markerDef: SVGDefsElement[] = [];
   private drawingService: DrawingService;
-  public elementToErase: Map<string, SVGElement> = new Map<
+  private elementToErase: Map<string, SVGElement> = new Map<
     string,
     SVGElement
   >();
