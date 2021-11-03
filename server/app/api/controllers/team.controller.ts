@@ -1,5 +1,5 @@
-import { TYPES } from '@app/domain/constants/types';
-import { TeamRepository } from '@app/infrastructure/data_access/repositories/team_repository';
+import { TYPES } from '../../domain/constants/types';
+import { TeamRepository } from '../../infrastructure/data_access/repositories/team_repository';
 import { Request } from 'express';
 import { inject } from 'inversify';
 import {
