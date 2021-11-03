@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/galleryMenuView"
     tools:context=".ui.home.fragments.gallery.GalleryMenuFragment">
 
     <RelativeLayout
@@ -17,6 +18,19 @@
             android:text="Create New Drawing"
             android:layout_alignParentRight="true"
             android:backgroundTint="@color/primary"/>
+
+        <RelativeLayout
+            android:layout_below="@id/newDrawingBtn"
+            android:layout_marginTop="20px"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/image"
+                android:layout_width="500px"
+                android:layout_height="500px"/>
+
+        </RelativeLayout>
 
     </RelativeLayout>
 
