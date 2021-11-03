@@ -1,8 +1,6 @@
 import { Component } from "@angular/core";
-import { MatDialog } from "@angular/material/dialog";
 import { CommandInvokerService } from "src/app/modules/workspace";
 import { DrawingService } from "src/app/modules/workspace";
-import { NewDrawingComponent } from "src/app/modules/new-drawing";
 
 /// Component pour afficher les options fichiers
 @Component({
@@ -12,7 +10,6 @@ import { NewDrawingComponent } from "src/app/modules/new-drawing";
 })
 export class ControlMenuComponent {
   constructor(
-    private dialog: MatDialog,
     private drawingService: DrawingService,
     private commandInvoker: CommandInvokerService
   ) {}
@@ -22,11 +19,6 @@ export class ControlMenuComponent {
   }
   get isCreated(): boolean {
     return this.drawingService.isCreated;
-  }
-
-  /// Ouvre une nouveau dialog de creation de dessin
-  openNewDrawing(): void {
-    this.dialog.open(NewDrawingComponent, {});
   }
 
   get canUndo(): boolean {
