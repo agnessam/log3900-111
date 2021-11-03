@@ -3,10 +3,12 @@ import { DrawingService } from "../../../drawing/drawing.service";
 import { ICommand } from "src/app/modules/workspace/interfaces/command.interface";
 import {
   PencilCommand,
+  RectangleCommand,
   RendererProviderService,
 } from "src/app/modules/workspace";
 import { Tool } from "../../../tools/tool.model";
 import { Pencil } from "../../../tools/pencil-tool/pencil.model";
+import { Rectangle } from "../../../tools/tool-rectangle/rectangle.model";
 
 @Injectable({
   providedIn: "root",
@@ -23,6 +25,12 @@ export class CommandFactoryService {
         return new PencilCommand(
           this.rendererService.renderer,
           commandParameters as Pencil,
+          this.drawingService
+        );
+      case "Rectangle":
+        return new RectangleCommand(
+          this.rendererService.renderer,
+          commandParameters as Rectangle,
           this.drawingService
         );
       default:

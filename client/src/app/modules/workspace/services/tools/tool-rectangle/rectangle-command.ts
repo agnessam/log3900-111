@@ -1,7 +1,7 @@
 import { Renderer2 } from "@angular/core";
 import { ICommand } from "../../../interfaces/command.interface";
 import { DrawingService } from "../../drawing/drawing.service";
-import { FilledShape } from "./filed-shape.model";
+import { Rectangle } from "./rectangle.model";
 
 /// Commande pour la creation de rectangles
 export class RectangleCommand implements ICommand {
@@ -9,7 +9,7 @@ export class RectangleCommand implements ICommand {
 
   constructor(
     readonly renderer: Renderer2,
-    private rectangleAttributes: FilledShape,
+    private rectangleAttributes: Rectangle,
     private drawingService: DrawingService
   ) {}
 
@@ -128,6 +128,9 @@ export class RectangleCommand implements ICommand {
   }
 
   update(drawingCommand: any) {
-    console.log(drawingCommand);
+    this.setX(drawingCommand.x);
+    this.setY(drawingCommand.y);
+    this.setWidth(drawingCommand.width);
+    this.setHeight(drawingCommand.height);
   }
 }
