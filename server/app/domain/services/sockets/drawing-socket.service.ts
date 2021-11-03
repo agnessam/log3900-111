@@ -2,6 +2,7 @@ import {
   COLLABORATIVE_DRAWING_NAMESPACE,
   CONFIRM_DRAW_EVENT,
   IN_PROGRESS_DRAW_EVENT,
+  CONFIRM_ERASE_EVENT
 } from '../../constants/socket-constants';
 import { SocketServiceInterface } from '@app/domain/interfaces/socket.interface';
 import { injectable } from 'inversify';
@@ -17,6 +18,7 @@ export class DrawingSocketService extends SocketServiceInterface {
   protected setSocketListens(socket: Socket): void {
     this.listenInProgressDrawingCommand(socket);
     this.listenConfirmDrawingCommand(socket);
+    this.listenConfirmEraseCommand(socket);
   }
 
   private listenInProgressDrawingCommand(socket: Socket): void {
@@ -35,6 +37,12 @@ export class DrawingSocketService extends SocketServiceInterface {
     });
   }
 
+  private listenConfirmEraseCommand(socket: Socket): void {
+    socket.on(CONFIRM_ERASE_EVENT, (eraseCommand: any) => {
+      this.emitConfirmEraseCommand(eraseCommand, socket);
+    });
+  }
+
   private emitInProgressDrawingCommand(
     drawingCommand: DrawingCommand,
     socket: Socket,
@@ -42,6 +50,10 @@ export class DrawingSocketService extends SocketServiceInterface {
     socket
       .to(drawingCommand.roomName)
       .emit(IN_PROGRESS_DRAW_EVENT, drawingCommand);
+  }
+
+  private emitConfirmEraseCommand(drawingCommand: any, socket: Socket): void {
+    socket.to(drawingCommand.roomName).emit(CONFIRM_ERASE_EVENT, drawingCommand);
   }
 
   private emitConfirmDrawingCommand(

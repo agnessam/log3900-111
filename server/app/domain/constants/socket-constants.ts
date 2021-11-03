@@ -9,3 +9,4 @@ export const LEAVE_ROOM_EVENT_NAME = 'leaveRoom';
 export const COLLABORATIVE_DRAWING_NAMESPACE = 'drawing';
 export const IN_PROGRESS_DRAW_EVENT = 'draw-in-progress';
 export const CONFIRM_DRAW_EVENT = 'draw-confirm';
+export const CONFIRM_ERASE_EVENT = 'erase-confirm';

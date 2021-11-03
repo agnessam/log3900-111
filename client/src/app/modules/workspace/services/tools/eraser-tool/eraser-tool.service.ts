@@ -12,6 +12,7 @@ import { Tools } from '../../../interfaces/tools.interface';
 import { ToolIdConstants } from '../tool-id-constants';
 import { LEFT_CLICK, RIGHT_CLICK } from '../tools-constants';
 import { EraserCommand } from './eraser-command';
+import { DrawingSocketService } from '../../synchronisation/sockets/drawing-socket/drawing-socket.service';
 
 const TARGET_STROKE_WIDTH = 5;
 
@@ -38,6 +39,7 @@ export class EraserToolService implements Tools {
     private offsetManager: OffsetManagerService,
     private rendererService: RendererProviderService,
     private commandInvoker: CommandInvokerService,
+    private drawingSocketService: DrawingSocketService,
   ) {
     this.eraserSize = new FormControl(1, [Validators.min(1), Validators.required]);
     this.parameters = new FormGroup({ eraserSize: this.eraserSize, });
@@ -93,12 +95,19 @@ export class EraserToolService implements Tools {
   onRelease(event: MouseEvent): void | ICommand {
     if (this.isPressed && this.isEraserActive && this.itemToDelete.size > 0) {
       const eraserCommand = new EraserCommand(this.itemToDelete, this.drawingService);
+
+      let itemsToDeleteArray: String[] = new Array();
+      for(const i of this.itemToDelete){
+        itemsToDeleteArray.push(i[0])
+      }
+      console.log(itemsToDeleteArray)
+      this.drawingSocketService.sendConfirmEraseCommand(itemsToDeleteArray, "Eraser");
+
       eraserCommand.execute();
       this.reset();
       this.processElementInEraser();
       return eraserCommand;
     }
-    return;
   }
 
   /// Gestion de capture des objets lors du mouvements de la souris

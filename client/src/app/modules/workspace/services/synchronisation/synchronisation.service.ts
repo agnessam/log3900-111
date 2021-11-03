@@ -30,4 +30,9 @@ export class SynchronisationService {
       command.execute();
     }
   }
+
+  erase(eraseCommandData: any){
+    let eraseCommand = this.commandFactory.createCommand(eraseCommandData.type, eraseCommandData.itemsToDeleteIds);
+    eraseCommand.execute();
+  }
 }
