@@ -45,4 +45,9 @@ export class TextChannelController {
   public async getMessages(@request() req: Request) {
     return await this.textChannelRepository.getMessages(req.params.channelId);
   }
+
+  @httpGet('/search/:channelName')
+  public async getChannelsByName(@request() req: Request) {
+    return await this.textChannelRepository.getChannelsByName(req.params.channelName);
+  }
 }

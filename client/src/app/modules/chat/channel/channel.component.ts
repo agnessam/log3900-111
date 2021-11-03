@@ -1,10 +1,11 @@
-import { Component, OnDestroy, OnInit, ViewChild, ElementRef } from "@angular/core";
-import { AuthenticationService } from "src/app/modules/authentication";
-import { User } from "../../authentication/models/user";
+import { Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { AuthenticationService } from 'src/app/modules/authentication';
+import { User } from '../../authentication/models/user';
 import { TextChannel } from '../models/text-channel.model';
-import { ChatService } from "../services/chat.service";
+// import { ChatSocketService } from '../services/chat-socket.service';
+import { ChatService } from '../services/chat.service';
 import { TextChannelService } from '../services/text-channel.service';
-import { MatSnackBar } from "@angular/material/snack-bar";
 
 @Component({
   selector: 'channel',
@@ -13,65 +14,73 @@ import { MatSnackBar } from "@angular/material/snack-bar";
 })
 export class ChannelComponent implements OnInit, OnDestroy {
   user: User | null;
-  channels: TextChannel[];
+  allChannels: TextChannel[];
   isSearchOpen: boolean;
-  newChannelName: string = '';
+  searchedChannels: TextChannel[];
+  newChannelName = '';
 
-  public isChannelListOpen:boolean;
+  isChannelListOpen:boolean;
+
+  @Input () connectedChannels: TextChannel[];
 
   @ViewChild('addChannelModal', { static: false }) private addChannelModal: ElementRef<HTMLInputElement>;
   @ViewChild('newChannelNameInput', { static: false }) private newChannelNameInput: ElementRef<HTMLInputElement>;
-
-  //@Input() private chatRoomName: string = "default";
-
+  @ViewChild('searchInput', { static: false }) private searchInput: ElementRef<HTMLInputElement>;
+  
   constructor(
     private authenticationService: AuthenticationService,
-    private chatService:ChatService,
+    private chatService: ChatService,
+    // private chatSocketService: ChatSocketService,
     private textChannelService: TextChannelService,
     private snackBar: MatSnackBar,
   ) {
-    this.authenticationService.currentUserObservable.subscribe(
-      (user) => (this.user = user),
-    );
     this.isSearchOpen = false;
+    this.connectedChannels = [];
   }
 
   ngOnInit(): void {
-    this.chatService.toggleChannelOverlay.subscribe(status=>{
+    this.authenticationService.currentUserObservable.subscribe(
+      (user) => (this.user = user),
+    );
+
+    this.chatService.toggleChannelOverlay.subscribe((status)=>{
       this.isChannelListOpen = !this.isChannelListOpen;
       this.toggleChannelOverlay(this.isChannelListOpen);
     });
+
     this.textChannelService.getChannels().subscribe((channels) => {
-      this.channels = channels;
+      this.allChannels = channels;
+      this.searchedChannels = channels;
     });
+
     this.keyListener();
   }
 
-  ngOnDestroy(): void {
-  }
+  ngOnDestroy(): void {}
 
   addChannel():void {
-    let name=this.newChannelName;
+    const name = this.newChannelName;
     this.newChannelName = '';
     this.newChannelNameInput.nativeElement.value = '';
 
-    let isWhitespace = (name || '').trim().length === 0;
+    const isWhitespace = (name || '').trim().length === 0;
     if (isWhitespace){
-      this.snackBar.open("The name can not be empty", "Close", { duration: 3000 });
+      this.snackBar.open('The name can not be empty', 'Close', { duration: 3000 });
       return;
     }
     else{
       let isValid =true;
-      this.channels.forEach(channel => {
-        if(channel.name == name){
-          this.snackBar.open("This channel already exist", "Close", { duration: 3000 });
-          isValid =false;
-        }
-      });
+      if (this.allChannels.find((channel) => channel.name === name)) {
+        this.snackBar.open('This channel already exist', 'Close', { duration: 3000 });
+        isValid =false;
+      }
 
       if(isValid) {
         this.textChannelService.createChannel(name, this.user?._id as string).subscribe((channel) => {
-          console.log(channel);
+          this.allChannels.push(channel);
+          // should automatically connect user to socket
+          this.connectedChannels.push(channel);
+          this.chatService.toggleChatOverlay.emit(channel);
        });
       }
     }
@@ -79,36 +88,53 @@ export class ChannelComponent implements OnInit, OnDestroy {
 
   searchChannel(evt: Event):void {
     const search = (evt.target as HTMLInputElement).value;
-    console.log(search);
+    if (search === null || search.match(/^ *$/) !== null) {
+      this.searchedChannels  = Object.assign([], this.allChannels);
+    } else {
+      this.textChannelService.getChannelsByName(search).subscribe((channels) => {
+        this.searchedChannels = channels;
+      });
+    }
   }
 
   toggleSearchBar(): void {
     this.isSearchOpen = !this.isSearchOpen;
-    console.log(this.isSearchOpen);
+    if (this.isSearchOpen) {
+      this.searchInput.nativeElement.focus();
+    }
   }
 
-  openChannel(channel: TextChannel):void {
+  openChannel(channel: TextChannel, isSearchOpen: boolean):void {
     const channelOverlay = document.getElementById('channel-overlay') as HTMLInputElement;
     channelOverlay.style.display = 'none';
     this.chatService.toggleChatOverlay.emit(channel);
     this.toggleChannelOverlay(false);
     this.isChannelListOpen = false;
+
+    if (!this.connectedChannels.find((x) => x.name === channel.name)) {
+      this.connectedChannels.push(channel);
+    }
+
+    if (isSearchOpen) {
+      this.searchInput.nativeElement.value = '';
+      this.isSearchOpen = false;
+    }
   }
 
   toggleChannelOverlay(open:boolean){
-    let channelOverlay = <HTMLInputElement>document.getElementById("channel-overlay");
+    const channelOverlay = document.getElementById('channel-overlay') as HTMLInputElement;
 
-    if(open) channelOverlay.style.display = "block";
-    else channelOverlay.style.display = "none";
+    if(open) channelOverlay.style.display = 'block';
+    else channelOverlay.style.display = 'none';
   }
 
   openAddChannelModal(){
     const modal = this.addChannelModal.nativeElement;
-    modal.style.display = "block";
+    modal.style.display = 'block';
   }
   closeAddChannelModal(){
     const modal = this.addChannelModal.nativeElement;
-    modal.style.display = "none";
+    modal.style.display = 'none';
   }
 
   onInput(evt: Event): void {
@@ -118,7 +144,7 @@ export class ChannelComponent implements OnInit, OnDestroy {
   keyListener() {
     window.addEventListener('keydown', (event) => {
       const modal = this.addChannelModal.nativeElement;
-      if (event.key === 'Enter' && modal.style.display != "none") {
+      if (event.key === 'Enter' && modal.style.display !== 'none') {
         this.addChannel();
       }
     });

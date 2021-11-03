@@ -10,6 +10,7 @@
   </div>
   <ng-template #searchBar>
     <input type="search"
+            #searchInput
             id="searchInput"
             autocomplete="off"
             spellcheck="false"
@@ -18,11 +19,18 @@
     <button mat-icon-button class="btn" (click)="toggleSearchBar()">
       <mat-icon>close</mat-icon>
     </button>
+    <div class="channel-list">
+      <div *ngFor="let channel of searchedChannels">
+        <div class="channel" (click)="openChannel(channel, isSearchOpen)">
+          <p>{{channel.name}}</p>
+        </div>
+      </div>
+    </div>
   </ng-template>
 
   <div class="channel-list">
-    <div *ngFor="let channel of channels">
-      <div class="channel" (click)="openChannel(channel)">
+    <div *ngFor="let channel of connectedChannels">
+      <div class="channel" (click)="openChannel(channel, isSearchOpen)">
         <p>{{channel.name}}</p>
       </div>
     </div>

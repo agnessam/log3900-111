@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { EditableChannelParameters } from '../models/editable-channel-parameters';
+import { Message } from '../models/message.model';
 import { TextChannel } from '../models/text-channel.model';
 
 @Injectable({
@@ -65,9 +66,17 @@ export class TextChannelService {
       });
   }
 
-  getMessages(channelId: string): Observable<TextChannel> {
+  getMessages(channelId: string): Observable<Message[]> {
     return this.httpClient
-      .get<TextChannel>(`${this.endpointUrl}/${channelId}/messages`)
+      .get<Message[]>(`${this.endpointUrl}/${channelId}/messages`)
+      .pipe((response) => {
+        return response;
+      });
+  }
+
+  getChannelsByName(channelName: string): Observable<TextChannel[]> {
+    return this.httpClient
+      .get<TextChannel[]>(`${this.endpointUrl}/search/${channelName}`)
       .pipe((response) => {
         return response;
       });
