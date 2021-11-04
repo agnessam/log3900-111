@@ -3,7 +3,6 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { AuthenticationService } from 'src/app/modules/authentication';
 import { User } from '../../authentication/models/user';
 import { TextChannel } from '../models/text-channel.model';
-// import { ChatSocketService } from '../services/chat-socket.service';
 import { ChatService } from '../services/chat.service';
 import { TextChannelService } from '../services/text-channel.service';
 
@@ -26,11 +25,10 @@ export class ChannelComponent implements OnInit, OnDestroy {
   @ViewChild('addChannelModal', { static: false }) private addChannelModal: ElementRef<HTMLInputElement>;
   @ViewChild('newChannelNameInput', { static: false }) private newChannelNameInput: ElementRef<HTMLInputElement>;
   @ViewChild('searchInput', { static: false }) private searchInput: ElementRef<HTMLInputElement>;
-  
+
   constructor(
     private authenticationService: AuthenticationService,
     private chatService: ChatService,
-    // private chatSocketService: ChatSocketService,
     private textChannelService: TextChannelService,
     private snackBar: MatSnackBar,
   ) {
@@ -43,7 +41,7 @@ export class ChannelComponent implements OnInit, OnDestroy {
       (user) => (this.user = user),
     );
 
-    this.chatService.toggleChannelOverlay.subscribe((status)=>{
+    this.chatService.toggleChannelOverlay.subscribe(()=>{
       this.isChannelListOpen = !this.isChannelListOpen;
       this.toggleChannelOverlay(this.isChannelListOpen);
     });
@@ -88,7 +86,7 @@ export class ChannelComponent implements OnInit, OnDestroy {
 
   deleteChannel(channelId: string):void {
     this.textChannelService.deleteChannel(channelId).subscribe((channel) => {
-      console.log(channel.name + "has beeen delete");
+      console.log(channel.name + 'has beeen deleted');
     });
   }
 
@@ -99,15 +97,15 @@ export class ChannelComponent implements OnInit, OnDestroy {
   toggleChannelButton(channel:TextChannel, mouseover:boolean):void{
       const btnDiv = document.getElementById(channel.name) as HTMLInputElement;
       if(mouseover)
-        btnDiv.style.display = "inline";
+        btnDiv.style.display = 'inline';
       else
-        btnDiv.style.display = "none";
+        btnDiv.style.display = 'none';
 
       const deletbtn = btnDiv.children.item(1) as HTMLInputElement;
-      deletbtn.style.display = "none";
+      deletbtn.style.display = 'none';
       if(channel.ownerId == this.user?._id){
 
-        deletbtn.style.display = "inline";
+        deletbtn.style.display = 'inline';
       }
   }
 
