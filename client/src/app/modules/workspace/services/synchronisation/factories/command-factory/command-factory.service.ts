@@ -21,7 +21,10 @@ export class CommandFactoryService {
     private rendererService: RendererProviderService
   ) {}
 
-  createCommand(commandType: string, commandParameters: Tool | string[]): ICommand {
+  createCommand(
+    commandType: string,
+    commandParameters: Tool | string[]
+  ): ICommand {
     switch (commandType) {
       case "Pencil":
         return new PencilCommand(
@@ -43,16 +46,13 @@ export class CommandFactoryService {
         );
       case "Eraser":
         let itemsToDelete = new Map<string, SVGElement>();
-        for(const id of <string[]>commandParameters){
-          const svgElement = this.drawingService.getObject(parseInt(id))
-          if(svgElement){
+        for (const id of <string[]>commandParameters) {
+          const svgElement = this.drawingService.getObject(id);
+          if (svgElement) {
             itemsToDelete.set(id, svgElement);
           }
         }
-        return new EraserCommand(
-          itemsToDelete,
-          this.drawingService
-        );
+        return new EraserCommand(itemsToDelete, this.drawingService);
       default:
         throw new Error("Unable to create command");
     }
