@@ -14,7 +14,6 @@ export class SynchronisationService {
   draw(drawingCommand: SocketTool) {
     const commandId = drawingCommand.drawingCommand.id;
     let command: ICommand | undefined;
-
     if (this.previewShapes.has(commandId)) {
       command = this.previewShapes.get(commandId);
       command!.update(drawingCommand.drawingCommand);

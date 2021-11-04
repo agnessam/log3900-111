@@ -13,6 +13,7 @@ import { ToolIdConstants } from '../tool-id-constants';
 import { LEFT_CLICK, RIGHT_CLICK } from '../tools-constants';
 import { EraserCommand } from './eraser-command';
 import { DrawingSocketService } from '../../synchronisation/sockets/drawing-socket/drawing-socket.service';
+import { SynchronisationService } from '../../synchronisation/synchronisation.service';
 
 const TARGET_STROKE_WIDTH = 5;
 
@@ -40,6 +41,7 @@ export class EraserToolService implements Tools {
     private rendererService: RendererProviderService,
     private commandInvoker: CommandInvokerService,
     private drawingSocketService: DrawingSocketService,
+    private synchronisationService: SynchronisationService
   ) {
     this.eraserSize = new FormControl(1, [Validators.min(1), Validators.required]);
     this.parameters = new FormGroup({ eraserSize: this.eraserSize, });
@@ -175,7 +177,9 @@ export class EraserToolService implements Tools {
   private processElementInEraser(): void {
     const elementInEraser: SVGElement[] = this.getElementsInContact();
     elementInEraser.forEach((el) => {
-      if (!this.itemToDelete.get(el.id)) {
+      console.log("IN PREVIEW SHAPES?:", this.synchronisationService.previewShapes.get(el.id));
+      if (!this.itemToDelete.get(el.id) && !this.synchronisationService.previewShapes.get(el.id)) {
+        console.log("WE IN?");
         this.itemToDelete.set(el.id, el);
         const elDeleteMark = this.createDeleteMarkElement(el);
         this.rendererService.renderer.appendChild(this.drawingService.drawing, elDeleteMark);
