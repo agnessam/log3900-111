@@ -11,9 +11,11 @@ import com.example.colorimagemobile.services.SharedPreferencesService
 import com.example.colorimagemobile.utils.Constants
 import java.util.*
 import android.graphics.Bitmap
+import android.widget.Button
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.colorimagemobile.adapter.DrawingMenuRecyclerAdapter
+import com.example.colorimagemobile.bottomsheets.NewDrawingMenuBottomSheet
 import com.example.colorimagemobile.classes.ImageConvertor
 import com.example.colorimagemobile.models.recyclerAdapters.DrawingMenuData
 import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
@@ -35,7 +37,16 @@ class GalleryMenuFragment : Fragment(R.layout.fragment_gallery_menu) {
         galleryView = view.findViewById(R.id.galleryMenuView)
         drawings = arrayListOf()
 
+        setListeners()
         getAllDrawings()
+    }
+
+    private fun setListeners() {
+        val createDrawingBtn: Button = galleryView.findViewById(R.id.newDrawingBtn)
+        createDrawingBtn.setOnClickListener {
+            val newDrawingMenu = NewDrawingMenuBottomSheet()
+            newDrawingMenu.show(parentFragmentManager, "NewDrawingBottomSheetDialog")
+        }
     }
 
     private fun getAllDrawings() {
