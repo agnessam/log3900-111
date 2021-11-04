@@ -3,7 +3,6 @@ package com.example.colorimagemobile.ui.home.fragments.gallery
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.View
-import android.widget.ImageView
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.example.colorimagemobile.R
 import com.example.colorimagemobile.models.DrawingModel
@@ -12,7 +11,15 @@ import com.example.colorimagemobile.services.SharedPreferencesService
 import com.example.colorimagemobile.utils.Constants
 import java.util.*
 import android.graphics.Bitmap
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.example.colorimagemobile.adapter.DrawingMenuRecyclerAdapter
 import com.example.colorimagemobile.classes.ImageConvertor
+import com.example.colorimagemobile.models.recyclerAdapters.DrawingMenuData
+import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
+import kotlin.collections.ArrayList
+
+private const val NB_ROWS = 3
 
 class GalleryMenuFragment : Fragment(R.layout.fragment_gallery_menu) {
     private lateinit var drawingRepo: DrawingRepository
@@ -34,6 +41,7 @@ class GalleryMenuFragment : Fragment(R.layout.fragment_gallery_menu) {
     private fun getAllDrawings() {
         val token = sharedPreferencesService.getItem(Constants.STORAGE_KEY.TOKEN)
 
+        printMsg("Fetching all drawings")
         drawingRepo.getAllDrawings(token).observe(viewLifecycleOwner, {
             // some error occurred during HTTP request
             if (it.isError as Boolean) {
@@ -47,12 +55,21 @@ class GalleryMenuFragment : Fragment(R.layout.fragment_gallery_menu) {
 
     // display all existing drawings in menu
     private fun renderDrawings() {
-        val dataUri = drawings[7].dataUri
-        val bitmap: Bitmap? = ImageConvertor(requireContext()).base64ToBitmap(dataUri)
+        val drawingsMenu: ArrayList<DrawingMenuData> = arrayListOf()
+        val recyclerView = galleryView.findViewById<RecyclerView>(R.id.drawingMenuRecyclerView)
 
-        if (bitmap != null) {
-            val img = galleryView.findViewById<ImageView>(R.id.image)
-            img.setImageBitmap(bitmap)
+        // convert src to bitmap for each drawing
+        drawings.forEach { drawing ->
+            val bitmap: Bitmap? = ImageConvertor(requireContext()).base64ToBitmap(drawing.dataUri)
+
+            if (bitmap != null) {
+                drawingsMenu.add(DrawingMenuData(drawing.ownerId, bitmap))
+            }
         }
+
+        val layoutManager: RecyclerView.LayoutManager = GridLayoutManager(requireContext(), NB_ROWS)
+        recyclerView.layoutManager = layoutManager
+        val drawingMenuAdapter = DrawingMenuRecyclerAdapter(drawingsMenu)
+        recyclerView.adapter = drawingMenuAdapter
     }
 }

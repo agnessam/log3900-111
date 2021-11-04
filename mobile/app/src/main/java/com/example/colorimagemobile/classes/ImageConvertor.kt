@@ -41,7 +41,7 @@ class ImageConvertor(val context: Context) {
             val bitmapCanvas = Canvas(newBitmap)
 
             // Clear background to white if you want
-            bitmapCanvas.drawRGB(255, 255, 255)
+//            bitmapCanvas.drawRGB(25, 255, 255)
 
             // Render our document onto our canvas
             svg.renderToCanvas(bitmapCanvas);
