@@ -3,6 +3,7 @@ import { ICommand } from "src/app/modules/workspace/interfaces/command.interface
 import { Point } from "src/app/shared";
 import { DrawingService } from "../../drawing/drawing.service";
 import { InProgressPencil, Pencil } from "./pencil.model";
+import { v4 as uuidv4 } from "uuid";
 
 /// Commande pour ajouter un objet de type pencil sur le dessin
 export class PencilCommand implements ICommand {
@@ -60,6 +61,7 @@ export class PencilCommand implements ICommand {
           "circle",
           "svg"
         ) as SVGCircleElement;
+        this.renderer.setAttribute(this.dot, "id", uuidv4());
         this.renderer.setAttribute(
           this.dot,
           "cx",
