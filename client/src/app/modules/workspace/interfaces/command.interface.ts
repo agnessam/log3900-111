@@ -1,4 +1,5 @@
 export interface ICommand {
-    undo(): void;
-    execute(): void;
+  update(drawingCommand: any): void;
+  undo(): void;
+  execute(): void;
 }
