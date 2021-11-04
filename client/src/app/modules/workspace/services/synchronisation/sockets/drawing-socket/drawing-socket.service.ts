@@ -4,7 +4,7 @@ import {
   COLLABORATIVE_DRAWING_NAMESPACE,
   CONFIRM_DRAWING_EVENT,
   IN_PROGRESS_DRAWING_EVENT,
-  CONFIRM_ERASE_EVENT
+  CONFIRM_ERASE_EVENT,
 } from "src/app/shared";
 import { SocketTool } from "../../../tools/socket-tool";
 import { SynchronisationService } from "../../synchronisation.service";
@@ -45,7 +45,7 @@ export class DrawingSocketService extends AbstractSocketService {
     this.emit(IN_PROGRESS_DRAWING_EVENT, socketToolCommand);
   }
 
-  sendConfirmEraseCommand(itemsToDeleteIds: String[], type:string): void {
+  sendConfirmEraseCommand(itemsToDeleteIds: String[], type: string): void {
     let eraseCommand = {
       type: type,
       roomName: this.roomName,
@@ -55,19 +55,15 @@ export class DrawingSocketService extends AbstractSocketService {
   }
 
   private listenConfirmEraseCommand(): void {
-    this.namespaceSocket.on(
-      CONFIRM_ERASE_EVENT,
-      (eraseCommand: any) => {
-        this.synchronisationService.erase(eraseCommand);
-      }
-    );
+    this.namespaceSocket.on(CONFIRM_ERASE_EVENT, (eraseCommand: any) => {
+      this.synchronisationService.erase(eraseCommand);
+    });
   }
 
   private listenInProgressDrawingCommand(): void {
     this.namespaceSocket.on(
       IN_PROGRESS_DRAWING_EVENT,
       (drawingCommand: SocketTool) => {
-        console.log(drawingCommand);
         this.synchronisationService.draw(drawingCommand);
       }
     );

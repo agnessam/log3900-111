@@ -1,7 +1,7 @@
 import { Renderer2 } from "@angular/core";
 import { ICommand } from "../../../interfaces/command.interface";
 import { DrawingService } from "../../drawing/drawing.service";
-import { FilledShape } from "../tool-rectangle/filed-shape.model";
+import { Ellipse } from "./ellipse.model";
 
 /// Commande pour permettre la creatio d'ellipse
 export class EllipseCommand implements ICommand {
@@ -9,7 +9,7 @@ export class EllipseCommand implements ICommand {
 
   constructor(
     readonly renderer: Renderer2,
-    private ellipseAttributes: FilledShape,
+    private ellipseAttributes: Ellipse,
     private drawingService: DrawingService
   ) {}
 
@@ -80,6 +80,7 @@ export class EllipseCommand implements ICommand {
   execute(): void {
     if (!this.ellipse) {
       this.ellipse = this.renderer.createElement("ellipse", "svg");
+      this.renderer.setAttribute(this.ellipse, "id", this.ellipseAttributes.id);
       this.renderer.setAttribute(this.ellipse, "name", "ellipse");
       this.renderer.setAttribute(
         this.ellipse,
@@ -139,7 +140,7 @@ export class EllipseCommand implements ICommand {
   /// Retrait de l'ellipse au dessin
   undo(): void {
     if (this.ellipse) {
-      this.drawingService.removeObject(Number(this.ellipse.id));
+      this.drawingService.removeObject(this.ellipse.id);
     }
   }
 

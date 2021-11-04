@@ -30,7 +30,7 @@ export class ToolEllipseService implements Tools {
   private inProgressEllipse: InProgressEllipse | null = null;
 
   private contour: SVGRectElement | null;
-  private contourId: number;
+  // private contourId: number;
 
   parameters: FormGroup;
   private strokeWidth: FormControl;
@@ -108,7 +108,7 @@ export class ToolEllipseService implements Tools {
         y: this.y,
         width: 0,
         height: 0,
-      }
+      };
 
       if (event.button === LEFT_CLICK) {
         this.setStyle(
@@ -131,7 +131,7 @@ export class ToolEllipseService implements Tools {
         this.drawingService
       );
       this.ellipseCommand.execute();
-      
+
       this.drawingSocketService.sendInProgressDrawingCommand(
         this.ellipse,
         "Ellipse"
@@ -144,8 +144,8 @@ export class ToolEllipseService implements Tools {
     this.isCircle = false;
     this.ellipse = null;
     if (this.contour) {
-      this.drawingService.removeObject(this.contourId);
-      this.contourId = -1;
+      // this.drawingService.removeObject(this.contourId);
+      // this.contourId = -1;
     }
     if (this.ellipseCommand) {
       const returnEllipseCommand = this.ellipseCommand;
@@ -160,7 +160,7 @@ export class ToolEllipseService implements Tools {
     const offset: { x: number; y: number } =
       this.offsetManager.offsetFromMouseEvent(event);
     const ellipseAttributes = this.setSize(offset.x, offset.y);
-    
+
     this.inProgressEllipse!.x = ellipseAttributes[0];
     this.inProgressEllipse!.y = ellipseAttributes[1];
     this.inProgressEllipse!.width = ellipseAttributes[2];
@@ -237,12 +237,8 @@ export class ToolEllipseService implements Tools {
     width = width - strokeFactor <= 0 ? 1 : width - strokeFactor;
     this.ellipseCommand.setCX(xValue);
     this.ellipseCommand.setCY(yValue);
-    this.ellipseCommand.setHeight(
-      height
-    );
-    this.ellipseCommand.setWidth(
-      width
-    );
+    this.ellipseCommand.setHeight(height);
+    this.ellipseCommand.setWidth(width);
 
     return [xValue, yValue, width, height];
 

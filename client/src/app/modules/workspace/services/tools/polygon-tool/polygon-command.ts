@@ -134,7 +134,7 @@ export class PolygonCommand implements ICommand {
   /// Retrait du polygo dans le dessin
   undo(): void {
     if (this.polygon) {
-      this.drawingService.removeObject(Number(this.polygon.id));
+      this.drawingService.removeObject(this.polygon.id);
     }
   }
 }

@@ -70,6 +70,11 @@ export class RectangleCommand implements ICommand {
   execute(): void {
     if (!this.rectangle) {
       this.rectangle = this.renderer.createElement("rect", "svg");
+      this.renderer.setAttribute(
+        this.rectangle,
+        "id",
+        this.rectangleAttributes.id
+      );
       this.renderer.setAttribute(this.rectangle, "name", "rectangle");
       this.renderer.setAttribute(
         this.rectangle,
@@ -123,7 +128,7 @@ export class RectangleCommand implements ICommand {
   /// Retrait du rectangle
   undo(): void {
     if (this.rectangle) {
-      this.drawingService.removeObject(Number(this.rectangle.id));
+      this.drawingService.removeObject(this.rectangle.id);
     }
   }
 

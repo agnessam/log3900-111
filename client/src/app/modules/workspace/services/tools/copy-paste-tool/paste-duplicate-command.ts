@@ -45,10 +45,10 @@ export class PasteDuplicateCommand implements ICommand {
           y: this.lastOffset.y - this.copyPasteOffsetService.OFFSET_CONST,
         });
     for (const obj of this.objectList) {
-      this.drawingService.removeObject(Number(obj.id));
+      this.drawingService.removeObject(obj.id);
     }
     for (const obj of this.defsList) {
-      this.drawingService.removeObject(Number(obj[1].id));
+      this.drawingService.removeObject(obj[1].id);
     }
   }
 
@@ -90,7 +90,7 @@ export class PasteDuplicateCommand implements ICommand {
           }
         }
 
-        const newId: number = this.drawingService.addObject(clone);
+        const newId: string = this.drawingService.addObject(clone);
         const defObj: any = this.defsList.get(newId.toString());
         defObj
           ? this.drawingService.addObject(defObj)

@@ -27,7 +27,7 @@ export class EraserCommand implements ICommand {
 
   execute(): void {
     this.elementToErase.forEach((value: SVGElement, key: string) => {
-      this.drawingService.removeObject(Number(key));
+      this.drawingService.removeObject(key);
       const positionStart: number = value.outerHTML.indexOf("url(#", 0);
       if (positionStart !== NOT_FOUND) {
         const positionEnd: number = value.outerHTML.indexOf(")", positionStart);
@@ -39,7 +39,7 @@ export class EraserCommand implements ICommand {
           document.getElementById(urlId) as Element
         ).parentNode as SVGDefsElement;
         this.markerDef.push(markerToRemove);
-        this.drawingService.removeObject(Number(markerToRemove.id));
+        this.drawingService.removeObject(markerToRemove.id);
       }
     });
   }

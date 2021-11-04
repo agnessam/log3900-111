@@ -97,7 +97,7 @@ export class SelectionToolService implements Tools {
       ) {
         target = target.parentNode as SVGElement;
       }
-      const obj = this.drawingService.getObject(Number(target.id));
+      const obj = this.drawingService.getObject(target.id);
 
       if (event.button === LEFT_CLICK) {
         if (this.isInside(offset.x, offset.y)) {
@@ -184,7 +184,7 @@ export class SelectionToolService implements Tools {
         } else if (!this.wasMoved && this.objects.length >= 1 && this.isIn) {
           this.objects = [];
           const target = event.target as SVGElement;
-          const obj = this.drawingService.getObject(Number(target.id));
+          const obj = this.drawingService.getObject(target.id);
           if (obj) {
             this.objects.push(obj);
             this.selectionTransformService.createCommand(
