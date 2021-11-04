@@ -1,9 +1,8 @@
-import { AfterViewInit, Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AuthenticationService } from 'src/app/modules/authentication';
 import { User } from '../../authentication/models/user';
 import { TextChannel } from '../models/text-channel.model';
-import { ChatSocketService } from '../services/chat-socket.service';
 import { ChatService } from '../services/chat.service';
 import { TextChannelService } from '../services/text-channel.service';
 
@@ -12,16 +11,14 @@ import { TextChannelService } from '../services/text-channel.service';
   templateUrl: './channel.component.html',
   styleUrls: ['./channel.component.scss'],
 })
-export class ChannelComponent implements OnInit, OnDestroy, AfterViewInit {
+export class ChannelComponent implements OnInit, OnDestroy {
   user: User | null;
   allChannels: TextChannel[];
   isSearchOpen: boolean;
   searchedChannels: TextChannel[];
   newChannelName = '';
-
   isChannelListOpen:boolean;
-
-  @Input () connectedChannels: TextChannel[];
+  connectedChannels: TextChannel[];
 
   @ViewChild('addChannelModal', { static: false }) private addChannelModal: ElementRef<HTMLInputElement>;
   @ViewChild('newChannelNameInput', { static: false }) private newChannelNameInput: ElementRef<HTMLInputElement>;
@@ -30,7 +27,7 @@ export class ChannelComponent implements OnInit, OnDestroy, AfterViewInit {
   constructor(
     private authenticationService: AuthenticationService,
     private chatService: ChatService,
-    private chatSocketService: ChatSocketService,
+    // private chatSocketService: ChatSocketService,
     private textChannelService: TextChannelService,
     private snackBar: MatSnackBar,
   ) {
@@ -58,12 +55,7 @@ export class ChannelComponent implements OnInit, OnDestroy, AfterViewInit {
 
   ngOnDestroy(): void {}
 
-  ngAfterViewInit() {
-    this.isSearchOpen = false;
-    // this.ngAfterViewInitExecuted = true;
-  }
-
-  addChannel():void {
+  addChannel(): void {
     const name = this.newChannelName;
     this.newChannelName = '';
     this.newChannelNameInput.nativeElement.value = '';
@@ -86,29 +78,35 @@ export class ChannelComponent implements OnInit, OnDestroy, AfterViewInit {
           // should automatically connect user to socket
           this.connectedChannels.push(channel);
           this.chatService.toggleChatOverlay.emit(channel);
+          this.isSearchOpen = false;
+          this.toggleChannelOverlay(false);
+          this.closeAddChannelModal();
        });
       }
     }
   }
 
-  deleteChannel(channelId: string):void {
-    this.textChannelService.deleteChannel(channelId).subscribe((channel) => {
-      console.log(channel.name + 'has been deleted');
+  // can only delete channel if owner id corresponds to user id
+  deleteChannel(channel: TextChannel):void {
+    this.textChannelService.deleteChannel(channel._id).subscribe(() => {
+      console.log(channel.name + ' has been deleted');
     });
-
-    const indexConnected = this.connectedChannels.findIndex((channel) => channel._id === channelId);
+    const indexConnected = this.connectedChannels.findIndex((x) => x._id === channel._id);
     this.connectedChannels.splice(indexConnected, 1);
-    const indexAll = this.allChannels.findIndex((channel) => channel._id === channelId);
-    this.connectedChannels.splice(indexAll, 1);
+    this.chatService.leaveRoomEventEmitter.emit(channel);
+    // const indexAll = this.allChannels.findIndex((channel) => channel._id === channelId);
+    // this.connectedChannels.splice(indexAll, 1);
   }
 
-  removeChannel(channelName :string):void{
-    this.chatSocketService.leaveRoom(channelName);
-    const index = this.connectedChannels.findIndex((channel) => channel.name === channelName);
+  removeChannel(channel: TextChannel): void{
+    const index = this.connectedChannels.findIndex((x) => x._id === channel._id);
     this.connectedChannels.splice(index, 1);
+    // leaves room in chat socket service to better handle connected channels
+    this.chatService.leaveRoomEventEmitter.emit(channel);
+
   }
 
-  toggleChannelButton(channel:TextChannel, mouseover:boolean):void{
+  toggleChannelButton(channel: TextChannel, mouseover: boolean): void{
       const btnDiv = document.getElementById(channel.name) as HTMLInputElement;
       if(mouseover)
         btnDiv.style.display = 'inline';
@@ -117,13 +115,12 @@ export class ChannelComponent implements OnInit, OnDestroy, AfterViewInit {
 
       const deletbtn = btnDiv.children.item(1) as HTMLInputElement;
       deletbtn.style.display = 'none';
-      if(channel.ownerId == this.user?._id){
-
+      if(channel.ownerId === this.user?._id){
         deletbtn.style.display = 'inline';
       }
   }
 
-  searchChannel(evt: Event):void {
+  searchChannel(evt: Event): void {
     const search = (evt.target as HTMLInputElement).value;
     if (search === null || search.match(/^ *$/) !== null) {
       this.searchedChannels  = Object.assign([], this.allChannels);
@@ -138,16 +135,15 @@ export class ChannelComponent implements OnInit, OnDestroy, AfterViewInit {
 
   toggleSearchBar(): void {
     this.isSearchOpen = !this.isSearchOpen;
-    // const channelTop = document.getElementById('channel-top') as HTMLInputElement;
-    // channelTop.style.visibility = this.isSearchOpen ? 'hidden' : 'collapsed';
-    // const searchBar = document.getElementById('search-bar') as HTMLInputElement;
-    // searchBar.style.visibility = this.isSearchOpen ? 'collapsed' : 'hidden';
+
     if (this.isSearchOpen) {
-      this.searchInput.nativeElement.focus();
+      setTimeout(()=>{
+        this.searchInput.nativeElement.focus();
+      },0);
     }
   }
 
-  openChannel(channel: TextChannel):void {
+  openChannel(channel: TextChannel): void {
     const channelOverlay = document.getElementById('channel-overlay') as HTMLInputElement;
     channelOverlay.style.display = 'none';
     this.chatService.toggleChatOverlay.emit(channel);
@@ -164,7 +160,7 @@ export class ChannelComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
-  toggleChannelOverlay(open:boolean){
+  toggleChannelOverlay(open: boolean) {
     const channelOverlay = document.getElementById('channel-overlay') as HTMLInputElement;
 
     if(open) channelOverlay.style.display = 'block';

@@ -1,5 +1,4 @@
 <div id="channel-overlay">
-  <!-- *ngIf="!isSearchOpen; else searchBar" -->
   <div class="channel-top" id="channel-top" >
     <p>Channels</p>
     <button mat-icon-button class="btn" (click)="openAddChannelModal()">
@@ -9,7 +8,6 @@
       <mat-icon>search</mat-icon>
     </button>
   </div>
-  <!-- <ng-template #searchBar id="search-bar" > -->
     <div [hidden]="!isSearchOpen">
       <input type="search"
               #searchInput
@@ -28,19 +26,17 @@
           </div>
         </div>
       </div>
-
     </div>
-  <!-- </ng-template> -->
 
   <div class="channel-list" [hidden]="isSearchOpen">
     <div *ngFor="let channel of connectedChannels">
       <div class="channel" (mouseover)="toggleChannelButton(channel, true)" (mouseout)="toggleChannelButton(channel, false)">
         <p (click)="openChannel(channel)">{{channel.name}}</p>
         <div class="deleteChannelBtn" [id]="channel.name">
-          <button mat-icon-button class="btn" (click)="removeChannel(channel.name)">
+          <button mat-icon-button class="btn" (click)="removeChannel(channel)">
             <mat-icon>clear</mat-icon>
           </button>
-          <button mat-icon-button class="btn" (click)="deleteChannel(channel._id)">
+          <button mat-icon-button class="btn" (click)="deleteChannel(channel)">
             <mat-icon>delete</mat-icon>
           </button>
         </div>
