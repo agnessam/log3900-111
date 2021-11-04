@@ -28,7 +28,6 @@ export class SelectionToolService implements Tools {
   private hasSelectedItems = false;
   private isAlt = false;
   private isShift = false;
-  private shiftChanged = false;
 
   private pointsSideLength = 10;
   private pointsList: Point[] = [
@@ -160,7 +159,6 @@ export class SelectionToolService implements Tools {
       }
 
       this.isIn = false;
-      this.shiftChanged = false;
       let returnRectangleCommand;
       if (this.wasMoved) {
         if (this.selectionTransformService.hasCommand()) {
@@ -169,11 +167,9 @@ export class SelectionToolService implements Tools {
         }
         this.wasMoved = false;
 
-        this.endRotation();
         return returnRectangleCommand;
       }
 
-      this.endRotation();
       this.selectionTransformService.endCommand();
     }
   }
@@ -233,9 +229,6 @@ export class SelectionToolService implements Tools {
     if (!this.isShift) {
       this.isShift =
         event.code === KeyCodes.shiftR || event.code === KeyCodes.shiftL;
-      if (this.isShift) {
-        this.shiftChanged = true;
-      }
     }
 
     this.wasMoved = true;
@@ -267,9 +260,6 @@ export class SelectionToolService implements Tools {
       this.isShift = !(
         event.code === KeyCodes.shiftR || event.code === KeyCodes.shiftL
       );
-      if (!this.isShift) {
-        this.shiftChanged = true;
-      }
     }
 
     this.wasMoved = true;
@@ -532,41 +522,6 @@ export class SelectionToolService implements Tools {
     }
 
     this.selectionTransformService.setCtrlPointList(this.ctrlPoints);
-  }
-
-  private rotationAction(event: WheelEvent): void {
-    if (
-      this.selectionTransformService.getCommandType() !==
-        SelectionCommandConstants.ROTATE ||
-      this.shiftChanged
-    ) {
-      this.selectionTransformService.createCommand(
-        SelectionCommandConstants.ROTATE,
-        this.rectSelection,
-        this.objects
-      );
-      this.shiftChanged = false;
-    }
-    if (
-      this.selectionTransformService.getCommandType() ===
-      SelectionCommandConstants.ROTATE
-    ) {
-      event.preventDefault();
-      this.wasMoved = true;
-
-      this.selectionTransformService.rotate(
-        event.deltaY > 0 ? 1 : -1,
-        this.rectSelection
-      );
-
-      if (this.isShift) {
-        this.setSelection();
-      }
-    }
-  }
-
-  private endRotation(): void {
-    window.removeEventListener("wheel", this.rotationAction);
   }
 
   /// Retourne la liste d'objets selectionne.
