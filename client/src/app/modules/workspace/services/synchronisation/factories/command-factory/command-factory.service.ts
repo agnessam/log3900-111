@@ -8,10 +8,10 @@ import {
   RectangleCommand,
   RendererProviderService,
 } from "src/app/modules/workspace";
-import { Tool } from "../../../tools/tool.model";
 import { Pencil } from "../../../tools/pencil-tool/pencil.model";
 import { Rectangle } from "../../../tools/tool-rectangle/rectangle.model";
 import { Ellipse } from "../../../tools/tool-ellipse/ellipse.model";
+import { SelectionStartCommand } from "../../../tools/selection-tool/start-command/selection-start-command.service";
 @Injectable({
   providedIn: "root",
 })
@@ -21,10 +21,7 @@ export class CommandFactoryService {
     private rendererService: RendererProviderService
   ) {}
 
-  createCommand(
-    commandType: string,
-    commandParameters: Tool | string[]
-  ): ICommand {
+  createCommand(commandType: string, commandParameters: any): ICommand {
     switch (commandType) {
       case "Pencil":
         return new PencilCommand(
@@ -53,6 +50,14 @@ export class CommandFactoryService {
           }
         }
         return new EraserCommand(itemsToDelete, this.drawingService);
+      case "SelectionStart":
+        const selectedShapeId = commandParameters.id;
+        console.log(selectedShapeId);
+        const selectedShape = this.drawingService.getObject(selectedShapeId);
+        if (selectedShape == undefined) {
+          throw new Error("Could not find current shape");
+        }
+        return new SelectionStartCommand(selectedShape);
       default:
         throw new Error("Unable to create command");
     }

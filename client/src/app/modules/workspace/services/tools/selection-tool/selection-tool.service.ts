@@ -105,8 +105,23 @@ export class SelectionToolService implements Tools {
             );
           });
 
+          // This happens when we have a selection and we confirm it, in which case the
+          // selection is pasted back onto the canvas, and we can redo another selection.
+
+          if (this.objects.length > 0) {
+            const confirmedSelection: Selection = {
+              id: this.objects[0].id,
+            };
+
+            this.drawingSocketService.sendConfirmSelectionCommand(
+              confirmedSelection,
+              "ConfirmSelection"
+            );
+
+            this.removeSelection();
+          }
+
           // Initializes the selection
-          this.removeSelection();
           if (obj && (this.objects.length < 2 || !this.objects.includes(obj))) {
             this.objects.push(obj);
 
@@ -115,9 +130,9 @@ export class SelectionToolService implements Tools {
               id: obj.id,
             };
 
-            this.drawingSocketService.sendInProgressDrawingCommand(
+            this.drawingSocketService.sendStartSelectionCommand(
               this.currentSelection,
-              "Selection-Start"
+              "SelectionStart"
             );
 
             this.setSelection();

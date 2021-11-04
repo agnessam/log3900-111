@@ -1,16 +1,16 @@
-import { TestBed } from '@angular/core/testing';
+import { TestBed } from "@angular/core/testing";
 
-import { SelectionStartCommandService } from './selection-start-command.service';
+import { SelectionStartCommand } from "./selection-start-command.service";
 
-describe('SelectionStartCommandService', () => {
-  let service: SelectionStartCommandService;
+describe("SelectionStartCommand", () => {
+  let service: SelectionStartCommand;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(SelectionStartCommandService);
+    service = TestBed.inject(SelectionStartCommand);
   });
 
-  it('should be created', () => {
+  it("should be created", () => {
     expect(service).toBeTruthy();
   });
 });
