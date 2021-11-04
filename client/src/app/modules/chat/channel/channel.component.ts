@@ -1,8 +1,9 @@
-import { Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AuthenticationService } from 'src/app/modules/authentication';
 import { User } from '../../authentication/models/user';
 import { TextChannel } from '../models/text-channel.model';
+import { ChatSocketService } from '../services/chat-socket.service';
 import { ChatService } from '../services/chat.service';
 import { TextChannelService } from '../services/text-channel.service';
 
@@ -11,7 +12,7 @@ import { TextChannelService } from '../services/text-channel.service';
   templateUrl: './channel.component.html',
   styleUrls: ['./channel.component.scss'],
 })
-export class ChannelComponent implements OnInit, OnDestroy {
+export class ChannelComponent implements OnInit, OnDestroy, AfterViewInit {
   user: User | null;
   allChannels: TextChannel[];
   isSearchOpen: boolean;
@@ -24,11 +25,12 @@ export class ChannelComponent implements OnInit, OnDestroy {
 
   @ViewChild('addChannelModal', { static: false }) private addChannelModal: ElementRef<HTMLInputElement>;
   @ViewChild('newChannelNameInput', { static: false }) private newChannelNameInput: ElementRef<HTMLInputElement>;
-  @ViewChild('searchInput', { static: false }) private searchInput: ElementRef<HTMLInputElement>;
+  @ViewChild('searchInput', { static: true }) private searchInput: ElementRef<HTMLInputElement>;
 
   constructor(
     private authenticationService: AuthenticationService,
     private chatService: ChatService,
+    private chatSocketService: ChatSocketService,
     private textChannelService: TextChannelService,
     private snackBar: MatSnackBar,
   ) {
@@ -55,6 +57,11 @@ export class ChannelComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {}
+
+  ngAfterViewInit() {
+    this.isSearchOpen = false;
+    // this.ngAfterViewInitExecuted = true;
+  }
 
   addChannel():void {
     const name = this.newChannelName;
@@ -86,12 +93,19 @@ export class ChannelComponent implements OnInit, OnDestroy {
 
   deleteChannel(channelId: string):void {
     this.textChannelService.deleteChannel(channelId).subscribe((channel) => {
-      console.log(channel.name + 'has beeen deleted');
+      console.log(channel.name + 'has been deleted');
     });
+
+    const indexConnected = this.connectedChannels.findIndex((channel) => channel._id === channelId);
+    this.connectedChannels.splice(indexConnected, 1);
+    const indexAll = this.allChannels.findIndex((channel) => channel._id === channelId);
+    this.connectedChannels.splice(indexAll, 1);
   }
 
-  removeChannel(channelId:string):void{
-
+  removeChannel(channelName :string):void{
+    this.chatSocketService.leaveRoom(channelName);
+    const index = this.connectedChannels.findIndex((channel) => channel.name === channelName);
+    this.connectedChannels.splice(index, 1);
   }
 
   toggleChannelButton(channel:TextChannel, mouseover:boolean):void{
@@ -118,16 +132,22 @@ export class ChannelComponent implements OnInit, OnDestroy {
         this.searchedChannels = channels;
       });
     }
+    console.log('searched: ');
+    console.log(this.searchedChannels);
   }
 
   toggleSearchBar(): void {
     this.isSearchOpen = !this.isSearchOpen;
+    // const channelTop = document.getElementById('channel-top') as HTMLInputElement;
+    // channelTop.style.visibility = this.isSearchOpen ? 'hidden' : 'collapsed';
+    // const searchBar = document.getElementById('search-bar') as HTMLInputElement;
+    // searchBar.style.visibility = this.isSearchOpen ? 'collapsed' : 'hidden';
     if (this.isSearchOpen) {
       this.searchInput.nativeElement.focus();
     }
   }
 
-  openChannel(channel: TextChannel, isSearchOpen: boolean):void {
+  openChannel(channel: TextChannel):void {
     const channelOverlay = document.getElementById('channel-overlay') as HTMLInputElement;
     channelOverlay.style.display = 'none';
     this.chatService.toggleChatOverlay.emit(channel);
@@ -138,7 +158,7 @@ export class ChannelComponent implements OnInit, OnDestroy {
       this.connectedChannels.push(channel);
     }
 
-    if (isSearchOpen) {
+    if (this.isSearchOpen) {
       this.searchInput.nativeElement.value = '';
       this.isSearchOpen = false;
     }

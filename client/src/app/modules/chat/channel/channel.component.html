@@ -1,5 +1,6 @@
 <div id="channel-overlay">
-  <div class="channel-top" *ngIf="!isSearchOpen; else searchBar">
+  <!-- *ngIf="!isSearchOpen; else searchBar" -->
+  <div class="channel-top" id="channel-top" >
     <p>Channels</p>
     <button mat-icon-button class="btn" (click)="openAddChannelModal()">
       <mat-icon>add</mat-icon>
@@ -8,32 +9,35 @@
       <mat-icon>search</mat-icon>
     </button>
   </div>
-  <ng-template #searchBar>
-    <input type="search"
-            #searchInput
-            id="searchInput"
-            autocomplete="off"
-            spellcheck="false"
-            placeholder="Search groups..."
-            (input)="searchChannel($event)" >
-    <button mat-icon-button class="btn" (click)="toggleSearchBar()">
-      <mat-icon>close</mat-icon>
-    </button>
-    <div class="channel-list">
-      <div *ngFor="let channel of searchedChannels">
-        <div class="channel" (click)="openChannel(channel, isSearchOpen)">
-          <p>{{channel.name}}</p>
+  <!-- <ng-template #searchBar id="search-bar" > -->
+    <div [hidden]="!isSearchOpen">
+      <input type="search"
+              #searchInput
+              id="search-input"
+              autocomplete="off"
+              spellcheck="false"
+              placeholder="Search groups..."
+              (input)="searchChannel($event)" >
+      <button mat-icon-button class="btn" (click)="toggleSearchBar()">
+        <mat-icon>close</mat-icon>
+      </button>
+      <div class="channel-list">
+        <div *ngFor="let channel of searchedChannels">
+          <div class="channel" (click)="openChannel(channel)">
+            <p>{{channel.name}}</p>
+          </div>
         </div>
       </div>
-    </div>
-  </ng-template>
 
-  <div class="channel-list">
+    </div>
+  <!-- </ng-template> -->
+
+  <div class="channel-list" [hidden]="isSearchOpen">
     <div *ngFor="let channel of connectedChannels">
       <div class="channel" (mouseover)="toggleChannelButton(channel, true)" (mouseout)="toggleChannelButton(channel, false)">
-        <p (click)="openChannel(channel, isSearchOpen)">{{channel.name}}</p>
+        <p (click)="openChannel(channel)">{{channel.name}}</p>
         <div class="deleteChannelBtn" [id]="channel.name">
-          <button mat-icon-button class="btn" (click)="removeChannel(channel._id)">
+          <button mat-icon-button class="btn" (click)="removeChannel(channel.name)">
             <mat-icon>clear</mat-icon>
           </button>
           <button mat-icon-button class="btn" (click)="deleteChannel(channel._id)">
