@@ -2,6 +2,7 @@ import { Injectable } from "@angular/core";
 import { DrawingService } from "../../../drawing/drawing.service";
 import { ICommand } from "src/app/modules/workspace/interfaces/command.interface";
 import {
+  EllipseCommand,
   PencilCommand,
   RectangleCommand,
   RendererProviderService,
@@ -9,7 +10,7 @@ import {
 import { Tool } from "../../../tools/tool.model";
 import { Pencil } from "../../../tools/pencil-tool/pencil.model";
 import { Rectangle } from "../../../tools/tool-rectangle/rectangle.model";
-
+import { Ellipse } from "../../../tools/tool-ellipse/ellipse.model";
 @Injectable({
   providedIn: "root",
 })
@@ -31,6 +32,12 @@ export class CommandFactoryService {
         return new RectangleCommand(
           this.rendererService.renderer,
           commandParameters as Rectangle,
+          this.drawingService
+        );
+      case "Ellipse":
+        return new EllipseCommand(
+          this.rendererService.renderer,
+          commandParameters as Ellipse,
           this.drawingService
         );
       default:

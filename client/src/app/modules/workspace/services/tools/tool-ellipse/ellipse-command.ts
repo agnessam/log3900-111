@@ -144,6 +144,9 @@ export class EllipseCommand implements ICommand {
   }
 
   update(drawingCommand: any): void {
-    console.log(drawingCommand);
+    this.setCX(drawingCommand.x);
+    this.setCY(drawingCommand.y);
+    this.setWidth(drawingCommand.width);
+    this.setHeight(drawingCommand.height);
   }
 }
