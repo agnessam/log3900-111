@@ -65,4 +65,7 @@ dependencies {
 
     // color palette: https://github.com/duanhong169/ColorPicker
     implementation 'com.github.duanhong169:colorpicker:1.1.6'
+
+    // Android Base64 svg+xml to Bitmap
+    implementation 'com.caverock:androidsvg-aar:1.4'
 }

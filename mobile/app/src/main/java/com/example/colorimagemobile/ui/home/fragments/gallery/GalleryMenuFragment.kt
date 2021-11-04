@@ -47,8 +47,8 @@ class GalleryMenuFragment : Fragment(R.layout.fragment_gallery_menu) {
 
     // display all existing drawings in menu
     private fun renderDrawings() {
-        val dataUri = drawings[0].dataUri
-        val bitmap: Bitmap? = ImageConvertor(requireContext()).base64ToBitmap("")
+        val dataUri = drawings[7].dataUri
+        val bitmap: Bitmap? = ImageConvertor(requireContext()).base64ToBitmap(dataUri)
 
         if (bitmap != null) {
             val img = galleryView.findViewById<ImageView>(R.id.image)
