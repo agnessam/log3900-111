@@ -91,6 +91,7 @@ export class PencilToolService implements Tools {
 
   /// Réinitialisation de l'outil après avoir laisser le clique de la souris
   onRelease(event: MouseEvent): void | ICommand {
+    this.drawingSocketService.sendConfirmDrawingCommand(this.pencil, "Pencil");
     this.pencil = null;
     this.inProgressPencil = null;
     if (this.pencilCommand) {

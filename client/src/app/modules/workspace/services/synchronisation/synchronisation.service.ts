@@ -11,6 +11,14 @@ export class SynchronisationService {
 
   constructor(private commandFactory: CommandFactoryService) {}
 
+  removeFromPreview(id:string): boolean{
+    if(this.previewShapes.has(id)){
+      this.previewShapes.delete(id);
+      return true;
+    }
+    return false;
+  }
+
   draw(drawingCommand: SocketTool) {
     const commandId = drawingCommand.drawingCommand.id;
     let command: ICommand | undefined;
