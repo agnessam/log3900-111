@@ -9,10 +9,12 @@ import { DrawingService } from "../../drawing/drawing.service";
 import { KeyCodes } from "../../hotkeys/hotkeys-constants";
 import { OffsetManagerService } from "../../offset-manager/offset-manager.service";
 import { RendererProviderService } from "../../renderer-provider/renderer-provider.service";
+import { DrawingSocketService } from "../../synchronisation/sockets/drawing-socket/drawing-socket.service";
 import { ToolIdConstants } from "../tool-id-constants";
 import { LEFT_CLICK } from "../tools-constants";
 import { SelectionCommandConstants } from "./command-type-constant";
 import { SelectionTransformService } from "./selection-transform.service";
+import { Selection } from "./selection.model";
 
 @Injectable({
   providedIn: "root",
@@ -46,6 +48,7 @@ export class SelectionToolService implements Tools {
   private recStrokeWidth = 1;
 
   private objects: SVGElement[] = [];
+  private currentSelection: Selection;
   private wasMoved = false;
   private isIn = false;
 
@@ -53,7 +56,8 @@ export class SelectionToolService implements Tools {
     private drawingService: DrawingService,
     private offsetManager: OffsetManagerService,
     private rendererService: RendererProviderService,
-    private selectionTransformService: SelectionTransformService
+    private selectionTransformService: SelectionTransformService,
+    private drawingSocketService: DrawingSocketService
   ) {
     this.setRectSelection();
     this.setCtrlPoints();
@@ -106,6 +110,17 @@ export class SelectionToolService implements Tools {
           this.removeSelection();
           if (obj && (this.objects.length < 2 || !this.objects.includes(obj))) {
             this.objects.push(obj);
+
+            // Initializes the selection model that will be synchronised
+            this.currentSelection = {
+              id: obj.id,
+            };
+
+            this.drawingSocketService.sendInProgressDrawingCommand(
+              this.currentSelection,
+              "Selection-Start"
+            );
+
             this.setSelection();
             this.isIn = true;
 
