@@ -66,8 +66,8 @@ class GalleryMenuFragment : Fragment(R.layout.fragment_gallery_menu) {
 
     // display all existing drawings in menu
     private fun renderDrawings() {
-        val drawingsMenu: ArrayList<DrawingMenuData> = arrayListOf()
         val recyclerView = galleryView.findViewById<RecyclerView>(R.id.drawingMenuRecyclerView)
+        val drawingsMenu: ArrayList<DrawingMenuData> = arrayListOf()
 
         // convert src to bitmap for each drawing
         drawings.forEach { drawing ->
@@ -78,9 +78,7 @@ class GalleryMenuFragment : Fragment(R.layout.fragment_gallery_menu) {
             }
         }
 
-        val layoutManager: RecyclerView.LayoutManager = GridLayoutManager(requireContext(), NB_ROWS)
-        recyclerView.layoutManager = layoutManager
-        val drawingMenuAdapter = DrawingMenuRecyclerAdapter(drawingsMenu)
-        recyclerView.adapter = drawingMenuAdapter
+        recyclerView.layoutManager = GridLayoutManager(requireContext(), NB_ROWS)
+        recyclerView.adapter = DrawingMenuRecyclerAdapter(drawingsMenu)
     }
 }
