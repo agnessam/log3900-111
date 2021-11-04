@@ -87,12 +87,19 @@ export class ChannelComponent implements OnInit, OnDestroy {
 
   }
 
-  toggleChannelButton(channelId:string, mouseover:boolean):void{
-      const btnDiv = document.getElementById(channelId) as HTMLInputElement;
+  toggleChannelButton(channel:TextChannel, mouseover:boolean):void{
+      const btnDiv = document.getElementById(channel.name) as HTMLInputElement;
       if(mouseover)
         btnDiv.style.display = "inline";
       else
         btnDiv.style.display = "none";
+
+      const deletbtn = btnDiv.children.item(1) as HTMLInputElement;
+      deletbtn.style.display = "none";
+      if(channel.ownerId == this.user?._id){
+
+        deletbtn.style.display = "inline";
+      }
   }
 
   searchChannel(evt: Event):void {
