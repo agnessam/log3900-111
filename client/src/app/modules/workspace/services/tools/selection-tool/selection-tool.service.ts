@@ -43,8 +43,6 @@ export class SelectionToolService implements Tools {
   private ctrlG: SVGGElement;
   private rectSelection: SVGPolygonElement;
 
-  // private rectInversement: SVGRectElement;
-  private firstInvObj: SVGElement | null;
   private recStrokeWidth = 1;
 
   private objects: SVGElement[] = [];
@@ -59,8 +57,6 @@ export class SelectionToolService implements Tools {
   ) {
     this.setRectSelection();
     this.setCtrlPoints();
-
-    this.rotationAction = this.rotationAction.bind(this);
   }
 
   /// Quand le bouton gauche de la sourie est enfoncé, soit on selectionne un objet, soit on debute une zone de selection
@@ -87,7 +83,6 @@ export class SelectionToolService implements Tools {
       if (event.button === LEFT_CLICK) {
         if (this.isInside(offset.x, offset.y)) {
           this.isIn = true;
-          this.setMouseWheelEvent();
           if (!this.selectionTransformService.hasCommand()) {
             this.selectionTransformService.setCommandType(
               SelectionCommandConstants.NONE
@@ -106,9 +101,10 @@ export class SelectionToolService implements Tools {
               `${offset.y}`
             );
           });
+
+          // Initializes the selection
           this.removeSelection();
           if (obj && (this.objects.length < 2 || !this.objects.includes(obj))) {
-            this.setMouseWheelEvent();
             this.objects.push(obj);
             this.setSelection();
             this.isIn = true;
@@ -142,30 +138,12 @@ export class SelectionToolService implements Tools {
   /// la selection des objets se situant a l'interieur.
   onRelease(event: MouseEvent): ICommand | void {
     if (event.button === LEFT_CLICK && this.drawingService.drawing) {
-      if (event.button === LEFT_CLICK) {
-        if (this.wasMoved && !this.hasSelectedItems) {
-          this.findObjects(this.rectSelection, event.button);
-        } else if (!this.wasMoved && this.objects.length >= 1 && this.isIn) {
-          this.objects = [];
-          const target = event.target as SVGElement;
-          const obj = this.drawingService.getObject(target.id);
-          if (obj) {
-            this.objects.push(obj);
-            this.selectionTransformService.createCommand(
-              SelectionCommandConstants.TRANSLATE,
-              this.rectSelection,
-              this.objects
-            );
-          }
-        }
-      }
       if (this.objects.length > 0) {
         this.setSelection();
       } else {
         this.removeSelection();
       }
 
-      this.firstInvObj = null;
       this.isIn = false;
       this.shiftChanged = false;
       let returnRectangleCommand;
@@ -230,6 +208,9 @@ export class SelectionToolService implements Tools {
     }
   }
 
+  // Alt and shift alter the behavior when resizing
+  // With shift, the resize follows a square transformation
+  // With alt, the size is mirrored on both sides
   onKeyDown(event: KeyboardEvent): void {
     if (!this.isAlt) {
       this.isAlt = event.code === KeyCodes.altR || event.code === KeyCodes.altL;
@@ -300,64 +281,6 @@ export class SelectionToolService implements Tools {
   }
   dropTool(): void {
     return;
-  }
-
-  /// Methode qui trouve les objets se situant a l'interieur du rectangle de selection ou d'inversement trace.
-  private findObjects(rectUsing: SVGElement, button: number): void {
-    const allObject: SVGElement[] = [];
-    this.drawingService.getObjectList().forEach((value) => {
-      if (value.tagName.toLowerCase() !== "defs") {
-        allObject.push(value);
-      }
-    });
-
-    const rectBox = rectUsing.getBoundingClientRect();
-
-    if (button === 0) {
-      allObject.forEach((obj) => {
-        const box = obj.getBoundingClientRect();
-        if (
-          !(
-            rectBox.left >
-              box.right + this.strToNum(obj.style.strokeWidth) / 2 ||
-            rectBox.right <
-              box.left - this.strToNum(obj.style.strokeWidth) / 2 ||
-            rectBox.top >
-              box.bottom + this.strToNum(obj.style.strokeWidth) / 2 ||
-            rectBox.bottom < box.top - this.strToNum(obj.style.strokeWidth) / 2
-          )
-        ) {
-          this.objects.push(obj);
-        }
-      });
-    } else {
-      allObject.forEach((obj) => {
-        const box = obj.getBoundingClientRect();
-        if (
-          !(
-            rectBox.left > box.right ||
-            rectBox.right < box.left ||
-            rectBox.top > box.bottom ||
-            rectBox.bottom < box.top
-          )
-        ) {
-          if (obj && obj !== this.firstInvObj) {
-            if (this.objects.includes(obj)) {
-              this.objects.splice(this.objects.indexOf(obj, 0), 1);
-            } else {
-              this.objects.push(obj);
-            }
-          }
-        }
-      });
-      if (this.firstInvObj) {
-        if (this.objects.includes(this.firstInvObj)) {
-          this.objects.splice(this.objects.indexOf(this.firstInvObj, 0), 1);
-        } else {
-          this.objects.push(this.firstInvObj);
-        }
-      }
-    }
   }
 
   /// Methode qui calcule la surface que le rectangle de selection doit prendre en fonction des objets selectionnes.
@@ -596,10 +519,6 @@ export class SelectionToolService implements Tools {
     this.selectionTransformService.setCtrlPointList(this.ctrlPoints);
   }
 
-  private setMouseWheelEvent(): void {
-    window.addEventListener("wheel", this.rotationAction);
-  }
-
   private rotationAction(event: WheelEvent): void {
     if (
       this.selectionTransformService.getCommandType() !==
@@ -648,28 +567,6 @@ export class SelectionToolService implements Tools {
   /// Retourne si il y a une selection ou non.
   hasSelection(): boolean {
     return this.objects.length > 0;
-  }
-
-  /// Selectionne tous les objets du dessin.
-  selectAll(): void {
-    this.removeSelection();
-    this.drawingService.getObjectList().forEach((value) => {
-      if (value.tagName.toLowerCase() !== "defs") {
-        this.objects.push(value);
-      }
-    });
-    if (this.objects.length > 0) {
-      this.wasMoved = true;
-      this.rendererService.renderer.appendChild(
-        this.drawingService.drawing,
-        this.rectSelection
-      );
-      this.rendererService.renderer.appendChild(
-        this.drawingService.drawing,
-        this.ctrlG
-      );
-      this.setSelection();
-    }
   }
 
   /// Applique une selection sur une liste d'objets fourni.
