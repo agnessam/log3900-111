@@ -264,22 +264,51 @@ export class EraserToolService implements Tools {
   /// Constructeur d'élément indicateur de sélection
   private createDeleteMarkElement(el: SVGElement): SVGElement {
     let deleteMark: SVGElement;
-    if (el.tagName === "g" || el.tagName === "text" || el.tagName === "image) {
+    if (el.tagName === "g" || el.tagName === "text" || el.tagName === "image") {
       const elBox = el.getBoundingClientRect();
-      deleteMark = this.rendererService.renderer.createElement('rect', 'svg');
-      this.rendererService.renderer.setAttribute(deleteMark, 'width', `${elBox.width}px`);
-      this.rendererService.renderer.setAttribute(deleteMark, 'height', `${elBox.height}px`);
-      this.rendererService.renderer.setAttribute(deleteMark, 'x',
-        `${elBox.left - this.drawingService.drawing.getBoundingClientRect().left}px`);
-      this.rendererService.renderer.setAttribute(deleteMark, 'y', `${elBox.top}px`);
+      deleteMark = this.rendererService.renderer.createElement("rect", "svg");
+      this.rendererService.renderer.setAttribute(
+        deleteMark,
+        "width",
+        `${elBox.width}px`
+      );
+      this.rendererService.renderer.setAttribute(
+        deleteMark,
+        "height",
+        `${elBox.height}px`
+      );
+      this.rendererService.renderer.setAttribute(
+        deleteMark,
+        "x",
+        `${
+          elBox.left - this.drawingService.drawing.getBoundingClientRect().left
+        }px`
+      );
+      this.rendererService.renderer.setAttribute(
+        deleteMark,
+        "y",
+        `${elBox.top}px`
+      );
     } else {
       deleteMark = el.cloneNode() as SVGElement;
     }
-    this.rendererService.renderer.setAttribute(deleteMark, 'id', `${el.id}-delete`);
-    this.rendererService.renderer.setStyle(deleteMark, 'strokeWidth', `${this.strToNum(el.style.strokeWidth) + TARGET_STROKE_WIDTH}`);
-    this.rendererService.renderer.setStyle(deleteMark, 'fill', 'none');
-    this.rendererService.renderer.setStyle(deleteMark, 'stroke', 'red');
-    this.rendererService.renderer.setAttribute(deleteMark, 'pointer-events', 'none');
+    this.rendererService.renderer.setAttribute(
+      deleteMark,
+      "id",
+      `${el.id}-delete`
+    );
+    this.rendererService.renderer.setStyle(
+      deleteMark,
+      "strokeWidth",
+      `${this.strToNum(el.style.strokeWidth) + TARGET_STROKE_WIDTH}`
+    );
+    this.rendererService.renderer.setStyle(deleteMark, "fill", "none");
+    this.rendererService.renderer.setStyle(deleteMark, "stroke", "red");
+    this.rendererService.renderer.setAttribute(
+      deleteMark,
+      "pointer-events",
+      "none"
+    );
     return deleteMark;
   }
 
@@ -293,10 +322,14 @@ export class EraserToolService implements Tools {
       const lowerElBoundingBox = lowerEl.getBoundingClientRect();
       for (const pairHigherEl of this.drawingService.getObjectList()) {
         if (pairHigherEl[0] > lowerId) {
-          if (this.isElementCompletelyUnder(
-            pairHigherEl[1].getBoundingClientRect(), this.strToNum(pairHigherEl[1].style.strokeWidth),
-            lowerElBoundingBox, lowerElStrokeWidth,
-          )) {
+          if (
+            this.isElementCompletelyUnder(
+              pairHigherEl[1].getBoundingClientRect(),
+              this.strToNum(pairHigherEl[1].style.strokeWidth),
+              lowerElBoundingBox,
+              lowerElStrokeWidth
+            )
+          ) {
             isCovered = true;
           }
         }
@@ -309,25 +342,39 @@ export class EraserToolService implements Tools {
 
   /// Vérifie si un item est contenu dans un autre
   private isElementCompletelyUnder(
-    rect1: ClientRect | DOMRect, rect1StrokeWidth: number, rect2: ClientRect | DOMRect, rect2StrokeWidth: number,
+    rect1: ClientRect | DOMRect,
+    rect1StrokeWidth: number,
+    rect2: ClientRect | DOMRect,
+    rect2StrokeWidth: number
   ): boolean {
-    return rect1.left - rect1StrokeWidth < rect2.left + rect2StrokeWidth
-      && rect1.right + rect1StrokeWidth > rect2.right - rect2StrokeWidth
-      && rect1.top - rect1StrokeWidth < rect2.top + rect2StrokeWidth
-      && rect1.bottom + rect1StrokeWidth > rect2.bottom - rect2StrokeWidth;
+    return (
+      rect1.left - rect1StrokeWidth < rect2.left + rect2StrokeWidth &&
+      rect1.right + rect1StrokeWidth > rect2.right - rect2StrokeWidth &&
+      rect1.top - rect1StrokeWidth < rect2.top + rect2StrokeWidth &&
+      rect1.bottom + rect1StrokeWidth > rect2.bottom - rect2StrokeWidth
+    );
   }
 
   /// Vérifie si un élément est en catact avec un autre
-  private isElementInContact(rect1: ClientRect | DOMRect, rect2: ClientRect | DOMRect, rect2StrokeWidth: number): boolean {
+  private isElementInContact(
+    rect1: ClientRect | DOMRect,
+    rect2: ClientRect | DOMRect,
+    rect2StrokeWidth: number
+  ): boolean {
     return !(
-      rect1.left > rect2.right + rect2StrokeWidth
-      || rect1.right < rect2.left - rect2StrokeWidth
-      || rect1.top > rect2.bottom + rect2StrokeWidth
-      || rect1.bottom < rect2.top - rect2StrokeWidth
+      rect1.left > rect2.right + rect2StrokeWidth ||
+      rect1.right < rect2.left - rect2StrokeWidth ||
+      rect1.top > rect2.bottom + rect2StrokeWidth ||
+      rect1.bottom < rect2.top - rect2StrokeWidth
     );
   }
 
   private strToNum(str: string | null) {
-    return str ? +str.replace(/[^-?\d]+/g, ',').split(',').filter((el) => el !== '') : 0;
+    return str
+      ? +str
+          .replace(/[^-?\d]+/g, ",")
+          .split(",")
+          .filter((el) => el !== "")
+      : 0;
   }
 }
