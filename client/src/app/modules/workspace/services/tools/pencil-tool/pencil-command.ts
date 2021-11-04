@@ -40,7 +40,7 @@ export class PencilCommand implements ICommand {
       this.dot &&
       !this.pencil
     ) {
-      this.drawingService.removeObject(Number(this.dot.id));
+      this.drawingService.removeObject(this.dot.id);
       this.dot = null;
       this.execute();
     } else if (this.pencil) {
@@ -60,6 +60,7 @@ export class PencilCommand implements ICommand {
           "circle",
           "svg"
         ) as SVGCircleElement;
+        this.renderer.setAttribute(this.dot, "id", this.pencilAttributes.id);
         this.renderer.setAttribute(
           this.dot,
           "cx",
@@ -89,6 +90,7 @@ export class PencilCommand implements ICommand {
           "polyline",
           "svg"
         ) as SVGPolylineElement;
+        this.renderer.setAttribute(this.pencil, "id", this.pencilAttributes.id);
         this.renderer.setAttribute(this.pencil, "name", "pencil");
         this.renderer.setAttribute(this.pencil, "points", this.pointString());
         this.renderer.setStyle(
@@ -122,10 +124,10 @@ export class PencilCommand implements ICommand {
   /// Retrait des bons objets
   undo(): void {
     if (this.dot) {
-      this.drawingService.removeObject(Number(this.dot.id));
+      this.drawingService.removeObject(this.dot.id);
     }
     if (this.pencil) {
-      this.drawingService.removeObject(Number(this.pencil.id));
+      this.drawingService.removeObject(this.pencil.id);
     }
   }
 

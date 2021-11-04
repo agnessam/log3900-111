@@ -27,7 +27,7 @@ export class DeleteCommand implements ICommand {
   /// Retrait des elements de la liste du dessin
   execute(): void {
     for (const obj of this.objectList) {
-      this.drawingService.removeObject(Number(obj.id));
+      this.drawingService.removeObject(obj.id);
 
       const positionStart: number = obj.outerHTML.indexOf("url(#", 0);
       if (positionStart !== -1) {
@@ -41,7 +41,7 @@ export class DeleteCommand implements ICommand {
           document.getElementById(urlId) as Element
         ).parentNode as SVGElement;
         this.markerDef.push(markerToRemove);
-        this.drawingService.removeObject(Number(markerToRemove.id));
+        this.drawingService.removeObject(markerToRemove.id);
       }
     }
   }
