@@ -9,16 +9,16 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:text="Choose canvas color" />
+        android:text="Choose canvas color"
+        android:textStyle="bold"/>
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <include
-            layout="@layout/fragment_color_palette"
-            android:layout_height="350dp"
-            android:layout_width="match_parent" />
-    </RelativeLayout>
+    <include
+        layout="@layout/view_color_picker"
+        android:id="@+id/colorPickerNewDrawing"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="0dp"
+        android:layout_centerHorizontal="true"
+        android:layout_height="300dp"
+        android:layout_width="match_parent"/>
 
 </RelativeLayout>
