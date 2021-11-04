@@ -77,6 +77,24 @@ export class ChannelComponent implements OnInit, OnDestroy {
     }
   }
 
+  deleteChannel(channelId: string):void {
+    this.textChannelService.deleteChannel(channelId).subscribe((channel) => {
+      console.log(channel.name + "has beeen delete");
+    });
+  }
+
+  removeChannel(channelId:string):void{
+
+  }
+
+  toggleChannelButton(channelId:string, mouseover:boolean):void{
+      const btnDiv = document.getElementById(channelId) as HTMLInputElement;
+      if(mouseover)
+        btnDiv.style.display = "inline";
+      else
+        btnDiv.style.display = "none";
+  }
+
   searchChannel(evt: Event):void {
     const search = (evt.target as HTMLInputElement).value;
     console.log(search);

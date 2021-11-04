@@ -47,6 +47,9 @@
 
 .channel{
   margin-left: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 .channel:hover{
   color: #da7e70;
@@ -56,6 +59,10 @@
 .channel-list{
   overflow: auto;
   max-height: 80vh;
+}
+
+.deleteChannelBtn{
+  display: none;
 }
 
 .modal {

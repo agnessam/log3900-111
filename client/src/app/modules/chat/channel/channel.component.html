@@ -22,8 +22,17 @@
 
   <div class="channel-list">
     <div *ngFor="let channel of channels">
-      <div class="channel" (click)="openChannel(channel)">
-        <p>{{channel.name}}</p>
+      <div class="channel" (mouseover)="toggleChannelButton(channel.name, true)" (mouseout)="toggleChannelButton(channel.name, false)">
+        <p (click)="openChannel(channel)">{{channel.name}}</p>
+        <div class="deleteChannelBtn" [id]="channel.name">
+          <button mat-icon-button class="btn" (click)="removeChannel(channel._id)">
+            <mat-icon>clear</mat-icon>
+          </button>
+          <button mat-icon-button class="btn" (click)="deleteChannel(channel._id)">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
+
       </div>
     </div>
   </div>
