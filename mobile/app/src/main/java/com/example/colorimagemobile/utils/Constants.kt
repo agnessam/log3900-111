@@ -45,6 +45,16 @@ class Constants {
         }
     }
 
+    class DRAWING {
+        companion object {
+            const val MIN_WIDTH = 300
+            const val MAX_WIDTH = 1500
+
+            const val MIN_HEIGHT = 200
+            const val MAX_HEIGHT = 1000
+        }
+    }
+
     // sharedPreferences keys
     class STORAGE_KEY {
         companion object {
