@@ -62,24 +62,6 @@ export class ToolEllipseService implements Tools {
   /// en sortie et est inceré dans l'objet courrant de l'outil.
   onPressed(event: MouseEvent): void {
     if (event.button === RIGHT_CLICK || event.button === LEFT_CLICK) {
-      // this.contour = this.rendererService.renderer.createElement("rect", "svg");
-      // this.rendererService.renderer.setStyle(
-      //   this.contour,
-      //   "stroke",
-      //   `rgba(0, 0, 0, 1)`
-      // );
-      // this.rendererService.renderer.setStyle(this.contour, "stroke-width", `1`);
-      // this.rendererService.renderer.setStyle(
-      //   this.contour,
-      //   "stroke-dasharray",
-      //   `10,10`
-      // );
-      // this.rendererService.renderer.setStyle(this.contour, "d", `M5 40 l215 0`);
-      // this.rendererService.renderer.setStyle(this.contour, "fill", `none`);
-      // if (this.contour) {
-      //   this.contourId = this.drawingService.addObject(this.contour);
-      // }
-
       const offset: { x: number; y: number } =
         this.offsetManager.offsetFromMouseEvent(event);
 
@@ -241,27 +223,6 @@ export class ToolEllipseService implements Tools {
     this.ellipseCommand.setWidth(width);
 
     return [xValue, yValue, width, height];
-
-    // this.rendererService.renderer.setAttribute(
-    //   this.contour,
-    //   "x",
-    //   (xValue - width / 2).toString()
-    // );
-    // this.rendererService.renderer.setAttribute(
-    //   this.contour,
-    //   "y",
-    //   (yValue - height / 2).toString()
-    // );
-    // this.rendererService.renderer.setAttribute(
-    //   this.contour,
-    //   "width",
-    //   width.toString()
-    // );
-    // this.rendererService.renderer.setAttribute(
-    //   this.contour,
-    //   "height",
-    //   height.toString()
-    // );
   }
 
   /// Ajustement du style de l'ellipse
