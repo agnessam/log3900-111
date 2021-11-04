@@ -9,12 +9,10 @@ import { RendererProviderService } from "../../renderer-provider/renderer-provid
 import { ToolsColorService } from "src/app/modules/tools-color/services/tools-color.service";
 import { Tools } from "../../../interfaces/tools.interface";
 import { ToolIdConstants } from "../tool-id-constants";
+import { FilledShape } from "../tool-rectangle/filed-shape.model";
 import { LEFT_CLICK, RIGHT_CLICK } from "../tools-constants";
 import { EllipseCommand } from "./ellipse-command";
-import { InProgressEllipse } from "./ellipse.model";
-import { DrawingSocketService } from "../../synchronisation/sockets/drawing-socket/drawing-socket.service";
-import { UuidGeneratorService } from "src/app/shared/id-generator/uuid-generator.service";
-import { Ellipse } from "./ellipse.model";
+
 /// Outil pour créer des ellipse, click suivis de bouge suivis de relache crée l'ellipse
 /// et avec shift créer un cercle
 @Injectable({
@@ -25,9 +23,8 @@ export class ToolEllipseService implements Tools {
   readonly toolName = "Outil Ellipse";
   readonly id = ToolIdConstants.ELLIPSE_ID;
 
-  private ellipse: Ellipse | null = null;
-  private ellipseCommand: EllipseCommand | null = null;
-  private inProgressEllipse: InProgressEllipse | null = null;
+  private ellipse: FilledShape | null;
+  private ellipseCommand: EllipseCommand | null;
 
   private contour: SVGRectElement | null;
   private contourId: number;
@@ -46,9 +43,7 @@ export class ToolEllipseService implements Tools {
     private offsetManager: OffsetManagerService,
     private colorTool: ToolsColorService,
     private drawingService: DrawingService,
-    private rendererService: RendererProviderService,
-    private drawingSocketService: DrawingSocketService,
-    private uuidGeneratorService: UuidGeneratorService
+    private rendererService: RendererProviderService
   ) {
     this.strokeWidth = new FormControl(1, Validators.min(1));
     this.ellipseStyle = new FormControl("fill");
@@ -62,23 +57,23 @@ export class ToolEllipseService implements Tools {
   /// en sortie et est inceré dans l'objet courrant de l'outil.
   onPressed(event: MouseEvent): void {
     if (event.button === RIGHT_CLICK || event.button === LEFT_CLICK) {
-      // this.contour = this.rendererService.renderer.createElement("rect", "svg");
-      // this.rendererService.renderer.setStyle(
-      //   this.contour,
-      //   "stroke",
-      //   `rgba(0, 0, 0, 1)`
-      // );
-      // this.rendererService.renderer.setStyle(this.contour, "stroke-width", `1`);
-      // this.rendererService.renderer.setStyle(
-      //   this.contour,
-      //   "stroke-dasharray",
-      //   `10,10`
-      // );
-      // this.rendererService.renderer.setStyle(this.contour, "d", `M5 40 l215 0`);
-      // this.rendererService.renderer.setStyle(this.contour, "fill", `none`);
-      // if (this.contour) {
-      //   this.contourId = this.drawingService.addObject(this.contour);
-      // }
+      this.contour = this.rendererService.renderer.createElement("rect", "svg");
+      this.rendererService.renderer.setStyle(
+        this.contour,
+        "stroke",
+        `rgba(0, 0, 0, 1)`
+      );
+      this.rendererService.renderer.setStyle(this.contour, "stroke-width", `1`);
+      this.rendererService.renderer.setStyle(
+        this.contour,
+        "stroke-dasharray",
+        `10,10`
+      );
+      this.rendererService.renderer.setStyle(this.contour, "d", `M5 40 l215 0`);
+      this.rendererService.renderer.setStyle(this.contour, "fill", `none`);
+      if (this.contour) {
+        this.contourId = this.drawingService.addObject(this.contour);
+      }
 
       const offset: { x: number; y: number } =
         this.offsetManager.offsetFromMouseEvent(event);
@@ -88,9 +83,7 @@ export class ToolEllipseService implements Tools {
       this.oldX = offset.x;
       this.oldY = offset.y;
 
-      const ellipseId = this.uuidGeneratorService.generateId();
       this.ellipse = {
-        id: ellipseId,
         x: this.x,
         y: this.y,
         width: 0,
@@ -101,14 +94,6 @@ export class ToolEllipseService implements Tools {
         fillOpacity: "none",
         strokeOpacity: "none",
       };
-
-      this.inProgressEllipse = {
-        id: ellipseId,
-        x: this.x,
-        y: this.y,
-        width: 0,
-        height: 0,
-      }
 
       if (event.button === LEFT_CLICK) {
         this.setStyle(
@@ -131,11 +116,6 @@ export class ToolEllipseService implements Tools {
         this.drawingService
       );
       this.ellipseCommand.execute();
-      
-      this.drawingSocketService.sendInProgressDrawingCommand(
-        this.ellipse,
-        "Ellipse"
-      );
     }
   }
 
@@ -159,17 +139,7 @@ export class ToolEllipseService implements Tools {
   onMove(event: MouseEvent): void {
     const offset: { x: number; y: number } =
       this.offsetManager.offsetFromMouseEvent(event);
-    const ellipseAttributes = this.setSize(offset.x, offset.y);
-    
-    this.inProgressEllipse!.x = ellipseAttributes[0];
-    this.inProgressEllipse!.y = ellipseAttributes[1];
-    this.inProgressEllipse!.width = ellipseAttributes[2];
-    this.inProgressEllipse!.height = ellipseAttributes[3];
-
-    this.drawingSocketService.sendInProgressDrawingCommand(
-      this.inProgressEllipse,
-      "Ellipse"
-    );
+    this.setSize(offset.x, offset.y);
   }
 
   /// Verification de la touche shift
@@ -196,9 +166,9 @@ export class ToolEllipseService implements Tools {
   }
 
   /// Transforme le size de l'objet courrant avec un x et un y en entrée
-  private setSize(mouseX: number, mouseY: number): number[] {
+  private setSize(mouseX: number, mouseY: number): void {
     if (!this.ellipseCommand || !this.ellipse) {
-      return [];
+      return;
     }
     let strokeFactor = 0;
     if (this.ellipse.stroke !== "none") {
@@ -233,39 +203,36 @@ export class ToolEllipseService implements Tools {
     }
     xValue += width / 2;
     yValue += height / 2;
-    height = height - strokeFactor <= 0 ? 1 : height - strokeFactor;
-    width = width - strokeFactor <= 0 ? 1 : width - strokeFactor;
+
     this.ellipseCommand.setCX(xValue);
     this.ellipseCommand.setCY(yValue);
     this.ellipseCommand.setHeight(
-      height
+      height - strokeFactor <= 0 ? 1 : height - strokeFactor
     );
     this.ellipseCommand.setWidth(
-      width
+      width - strokeFactor <= 0 ? 1 : width - strokeFactor
     );
 
-    return [xValue, yValue, width, height];
-
-    // this.rendererService.renderer.setAttribute(
-    //   this.contour,
-    //   "x",
-    //   (xValue - width / 2).toString()
-    // );
-    // this.rendererService.renderer.setAttribute(
-    //   this.contour,
-    //   "y",
-    //   (yValue - height / 2).toString()
-    // );
-    // this.rendererService.renderer.setAttribute(
-    //   this.contour,
-    //   "width",
-    //   width.toString()
-    // );
-    // this.rendererService.renderer.setAttribute(
-    //   this.contour,
-    //   "height",
-    //   height.toString()
-    // );
+    this.rendererService.renderer.setAttribute(
+      this.contour,
+      "x",
+      (xValue - width / 2).toString()
+    );
+    this.rendererService.renderer.setAttribute(
+      this.contour,
+      "y",
+      (yValue - height / 2).toString()
+    );
+    this.rendererService.renderer.setAttribute(
+      this.contour,
+      "width",
+      width.toString()
+    );
+    this.rendererService.renderer.setAttribute(
+      this.contour,
+      "height",
+      height.toString()
+    );
   }
 
   /// Ajustement du style de l'ellipse
