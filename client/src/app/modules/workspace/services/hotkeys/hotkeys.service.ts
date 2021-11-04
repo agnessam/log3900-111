@@ -3,6 +3,7 @@ import { MatDialog } from "@angular/material/dialog";
 import { NewDrawingComponent } from "src/app/modules/new-drawing";
 import { CommandInvokerService } from "src/app/modules/workspace";
 import { SidenavService } from "src/app/modules/sidenav";
+import { CopyPasteToolService } from "../tools/copy-paste-tool/copy-paste-tool.service";
 import { DeletingToolService } from "../tools/selection-tool/delete-command/delete-tool.service";
 import { SelectionToolService } from "../tools/selection-tool/selection-tool.service";
 import { ToolIdConstants } from "../tools/tool-id-constants";
@@ -22,6 +23,7 @@ export class HotkeysService {
     private dialog: MatDialog,
     private sideNavService: SidenavService,
     private toolsService: ToolsService,
+    private copyPasteService: CopyPasteToolService,
     private selectionTool: SelectionToolService,
     private deletingTool: DeletingToolService,
     private commandInvoker: CommandInvokerService,
@@ -79,6 +81,18 @@ export class HotkeysService {
         switch (value) {
           case EmitReturn.NEW_DRAWING:
             this.dialog.open(NewDrawingComponent, {});
+            break;
+          case EmitReturn.COPY:
+            this.copyPasteService.copy();
+            break;
+          case EmitReturn.CUT:
+            this.copyPasteService.cut();
+            break;
+          case EmitReturn.PASTE:
+            this.copyPasteService.paste();
+            break;
+          case EmitReturn.DUPLICATE:
+            this.copyPasteService.duplicate();
             break;
           case EmitReturn.DELETE:
             this.deletingTool.deleteSelection();
