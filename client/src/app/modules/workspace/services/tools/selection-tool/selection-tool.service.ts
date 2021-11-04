@@ -10,7 +10,7 @@ import { KeyCodes } from "../../hotkeys/hotkeys-constants";
 import { OffsetManagerService } from "../../offset-manager/offset-manager.service";
 import { RendererProviderService } from "../../renderer-provider/renderer-provider.service";
 import { ToolIdConstants } from "../tool-id-constants";
-import { LEFT_CLICK, RIGHT_CLICK } from "../tools-constants";
+import { LEFT_CLICK } from "../tools-constants";
 import { SelectionCommandConstants } from "./command-type-constant";
 import { SelectionTransformService } from "./selection-transform.service";
 
@@ -43,13 +43,11 @@ export class SelectionToolService implements Tools {
   private ctrlG: SVGGElement;
   private rectSelection: SVGPolygonElement;
 
-  private rectInversement: SVGRectElement;
+  // private rectInversement: SVGRectElement;
   private firstInvObj: SVGElement | null;
   private recStrokeWidth = 1;
 
   private objects: SVGElement[] = [];
-  private tmpX: number;
-  private tmpY: number;
   private wasMoved = false;
   private isIn = false;
 
@@ -59,7 +57,6 @@ export class SelectionToolService implements Tools {
     private rendererService: RendererProviderService,
     private selectionTransformService: SelectionTransformService
   ) {
-    this.setRectInversement();
     this.setRectSelection();
     this.setCtrlPoints();
 
@@ -70,14 +67,9 @@ export class SelectionToolService implements Tools {
   /// soit on s'aprete a deplacer un ou plusieurs objet ou soit on enleve une selection.
   /// Avec le bouton droit, on debute une zone d'inversion.
   onPressed(event: MouseEvent): void {
-    if (
-      (event.button === RIGHT_CLICK || event.button === LEFT_CLICK) &&
-      this.drawingService.drawing
-    ) {
+    if (event.button === LEFT_CLICK && this.drawingService.drawing) {
       const offset: { x: number; y: number } =
         this.offsetManager.offsetFromMouseEvent(event);
-      this.tmpX = offset.x;
-      this.tmpY = offset.y;
       let target = event.target as SVGElement;
       if (this.ctrlPoints.includes(target as SVGRectElement)) {
         this.selectionTransformService.createCommand(
@@ -90,13 +82,6 @@ export class SelectionToolService implements Tools {
         return;
       }
 
-      if (
-        target.getAttribute("name") === "pen" ||
-        target.getAttribute("name") === "stamp" ||
-        target.getAttribute("name") === "spray"
-      ) {
-        target = target.parentNode as SVGElement;
-      }
       const obj = this.drawingService.getObject(target.id);
 
       if (event.button === LEFT_CLICK) {
@@ -136,6 +121,7 @@ export class SelectionToolService implements Tools {
               this.drawingService.drawing,
               this.rectSelection
             );
+
             this.rendererService.renderer.appendChild(
               this.drawingService.drawing,
               this.ctrlG
@@ -143,30 +129,11 @@ export class SelectionToolService implements Tools {
             return;
           }
         }
-      } else {
-        if (obj) {
-          this.firstInvObj = obj;
-        }
-        this.rendererService.renderer.appendChild(
-          this.drawingService.drawing,
-          this.rectInversement
-        );
-
-        this.wasMoved = true;
       }
 
       if (this.hasSelectedItems) {
         return;
       }
-
-      this.rendererService.renderer.appendChild(
-        this.drawingService.drawing,
-        this.rectSelection
-      );
-      this.rendererService.renderer.appendChild(
-        this.drawingService.drawing,
-        this.ctrlG
-      );
     }
   }
 
@@ -174,10 +141,7 @@ export class SelectionToolService implements Tools {
   /// et on recherche les objets a l'interieur. Avec le droit, on termine la zone d'inversement et on inverse
   /// la selection des objets se situant a l'interieur.
   onRelease(event: MouseEvent): ICommand | void {
-    if (
-      (event.button === RIGHT_CLICK || event.button === LEFT_CLICK) &&
-      this.drawingService.drawing
-    ) {
+    if (event.button === LEFT_CLICK && this.drawingService.drawing) {
       if (event.button === LEFT_CLICK) {
         if (this.wasMoved && !this.hasSelectedItems) {
           this.findObjects(this.rectSelection, event.button);
@@ -194,16 +158,12 @@ export class SelectionToolService implements Tools {
             );
           }
         }
-      } else {
-        this.findObjects(this.rectInversement, event.button);
       }
       if (this.objects.length > 0) {
         this.setSelection();
       } else {
         this.removeSelection();
       }
-
-      this.removeInversement();
 
       this.firstInvObj = null;
       this.isIn = false;
@@ -265,11 +225,7 @@ export class SelectionToolService implements Tools {
             );
           }
           this.setSelection();
-        } else {
-          this.setSizeOfSelectionArea(offset.x, offset.y, this.rectSelection);
         }
-      } else if (event.buttons === 2) {
-        this.setSizeOfSelectionArea(offset.x, offset.y, this.rectInversement);
       }
     }
   }
@@ -336,83 +292,6 @@ export class SelectionToolService implements Tools {
     ) {
       this.selectionTransformService.resizeWithLastOffset();
       this.setSelection();
-    }
-  }
-
-  /// Methode qui applique un redimensionnement au rectangle de selection ou d'inversement.
-  private setSizeOfSelectionArea(
-    x: number,
-    y: number,
-    rectUsing: SVGElement
-  ): void {
-    let recX = this.tmpX + this.recStrokeWidth / 2;
-    let recY = this.tmpY + this.recStrokeWidth / 2;
-    let width = x - this.tmpX - this.recStrokeWidth;
-    let height = y - this.tmpY - this.recStrokeWidth;
-
-    if (width < 0) {
-      recX = x + this.recStrokeWidth / 2;
-      width = Math.abs(width) - 2 * this.recStrokeWidth;
-    }
-    if (height < 0) {
-      recY = y + this.recStrokeWidth / 2;
-      height = Math.abs(height) - 2 * this.recStrokeWidth;
-    }
-
-    if (width < 0) {
-      width = 0;
-    }
-    if (height < 0) {
-      height = 0;
-    }
-
-    if (rectUsing === this.rectInversement) {
-      this.rendererService.renderer.setAttribute(rectUsing, "x", `${recX}`);
-      this.rendererService.renderer.setAttribute(rectUsing, "y", `${recY}`);
-      this.rendererService.renderer.setAttribute(
-        rectUsing,
-        "height",
-        `${height}`
-      );
-      this.rendererService.renderer.setAttribute(
-        rectUsing,
-        "width",
-        `${width}`
-      );
-    } else {
-      this.pointsList[0].x = recX;
-      this.pointsList[0].y = recY;
-      this.pointsList[1].x = recX + width / 2;
-      this.pointsList[1].y = recY;
-      this.pointsList[2].x = recX + width;
-      this.pointsList[2].y = recY;
-      this.pointsList[3].x = recX + width;
-      this.pointsList[3].y = recY + height / 2;
-      this.pointsList[4].x = recX + width;
-      this.pointsList[4].y = recY + height;
-      this.pointsList[5].x = recX + width / 2;
-      this.pointsList[5].y = recY + height;
-      this.pointsList[6].x = recX;
-      this.pointsList[6].y = recY + height;
-      this.pointsList[7].x = recX;
-      this.pointsList[7].y = recY + height / 2;
-      this.rendererService.renderer.setAttribute(
-        rectUsing,
-        "points",
-        this.pointsToString()
-      );
-      for (let i = 0; i < 8; i++) {
-        this.rendererService.renderer.setAttribute(
-          this.ctrlPoints[i],
-          "x",
-          `${this.pointsList[i].x + 0.5 - this.pointsSideLength / 2}`
-        );
-        this.rendererService.renderer.setAttribute(
-          this.ctrlPoints[i],
-          "y",
-          `${this.pointsList[i].y + 0.5 - this.pointsSideLength / 2}`
-        );
-      }
     }
   }
 
@@ -649,27 +528,6 @@ export class SelectionToolService implements Tools {
     );
   }
 
-  /// Methode qui suprime le rectangle de selection du dessin.
-  private removeInversement(): void {
-    this.rendererService.renderer.removeChild(
-      this.drawingService.drawing,
-      this.rectInversement
-    );
-
-    this.rendererService.renderer.setAttribute(this.rectInversement, "x", "0");
-    this.rendererService.renderer.setAttribute(this.rectInversement, "y", "0");
-    this.rendererService.renderer.setAttribute(
-      this.rectInversement,
-      "width",
-      "0"
-    );
-    this.rendererService.renderer.setAttribute(
-      this.rectInversement,
-      "height",
-      "0"
-    );
-  }
-
   /// Initialise le rectangle de selection.
   private setRectSelection(): void {
     this.rectSelection = this.rendererService.renderer.createElement(
@@ -736,46 +594,6 @@ export class SelectionToolService implements Tools {
     }
 
     this.selectionTransformService.setCtrlPointList(this.ctrlPoints);
-  }
-
-  /// Initialise le rectangle d'inversement.
-  private setRectInversement(): void {
-    this.rectInversement = this.rendererService.renderer.createElement(
-      "rect",
-      "svg"
-    );
-    this.rendererService.renderer.setStyle(
-      this.rectInversement,
-      "stroke",
-      `rgba(200, 0, 0, 1)`
-    );
-    this.rendererService.renderer.setStyle(
-      this.rectInversement,
-      "stroke-width",
-      `${this.recStrokeWidth}`
-    );
-    this.rendererService.renderer.setStyle(
-      this.rectInversement,
-      "stroke-dasharray",
-      `10,10`
-    );
-    this.rendererService.renderer.setStyle(
-      this.rectInversement,
-      "d",
-      `M5 40 l215 0`
-    );
-    this.rendererService.renderer.setStyle(
-      this.rectInversement,
-      "fill",
-      `none`
-    );
-    this.rendererService.renderer.setAttribute(this.rectInversement, "x", "0");
-    this.rendererService.renderer.setAttribute(this.rectInversement, "y", "0");
-    this.rendererService.renderer.setAttribute(
-      this.rectInversement,
-      "pointer-events",
-      "none"
-    );
   }
 
   private setMouseWheelEvent(): void {
