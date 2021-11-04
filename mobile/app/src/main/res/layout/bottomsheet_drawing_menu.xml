@@ -19,7 +19,7 @@
         android:layout_marginTop="5dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Enter canvas dimensions" />
+        android:text="Enter canvas dimensions (px)" />
 
 <!--    Width and height-->
     <GridLayout
@@ -37,6 +37,7 @@
             android:layout_marginRight="10px"
             android:hint="Width"
             app:suffixText="px"
+            app:errorEnabled="true"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
             <com.google.android.material.textfield.TextInputEditText
@@ -54,6 +55,7 @@
             android:layout_marginLeft="10px"
             android:hint="Height"
             app:suffixText="px"
+            app:errorEnabled="true"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
             <com.google.android.material.textfield.TextInputEditText
