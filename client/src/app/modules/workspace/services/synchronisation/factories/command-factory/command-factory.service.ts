@@ -2,12 +2,14 @@ import { Injectable } from "@angular/core";
 import { DrawingService } from "../../../drawing/drawing.service";
 import { ICommand } from "src/app/modules/workspace/interfaces/command.interface";
 import {
+  DeleteCommand,
   EllipseCommand,
   EraserCommand,
   PencilCommand,
   RectangleCommand,
   RendererProviderService,
   ResizeCommand,
+  TranslateCommand,
 } from "src/app/modules/workspace";
 import { Pencil } from "../../../tools/pencil-tool/pencil.model";
 import { Rectangle } from "../../../tools/tool-rectangle/rectangle.model";
@@ -53,7 +55,6 @@ export class CommandFactoryService {
         return new EraserCommand(itemsToDelete, this.drawingService);
       case "SelectionStart":
         const selectedShapeId = commandParameters.id;
-        console.log(selectedShapeId);
         const selectedShape = this.drawingService.getObject(selectedShapeId);
         if (selectedShape == undefined) {
           throw new Error("Could not find current shape");
@@ -65,9 +66,38 @@ export class CommandFactoryService {
         if (resizeShape == undefined) {
           throw new Error("Could not find current shape");
         }
-        let resizeSelectionCommand = new ResizeCommand(this.rendererService.renderer, [resizeShape]);
-        resizeSelectionCommand.setScales(commandParameters.xScaled, commandParameters.yScaled, commandParameters.xTranslate, commandParameters.yTranslate);
+        let resizeSelectionCommand = new ResizeCommand(
+          this.rendererService.renderer,
+          [resizeShape]
+        );
+        resizeSelectionCommand.setScales(
+          commandParameters.xScaled,
+          commandParameters.yScaled,
+          commandParameters.xTranslate,
+          commandParameters.yTranslate
+        );
         return resizeSelectionCommand;
+      case "Translation":
+        const translationShapeId = commandParameters.id;
+        const translationShape =
+          this.drawingService.getObject(translationShapeId);
+        if (translationShape == undefined)
+          throw new Error("Shape could not befound in the object list.");
+        let translateCommand = new TranslateCommand(
+          this.rendererService.renderer,
+          translationShape
+        );
+        translateCommand.setTransformation(
+          commandParameters.deltaX,
+          commandParameters.deltaY
+        );
+        return translateCommand;
+      case "Delete":
+        const id = commandParameters.id;
+        const deletedShape = this.drawingService.getObject(id);
+        if (deletedShape == undefined)
+          throw new Error("Couldn't find the shape you wanted to delete.");
+        return new DeleteCommand(this.drawingService, deletedShape);
       default:
         throw new Error("Unable to create command");
     }

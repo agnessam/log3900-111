@@ -1,6 +1,5 @@
 import { Injectable } from "@angular/core";
 import { ICommand } from "../../interfaces/command.interface";
-import { ResizeCommand } from "../tools/selection-tool/resize-command/resize-command";
 import { SocketTool } from "../tools/socket-tool";
 import { CommandFactoryService } from "./factories/command-factory/command-factory.service";
 
@@ -37,8 +36,6 @@ export class SynchronisationService {
       this.previewShapes.set(commandId, command);
       command.execute();
     }
-
-    console.log(this.previewShapes);
   }
 
   erase(eraseCommandData: any) {
@@ -69,18 +66,39 @@ export class SynchronisationService {
   transformSelection(transformSelectionData: SocketTool) {
     const commandId = transformSelectionData.drawingCommand.id;
     let command: ICommand | undefined;
+    let transformationCommand: ICommand;
     if (this.previewShapes.has(commandId)) {
       command = this.previewShapes.get(commandId);
-      if (command! instanceof ResizeCommand) {
+
+      transformationCommand = this.commandFactory.createCommand(
+        transformSelectionData.type,
+        transformSelectionData.drawingCommand
+      );
+
+      if (transformationCommand instanceof command!.constructor) {
         command!.update(transformSelectionData.drawingCommand);
       } else {
-        command = this.commandFactory.createCommand(
-          transformSelectionData.type,
-          transformSelectionData.drawingCommand
-        );
-        this.previewShapes.set(commandId, command);
+        this.previewShapes.set(commandId, transformationCommand);
       }
+
+      // if (command! instanceof TranslateCommand) {
+      //   command!.update(transformSelectionData.drawingCommand);
+      // } else {
+      //   command = this.commandFactory.createCommand(
+      //     transformSelectionData.type,
+      //     transformSelectionData.drawingCommand
+      //   );
+      //   this.previewShapes.set(commandId, command);
     }
-    command!.execute();
+
+    this.previewShapes.get(commandId)!.execute();
+  }
+
+  deleteSelection(deleteSelectionData: SocketTool): void {
+    let transformCommand = this.commandFactory.createCommand(
+      deleteSelectionData.type,
+      deleteSelectionData.drawingCommand
+    );
+    transformCommand.execute();
   }
 }

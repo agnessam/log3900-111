@@ -5,6 +5,7 @@ import {
   CONFIRM_DRAWING_EVENT,
   CONFIRM_ERASE_EVENT,
   CONFIRM_SELECTION_EVENT,
+  DELETE_SELECTION_EVENT,
   IN_PROGRESS_DRAWING_EVENT,
   START_SELECTION_EVENT,
   TRANSFORM_SELECTION_EVENT,
@@ -40,6 +41,7 @@ export class DrawingSocketService extends AbstractSocketService {
     this.listenStartSelectionCommand();
     this.listenConfirmSelectionCommand();
     this.listenTransformSelectionCommand();
+    this.listenDeleteSelectionCommand();
   }
 
   sendInProgressDrawingCommand(drawingCommand: any, type: string): void {
@@ -107,6 +109,16 @@ export class DrawingSocketService extends AbstractSocketService {
     this.emit(TRANSFORM_SELECTION_EVENT, transformCommand);
   }
 
+  sendDeleteSelectionCommand(deleteSelectionCommand: any, type: string): void {
+    let deleteCommand: SocketTool = {
+      type: type,
+      roomName: this.roomName,
+      drawingCommand: deleteSelectionCommand,
+    };
+
+    this.emit(DELETE_SELECTION_EVENT, deleteCommand);
+  }
+
   private listenConfirmEraseCommand(): void {
     this.namespaceSocket.on(CONFIRM_ERASE_EVENT, (eraseCommand: any) => {
       this.synchronisationService.erase(eraseCommand);
@@ -138,6 +150,15 @@ export class DrawingSocketService extends AbstractSocketService {
         this.synchronisationService.transformSelection(
           transformSelectionCommand
         );
+      }
+    );
+  }
+
+  private listenDeleteSelectionCommand(): void {
+    this.namespaceSocket.on(
+      DELETE_SELECTION_EVENT,
+      (deleteSelectionCommand: any) => {
+        this.synchronisationService.deleteSelection(deleteSelectionCommand);
       }
     );
   }
