@@ -3,10 +3,11 @@ import {
   AbstractSocketService,
   COLLABORATIVE_DRAWING_NAMESPACE,
   CONFIRM_DRAWING_EVENT,
-  IN_PROGRESS_DRAWING_EVENT,
   CONFIRM_ERASE_EVENT,
   CONFIRM_SELECTION_EVENT,
+  IN_PROGRESS_DRAWING_EVENT,
   START_SELECTION_EVENT,
+  TRANSFORM_SELECTION_EVENT,
 } from "src/app/shared";
 import { Selection } from "../../../tools/selection-tool/selection.model";
 import { SocketTool } from "../../../tools/socket-tool";
@@ -38,6 +39,7 @@ export class DrawingSocketService extends AbstractSocketService {
     this.listenConfirmEraseCommand();
     this.listenStartSelectionCommand();
     this.listenConfirmSelectionCommand();
+    this.listenTransformSelectionCommand();
   }
 
   sendInProgressDrawingCommand(drawingCommand: any, type: string): void {
@@ -60,7 +62,7 @@ export class DrawingSocketService extends AbstractSocketService {
     this.emit(CONFIRM_DRAWING_EVENT, socketToolCommand);
   }
 
-  sendConfirmEraseCommand(itemsToDeleteIds: String[], type:string): void {
+  sendConfirmEraseCommand(itemsToDeleteIds: String[], type: string): void {
     let eraseCommand = {
       type: type,
       roomName: this.roomName,
@@ -93,6 +95,19 @@ export class DrawingSocketService extends AbstractSocketService {
     this.emit(CONFIRM_SELECTION_EVENT, selectionCommand);
   }
 
+  sendTransformSelectionCommand(
+    transformSelectionCommand: any,
+    type: string
+  ): void {
+    let transformCommand: SocketTool = {
+      type: type,
+      roomName: this.roomName,
+      drawingCommand: transformSelectionCommand,
+    };
+
+    this.emit(TRANSFORM_SELECTION_EVENT, transformCommand);
+  }
+
   private listenConfirmEraseCommand(): void {
     this.namespaceSocket.on(CONFIRM_ERASE_EVENT, (eraseCommand: any) => {
       this.synchronisationService.erase(eraseCommand);
@@ -117,6 +132,17 @@ export class DrawingSocketService extends AbstractSocketService {
     );
   }
 
+  private listenTransformSelectionCommand(): void {
+    this.namespaceSocket.on(
+      TRANSFORM_SELECTION_EVENT,
+      (transformSelectionCommand: any) => {
+        this.synchronisationService.transformSelection(
+          transformSelectionCommand
+        );
+      }
+    );
+  }
+
   private listenInProgressDrawingCommand(): void {
     this.namespaceSocket.on(
       IN_PROGRESS_DRAWING_EVENT,
@@ -130,7 +156,9 @@ export class DrawingSocketService extends AbstractSocketService {
     this.namespaceSocket.on(
       CONFIRM_DRAWING_EVENT,
       (drawingCommand: SocketTool) => {
-        this.synchronisationService.removeFromPreview(drawingCommand.drawingCommand.id);
+        this.synchronisationService.removeFromPreview(
+          drawingCommand.drawingCommand.id
+        );
       }
     );
   }
