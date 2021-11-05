@@ -150,6 +150,7 @@ export class EraserToolService implements Tools {
       this.processElementInEraser();
       return eraserCommand;
     }
+    this.reset();
   }
 
   /// Gestion de capture des objets lors du mouvements de la souris
@@ -169,12 +170,14 @@ export class EraserToolService implements Tools {
         });
         this.deleteMarkList = [];
         elementInEraser.forEach((el) => {
-          const elDeleteMark = this.createDeleteMarkElement(el);
-          this.rendererService.renderer.appendChild(
-            this.drawingService.drawing,
-            elDeleteMark
-          );
-          this.deleteMarkList.push(elDeleteMark);
+          if(!this.synchronisationService.previewShapes.has(el.id)){
+            const elDeleteMark = this.createDeleteMarkElement(el);
+            this.rendererService.renderer.appendChild(
+              this.drawingService.drawing,
+              elDeleteMark
+            );
+            this.deleteMarkList.push(elDeleteMark);
+          }
         });
       }
     }
@@ -232,9 +235,7 @@ export class EraserToolService implements Tools {
   private processElementInEraser(): void {
     const elementInEraser: SVGElement[] = this.getElementsInContact();
     elementInEraser.forEach((el) => {
-      console.log("IN PREVIEW SHAPES?:", this.synchronisationService.previewShapes.get(el.id));
-      if (!this.itemToDelete.get(el.id) && !this.synchronisationService.previewShapes.get(el.id)) {
-        console.log("WE IN?");
+      if (!this.itemToDelete.get(el.id) && !this.synchronisationService.previewShapes.has(el.id)) {
         this.itemToDelete.set(el.id, el);
         const elDeleteMark = this.createDeleteMarkElement(el);
         this.rendererService.renderer.appendChild(
