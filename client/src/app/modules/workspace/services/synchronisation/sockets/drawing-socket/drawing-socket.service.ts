@@ -83,7 +83,6 @@ export class DrawingSocketService extends AbstractSocketService {
     this.namespaceSocket.on(
       CONFIRM_DRAWING_EVENT,
       (drawingCommand: SocketTool) => {
-        // this.synchronisationService.draw(drawingCommand);
         this.synchronisationService.removeFromPreview(drawingCommand.drawingCommand.id);
       }
     );
