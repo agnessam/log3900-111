@@ -1,4 +1,5 @@
 import { Injectable } from "@angular/core";
+import { TranslateCommand } from "../..";
 import { ICommand } from "../../interfaces/command.interface";
 import { SocketTool } from "../tools/socket-tool";
 import { CommandFactoryService } from "./factories/command-factory/command-factory.service";
@@ -36,8 +37,6 @@ export class SynchronisationService {
       this.previewShapes.set(commandId, command);
       command.execute();
     }
-
-    console.log(this.previewShapes);
   }
 
   erase(eraseCommandData: any) {
@@ -63,13 +62,24 @@ export class SynchronisationService {
 
   confirmSelection(confirmSelectionData: SocketTool) {
     this.previewShapes.delete(confirmSelectionData.drawingCommand.id);
+    console.log(this.previewShapes);
   }
 
   transformSelection(transformSelectionData: SocketTool) {
-    let transformCommand = this.commandFactory.createCommand(
-      transformSelectionData.type,
-      transformSelectionData.drawingCommand
-    );
-    console.log(transformCommand);
+    const commandId = transformSelectionData.drawingCommand.id;
+    let command: ICommand | undefined;
+    if (this.previewShapes.has(commandId)) {
+      command = this.previewShapes.get(commandId);
+      if (command! instanceof TranslateCommand) {
+        command!.update(transformSelectionData.drawingCommand);
+      } else {
+        command = this.commandFactory.createCommand(
+          transformSelectionData.type,
+          transformSelectionData.drawingCommand
+        );
+        this.previewShapes.set(commandId, command);
+      }
+    }
+    command!.execute();
   }
 }

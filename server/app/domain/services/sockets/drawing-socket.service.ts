@@ -65,6 +65,7 @@ export class DrawingSocketService extends SocketServiceInterface {
 
   private listenTransformSelectionCommand(socket: Socket): void {
     socket.on(TRANSFORM_SELECTION_EVENT, (selectionCommand: any) => {
+      console.log(selectionCommand);
       this.emitTransformSelectionCommand(selectionCommand, socket);
     });
   }

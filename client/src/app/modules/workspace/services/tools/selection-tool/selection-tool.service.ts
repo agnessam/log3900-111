@@ -112,6 +112,7 @@ export class SelectionToolService implements Tools {
           // selection is pasted back onto the canvas, and we can redo another selection.
 
           if (this.objects.length > 0) {
+            console.log(this.objects[0]);
             const confirmedSelection: Selection = {
               id: this.objects[0].id,
             };
@@ -225,17 +226,31 @@ export class SelectionToolService implements Tools {
               this.rectSelection,
               this.objects
             );
-          } else {
+
+            // Initializes the translation
+            // At the start, the deltaX and deltaY are 0 as the object hasn't moved.
             this.translation = {
               id: this.objects[0].id,
-              deltaX: event.movementX,
-              deltaY: event.movementY,
+              deltaX: 0,
+              deltaY: 0,
             };
-            console.log(this.translation);
+            this.drawingSocketService.sendTransformSelectionCommand(
+              this.translation,
+              "Translation"
+            );
+          } else {
+            // Increments the previous translation.
+            this.translation.deltaX += event.movementX;
+            this.translation.deltaY += event.movementY;
 
             this.selectionTransformService.translate(
-              event.movementX,
-              event.movementY
+              this.translation.deltaX,
+              this.translation.deltaY
+            );
+
+            this.drawingSocketService.sendTransformSelectionCommand(
+              this.translation,
+              "Translation"
             );
           }
           this.setSelection();

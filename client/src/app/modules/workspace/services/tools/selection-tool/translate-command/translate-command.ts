@@ -7,48 +7,53 @@ export class TranslateCommand implements ICommand {
     string
   >();
 
-  private lastXTranslate = 0;
-  private lastYTranslate = 0;
+  private deltaX: number;
+  private deltaY: number;
 
-  constructor(private renderer: Renderer2, private objectList: SVGElement[]) {
-    for (const obj of this.objectList) {
-      const transform: string | null = obj.getAttribute("transform");
-      if (transform) {
-        this.previousTransformation.set(obj.id, transform);
-      } else {
-        this.previousTransformation.set(obj.id, "");
-      }
+  constructor(private renderer: Renderer2, private selectedShape: SVGElement) {
+    const transform: string | null =
+      this.selectedShape.getAttribute("transform");
+    if (transform) {
+      this.previousTransformation.set(this.selectedShape.id, transform);
+    } else {
+      this.previousTransformation.set(this.selectedShape.id, "");
     }
   }
 
   update(drawingCommand: any): void {
-    throw new Error("Method not implemented.");
+    this.setTransformation(drawingCommand.deltaX, drawingCommand.deltaY);
   }
 
   translate(xTranslate: number, yTranslate: number): void {
-    this.lastXTranslate = xTranslate;
-    this.lastYTranslate = yTranslate;
     const translateString = ` translate(${xTranslate} ${yTranslate})`;
-    for (const obj of this.objectList) {
-      this.renderer.setAttribute(
-        obj,
-        "transform",
-        (translateString + this.previousTransformation.get(obj.id)) as string
-      );
-    }
+    this.renderer.setAttribute(
+      this.selectedShape,
+      "transform",
+      (translateString +
+        this.previousTransformation.get(this.selectedShape.id)) as string
+    );
+  }
+
+  setTransformation(x: number, y: number): void {
+    this.deltaX = x;
+    this.deltaY = y;
   }
 
   undo(): void {
-    for (const obj of this.objectList) {
-      this.renderer.setAttribute(
-        obj,
-        "transform",
-        this.previousTransformation.get(obj.id) as string
-      );
-    }
+    throw new Error("method not implemented.");
+  }
+
+  translateShape(deltaX: number, deltaY: number) {
+    const translateString = `translate(${deltaX} ${deltaY})`;
+    this.renderer.setAttribute(
+      this.selectedShape,
+      "transform",
+      (translateString +
+        this.previousTransformation.get(this.selectedShape.id)) as string
+    );
   }
 
   execute(): void {
-    this.translate(this.lastXTranslate, this.lastYTranslate);
+    this.translate(this.deltaX, this.deltaY);
   }
 }
