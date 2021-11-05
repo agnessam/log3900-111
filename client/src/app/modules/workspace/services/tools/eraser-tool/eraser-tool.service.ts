@@ -1,18 +1,19 @@
-import { Injectable } from "@angular/core";
-import { FormControl, FormGroup, Validators } from "@angular/forms";
-import { IconDefinition } from "@fortawesome/fontawesome-common-types";
-import { faEraser } from "@fortawesome/free-solid-svg-icons";
-import { ICommand } from "src/app/modules/workspace/interfaces/command.interface";
-import { Point } from "src/app/shared";
-import { CommandInvokerService } from "../../command-invoker/command-invoker.service";
-import { DrawingService } from "../../drawing/drawing.service";
-import { OffsetManagerService } from "../../offset-manager/offset-manager.service";
-import { RendererProviderService } from "../../renderer-provider/renderer-provider.service";
-import { Tools } from "../../../interfaces/tools.interface";
-import { ToolIdConstants } from "../tool-id-constants";
-import { LEFT_CLICK, RIGHT_CLICK } from "../tools-constants";
-import { EraserCommand } from "./eraser-command";
-import { DrawingSocketService } from "../../synchronisation/sockets/drawing-socket/drawing-socket.service";
+import { Injectable } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { IconDefinition } from '@fortawesome/fontawesome-common-types';
+import { faEraser } from '@fortawesome/free-solid-svg-icons';
+import { ICommand } from 'src/app/modules/workspace/interfaces/command.interface';
+import { Point } from 'src/app/shared';
+import { CommandInvokerService } from '../../command-invoker/command-invoker.service';
+import { DrawingService } from '../../drawing/drawing.service';
+import { OffsetManagerService } from '../../offset-manager/offset-manager.service';
+import { RendererProviderService } from '../../renderer-provider/renderer-provider.service';
+import { Tools } from '../../../interfaces/tools.interface';
+import { ToolIdConstants } from '../tool-id-constants';
+import { LEFT_CLICK, RIGHT_CLICK } from '../tools-constants';
+import { EraserCommand } from './eraser-command';
+import { DrawingSocketService } from '../../synchronisation/sockets/drawing-socket/drawing-socket.service';
+import { SynchronisationService } from '../../synchronisation/synchronisation.service';
 
 const TARGET_STROKE_WIDTH = 5;
 
@@ -39,7 +40,8 @@ export class EraserToolService implements Tools {
     private offsetManager: OffsetManagerService,
     private rendererService: RendererProviderService,
     private commandInvoker: CommandInvokerService,
-    private drawingSocketService: DrawingSocketService
+    private drawingSocketService: DrawingSocketService,
+    private synchronisationService: SynchronisationService
   ) {
     this.eraserSize = new FormControl(1, [
       Validators.min(1),
@@ -148,6 +150,7 @@ export class EraserToolService implements Tools {
       this.processElementInEraser();
       return eraserCommand;
     }
+    this.reset();
   }
 
   /// Gestion de capture des objets lors du mouvements de la souris
@@ -167,12 +170,14 @@ export class EraserToolService implements Tools {
         });
         this.deleteMarkList = [];
         elementInEraser.forEach((el) => {
-          const elDeleteMark = this.createDeleteMarkElement(el);
-          this.rendererService.renderer.appendChild(
-            this.drawingService.drawing,
-            elDeleteMark
-          );
-          this.deleteMarkList.push(elDeleteMark);
+          if(!this.synchronisationService.previewShapes.has(el.id)){
+            const elDeleteMark = this.createDeleteMarkElement(el);
+            this.rendererService.renderer.appendChild(
+              this.drawingService.drawing,
+              elDeleteMark
+            );
+            this.deleteMarkList.push(elDeleteMark);
+          }
         });
       }
     }
@@ -230,7 +235,7 @@ export class EraserToolService implements Tools {
   private processElementInEraser(): void {
     const elementInEraser: SVGElement[] = this.getElementsInContact();
     elementInEraser.forEach((el) => {
-      if (!this.itemToDelete.get(el.id)) {
+      if (!this.itemToDelete.get(el.id) && !this.synchronisationService.previewShapes.has(el.id)) {
         this.itemToDelete.set(el.id, el);
         const elDeleteMark = this.createDeleteMarkElement(el);
         this.rendererService.renderer.appendChild(

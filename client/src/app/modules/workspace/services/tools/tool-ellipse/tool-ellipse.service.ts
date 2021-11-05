@@ -123,6 +123,7 @@ export class ToolEllipseService implements Tools {
 
   /// Quand le bouton de la sourie est relaché, l'objet courrant de l'outil est mis a null.
   onRelease(event: MouseEvent): ICommand | void {
+    this.drawingSocketService.sendConfirmDrawingCommand(this.ellipse, "Ellipse");
     this.isCircle = false;
     this.ellipse = null;
     if (this.contour) {

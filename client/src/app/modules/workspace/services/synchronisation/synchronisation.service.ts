@@ -11,10 +11,17 @@ export class SynchronisationService {
 
   constructor(private commandFactory: CommandFactoryService) {}
 
+  removeFromPreview(id:string): boolean{
+    if(this.previewShapes.has(id)){
+      this.previewShapes.delete(id);
+      return true;
+    }
+    return false;
+  }
+
   draw(drawingCommand: SocketTool) {
     const commandId = drawingCommand.drawingCommand.id;
     let command: ICommand | undefined;
-
     if (this.previewShapes.has(commandId)) {
       command = this.previewShapes.get(commandId);
       command!.update(drawingCommand.drawingCommand);

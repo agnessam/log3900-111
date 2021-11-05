@@ -121,6 +121,7 @@ export class ToolRectangleService implements Tools {
 
   /// Quand le bouton de la sourie est relaché, l'objet courrant de l'outil est mis a null.
   onRelease(event: MouseEvent): ICommand | void {
+    this.drawingSocketService.sendConfirmDrawingCommand(this.rectangle, "Rectangle");
     this.isSquare = false;
     this.rectangle = null;
     if (this.rectangleCommand) {
