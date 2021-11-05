@@ -2,12 +2,12 @@ import { Component, HostListener, OnInit } from "@angular/core";
 import { FormGroup } from "@angular/forms";
 import { MatDialogRef } from "@angular/material/dialog";
 import { MatSnackBar } from "@angular/material/snack-bar";
-import { ColorPickerService } from "src/app/modules/color-picker";
-import { DEFAULT_RGB_COLOR, DEFAULT_ALPHA } from "src/app/shared";
-import { DrawingService } from "src/app/modules/workspace";
-import { NewDrawingService } from "./new-drawing.service";
 import { Router } from "@angular/router";
-import { DrawingHttpClientService } from "../http-client";
+import { ColorPickerService } from "src/app/modules/color-picker";
+import { DrawingService } from "src/app/modules/workspace";
+import { DEFAULT_ALPHA, DEFAULT_RGB_COLOR } from "src/app/shared";
+import { DrawingHttpClientService } from "../backend-communication";
+import { NewDrawingService } from "./new-drawing.service";
 
 const ONE_SECOND = 1000;
 @Component({
@@ -48,17 +48,25 @@ export class NewDrawingComponent implements OnInit {
     this.drawingService.isCreated = true;
     const size: { width: number; height: number } =
       this.newDrawingService.sizeGroup.value;
-    let drawingDataUri = this.drawingService.newDrawing(size.width, size.height, {
-      rgb: this.colorPickerService.rgb.value,
-      a: this.colorPickerService.a.value,
-    });
-    let ownerModel:string = "User";
-    this.drawingHttpClient.createNewDrawing(drawingDataUri, ownerModel).subscribe((response) => {
-      if (response._id) {
-        this.router.navigate([`/drawings/${response._id}`]);
-        this.snackBar.open("Nouveau dessin créé", "", { duration: ONE_SECOND });
+    let drawingDataUri = this.drawingService.newDrawing(
+      size.width,
+      size.height,
+      {
+        rgb: this.colorPickerService.rgb.value,
+        a: this.colorPickerService.a.value,
       }
-    });
+    );
+    let ownerModel: string = "User";
+    this.drawingHttpClient
+      .createNewDrawing(drawingDataUri, ownerModel)
+      .subscribe((response) => {
+        if (response._id) {
+          this.router.navigate([`/drawings/${response._id}`]);
+          this.snackBar.open("Nouveau dessin créé", "", {
+            duration: ONE_SECOND,
+          });
+        }
+      });
     this.newDrawingService.form.reset();
     this.dialogRef.close();
   }

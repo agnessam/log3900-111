@@ -29,7 +29,7 @@ export class PolygonToolService implements Tools {
   readonly id = ToolIdConstants.POLYGON_ID;
 
   private border: SVGRectElement | null;
-  private borderId: number;
+  private borderId: string;
 
   parameters: FormGroup;
   private strokeWidth: FormControl;
@@ -132,7 +132,7 @@ export class PolygonToolService implements Tools {
     if (event.button === RIGHT_CLICK || event.button === LEFT_CLICK) {
       if (this.border) {
         this.drawingService.removeObject(this.borderId);
-        this.borderId = 0;
+        this.borderId = "";
       }
       if (this.polygonCommand) {
         const returnRectangleCommand = this.polygonCommand;
