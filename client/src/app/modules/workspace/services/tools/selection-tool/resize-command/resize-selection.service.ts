@@ -1,16 +1,19 @@
-import { Injectable } from '@angular/core';
-import { ICommand } from '../../../../interfaces/command.interface';
-import { Point } from 'src/app/shared';
-import { DrawingService, RendererProviderService } from 'src/app/modules/workspace';
-import { ResizeCommand } from './resize-command';
-import { DrawingSocketService } from '../../../synchronisation/sockets/drawing-socket/drawing-socket.service';
+import { Injectable } from "@angular/core";
+import { ICommand } from "../../../../interfaces/command.interface";
+import { Point } from "src/app/shared";
+import {
+  DrawingService,
+  RendererProviderService,
+} from "src/app/modules/workspace";
+import { ResizeCommand } from "./resize-command";
+import { DrawingSocketService } from "../../../synchronisation/sockets/drawing-socket/drawing-socket.service";
 
 const DOUBLING_SCALE_MODIFIER = 2;
 const SCALE_POSITIONNER_MODIFIER = 1;
 const SCALE_INVERSER_MODIFIER = -1;
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: "root",
 })
 export class ResizeSelectionService {
   private objectList: SVGElement[];
@@ -37,15 +40,17 @@ export class ResizeSelectionService {
     private rendererService: RendererProviderService,
     private drawingService: DrawingService,
     private drawingSocketService: DrawingSocketService
-  ) { }
+  ) {}
 
   setCtrlPointList(ctrlPointList: SVGRectElement[]): void {
     this.ctrlPointList = ctrlPointList;
   }
 
   createResizeCommand(
-    recSelection: SVGPolygonElement, objectList: SVGElement[],
-    offset: Point, ctrlPoint: SVGRectElement | null,
+    recSelection: SVGPolygonElement,
+    objectList: SVGElement[],
+    offset: Point,
+    ctrlPoint: SVGRectElement | null
   ): void {
     this.delta = { x: 0, y: 0 };
     this.oldRectBox = recSelection.getBoundingClientRect();
@@ -53,7 +58,10 @@ export class ResizeSelectionService {
     this.objectList = objectList;
     this.lastOffset = offset;
     this.xFactor = this.drawingService.drawing.getBoundingClientRect().left;
-    this.resizeCommand = new ResizeCommand(this.rendererService.renderer, this.objectList);
+    this.resizeCommand = new ResizeCommand(
+      this.rendererService.renderer,
+      this.objectList
+    );
   }
 
   endCommand(): void {
@@ -75,7 +83,12 @@ export class ResizeSelectionService {
       this.delta.x += deltaX;
       this.delta.y += deltaY;
 
-      let scaleReturn: IScale = { xScale: 1, yScale: 1, xTranslate: this.oldRectBox.left - this.xFactor, yTranslate: this.oldRectBox.top };
+      let scaleReturn: IScale = {
+        xScale: 1,
+        yScale: 1,
+        xTranslate: this.oldRectBox.left - this.xFactor,
+        yTranslate: this.oldRectBox.top,
+      };
 
       switch (this.ctrlPoint) {
         case this.ctrlPointList[0]: {
@@ -95,7 +108,11 @@ export class ResizeSelectionService {
           break;
         }
         case this.ctrlPointList[4]: {
-          scaleReturn = this.bottomRightResize(offset, scaleReturn.xTranslate, scaleReturn.yTranslate);
+          scaleReturn = this.bottomRightResize(
+            offset,
+            scaleReturn.xTranslate,
+            scaleReturn.yTranslate
+          );
           break;
         }
         case this.ctrlPointList[5]: {
@@ -113,26 +130,37 @@ export class ResizeSelectionService {
       }
 
       if (this.isAlt) {
-        scaleReturn.xScale = DOUBLING_SCALE_MODIFIER * scaleReturn.xScale - SCALE_POSITIONNER_MODIFIER;
-        scaleReturn.xTranslate += this.xInverser * this.oldRectBox.width / 2;
+        scaleReturn.xScale =
+          DOUBLING_SCALE_MODIFIER * scaleReturn.xScale -
+          SCALE_POSITIONNER_MODIFIER;
+        scaleReturn.xTranslate += (this.xInverser * this.oldRectBox.width) / 2;
 
-        scaleReturn.yScale = DOUBLING_SCALE_MODIFIER * scaleReturn.yScale - SCALE_POSITIONNER_MODIFIER;
-        scaleReturn.yTranslate += this.yInverser * this.oldRectBox.height / 2;
+        scaleReturn.yScale =
+          DOUBLING_SCALE_MODIFIER * scaleReturn.yScale -
+          SCALE_POSITIONNER_MODIFIER;
+        scaleReturn.yTranslate += (this.yInverser * this.oldRectBox.height) / 2;
       }
-      this.resizeCommand.setScales(scaleReturn.xScale, scaleReturn.yScale, scaleReturn.xTranslate, scaleReturn.yTranslate)
+      this.resizeCommand.setScales(
+        scaleReturn.xScale,
+        scaleReturn.yScale,
+        scaleReturn.xTranslate,
+        scaleReturn.yTranslate
+      );
       this.resizeCommand.execute();
       let objectIds: String[] = [];
-      this.objectList.forEach(object => objectIds.push(object.id));
+      this.objectList.forEach((object) => objectIds.push(object.id));
       let resizeSocket = {
         id: objectIds[0],
         xScaled: scaleReturn.xScale,
         yScaled: scaleReturn.yScale,
         xTranslate: scaleReturn.xTranslate,
         yTranslate: scaleReturn.yTranslate,
-        previousTransform: this.resizeCommand.getLastTransformation()
-      }
-      console.log("LAST: ", resizeSocket.previousTransform);
-      this.drawingSocketService.sendTransformSelectionCommand(resizeSocket, "SelectionResize");
+        previousTransform: this.resizeCommand.getLastTransformation(),
+      };
+      this.drawingSocketService.sendTransformSelectionCommand(
+        resizeSocket,
+        "SelectionResize"
+      );
     }
   }
 
@@ -141,10 +169,13 @@ export class ResizeSelectionService {
   }
 
   private topLeftResize(offset: Point): IScale {
-    let newXScale = (this.oldRectBox.width - this.delta.x) / this.oldRectBox.width;
-    let newYScale = (this.oldRectBox.height - this.delta.y) / this.oldRectBox.height;
+    let newXScale =
+      (this.oldRectBox.width - this.delta.x) / this.oldRectBox.width;
+    let newYScale =
+      (this.oldRectBox.height - this.delta.y) / this.oldRectBox.height;
 
-    const newXTranslate = this.oldRectBox.left + this.oldRectBox.width - this.xFactor;
+    const newXTranslate =
+      this.oldRectBox.left + this.oldRectBox.width - this.xFactor;
     const newYTranslate = this.oldRectBox.top + this.oldRectBox.height;
 
     this.xInverser = -1;
@@ -152,37 +183,58 @@ export class ResizeSelectionService {
 
     if (this.isShift) {
       if (this.oldRectBox.bottom < offset.y) {
-        newYScale = SCALE_INVERSER_MODIFIER * newYScale + (this.isAlt ? SCALE_POSITIONNER_MODIFIER : 0);
+        newYScale =
+          SCALE_INVERSER_MODIFIER * newYScale +
+          (this.isAlt ? SCALE_POSITIONNER_MODIFIER : 0);
       }
       if (this.oldRectBox.right - this.xFactor < offset.x) {
-        newXScale = SCALE_INVERSER_MODIFIER * newXScale + (this.isAlt ? SCALE_POSITIONNER_MODIFIER : 0);
+        newXScale =
+          SCALE_INVERSER_MODIFIER * newXScale +
+          (this.isAlt ? SCALE_POSITIONNER_MODIFIER : 0);
       }
-      Math.abs(newXScale) <= Math.abs(newYScale) ?
-        newYScale = newXScale :
-        newXScale = newYScale;
+      Math.abs(newXScale) <= Math.abs(newYScale)
+        ? (newYScale = newXScale)
+        : (newXScale = newYScale);
 
       if (this.oldRectBox.bottom < offset.y) {
-        newYScale = SCALE_INVERSER_MODIFIER * newYScale + (this.isAlt ? SCALE_POSITIONNER_MODIFIER : 0);
+        newYScale =
+          SCALE_INVERSER_MODIFIER * newYScale +
+          (this.isAlt ? SCALE_POSITIONNER_MODIFIER : 0);
       }
       if (this.oldRectBox.right - this.xFactor < offset.x) {
-        newXScale = SCALE_INVERSER_MODIFIER * newXScale + (this.isAlt ? SCALE_POSITIONNER_MODIFIER : 0);
+        newXScale =
+          SCALE_INVERSER_MODIFIER * newXScale +
+          (this.isAlt ? SCALE_POSITIONNER_MODIFIER : 0);
       }
     }
-    return { xScale: newXScale, yScale: newYScale, xTranslate: newXTranslate, yTranslate: newYTranslate };
+    return {
+      xScale: newXScale,
+      yScale: newYScale,
+      xTranslate: newXTranslate,
+      yTranslate: newYTranslate,
+    };
   }
 
   private topMiddleResize(scale: IScale): IScale {
-    const newYScale = (this.oldRectBox.height - this.delta.y) / this.oldRectBox.height;
+    const newYScale =
+      (this.oldRectBox.height - this.delta.y) / this.oldRectBox.height;
 
     const newYTranslate = this.oldRectBox.top + this.oldRectBox.height;
 
     this.yInverser = -1;
-    return { xScale: scale.xScale, yScale: newYScale, xTranslate: scale.xTranslate, yTranslate: newYTranslate };
+    return {
+      xScale: scale.xScale,
+      yScale: newYScale,
+      xTranslate: scale.xTranslate,
+      yTranslate: newYTranslate,
+    };
   }
 
   private topRightResize(offset: Point, oldXTranslate: number): IScale {
-    let newXScale = (this.oldRectBox.width + this.delta.x) / this.oldRectBox.width;
-    let newYScale = (this.oldRectBox.height - this.delta.y) / this.oldRectBox.height;
+    let newXScale =
+      (this.oldRectBox.width + this.delta.x) / this.oldRectBox.width;
+    let newYScale =
+      (this.oldRectBox.height - this.delta.y) / this.oldRectBox.height;
 
     const newYTranslate = this.oldRectBox.top + this.oldRectBox.height;
 
@@ -191,102 +243,169 @@ export class ResizeSelectionService {
 
     if (this.isShift) {
       if (this.oldRectBox.bottom < offset.y) {
-        newYScale = SCALE_INVERSER_MODIFIER * newYScale + (this.isAlt ? SCALE_POSITIONNER_MODIFIER : 0);
+        newYScale =
+          SCALE_INVERSER_MODIFIER * newYScale +
+          (this.isAlt ? SCALE_POSITIONNER_MODIFIER : 0);
       }
       if (this.oldRectBox.left - this.xFactor > offset.x) {
-        newXScale = SCALE_INVERSER_MODIFIER * newXScale + (this.isAlt ? SCALE_POSITIONNER_MODIFIER : 0);
+        newXScale =
+          SCALE_INVERSER_MODIFIER * newXScale +
+          (this.isAlt ? SCALE_POSITIONNER_MODIFIER : 0);
       }
-      Math.abs(newXScale) <= Math.abs(newYScale) ?
-        newYScale = newXScale :
-        newXScale = newYScale;
+      Math.abs(newXScale) <= Math.abs(newYScale)
+        ? (newYScale = newXScale)
+        : (newXScale = newYScale);
 
       if (this.oldRectBox.bottom < offset.y) {
-        newYScale = SCALE_INVERSER_MODIFIER * newYScale + (this.isAlt ? SCALE_POSITIONNER_MODIFIER : 0);
+        newYScale =
+          SCALE_INVERSER_MODIFIER * newYScale +
+          (this.isAlt ? SCALE_POSITIONNER_MODIFIER : 0);
       }
       if (this.oldRectBox.left - this.xFactor > offset.x) {
-        newXScale = SCALE_INVERSER_MODIFIER * newXScale + (this.isAlt ? SCALE_POSITIONNER_MODIFIER : 0);
+        newXScale =
+          SCALE_INVERSER_MODIFIER * newXScale +
+          (this.isAlt ? SCALE_POSITIONNER_MODIFIER : 0);
       }
     }
-    return { xScale: newXScale, yScale: newYScale, xTranslate: oldXTranslate, yTranslate: newYTranslate };
+    return {
+      xScale: newXScale,
+      yScale: newYScale,
+      xTranslate: oldXTranslate,
+      yTranslate: newYTranslate,
+    };
   }
 
   private middleRightResize(scale: IScale): IScale {
-    const newXScale = (this.oldRectBox.width + this.delta.x) / this.oldRectBox.width;
+    const newXScale =
+      (this.oldRectBox.width + this.delta.x) / this.oldRectBox.width;
     this.xInverser = 1;
-    return { xScale: newXScale, yScale: scale.yScale, xTranslate: scale.xTranslate, yTranslate: scale.yTranslate };
+    return {
+      xScale: newXScale,
+      yScale: scale.yScale,
+      xTranslate: scale.xTranslate,
+      yTranslate: scale.yTranslate,
+    };
   }
 
-  private bottomRightResize(offset: Point, oldXTranslate: number, oldYTranslate: number): IScale {
-    let newXScale = (this.oldRectBox.width + this.delta.x) / this.oldRectBox.width;
-    let newYScale = (this.oldRectBox.height + this.delta.y) / this.oldRectBox.height;
+  private bottomRightResize(
+    offset: Point,
+    oldXTranslate: number,
+    oldYTranslate: number
+  ): IScale {
+    let newXScale =
+      (this.oldRectBox.width + this.delta.x) / this.oldRectBox.width;
+    let newYScale =
+      (this.oldRectBox.height + this.delta.y) / this.oldRectBox.height;
 
     this.xInverser = 1;
     this.yInverser = 1;
 
     if (this.isShift) {
       if (this.oldRectBox.top > offset.y) {
-        newYScale = SCALE_INVERSER_MODIFIER * newYScale + (this.isAlt ? SCALE_POSITIONNER_MODIFIER : 0);
+        newYScale =
+          SCALE_INVERSER_MODIFIER * newYScale +
+          (this.isAlt ? SCALE_POSITIONNER_MODIFIER : 0);
       }
       if (this.oldRectBox.left - this.xFactor > offset.x) {
-        newXScale = SCALE_INVERSER_MODIFIER * newXScale + (this.isAlt ? SCALE_POSITIONNER_MODIFIER : 0);
+        newXScale =
+          SCALE_INVERSER_MODIFIER * newXScale +
+          (this.isAlt ? SCALE_POSITIONNER_MODIFIER : 0);
       }
-      Math.abs(newXScale) <= Math.abs(newYScale) ?
-        newYScale = newXScale :
-        newXScale = newYScale;
+      Math.abs(newXScale) <= Math.abs(newYScale)
+        ? (newYScale = newXScale)
+        : (newXScale = newYScale);
 
       if (this.oldRectBox.top > offset.y) {
-        newYScale = SCALE_INVERSER_MODIFIER * newYScale + (this.isAlt ? SCALE_POSITIONNER_MODIFIER : 0);
+        newYScale =
+          SCALE_INVERSER_MODIFIER * newYScale +
+          (this.isAlt ? SCALE_POSITIONNER_MODIFIER : 0);
       }
       if (this.oldRectBox.left - this.xFactor > offset.x) {
-        newXScale = SCALE_INVERSER_MODIFIER * newXScale + (this.isAlt ? SCALE_POSITIONNER_MODIFIER : 0);
+        newXScale =
+          SCALE_INVERSER_MODIFIER * newXScale +
+          (this.isAlt ? SCALE_POSITIONNER_MODIFIER : 0);
       }
     }
-    return { xScale: newXScale, yScale: newYScale, xTranslate: oldXTranslate, yTranslate: oldYTranslate };
+    return {
+      xScale: newXScale,
+      yScale: newYScale,
+      xTranslate: oldXTranslate,
+      yTranslate: oldYTranslate,
+    };
   }
 
   private bottomMiddleResize(scale: IScale): IScale {
-    const newYScale = (this.oldRectBox.height + this.delta.y) / this.oldRectBox.height;
+    const newYScale =
+      (this.oldRectBox.height + this.delta.y) / this.oldRectBox.height;
     this.yInverser = 1;
-    return { xScale: scale.xScale, yScale: newYScale, xTranslate: scale.xTranslate, yTranslate: scale.yTranslate };
+    return {
+      xScale: scale.xScale,
+      yScale: newYScale,
+      xTranslate: scale.xTranslate,
+      yTranslate: scale.yTranslate,
+    };
   }
 
   private bottomLeftResize(offset: Point, oldYTranslate: number): IScale {
-    let newXScale = (this.oldRectBox.width - this.delta.x) / this.oldRectBox.width;
-    let newYScale = (this.oldRectBox.height + this.delta.y) / this.oldRectBox.height;
+    let newXScale =
+      (this.oldRectBox.width - this.delta.x) / this.oldRectBox.width;
+    let newYScale =
+      (this.oldRectBox.height + this.delta.y) / this.oldRectBox.height;
 
-    const newXTranslate = this.oldRectBox.left + this.oldRectBox.width - this.xFactor;
+    const newXTranslate =
+      this.oldRectBox.left + this.oldRectBox.width - this.xFactor;
 
     this.xInverser = -1;
     this.yInverser = 1;
 
     if (this.isShift) {
       if (this.oldRectBox.top > offset.y) {
-        newYScale = SCALE_INVERSER_MODIFIER * newYScale + (this.isAlt ? SCALE_POSITIONNER_MODIFIER : 0);
+        newYScale =
+          SCALE_INVERSER_MODIFIER * newYScale +
+          (this.isAlt ? SCALE_POSITIONNER_MODIFIER : 0);
       }
       if (this.oldRectBox.right - this.xFactor < offset.x) {
-        newXScale = SCALE_INVERSER_MODIFIER * newXScale + (this.isAlt ? SCALE_POSITIONNER_MODIFIER : 0);
+        newXScale =
+          SCALE_INVERSER_MODIFIER * newXScale +
+          (this.isAlt ? SCALE_POSITIONNER_MODIFIER : 0);
       }
-      Math.abs(newXScale) <= Math.abs(newYScale) ?
-        newYScale = newXScale :
-        newXScale = newYScale;
+      Math.abs(newXScale) <= Math.abs(newYScale)
+        ? (newYScale = newXScale)
+        : (newXScale = newYScale);
 
       if (this.oldRectBox.top > offset.y) {
-        newYScale = SCALE_INVERSER_MODIFIER * newYScale + (this.isAlt ? SCALE_POSITIONNER_MODIFIER : 0);
+        newYScale =
+          SCALE_INVERSER_MODIFIER * newYScale +
+          (this.isAlt ? SCALE_POSITIONNER_MODIFIER : 0);
       }
       if (this.oldRectBox.right - this.xFactor < offset.x) {
-        newXScale = SCALE_INVERSER_MODIFIER * newXScale + (this.isAlt ? SCALE_POSITIONNER_MODIFIER : 0);
+        newXScale =
+          SCALE_INVERSER_MODIFIER * newXScale +
+          (this.isAlt ? SCALE_POSITIONNER_MODIFIER : 0);
       }
     }
-    return { xScale: newXScale, yScale: newYScale, xTranslate: newXTranslate, yTranslate: oldYTranslate };
+    return {
+      xScale: newXScale,
+      yScale: newYScale,
+      xTranslate: newXTranslate,
+      yTranslate: oldYTranslate,
+    };
   }
 
   private middleLeftResize(scale: IScale): IScale {
-    const newXScale = (this.oldRectBox.width - this.delta.x) / this.oldRectBox.width;
+    const newXScale =
+      (this.oldRectBox.width - this.delta.x) / this.oldRectBox.width;
 
-    const newXTranslate = this.oldRectBox.left + this.oldRectBox.width - this.xFactor;
+    const newXTranslate =
+      this.oldRectBox.left + this.oldRectBox.width - this.xFactor;
 
     this.xInverser = -1;
-    return { xScale: newXScale, yScale: scale.yScale, xTranslate: newXTranslate, yTranslate: scale.yTranslate };
+    return {
+      xScale: newXScale,
+      yScale: scale.yScale,
+      xTranslate: newXTranslate,
+      yTranslate: scale.yTranslate,
+    };
   }
 }
 
