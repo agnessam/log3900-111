@@ -6,6 +6,7 @@ import {
   START_SELECTION_EVENT,
   CONFIRM_SELECTION_EVENT,
   TRANSFORM_SELECTION_EVENT,
+  DELETE_SELECTION_EVENT,
 } from '../../constants/socket-constants';
 import { SocketServiceInterface } from '../../../domain/interfaces/socket.interface';
 import { injectable } from 'inversify';
@@ -27,6 +28,7 @@ export class DrawingSocketService extends SocketServiceInterface {
     this.listenStartSelectionCommand(socket);
     this.listenConfirmSelectionCommand(socket);
     this.listenTransformSelectionCommand(socket);
+    this.listenDeleteSelectionCommand(socket);
   }
 
   private listenInProgressDrawingCommand(socket: Socket): void {
@@ -67,6 +69,12 @@ export class DrawingSocketService extends SocketServiceInterface {
     socket.on(TRANSFORM_SELECTION_EVENT, (selectionCommand: any) => {
       console.log(selectionCommand);
       this.emitTransformSelectionCommand(selectionCommand, socket);
+    });
+  }
+
+  private listenDeleteSelectionCommand(socket: Socket): void {
+    socket.on(DELETE_SELECTION_EVENT, (deleteSelectionCommand: any) => {
+      this.emitDeleteSelectionCommand(deleteSelectionCommand, socket);
     });
   }
 
@@ -116,5 +124,14 @@ export class DrawingSocketService extends SocketServiceInterface {
     socket
       .to(drawingCommand.roomName)
       .emit(TRANSFORM_SELECTION_EVENT, drawingCommand);
+  }
+
+  private emitDeleteSelectionCommand(
+    drawingCommand: any,
+    socket: Socket,
+  ): void {
+    socket
+      .to(drawingCommand.roomName)
+      .emit(DELETE_SELECTION_EVENT, drawingCommand);
   }
 }

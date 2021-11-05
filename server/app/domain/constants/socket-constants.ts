@@ -13,3 +13,4 @@ export const CONFIRM_ERASE_EVENT = 'erase-confirm';
 export const START_SELECTION_EVENT = 'selection-start';
 export const CONFIRM_SELECTION_EVENT = 'selection-confirm';
 export const TRANSFORM_SELECTION_EVENT = 'selection-transform';
+export const DELETE_SELECTION_EVENT = 'selection-delete';
