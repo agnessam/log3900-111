@@ -1,5 +1,6 @@
 import { Injectable } from "@angular/core";
 import { ICommand } from "../../interfaces/command.interface";
+import { ResizeCommand } from "../tools/selection-tool/resize-command/resize-command";
 import { SocketTool } from "../tools/socket-tool";
 import { CommandFactoryService } from "./factories/command-factory/command-factory.service";
 
@@ -66,10 +67,20 @@ export class SynchronisationService {
   }
 
   transformSelection(transformSelectionData: SocketTool) {
-    let transformCommand = this.commandFactory.createCommand(
-      transformSelectionData.type,
-      transformSelectionData.drawingCommand
-    );
-    console.log(transformCommand);
+    const commandId = transformSelectionData.drawingCommand.id;
+    let command: ICommand | undefined;
+    if (this.previewShapes.has(commandId)) {
+      command = this.previewShapes.get(commandId);
+      if (command! instanceof ResizeCommand) {
+        command!.update(transformSelectionData.drawingCommand);
+      } else {
+        command = this.commandFactory.createCommand(
+          transformSelectionData.type,
+          transformSelectionData.drawingCommand
+        );
+        this.previewShapes.set(commandId, command);
+      }
+    }
+    command!.execute();
   }
 }

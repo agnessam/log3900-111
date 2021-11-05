@@ -3,6 +3,7 @@ import { ICommand } from '../../../../interfaces/command.interface';
 import { Point } from 'src/app/shared';
 import { DrawingService, RendererProviderService } from 'src/app/modules/workspace';
 import { ResizeCommand } from './resize-command';
+import { DrawingSocketService } from '../../../synchronisation/sockets/drawing-socket/drawing-socket.service';
 
 const DOUBLING_SCALE_MODIFIER = 2;
 const SCALE_POSITIONNER_MODIFIER = 1;
@@ -35,6 +36,7 @@ export class ResizeSelectionService {
   constructor(
     private rendererService: RendererProviderService,
     private drawingService: DrawingService,
+    private drawingSocketService: DrawingSocketService
   ) { }
 
   setCtrlPointList(ctrlPointList: SVGRectElement[]): void {
@@ -117,8 +119,20 @@ export class ResizeSelectionService {
         scaleReturn.yScale = DOUBLING_SCALE_MODIFIER * scaleReturn.yScale - SCALE_POSITIONNER_MODIFIER;
         scaleReturn.yTranslate += this.yInverser * this.oldRectBox.height / 2;
       }
-
-      this.resizeCommand.resize(scaleReturn.xScale, scaleReturn.yScale, scaleReturn.xTranslate, scaleReturn.yTranslate);
+      this.resizeCommand.setScales(scaleReturn.xScale, scaleReturn.yScale, scaleReturn.xTranslate, scaleReturn.yTranslate)
+      this.resizeCommand.execute();
+      let objectIds: String[] = [];
+      this.objectList.forEach(object => objectIds.push(object.id));
+      let resizeSocket = {
+        id: objectIds[0],
+        xScaled: scaleReturn.xScale,
+        yScaled: scaleReturn.yScale,
+        xTranslate: scaleReturn.xTranslate,
+        yTranslate: scaleReturn.yTranslate,
+        previousTransform: this.resizeCommand.getLastTransformation()
+      }
+      console.log("LAST: ", resizeSocket.previousTransform);
+      this.drawingSocketService.sendTransformSelectionCommand(resizeSocket, "SelectionResize");
     }
   }
 
