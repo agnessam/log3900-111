@@ -463,6 +463,7 @@ export class SelectionToolService implements Tools {
       confirmedSelection,
       "ConfirmSelection"
     );
+
     this.objects = [];
     this.hasSelectedItems = false;
 

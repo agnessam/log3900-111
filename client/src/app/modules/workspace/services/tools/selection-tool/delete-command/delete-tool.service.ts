@@ -32,7 +32,7 @@ export class DeletingToolService {
       id: this.selectionTool.getObjectList()[0].id,
     };
 
-    this.drawingSocketService.sendTransformSelectionCommand(
+    this.drawingSocketService.sendDeleteSelectionCommand(
       this.deleteModel,
       "Delete"
     );
