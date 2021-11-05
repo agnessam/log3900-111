@@ -2,6 +2,7 @@ import { Injectable } from "@angular/core";
 import { DrawingService } from "../../../drawing/drawing.service";
 import { ICommand } from "src/app/modules/workspace/interfaces/command.interface";
 import {
+  DeleteCommand,
   EllipseCommand,
   EraserCommand,
   PencilCommand,
@@ -73,6 +74,12 @@ export class CommandFactoryService {
           commandParameters.deltaY
         );
         return translateCommand;
+      case "Delete":
+        const id = commandParameters.id;
+        const deletedShape = this.drawingService.getObject(id);
+        if (deletedShape == undefined)
+          throw new Error("Couldn't find the shape you wanted to delete.");
+        return new DeleteCommand(this.drawingService, deletedShape);
       default:
         throw new Error("Unable to create command");
     }

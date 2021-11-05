@@ -82,10 +82,6 @@ export class ToolsService {
         return;
       }
 
-      if (tool.id !== ToolIdConstants.SELECTION_ID) {
-        this.selectionTool.removeSelection();
-      }
-
       tool.onPressed(event);
       this.isPressed = true;
     }

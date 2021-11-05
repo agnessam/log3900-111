@@ -81,4 +81,12 @@ export class SynchronisationService {
     }
     command!.execute();
   }
+
+  deleteSelection(deleteSelectionData: SocketTool): void {
+    let transformCommand = this.commandFactory.createCommand(
+      deleteSelectionData.type,
+      deleteSelectionData.drawingCommand
+    );
+    transformCommand.execute();
+  }
 }
