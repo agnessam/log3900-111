@@ -15,6 +15,7 @@ import { LEFT_CLICK } from "../tools-constants";
 import { SelectionCommandConstants } from "./command-type-constant";
 import { SelectionTransformService } from "./selection-transform.service";
 import { Selection } from "./selection.model";
+import { Translation } from "./translate-command/translate.model";
 
 @Injectable({
   providedIn: "root",
@@ -50,6 +51,8 @@ export class SelectionToolService implements Tools {
   private currentSelection: Selection;
   private wasMoved = false;
   private isIn = false;
+
+  private translation: Translation;
 
   constructor(
     private drawingService: DrawingService,
@@ -223,6 +226,13 @@ export class SelectionToolService implements Tools {
               this.objects
             );
           } else {
+            this.translation = {
+              id: this.objects[0].id,
+              deltaX: event.movementX,
+              deltaY: event.movementY,
+            };
+            console.log(this.translation);
+
             this.selectionTransformService.translate(
               event.movementX,
               event.movementY
