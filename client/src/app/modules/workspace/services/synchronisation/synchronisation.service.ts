@@ -11,8 +11,8 @@ export class SynchronisationService {
 
   constructor(private commandFactory: CommandFactoryService) {}
 
-  removeFromPreview(id:string): boolean{
-    if(this.previewShapes.has(id)){
+  removeFromPreview(id: string): boolean {
+    if (this.previewShapes.has(id)) {
       this.previewShapes.delete(id);
       return true;
     }
@@ -36,10 +36,40 @@ export class SynchronisationService {
       this.previewShapes.set(commandId, command);
       command.execute();
     }
+
+    console.log(this.previewShapes);
   }
 
-  erase(eraseCommandData: any){
-    let eraseCommand = this.commandFactory.createCommand(eraseCommandData.type, eraseCommandData.itemsToDeleteIds);
+  erase(eraseCommandData: any) {
+    let eraseCommand = this.commandFactory.createCommand(
+      eraseCommandData.type,
+      eraseCommandData.itemsToDeleteIds
+    );
     eraseCommand.execute();
+  }
+
+  // When starting a selection we simply add it to the list of preview shapes so that
+  // no one can manipulate it.
+  startSelection(selectionCommandData: SocketTool) {
+    let selectionCommand = this.commandFactory.createCommand(
+      selectionCommandData.type,
+      selectionCommandData.drawingCommand
+    );
+    this.previewShapes.set(
+      selectionCommandData.drawingCommand.id,
+      selectionCommand
+    );
+  }
+
+  confirmSelection(confirmSelectionData: SocketTool) {
+    this.previewShapes.delete(confirmSelectionData.drawingCommand.id);
+  }
+
+  transformSelection(transformSelectionData: SocketTool) {
+    let transformCommand = this.commandFactory.createCommand(
+      transformSelectionData.type,
+      transformSelectionData.drawingCommand
+    );
+    console.log(transformCommand);
   }
 }

@@ -10,3 +10,6 @@ export const COLLABORATIVE_DRAWING_NAMESPACE = "drawing";
 export const IN_PROGRESS_DRAWING_EVENT = "draw-in-progress";
 export const CONFIRM_DRAWING_EVENT = "draw-confirm";
 export const CONFIRM_ERASE_EVENT = "erase-confirm";
+export const START_SELECTION_EVENT = "selection-start";
+export const CONFIRM_SELECTION_EVENT = "selection-confirm";
+export const TRANSFORM_SELECTION_EVENT = "seletion-transfrom";

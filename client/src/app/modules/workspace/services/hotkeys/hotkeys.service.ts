@@ -5,7 +5,6 @@ import { CommandInvokerService } from "src/app/modules/workspace";
 import { SidenavService } from "src/app/modules/sidenav";
 import { CopyPasteToolService } from "../tools/copy-paste-tool/copy-paste-tool.service";
 import { DeletingToolService } from "../tools/selection-tool/delete-command/delete-tool.service";
-import { SelectionToolService } from "../tools/selection-tool/selection-tool.service";
 import { ToolIdConstants } from "../tools/tool-id-constants";
 import { ToolsService } from "../tools/tools.service";
 import { EmitReturn } from "./hotkeys-constants";
@@ -24,7 +23,6 @@ export class HotkeysService {
     private sideNavService: SidenavService,
     private toolsService: ToolsService,
     private copyPasteService: CopyPasteToolService,
-    private selectionTool: SelectionToolService,
     private deletingTool: DeletingToolService,
     private commandInvoker: CommandInvokerService,
 
@@ -96,9 +94,6 @@ export class HotkeysService {
             break;
           case EmitReturn.DELETE:
             this.deletingTool.deleteSelection();
-            break;
-          case EmitReturn.SELECTALL:
-            this.selectionTool.selectAll();
             break;
           case EmitReturn.UNDO:
             this.commandInvoker.undo();
