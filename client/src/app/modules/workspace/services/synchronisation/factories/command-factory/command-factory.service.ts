@@ -8,6 +8,7 @@ import {
   PencilCommand,
   RectangleCommand,
   RendererProviderService,
+  ResizeCommand,
   TranslateCommand,
 } from "src/app/modules/workspace";
 import { Pencil } from "../../../tools/pencil-tool/pencil.model";
@@ -59,6 +60,23 @@ export class CommandFactoryService {
           throw new Error("Could not find current shape");
         }
         return new SelectionStartCommand(selectedShape);
+      case "SelectionResize":
+        const resizeShapeId = commandParameters.id;
+        const resizeShape = this.drawingService.getObject(resizeShapeId);
+        if (resizeShape == undefined) {
+          throw new Error("Could not find current shape");
+        }
+        let resizeSelectionCommand = new ResizeCommand(
+          this.rendererService.renderer,
+          [resizeShape]
+        );
+        resizeSelectionCommand.setScales(
+          commandParameters.xScaled,
+          commandParameters.yScaled,
+          commandParameters.xTranslate,
+          commandParameters.yTranslate
+        );
+        return resizeSelectionCommand;
       case "Translation":
         const translationShapeId = commandParameters.id;
         const translationShape =

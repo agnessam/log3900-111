@@ -106,7 +106,6 @@ export class DrawingSocketService extends AbstractSocketService {
       roomName: this.roomName,
       drawingCommand: transformSelectionCommand,
     };
-
     this.emit(TRANSFORM_SELECTION_EVENT, transformCommand);
   }
 

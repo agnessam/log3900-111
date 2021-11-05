@@ -1,5 +1,4 @@
 import { Injectable } from "@angular/core";
-import { TranslateCommand } from "../..";
 import { ICommand } from "../../interfaces/command.interface";
 import { SocketTool } from "../tools/socket-tool";
 import { CommandFactoryService } from "./factories/command-factory/command-factory.service";
@@ -67,19 +66,32 @@ export class SynchronisationService {
   transformSelection(transformSelectionData: SocketTool) {
     const commandId = transformSelectionData.drawingCommand.id;
     let command: ICommand | undefined;
+    let transformationCommand: ICommand;
     if (this.previewShapes.has(commandId)) {
       command = this.previewShapes.get(commandId);
-      if (command! instanceof TranslateCommand) {
+
+      transformationCommand = this.commandFactory.createCommand(
+        transformSelectionData.type,
+        transformSelectionData.drawingCommand
+      );
+
+      if (transformationCommand instanceof command!.constructor) {
         command!.update(transformSelectionData.drawingCommand);
       } else {
-        command = this.commandFactory.createCommand(
-          transformSelectionData.type,
-          transformSelectionData.drawingCommand
-        );
-        this.previewShapes.set(commandId, command);
+        this.previewShapes.set(commandId, transformationCommand);
       }
+
+      // if (command! instanceof TranslateCommand) {
+      //   command!.update(transformSelectionData.drawingCommand);
+      // } else {
+      //   command = this.commandFactory.createCommand(
+      //     transformSelectionData.type,
+      //     transformSelectionData.drawingCommand
+      //   );
+      //   this.previewShapes.set(commandId, command);
     }
-    command!.execute();
+
+    this.previewShapes.get(commandId)!.execute();
   }
 
   deleteSelection(deleteSelectionData: SocketTool): void {

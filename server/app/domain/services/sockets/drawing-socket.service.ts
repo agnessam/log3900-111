@@ -121,6 +121,7 @@ export class DrawingSocketService extends SocketServiceInterface {
     drawingCommand: any,
     socket: Socket,
   ): void {
+    console.log(drawingCommand);
     socket
       .to(drawingCommand.roomName)
       .emit(TRANSFORM_SELECTION_EVENT, drawingCommand);
