@@ -43,16 +43,6 @@ export class TranslateCommand implements ICommand {
     throw new Error("method not implemented.");
   }
 
-  translateShape(deltaX: number, deltaY: number) {
-    const translateString = `translate(${deltaX} ${deltaY})`;
-    this.renderer.setAttribute(
-      this.selectedShape,
-      "transform",
-      (translateString +
-        this.previousTransformation.get(this.selectedShape.id)) as string
-    );
-  }
-
   execute(): void {
     this.translate(this.deltaX, this.deltaY);
   }
