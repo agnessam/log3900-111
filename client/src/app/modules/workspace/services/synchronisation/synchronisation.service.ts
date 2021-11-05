@@ -62,7 +62,6 @@ export class SynchronisationService {
 
   confirmSelection(confirmSelectionData: SocketTool) {
     this.previewShapes.delete(confirmSelectionData.drawingCommand.id);
-    console.log(this.previewShapes);
   }
 
   transformSelection(transformSelectionData: SocketTool) {

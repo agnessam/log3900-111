@@ -112,7 +112,6 @@ export class SelectionToolService implements Tools {
           // selection is pasted back onto the canvas, and we can redo another selection.
 
           if (this.objects.length > 0) {
-            console.log(this.objects[0]);
             const confirmedSelection: Selection = {
               id: this.objects[0].id,
             };
@@ -324,7 +323,20 @@ export class SelectionToolService implements Tools {
   pickupTool(): void {
     return;
   }
+
   dropTool(): void {
+    if (this.objects.length > 0) {
+      const confirmedSelection: Selection = {
+        id: this.objects[0].id,
+      };
+
+      this.drawingSocketService.sendConfirmSelectionCommand(
+        confirmedSelection,
+        "ConfirmSelection"
+      );
+
+      this.removeSelection();
+    }
     return;
   }
 
