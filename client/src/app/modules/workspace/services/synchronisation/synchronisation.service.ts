@@ -36,8 +36,6 @@ export class SynchronisationService {
       this.previewShapes.set(commandId, command);
       command.execute();
     }
-
-    console.log(this.previewShapes);
   }
 
   erase(eraseCommandData: any) {
@@ -70,6 +68,6 @@ export class SynchronisationService {
       transformSelectionData.type,
       transformSelectionData.drawingCommand
     );
-    console.log(transformCommand);
+    transformCommand.execute();
   }
 }

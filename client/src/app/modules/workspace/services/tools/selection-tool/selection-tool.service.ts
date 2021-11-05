@@ -109,15 +109,6 @@ export class SelectionToolService implements Tools {
           // selection is pasted back onto the canvas, and we can redo another selection.
 
           if (this.objects.length > 0) {
-            const confirmedSelection: Selection = {
-              id: this.objects[0].id,
-            };
-
-            this.drawingSocketService.sendConfirmSelectionCommand(
-              confirmedSelection,
-              "ConfirmSelection"
-            );
-
             this.removeSelection();
           }
 
@@ -169,9 +160,10 @@ export class SelectionToolService implements Tools {
     if (event.button === LEFT_CLICK && this.drawingService.drawing) {
       if (this.objects.length > 0) {
         this.setSelection();
-      } else {
-        this.removeSelection();
       }
+      // else {
+      //   this.removeSelection();
+      // }
 
       this.isIn = false;
       let returnRectangleCommand;
@@ -426,6 +418,14 @@ export class SelectionToolService implements Tools {
 
   /// Methode qui suprime la selection courante .
   removeSelection(): void {
+    const confirmedSelection: Selection = {
+      id: this.objects[0].id,
+    };
+
+    this.drawingSocketService.sendConfirmSelectionCommand(
+      confirmedSelection,
+      "ConfirmSelection"
+    );
     this.objects = [];
     this.hasSelectedItems = false;
 
