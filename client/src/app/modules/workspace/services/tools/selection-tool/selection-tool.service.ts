@@ -15,6 +15,7 @@ import { LEFT_CLICK } from "../tools-constants";
 import { SelectionCommandConstants } from "./command-type-constant";
 import { SelectionTransformService } from "./selection-transform.service";
 import { Selection } from "./selection.model";
+import { Translation } from "./translate-command/translate.model";
 
 @Injectable({
   providedIn: "root",
@@ -50,6 +51,8 @@ export class SelectionToolService implements Tools {
   private currentSelection: Selection;
   private wasMoved = false;
   private isIn = false;
+
+  private translation: Translation;
 
   constructor(
     private drawingService: DrawingService,
@@ -214,10 +217,31 @@ export class SelectionToolService implements Tools {
               this.rectSelection,
               this.objects
             );
+
+            // Initializes the translation
+            // At the start, the deltaX and deltaY are 0 as the object hasn't moved.
+            this.translation = {
+              id: this.objects[0].id,
+              deltaX: 0,
+              deltaY: 0,
+            };
+            this.drawingSocketService.sendTransformSelectionCommand(
+              this.translation,
+              "Translation"
+            );
           } else {
+            // Increments the previous translation.
+            this.translation.deltaX += event.movementX;
+            this.translation.deltaY += event.movementY;
+
             this.selectionTransformService.translate(
-              event.movementX,
-              event.movementY
+              this.translation.deltaX,
+              this.translation.deltaY
+            );
+
+            this.drawingSocketService.sendTransformSelectionCommand(
+              this.translation,
+              "Translation"
             );
           }
           this.setSelection();
@@ -291,7 +315,20 @@ export class SelectionToolService implements Tools {
   pickupTool(): void {
     return;
   }
+
   dropTool(): void {
+    if (this.objects.length > 0) {
+      const confirmedSelection: Selection = {
+        id: this.objects[0].id,
+      };
+
+      this.drawingSocketService.sendConfirmSelectionCommand(
+        confirmedSelection,
+        "ConfirmSelection"
+      );
+
+      this.removeSelection();
+    }
     return;
   }
 
@@ -426,6 +463,7 @@ export class SelectionToolService implements Tools {
       confirmedSelection,
       "ConfirmSelection"
     );
+
     this.objects = [];
     this.hasSelectedItems = false;
 

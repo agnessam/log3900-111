@@ -8,6 +8,7 @@ import {
   PencilCommand,
   RectangleCommand,
   RendererProviderService,
+  TranslateCommand,
 } from "src/app/modules/workspace";
 import { Pencil } from "../../../tools/pencil-tool/pencil.model";
 import { Rectangle } from "../../../tools/tool-rectangle/rectangle.model";
@@ -58,6 +59,21 @@ export class CommandFactoryService {
           throw new Error("Could not find current shape");
         }
         return new SelectionStartCommand(selectedShape);
+      case "Translation":
+        const translationShapeId = commandParameters.id;
+        const translationShape =
+          this.drawingService.getObject(translationShapeId);
+        if (translationShape == undefined)
+          throw new Error("Shape could not befound in the object list.");
+        let translateCommand = new TranslateCommand(
+          this.rendererService.renderer,
+          translationShape
+        );
+        translateCommand.setTransformation(
+          commandParameters.deltaX,
+          commandParameters.deltaY
+        );
+        return translateCommand;
       case "Delete":
         const id = commandParameters.id;
         const deletedShape = this.drawingService.getObject(id);
