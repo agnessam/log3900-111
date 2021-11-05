@@ -50,7 +50,17 @@ export class DrawingSocketService extends AbstractSocketService {
     this.emit(IN_PROGRESS_DRAWING_EVENT, socketToolCommand);
   }
 
-  sendConfirmEraseCommand(itemsToDeleteIds: String[], type: string): void {
+  sendConfirmDrawingCommand(drawingCommand: any, type: string): void {
+    let socketToolCommand: SocketTool = {
+      type: type,
+      roomName: this.roomName,
+      drawingCommand: drawingCommand,
+    };
+
+    this.emit(CONFIRM_DRAWING_EVENT, socketToolCommand);
+  }
+
+  sendConfirmEraseCommand(itemsToDeleteIds: String[], type:string): void {
     let eraseCommand = {
       type: type,
       roomName: this.roomName,
@@ -120,7 +130,7 @@ export class DrawingSocketService extends AbstractSocketService {
     this.namespaceSocket.on(
       CONFIRM_DRAWING_EVENT,
       (drawingCommand: SocketTool) => {
-        this.synchronisationService.draw(drawingCommand);
+        this.synchronisationService.removeFromPreview(drawingCommand.drawingCommand.id);
       }
     );
   }
