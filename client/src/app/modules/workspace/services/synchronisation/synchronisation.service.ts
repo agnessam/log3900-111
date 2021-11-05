@@ -11,8 +11,8 @@ export class SynchronisationService {
 
   constructor(private commandFactory: CommandFactoryService) {}
 
-  removeFromPreview(id:string): boolean{
-    if(this.previewShapes.has(id)){
+  removeFromPreview(id: string): boolean {
+    if (this.previewShapes.has(id)) {
       this.previewShapes.delete(id);
       return true;
     }
@@ -59,13 +59,17 @@ export class SynchronisationService {
       selectionCommandData.drawingCommand.id,
       selectionCommand
     );
-
-    console.log(this.previewShapes);
   }
 
   confirmSelection(confirmSelectionData: SocketTool) {
-    console.log(this.previewShapes);
     this.previewShapes.delete(confirmSelectionData.drawingCommand.id);
-    console.log(this.previewShapes);
+  }
+
+  transformSelection(transformSelectionData: SocketTool) {
+    let transformCommand = this.commandFactory.createCommand(
+      transformSelectionData.type,
+      transformSelectionData.drawingCommand
+    );
+    console.log(transformCommand);
   }
 }
