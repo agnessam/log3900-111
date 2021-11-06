@@ -23,7 +23,8 @@ import { UsersModule } from "./modules/users/users.module";
 import { GalleryModule } from "./modules/gallery/gallery.module";
 import { SidenavModule } from "./modules/sidenav/sidenav.module";
 import { DrawingsModule } from "./modules/drawings/drawings.module";
-import {BackendCommunicationModule}  from "./modules/backend-communication/backend-communication.module";
+import { BackendCommunicationModule } from "./modules/backend-communication/backend-communication.module";
+import { TeamModule } from "./modules/team/team.module";
 
 @NgModule({
   declarations: [AppComponent],
@@ -52,7 +53,8 @@ import {BackendCommunicationModule}  from "./modules/backend-communication/backe
     SidenavModule,
     ErrorModule,
     DrawingsModule,
-    BackendCommunicationModule
+    TeamModule,
+    BackendCommunicationModule,
   ],
   exports: [],
   providers: [],
