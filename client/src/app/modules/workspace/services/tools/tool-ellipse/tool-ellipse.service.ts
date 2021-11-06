@@ -30,7 +30,7 @@ export class ToolEllipseService implements Tools {
   private inProgressEllipse: InProgressEllipse | null = null;
 
   private contour: SVGRectElement | null;
-  // private contourId: number;
+  private contourId: string;
 
   parameters: FormGroup;
   private strokeWidth: FormControl;
@@ -41,6 +41,8 @@ export class ToolEllipseService implements Tools {
   private oldY = 0;
   private x: number;
   private y: number;
+
+  private isPressed: boolean;
 
   constructor(
     private offsetManager: OffsetManagerService,
@@ -62,6 +64,32 @@ export class ToolEllipseService implements Tools {
   /// en sortie et est inceré dans l'objet courrant de l'outil.
   onPressed(event: MouseEvent): void {
     if (event.button === RIGHT_CLICK || event.button === LEFT_CLICK) {
+      this.isPressed = true;
+      this.contour = this.rendererService.renderer.createElement("rect", "svg");
+      this.contourId = this.uuidGeneratorService.generateId();
+      this.rendererService.renderer.setAttribute(
+        this.contour,
+        "id",
+        this.contourId
+      );
+      this.rendererService.renderer.setStyle(
+        this.contour,
+        "stroke",
+        `rgba(0, 0, 0, 1)`
+      );
+      this.rendererService.renderer.setStyle(this.contour, "stroke-width", `1`);
+      this.rendererService.renderer.setStyle(
+        this.contour,
+        "stroke-dasharray",
+        `10,10`
+      );
+      this.rendererService.renderer.setStyle(this.contour, "d", `M5 40 l215 0`);
+      this.rendererService.renderer.setStyle(this.contour, "fill", `none`);
+
+      if (this.contour) {
+        this.drawingService.addObject(this.contour);
+      }
+
       const offset: { x: number; y: number } =
         this.offsetManager.offsetFromMouseEvent(event);
 
@@ -123,12 +151,19 @@ export class ToolEllipseService implements Tools {
 
   /// Quand le bouton de la sourie est relaché, l'objet courrant de l'outil est mis a null.
   onRelease(event: MouseEvent): ICommand | void {
-    this.drawingSocketService.sendConfirmDrawingCommand(this.ellipse, "Ellipse");
+    if (!this.isPressed) return;
+
+    this.isPressed = false;
+
+    this.drawingSocketService.sendConfirmDrawingCommand(
+      this.ellipse,
+      "Ellipse"
+    );
     this.isCircle = false;
     this.ellipse = null;
     if (this.contour) {
-      // this.drawingService.removeObject(this.contourId);
-      // this.contourId = -1;
+      this.drawingService.removeObject(this.contourId);
+      this.contourId = "";
     }
     if (this.ellipseCommand) {
       const returnEllipseCommand = this.ellipseCommand;
@@ -140,6 +175,7 @@ export class ToolEllipseService implements Tools {
 
   /// Quand le bouton de la sourie est apuyé et on bouge celle-ci, l'objet courrant subit des modifications.
   onMove(event: MouseEvent): void {
+    if (!this.isPressed) return;
     const offset: { x: number; y: number } =
       this.offsetManager.offsetFromMouseEvent(event);
     const ellipseAttributes = this.setSize(offset.x, offset.y);
@@ -222,6 +258,27 @@ export class ToolEllipseService implements Tools {
     this.ellipseCommand.setCY(yValue);
     this.ellipseCommand.setHeight(height);
     this.ellipseCommand.setWidth(width);
+
+    this.rendererService.renderer.setAttribute(
+      this.contour,
+      "x",
+      (xValue - width / 2).toString()
+    );
+    this.rendererService.renderer.setAttribute(
+      this.contour,
+      "y",
+      (yValue - height / 2).toString()
+    );
+    this.rendererService.renderer.setAttribute(
+      this.contour,
+      "width",
+      width.toString()
+    );
+    this.rendererService.renderer.setAttribute(
+      this.contour,
+      "height",
+      height.toString()
+    );
 
     return [xValue, yValue, width, height];
   }
