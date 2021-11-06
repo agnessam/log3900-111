@@ -29,5 +29,5 @@ interface API {
     fun updateUser(@Header("Authorization")token: String, @Path ("id") id : String, @Body  newUser: UserModel.UpdateUser) : Call<HTTPResponseModel.UpdateUser>
 
     @GET(Constants.ENDPOINTS.GET_ALL_DRAWINGS)
-    fun getAllDrawings(@Header("Authorization") token: String): Call<List<DrawingModel.AllDrawings>>
+    fun getAllDrawings(@Header("Authorization") token: String): Call<List<DrawingModel.Drawing>>
 }

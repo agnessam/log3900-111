@@ -4,7 +4,7 @@ import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.View
 import com.example.colorimagemobile.R
-import com.example.colorimagemobile.utils.CommonFun.Companion.changeFragment
+import com.example.colorimagemobile.classes.MyFragmentManager
 
 class GalleryFragment : Fragment(R.layout.fragment_gallery) {
 
@@ -14,6 +14,6 @@ class GalleryFragment : Fragment(R.layout.fragment_gallery) {
         super.onViewCreated(view, savedInstanceState)
 
         // go to drawing page
-        changeFragment(requireActivity(), mainGalleryFragmentID, GalleryMenuFragment())
+        MyFragmentManager(requireActivity()).open(mainGalleryFragmentID, GalleryMenuFragment())
     }
 }

@@ -4,7 +4,6 @@ import android.app.Activity
 import android.content.Context
 import android.content.Context.INPUT_METHOD_SERVICE
 import android.content.Intent
-import android.os.Bundle
 import android.util.Log
 import android.view.KeyEvent
 import android.view.View
@@ -13,11 +12,8 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
-import androidx.fragment.app.FragmentTransaction
 import com.example.colorimagemobile.utils.Constants.Companion.DEBUG_KEY
-import java.io.Serializable
 
 class CommonFun {
     companion object {
@@ -38,31 +34,6 @@ class CommonFun {
             currentActivity.finish()
         }
 
-        // replace a fragment with a new one
-        fun changeFragment(activity: FragmentActivity, oldFragmentID: Int, newFragmentClass: Fragment) {
-            activity.supportFragmentManager
-                .beginTransaction()
-                .replace(oldFragmentID, newFragmentClass)
-                .commitAllowingStateLoss()
-        }
-
-        fun openFragmentWithData(activity: FragmentActivity, oldFragmentID: Int, newFragmentClass: Fragment, data: Serializable) {
-            val bundle = Bundle()
-            bundle.putSerializable("canvas", data)
-            newFragmentClass.arguments = bundle
-
-            activity.supportFragmentManager
-                .beginTransaction()
-                .replace(oldFragmentID, newFragmentClass)
-                .addToBackStack(null)
-                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-                .commitAllowingStateLoss()
-        }
-
-        fun closeFragment(activity: FragmentActivity, fragment: Fragment) {
-            activity.supportFragmentManager.beginTransaction().remove(fragment).commitAllowingStateLoss()
-        }
-
         // close/hide Android keyboard
         fun closeKeyboard(currentActivity: Activity): Boolean {
             return try {
@@ -74,6 +45,7 @@ class CommonFun {
                 false
             }
         }
+
         // close/hide Android keyboard
         fun closeKeyboard_(currentActivity: FragmentActivity): Boolean {
             return try {

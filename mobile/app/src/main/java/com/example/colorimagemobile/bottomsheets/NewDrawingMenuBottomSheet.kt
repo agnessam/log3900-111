@@ -11,9 +11,8 @@ import android.view.ViewGroup
 import android.widget.Button
 import androidx.core.widget.doOnTextChanged
 import com.example.colorimagemobile.R
+import com.example.colorimagemobile.classes.MyFragmentManager
 import com.example.colorimagemobile.ui.home.fragments.gallery.GalleryDrawingFragment
-import com.example.colorimagemobile.utils.CommonFun.Companion.closeFragment
-import com.example.colorimagemobile.utils.CommonFun.Companion.openFragmentWithData
 import com.example.colorimagemobile.utils.CommonFun.Companion.toggleButton
 import com.example.colorimagemobile.utils.Constants.DRAWING.Companion.MAX_HEIGHT
 import com.example.colorimagemobile.utils.Constants.DRAWING.Companion.MAX_WIDTH
@@ -82,8 +81,10 @@ class NewDrawingMenuBottomSheet: BottomSheetDialogFragment() {
             canvas.drawColor(color)
 
             closeSheet()
-            closeFragment(requireActivity(), this@NewDrawingMenuBottomSheet)
-            openFragmentWithData(requireActivity(), R.id.main_gallery_fragment, GalleryDrawingFragment(), NewDrawing(canvas, bitmap))
+
+            val fragmentManager = MyFragmentManager(requireActivity())
+            fragmentManager.closeFragment(this@NewDrawingMenuBottomSheet)
+            fragmentManager.openWithData(R.id.main_gallery_fragment, GalleryDrawingFragment(), NewDrawing(canvas, bitmap))
         }
     }
 

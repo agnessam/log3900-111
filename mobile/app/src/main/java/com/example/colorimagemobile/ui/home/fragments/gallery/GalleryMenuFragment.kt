@@ -26,7 +26,7 @@ private const val NB_ROWS = 3
 class GalleryMenuFragment : Fragment(R.layout.fragment_gallery_menu) {
     private lateinit var drawingRepo: DrawingRepository
     private lateinit var sharedPreferencesService: SharedPreferencesService
-    private lateinit var drawings: List<DrawingModel.AllDrawings>
+    private lateinit var drawings: List<DrawingModel.Drawing>
     private lateinit var galleryView: ConstraintLayout
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -59,7 +59,7 @@ class GalleryMenuFragment : Fragment(R.layout.fragment_gallery_menu) {
                 return@observe
             }
 
-            drawings = it.data as List<DrawingModel.AllDrawings>
+            drawings = it.data as List<DrawingModel.Drawing>
             renderDrawings()
         })
     }

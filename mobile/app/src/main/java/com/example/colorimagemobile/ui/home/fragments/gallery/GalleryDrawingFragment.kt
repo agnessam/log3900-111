@@ -16,10 +16,10 @@ import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.example.colorimagemobile.R
+import com.example.colorimagemobile.classes.MyFragmentManager
 import com.example.colorimagemobile.classes.tools.ToolsFactory
 import com.example.colorimagemobile.enumerators.ToolType
 import com.example.colorimagemobile.services.drawing.ToolTypeService
-import com.example.colorimagemobile.utils.CommonFun.Companion.changeFragment
 
 class GalleryDrawingFragment : Fragment(R.layout.fragment_gallery_drawing) {
     private lateinit var galleryDrawingFragment: ConstraintLayout;
@@ -55,7 +55,7 @@ class GalleryDrawingFragment : Fragment(R.layout.fragment_gallery_drawing) {
             // handle attribute panel when clicked on tool
             toolBtn.setOnClickListener {
                 togglePanel(tool.getType())
-                changeFragment(requireActivity(), R.id.tool_attribute_fragment, tool.getFragment())
+                MyFragmentManager(requireActivity()).open(R.id.tool_attribute_fragment, tool.getFragment())
                 panelView.findViewById<TextView>(R.id.tool_name).text = tool.getTitle()
             }
 

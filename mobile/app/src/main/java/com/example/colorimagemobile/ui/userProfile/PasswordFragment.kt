@@ -16,9 +16,9 @@ import com.example.colorimagemobile.services.UserService
 import com.example.colorimagemobile.utils.CommonFun
 import com.example.colorimagemobile.utils.Constants
 import androidx.lifecycle.LiveData
+import com.example.colorimagemobile.classes.MyFragmentManager
 import com.example.colorimagemobile.models.DataWrapper
 import com.example.colorimagemobile.models.HTTPResponseModel
-import com.example.colorimagemobile.utils.CommonFun.Companion.changeFragment
 
 class PasswordFragment : Fragment() {
 
@@ -140,11 +140,10 @@ class PasswordFragment : Fragment() {
         val updateObserver = updateUserInfo(newUserData)
 
         updateObserver.observe(viewLifecycleOwner, { context?.let { it1 -> handleHTTP.Response(it1,it) } })
-        changeFragment(requireActivity(), R.id.fragment, UserProfileFragment())
+        MyFragmentManager(requireActivity()).open(R.id.fragment, UserProfileFragment())
     }
 
     private fun updateUserInfo(newUserData: UserModel.UpdateUser): LiveData<DataWrapper<HTTPResponseModel.UpdateUser>> {
         return userRepository.updateUserData(token, user._id,newUserData)
     }
-
 }
