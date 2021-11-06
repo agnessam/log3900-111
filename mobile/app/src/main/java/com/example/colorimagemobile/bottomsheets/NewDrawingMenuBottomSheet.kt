@@ -1,6 +1,9 @@
 package com.example.colorimagemobile.bottomsheets
 
 import android.app.Dialog
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,6 +11,9 @@ import android.view.ViewGroup
 import android.widget.Button
 import androidx.core.widget.doOnTextChanged
 import com.example.colorimagemobile.R
+import com.example.colorimagemobile.ui.home.fragments.gallery.GalleryDrawingFragment
+import com.example.colorimagemobile.utils.CommonFun.Companion.closeFragment
+import com.example.colorimagemobile.utils.CommonFun.Companion.openFragmentWithData
 import com.example.colorimagemobile.utils.CommonFun.Companion.toggleButton
 import com.example.colorimagemobile.utils.Constants.DRAWING.Companion.MAX_HEIGHT
 import com.example.colorimagemobile.utils.Constants.DRAWING.Companion.MAX_WIDTH
@@ -18,24 +24,35 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
+import top.defaults.colorpicker.ColorPickerView
+import java.io.Serializable
+
+data class NewDrawing(val canvas: Canvas, val bitmap: Bitmap): Serializable
 
 class NewDrawingMenuBottomSheet: BottomSheetDialogFragment() {
     private lateinit var createDrawingBtn: Button
     private lateinit var widthLayout: TextInputLayout
     private lateinit var heightLayout: TextInputLayout
+    private lateinit var dialog: BottomSheetDialog
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.bottomsheet_drawing_menu, container, false)
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val dialog: BottomSheetDialog = super.onCreateDialog(savedInstanceState) as BottomSheetDialog
+        dialog = super.onCreateDialog(savedInstanceState) as BottomSheetDialog
         dialog.behavior.state = BottomSheetBehavior.STATE_EXPANDED
         return dialog
     }
 
+    private fun closeSheet() { dialog.behavior.state = BottomSheetBehavior.STATE_HIDDEN }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        val widthInput = view.findViewById<TextInputEditText>(R.id.newDrawingWidthInputText)
+        val heightInput = view.findViewById<TextInputEditText>(R.id.newDrawingHeightInputText)
+        var color: Int = Color.WHITE
 
         createDrawingBtn = view.findViewById(R.id.createDrawingBtn)
         widthLayout = view.findViewById(R.id.newDrawingWidthInputLayout)
@@ -44,15 +61,29 @@ class NewDrawingMenuBottomSheet: BottomSheetDialogFragment() {
         toggleButton(createDrawingBtn, false)
 
         // width input validation
-        view.findViewById<TextInputEditText>(R.id.newDrawingWidthInputText).doOnTextChanged { text, _, _, _ ->
+        widthInput.doOnTextChanged { text, _, _, _ ->
             widthLayout.error = getErrorMessage(getCurrentValue(text), MIN_WIDTH, MAX_WIDTH)
             updateCreateBtn()
         }
 
         // height input validation
-        view.findViewById<TextInputEditText>(R.id.newDrawingHeightInputText).doOnTextChanged { text, _, _, _ ->
+        heightInput.doOnTextChanged { text, _, _, _ ->
             heightLayout.error = getErrorMessage(getCurrentValue(text), MIN_HEIGHT, MAX_HEIGHT)
             updateCreateBtn()
+        }
+
+        view.findViewById<ColorPickerView>(R.id.colorPickerNewDrawing).subscribe { newColor, _, _ ->
+            color = newColor
+        }
+
+        view.findViewById<Button>(R.id.createDrawingBtn).setOnClickListener {
+            val bitmap = Bitmap.createBitmap(getCurrentValue(widthInput.text), getCurrentValue(heightInput.text), Bitmap.Config.ARGB_8888)
+            val canvas = Canvas(bitmap)
+            canvas.drawColor(color)
+
+            closeSheet()
+            closeFragment(requireActivity(), this@NewDrawingMenuBottomSheet)
+            openFragmentWithData(requireActivity(), R.id.main_gallery_fragment, GalleryDrawingFragment(), NewDrawing(canvas, bitmap))
         }
     }
 
