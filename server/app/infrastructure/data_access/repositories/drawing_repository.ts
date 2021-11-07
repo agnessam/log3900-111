@@ -1,4 +1,4 @@
-import { User, UserInterface } from '@app/domain/models/user';
+import { User, UserInterface } from '../../../domain/models/User';
 import { injectable } from 'inversify';
 import { Types } from 'mongoose';
 import { Drawing, DrawingInterface } from '../../../domain/models/Drawing';

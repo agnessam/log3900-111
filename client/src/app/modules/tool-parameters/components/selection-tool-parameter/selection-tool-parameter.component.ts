@@ -1,19 +1,21 @@
-import { Component } from '@angular/core';
-import { CopyPasteToolService,
+import { Component } from "@angular/core";
+import {
+  CopyPasteToolService,
   DeletingToolService,
-  SelectionToolService } from 'src/app/modules/workspace';
+  SelectionToolService,
+} from "src/app/modules/workspace";
 
 @Component({
-  selector: 'app-selection-tool-parameter',
-  templateUrl: './selection-tool-parameter.component.html',
-  styleUrls: ['./selection-tool-parameter.component.scss'],
+  selector: "app-selection-tool-parameter",
+  templateUrl: "./selection-tool-parameter.component.html",
+  styleUrls: ["./selection-tool-parameter.component.scss"],
 })
 export class SelectionToolParameterComponent {
-
   constructor(
     private selectionService: SelectionToolService,
     private deletingService: DeletingToolService,
-    private copyPasteService: CopyPasteToolService) { }
+    private copyPasteService: CopyPasteToolService
+  ) {}
 
   get toolName(): string {
     return this.selectionService.toolName;
@@ -50,10 +52,5 @@ export class SelectionToolParameterComponent {
   /// SelectAll
   deleteSelection(): void {
     this.deletingService.deleteSelection();
-  }
-
-  /// SelectAll
-  selectAll(): void {
-    this.selectionService.selectAll();
   }
 }

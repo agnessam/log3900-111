@@ -1,5 +1,5 @@
-import { TYPES } from '@app/domain/constants/types';
-import { UserRepository } from '@app/infrastructure/data_access/repositories/user_repository';
+import { TYPES } from '../../domain/constants/types';
+import { UserRepository } from '../../infrastructure/data_access/repositories/user_repository';
 import { Request, Response } from 'express';
 import { inject } from 'inversify';
 import {

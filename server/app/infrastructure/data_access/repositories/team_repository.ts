@@ -1,6 +1,6 @@
 import { injectable } from 'inversify';
 import { Team, TeamInterface } from '../../../domain/models/teams';
-import { User, UserInterface } from '../../../domain/models/user';
+import { User, UserInterface } from '../../../domain/models/User';
 import { GenericRepository } from './generic_repository';
 
 @injectable()

@@ -7,7 +7,7 @@ export interface DrawingInterface extends Document {
 }
 
 const DrawingSchema = new mongoose.Schema({
-  dataUri: { type: Buffer, required: true },
+  dataUri: { type: String, required: true },
   ownerId: {
     type: Schema.Types.ObjectId,
     required: true,

@@ -1,43 +1,49 @@
-import { Renderer2 } from '@angular/core';
-import { ICommand } from 'src/app/modules/workspace/interfaces/command.interface';
+import { Renderer2 } from "@angular/core";
+import { ICommand } from "src/app/modules/workspace/interfaces/command.interface";
 
 export class TranslateCommand implements ICommand {
-    private previousTransformation: Map<string, string> = new Map<string, string>();
+  private previousTransformation: Map<string, string> = new Map<
+    string,
+    string
+  >();
 
-    private lastXTranslate = 0;
-    private lastYTranslate = 0;
+  private deltaX: number;
+  private deltaY: number;
 
-    constructor(
-        private renderer: Renderer2,
-        private objectList: SVGElement[],
-    ) {
-        for (const obj of this.objectList) {
-            const transform: string | null = obj.getAttribute('transform');
-            if (transform) {
-                this.previousTransformation.set(obj.id, transform);
-            } else {
-                this.previousTransformation.set(obj.id, '');
-            }
-        }
+  constructor(private renderer: Renderer2, private selectedShape: SVGElement) {
+    const transform: string | null =
+      this.selectedShape.getAttribute("transform");
+    if (transform) {
+      this.previousTransformation.set(this.selectedShape.id, transform);
+    } else {
+      this.previousTransformation.set(this.selectedShape.id, "");
     }
+  }
 
-    translate(xTranslate: number, yTranslate: number): void {
-        this.lastXTranslate = xTranslate; this.lastYTranslate = yTranslate;
-        const translateString = ` translate(${xTranslate} ${yTranslate})`;
-        for (const obj of this.objectList) {
-            this.renderer.setAttribute(obj,
-                'transform', translateString + this.previousTransformation.get(obj.id) as string);
-        }
-    }
+  update(drawingCommand: any): void {
+    this.setTransformation(drawingCommand.deltaX, drawingCommand.deltaY);
+  }
 
-    undo(): void {
-        for (const obj of this.objectList) {
-            this.renderer.setAttribute(obj, 'transform', this.previousTransformation.get(obj.id) as string);
-        }
-    }
+  translate(xTranslate: number, yTranslate: number): void {
+    const translateString = ` translate(${xTranslate} ${yTranslate})`;
+    this.renderer.setAttribute(
+      this.selectedShape,
+      "transform",
+      (translateString +
+        this.previousTransformation.get(this.selectedShape.id)) as string
+    );
+  }
 
-    execute(): void {
-        this.translate(this.lastXTranslate, this.lastYTranslate);
-    }
+  setTransformation(x: number, y: number): void {
+    this.deltaX = x;
+    this.deltaY = y;
+  }
 
+  undo(): void {
+    throw new Error("method not implemented.");
+  }
+
+  execute(): void {
+    this.translate(this.deltaX, this.deltaY);
+  }
 }
