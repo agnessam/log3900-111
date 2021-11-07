@@ -5,6 +5,7 @@ import { User } from '../authentication/models/user';
 import { Message } from './models/message.model';
 import { ChatSocketService } from './services/chat-socket.service';
 import { ChatService } from './services/chat.service';
+import { TextChannelService } from './services/text-channel.service';
 
 @Component({
   selector: 'chat',
@@ -21,11 +22,13 @@ export class ChatComponent implements OnInit, OnDestroy {
   @ViewChild('chatBottom', { static: false }) private chatBottom: ElementRef<HTMLInputElement>;
   message = '';
   // saves connected rooms and message history from connection
-  connectedMessageHistory: Map<string, Message[]> = new Map();
+  connectedMessageHistory: Map<string, Set<Message>> = new Map();
 
   chatStatus:boolean;
   isMinimized = false;
   isPopoutOpen = false;
+  hasDbMessages = false;
+  loadedDbMessages = false;
 
   chatRoomName = 'General';
 
@@ -33,7 +36,11 @@ export class ChatComponent implements OnInit, OnDestroy {
     private authenticationService: AuthenticationService,
     private chatSocketService: ChatSocketService,
     private chatService: ChatService,
-  ) {}
+    private textChannelService: TextChannelService,
+  ) {
+    this.loadedDbMessages = false;
+    this.hasDbMessages = false;
+  }
 
   ngOnInit(): void {
     this.authenticationService.currentUserObservable.subscribe(
@@ -65,7 +72,7 @@ export class ChatComponent implements OnInit, OnDestroy {
   }
 
   openChatRoom() {
-    // TODO: run these in parallel (fork?)
+    // might want to run these in parallel (fork?)
     this.chatService.toggleChatOverlay.subscribe((channel) =>{
       this.chatRoomName = channel.name;
       if (!this.isPopoutOpen) {
@@ -73,19 +80,22 @@ export class ChatComponent implements OnInit, OnDestroy {
         chat.style.display = 'block';
         this.minimizeChat(false);
       }
+      this.scrollDown();
       this.joinRoom(this.chatRoomName);
+      // this.getDatabaseMessages(this.chatRoomName);
     });
 
   }
 
   joinRoom(channelName: string) {
     if (!this.connectedMessageHistory.has(channelName)) {
-      this.connectedMessageHistory.set(channelName, []);
+      this.connectedMessageHistory.set(channelName, new Set());
       this.chatSocketService.joinRoom(channelName);
+      this.loadedDbMessages = false;
     }
     this.chatSocketService.messageHistory.subscribe({
       next: (history) => {
-        this.connectedMessageHistory.set(this.chatRoomName, history);
+        this.connectedMessageHistory.set(this.chatRoomName, new Set(history));
       },
     });
   }
@@ -94,6 +104,8 @@ export class ChatComponent implements OnInit, OnDestroy {
     this.chatService.leaveRoomEventEmitter.subscribe((channel) => {
       this.connectedMessageHistory.delete(channel.name);
       this.chatSocketService.leaveRoom(channel.name);
+      this.closeChat();
+      this.closeChatPopout();
     });
   }
 
@@ -102,11 +114,17 @@ export class ChatComponent implements OnInit, OnDestroy {
     this.chatSubscription = this.chatSocketService.chatSubject.subscribe({
       next: (message) => {
         this.joinRoom(message.roomName);
-        this.connectedMessageHistory.get(message.roomName)?.push(message);
-        const messageBox = this.chatBox.nativeElement;
-        messageBox.scrollTop = messageBox.scrollHeight;
+        if (!this.connectedMessageHistory.get(message.roomName)?.has(message)) {
+          this.connectedMessageHistory.get(message.roomName)?.add(message);
+        }
+        this.scrollDown();
       },
     });
+  }
+
+  scrollDown() {
+    const messageBox = this.chatBox.nativeElement;
+    messageBox.scrollTop = messageBox.scrollHeight;
   }
 
   sendMessage() {
@@ -130,7 +148,6 @@ export class ChatComponent implements OnInit, OnDestroy {
     this.chatSocketService.sendMessage(message);
     this.messageBody.nativeElement.value = '';
     this.message = '';
-    console.log(this.connectedMessageHistory)
   }
 
   onInput(evt: Event): void {
@@ -165,7 +182,7 @@ export class ChatComponent implements OnInit, OnDestroy {
   }
 
   closeChatPopout() {
-    // on close using browser doesn't toggle ispopoutopen
+    // TODO: on close using browser doesn't toggle ispopoutopen
     this.isPopoutOpen = false;
   }
 
@@ -176,11 +193,26 @@ export class ChatComponent implements OnInit, OnDestroy {
       return 'other';
   }
 
-  getMessages():Message[]{
-    const messages = this.connectedMessageHistory.get(this.chatRoomName);
-    if (messages !== undefined)
-      return messages;
-    else
+  getMessages(): Message[]{
+    if (!this.connectedMessageHistory.has(this.chatRoomName)) {
       return [];
+    }
+    const messages = Array.from((this.connectedMessageHistory.get(this.chatRoomName) as Set<Message>).values());
+    return messages;
+  }
+
+  // TODO: change arg to get id instead of string.....
+  getDatabaseMessages(channelName: string): void {
+    this.textChannelService.getMessages(channelName).subscribe((messages) => {
+      if (this.connectedMessageHistory.has(channelName)) {
+        this.loadedDbMessages = true;
+        this.hasDbMessages = messages.length !== 0;
+        if (!this.hasDbMessages) {
+          return;
+        }
+        const currentMessages = Array.from((this.connectedMessageHistory.get(channelName) as Set<Message>).values());
+        this.connectedMessageHistory.set(channelName, new Set(messages.concat(currentMessages)));
+      }
+    });
   }
 }

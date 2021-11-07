@@ -67,27 +67,28 @@ export class ChatSocketService extends SocketServiceInterface {
 			console.log(`User has joined room ${roomName}`);
 			socket.join(roomName);
 
-			this.getMessagesFromDatabase(roomName);			
+			// this.getMessagesFromDatabase(roomName);	
+			if (this.messageHistory.has(roomName)) {
+				this.emitHistory(roomName, this.messageHistory.get(roomName) as MessageInterface[]);
+			}
 
 			console.log(`number of users in ${roomName} : ${this.namespace.adapter.rooms.get(roomName)?.size}`)
 		});
 	}
 
-	private getMessagesFromDatabase(channelName: string) {
-		this.textChannelRepository.getChannelsByName(channelName).then((channels) => {
-			// const channelId = channels[0].id;
-			if (!this.messageHistory.has(channelName)) {
-				// Put messages from database in history
-				this.textChannelRepository.getMessages(channelName).then((messages: MessageInterface[]) => {
-					console.log('MESSAGES I GOT: ')
-					console.log(messages)
-					this.messageHistory.set(channelName, messages);
-				})
-			}
-			this.emitHistory(channelName, this.messageHistory.get(channelName) as MessageInterface[]);
-			console.log(this.messageHistory)
-		});
-	}
+	// private getMessagesFromDatabase(channelName: string) {
+	// 	// this.textChannelRepository.getChannelsByName(channelName).then((channels) => {
+	// 		// const channelId = channels[0].id;
+	// 		if (!this.messageHistory.has(channelName)) {
+	// 			// Put messages from database in history
+	// 			this.textChannelRepository.getMessages(channelName).then((messages: MessageInterface[]) => {
+	// 				this.messageHistory.set(channelName, messages);
+	// 			})
+	// 		}
+	// 		this.emitHistory(channelName, this.messageHistory.get(channelName) as MessageInterface[]);
+	// 		console.log(this.messageHistory)
+	// 	// });
+	// }
 
 	private emitHistory(roomName: string, history: MessageInterface[]) {
 		this.namespace.to(roomName).emit(ROOM_EVENT_NAME, history);

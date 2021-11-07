@@ -30,6 +30,7 @@
 
   <div id="chat-bottom" #chatBottom>
     <div id="chatbox" #chatBox >
+      <p id="loadHistory" *ngIf=" !loadedDbMessages" (click)="getDatabaseMessages(chatRoomName)">Load previous messages ...</p>
       <div *ngFor="let m of getMessages()">
           <div [ngClass]="getMessageClass(m.author)">
             <div class="authorName">{{m.author}}</div>

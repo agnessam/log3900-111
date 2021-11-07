@@ -130,3 +130,7 @@ input[type=text]{
   display:flex;
   flex-direction: column;
 }
+
+#loadHistory:hover {
+  cursor: pointer;
+}
