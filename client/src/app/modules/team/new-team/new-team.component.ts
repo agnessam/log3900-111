@@ -29,6 +29,15 @@ export class NewTeamComponent implements OnInit {
 
     console.log(this.newTeamForm.value);
     console.log("Accepted the form");
+    this.teamClient
+      .createTeam(
+        this.newTeamForm.value.teamName,
+        this.newTeamForm.value.description
+      )
+      .subscribe((response) => {
+        this.dialogRef.close(response);
+        this.newTeamForm.reset();
+      });
   }
 
   onCancel(): void {
