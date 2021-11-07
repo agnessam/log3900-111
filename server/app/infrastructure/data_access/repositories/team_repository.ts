@@ -10,7 +10,7 @@ export class TeamRepository extends GenericRepository<TeamInterface> {
   }
 
   public async create(team: TeamInterface): Promise<TeamInterface> {
-    return new Promise<TeamInterface>((resolve, reject) => {
+    return new Promise((resolve, reject) => {
       Team.create(team, (err: Error, createdTeam: TeamInterface) => {
         if (err || !createdTeam) {
           reject(err);
@@ -27,7 +27,7 @@ export class TeamRepository extends GenericRepository<TeamInterface> {
           },
         );
 
-        resolve(team);
+        resolve(createdTeam);
       });
     });
   }
