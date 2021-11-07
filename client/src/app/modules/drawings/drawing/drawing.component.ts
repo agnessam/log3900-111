@@ -13,7 +13,6 @@ export class DrawingComponent implements OnInit, AfterViewInit {
   constructor(
     private route: ActivatedRoute,
     private drawingService: DrawingService,
-    // private drawingHttpClientService: DrawingHttpClientService,
     private drawingSocketService: DrawingSocketService
   ) {}
 
@@ -27,12 +26,11 @@ export class DrawingComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    this.drawingSocketService.sendGetUpdateDrawingRequest().then(() => {
-      console.log("WE GOT THE DRAWING!");
-    })
+    this.drawingSocketService.sendGetUpdateDrawingRequest();
   }
 
   ngOnDestroy(): void {
+    this.drawingService.saveDrawing();
     this.drawingSocketService.disconnect();
     this.drawingSocketService.leaveRoom(this.drawingId);
   }
