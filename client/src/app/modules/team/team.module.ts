@@ -7,8 +7,12 @@ import { MatGridListModule } from "@angular/material/grid-list";
 import { MatButtonModule } from "@angular/material/button";
 import { MatCardModule } from "@angular/material/card";
 import { FlexLayoutModule } from "@angular/flex-layout";
-import { TeamProfileComponent } from './team-profile/team-profile/team-profile.component';
-import { NewTeamComponent } from './new-team/new-team/new-team.component';
+import { TeamProfileComponent } from "./team-profile/team-profile/team-profile.component";
+import { NewTeamComponent } from "./new-team/new-team.component";
+import { MatDialogModule } from "@angular/material/dialog";
+import { ReactiveFormsModule } from "@angular/forms";
+import { MatFormFieldModule } from "@angular/material/form-field";
+import { MatInputModule } from "@angular/material/input";
 
 @NgModule({
   declarations: [TeamMainPageComponent, TeamProfileComponent, NewTeamComponent],
@@ -19,6 +23,10 @@ import { NewTeamComponent } from './new-team/new-team/new-team.component';
     MatButtonModule,
     MatCardModule,
     FlexLayoutModule,
+    MatDialogModule,
+    ReactiveFormsModule,
+    MatFormFieldModule,
+    MatInputModule,
   ],
 })
 export class TeamModule {}
