@@ -1,1 +1,32 @@
-<p>team-profile works!</p>
+<div id="team-profile">
+  <div id="team-header" fxLayout="row grid" fxLayoutAlign="center center">
+    <div fxFlex="13%" style="text-align: center">
+      <h1>{{ this.team.name }}</h1>
+    </div>
+    <div fxFlex="13%">
+      <div fxLayout="column" fxLayoutAlign="center center">
+        <div fxFlex="100%">
+          <h2>{{ this.team.name }}</h2>
+        </div>
+        <div fxLayout="row grid" fxLayoutAlign="center center">
+          <div><p>FOLLOWERS</p></div>
+          <div><p>HUDAWHDUIA</p></div>
+          <div>
+            <p>dwjaidowa</p>
+          </div>
+        </div>
+        <div fxFlex="100%">
+          <p>{{ this.team.description }}</p>
+        </div>
+      </div>
+    </div>
+    <div fxFlex="13%" style="text-align: center">
+      <div fxLayout="column" fxLayoutAlign="center center">
+        <button mat-button>Follow</button>
+        <button mat-button>Join team</button>
+      </div>
+    </div>
+  </div>
+  <br />
+  <!-- TODO: Add the teams drawings here -->
+</div>
