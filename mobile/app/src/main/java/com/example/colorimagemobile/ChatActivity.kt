@@ -27,6 +27,7 @@ import com.example.colorimagemobile.utils.Constants.Companion.DEFAULT_ROOM_NAME
 import com.example.colorimagemobile.utils.Constants.Companion.TEXT_MESSAGE_EVENT_NAME
 import com.google.gson.Gson
 import java.util.*
+import kotlin.collections.ArrayList
 import io.socket.client.Socket
 import org.json.JSONException
 import io.socket.emitter.Emitter
