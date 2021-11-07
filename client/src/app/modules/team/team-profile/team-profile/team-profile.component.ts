@@ -1,6 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { TeamClientService } from "src/app/modules/backend-communication/team-client/team-client.service";
+import { Team } from "src/app/shared/models/team.model";
 
 @Component({
   selector: "app-team-profile",
@@ -9,7 +10,7 @@ import { TeamClientService } from "src/app/modules/backend-communication/team-cl
 })
 export class TeamProfileComponent implements OnInit {
   teamId: string;
-  team: any;
+  team: Team;
 
   constructor(
     private route: ActivatedRoute,
@@ -23,5 +24,16 @@ export class TeamProfileComponent implements OnInit {
         this.team = team;
       });
     });
+  }
+
+  joinTeam(teamId: string) {
+    this.teamClient.joinTeam(teamId).subscribe((response) => {
+      console.log(response);
+    });
+  }
+
+  isAlreadyJoined(): boolean {
+    const userId = localStorage.getItem("userId");
+    return this.team.members.includes(userId!);
   }
 }

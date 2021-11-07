@@ -21,7 +21,24 @@
     <div fxFlex="13%" style="text-align: center">
       <div fxLayout="column" fxLayoutGap="12px" fxLayoutAlign="center center">
         <button mat-raised-button color="primary">Follow</button>
-        <button mat-raised-button color="primary">Join team</button>
+
+        <button
+          mat-raised-button
+          color="primary"
+          (click)="joinTeam(teamId)"
+          *ngIf="!isAlreadyJoined()"
+        >
+          Join team
+        </button>
+
+        <button
+          mat-raised-button
+          color="primary"
+          disabled
+          *ngIf="isAlreadyJoined()"
+        >
+          Joined
+        </button>
       </div>
     </div>
   </div>

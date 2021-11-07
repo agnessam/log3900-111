@@ -38,4 +38,14 @@ export class TeamClientService {
       })
     );
   }
+
+  joinTeam(teamId: string): Observable<Team> {
+    return this.httpClient
+      .post<Team>(`${this.TEAM_ENDPOINT}${teamId}/join`, {})
+      .pipe(
+        map((team) => {
+          return team;
+        })
+      );
+  }
 }

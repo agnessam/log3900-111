@@ -49,9 +49,10 @@ export class TeamController {
   // Join a collaboration team
   @httpPost('/:teamId/join')
   public async addMemberToTeam(@request() req: Request) {
+    console.log(req.user!.id);
     return await this.teamRepository.addMemberToTeam(
       req.params.teamId,
-      req.body.userId,
+      req.user!.id,
     );
   }
 
