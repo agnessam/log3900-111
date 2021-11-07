@@ -1,24 +1,20 @@
 <div id="teams">
-  <mat-grid-list cols="1" rowHeight="200px">
-    <mat-grid-tile colspan="1" rowspan="1">
-      <div id="team-header">
-        <mat-grid-list cols="2">
-          <mat-grid-tile
-            ><div><h1>Collaboration Teams</h1></div></mat-grid-tile
-          >
-          <mat-grid-tile
-            ><div id="new-drawing-button">
-              <button mat-raised-button color="primary">
-                Create your own team
-              </button>
-            </div></mat-grid-tile
-          >
-        </mat-grid-list>
-      </div>
-    </mat-grid-tile>
-    <!-- <mat-grid-tile class="drawing" *ngFor="let drawing of drawings">
-      <div>{{drawing}}</div>
-      <button (click)="goToDrawing(drawing)">Go to drawing</button>
-    </mat-grid-tile> -->
-  </mat-grid-list>
+  <div fxLayout="row wrap" fxLayoutGap="16px grid">
+    <div fxFlex="25%" *ngFor="let num of [1, 2, 3, 4, 5, 6, 7]">
+      <mat-card class="mat-elevation-z4 team">
+        <mat-card-header>
+          <mat-card-title>Himalayan peaks lol {{ num }}</mat-card-title>
+        </mat-card-header>
+        <img
+          mat-card-image
+          src="https://material.angular.io/assets/img/examples/shiba2.jpg"
+          alt="Photo of a Shiba Inu"
+        />
+
+        <mat-card-content>
+          <p>THe hahAHHAHAHAH</p>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
 </div>

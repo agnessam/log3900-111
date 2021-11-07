@@ -1,3 +1,15 @@
+#teams {
+  padding: 16px;
+}
+
+#teams > mat-card {
+  width: 200px;
+}
+
+.team {
+  max-width: 200px;
+}
+
 #team-header {
   min-width: 50%;
 }
