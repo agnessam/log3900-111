@@ -121,13 +121,12 @@ class DrawingFragment : Fragment(), OnItemClick,
     override fun onItemClick(position: Int) {
         if (position == 0) {
             mEditor!!.setBrushDrawingMode(true)
-//            mShapeBuilder = ShapeBuilder()
             mEditor!!.setShape(mShapeBuilder)
             relativeLayout!!.visibility = View.VISIBLE
             recyclerView!!.visibility = View.GONE
             setFragment(mShapeBSFragment!!)
         } else if (position == 1) {
-            mEditor!!.brushEraser()
+//            mEditor!!.brushEraser()
         }
         else if (position == 2 ) {
             mEditor!!.setBrushDrawingMode(true)
@@ -153,7 +152,7 @@ class DrawingFragment : Fragment(), OnItemClick,
         // don't delete
 //        else if (position == 5 ) {
 //            EditorViewState().clearAddedViews()
-//            DrawingView().drawShapes.clear()
+//            DrawingPreview().drawShapes.clear()
 //
 //        }
 

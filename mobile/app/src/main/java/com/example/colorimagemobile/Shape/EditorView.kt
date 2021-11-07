@@ -9,10 +9,7 @@ import android.widget.RelativeLayout
 class EditorView : RelativeLayout {
     private val TAG = "EditorView"
 
-//    private var mImgSource: FilterImageView? = null
-    private var mDrawingView: DrawingView? = null
-//    private var mImageFilterView: ImageFilterView? = null
-//    private var clipSourceImage = false
+    private var mDrawingPreview: DrawingPreview? = null
 
 
     constructor(context: Context?) : super(context) {
@@ -43,17 +40,17 @@ class EditorView : RelativeLayout {
     private fun init(attrs: AttributeSet?) {
 
         //Setup drawing view
-        mDrawingView = DrawingView(context)
+        mDrawingPreview = DrawingPreview(context)
         val brushParam = setupDrawingView()
 
 
         //Add brush view
-        addView(mDrawingView, brushParam)
+        addView(mDrawingPreview, brushParam)
     }
 
 
     private fun setupDrawingView(): LayoutParams? {
-        mDrawingView!!.visibility = GONE
+        mDrawingPreview!!.visibility = GONE
 
         val params = LayoutParams(
             ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT
@@ -64,8 +61,8 @@ class EditorView : RelativeLayout {
     }
 
 
-    fun getDrawingView(): DrawingView? {
-        return mDrawingView
+    fun getDrawingView(): DrawingPreview? {
+        return mDrawingPreview
     }
 
 

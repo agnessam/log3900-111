@@ -1,16 +1,10 @@
 package com.example.colorimagemobile
 
 import android.os.Bundle
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.example.colorimagemobile.adapter.MainAdapter
 import com.example.colorimagemobile.databinding.ActivityMainBinding
-import com.example.colorimagemobile.models.ToolModel
 import com.example.colorimagemobile.services.SharedPreferencesService
 import com.example.colorimagemobile.ui.home.HomeActivity
-import com.example.colorimagemobile.ui.login.LoginActivity
 import com.example.colorimagemobile.utils.CommonFun.Companion.redirectTo
 import com.example.colorimagemobile.utils.Constants
 

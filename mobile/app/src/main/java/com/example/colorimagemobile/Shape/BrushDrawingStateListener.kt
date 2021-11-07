@@ -9,17 +9,17 @@ class BrushDrawingStateListener internal constructor(
 ) : BrushViewChangeListener {
 
 
-    override fun onViewAdd(drawingView: DrawingView?) {
-        mViewState.addAddedView(drawingView!!)
+    override fun onViewAdd(drawingPreview: DrawingPreview?) {
+        mViewState.addAddedView(drawingPreview!!)
 
     }
 
-    override fun onViewRemoved(drawingView: DrawingView?) {
+    override fun onViewRemoved(drawingPreview: DrawingPreview?) {
         if (mViewState.addedViewsCount > 0) {
             val removeView: View = mViewState.removeAddedView(
                 mViewState.addedViewsCount - 1
             )
-            if (removeView !is DrawingView) {
+            if (removeView !is DrawingPreview) {
                 mEditorView.removeView(removeView)
             }
         }

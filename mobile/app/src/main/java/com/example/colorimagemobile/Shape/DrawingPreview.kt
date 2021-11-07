@@ -13,7 +13,7 @@ import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
 import java.lang.Math.abs
 import java.util.*
 
-class DrawingView @JvmOverloads constructor(
+class DrawingPreview @JvmOverloads constructor(
     context: Context?,
     attrs: AttributeSet? = null,
     defStyle: Int = 0
@@ -119,14 +119,12 @@ class DrawingView @JvmOverloads constructor(
         }
     }
 
+    // All tools use these functions To be use for synchronisation
     private fun onTouchEventDown(touchX: Float, touchY: Float) {
         createShape()
         if (currentShape != null && currentShape!!.shape != null) {
             currentShape!!.shape.startShape(touchX, touchY)
-            points.add( Point
-                (touchX,
-                touchY)
-                    )
+            points.add( Point(touchX,touchY))
         }
 
     }
@@ -135,28 +133,16 @@ class DrawingView @JvmOverloads constructor(
         if (currentShape != null && currentShape!!.shape != null) {
             currentShape!!.shape.moveShape(touchX, touchY)
         }
-        points.add( Point
-            (touchX,
-            touchY)
-        )
+        points.add( Point(touchX,touchY))
     }
 
     private fun onTouchEventUp(touchX: Float, touchY: Float) {
         if (currentShape != null && currentShape!!.shape != null) {
             currentShape!!.shape.stopShape()
             endShape(touchX, touchY)
-
-
         }
         currentShape?.let { PathService.addPaintPath(it) }
-
-        //Check the path for pathservice and drawshape for erase test
-        printMsg("allpath: = "+PathService.getPaintPath())
-        printMsg("allpath dans drawshapes: = "+drawShapes)
-
         if (isErasing) {
-            //check if erase is call
-            printMsg("event up erase")
             erase()
         }
     }
@@ -193,15 +179,6 @@ class DrawingView @JvmOverloads constructor(
             viewChangeListener!!.onStopDrawing()
             viewChangeListener!!.onViewAdd(this)
         }
-    }
-
-    fun brushEraser() {
-        isEnabled = true
-        isErasing = true
-    }
-
-    fun setBrushEraserSize(brushEraserSize: Float) {
-        mBrushEraserSize = brushEraserSize
     }
 
     fun setShapeBuilder(shapeBuilder: ShapeBuilder) {

@@ -12,14 +12,10 @@ interface Editor {
 
     fun setOpacity(@IntRange(from = 0, to = 100) opacity: Int)
 
-    fun setBrushEraserSize(brushEraserSize: Float)
-
-    fun brushEraser()
-
     class Builder(var context: Context, editorView: EditorView) {
         var parentView: EditorView = editorView
         var deleteView: View? = null
-        var drawingView: DrawingView = editorView.getDrawingView()!!
+        var drawingPreview: DrawingPreview = editorView.getDrawingView()!!
 
 
         fun build(): Editor {
