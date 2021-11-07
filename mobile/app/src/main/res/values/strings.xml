@@ -1,0 +1,25 @@
+<resources>
+    <string name="app_name">ColorImage</string>
+
+    <!--    Fragments-->
+    <string name="title_notifications">Notifications</string>
+    <string name="title_drawing">Drawing</string>
+    <string name="title_chat">Chat</string>
+    <string name="title_user_profile">User Profile</string>
+    <string name="title_activity_home">HomeActivity</string>
+
+    <string name="new_message">New to ColorImage?</string>
+    <string name="get_started"><u>Get Started</u></string>
+    <string name="existing_account">Already have an account?</string>
+    <string name="login_action"><u>Log In</u></string>
+
+    <string name="required">* Required</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="label_brush">Brush</string>
+    <string name="label_shape">Shape</string>
+    <string name="label_oval">Oval</string>
+    <string name="label_rectangle">Rectangle</string>
+    <string name="label_line">Line</string>
+</resources>

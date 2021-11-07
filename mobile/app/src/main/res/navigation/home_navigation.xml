@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/sidebar"
+    app:startDestination="@id/drawingFragment">
+
+    <fragment
+        android:id="@+id/drawingFragment"
+        android:name="com.example.colorimagemobile.ui.home.fragments.drawing.DrawingFragment"
+        android:label="Drawing zone"
+        tools:layout="@layout/fragment_drawing" />
+    <fragment
+        android:id="@+id/chatFragment"
+        android:name="com.example.colorimagemobile.ui.home.fragments.chat.ChatFragment"
+        android:label="Chat"
+        tools:layout="@layout/fragment_chat" />
+    <fragment
+        android:id="@+id/notificationFragment"
+        android:name="com.example.colorimagemobile.ui.home.fragments.notification.NotificationFragment"
+        android:label="Notification"
+        tools:layout="@layout/fragment_notification" />
+    <fragment
+        android:id="@+id/userProfileFragment"
+        android:name="com.example.colorimagemobile.ui.userProfile.UserProfileFragment"
+        android:label="User Profile"
+        tools:layout="@layout/fragment_user_profile" />
+
+</navigation>
