@@ -9,21 +9,19 @@
           <h2>{{ this.team.name }}</h2>
         </div>
         <div fxLayout="row grid" fxLayoutAlign="center center">
-          <div><p>FOLLOWERS</p></div>
-          <div><p>HUDAWHDUIA</p></div>
           <div>
-            <p>dwjaidowa</p>
+            <p>{{ this.team.members.length }} members</p>
           </div>
         </div>
-        <div fxFlex="100%">
+        <div fxFlex="100%" style="text-align: center">
           <p>{{ this.team.description }}</p>
         </div>
       </div>
     </div>
     <div fxFlex="13%" style="text-align: center">
-      <div fxLayout="column" fxLayoutAlign="center center">
-        <button mat-button>Follow</button>
-        <button mat-button>Join team</button>
+      <div fxLayout="column" fxLayoutGap="12px" fxLayoutAlign="center center">
+        <button mat-raised-button color="primary">Follow</button>
+        <button mat-raised-button color="primary">Join team</button>
       </div>
     </div>
   </div>
