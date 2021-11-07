@@ -82,7 +82,6 @@ export class ChatComponent implements OnInit, OnDestroy {
       }
       this.scrollDown();
       this.joinRoom(this.chatRoomName);
-      // this.getDatabaseMessages(this.chatRoomName);
     });
 
   }
