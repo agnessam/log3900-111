@@ -40,24 +40,6 @@ export class DrawingSocketService extends AbstractSocketService {
     super.connect();
   }
 
-  // private async isSocketConnected(): Promise<boolean> {
-  //   const INTERVAL_TIME_MS = 500;
-  //   const TOTAL_TIME_ALLOWED = 5000;
-  //   const MAX_LOOP_COUNT = TOTAL_TIME_ALLOWED / INTERVAL_TIME_MS;
-
-  //   for(let current_loop_count = 0; current_loop_count < MAX_LOOP_COUNT; current_loop_count++){
-  //     if(this.namespaceSocket.connected){
-  //       console.log("CONNECTED");
-  //       return true;
-  //     }
-  //     console.log("NOT CONNECTED: ", current_loop_count);
-  //     // Delay by INTERVAL_TIME_MS
-  //     await new Promise(resolve => setTimeout(resolve, INTERVAL_TIME_MS));
-  //   }
-  //   console.log("NOPE");
-  //   return false;
-  // }
-
   joinRoom(roomName: string) {
     this.roomName = roomName;
     super.joinRoom(roomName);
