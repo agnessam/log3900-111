@@ -119,15 +119,9 @@ export class DrawingService {
     return this.getDrawingDataUriBase64();
   }
 
-  saveDrawing(){
+  async saveDrawing(): Promise<void>{
     let dataUri = this.getDrawingDataUriBase64();
-    console.log("SAVE??");
-    this.drawingHttpClientService.updateDrawing(this.drawingId, dataUri).subscribe(
-      (response) => {
-        console.log("Success");
-        console.log(response);
-      }
-    );
+    await this.drawingHttpClientService.updateDrawing(this.drawingId, dataUri).toPromise();
   }
 
   /// Get drawing svg uri

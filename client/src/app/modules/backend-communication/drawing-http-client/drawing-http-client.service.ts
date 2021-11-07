@@ -26,8 +26,6 @@ export class DrawingHttpClientService {
       ownerId: ownerId, // TODO: remove ownerID from all requests
       ownerModel: ownerModel, // TODO: Add option to toggle between 
     };
-    console.log("PAAAAAAATCH");
-    console.log(`${this.SERVER_ENDPOINT}${drawingId}`);
     return this.httpClient.patch<Drawing>(`${this.SERVER_ENDPOINT}${drawingId}`, newDrawing);
   }
 
