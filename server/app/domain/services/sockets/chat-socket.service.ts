@@ -18,7 +18,7 @@ export class ChatSocketService extends SocketServiceInterface {
 	@inject(TYPES.MessageRepository) public messageRepository: MessageRepository;
 	@inject(TYPES.TextChannelRepository) public textChannelRepository: TextChannelRepository;
 
-	messageHistory: Map<string, MessageInterface[]> = new Map();
+	messageHistory: Map<string, Set<MessageInterface>> = new Map();
 	io: Server;
 	
 	init(io: Server) {
@@ -49,9 +49,9 @@ export class ChatSocketService extends SocketServiceInterface {
 			this.emitMessage(message);
 
 			if (!this.messageHistory.has(message.roomName)) {
-				this.messageHistory.set(message.roomName, []);
+				this.messageHistory.set(message.roomName, new Set());
 			} 
-			this.messageHistory.get(message.roomName)?.push(message);
+			this.messageHistory.get(message.roomName)?.add(message);
 			console.log(this.messageHistory)
 		});
 	}
@@ -67,28 +67,14 @@ export class ChatSocketService extends SocketServiceInterface {
 			console.log(`User has joined room ${roomName}`);
 			socket.join(roomName);
 
-			// this.getMessagesFromDatabase(roomName);	
 			if (this.messageHistory.has(roomName)) {
-				this.emitHistory(roomName, this.messageHistory.get(roomName) as MessageInterface[]);
+				console.log(this.messageHistory)
+				this.emitHistory(roomName, Array.from((this.messageHistory.get(roomName) as Set<MessageInterface>).values()));
 			}
 
 			console.log(`number of users in ${roomName} : ${this.namespace.adapter.rooms.get(roomName)?.size}`)
 		});
 	}
-
-	// private getMessagesFromDatabase(channelName: string) {
-	// 	// this.textChannelRepository.getChannelsByName(channelName).then((channels) => {
-	// 		// const channelId = channels[0].id;
-	// 		if (!this.messageHistory.has(channelName)) {
-	// 			// Put messages from database in history
-	// 			this.textChannelRepository.getMessages(channelName).then((messages: MessageInterface[]) => {
-	// 				this.messageHistory.set(channelName, messages);
-	// 			})
-	// 		}
-	// 		this.emitHistory(channelName, this.messageHistory.get(channelName) as MessageInterface[]);
-	// 		console.log(this.messageHistory)
-	// 	// });
-	// }
 
 	private emitHistory(roomName: string, history: MessageInterface[]) {
 		this.namespace.to(roomName).emit(ROOM_EVENT_NAME, history);
@@ -99,8 +85,18 @@ export class ChatSocketService extends SocketServiceInterface {
 			console.log(`User has left room ${roomName}`);
 			socket.leave(roomName);
 
-			if (this.namespace.adapter.rooms.get(roomName)?.size === undefined) {
-				this.messageRepository.storeMessages(this.messageHistory.get(roomName) as MessageInterface[]);
+			if (this.namespace.adapter.rooms.get(roomName)?.size === undefined && this.messageHistory.has(roomName)) {
+				const currentMessages = Array.from((this.messageHistory.get(roomName) as Set<MessageInterface>).values());
+				this.textChannelRepository.getChannelsByName(roomName).then((rooms) => {
+					this.textChannelRepository.getMessages(rooms[0]._id).then((messages) => {
+						const filtered = currentMessages.filter((message) => !messages.some((dbMessage) =>
+							message.author === dbMessage.author &&
+							message.message === dbMessage.message &&
+							message.timestamp === dbMessage.timestamp &&
+							message.roomName === dbMessage.roomName));
+						this.messageRepository.storeMessages(filtered);
+					})
+				})
 			}
 			console.log(`number of users in ${roomName} : ${this.namespace.adapter.rooms.get(roomName)?.size}`)
 		});

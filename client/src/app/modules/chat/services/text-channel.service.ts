@@ -66,6 +66,14 @@ export class TextChannelService {
       });
   }
 
+  deleteMessages(channelId: string): Observable<void> {
+    return this.httpClient
+      .delete<void>(`${this.endpointUrl}/${channelId}/messages`)
+      .pipe((response) => {
+        return response;
+      });
+  }
+
   getMessages(channelId: string): Observable<Message[]> {
     return this.httpClient
       .get<Message[]>(`${this.endpointUrl}/${channelId}/messages`)

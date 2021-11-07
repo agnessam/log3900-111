@@ -9,14 +9,26 @@ export class TextChannelRepository extends GenericRepository<TextChannelInterfac
 		super(TextChannel);
 	}
 
-	public async getMessages(channelName: string): Promise<MessageInterface[]> {
+	public async getMessages(channelId: string): Promise<MessageInterface[]> {
 		return new Promise((resolve, reject) => {
-			Message.find({ roomName: channelName })
+			Message.find({ roomId: channelId })
 			.exec((err, messages) => {
 				if (err) {
 					reject(err);
 				}
 				resolve(messages);
+			})
+		})
+	};
+
+	public async deleteMessages(channelId: string): Promise<void> {
+		return new Promise((resolve, reject) => {
+			Message.deleteMany({ roomId: channelId })
+			.exec((err) => {
+				if (err) {
+					reject(err);
+				}
+				resolve();
 			})
 		})
 	};

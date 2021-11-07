@@ -27,7 +27,6 @@ export class ChannelComponent implements OnInit, OnDestroy {
   constructor(
     private authenticationService: AuthenticationService,
     private chatService: ChatService,
-    // private chatSocketService: ChatSocketService,
     private textChannelService: TextChannelService,
     private snackBar: MatSnackBar,
   ) {
@@ -91,11 +90,17 @@ export class ChannelComponent implements OnInit, OnDestroy {
     this.textChannelService.deleteChannel(channel._id).subscribe(() => {
       console.log(channel.name + ' has been deleted');
     });
+
+    this.textChannelService.deleteMessages(channel._id).subscribe(() => {
+      console.log('messages from ' + channel.name + ' have been deleted');
+    })
+
     const indexConnected = this.connectedChannels.findIndex((x) => x._id === channel._id);
     this.connectedChannels.splice(indexConnected, 1);
+    const indexAll = this.allChannels.findIndex((x) => x._id === channel._id);
+    this.allChannels.splice(indexAll, 1);
+
     this.chatService.leaveRoomEventEmitter.emit(channel);
-    // const indexAll = this.allChannels.findIndex((channel) => channel._id === channelId);
-    // this.connectedChannels.splice(indexAll, 1);
   }
 
   removeChannel(channel: TextChannel): void{
@@ -103,10 +108,10 @@ export class ChannelComponent implements OnInit, OnDestroy {
     this.connectedChannels.splice(index, 1);
     // leaves room in chat socket service to better handle connected channels
     this.chatService.leaveRoomEventEmitter.emit(channel);
-
   }
 
   toggleChannelButton(channel: TextChannel, mouseover: boolean): void{
+    if (channel.name !== 'General') {
       const btnDiv = document.getElementById(channel.name) as HTMLInputElement;
       if(mouseover)
         btnDiv.style.display = 'inline';
@@ -118,6 +123,7 @@ export class ChannelComponent implements OnInit, OnDestroy {
       if(channel.ownerId === this.user?._id){
         deletbtn.style.display = 'inline';
       }
+    }
   }
 
   searchChannel(evt: Event): void {

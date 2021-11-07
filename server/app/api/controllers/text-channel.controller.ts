@@ -36,6 +36,11 @@ export class TextChannelController {
     return await this.textChannelRepository.deleteById(req.params.channelId);
   }
 
+  @httpDelete('/:channelId/messages')
+  public async deleteMessages(@request() req: Request) {
+    return await this.textChannelRepository.deleteMessages(req.params.channelId);
+  }
+
   @httpPatch('/:channelId')
   public async updateChannel(@request() req: Request) {
     return await this.textChannelRepository.updateById(req.params.channelId, req.body);

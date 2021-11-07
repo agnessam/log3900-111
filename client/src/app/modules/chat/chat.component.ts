@@ -139,15 +139,18 @@ export class ChatComponent implements OnInit, OnDestroy {
     const second = new Date().getSeconds().toString();
     const time = hour + ':' + minute + ':' + second;
 
-    const message = {
-      message: this.message,
-      timestamp: time,
-      author: name,
-      roomName: this.chatRoomName,
-    };
-    this.chatSocketService.sendMessage(message);
-    this.messageBody.nativeElement.value = '';
-    this.message = '';
+    this.textChannelService.getChannelsByName(this.chatRoomName).subscribe((channels) => {
+      const message = {
+        message: this.message,
+        timestamp: time,
+        author: name,
+        roomId: channels[0]._id,
+        roomName: this.chatRoomName,
+      };
+      this.chatSocketService.sendMessage(message);
+      this.messageBody.nativeElement.value = '';
+      this.message = '';
+    });
   }
 
   onInput(evt: Event): void {
@@ -201,18 +204,25 @@ export class ChatComponent implements OnInit, OnDestroy {
     return messages;
   }
 
-  // TODO: change arg to get id instead of string.....
   getDatabaseMessages(channelName: string): void {
-    this.textChannelService.getMessages(channelName).subscribe((messages) => {
-      if (this.connectedMessageHistory.has(channelName)) {
-        this.loadedDbMessages = true;
-        this.hasDbMessages = messages.length !== 0;
-        if (!this.hasDbMessages) {
-          return;
+    this.textChannelService.getChannelsByName(channelName).subscribe((channels) => {
+      this.textChannelService.getMessages(channels[0]._id).subscribe((messages) => {
+        if (this.connectedMessageHistory.has(channelName)) {
+          this.loadedDbMessages = true;
+          this.hasDbMessages = messages.length !== 0;
+          if (!this.hasDbMessages) {
+            return;
+          }
+          const currentMessages = Array.from((this.connectedMessageHistory.get(channelName) as Set<Message>).values());
+          // Filter out messages that match attributes from database (should be id but not generated yet for current)
+          const filtered = currentMessages.filter((message) => !messages.some((dbMessage) =>
+            message.author === dbMessage.author &&
+            message.message === dbMessage.message &&
+            message.timestamp === dbMessage.timestamp &&
+            message.roomName === dbMessage.roomName));
+          this.connectedMessageHistory.set(channelName, new Set(messages.concat(filtered)));
         }
-        const currentMessages = Array.from((this.connectedMessageHistory.get(channelName) as Set<Message>).values());
-        this.connectedMessageHistory.set(channelName, new Set(messages.concat(currentMessages)));
-      }
+      });
     });
   }
 }
