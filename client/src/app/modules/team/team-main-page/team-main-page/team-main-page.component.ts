@@ -8,6 +8,7 @@ import { TeamClientService } from "src/app/modules/backend-communication/team-cl
   styleUrls: ["./team-main-page.component.scss"],
 })
 export class TeamMainPageComponent implements OnInit {
+  gridColumns: number = 3;
   teams: Set<any> = new Set();
 
   constructor(private teamClient: TeamClientService, private router: Router) {}
