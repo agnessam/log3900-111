@@ -6,15 +6,18 @@ import { TeamMainPageComponent } from "./team-main-page/team-main-page/team-main
 import { MatGridListModule } from "@angular/material/grid-list";
 import { MatButtonModule } from "@angular/material/button";
 import { MatCardModule } from "@angular/material/card";
+import { FlexLayoutModule } from "@angular/flex-layout";
+import { TeamProfileComponent } from './team-profile/team-profile/team-profile.component';
 
 @NgModule({
-  declarations: [TeamMainPageComponent],
+  declarations: [TeamMainPageComponent, TeamProfileComponent],
   imports: [
     CommonModule,
     TeamRoutingModule,
     MatGridListModule,
     MatButtonModule,
     MatCardModule,
+    FlexLayoutModule,
   ],
 })
 export class TeamModule {}

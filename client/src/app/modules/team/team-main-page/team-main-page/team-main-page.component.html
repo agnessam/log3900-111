@@ -1,19 +1,37 @@
 <div id="teams">
-  <div fxLayout="row wrap" fxLayoutGap="16px grid">
-    <div fxFlex="25%" *ngFor="let num of [1, 2, 3, 4, 5, 6, 7]">
+  <div id="team-header" fxLayout="row" fxLayoutAlign="center center">
+    <div fxFlex="20%">
+      <h1>Collaboration Team</h1>
+    </div>
+    <div fxFlex="20%">
+      <button id="create-button" mat-button>Create a team</button>
+    </div>
+  </div>
+  <br />
+  <div
+    fxLayout="row wrap"
+    fxLayoutGap="16px grid"
+    fxLayoutAlign="space-around center"
+  >
+    <div
+      fxFlex="33%"
+      fxFlex.xs="100%"
+      fxFlex.sm="50%"
+      *ngFor="let team of teams"
+    >
       <mat-card class="mat-elevation-z4 team">
         <mat-card-header>
-          <mat-card-title>Himalayan peaks lol {{ num }}</mat-card-title>
+          <mat-card-title (click)="goToTeam(team._id)"
+            ><a>{{ team.name }}</a>
+          </mat-card-title>
         </mat-card-header>
-        <img
-          mat-card-image
-          src="https://material.angular.io/assets/img/examples/shiba2.jpg"
-          alt="Photo of a Shiba Inu"
-        />
 
         <mat-card-content>
-          <p>THe hahAHHAHAHAH</p>
+          <p>{{ team.description }}</p>
         </mat-card-content>
+        <mat-card-actions>
+          <button mat-button>Join team</button>
+        </mat-card-actions>
       </mat-card>
     </div>
   </div>

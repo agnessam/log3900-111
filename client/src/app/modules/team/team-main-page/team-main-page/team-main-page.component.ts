@@ -1,3 +1,4 @@
+import { Router } from "@angular/router";
 import { Component, OnInit } from "@angular/core";
 import { TeamClientService } from "src/app/modules/backend-communication/team-client/team-client.service";
 
@@ -9,16 +10,19 @@ import { TeamClientService } from "src/app/modules/backend-communication/team-cl
 export class TeamMainPageComponent implements OnInit {
   teams: Set<any> = new Set();
 
-  constructor(private teamClient: TeamClientService) {}
+  constructor(private teamClient: TeamClientService, private router: Router) {}
 
   ngOnInit(): void {}
 
   ngAfterViewInit(): void {
     this.teamClient.getTeams().subscribe((response) => {
       response.forEach((team) => {
-        console.log(team);
         this.teams.add(team);
       });
     });
+  }
+
+  goToTeam(teamId: string): void {
+    this.router.navigate([`/teams/${teamId}`]);
   }
 }

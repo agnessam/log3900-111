@@ -2,14 +2,14 @@
   padding: 16px;
 }
 
-#teams > mat-card {
-  width: 200px;
-}
-
 .team {
-  max-width: 200px;
+  width: 400px;
 }
 
 #team-header {
   min-width: 50%;
+}
+
+#create-button {
+  align-items: right;
 }
