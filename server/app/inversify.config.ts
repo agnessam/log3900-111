@@ -14,11 +14,16 @@ import { TeamRepositoryInterface } from './domain/interfaces/repository.interfac
 import { TeamRepository } from './infrastructure/data_access/repositories/team_repository';
 import { DrawingRepository } from './infrastructure/data_access/repositories/drawing_repository';
 import { MessageRepository } from './infrastructure/data_access/repositories/message_repository';
+import { DrawingSocketService } from './domain/services/sockets/drawing-socket.service';
 
 export const referenceDataIoCModule = new ContainerModule((bind) => {
   // Services
   bind<SocketServiceInterface>(TYPES.ChatSocketService)
     .to(ChatSocketService)
+    .inSingletonScope();
+
+  bind<DrawingSocketService>(TYPES.DrawingSocketService)
+    .to(DrawingSocketService)
     .inSingletonScope();
 
   // Repositories

@@ -3,7 +3,7 @@ import { NgModule } from "@angular/core";
 import { RouterModule, Routes } from "@angular/router";
 import { AuthGuard } from "./modules/authentication/";
 import { PageNotFoundComponent } from "./modules/error/";
-import { SidenavComponent } from "./modules/sidenav/sidenav.component";
+import { SidenavComponent } from "./modules/sidenav";
 
 const routes: Routes = [
   {
@@ -14,9 +14,22 @@ const routes: Routes = [
     canActivate: [AuthGuard],
   },
   {
+    path: "drawing",
+    component: SidenavComponent,
+    loadChildren: () =>
+      import("./modules/sidenav/sidenav.module").then((m) => m.SidenavModule),
+  },
+  {
     path: "users",
     loadChildren: () =>
       import("./modules/users/users.module").then((m) => m.UsersModule),
+  },
+  {
+    path: "drawings",
+    loadChildren: () =>
+      import("./modules/drawings/drawings.module").then(
+        (m) => m.DrawingsModule
+      ),
   },
   {
     path: "gallery",

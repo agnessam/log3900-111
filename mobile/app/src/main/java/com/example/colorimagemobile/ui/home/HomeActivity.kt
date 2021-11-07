@@ -80,7 +80,7 @@ class HomeActivity : AppCompatActivity() {
         }
     }
 
-    private fun handleGetUserMe(response: DataWrapper<HTTPResponseModel.GetUserMe>) {
+    private fun handleGetUserMe(response: DataWrapper<HTTPResponseModel.GetUser>) {
         UserService.setUserInfo(response.data?.user as UserModel.AllInfo)
 
         // update username in menu item

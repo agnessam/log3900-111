@@ -1,10 +1,11 @@
-import { Point } from 'src/app/shared';
+import { Point } from "src/app/shared";
+import { Tool } from "../tool.model";
 
-export interface Pencil {
-    pointsList: Point[];
-    strokeWidth: number;
-    fill: string;
-    stroke: string;
-    fillOpacity: string;
-    strokeOpacity: string;
+export interface Pencil extends Tool {
+  pointsList: Point[];
+}
+
+export interface InProgressPencil {
+  id: string;
+  point: Point;
 }
