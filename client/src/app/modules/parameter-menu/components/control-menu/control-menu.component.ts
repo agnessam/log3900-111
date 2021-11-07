@@ -47,8 +47,4 @@ export class ControlMenuComponent {
   redo(): void {
     this.commandInvoker.redo();
   }
-
-  saveDrawing(): void{
-    this.drawingService.saveDrawing();
-  }
 }
