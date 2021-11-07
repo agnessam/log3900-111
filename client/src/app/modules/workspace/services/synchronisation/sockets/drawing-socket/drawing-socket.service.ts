@@ -12,7 +12,8 @@ import {
   TRANSFORM_SELECTION_EVENT,
   UPDATE_DRAWING_EVENT,
   FETCH_DRIVING_EVENT,
-  UPDATE_DRAWING_NOTIFICATION
+  UPDATE_DRAWING_NOTIFICATION,
+  ONE_USER_RESPONSE
 } from "src/app/shared";
 import { Selection } from "../../../tools/selection-tool/selection.model";
 import { SocketTool } from "../../../tools/socket-tool";
@@ -64,7 +65,7 @@ export class DrawingSocketService extends AbstractSocketService {
   async sendGetUpdateDrawingRequest(): Promise<void> {
     return await new Promise(resolve => {
       this.emitWithCallback(UPDATE_DRAWING_EVENT, this.roomName, (response) => {
-        if(response.status == "One User"){
+        if(response.status == ONE_USER_RESPONSE){
           console.log(response);
           this.drawingHttpClientService
           .getDrawing(this.drawingService.drawingId)
