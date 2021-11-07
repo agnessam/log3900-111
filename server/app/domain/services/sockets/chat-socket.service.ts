@@ -52,7 +52,6 @@ export class ChatSocketService extends SocketServiceInterface {
 				this.messageHistory.set(message.roomName, new Set());
 			} 
 			this.messageHistory.get(message.roomName)?.add(message);
-			console.log(this.messageHistory)
 		});
 	}
 
@@ -68,7 +67,6 @@ export class ChatSocketService extends SocketServiceInterface {
 			socket.join(roomName);
 
 			if (this.messageHistory.has(roomName)) {
-				console.log(this.messageHistory)
 				this.emitHistory(roomName, Array.from((this.messageHistory.get(roomName) as Set<MessageInterface>).values()));
 			}
 
