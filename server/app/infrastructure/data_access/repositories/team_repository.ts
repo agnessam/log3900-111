@@ -11,12 +11,12 @@ export class TeamRepository extends GenericRepository<TeamInterface> {
 
   public async create(team: TeamInterface): Promise<TeamInterface> {
     return new Promise<TeamInterface>((resolve, reject) => {
-      Team.create(team, (err: Error, team: TeamInterface) => {
-        if (err) {
+      Team.create(team, (err: Error, createdTeam: TeamInterface) => {
+        if (err || !createdTeam) {
           reject(err);
         }
         User.findById(
-          { _id: team.owner },
+          { _id: team.ownerId },
           (err: Error, user: UserInterface) => {
             if (err) {
               reject(err);
@@ -37,12 +37,12 @@ export class TeamRepository extends GenericRepository<TeamInterface> {
   public async getTeamMembers(teamId: string) {
     return new Promise((resolve, reject) => {
       Team.findById({ _id: teamId })
-        .populate(['members', 'owner'])
+        .populate(['members', 'ownerId'])
         .exec((err, team) => {
           if (err || !team) {
             reject(err);
           }
-          const allTeamMembers = team!.members.concat(team!.owner);
+          const allTeamMembers = team!.members.concat(team!.ownerId);
           resolve(allTeamMembers);
         });
     });
@@ -51,14 +51,14 @@ export class TeamRepository extends GenericRepository<TeamInterface> {
   public async addMemberToTeam(teamId: string, userId: string) {
     return new Promise((resolve, reject) => {
       Team.findById({ _id: teamId }, (err: Error, team: TeamInterface) => {
-        if (err) {
+        if (err || !team) {
           reject(err);
         }
 
         team.members.push(userId);
         team.save().then((team) => {
           User.findById({ _id: userId }, (err: Error, user: UserInterface) => {
-            if (err) {
+            if (err || !user) {
               reject(err);
             }
 
