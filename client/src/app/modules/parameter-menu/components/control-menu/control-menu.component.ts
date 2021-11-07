@@ -14,7 +14,8 @@ export class ControlMenuComponent {
   constructor(
     private dialog: MatDialog,
     private drawingService: DrawingService,
-    private commandInvoker: CommandInvokerService
+    private commandInvoker: CommandInvokerService,
+    
   ) {}
 
   get isSaved(): boolean {

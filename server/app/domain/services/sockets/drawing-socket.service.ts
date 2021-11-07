@@ -7,6 +7,13 @@ import {
   CONFIRM_SELECTION_EVENT,
   TRANSFORM_SELECTION_EVENT,
   DELETE_SELECTION_EVENT,
+  UPDATE_DRAWING_EVENT,
+  FETCH_DRIVING_EVENT,
+  UPDATE_DRAWING_NOTIFICATION,
+  ROOM_EMPTY_RESPONSE,
+  ROOM_NOT_FOUND_RESPONSE,
+  ONE_USER_RESPONSE,
+  NEW_USER_RESPONSE,
 } from '../../constants/socket-constants';
 import { SocketServiceInterface } from '../../../domain/interfaces/socket.interface';
 import { injectable } from 'inversify';
@@ -29,6 +36,8 @@ export class DrawingSocketService extends SocketServiceInterface {
     this.listenConfirmSelectionCommand(socket);
     this.listenTransformSelectionCommand(socket);
     this.listenDeleteSelectionCommand(socket);
+    this.listenGetUpdatedDrawing(socket);
+    this.listenDrawingRequestBroadcastRequest(socket);
   }
 
   private listenInProgressDrawingCommand(socket: Socket): void {
@@ -76,6 +85,67 @@ export class DrawingSocketService extends SocketServiceInterface {
     socket.on(DELETE_SELECTION_EVENT, (deleteSelectionCommand: any) => {
       this.emitDeleteSelectionCommand(deleteSelectionCommand, socket);
     });
+  }
+
+  private listenGetUpdatedDrawing(socket: Socket): void {
+    socket.on(UPDATE_DRAWING_EVENT, (roomName:string, callback) => {
+      console.log("Request update drawing room: ", roomName);
+      const clientIdsInRoomSet = this.namespace.adapter.rooms.get(roomName);
+
+      if(!clientIdsInRoomSet) {
+        callback({
+          status: ROOM_NOT_FOUND_RESPONSE
+        });
+        return;
+      }
+
+      if (clientIdsInRoomSet.size < 1){
+        console.log(`Room ${roomName} is empty`);
+        callback({
+          status: ROOM_EMPTY_RESPONSE
+        });
+        return;
+      }
+      
+      let alreadyConnectedUserId;
+      for(let clientInRoomSet of clientIdsInRoomSet){
+        if (clientInRoomSet != socket.id){
+          alreadyConnectedUserId = clientInRoomSet;
+          break;
+        }
+      }
+
+      if(!alreadyConnectedUserId){
+        callback({
+          status: ONE_USER_RESPONSE
+        })
+        return
+      }
+
+      this.sendUpdateDrawingRequest(socket, alreadyConnectedUserId, socket.id);
+      
+      callback({
+        status: NEW_USER_RESPONSE
+      });
+    });
+  }
+
+  private sendUpdateDrawingRequest(socket:Socket, alreadyConnectedUserId: string, newClientId: string): void {
+    let request = {
+      newUserId: newClientId,
+      alreadyConnectedUserId: alreadyConnectedUserId 
+    }
+    socket.broadcast.to(alreadyConnectedUserId).emit(UPDATE_DRAWING_EVENT, request);
+  }
+
+  private listenDrawingRequestBroadcastRequest(socket: Socket): void {
+    socket.on(UPDATE_DRAWING_NOTIFICATION, (newClientId) => {
+      this.sendFetchDrawingNotification(socket, newClientId);
+    });
+  }
+
+  private sendFetchDrawingNotification(socket:Socket, newClientId: string): void {
+    socket.broadcast.to(newClientId).emit(FETCH_DRIVING_EVENT);
   }
 
   private emitInProgressDrawingCommand(

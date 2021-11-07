@@ -1,11 +1,6 @@
-import {
-  EventEmitter,
-  Injectable,
-  Output,
-  Renderer2,
-  Directive,
-} from "@angular/core";
-import { DEFAULT_RGB_COLOR, RGB, DEFAULT_ALPHA, RGBA } from "src/app/shared";
+import { EventEmitter, Injectable, Output, Renderer2, Directive } from '@angular/core';
+import { DEFAULT_RGB_COLOR, RGB, DEFAULT_ALPHA, RGBA } from 'src/app/shared';
+import { DrawingHttpClientService } from 'src/app/modules/backend-communication';
 
 /// Service qui contient les fonction pour dessiner a l'écran
 @Directive()
@@ -26,9 +21,11 @@ export class DrawingService {
   height = 0;
   drawing: SVGElement;
 
+  drawingId: string;
+
   private objectList: Map<string, SVGElement>;
 
-  constructor(public renderer: Renderer2) {
+  constructor(public renderer: Renderer2, private drawingHttpClientService:DrawingHttpClientService) {
     this.objectList = new Map<string, SVGElement>();
   }
 
@@ -120,6 +117,11 @@ export class DrawingService {
     this.setDrawingColor(rgba);
     this.drawingEmit.emit(this.drawing);
     return this.getDrawingDataUriBase64();
+  }
+
+  async saveDrawing(): Promise<void>{
+    let dataUri = this.getDrawingDataUriBase64();
+    await this.drawingHttpClientService.updateDrawing(this.drawingId, dataUri).toPromise();
   }
 
   /// Get drawing svg uri

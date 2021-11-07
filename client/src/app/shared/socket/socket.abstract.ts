@@ -42,4 +42,8 @@ export abstract class AbstractSocketService {
   protected emit(event: string, data: any): void {
     this.namespaceSocket.emit(event, data);
   }
+
+  protected emitWithCallback(event: string, data: any, callback: (response:any) => any): void {
+    this.namespaceSocket.emit(event, data, callback);
+  }
 }
