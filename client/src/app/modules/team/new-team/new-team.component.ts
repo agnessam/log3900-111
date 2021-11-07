@@ -25,10 +25,6 @@ export class NewTeamComponent implements OnInit {
   }
 
   onAccept(): void {
-    console.log(this.teamClient);
-
-    console.log(this.newTeamForm.value);
-    console.log("Accepted the form");
     this.teamClient
       .createTeam(
         this.newTeamForm.value.teamName,
