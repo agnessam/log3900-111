@@ -14,3 +14,7 @@ export const START_SELECTION_EVENT = "selection-start";
 export const CONFIRM_SELECTION_EVENT = "selection-confirm";
 export const TRANSFORM_SELECTION_EVENT = "selection-transform";
 export const DELETE_SELECTION_EVENT = "selection-delete";
+export const UPDATE_DRAWING_EVENT = "drawing-update";
+export const FETCH_DRIVING_EVENT = "drawing-fetch";
+export const UPDATE_DRAWING_NOTIFICATION = "drawing-update-notification";
+export const ONE_USER_RESPONSE = "One User";

@@ -20,6 +20,15 @@ export class DrawingHttpClientService {
     return this.httpClient.get<Drawing>(`${this.SERVER_ENDPOINT}${drawingId}`);
   }
 
+  updateDrawing(drawingId:string, drawingDataUri: string, ownerModel:string = "User", ownerId: string = "617832e99a8c22d106b37528"): Observable<Drawing>{
+    let newDrawing = {
+      dataUri: drawingDataUri,
+      ownerId: ownerId, // TODO: remove ownerID from all requests
+      ownerModel: ownerModel, // TODO: Add option to toggle between 
+    };
+    return this.httpClient.patch<Drawing>(`${this.SERVER_ENDPOINT}${drawingId}`, newDrawing);
+  }
+
   createNewDrawing(drawingDataUri: string, ownerModel:string, ownerId: string = "617832e99a8c22d106b37528"): Observable<Drawing> {
     let newDrawing = {
       dataUri: drawingDataUri,

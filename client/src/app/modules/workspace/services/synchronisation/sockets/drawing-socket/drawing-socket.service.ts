@@ -1,4 +1,5 @@
 import { Injectable } from "@angular/core";
+import { Subject } from "rxjs";
 import {
   AbstractSocketService,
   COLLABORATIVE_DRAWING_NAMESPACE,
@@ -9,20 +10,35 @@ import {
   IN_PROGRESS_DRAWING_EVENT,
   START_SELECTION_EVENT,
   TRANSFORM_SELECTION_EVENT,
+  UPDATE_DRAWING_EVENT,
+  FETCH_DRIVING_EVENT,
+  UPDATE_DRAWING_NOTIFICATION,
+  ONE_USER_RESPONSE
 } from "src/app/shared";
 import { Selection } from "../../../tools/selection-tool/selection.model";
 import { SocketTool } from "../../../tools/socket-tool";
 import { SynchronisationService } from "../../synchronisation.service";
+import { DrawingHttpClientService } from "src/app/modules/backend-communication";
+import { DrawingService } from "src/app/modules/workspace";
 
 @Injectable({
   providedIn: "root",
 })
 export class DrawingSocketService extends AbstractSocketService {
   roomName: string;
+  drawingSubject: Subject<boolean> = new Subject(); 
 
-  constructor(private synchronisationService: SynchronisationService) {
+  constructor(
+    private synchronisationService: SynchronisationService,
+    private drawingHttpClientService: DrawingHttpClientService,
+    private drawingService: DrawingService  
+  ) {
     super();
     this.init();
+  }
+
+  connect(): void {
+    super.connect();
   }
 
   joinRoom(roomName: string) {
@@ -42,6 +58,23 @@ export class DrawingSocketService extends AbstractSocketService {
     this.listenConfirmSelectionCommand();
     this.listenTransformSelectionCommand();
     this.listenDeleteSelectionCommand();
+    this.listenUpdateDrawingRequest();
+    this.listenFetchDrawingNotification();
+  }
+
+  async sendGetUpdateDrawingRequest(): Promise<void> {
+    return await new Promise(resolve => {
+      this.emitWithCallback(UPDATE_DRAWING_EVENT, this.roomName, (response) => {
+        if(response.status == ONE_USER_RESPONSE){
+          console.log(response);
+          this.drawingHttpClientService
+          .getDrawing(this.drawingService.drawingId)
+          .subscribe((response) => {
+            this.drawingService.openSvgFromDataUri(response.dataUri);
+          });
+        }
+      })
+    });
   }
 
   sendInProgressDrawingCommand(drawingCommand: any, type: string): void {
@@ -181,5 +214,27 @@ export class DrawingSocketService extends AbstractSocketService {
         );
       }
     );
+  }
+
+  private listenUpdateDrawingRequest(): void {
+    this.namespaceSocket.on(UPDATE_DRAWING_EVENT, (request: any) => {
+      this.drawingService.saveDrawing().then(() => {
+        this.sendDrawingUpdatedNotification(request.newUserId);
+      });
+    });
+  }
+
+  private listenFetchDrawingNotification(): void {
+    this.namespaceSocket.on(FETCH_DRIVING_EVENT, () => {
+      this.drawingHttpClientService
+      .getDrawing(this.drawingService.drawingId)
+      .subscribe((response) => {
+        this.drawingService.openSvgFromDataUri(response.dataUri);
+      });
+    });
+  }
+
+  private sendDrawingUpdatedNotification(clientSocketId: string): void {
+    this.namespaceSocket.emit(UPDATE_DRAWING_NOTIFICATION, clientSocketId);
   }
 }

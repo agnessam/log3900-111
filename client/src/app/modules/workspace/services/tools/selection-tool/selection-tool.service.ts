@@ -16,6 +16,7 @@ import { SelectionCommandConstants } from "./command-type-constant";
 import { SelectionTransformService } from "./selection-transform.service";
 import { Selection } from "./selection.model";
 import { Translation } from "./translate-command/translate.model";
+import { SynchronisationService } from "../../synchronisation/synchronisation.service";
 
 @Injectable({
   providedIn: "root",
@@ -59,7 +60,8 @@ export class SelectionToolService implements Tools {
     private offsetManager: OffsetManagerService,
     private rendererService: RendererProviderService,
     private selectionTransformService: SelectionTransformService,
-    private drawingSocketService: DrawingSocketService
+    private drawingSocketService: DrawingSocketService,
+    private synchronisationService: SynchronisationService
   ) {
     this.setRectSelection();
     this.setCtrlPoints();
@@ -85,7 +87,6 @@ export class SelectionToolService implements Tools {
       }
 
       const obj = this.drawingService.getObject(target.id);
-
       if (event.button === LEFT_CLICK) {
         if (this.isInside(offset.x, offset.y)) {
           this.isIn = true;
@@ -116,7 +117,7 @@ export class SelectionToolService implements Tools {
           }
 
           // Initializes the selection
-          if (obj && (this.objects.length < 2 || !this.objects.includes(obj))) {
+          if (obj && (this.objects.length < 2 || !this.objects.includes(obj)) && !this.synchronisationService.previewShapes.has(target.id)) {
             this.objects.push(obj);
 
             // Initializes the selection model that will be synchronised
@@ -458,6 +459,8 @@ export class SelectionToolService implements Tools {
     const confirmedSelection: Selection = {
       id: this.objects[0].id,
     };
+
+    this.synchronisationService.removeFromPreview(confirmedSelection.id);
 
     this.drawingSocketService.sendConfirmSelectionCommand(
       confirmedSelection,

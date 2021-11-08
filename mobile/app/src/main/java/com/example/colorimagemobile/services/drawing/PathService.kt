@@ -1,56 +1,29 @@
 package com.example.colorimagemobile.services.drawing
 
-import android.graphics.Paint
-import android.graphics.Path
+import com.example.colorimagemobile.Shape.ShapeAndPaint
+import kotlin.collections.ArrayList
 
-data class Point(val x: Float, val y: Float)
-
-// contains paint customizations and path's points
-data class PaintPath(val id: Int, val brush: CustomPaint, val path: Path, val points: ArrayList<Point>)
-
-// Paint/brush customizations
-class CustomPaint() {
-    private var paint: Paint = Paint()
-
-    init {
-        setDefaultBrushAttributes()
-    }
-
-    private fun setDefaultBrushAttributes() {
-        paint.isAntiAlias = true
-        paint.isDither = true
-        paint.style = Paint.Style.STROKE
-        paint.strokeJoin = Paint.Join.ROUND
-    }
-
-    fun setColor(newColor: Int) {
-        paint.color = newColor
-    }
-
-    fun setStrokeWidth(newWidth: Float) {
-        paint.strokeWidth = newWidth
-    }
-
-    fun getPaint(): Paint {
-        return paint
-    }
-}
 
 // global path and paint holder
 object PathService {
-    private var paintPath: ArrayList<PaintPath> = arrayListOf()
+    private var shapeAndPaint: ArrayList<ShapeAndPaint> = arrayListOf()
 
-    fun addPaintPath(newPaintPath: PaintPath) {
-        paintPath.add(newPaintPath)
+    fun addPaintPath(newPaintPath: ShapeAndPaint) {
+        shapeAndPaint.add(newPaintPath)
     }
 
-    fun getPaintPath(): ArrayList<PaintPath> {
-        return paintPath
+    fun getPaintPath(): ArrayList<ShapeAndPaint> {
+        return shapeAndPaint
     }
 
     fun removeByID(id: Int) {
-        paintPath = paintPath.filterIndexed { _, paintPath -> paintPath.id != id  } as ArrayList<PaintPath>
+        shapeAndPaint = shapeAndPaint.filterIndexed { _, ShapeAndPaint -> ShapeAndPaint.id != id  } as ArrayList<ShapeAndPaint>
     }
+
+    fun removeAll() {
+        shapeAndPaint.clear()
+    }
+
 }
 
 // generate new id [temporary?]

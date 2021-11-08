@@ -1,7 +1,6 @@
 import { Component, AfterViewInit, OnInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { DrawingService } from "../../workspace";
-import { DrawingHttpClientService } from "../../backend-communication";
 import { DrawingSocketService } from "../../workspace/services/synchronisation/sockets/drawing-socket/drawing-socket.service";
 @Component({
   selector: "app-drawing",
@@ -13,27 +12,24 @@ export class DrawingComponent implements OnInit, AfterViewInit {
   constructor(
     private route: ActivatedRoute,
     private drawingService: DrawingService,
-    private drawingHttpClientService: DrawingHttpClientService,
     private drawingSocketService: DrawingSocketService
   ) {}
 
   ngOnInit(): void {
     this.route.params.subscribe((params) => {
       this.drawingId = params["id"];
+      this.drawingService.drawingId = this.drawingId;
       this.drawingSocketService.connect();
       this.drawingSocketService.joinRoom(params["id"]);
     });
   }
 
   ngAfterViewInit(): void {
-    this.drawingHttpClientService
-      .getDrawing(this.drawingId)
-      .subscribe((response) => {
-        this.drawingService.openSvgFromDataUri(response.dataUri);
-      });
+    this.drawingSocketService.sendGetUpdateDrawingRequest();
   }
 
   ngOnDestroy(): void {
+    this.drawingService.saveDrawing();
     this.drawingSocketService.disconnect();
     this.drawingSocketService.leaveRoom(this.drawingId);
   }
