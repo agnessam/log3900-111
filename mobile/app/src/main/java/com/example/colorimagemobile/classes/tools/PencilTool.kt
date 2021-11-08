@@ -11,7 +11,7 @@ import com.example.colorimagemobile.ui.home.fragments.drawing.views.PencilView
 
 class PencilTool: ITool {
     override fun getTitle(): String {
-        return "Pencil"
+        return "PencilCommand"
     }
 
     override fun getType(): ToolType {

@@ -14,7 +14,6 @@ import com.example.colorimagemobile.services.drawing.toolsAttribute.ColorService
 abstract class CanvasView(context: Context?): View(context) {
     protected lateinit var extraBitmap: Bitmap
     protected lateinit var extraCanvas: Canvas
-    protected var paintPath: PaintPath = PaintPath(0, CustomPaint(), Path(), arrayListOf())
 
     protected var motionTouchEventX = 0f
     protected var motionTouchEventY = 0f
@@ -53,8 +52,6 @@ abstract class CanvasView(context: Context?): View(context) {
         when (event.action) {
             // when user first touches the screen, set new paintPath
             MotionEvent.ACTION_DOWN -> {
-                paintPath = PaintPath(IDGenerator.getNewId(), CustomPaint(), Path(), arrayListOf())
-                paintPath.brush.setColor(ColorService.getColor())
                 onTouchDown()
             }
 
@@ -70,7 +67,5 @@ abstract class CanvasView(context: Context?): View(context) {
     abstract fun onTouchMove()
 
     // can be overridden by children
-    open fun onTouchUp() {
-        PathService.addPaintPath(paintPath)
-    }
+    abstract fun onTouchUp()
 }
