@@ -12,7 +12,7 @@ import { NewTeamComponent } from "../../new-team/new-team.component";
 })
 export class TeamMainPageComponent implements OnInit {
   gridColumns: number = 3;
-  teams: Set<Team> = new Set();
+  teams: Array<Team> = new Array();
 
   newTeamDialogRef: MatDialogRef<NewTeamComponent>;
 
@@ -26,7 +26,7 @@ export class TeamMainPageComponent implements OnInit {
   ngOnInit(): void {
     this.teamClient.getTeams().subscribe((response) => {
       response.forEach((team) => {
-        this.teams.add(team);
+        this.teams.push(team);
       });
     });
   }
@@ -44,7 +44,7 @@ export class TeamMainPageComponent implements OnInit {
         return;
       }
 
-      this.teams.add(result);
+      this.teams.push(result);
     });
   }
 
@@ -55,6 +55,11 @@ export class TeamMainPageComponent implements OnInit {
 
   joinTeam(teamId: string) {
     return this.teamClient.joinTeam(teamId).subscribe((team) => {
+      for (let i = 0; i < this.teams.length; ++i) {
+        if (this.teams[i].id == teamId) {
+          this.teams[i] = team;
+        }
+      }
       this.changeDetectorRef.detectChanges();
       return team;
     });
