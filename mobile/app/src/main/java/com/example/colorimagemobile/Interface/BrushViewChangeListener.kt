@@ -1,6 +1,6 @@
 package com.example.colorimagemobile.Interface
 
-import com.example.colorimagemobile.Shape.DrawingPreview
+import com.example.colorimagemobile.classes.Shape.DrawingPreview
 
 interface BrushViewChangeListener {
     fun onViewAdd(drawingPreview: DrawingPreview?)

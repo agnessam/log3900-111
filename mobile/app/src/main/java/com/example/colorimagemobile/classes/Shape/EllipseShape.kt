@@ -1,4 +1,4 @@
-package com.example.colorimagemobile.Shape
+package com.example.colorimagemobile.classes.Shape
 
 import android.graphics.Path
 import android.graphics.RectF
@@ -38,7 +38,4 @@ class EllipseShape : AbstractShape() {
         return path
     }
 
-    override fun stopShape() {
-        Log.d(tag, "stopShape")
-    }
 }

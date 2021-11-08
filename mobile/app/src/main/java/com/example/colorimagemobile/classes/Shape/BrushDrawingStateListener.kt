@@ -1,10 +1,12 @@
-package com.example.colorimagemobile.Shape
+package com.example.colorimagemobile.classes.Shape
 
 import android.view.View
 import com.example.colorimagemobile.Interface.BrushViewChangeListener
+import com.example.colorimagemobile.classes.drawingEditor.EditorViewClass
+import com.example.colorimagemobile.classes.drawingEditor.EditorViewState
 
 class BrushDrawingStateListener internal constructor(
-    private val mEditorView: EditorView,
+    private val mEditorViewClass: EditorViewClass,
     private val mViewState: EditorViewState
 ) : BrushViewChangeListener {
 
@@ -20,7 +22,7 @@ class BrushDrawingStateListener internal constructor(
                 mViewState.addedViewsCount - 1
             )
             if (removeView !is DrawingPreview) {
-                mEditorView.removeView(removeView)
+                mEditorViewClass.removeView(removeView)
             }
         }
 

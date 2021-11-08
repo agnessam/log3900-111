@@ -1,13 +1,14 @@
-package com.example.colorimagemobile.Shape
+package com.example.colorimagemobile.classes.drawingEditor
 
 import android.content.Context
 import android.util.AttributeSet
 import android.view.ViewGroup
 import android.widget.RelativeLayout
+import com.example.colorimagemobile.classes.Shape.DrawingPreview
 
 
-class EditorView : RelativeLayout {
-    private val TAG = "EditorView"
+class EditorViewClass : RelativeLayout {
+    private val TAG = "EditorViewClass"
 
     private var mDrawingPreview: DrawingPreview? = null
 

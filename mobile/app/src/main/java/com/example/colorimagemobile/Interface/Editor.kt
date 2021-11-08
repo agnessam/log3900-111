@@ -3,7 +3,9 @@ package com.example.colorimagemobile.Interface
 import android.content.Context
 import android.view.View
 import androidx.annotation.IntRange
-import com.example.colorimagemobile.Shape.*
+import com.example.colorimagemobile.classes.Shape.*
+import com.example.colorimagemobile.classes.drawingEditor.EditorViewClass
+import com.example.colorimagemobile.classes.drawingEditor.EditorImpl
 
 
 interface Editor {
@@ -12,10 +14,10 @@ interface Editor {
 
     fun setOpacity(@IntRange(from = 0, to = 100) opacity: Int)
 
-    class Builder(var context: Context, editorView: EditorView) {
-        var parentView: EditorView = editorView
+    class Builder(var context: Context, editorViewClass: EditorViewClass) {
+        var parentView: EditorViewClass = editorViewClass
         var deleteView: View? = null
-        var drawingPreview: DrawingPreview = editorView.getDrawingView()!!
+        var drawingPreview: DrawingPreview = editorViewClass.getDrawingView()!!
 
 
         fun build(): Editor {

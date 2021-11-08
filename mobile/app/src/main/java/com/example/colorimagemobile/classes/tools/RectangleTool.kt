@@ -3,11 +3,10 @@ package com.example.colorimagemobile.classes.tools
 import android.content.Context
 import androidx.fragment.app.Fragment
 import com.example.colorimagemobile.R
-import com.example.colorimagemobile.Shape.DrawingPreview
+import com.example.colorimagemobile.classes.Shape.DrawingPreview
 import com.example.colorimagemobile.enumerators.ToolType
-import com.example.colorimagemobile.interfaces.ITool
+import com.example.colorimagemobile.Interface.ITool
 import com.example.colorimagemobile.ui.home.fragments.drawing.attributes.rectangle.RectangleFragment
-import com.example.colorimagemobile.ui.home.fragments.drawing.views.RectangleView
 
 class RectangleTool : ITool {
     override fun getTitle(): String {
@@ -23,7 +22,7 @@ class RectangleTool : ITool {
     }
 
     override fun getView(context: Context): DrawingPreview {
-        return RectangleView(context)
+        return DrawingPreview(context)
     }
 
     override fun getFragment(): Fragment {

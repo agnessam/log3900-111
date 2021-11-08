@@ -1,4 +1,4 @@
-package com.example.colorimagemobile.Shape
+package com.example.colorimagemobile.classes.Shape
 
 import android.graphics.Canvas
 import android.graphics.Paint
@@ -7,7 +7,7 @@ import android.util.Log
 
 class BrushShape : AbstractShape() {
     override val tag: String
-        protected get() = "BrushShape"
+        get() = "BrushShape"
 
     override fun draw(canvas: Canvas, paint: Paint?) {
         canvas.drawPath(path, paint!!)
@@ -30,7 +30,4 @@ class BrushShape : AbstractShape() {
         }
     }
 
-    override fun stopShape() {
-        Log.d(tag, "stopShape")
-    }
 }

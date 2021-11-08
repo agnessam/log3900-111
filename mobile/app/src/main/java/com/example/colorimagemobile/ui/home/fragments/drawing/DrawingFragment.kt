@@ -15,9 +15,9 @@ import android.widget.*
 import androidx.cardview.widget.CardView
 import com.example.colorimagemobile.Interface.Editor
 import com.example.colorimagemobile.R
-import com.example.colorimagemobile.Shape.EditorView
-import com.example.colorimagemobile.Shape.ShapeBuilder
-import com.example.colorimagemobile.Shape.ShapeType
+import com.example.colorimagemobile.classes.drawingEditor.EditorViewClass
+import com.example.colorimagemobile.classes.Shape.ShapeBuilder
+import com.example.colorimagemobile.classes.Shape.ShapeType
 import com.example.colorimagemobile.classes.tools.ToolsFactory
 import com.example.colorimagemobile.enumerators.ToolType
 import com.example.colorimagemobile.services.drawing.ToolTypeService
@@ -26,7 +26,7 @@ import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
 class DrawingFragment : Fragment(R.layout.fragment_drawing) {
     private lateinit var panelView: CardView
     private lateinit var toolsFactory: ToolsFactory
-    private var canvasView : EditorView ? = null
+    private var canvasView : EditorViewClass? = null
     var viewEditor: Editor? = null
     private  var canvasTool : LinearLayout ? = null
     var mShapeBuilder: ShapeBuilder? = null

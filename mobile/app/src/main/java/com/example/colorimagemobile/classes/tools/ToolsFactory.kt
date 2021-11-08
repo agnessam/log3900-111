@@ -1,7 +1,7 @@
 package com.example.colorimagemobile.classes.tools
 
 import com.example.colorimagemobile.enumerators.ToolType
-import com.example.colorimagemobile.interfaces.ITool
+import com.example.colorimagemobile.Interface.ITool
 
 class ToolsFactory {
     private var tool: ToolType = ToolType.PENCIL

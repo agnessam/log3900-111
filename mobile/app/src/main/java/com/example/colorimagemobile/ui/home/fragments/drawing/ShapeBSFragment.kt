@@ -13,7 +13,7 @@
 //import androidx.recyclerview.widget.LinearLayoutManager
 //import androidx.recyclerview.widget.RecyclerView
 //import com.example.colorimagemobile.R
-//import com.example.colorimagemobile.Shape.ShapeType
+//import com.example.colorimagemobile.classes.Shape.ShapeType
 //import com.example.colorimagemobile.adapter.ColorPickerAdapter
 //import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 //

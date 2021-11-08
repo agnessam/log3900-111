@@ -1,15 +1,18 @@
-package com.example.colorimagemobile.Shape
+package com.example.colorimagemobile.classes.drawingEditor
 
 
 import android.content.Context
 import android.view.View
 import androidx.annotation.IntRange
 import com.example.colorimagemobile.Interface.Editor
+import com.example.colorimagemobile.classes.Shape.BrushDrawingStateListener
+import com.example.colorimagemobile.classes.Shape.DrawingPreview
+import com.example.colorimagemobile.classes.Shape.ShapeBuilder
 
 
 class EditorImpl(builder: Editor.Builder): Editor {
 
-    private var parentView: EditorView? = null
+    private var parentView: EditorViewClass? = null
     private var viewState: EditorViewState? = null
     private var deleteView: View? = null
     private var drawingPreview: DrawingPreview? = null

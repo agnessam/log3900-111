@@ -1,8 +1,8 @@
 package com.example.colorimagemobile.services.drawing
 
 import android.graphics.Paint
-import com.example.colorimagemobile.Shape.ShapeAndPaint
-import com.example.colorimagemobile.Shape.ShapeBuilder
+import com.example.colorimagemobile.classes.Shape.ShapeAndPaint
+import com.example.colorimagemobile.classes.Shape.ShapeBuilder
 import com.example.colorimagemobile.enumerators.ToolType
 import com.example.colorimagemobile.services.drawing.toolsAttribute.ColorService
 import com.example.colorimagemobile.services.drawing.toolsAttribute.PencilService
