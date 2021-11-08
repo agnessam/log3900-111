@@ -1,11 +1,14 @@
 package com.example.colorimagemobile.ui.home.fragments.drawing.attributes.colorPalette
 
+import android.graphics.Color
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.View
 import com.example.colorimagemobile.R
 import com.example.colorimagemobile.services.drawing.toolsAttribute.ColorService
+import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
 import top.defaults.colorpicker.ColorPickerView
+import java.lang.String
 
 class ColorPaletteFragment : Fragment(R.layout.fragment_color_palette) {
 
@@ -13,10 +16,10 @@ class ColorPaletteFragment : Fragment(R.layout.fragment_color_palette) {
         super.onViewCreated(view, savedInstanceState)
 
         val colorPicker: ColorPickerView = view.findViewById(R.id.colorPicker)
-        colorPicker.setInitialColor(ColorService.getColor())
+        colorPicker.setInitialColor(ColorService.getColorAsInt())
 
         colorPicker.subscribe { color, _, _ ->
-            ColorService.setColor(color)
+            ColorService.setColorAsString(color)
         }
     }
 }

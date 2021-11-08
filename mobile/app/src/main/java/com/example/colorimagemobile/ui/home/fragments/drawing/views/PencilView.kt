@@ -20,7 +20,7 @@ class PencilView(context: Context?): CanvasView(context) {
     private fun createObject() {
         paintPath = PaintPath(0, CustomPaint(), Path(), arrayListOf())
         paintPath!!.brush.setStrokeWidth(PencilService.getCurrentWidthAsFloat())
-        paintPath!!.brush.setColor(ColorService.getColor())
+        paintPath!!.brush.setColor(ColorService.getColorAsInt())
 
         pencilCommand = PencilCommand(paintPath as PaintPath)
     }
@@ -46,7 +46,7 @@ class PencilView(context: Context?): CanvasView(context) {
             id = id,
             pointsList = arrayListOf(point),
             fill = "none",
-            stroke = "red",
+            stroke = ColorService.getColorAsString(),
             fillOpacity = "1",
             strokeOpacity = "1",
             strokeWidth = paintPath!!.brush.getPaint().strokeWidth.toInt()
@@ -62,13 +62,11 @@ class PencilView(context: Context?): CanvasView(context) {
 
         // check if finger has moved for real
         if (dx >= touchTolerance || dy >= touchTolerance) {
-//            paintPath!!.path.quadTo(currentX, currentY, (motionTouchEventX + currentX) / 2, (motionTouchEventY + currentY) / 2)
+            paintPath!!.path.quadTo(currentX, currentY, (motionTouchEventX + currentX) / 2, (motionTouchEventY + currentY) / 2)
             currentX = motionTouchEventX
             currentY = motionTouchEventY
 
             updateCanvas()
-
-            paintPath!!.path.lineTo(motionTouchEventX, motionTouchEventY)
             inProgressPencil!!.point = Point(motionTouchEventX, motionTouchEventY)
             DrawingSocketService.sendInProgressDrawingCommand(inProgressPencil!!, "Pencil")
         }

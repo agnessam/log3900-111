@@ -3,13 +3,17 @@ package com.example.colorimagemobile.services.drawing.toolsAttribute
 import android.graphics.Color
 
 object ColorService {
-    private var currentColor: Int = Color.BLACK
+    private var currentColor: String = "#000000"
 
-    fun setColor(newColor: Int) {
-        currentColor = newColor
+    fun setColorAsString(newColor: Int) {
+        currentColor = String.format("#%06X", 0xFFFFFF and newColor)
     }
 
-    fun getColor(): Int {
+    fun getColorAsString(): String {
         return currentColor
+    }
+
+    fun getColorAsInt(): Int {
+        return Color.parseColor(currentColor)
     }
 }
