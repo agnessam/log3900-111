@@ -8,11 +8,13 @@ const routes: Routes = [
     path: "users",
     loadChildren: () =>
       import("./modules/users/users.module").then((m) => m.UsersModule),
+    canActivate: [AuthGuard],
   },
   {
     path: "teams",
     loadChildren: () =>
       import("./modules/team/team.module").then((m) => m.TeamModule),
+    canActivate: [AuthGuard],
   },
   {
     path: "drawings",
