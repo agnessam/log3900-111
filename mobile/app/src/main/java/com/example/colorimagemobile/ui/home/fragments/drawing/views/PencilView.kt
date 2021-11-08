@@ -1,12 +1,10 @@
 package com.example.colorimagemobile.ui.home.fragments.drawing.views
 
 import android.content.Context
+import android.graphics.Canvas
 import android.graphics.Path
 import com.example.colorimagemobile.classes.toolsCommand.PencilCommand
-import com.example.colorimagemobile.services.drawing.CustomPaint
-import com.example.colorimagemobile.services.drawing.PaintPath
-import com.example.colorimagemobile.services.drawing.PathService
-import com.example.colorimagemobile.services.drawing.Point
+import com.example.colorimagemobile.services.drawing.*
 import com.example.colorimagemobile.services.drawing.toolsAttribute.ColorService
 import com.example.colorimagemobile.services.drawing.toolsAttribute.PencilService
 import kotlin.math.abs
@@ -23,16 +21,20 @@ class PencilView(context: Context?): CanvasView(context) {
         pencilCommand = PencilCommand(paintPath as PaintPath)
     }
 
+    private fun updateCanvas() {
+        pencilCommand!!.addPoint(Point(currentX, currentY))
+        pencilCommand!!.execute()
+        invalidate()
+    }
+
     override fun onTouchDown() {
         createObject()
-
         paintPath!!.path.moveTo(motionTouchEventX, motionTouchEventY)
 
         currentX = motionTouchEventX
         currentY = motionTouchEventY
 
-        pencilCommand!!.addPoint(Point(currentX, currentY))
-        pencilCommand!!.execute();
+        updateCanvas()
     }
 
     override fun onTouchMove() {
@@ -41,19 +43,17 @@ class PencilView(context: Context?): CanvasView(context) {
 
         // check if finger has moved for real
         if (dx >= touchTolerance || dy >= touchTolerance) {
-//            paintPath.path.quadTo(currentX, currentY, (motionTouchEventX + currentX) / 2, (motionTouchEventY + currentY) / 2)
+            paintPath!!.path.quadTo(currentX, currentY, (motionTouchEventX + currentX) / 2, (motionTouchEventY + currentY) / 2)
             currentX = motionTouchEventX
             currentY = motionTouchEventY
 
-//            extraCanvas.drawPath(paintPath.path, paintPath.brush.getPaint())
-//            paintPath.points.add(Point((motionTouchEventX + currentX) / 2, (motionTouchEventY + currentY) / 2))
+            updateCanvas()
         }
-
-        invalidate()
     }
 
+
     override fun onTouchUp() {
-//        pencilCommand!!.addPoint(Point(currentX, currentY))
+        updateCanvas()
         paintPath = null
     }
 }

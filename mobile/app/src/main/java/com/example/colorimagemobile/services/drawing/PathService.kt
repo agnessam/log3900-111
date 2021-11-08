@@ -1,5 +1,6 @@
 package com.example.colorimagemobile.services.drawing
 
+import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Path
 
