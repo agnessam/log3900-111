@@ -22,7 +22,6 @@ export class TeamProfileComponent implements OnInit {
     this.route.params.subscribe((params) => {
       this.teamId = params["id"];
       this.teamClient.getTeam(this.teamId).subscribe((team) => {
-        console.log(this.team);
         this.team = team;
       });
     });
@@ -30,7 +29,6 @@ export class TeamProfileComponent implements OnInit {
 
   ngAfterViewInit(): void {
     this.teamClient.getTeam(this.teamId).subscribe((team) => {
-      console.log(this.team);
       this.team = team;
     });
   }
