@@ -46,10 +46,11 @@ class PencilView(context: Context?): CanvasView(context) {
             id = id,
             pointsList = arrayListOf(point),
             fill = "red",
-            stroke = "none",
-            fillOpacity = "none",
-            strokeOpacity = "none",
-            strokeWidth = paintPath!!.brush.getPaint().strokeWidth.toString()
+            stroke = "red",
+            fillOpacity = "1",
+            strokeOpacity = "1",
+            strokeWidth = 10
+//                    strokeWidth = paintPath!!.brush.getPaint().strokeWidth.toString()
         )
 
         inProgressPencil = InProgressPencil(id, point)
