@@ -45,12 +45,11 @@ class PencilView(context: Context?): CanvasView(context) {
         val pencil = ToolData(
             id = id,
             pointsList = arrayListOf(point),
-            fill = "red",
+            fill = "none",
             stroke = "red",
             fillOpacity = "1",
             strokeOpacity = "1",
-            strokeWidth = 10
-//                    strokeWidth = paintPath!!.brush.getPaint().strokeWidth.toString()
+            strokeWidth = paintPath!!.brush.getPaint().strokeWidth.toInt()
         )
 
         inProgressPencil = InProgressPencil(id, point)
@@ -63,13 +62,14 @@ class PencilView(context: Context?): CanvasView(context) {
 
         // check if finger has moved for real
         if (dx >= touchTolerance || dy >= touchTolerance) {
-            paintPath!!.path.quadTo(currentX, currentY, (motionTouchEventX + currentX) / 2, (motionTouchEventY + currentY) / 2)
+//            paintPath!!.path.quadTo(currentX, currentY, (motionTouchEventX + currentX) / 2, (motionTouchEventY + currentY) / 2)
             currentX = motionTouchEventX
             currentY = motionTouchEventY
 
             updateCanvas()
 
-            inProgressPencil!!.point = Point(currentX, currentY)
+            paintPath!!.path.lineTo(motionTouchEventX, motionTouchEventY)
+            inProgressPencil!!.point = Point(motionTouchEventX, motionTouchEventY)
             DrawingSocketService.sendInProgressDrawingCommand(inProgressPencil!!, "Pencil")
         }
     }

@@ -35,14 +35,14 @@ class DrawingFragment : Fragment(R.layout.fragment_drawing) {
 
         // TEMP: TO CHANGE
         DrawingSocketService.connect()
-        DrawingSocketService.joinRoom("6189506740fe00c8f62a3a6d")
+        DrawingSocketService.joinRoom("6188cfdf40fe00c8f62a39f8")
     }
 
     // TEMP: TO CHANGE
     override fun onDestroy() {
         super.onDestroy()
         DrawingSocketService.disconnect()
-        DrawingSocketService.leaveRoom("6189506740fe00c8f62a3a6d")
+        DrawingSocketService.leaveRoom("6188cfdf40fe00c8f62a39f8")
     }
 
     // dynamically add tools on sidebar
