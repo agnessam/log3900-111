@@ -11,12 +11,16 @@ class Constants {
         const val CHAT_NAMESPACE_NAME = "chat"
         const val TEXT_MESSAGE_EVENT_NAME = "text"
 
-        //global
-        const val EMPTY_STRING =""
-
         // profile user log history
         const val LAST_LOGIN_DATE = "lastLogin"
         const val LAST_LOGOUT_DATE ="lastLogout"
+    }
+
+    class SOCKETS {
+        companion object {
+            const val ROOM_EVENT_NAME = "room"
+            const val LEAVE_ROOM_EVENT_NAME = "leaveRoom"
+        }
     }
 
     class URL {
@@ -37,8 +41,6 @@ class Constants {
             const val GET_USER_BY_ID = "api/users/"
             const val UPDATE_USER = "api/users/"
             const val DELETE_USER = "api/users/:id"
-
-
         }
     }
 

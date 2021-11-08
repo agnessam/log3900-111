@@ -10,9 +10,9 @@ object SocketHandler {
     private lateinit var mSocket: Socket
 
     @Synchronized
-    fun setSocket() {
+    fun setSocket(namespace: String) {
         try {
-            mSocket = IO.socket("${Constants.URL.SERVER}/$CHAT_NAMESPACE_NAME")
+            mSocket = IO.socket("${Constants.URL.SERVER}/$namespace")
         } catch (e: URISyntaxException) {
             print("Error setting up socket $e")
         }
