@@ -1,17 +1,20 @@
 package com.example.colorimagemobile.ui.home.fragments.drawing.views
 
 import android.content.Context
-import android.graphics.Canvas
 import android.graphics.Path
 import com.example.colorimagemobile.classes.toolsCommand.PencilCommand
+import com.example.colorimagemobile.interfaces.InProgressPencil
+import com.example.colorimagemobile.interfaces.ToolData
 import com.example.colorimagemobile.services.drawing.*
 import com.example.colorimagemobile.services.drawing.toolsAttribute.ColorService
 import com.example.colorimagemobile.services.drawing.toolsAttribute.PencilService
+import com.example.colorimagemobile.services.socket.DrawingSocketService
 import kotlin.math.abs
 
 class PencilView(context: Context?): CanvasView(context) {
     private var paintPath: PaintPath? = null
     private var pencilCommand: PencilCommand? = null
+    private var inProgressPencil: InProgressPencil? = null
 
     private fun createObject() {
         paintPath = PaintPath(0, CustomPaint(), Path(), arrayListOf())
@@ -33,8 +36,23 @@ class PencilView(context: Context?): CanvasView(context) {
 
         currentX = motionTouchEventX
         currentY = motionTouchEventY
-
         updateCanvas()
+
+        val id = "8359a0e7-0a6d-4229-894d-da86c00744ba" // temp UUID
+        val point = Point(currentX, currentY)
+
+        val pencil = ToolData(
+            id = id,
+            pointsList = arrayListOf(point),
+            fill = "red",
+            stroke = "none",
+            fillOpacity = "none",
+            strokeOpacity = "none",
+            strokeWidth = paintPath!!.brush.getPaint().strokeWidth.toString()
+        )
+
+        inProgressPencil = InProgressPencil(id, point)
+        DrawingSocketService.sendInProgressDrawingCommand(pencil, "Pencil")
     }
 
     override fun onTouchMove() {
@@ -48,9 +66,11 @@ class PencilView(context: Context?): CanvasView(context) {
             currentY = motionTouchEventY
 
             updateCanvas()
+
+            inProgressPencil!!.point = Point(currentX, currentY)
+            DrawingSocketService.sendInProgressDrawingCommand(inProgressPencil!!, "Pencil")
         }
     }
-
 
     override fun onTouchUp() {
         updateCanvas()

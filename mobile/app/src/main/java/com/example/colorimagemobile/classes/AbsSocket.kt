@@ -1,6 +1,6 @@
 package com.example.colorimagemobile.classes
 
-import com.example.colorimagemobile.services.SocketHandler
+import com.example.colorimagemobile.services.socket.SocketHandler
 import com.example.colorimagemobile.utils.Constants.SOCKETS
 import io.socket.client.Socket
 
@@ -20,11 +20,15 @@ abstract class AbsSocket(namespace: String) {
         mSocket.disconnect()
     }
 
-    fun joinRoom(roomName: String) {
-        mSocket.emit(SOCKETS.ROOM_EVENT_NAME, roomName)
+    open fun joinRoom(roomName: String) {
+        emit(SOCKETS.ROOM_EVENT_NAME, roomName)
     }
 
     fun leaveRoom(roomName: String) {
-        mSocket.emit(SOCKETS.LEAVE_ROOM_EVENT_NAME, roomName)
+        emit(SOCKETS.LEAVE_ROOM_EVENT_NAME, roomName)
+    }
+
+    protected fun emit(event: String, data: Any) {
+        mSocket.emit(event, data)
     }
 }
