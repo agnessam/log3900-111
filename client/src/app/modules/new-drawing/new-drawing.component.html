@@ -16,13 +16,9 @@
     <p>
       <mat-form-field appearance="fill">
         <mat-label>Assign to</mat-label>
-        <input 
-          matInput 
-          placeholder="Assignee"
-          formControlName="ownerId">
-        <mat-select>
+        <mat-select formControlName="ownerId">
           <mat-option value="">Me</mat-option>
-          <mat-option value=team._id *ngFor="let team of teams">{{team}}</mat-option>
+          <mat-option value={{team._id}} *ngFor="let team of teams">{{team.name}}</mat-option>
         </mat-select>
       </mat-form-field>
     </p>

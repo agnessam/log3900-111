@@ -8,6 +8,8 @@ import { DrawingService } from "src/app/modules/workspace";
 import { DEFAULT_ALPHA, DEFAULT_RGB_COLOR } from "src/app/shared";
 import { DrawingHttpClientService } from "../backend-communication";
 import { NewDrawingService } from "./new-drawing.service";
+import { UsersService } from "../users/services/users.service";
+import { Team } from "src/app/shared/models/team.model";
 
 const ONE_SECOND = 1000;
 @Component({
@@ -17,7 +19,7 @@ const ONE_SECOND = 1000;
 })
 export class NewDrawingComponent implements OnInit {
   form: FormGroup;
-  teams:String[] = [];
+  teams: Team[] = [];
 
   constructor(
     public dialogRef: MatDialogRef<NewDrawingComponent>,
@@ -26,6 +28,7 @@ export class NewDrawingComponent implements OnInit {
     private drawingService: DrawingService,
     private colorPickerService: ColorPickerService,
     private drawingHttpClient: DrawingHttpClientService,
+    private usersService: UsersService,
     private router: Router
   ) {}
 
@@ -41,7 +44,11 @@ export class NewDrawingComponent implements OnInit {
     this.dialogRef.disableClose = true;
     this.dialogRef.afterOpened().subscribe(() => this.onResize());
     this.colorPickerService.setFormColor(DEFAULT_RGB_COLOR, DEFAULT_ALPHA);
-    // fetch all teams
+    const userId = localStorage.getItem("userId");
+    if(!userId) return;
+    this.usersService.getUserTeams(userId).subscribe((teams) => {
+      this.teams = teams;
+    });
   }
 
   get sizeForm(): FormGroup {
