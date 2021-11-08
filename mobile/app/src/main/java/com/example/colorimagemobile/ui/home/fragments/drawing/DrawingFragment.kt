@@ -17,6 +17,7 @@ import com.example.colorimagemobile.classes.tools.ToolsFactory
 import com.example.colorimagemobile.enumerators.ToolType
 import com.example.colorimagemobile.services.drawing.ToolTypeService
 import com.example.colorimagemobile.services.socket.DrawingSocketService
+import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
 
 class DrawingFragment : Fragment(R.layout.fragment_drawing) {
     private lateinit var drawingFragment: ConstraintLayout;
@@ -35,14 +36,15 @@ class DrawingFragment : Fragment(R.layout.fragment_drawing) {
 
         // TEMP: TO CHANGE
         DrawingSocketService.connect()
-        DrawingSocketService.joinRoom("6188cfdf40fe00c8f62a39f8")
+        DrawingSocketService.setFragmentActivity(requireActivity())
+        DrawingSocketService.joinRoom("6188cd3440fe00c8f62a3996")
     }
 
     // TEMP: TO CHANGE
     override fun onDestroy() {
         super.onDestroy()
         DrawingSocketService.disconnect()
-        DrawingSocketService.leaveRoom("6188cfdf40fe00c8f62a39f8")
+        DrawingSocketService.leaveRoom("6188cd3440fe00c8f62a3996")
     }
 
     // dynamically add tools on sidebar
