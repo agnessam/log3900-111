@@ -54,6 +54,7 @@ class PencilView(context: Context?): CanvasView(context) {
 
     override fun onTouchUp() {
         updateCanvas()
+        PathService.addPaintPath(paintPath as PaintPath)
         paintPath = null
     }
 }

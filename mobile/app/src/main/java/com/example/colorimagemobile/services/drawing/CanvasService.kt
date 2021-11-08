@@ -19,6 +19,7 @@ object CanvasService {
         height = newHeight
     }
 
+    // maybe get previous bitmap and draw it instead of drawing everything
     fun drawPreviousCanvas() {
         if (::extraBitmap.isInitialized) extraBitmap.recycle()
         extraBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
