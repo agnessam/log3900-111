@@ -19,7 +19,7 @@
 
         <TextView
             android:id="@+id/channel_name"
-            android:layout_width="400dp"
+            android:layout_width="600dp"
             android:layout_height="39dp"
             android:layout_marginStart="16dp"
             android:padding="16dp"

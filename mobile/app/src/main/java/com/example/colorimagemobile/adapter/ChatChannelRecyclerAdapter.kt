@@ -1,0 +1,39 @@
+package com.example.colorimagemobile.adapter
+
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.TextView
+import androidx.recyclerview.widget.RecyclerView
+import com.example.colorimagemobile.R
+
+
+class ChatChannelRecyclerAdapter : RecyclerView.Adapter<ChatChannelRecyclerAdapter.ViewHolder>() {
+
+    private var channelName = arrayOf("")
+
+
+
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int
+    ): ChatChannelRecyclerAdapter.ViewHolder {
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.card_all_chat_channel_layout,parent,false)
+        return ViewHolder(view)
+    }
+
+    override fun onBindViewHolder(holder: ChatChannelRecyclerAdapter.ViewHolder, position: Int) {
+       holder.channelName.text = channelName[position]
+    }
+
+    override fun getItemCount(): Int {
+       return channelName.size
+    }
+    inner class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView){
+         var channelName : TextView;
+
+        init {
+            channelName = itemView.findViewById(R.id.channel_name)
+        }
+    }
+}
