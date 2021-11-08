@@ -53,13 +53,3 @@ object PathService {
         paintPath = paintPath.filterIndexed { _, paintPath -> paintPath.id != id  } as ArrayList<PaintPath>
     }
 }
-
-// generate new id [temporary?]
-object IDGenerator {
-    private var id = 0
-
-    fun getNewId(): Int {
-        id++
-        return id
-    }
-}

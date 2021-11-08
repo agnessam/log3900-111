@@ -5,6 +5,7 @@ import android.graphics.Path
 import com.example.colorimagemobile.classes.toolsCommand.PencilCommand
 import com.example.colorimagemobile.interfaces.InProgressPencil
 import com.example.colorimagemobile.interfaces.ToolData
+import com.example.colorimagemobile.services.UUIDService
 import com.example.colorimagemobile.services.drawing.*
 import com.example.colorimagemobile.services.drawing.toolsAttribute.ColorService
 import com.example.colorimagemobile.services.drawing.toolsAttribute.PencilService
@@ -38,7 +39,7 @@ class PencilView(context: Context?): CanvasView(context) {
         currentY = motionTouchEventY
         updateCanvas()
 
-        val id = "8359a0e7-0a6d-4229-894d-da86c00744ba" // temp UUID
+        val id = UUIDService.generateUUID()
         val point = Point(currentX, currentY)
 
         val pencil = ToolData(
