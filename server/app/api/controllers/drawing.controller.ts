@@ -28,7 +28,7 @@ export class DrawingController {
   @httpPost('/')
   public async createDrawing(@request() req: Request) {
     return req.body.ownerModel === 'User'
-      ? await this.drawingRepository.createUserDrawing(req.body)
+      ? await this.drawingRepository.createUserDrawing(req.body, req.user!.id)
       : await this.drawingRepository.createTeamDrawing(req.body);
   }
 
