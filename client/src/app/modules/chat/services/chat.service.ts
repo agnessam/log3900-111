@@ -10,9 +10,9 @@ export class ChatService{
 
   constructor() {}
 
-  toggleChatOverlay = new EventEmitter<TextChannel>()
-  toggleChannelOverlay = new EventEmitter<null>()
+  toggleChatOverlay = new EventEmitter<TextChannel>();
+
+  toggleChannelOverlay = new EventEmitter<null>();
 
   leaveRoomEventEmitter = new EventEmitter<TextChannel>();
-
 }

@@ -3,6 +3,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { AuthenticationService } from 'src/app/modules/authentication';
 import { User } from '../../authentication/models/user';
 import { TextChannel } from '../models/text-channel.model';
+import { ChatSocketService } from '../services/chat-socket.service';
 import { ChatService } from '../services/chat.service';
 import { TextChannelService } from '../services/text-channel.service';
 
@@ -19,6 +20,7 @@ export class ChannelComponent implements OnInit, OnDestroy {
   newChannelName = '';
   isChannelListOpen:boolean;
   connectedChannels: TextChannel[];
+  search: string;
 
   @ViewChild('addChannelModal', { static: false }) private addChannelModal: ElementRef<HTMLInputElement>;
   @ViewChild('newChannelNameInput', { static: false }) private newChannelNameInput: ElementRef<HTMLInputElement>;
@@ -27,6 +29,7 @@ export class ChannelComponent implements OnInit, OnDestroy {
   constructor(
     private authenticationService: AuthenticationService,
     private chatService: ChatService,
+    private chatSocketService: ChatSocketService,
     private textChannelService: TextChannelService,
     private snackBar: MatSnackBar,
   ) {
@@ -47,6 +50,11 @@ export class ChannelComponent implements OnInit, OnDestroy {
     this.textChannelService.getChannels().subscribe((channels) => {
       this.allChannels = channels;
       this.searchedChannels = channels;
+      const general = channels.find(channel => channel.name === 'General')
+      if (general) {
+        this.chatSocketService.joinRoom(general.name);
+        this.connectedChannels.unshift(general);
+      }
     });
 
     this.keyListener();
@@ -126,8 +134,11 @@ export class ChannelComponent implements OnInit, OnDestroy {
     }
   }
 
-  searchChannel(evt: Event): void {
-    const search = (evt.target as HTMLInputElement).value;
+  searchedInput(evt: Event): void {
+    this.search = (evt.target as HTMLInputElement).value;
+  }
+
+  searchChannels(search: string): void {
     if (search === null || search.match(/^ *$/) !== null) {
       this.searchedChannels  = Object.assign([], this.allChannels);
     } else {
@@ -135,8 +146,6 @@ export class ChannelComponent implements OnInit, OnDestroy {
         this.searchedChannels = channels;
       });
     }
-    console.log('searched: ');
-    console.log(this.searchedChannels);
   }
 
   toggleSearchBar(): void {
@@ -150,8 +159,6 @@ export class ChannelComponent implements OnInit, OnDestroy {
   }
 
   openChannel(channel: TextChannel): void {
-    const channelOverlay = document.getElementById('channel-overlay') as HTMLInputElement;
-    channelOverlay.style.display = 'none';
     this.chatService.toggleChatOverlay.emit(channel);
     this.toggleChannelOverlay(false);
     this.isChannelListOpen = false;

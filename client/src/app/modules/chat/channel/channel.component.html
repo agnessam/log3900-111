@@ -15,9 +15,9 @@
               autocomplete="off"
               spellcheck="false"
               placeholder="Search groups..."
-              (input)="searchChannel($event)" >
-      <button mat-icon-button class="btn" (click)="toggleSearchBar()">
-        <mat-icon>close</mat-icon>
+              (input)="searchedInput($event)" >
+      <button mat-icon-button class="btn" (click)="searchChannels(this.search)">
+        <mat-icon>manage_search</mat-icon>
       </button>
       <div class="channel-list">
         <div *ngFor="let channel of searchedChannels">

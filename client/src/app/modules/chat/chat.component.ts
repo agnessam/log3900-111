@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnDestroy, OnInit, ViewChild,  } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, ViewChild,  } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { AuthenticationService } from 'src/app/modules/authentication';
 import { User } from '../authentication/models/user';
@@ -24,7 +24,7 @@ export class ChatComponent implements OnInit, OnDestroy {
   // saves connected rooms and message history from connection
   connectedMessageHistory: Map<string, Set<Message>> = new Map();
 
-  chatStatus:boolean;
+  chatStatus: boolean;
   isMinimized = false;
   isPopoutOpen = false;
   hasDbMessages = false;
@@ -37,21 +37,27 @@ export class ChatComponent implements OnInit, OnDestroy {
     private chatSocketService: ChatSocketService,
     private chatService: ChatService,
     private textChannelService: TextChannelService,
+    private ref: ChangeDetectorRef,
   ) {
     this.loadedDbMessages = false;
     this.hasDbMessages = false;
   }
 
   ngOnInit(): void {
-    this.authenticationService.currentUserObservable.subscribe(
-      (user) => (this.user = user),
+    this.authenticationService.currentUserObservable.subscribe((user) => {
+        if (user) {
+          this.user = user;
+        } else {
+          this.closeChat();
+          this.closeChatPopout();
+        }
+      }
     );
     this.openChatRoom();
     this.keyListener();
     this.receiveMessage();
     this.leaveRoom();
     this.chatSocketService.connect();
-
   }
 
   ngOnDestroy(): void {
@@ -60,6 +66,8 @@ export class ChatComponent implements OnInit, OnDestroy {
     });
     this.chatSocketService.disconnect();
     this.chatSubscription.unsubscribe();
+    this.closeChat();
+    this.closeChatPopout();
   }
 
   // Note: this event listener listens throughout the whole app
@@ -91,12 +99,12 @@ export class ChatComponent implements OnInit, OnDestroy {
       this.connectedMessageHistory.set(channelName, new Set());
       this.chatSocketService.joinRoom(channelName);
       this.loadedDbMessages = false;
+      this.chatSocketService.messageHistory.subscribe({
+        next: (history) => {
+          this.connectedMessageHistory.set(history[0].roomName, new Set(history));
+        },
+      });
     }
-    this.chatSocketService.messageHistory.subscribe({
-      next: (history) => {
-        this.connectedMessageHistory.set(this.chatRoomName, new Set(history));
-      },
-    });
   }
 
   leaveRoom() {
@@ -183,9 +191,9 @@ export class ChatComponent implements OnInit, OnDestroy {
     this.isPopoutOpen = true;
   }
 
-  closeChatPopout() {
-    // TODO: on close using browser doesn't toggle ispopoutopen
+  closeChatPopout(_isOut?: boolean) {
     this.isPopoutOpen = false;
+    this.ref.detectChanges();
   }
 
   getMessageClass(author:string): string{
@@ -200,6 +208,7 @@ export class ChatComponent implements OnInit, OnDestroy {
       return [];
     }
     const messages = Array.from((this.connectedMessageHistory.get(this.chatRoomName) as Set<Message>).values());
+    console.log(messages)
     return messages;
   }
 

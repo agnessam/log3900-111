@@ -1,4 +1,4 @@
-import { Component, ElementRef, HostListener, Input, OnDestroy, Renderer2, ViewChild } from '@angular/core';
+import { Component, EventEmitter, ElementRef, HostListener, Input, OnDestroy, Output, Renderer2, ViewChild } from '@angular/core';
 
 @Component({
   selector: 'app-popout-window',
@@ -24,6 +24,8 @@ export class PopoutWindowComponent implements OnDestroy {
     return this.isOut;
   }
 
+  @Output() isOutEvent = new EventEmitter<boolean>();
+
   private popoutWindow: Window;
   private isOut = false;
 
@@ -47,6 +49,7 @@ export class PopoutWindowComponent implements OnDestroy {
       this.popoutWindow.close();
       this.popoutWindow = null as unknown as Window;
       this.isOut = false;
+      this.isOutEvent.emit(this.isOut);
     }
   }
 
