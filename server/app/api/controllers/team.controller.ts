@@ -28,7 +28,7 @@ export class TeamController {
 
   @httpPost('/')
   public async createTeam(@request() req: Request) {
-    return await this.teamRepository.create(req.body);
+    return await this.teamRepository.createTeam(req.body, req.user!.id);
   }
 
   @httpPatch('/:teamId')
@@ -51,7 +51,7 @@ export class TeamController {
   public async addMemberToTeam(@request() req: Request) {
     return await this.teamRepository.addMemberToTeam(
       req.params.teamId,
-      req.body.userId,
+      req.user!.id,
     );
   }
 

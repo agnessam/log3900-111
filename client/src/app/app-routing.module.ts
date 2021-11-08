@@ -10,6 +10,11 @@ const routes: Routes = [
       import("./modules/users/users.module").then((m) => m.UsersModule),
   },
   {
+    path: "teams",
+    loadChildren: () =>
+      import("./modules/team/team.module").then((m) => m.TeamModule),
+  },
+  {
     path: "drawings",
     loadChildren: () =>
       import("./modules/drawings/drawings.module").then(
