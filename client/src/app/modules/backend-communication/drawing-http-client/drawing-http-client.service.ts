@@ -29,12 +29,14 @@ export class DrawingHttpClientService {
     return this.httpClient.patch<Drawing>(`${this.SERVER_ENDPOINT}${drawingId}`, newDrawing);
   }
 
-  createNewDrawing(drawingDataUri: string, ownerModel:string, ownerId: string = "617832e99a8c22d106b37528"): Observable<Drawing> {
+  createNewDrawing(drawingDataUri: string, ownerModel:string, ownerId: string, name:string): Observable<Drawing> {
     let newDrawing = {
       dataUri: drawingDataUri,
       ownerId: ownerId, // TODO: remove ownerID from all requests
-      ownerModel: ownerModel, // TODO: Add option to toggle between 
+      ownerModel: ownerModel, // TODO: Add option to toggle between
+      name: name 
     };
+    console.log(newDrawing.name);
     return this.httpClient
       .post<Drawing>(`${this.SERVER_ENDPOINT}`, newDrawing)
       .pipe(

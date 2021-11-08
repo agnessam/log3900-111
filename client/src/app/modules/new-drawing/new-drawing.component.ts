@@ -1,5 +1,5 @@
 import { Component, HostListener, OnInit } from "@angular/core";
-import { FormGroup } from "@angular/forms";
+import { FormControl, FormGroup } from "@angular/forms";
 import { MatDialogRef } from "@angular/material/dialog";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { Router } from "@angular/router";
@@ -8,6 +8,8 @@ import { DrawingService } from "src/app/modules/workspace";
 import { DEFAULT_ALPHA, DEFAULT_RGB_COLOR } from "src/app/shared";
 import { DrawingHttpClientService } from "../backend-communication";
 import { NewDrawingService } from "./new-drawing.service";
+import { UsersService } from "../users/services/users.service";
+import { Team } from "src/app/shared/models/team.model";
 
 const ONE_SECOND = 1000;
 @Component({
@@ -17,6 +19,7 @@ const ONE_SECOND = 1000;
 })
 export class NewDrawingComponent implements OnInit {
   form: FormGroup;
+  teams: Team[] = [];
 
   constructor(
     public dialogRef: MatDialogRef<NewDrawingComponent>,
@@ -25,18 +28,27 @@ export class NewDrawingComponent implements OnInit {
     private drawingService: DrawingService,
     private colorPickerService: ColorPickerService,
     private drawingHttpClient: DrawingHttpClientService,
+    private usersService: UsersService,
     private router: Router
   ) {}
 
   /// Créer un nouveau form avec les dimensions et la couleur
   ngOnInit(): void {
     this.form = new FormGroup({
+      name: new FormControl(""),
+      teamName: new FormControl(""),
+      ownerId: new FormControl(""),
       dimension: this.newDrawingService.form,
       color: this.colorPickerService.colorForm,
     });
     this.dialogRef.disableClose = true;
     this.dialogRef.afterOpened().subscribe(() => this.onResize());
     this.colorPickerService.setFormColor(DEFAULT_RGB_COLOR, DEFAULT_ALPHA);
+    const userId = localStorage.getItem("userId");
+    if(!userId) return;
+    this.usersService.getUserTeams(userId).subscribe((teams) => {
+      this.teams = teams;
+    });
   }
 
   get sizeForm(): FormGroup {
@@ -56,9 +68,11 @@ export class NewDrawingComponent implements OnInit {
         a: this.colorPickerService.a.value,
       }
     );
-    let ownerModel: string = "User";
+    let ownerModel: string = this.form.value.ownerId == "" ? "User": "Team";
+    let ownerId: string = this.form.value.ownerId;
+    let drawingName: string = this.form.value.name;
     this.drawingHttpClient
-      .createNewDrawing(drawingDataUri, ownerModel)
+      .createNewDrawing(drawingDataUri, ownerModel, ownerId, drawingName)
       .subscribe((response) => {
         if (response._id) {
           this.router.navigate([`/drawings/${response._id}`]);
