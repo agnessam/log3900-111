@@ -6,14 +6,18 @@ import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
 import com.example.colorimagemobile.Interface.BrushViewChangeListener
+import com.example.colorimagemobile.enumerators.ToolType
+import com.example.colorimagemobile.services.drawing.CustomPaint
 import com.example.colorimagemobile.services.drawing.IDGenerator
 import com.example.colorimagemobile.services.drawing.PathService
+import com.example.colorimagemobile.services.drawing.ToolTypeService
+import com.example.colorimagemobile.services.drawing.toolsAttribute.ColorService
 import com.example.colorimagemobile.services.drawing.toolsAttribute.EraserService
 import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
 import java.lang.Math.abs
 import java.util.*
 
-class DrawingPreview @JvmOverloads constructor(
+open class DrawingPreview @JvmOverloads constructor(
     context: Context?,
     attrs: AttributeSet? = null,
     defStyle: Int = 0
@@ -29,26 +33,25 @@ class DrawingPreview @JvmOverloads constructor(
     private var touchY = 0f
     private var paint = Paint()
 
-    private var currentShape: ShapeAndPaint? = null
-
+    protected var currentShape: ShapeAndPaint? = ShapeAndPaint(0,BrushShape(),CustomPaint().createPaint(),arrayListOf())
     var currentShapeBuilder: ShapeBuilder? = null
     private val  drawShapes = Stack<ShapeAndPaint>()
 
-    private fun createPaint(): Paint {
-        val paint = Paint()
-        paint.isAntiAlias = true
-        paint.isDither = true
-        paint.style = Paint.Style.STROKE
-        paint.strokeJoin = Paint.Join.ROUND
-        paint.strokeCap = Paint.Cap.ROUND
-        paint.xfermode = PorterDuffXfermode(PorterDuff.Mode.SRC_OVER)
-
-        // apply shape builder parameters
-        paint.strokeWidth = currentShapeBuilder!!.shapeSize
-        paint.alpha = currentShapeBuilder!!.shapeOpacity
-        paint.color = currentShapeBuilder!!.shapeColor
-        return paint
-    }
+//    private fun createPaint(): Paint {
+//        val paint = Paint()
+//        paint.isAntiAlias = true
+//        paint.isDither = true
+//        paint.style = Paint.Style.STROKE
+//        paint.strokeJoin = Paint.Join.ROUND
+//        paint.strokeCap = Paint.Cap.ROUND
+//        paint.xfermode = PorterDuffXfermode(PorterDuff.Mode.SRC_OVER)
+//
+//        // apply shape builder parameters
+//        paint.strokeWidth = currentShapeBuilder!!.shapeSize
+//        paint.alpha = currentShapeBuilder!!.shapeOpacity
+//        paint.color = currentShapeBuilder!!.shapeColor
+//        return paint
+//    }
 
     // function use for the eraser
     fun erase(){
@@ -122,6 +125,7 @@ class DrawingPreview @JvmOverloads constructor(
     // All tools use these functions To be use for synchronisation
     private fun onTouchEventDown(touchX: Float, touchY: Float) {
         createShape()
+        printMsg("creation de shape fini on down")
         if (currentShape != null && currentShape!!.shape != null) {
             currentShape!!.shape.startShape(touchX, touchY)
             points.add( Point(touchX,touchY))
@@ -149,11 +153,11 @@ class DrawingPreview @JvmOverloads constructor(
 
 
     private fun createShape() {
-        var paint = createPaint()
+        var paint = CustomPaint().createPaint()
         val shape : AbstractShape
         if (currentShapeBuilder!!.shapeType === ShapeType.ELLIPSE) {
             shape = EllipseShape()
-        } else if (currentShapeBuilder!!.shapeType === ShapeType.RECTANGLE) {
+        } else if (ToolTypeService.getCurrentToolType().value == ToolType.RECTANGLE) {
             shape = RectangleShape()
         } else if (currentShapeBuilder!!.shapeType === ShapeType.LINE) {
             shape = LineShape()

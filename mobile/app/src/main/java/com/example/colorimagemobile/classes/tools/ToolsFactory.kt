@@ -13,6 +13,7 @@ class ToolsFactory {
             ToolType.PENCIL -> PencilTool()
             ToolType.ERASER -> EraserTool()
             ToolType.COLOR_PALETTE -> ColorPaletteTool()
+            ToolType.RECTANGLE ->RectangleTool()
         }
     }
 }

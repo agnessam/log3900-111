@@ -28,5 +28,5 @@ interface Editor {
      * Update the current shape to be drawn,
      * through the use of a ShapeBuilder.
      */
-    fun setShape(shapebuilder: ShapeBuilder?)
+    fun setShape(shapeBuilder: ShapeBuilder?)
 }

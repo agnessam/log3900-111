@@ -6,27 +6,27 @@ import com.example.colorimagemobile.R
 import com.example.colorimagemobile.Shape.DrawingPreview
 import com.example.colorimagemobile.enumerators.ToolType
 import com.example.colorimagemobile.interfaces.ITool
-import com.example.colorimagemobile.ui.home.fragments.drawing.attributes.pencil.PencilFragment
-import com.example.colorimagemobile.ui.home.fragments.drawing.views.PencilView
+import com.example.colorimagemobile.ui.home.fragments.drawing.attributes.rectangle.RectangleFragment
+import com.example.colorimagemobile.ui.home.fragments.drawing.views.RectangleView
 
-class PencilTool: ITool {
+class RectangleTool : ITool {
     override fun getTitle(): String {
-        return "Pencil"
+        return "rectangle"
     }
 
     override fun getType(): ToolType {
-        return ToolType.PENCIL
+        return ToolType.RECTANGLE
     }
 
     override fun getIcon(): Int {
-        return R.drawable.drawing_icon_pencil
+        return R.drawable.ic_rectangle
     }
 
     override fun getView(context: Context): DrawingPreview {
-        return DrawingPreview(context)
+        return RectangleView(context)
     }
 
     override fun getFragment(): Fragment {
-        return PencilFragment()
+        return RectangleFragment()
     }
 }
