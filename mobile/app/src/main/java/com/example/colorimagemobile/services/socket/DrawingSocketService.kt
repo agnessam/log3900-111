@@ -1,6 +1,7 @@
 package com.example.colorimagemobile.services.socket
 
 import com.example.colorimagemobile.classes.AbsSocket
+import com.example.colorimagemobile.classes.JSONConvertor
 import com.example.colorimagemobile.interfaces.SocketTool
 import com.example.colorimagemobile.utils.Constants.SOCKETS
 
@@ -23,6 +24,7 @@ object DrawingSocketService: AbsSocket(SOCKETS.COLLABORATIVE_DRAWING_NAMESPACE) 
             drawingCommand = drawingCommand
         )
 
-        super.emit(SOCKETS.IN_PROGRESS_DRAWING_EVENT, socketToolCommand)
+        val jsonSocket = JSONConvertor.convertToJSON(socketToolCommand)
+        super.emit(SOCKETS.IN_PROGRESS_DRAWING_EVENT, jsonSocket)
     }
 }
