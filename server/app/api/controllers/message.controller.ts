@@ -1,4 +1,4 @@
-import { TYPES } from '@app/domain/constants/types';
+import { TYPES } from '../../domain/constants/types';
 import { MessageRepository } from '../../infrastructure/data_access/repositories/message_repository';
 import { Request } from 'express';
 import { inject } from 'inversify';

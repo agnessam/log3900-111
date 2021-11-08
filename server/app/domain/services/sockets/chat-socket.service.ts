@@ -8,10 +8,10 @@ import {
 	TEXT_MESSAGE_EVENT_NAME,
 } from '../../constants/socket-constants';
 import { Server, Socket } from 'socket.io';
-import { TYPES } from '@app/domain/constants/types';
-import { MessageRepository } from '@app/infrastructure/data_access/repositories/message_repository';
-import { MessageInterface } from '@app/domain/models/Message';
-import { TextChannelRepository } from '@app/infrastructure/data_access/repositories/text_channel_repository';
+import { TYPES } from '../../../domain/constants/types';
+import { MessageRepository } from '../../../infrastructure/data_access/repositories/message_repository';
+import { MessageInterface } from '../../../domain/models/Message';
+import { TextChannelRepository } from '../../../infrastructure/data_access/repositories/text_channel_repository';
 
 @injectable()
 export class ChatSocketService extends SocketServiceInterface {
