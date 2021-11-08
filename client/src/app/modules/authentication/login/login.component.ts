@@ -35,11 +35,11 @@ export class LoginComponent implements OnInit {
       .login(this.loginForm.value.username, this.loginForm.value.password)
       .subscribe((response) => {
         if (response.error) {
-          this.snackBar.open("Username already exists", "Close", {
+          this.snackBar.open(response.error, "Close", {
             duration: 3000,
           });
         } else {
-          this.router.navigate(["/gallery"]);
+          this.router.navigate([""]);
         }
       });
   }
