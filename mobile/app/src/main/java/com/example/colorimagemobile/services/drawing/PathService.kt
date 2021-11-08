@@ -1,44 +1,26 @@
 package com.example.colorimagemobile.services.drawing
 
 import android.graphics.Paint
-import com.example.colorimagemobile.classes.Shape.ShapeAndPaint
-import com.example.colorimagemobile.classes.Shape.ShapeBuilder
-import com.example.colorimagemobile.enumerators.ToolType
-import com.example.colorimagemobile.services.drawing.toolsAttribute.ColorService
-import com.example.colorimagemobile.services.drawing.toolsAttribute.PencilService
-import com.example.colorimagemobile.services.drawing.toolsAttribute.RectangleService
-import kotlin.collections.ArrayList
+import android.graphics.Path
 
+data class Point(val x: Float, val y: Float)
 
-
+// contains paint customizations and path's points
+data class PaintPath(val id: Int, val brush: CustomPaint, val path: Path, val points: ArrayList<Point>)
 
 // Paint/brush customizations
 class CustomPaint() {
-    var currentShapeBuilder: ShapeBuilder? = null
     private var paint: Paint = Paint()
 
     init {
-        createPaint()
+        setDefaultBrushAttributes()
     }
 
-    fun createPaint() : Paint {
-
+    private fun setDefaultBrushAttributes() {
         paint.isAntiAlias = true
         paint.isDither = true
         paint.style = Paint.Style.STROKE
         paint.strokeJoin = Paint.Join.ROUND
-
-        paint.alpha = 255
-
-        setColor(ColorService.getColor())
-        if (ToolTypeService.getCurrentToolType().value == ToolType.RECTANGLE) {
-            setStrokeWidth(RectangleService.getCurrentWidthAsFloat())
-        }
-        else{
-            setStrokeWidth(PencilService.getCurrentWidthAsFloat())
-        }
-
-        return paint
     }
 
     fun setColor(newColor: Int) {
@@ -49,31 +31,26 @@ class CustomPaint() {
         paint.strokeWidth = newWidth
     }
 
-//    fun getPaint(): Paint {
-//        return paint
-//    }
+    fun getPaint(): Paint {
+        return paint
+    }
 }
 
 // global path and paint holder
 object PathService {
-    private var shapeAndPaint: ArrayList<ShapeAndPaint> = arrayListOf()
+    private var paintPath: ArrayList<PaintPath> = arrayListOf()
 
-    fun addPaintPath(newPaintPath: ShapeAndPaint) {
-        shapeAndPaint.add(newPaintPath)
+    fun addPaintPath(newPaintPath: PaintPath) {
+        paintPath.add(newPaintPath)
     }
 
-    fun getPaintPath(): ArrayList<ShapeAndPaint> {
-        return shapeAndPaint
+    fun getPaintPath(): ArrayList<PaintPath> {
+        return paintPath
     }
 
     fun removeByID(id: Int) {
-        shapeAndPaint = shapeAndPaint.filterIndexed { _, ShapeAndPaint -> ShapeAndPaint.id != id  } as ArrayList<ShapeAndPaint>
+        paintPath = paintPath.filterIndexed { _, paintPath -> paintPath.id != id  } as ArrayList<PaintPath>
     }
-
-    fun removeAll() {
-        shapeAndPaint.clear()
-    }
-
 }
 
 // generate new id [temporary?]
