@@ -1,4 +1,4 @@
-package com.example.colorimagemobile.Shape
+package com.example.colorimagemobile.classes.Shape
 
 import android.graphics.Color
 import androidx.annotation.ColorInt

@@ -1,4 +1,4 @@
-package com.example.colorimagemobile.Shape
+package com.example.colorimagemobile.classes.Shape
 
 import android.graphics.Path
 import android.util.Log
@@ -40,7 +40,4 @@ class RectangleShape : AbstractShape() {
         return path
     }
 
-    override fun stopShape() {
-        Log.d(tag, "stopShape")
-    }
 }
