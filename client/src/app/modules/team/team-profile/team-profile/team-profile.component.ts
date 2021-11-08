@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { ChangeDetectorRef, Component, OnInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { TeamClientService } from "src/app/modules/backend-communication/team-client/team-client.service";
 import { Team } from "src/app/shared/models/team.model";
@@ -14,7 +14,8 @@ export class TeamProfileComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private teamClient: TeamClientService
+    private teamClient: TeamClientService,
+    private changeDetectorRef: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -27,8 +28,9 @@ export class TeamProfileComponent implements OnInit {
   }
 
   joinTeam(teamId: string) {
-    this.teamClient.joinTeam(teamId).subscribe((response) => {
-      console.log(response);
+    this.teamClient.joinTeam(teamId).subscribe((team) => {
+      this.team = team;
+      this.changeDetectorRef.detectChanges();
     });
   }
 

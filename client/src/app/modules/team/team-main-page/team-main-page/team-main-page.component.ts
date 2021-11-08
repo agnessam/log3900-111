@@ -56,7 +56,8 @@ export class TeamMainPageComponent implements OnInit {
   joinTeam(teamId: string) {
     return this.teamClient.joinTeam(teamId).subscribe((team) => {
       for (let i = 0; i < this.teams.length; ++i) {
-        if (this.teams[i].id == teamId) {
+        console.log(this.teams[i]);
+        if (this.teams[i]._id == teamId) {
           this.teams[i] = team;
         }
       }
