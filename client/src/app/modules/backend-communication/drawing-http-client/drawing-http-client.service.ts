@@ -29,7 +29,7 @@ export class DrawingHttpClientService {
     return this.httpClient.patch<Drawing>(`${this.SERVER_ENDPOINT}${drawingId}`, newDrawing);
   }
 
-  createNewDrawing(drawingDataUri: string, ownerModel:string, ownerId: string = "", name:string = "TEST"): Observable<Drawing> {
+  createNewDrawing(drawingDataUri: string, ownerModel:string, ownerId: string, name:string): Observable<Drawing> {
     let newDrawing = {
       dataUri: drawingDataUri,
       ownerId: ownerId, // TODO: remove ownerID from all requests
