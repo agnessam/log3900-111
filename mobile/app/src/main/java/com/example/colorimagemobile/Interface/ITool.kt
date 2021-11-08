@@ -1,14 +1,14 @@
-package com.example.colorimagemobile.interfaces
+package com.example.colorimagemobile.Interface
 
 import android.content.Context
 import androidx.fragment.app.Fragment
+import com.example.colorimagemobile.classes.Shape.DrawingPreview
 import com.example.colorimagemobile.enumerators.ToolType
-import com.example.colorimagemobile.ui.home.fragments.drawing.views.CanvasView
 
 interface ITool {
     fun getTitle(): String
     fun getType(): ToolType
     fun getIcon(): Int
-    fun getView(context: Context): CanvasView?
+    fun getView(context: Context): DrawingPreview?
     fun getFragment(): Fragment
 }

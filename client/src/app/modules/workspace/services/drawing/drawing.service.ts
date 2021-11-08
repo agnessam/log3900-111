@@ -132,13 +132,17 @@ export class DrawingService {
     );
   }
 
-  openSvgFromDataUri(dataUri: string): void {
+  getSvgFromDataUri(dataUri: string): SVGElement{
     let svgDomString = atob(dataUri.replace("data:image/svg+xml;base64,", ""));
-    const documentSvg = new DOMParser().parseFromString(
+    return new DOMParser().parseFromString(
       svgDomString,
       "image/svg+xml"
-    );
-    this.openDrawing(documentSvg.children[0] as SVGElement);
+    ).children[0] as SVGElement;
+  }
+
+  openSvgFromDataUri(dataUri: string): void {
+    const svg = this.getSvgFromDataUri(dataUri);
+    this.openDrawing(svg);
   }
 
   /// Permer l'ouverture d'un dessin sous la forme du model Drawing

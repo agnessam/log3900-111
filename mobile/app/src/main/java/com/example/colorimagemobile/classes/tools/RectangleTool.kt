@@ -6,26 +6,26 @@ import com.example.colorimagemobile.R
 import com.example.colorimagemobile.classes.Shape.DrawingPreview
 import com.example.colorimagemobile.enumerators.ToolType
 import com.example.colorimagemobile.Interface.ITool
-import com.example.colorimagemobile.ui.home.fragments.drawing.attributes.colorPalette.ColorPaletteFragment
+import com.example.colorimagemobile.ui.home.fragments.drawing.attributes.rectangle.RectangleFragment
 
-class ColorPaletteTool: ITool {
+class RectangleTool : ITool {
     override fun getTitle(): String {
-        return "Color Palette"
+        return "rectangle"
     }
 
     override fun getType(): ToolType {
-        return ToolType.COLOR_PALETTE
+        return ToolType.RECTANGLE
     }
 
     override fun getIcon(): Int {
-        return R.drawable.drawing_icon_palette
+        return R.drawable.ic_rectangle
     }
 
-    override fun getView(context: Context): DrawingPreview? {
-        return null
+    override fun getView(context: Context): DrawingPreview {
+        return DrawingPreview(context)
     }
 
     override fun getFragment(): Fragment {
-        return ColorPaletteFragment()
+        return RectangleFragment()
     }
 }

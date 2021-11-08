@@ -7,6 +7,8 @@ import { MatButtonModule } from "@angular/material/button";
 import { NewDrawingModule } from "../new-drawing/new-drawing.module";
 import { MatDialogModule } from "@angular/material/dialog";
 import { WorkspaceModule } from "../workspace/workspace.module";
+import { FlexLayoutModule } from "@angular/flex-layout";
+import { MatCardModule } from '@angular/material/card';
 
 @NgModule({
   declarations: [GalleryComponent],
@@ -18,6 +20,8 @@ import { WorkspaceModule } from "../workspace/workspace.module";
     MatGridListModule,
     NewDrawingModule,
     WorkspaceModule,
+    FlexLayoutModule,
+    MatCardModule
   ],
 })
 export class GalleryModule {}
