@@ -13,7 +13,11 @@
   <span class="user-properties"></span>
 
   <div class="page-link">{{ user.username }}</div>
+  <button mat-icon-button (click)="onChatClick()">
+    <mat-icon>message</mat-icon>
+  </button>
   <div>
     <a mat-button (click)="logout()" id="logout-button">Logout</a>
   </div>
 </mat-toolbar>
+<channel *ngIf="user"></channel>

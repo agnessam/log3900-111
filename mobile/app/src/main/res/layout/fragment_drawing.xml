@@ -62,7 +62,7 @@
         </androidx.cardview.widget.CardView>
 
 <!--        canvas-->
-        <com.example.colorimagemobile.classes.drawingEditor.EditorViewClass
+        <RelativeLayout
             android:id="@+id/canvas_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
