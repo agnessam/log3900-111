@@ -1,7 +1,7 @@
 import { TextChannel, TextChannelInterface } from '../../../domain/models/TextChannel';
 import { injectable } from 'inversify';
 import { GenericRepository } from './generic_repository';
-import { Message, MessageInterface } from '@app/domain/models/Message';
+import { Message, MessageInterface } from '../../../domain/models/Message';
 
 @injectable()
 export class TextChannelRepository extends GenericRepository<TextChannelInterface> {
