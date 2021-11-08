@@ -1,9 +1,7 @@
 package com.example.colorimagemobile.ui.login
 
-import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import androidx.annotation.RequiresApi
 import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.ViewModelProvider
 import com.example.colorimagemobile.R
@@ -24,7 +22,6 @@ import com.example.colorimagemobile.utils.CommonFun.Companion.toggleButton
 import com.example.colorimagemobile.utils.Constants
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
-import java.time.LocalDateTime
 
 class LoginActivity : AppCompatActivity() {
 
@@ -54,7 +51,6 @@ class LoginActivity : AppCompatActivity() {
 
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     private fun setListeners() {
         binding.loginBtn.setOnClickListener { executeLogin() }
         binding.registerBtn.setOnClickListener { redirectTo(this, RegisterActivity::class.java) }
@@ -75,17 +71,13 @@ class LoginActivity : AppCompatActivity() {
         val containsError = formValidator.containsError()
         val invalidInputLength = formValidator.isInputEmpty(resources.getString(R.string.required))
 
-        // activate/deactivate login button if form contains error or isEmpty
-        canSubmit = !containsError && !invalidInputLength
+        // activate/deactivate login button if form contains error or isEmpty canSubmit = !containsError && !invalidInputLength
         toggleButton(binding.loginBtn, canSubmit)
     }
 
     private fun executeLogin() {
         if (!canSubmit) return
         val user = UserModel.Login(binding.usernameInputText.text.toString(), binding.passwordInputText.text.toString())
-
-        // Set lastLogin date to localtime
-        UserService.setLogHistory(Constants.LAST_LOGIN_DATE)
 
         // username ok -> make HTTP POST request
         val loginObserver = loginViewModel.loginUser(user)
@@ -101,8 +93,13 @@ class LoginActivity : AppCompatActivity() {
         if (HTTPResponse.isError as Boolean) {
             return
         }
+        // Set lastLogin date to localtime
+        UserService.setLogHistory(Constants.LAST_LOGIN_DATE)
 
         val response = HTTPResponse.data as HTTPResponseModel.LoginResponse
+
+        // Set lastLogin date to localtime
+        UserService.setLogHistory(Constants.LAST_LOGIN_DATE)
 
         // save users info and token and redirect to /Home
         UserService.setUserInfo(response.user)

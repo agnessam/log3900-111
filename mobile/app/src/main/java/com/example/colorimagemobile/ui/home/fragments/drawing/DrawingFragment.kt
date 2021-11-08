@@ -7,51 +7,28 @@ import android.text.SpannableString
 import android.text.style.ImageSpan
 import android.transition.AutoTransition
 import android.transition.TransitionManager
-import android.view.LayoutInflater
 import androidx.fragment.app.Fragment
 import android.view.View
-import android.view.ViewGroup
 import android.widget.*
 import androidx.cardview.widget.CardView
-import com.example.colorimagemobile.Interface.Editor
+import androidx.constraintlayout.widget.ConstraintLayout
 import com.example.colorimagemobile.R
-import com.example.colorimagemobile.classes.drawingEditor.EditorViewClass
-import com.example.colorimagemobile.classes.Shape.ShapeBuilder
-import com.example.colorimagemobile.classes.Shape.ShapeType
 import com.example.colorimagemobile.classes.tools.ToolsFactory
 import com.example.colorimagemobile.enumerators.ToolType
 import com.example.colorimagemobile.services.drawing.ToolTypeService
-import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
 
 class DrawingFragment : Fragment(R.layout.fragment_drawing) {
+    private lateinit var drawingFragment: ConstraintLayout;
     private lateinit var panelView: CardView
     private lateinit var toolsFactory: ToolsFactory
-    private var canvasView : EditorViewClass? = null
-    var viewEditor: Editor? = null
-    private  var canvasTool : LinearLayout ? = null
-    var mShapeBuilder: ShapeBuilder? = null
-
-
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        val view = inflater.inflate(R.layout.fragment_drawing, container, false)
-        canvasView = view.findViewById(R.id.canvas_view)
-        panelView = view.findViewById<CardView>(R.id.canvas_tools_attributes_cardview)
-        canvasTool = view.findViewById<LinearLayout>(R.id.canvas_tools)
-
-        return view;
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        drawingFragment = view.findViewById(R.id.drawingFragment)
+        panelView = drawingFragment.findViewById<CardView>(R.id.canvas_tools_attributes_cardview)
         toolsFactory = ToolsFactory()
-        viewEditor = Editor.Builder(requireActivity(), canvasView!!).build()
-        viewEditor!!.setBrushDrawingMode(true)
-        mShapeBuilder = ShapeBuilder()
+
         addToolsOnSidebar()
         setToolsListener()
     }
@@ -63,20 +40,12 @@ class DrawingFragment : Fragment(R.layout.fragment_drawing) {
 
             // create dynamic button for each tool
             val toolBtn = Button(context)
-            toolBtn.layoutParams = LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-            )
+            toolBtn.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
             toolBtn.setBackgroundColor(Color.rgb(245, 245, 245))
 
             // center button
             toolBtn.text = SpannableString(" ").apply {
-                setSpan(
-                    ImageSpan(requireContext(), tool.getIcon()),
-                    0,
-                    1,
-                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
-                )
+                setSpan(ImageSpan(requireContext(), tool.getIcon()),0,1,Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
             }
 
             // handle attribute panel when clicked on tool
@@ -86,7 +55,8 @@ class DrawingFragment : Fragment(R.layout.fragment_drawing) {
                 panelView.findViewById<TextView>(R.id.tool_name).text = tool.getTitle()
             }
 
-            canvasTool?.addView(toolBtn)
+            val toolSidebar = drawingFragment.findViewById<LinearLayout>(R.id.canvas_tools)
+            toolSidebar.addView(toolBtn)
         }
     }
 
@@ -98,34 +68,10 @@ class DrawingFragment : Fragment(R.layout.fragment_drawing) {
             // client
             val toolView = toolsFactory.getTool(toolType).getView(context)
 
-            when (toolsFactory.getTool(toolType).getTitle()) {
-
-                "PENCIL" -> { printMsg("pencil choose")
-                              viewEditor!!.setBrushDrawingMode(true)
-                              mShapeBuilder!!.withShapeType(ShapeType.BRUSH)
-                              viewEditor!!.setShape(mShapeBuilder)
-                            }
-
-                "RECTANGLE" ->  { viewEditor!!.setBrushDrawingMode(true)
-                                  mShapeBuilder!!.withShapeType(ShapeType.RECTANGLE)
-                                  viewEditor!!.setShape(mShapeBuilder)
-                                  ("rectangle choose")
-                                 }
-                else -> { // choose pencil
-                        printMsg("else")
-                        viewEditor!!.setBrushDrawingMode(true)
-                        mShapeBuilder!!.withShapeType(ShapeType.BRUSH)
-                        viewEditor!!.setShape(mShapeBuilder)
-
-                    printMsg("else no tool choose")
-                }
-            }
-
             if (toolView != null) {
-                printMsg("toolview is null")
-                val canvasLayout = canvasView
-                canvasLayout?.removeAllViews()
-                canvasLayout?.addView(toolView)
+                val canvasLayout = drawingFragment.findViewById<RelativeLayout>(R.id.canvas_view)
+                canvasLayout.removeAllViews()
+                canvasLayout.addView(toolView)
             }
         })
     }
@@ -153,20 +99,4 @@ class DrawingFragment : Fragment(R.layout.fragment_drawing) {
             ?.replace(R.id.tool_attribute_fragment, fragment)
             ?.commitAllowingStateLoss()
     }
-
-//     fun onColorChanged(colorCode: Int) {
-//        viewEditor!!.setShape(mShapeBuilder!!.withShapeColor(colorCode))
-//    }
-//
-//     fun onOpacityChanged(opacity: Int) {
-//        viewEditor!!.setShape(mShapeBuilder!!.withShapeOpacity(opacity))
-//    }
-//
-//     fun onShapeSizeChanged(shapeSize: Int) {
-//        viewEditor!!.setShape(mShapeBuilder!!.withShapeSize(shapeSize.toFloat()))
-//    }
-//
-//     fun onShapePicked(shapeType: ShapeType?) {
-//        viewEditor!!.setShape(mShapeBuilder!!.withShapeType(shapeType))
-//    }
 }
