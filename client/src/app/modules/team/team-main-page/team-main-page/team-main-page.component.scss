@@ -1,7 +1,7 @@
 #teams {
   padding: 16px;
   padding-top: 30px;
-  width: 66%;
+  width: 75%;
   margin-left: auto;
   margin-right: auto;
 }
@@ -16,8 +16,18 @@
   max-width: 400px;
 }
 
+.team-card {
+  justify-content: center;
+  align-items: center;
+}
+
 mat-card-title {
   cursor: pointer;
+}
+
+mat-card {
+  margin-left: auto;
+  margin-right: auto;
 }
 
 #team-list {
