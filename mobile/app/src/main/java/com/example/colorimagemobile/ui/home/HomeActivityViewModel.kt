@@ -18,7 +18,7 @@ class HomeActivityViewModel : ViewModel() {
         userRepository = UserRepository()
     }
 
-    fun getUserByToken(token: String): LiveData<DataWrapper<HTTPResponseModel.GetUser>> {
+    fun getUserByToken(token: String): LiveData<DataWrapper<HTTPResponseModel.GetUserMe>> {
         return userRepository.getUserByToken(token)
     }
 

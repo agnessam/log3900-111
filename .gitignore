@@ -15,4 +15,3 @@ server/key.json
 **/*.lock
 coverage
 /*/node_modules
-mobile/.idea/

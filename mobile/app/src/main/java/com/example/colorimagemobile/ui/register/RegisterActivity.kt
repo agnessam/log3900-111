@@ -1,10 +1,8 @@
 package com.example.colorimagemobile.ui.register
 
 import android.annotation.SuppressLint
-import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import androidx.annotation.RequiresApi
 import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.ViewModelProvider
 import com.example.colorimagemobile.R
@@ -24,7 +22,6 @@ import com.example.colorimagemobile.utils.CommonFun.Companion.toggleButton
 import com.example.colorimagemobile.utils.Constants
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
-import java.time.LocalDateTime
 
 enum class FormIndexes(val index: Int) {
     FIRST_NAME(0),
@@ -44,7 +41,6 @@ class RegisterActivity : AppCompatActivity() {
     private lateinit var registerLayouts: ArrayList<TextInputLayout>
     private lateinit var registerInputs: ArrayList<TextInputEditText>
 
-    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityRegisterBinding.inflate(layoutInflater)
@@ -61,7 +57,6 @@ class RegisterActivity : AppCompatActivity() {
         setListeners()
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     @SuppressLint("ClickableViewAccessibility")
     private fun setListeners() {
         binding.loginText.setOnClickListener { redirectTo(this, LoginActivity::class.java) }
@@ -103,7 +98,6 @@ class RegisterActivity : AppCompatActivity() {
         return true
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     private fun executeRegister() {
         if (!canSubmit || !doPasswordsMatch()) return
 
@@ -113,10 +107,9 @@ class RegisterActivity : AppCompatActivity() {
         val username = getInputText(FormIndexes.USERNAME.index)
         val email = getInputText(FormIndexes.EMAIL.index)
         val password = getInputText(FormIndexes.PASSWORD.index)
-        val createdAt = LocalDateTime.now()
 
         // form body to make HTTP request
-        val newUserData = UserModel.Register(firstName, lastName, username, email, password, createdAt.toString())
+        val newUserData = UserModel.Register(firstName, lastName, username, email, password)
         val registerObserver = registerViewModel.registerUser(newUserData)
         registerObserver.observe(this, { handleRegisterResponse(it) })
     }

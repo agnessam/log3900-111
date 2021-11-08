@@ -27,17 +27,14 @@ import com.google.android.material.textfield.TextInputLayout
 import java.time.LocalDateTime
 
 class LoginActivity : AppCompatActivity() {
-
     private lateinit var loginViewModel: LoginActivityViewModel
     private lateinit var sharedPreferencesService: SharedPreferencesService
     private lateinit var binding: ActivityLoginBinding
     private lateinit var formValidator: FormValidator
     private var canSubmit: Boolean = false
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -50,8 +47,6 @@ class LoginActivity : AppCompatActivity() {
 
         toggleButton(binding.loginBtn, false) // deactivate login button by default
         setListeners()
-
-
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -82,6 +77,7 @@ class LoginActivity : AppCompatActivity() {
 
     private fun executeLogin() {
         if (!canSubmit) return
+
         val user = UserModel.Login(binding.usernameInputText.text.toString(), binding.passwordInputText.text.toString())
 
         // Set lastLogin date to localtime
@@ -90,7 +86,6 @@ class LoginActivity : AppCompatActivity() {
         // username ok -> make HTTP POST request
         val loginObserver = loginViewModel.loginUser(user)
         loginObserver.observe(this, { handleLoginResponse(it) })
-
     }
 
     // response from HTTP request
