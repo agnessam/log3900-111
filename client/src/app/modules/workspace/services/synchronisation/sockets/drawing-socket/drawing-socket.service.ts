@@ -13,7 +13,7 @@ import {
   UPDATE_DRAWING_EVENT,
   FETCH_DRIVING_EVENT,
   UPDATE_DRAWING_NOTIFICATION,
-  ONE_USER_RESPONSE
+  ONE_USER_RESPONSE,
 } from "src/app/shared";
 import { Selection } from "../../../tools/selection-tool/selection.model";
 import { SocketTool } from "../../../tools/socket-tool";
@@ -26,12 +26,12 @@ import { DrawingService } from "src/app/modules/workspace";
 })
 export class DrawingSocketService extends AbstractSocketService {
   roomName: string;
-  drawingSubject: Subject<boolean> = new Subject(); 
+  drawingSubject: Subject<boolean> = new Subject();
 
   constructor(
     private synchronisationService: SynchronisationService,
     private drawingHttpClientService: DrawingHttpClientService,
-    private drawingService: DrawingService  
+    private drawingService: DrawingService
   ) {
     super();
     this.init();
@@ -63,17 +63,16 @@ export class DrawingSocketService extends AbstractSocketService {
   }
 
   async sendGetUpdateDrawingRequest(): Promise<void> {
-    return await new Promise(resolve => {
+    return await new Promise((resolve) => {
       this.emitWithCallback(UPDATE_DRAWING_EVENT, this.roomName, (response) => {
-        if(response.status == ONE_USER_RESPONSE){
-          console.log(response);
+        if (response.status == ONE_USER_RESPONSE) {
           this.drawingHttpClientService
-          .getDrawing(this.drawingService.drawingId)
-          .subscribe((response) => {
-            this.drawingService.openSvgFromDataUri(response.dataUri);
-          });
+            .getDrawing(this.drawingService.drawingId)
+            .subscribe((response) => {
+              this.drawingService.openSvgFromDataUri(response.dataUri);
+            });
         }
-      })
+      });
     });
   }
 
@@ -227,10 +226,10 @@ export class DrawingSocketService extends AbstractSocketService {
   private listenFetchDrawingNotification(): void {
     this.namespaceSocket.on(FETCH_DRIVING_EVENT, () => {
       this.drawingHttpClientService
-      .getDrawing(this.drawingService.drawingId)
-      .subscribe((response) => {
-        this.drawingService.openSvgFromDataUri(response.dataUri);
-      });
+        .getDrawing(this.drawingService.drawingId)
+        .subscribe((response) => {
+          this.drawingService.openSvgFromDataUri(response.dataUri);
+        });
     });
   }
 
