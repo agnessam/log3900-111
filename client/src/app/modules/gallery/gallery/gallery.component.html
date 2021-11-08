@@ -1,27 +1,29 @@
 <div id="gallery">
-  <mat-grid-list cols="1" rowHeight="200px">
-    <mat-grid-tile colspan="1" rowspan="1">
-      <div id="gallery-header">
-        <mat-grid-list cols="2">
-          <mat-grid-tile
-            ><div><h1>Gallery</h1></div></mat-grid-tile
-          >
-          <mat-grid-tile
-            ><div id="new-drawing-button">
-              <button
-                mat-raised-button
-                color="primary"
-                (click)="createNewDrawing()"
-              >
-                New Drawing
-              </button>
-            </div></mat-grid-tile>
-        </mat-grid-list>
-      </div>
-    </mat-grid-tile>
-    <mat-grid-tile class="drawing" *ngFor="let drawing of drawings">
-      <div>{{drawing}}</div>
-      <button (click)="goToDrawing(drawing)">Go to drawing</button>
-    </mat-grid-tile>
-  </mat-grid-list>
+  <div id="gallery-header" fxLayout="row" fxLayoutAlign="center center">
+    <div fxFlex="30%" id="section">
+      <h1>Gallery</h1>
+    </div>
+    <div fxFlex="30%" id="create-button">
+      <button
+        mat-raised-button
+        color="primary"
+        (click)="createNewDrawing()"
+      >
+        Create a drawing
+      </button>
+    </div>
+  </div>
+  <br />
+  <div id="drawingsContainer" fxLayout="row wrap" fxLayout.sm="columnm wrap" fxLayoutGap="33px grid">
+    <div
+      fxFlex="33%"
+      fxFlex.xs="100%"
+      fxFlex.sm="50%"
+      *ngFor="let drawing of drawings"
+    >
+      <mat-card class="mat-elevation-z2 gallery" (click)="goToDrawing(drawing._id)">
+        <img alt="" [src]='getSanitizedUrl(drawing.dataUri)' width="100%" height="100%"/>
+      </mat-card>
+    </div>
+  </div>
 </div>
