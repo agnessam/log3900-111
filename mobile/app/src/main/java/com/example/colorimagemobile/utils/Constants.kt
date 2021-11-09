@@ -49,4 +49,15 @@ class Constants {
             const val TOKEN = "token"
         }
     }
+
+    class SOCKET_KEY{
+        companion object{
+             const val CHAT_NAMESPACE_NAME = "chat";
+             const val ROOM_EVENT_NAME = "room";
+             const val TEXT_MESSAGE_EVENT_NAME = "text";
+             const val CONNECTION_EVENT_NAME = "connection";
+             const val DISCONNECTION_EVENT_NAME = "disconnect";
+             const val LEAVE_ROOM_EVENT_NAME = "leaveRoom";
+        }
+    }
 }
