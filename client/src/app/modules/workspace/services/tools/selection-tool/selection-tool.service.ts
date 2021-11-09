@@ -17,6 +17,7 @@ import { SelectionTransformService } from "./selection-transform.service";
 import { Selection } from "./selection.model";
 import { Translation } from "./translate-command/translate.model";
 import { SynchronisationService } from "../../synchronisation/synchronisation.service";
+import { Subject } from "rxjs";
 
 @Injectable({
   providedIn: "root",
@@ -54,6 +55,8 @@ export class SelectionToolService implements Tools {
   private isIn = false;
 
   private translation: Translation;
+
+  public lineWidthSubject: Subject<number> = new Subject();
 
   constructor(
     private drawingService: DrawingService,
@@ -114,16 +117,24 @@ export class SelectionToolService implements Tools {
 
           if (this.objects.length > 0) {
             this.removeSelection();
+            this.resetLineWidthSubject();
           }
 
           // Initializes the selection
-          if (obj && (this.objects.length < 2 || !this.objects.includes(obj)) && !this.synchronisationService.previewShapes.has(target.id)) {
+          if (
+            obj &&
+            (this.objects.length < 2 || !this.objects.includes(obj)) &&
+            !this.synchronisationService.previewShapes.has(target.id)
+          ) {
             this.objects.push(obj);
 
             // Initializes the selection model that will be synchronised
             this.currentSelection = {
               id: obj.id,
             };
+
+            // Send current lineWidth event to lineWidth subject
+            this.changeLineWidthParameterComponent(obj);
 
             this.drawingSocketService.sendStartSelectionCommand(
               this.currentSelection,
@@ -310,6 +321,43 @@ export class SelectionToolService implements Tools {
     ) {
       this.selectionTransformService.resizeWithLastOffset();
       this.setSelection();
+    }
+  }
+
+  private changeLineWidthParameterComponent(obj: SVGElement): void {
+    if (obj.style.strokeWidth != "" || obj.getAttribute("r") != "") {
+      const propertyString =
+        obj.tagName == "circle" ? obj.getAttribute("r") : obj.style.strokeWidth;
+      if (propertyString != null && propertyString != "") {
+        const objectLineWidth = parseInt(propertyString);
+        this.lineWidthSubject.next(objectLineWidth);
+      }
+    } else {
+      this.resetLineWidthSubject();
+    }
+  }
+
+  private resetLineWidthSubject(): void {
+    this.lineWidthSubject.next(1);
+  }
+
+  setSelectionLineWidth(strokeWidth: number): void {
+    if (this.objects.length > 0) {
+      const currentObject = this.objects[0];
+      const strokeWidthString = `${strokeWidth}px`;
+      if (currentObject.tagName == "circle") {
+        this.rendererService.renderer.setAttribute(
+          currentObject,
+          "r",
+          strokeWidthString
+        );
+      } else {
+        this.rendererService.renderer.setStyle(
+          currentObject,
+          "stroke-width",
+          strokeWidthString
+        );
+      }
     }
   }
 
