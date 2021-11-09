@@ -38,6 +38,10 @@
     <div>
       <app-tools-color></app-tools-color>
     </div>
+
+    <button mat-icon-button matTooltip="Publish to museum" (click)="publishMuseum()">
+      <mat-icon>camera</mat-icon>
+    </button>
   </mat-sidenav>
   <mat-sidenav-content>
     <app-parameter-menu [selectId]="selectedParameter"></app-parameter-menu>

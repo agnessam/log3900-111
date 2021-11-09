@@ -14,15 +14,22 @@ export class MuseumComponent implements OnInit {
 
   constructor(private authenticationService: AuthenticationService,) {
     const post: MuseumPost = {
-    image:"image",
+    image:"../../../../assets/img/test.jpg",
     timestamp:"19:15",
     author:"patate",
     like:45,
     comments:[{message: "woow", author:"joee"}, {message:"amazing", author:"lynnn"}]
   }
+  const post2: MuseumPost = {
+    image:"../../../../assets/img/test2.png",
+    timestamp:"20:27",
+    author:"harry",
+    like:17,
+    comments:[{message: "nice", author:"joee"}, {message:"cool", author:"nada"}]
+  }
     this.posts = [];
     this.posts.push(post);
-    this.posts.push(post);
+    this.posts.push(post2);
   }
 
   ngOnInit(): void {

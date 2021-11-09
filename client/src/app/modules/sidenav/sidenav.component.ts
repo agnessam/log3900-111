@@ -2,6 +2,7 @@ import { Component } from "@angular/core";
 import { MatButtonToggleChange } from "@angular/material/button-toggle";
 import { SidenavService } from "./services/sidenav/sidenav.service";
 import { Tools, ToolsService } from "src/app/modules/workspace";
+import { PostService } from "../museum/services/post.service";
 
 @Component({
   selector: "app-sidenav",
@@ -11,7 +12,8 @@ import { Tools, ToolsService } from "src/app/modules/workspace";
 export class SidenavComponent {
   constructor(
     private sideNavService: SidenavService,
-    private toolService: ToolsService
+    private toolService: ToolsService,
+    private postService: PostService,
   ) {}
 
   get currentToolId(): number {
@@ -49,5 +51,9 @@ export class SidenavComponent {
   /// Ouvre le menu control
   openControlMenu(): void {
     this.sideNavService.openControlMenu();
+  }
+
+  publishMuseum(): void {
+    this.postService.postCanvas();
   }
 }
