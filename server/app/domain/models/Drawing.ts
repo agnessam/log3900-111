@@ -4,10 +4,11 @@ export interface DrawingInterface extends Document {
   dataUri: string;
   ownerId: string;
   ownerModel: string;
+  name: string;
 }
 
 const DrawingSchema = new mongoose.Schema({
-  dataUri: { type: Buffer, required: true },
+  dataUri: { type: String, required: true },
   ownerId: {
     type: Schema.Types.ObjectId,
     required: true,
@@ -17,6 +18,10 @@ const DrawingSchema = new mongoose.Schema({
     type: String,
     required: true,
     enum: ['User', 'Team']
+  },
+  name: {
+    type: String,
+    required: true
   }
 }, { timestamps: true})
 

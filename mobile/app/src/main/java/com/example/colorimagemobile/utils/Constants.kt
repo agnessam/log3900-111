@@ -11,12 +11,18 @@ class Constants {
         const val CHAT_NAMESPACE_NAME = "chat"
         const val TEXT_MESSAGE_EVENT_NAME = "text"
 
-        //global
-        const val EMPTY_STRING =""
-
         // profile user log history
         const val LAST_LOGIN_DATE = "lastLogin"
         const val LAST_LOGOUT_DATE ="lastLogout"
+    }
+
+    class SOCKETS {
+        companion object {
+            const val ROOM_EVENT_NAME = "room"
+            const val LEAVE_ROOM_EVENT_NAME = "leaveRoom"
+            const val COLLABORATIVE_DRAWING_NAMESPACE = "drawing"
+            const val IN_PROGRESS_DRAWING_EVENT = "draw-in-progress"
+        }
     }
 
     class URL {
@@ -40,8 +46,6 @@ class Constants {
 
             // drawings
             const val GET_ALL_DRAWINGS = "api/drawings"
-
-
         }
     }
 

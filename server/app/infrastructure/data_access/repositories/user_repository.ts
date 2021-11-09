@@ -1,8 +1,9 @@
 import { Request, Response } from 'express';
 import { injectable } from 'inversify';
 import { request, response } from 'inversify-express-utils';
-import { User, UserInterface } from '../../../domain/models/user';
+import { User, UserInterface } from '../../../domain/models/User';
 import { GenericRepository } from './generic_repository';
+import { Team } from '../../../domain/models/teams';
 
 declare global {
   namespace Express {
@@ -33,6 +34,19 @@ export class UserRepository extends GenericRepository<UserInterface> {
         err,
       });
     }
+  }
+
+  public async getUserTeams(userId: string) {
+    return new Promise((resolve, reject) => {
+      Team.find({members: userId})
+        .exec((err, teams) => {
+          if (err || !teams) {
+            reject(err);
+          }
+          const userTeams = teams;
+          resolve(userTeams);
+        });
+    });
   }
 
   public async getUserDrawings(userId: string) {

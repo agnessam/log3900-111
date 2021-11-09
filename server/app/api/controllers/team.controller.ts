@@ -1,5 +1,5 @@
-import { TYPES } from '@app/domain/constants/types';
-import { TeamRepository } from '@app/infrastructure/data_access/repositories/team_repository';
+import { TYPES } from '../../domain/constants/types';
+import { TeamRepository } from '../../infrastructure/data_access/repositories/team_repository';
 import { Request } from 'express';
 import { inject } from 'inversify';
 import {
@@ -28,7 +28,7 @@ export class TeamController {
 
   @httpPost('/')
   public async createTeam(@request() req: Request) {
-    return await this.teamRepository.create(req.body);
+    return await this.teamRepository.createTeam(req.body, req.user!.id);
   }
 
   @httpPatch('/:teamId')
@@ -51,7 +51,7 @@ export class TeamController {
   public async addMemberToTeam(@request() req: Request) {
     return await this.teamRepository.addMemberToTeam(
       req.params.teamId,
-      req.body.userId,
+      req.user!.id,
     );
   }
 

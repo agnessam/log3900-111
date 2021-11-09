@@ -7,16 +7,17 @@
   <span class="menu-spacer"></span>
   <div>
     <a mat-button routerLink="/gallery" class="page-link">Gallery</a>
-    <a mat-button routerLink="/drawing" class="page-link">Drawing</a>
-    <a mat-button routerLink="/chat" class="page-link">Chat</a>
+    <a mat-button routerLink="/teams" class="page-link">Teams</a>
   </div>
 
   <span class="user-properties"></span>
 
-  <div class="page-link">
-    {{ user.username }}
-  </div>
+  <div class="page-link">{{ user.username }}</div>
+  <button mat-icon-button (click)="onChatClick()">
+    <mat-icon>message</mat-icon>
+  </button>
   <div>
     <a mat-button (click)="logout()" id="logout-button">Logout</a>
   </div>
 </mat-toolbar>
+<channel *ngIf="user"></channel>

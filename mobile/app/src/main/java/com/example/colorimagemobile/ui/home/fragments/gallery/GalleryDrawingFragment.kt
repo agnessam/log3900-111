@@ -20,6 +20,7 @@ import com.example.colorimagemobile.classes.MyFragmentManager
 import com.example.colorimagemobile.classes.tools.ToolsFactory
 import com.example.colorimagemobile.enumerators.ToolType
 import com.example.colorimagemobile.services.drawing.ToolTypeService
+import com.example.colorimagemobile.services.socket.DrawingSocketService
 
 class GalleryDrawingFragment : Fragment(R.layout.fragment_gallery_drawing) {
     private lateinit var galleryDrawingFragment: ConstraintLayout;
@@ -35,6 +36,19 @@ class GalleryDrawingFragment : Fragment(R.layout.fragment_gallery_drawing) {
 
         addToolsOnSidebar()
         setToolsListener()
+        connectToSocket()
+    }
+
+    private fun connectToSocket() {
+        DrawingSocketService.connect()
+        DrawingSocketService.setFragmentActivity(requireActivity())
+        DrawingSocketService.joinRoom("618983858790ec3e1fd4f887") // TEMP: TO CHANGE roomID
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        DrawingSocketService.disconnect()
+        DrawingSocketService.leaveRoom("618983858790ec3e1fd4f887") // TEMP: TO CHANGE roomID
     }
 
     // dynamically add tools on sidebar
@@ -67,10 +81,7 @@ class GalleryDrawingFragment : Fragment(R.layout.fragment_gallery_drawing) {
     // update tool when changed tool
     private fun setToolsListener() {
         ToolTypeService.getCurrentToolType().observe(viewLifecycleOwner, { toolType ->
-            val context = requireContext()
-
-            // client
-            val toolView = toolsFactory.getTool(toolType).getView(context)
+            val toolView = toolsFactory.getTool(toolType).getView(requireContext())
 
             if (toolView != null) {
                 val canvasLayout = galleryDrawingFragment.findViewById<RelativeLayout>(R.id.canvas_view)

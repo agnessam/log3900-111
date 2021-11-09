@@ -1,4 +1,4 @@
-import { User, UserInterface } from '@app/domain/models/user';
+import { User, UserInterface } from '../../../domain/models/User';
 import { injectable } from 'inversify';
 import { Types } from 'mongoose';
 import { Drawing, DrawingInterface } from '../../../domain/models/Drawing';
@@ -13,13 +13,15 @@ export class DrawingRepository extends GenericRepository<DrawingInterface> {
 
   public async createUserDrawing(
     item: DrawingInterface,
+    ownerId: string,
   ): Promise<DrawingInterface> {
     return new Promise<DrawingInterface>((resolve, reject) => {
       const drawing = new Drawing({
         _id: new Types.ObjectId(),
         dataUri: item.dataUri,
-        ownerId: item.ownerId,
+        ownerId: ownerId,
         ownerModel: 'User',
+        name: item.name
       });
       drawing.save().then((drawing) => {
         User.findById(
@@ -46,6 +48,7 @@ export class DrawingRepository extends GenericRepository<DrawingInterface> {
         dataUri: item.dataUri,
         ownerId: item.ownerId,
         ownerModel: 'Team',
+        name: item.name
       });
       drawing.save().then((drawing) => {
         Team.findById(

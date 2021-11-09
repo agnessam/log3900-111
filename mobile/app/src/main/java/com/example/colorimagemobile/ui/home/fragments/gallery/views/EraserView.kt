@@ -8,7 +8,10 @@ import kotlin.math.abs
 class EraserView(context: Context?): CanvasView(context) {
 
     init {
-        paintPath.brush.setStrokeWidth(EraserService.getCurrentWidthAsFloat())
+//        paintPath.brush.setStrokeWidth(EraserService.getCurrentWidthAsFloat())
+    }
+
+    override fun createPathObject() {
     }
 
     override fun onTouchDown() { }
@@ -29,7 +32,7 @@ class EraserView(context: Context?): CanvasView(context) {
                 // remove path from list
                 if (xDifference && yDifference) {
                     PathService.removeByID(it.id)
-                    super.drawPreviousCanvas()
+//                    super.drawPreviousCanvas()
                     invalidate()
                     return
                 }

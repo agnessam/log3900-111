@@ -1,5 +1,5 @@
-import { TYPES } from '@app/domain/constants/types';
-import { UserRepository } from '@app/infrastructure/data_access/repositories/user_repository';
+import { TYPES } from '../../domain/constants/types';
+import { UserRepository } from '../../infrastructure/data_access/repositories/user_repository';
 import { Request, Response } from 'express';
 import { inject } from 'inversify';
 import {
@@ -50,5 +50,10 @@ export class UserController {
   @httpGet('/:id/drawings')
   public async getDrawings(@request() req: Request) {
     return await this.userRepository.getUserDrawings(req.params.id);
+  }
+
+  @httpGet('/:id/teams')
+  public async getTeams(@request() req: Request) {
+    return await this.userRepository.getUserTeams(req.params.id);
   }
 }
