@@ -3,8 +3,8 @@ package com.example.colorimagemobile.services.drawing
 import android.graphics.Path
 import com.example.colorimagemobile.classes.CommandFactory
 import com.example.colorimagemobile.interfaces.ICommand
-import com.example.colorimagemobile.interfaces.SyncCreateDrawing
-import com.example.colorimagemobile.interfaces.SyncUpdateDrawing
+import com.example.colorimagemobile.models.SyncCreateDrawing
+import com.example.colorimagemobile.models.SyncUpdateDrawing
 import com.example.colorimagemobile.services.drawing.toolsAttribute.ColorService
 
 object SynchronisationService {

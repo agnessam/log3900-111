@@ -3,8 +3,8 @@ package com.example.colorimagemobile.ui.home.fragments.drawing.views
 import android.content.Context
 import android.graphics.Path
 import com.example.colorimagemobile.classes.toolsCommand.PencilCommand
-import com.example.colorimagemobile.interfaces.InProgressPencil
-import com.example.colorimagemobile.interfaces.ToolData
+import com.example.colorimagemobile.models.InProgressPencil
+import com.example.colorimagemobile.models.ToolData
 import com.example.colorimagemobile.services.UUIDService
 import com.example.colorimagemobile.services.drawing.*
 import com.example.colorimagemobile.services.drawing.toolsAttribute.ColorService

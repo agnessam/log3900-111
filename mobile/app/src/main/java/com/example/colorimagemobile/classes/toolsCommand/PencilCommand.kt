@@ -1,7 +1,7 @@
 package com.example.colorimagemobile.classes.toolsCommand
 
 import com.example.colorimagemobile.interfaces.ICommand
-import com.example.colorimagemobile.interfaces.SyncUpdate
+import com.example.colorimagemobile.models.SyncUpdate
 import com.example.colorimagemobile.services.drawing.*
 
 class PencilCommand(paintPath: PaintPath): ICommand {

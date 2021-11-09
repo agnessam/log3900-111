@@ -1,4 +1,4 @@
-package com.example.colorimagemobile.interfaces
+package com.example.colorimagemobile.models
 
 import com.example.colorimagemobile.services.drawing.Point
 

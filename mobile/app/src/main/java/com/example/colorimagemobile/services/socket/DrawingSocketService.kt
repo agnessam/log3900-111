@@ -3,9 +3,9 @@ package com.example.colorimagemobile.services.socket
 import androidx.fragment.app.FragmentActivity
 import com.example.colorimagemobile.classes.AbsSocket
 import com.example.colorimagemobile.classes.JSONConvertor
-import com.example.colorimagemobile.interfaces.SocketTool
-import com.example.colorimagemobile.interfaces.SyncCreateDrawing
-import com.example.colorimagemobile.interfaces.SyncUpdateDrawing
+import com.example.colorimagemobile.models.SocketTool
+import com.example.colorimagemobile.models.SyncCreateDrawing
+import com.example.colorimagemobile.models.SyncUpdateDrawing
 import com.example.colorimagemobile.services.drawing.SynchronisationService
 import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
 import com.example.colorimagemobile.utils.Constants.SOCKETS
