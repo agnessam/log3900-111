@@ -9,6 +9,7 @@ class PencilCommand(paintPath: PaintPath): ICommand {
 
     fun addPoint(point: Point) {
         pencilPaintPath.points.add(point)
+        PathService.addPaintPath(pencilPaintPath)
     }
 
     // for synchro

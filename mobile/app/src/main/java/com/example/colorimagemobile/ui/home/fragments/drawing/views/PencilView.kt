@@ -16,6 +16,7 @@ class PencilView(context: Context?): CanvasView(context) {
     private var paintPath: PaintPath? = null
     private var pencilCommand: PencilCommand? = null
     private var inProgressPencil: InProgressPencil? = null
+    private val pencilType = "Pencil"
 
     private fun createObject() {
         paintPath = PaintPath(UUIDService.generateUUID(), CustomPaint(), Path(), arrayListOf())
@@ -52,7 +53,7 @@ class PencilView(context: Context?): CanvasView(context) {
         )
 
         inProgressPencil = InProgressPencil(id, point)
-        DrawingSocketService.sendInProgressDrawingCommand(pencil, "Pencil")
+        DrawingSocketService.sendInProgressDrawingCommand(pencil, pencilType)
     }
 
     override fun onTouchMove() {
@@ -67,7 +68,7 @@ class PencilView(context: Context?): CanvasView(context) {
 
             updateCanvas()
             inProgressPencil!!.point = Point(motionTouchEventX, motionTouchEventY)
-            DrawingSocketService.sendInProgressDrawingCommand(inProgressPencil!!, "Pencil")
+            DrawingSocketService.sendInProgressDrawingCommand(inProgressPencil!!, pencilType)
         }
     }
 

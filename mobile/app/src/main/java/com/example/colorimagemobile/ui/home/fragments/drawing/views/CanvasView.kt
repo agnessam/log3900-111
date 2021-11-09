@@ -48,10 +48,7 @@ abstract class CanvasView(context: Context?): View(context) {
 
         when (event.action) {
             // when user first touches the screen, set new paintPath
-            MotionEvent.ACTION_DOWN -> {
-                onTouchDown()
-            }
-
+            MotionEvent.ACTION_DOWN -> onTouchDown()
             MotionEvent.ACTION_MOVE -> onTouchMove()
             MotionEvent.ACTION_UP -> onTouchUp() // when user lifts finger
             else -> return false
@@ -62,7 +59,5 @@ abstract class CanvasView(context: Context?): View(context) {
 
     abstract fun onTouchDown()
     abstract fun onTouchMove()
-
-    // can be overridden by children
     abstract fun onTouchUp()
 }

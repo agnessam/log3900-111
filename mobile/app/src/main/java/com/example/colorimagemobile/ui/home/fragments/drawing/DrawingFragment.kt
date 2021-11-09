@@ -15,10 +15,8 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import com.example.colorimagemobile.R
 import com.example.colorimagemobile.classes.tools.ToolsFactory
 import com.example.colorimagemobile.enumerators.ToolType
-import com.example.colorimagemobile.services.drawing.CanvasUpdateService
 import com.example.colorimagemobile.services.drawing.ToolTypeService
 import com.example.colorimagemobile.services.socket.DrawingSocketService
-import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
 
 class DrawingFragment : Fragment(R.layout.fragment_drawing) {
     private lateinit var drawingFragment: ConstraintLayout;
