@@ -25,6 +25,7 @@ import { SidenavModule } from "./modules/sidenav/sidenav.module";
 import { DrawingsModule } from "./modules/drawings/drawings.module";
 import { BackendCommunicationModule } from "./modules/backend-communication/backend-communication.module";
 import { TeamModule } from "./modules/team/team.module";
+import { MuseumModule } from "./modules/museum/museum.module";
 
 @NgModule({
   declarations: [AppComponent],
@@ -55,6 +56,7 @@ import { TeamModule } from "./modules/team/team.module";
     DrawingsModule,
     TeamModule,
     BackendCommunicationModule,
+    MuseumModule,
   ],
   exports: [],
   providers: [],

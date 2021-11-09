@@ -17,6 +17,12 @@ const routes: Routes = [
     canActivate: [AuthGuard],
   },
   {
+    path: "museum",
+    loadChildren: () =>
+      import("./modules/museum/museum.module").then((m) => m.MuseumModule),
+    canActivate: [AuthGuard],
+  },
+  {
     path: "drawings",
     loadChildren: () =>
       import("./modules/drawings/drawings.module").then(

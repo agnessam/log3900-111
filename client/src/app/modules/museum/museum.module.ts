@@ -1,14 +1,16 @@
+import { MuseumComponent } from './museum.component';
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-
+import { CommonModule } from "@angular/common";
 import { MuseumRoutingModule } from './museum-routing.module';
+import { MatIconModule } from "@angular/material/icon";
 
 
 @NgModule({
-  declarations: [],
+  declarations: [MuseumComponent],
   imports: [
     CommonModule,
-    MuseumRoutingModule
+    MuseumRoutingModule,
+    MatIconModule
   ]
 })
 export class MuseumModule { }

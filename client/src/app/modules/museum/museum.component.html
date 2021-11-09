@@ -1,0 +1,49 @@
+<div id="museum">
+  <div *ngFor="let post of posts">
+    <div class="post">
+      <div class="post-header">
+        <div class="author-picture"></div>
+        <div>
+          <div class="author-text">{{post.author}}</div>
+          <div class="time-text">{{post.timestamp}}</div>
+        </div>
+      </div>
+
+      <div class="post-image">
+        <div class="image">
+        </div>
+        <div class="bottom-image" >
+          <div class="bottom-group">
+            <mat-icon>favorite</mat-icon>
+            {{post.like}}
+          </div>
+          <div class="bottom-group">
+            <mat-icon>chat_bubble</mat-icon>
+            {{post.comments.length}}
+          </div>
+        </div>
+      </div>
+
+      <div *ngFor="let comment of post.comments">
+        <div class="comment">
+          {{comment.author}} : {{comment.message}}
+        </div>
+      </div>
+    </div>
+
+    <div class="bottom-comment">
+      <input type="search"
+                  #commentInput
+                  id="comment-input"
+                  autocomplete="off"
+                  spellcheck="false"
+                  placeholder="Add comment"
+                  >
+      <button mat-icon-button class="postbtn">
+        POST
+      </button>
+    </div>
+  </div>
+
+
+</div>
