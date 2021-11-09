@@ -18,7 +18,7 @@ class PencilView(context: Context?): CanvasView(context) {
     private var inProgressPencil: InProgressPencil? = null
     private val pencilType = "Pencil"
 
-    private fun createObject() {
+    override fun createPathObject() {
         paintPath = PaintPath(UUIDService.generateUUID(), CustomPaint(), Path(), arrayListOf())
         paintPath!!.brush.setStrokeWidth(PencilService.getCurrentWidthAsFloat())
         paintPath!!.brush.setColor(ColorService.getColorAsInt())
@@ -32,7 +32,7 @@ class PencilView(context: Context?): CanvasView(context) {
     }
 
     override fun onTouchDown() {
-        createObject()
+        createPathObject()
         paintPath!!.path.moveTo(motionTouchEventX, motionTouchEventY)
 
         currentX = motionTouchEventX

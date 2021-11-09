@@ -11,6 +11,9 @@ class EraserView(context: Context?): CanvasView(context) {
 //        paintPath.brush.setStrokeWidth(EraserService.getCurrentWidthAsFloat())
     }
 
+    override fun createPathObject() {
+    }
+
     override fun onTouchDown() { }
 
     override fun onTouchMove() {  }

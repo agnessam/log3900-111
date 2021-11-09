@@ -24,6 +24,9 @@ abstract class CanvasView(context: Context?): View(context) {
         invalidateCanvasListener()
     }
 
+    // to define our paintPath object
+    protected abstract fun createPathObject()
+
     // emitter to update canvas
     private fun invalidateCanvasListener() {
         CanvasUpdateService.getLiveData().observe(context as LifecycleOwner, {
