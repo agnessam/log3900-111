@@ -52,7 +52,6 @@ class GalleryMenuFragment : Fragment(R.layout.fragment_gallery_menu) {
     private fun getAllDrawings() {
         val token = sharedPreferencesService.getItem(Constants.STORAGE_KEY.TOKEN)
 
-        printMsg("Fetching all drawings")
         drawingRepo.getAllDrawings(token).observe(viewLifecycleOwner, {
             // some error occurred during HTTP request
             if (it.isError as Boolean) {
@@ -74,7 +73,7 @@ class GalleryMenuFragment : Fragment(R.layout.fragment_gallery_menu) {
             val bitmap: Bitmap? = ImageConvertor(requireContext()).base64ToBitmap(drawing.dataUri)
 
             if (bitmap != null) {
-                drawingsMenu.add(DrawingMenuData(drawing.ownerId, bitmap))
+                drawingsMenu.add(DrawingMenuData(drawing._id, bitmap))
             }
         }
 

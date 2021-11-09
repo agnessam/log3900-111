@@ -5,11 +5,17 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.example.colorimagemobile.R
+import com.example.colorimagemobile.classes.MyFragmentManager
 import com.example.colorimagemobile.models.recyclerAdapters.DrawingMenuData
 import com.example.colorimagemobile.models.recyclerAdapters.DrawingMenuViewHolder
-import com.example.colorimagemobile.utils.CommonFun.Companion.printToast
+import com.example.colorimagemobile.services.SharedPreferencesService
+import com.example.colorimagemobile.services.drawing.CanvasService
+import com.example.colorimagemobile.services.drawing.CanvasUpdateService
+import com.example.colorimagemobile.ui.home.fragments.gallery.GalleryDrawingFragment
+import com.example.colorimagemobile.utils.Constants
 
 class DrawingMenuRecyclerAdapter(drawings: ArrayList<DrawingMenuData>): RecyclerView.Adapter<DrawingMenuRecyclerAdapter.ViewHolder>() {
 
@@ -23,7 +29,7 @@ class DrawingMenuRecyclerAdapter(drawings: ArrayList<DrawingMenuData>): Recycler
 
     // populate each data to cardview
     override fun onBindViewHolder(holder: DrawingMenuRecyclerAdapter.ViewHolder, position: Int) {
-        holder.drawingMenuViewHolder.name.text = drawingMenus[position].name
+        holder.drawingMenuViewHolder.name.text = drawingMenus[position].id
         holder.drawingMenuViewHolder.image.setImageBitmap(drawingMenus[position].imageBitmap)
     }
 
@@ -44,7 +50,14 @@ class DrawingMenuRecyclerAdapter(drawings: ArrayList<DrawingMenuData>): Recycler
             // click listener for clicking on specific drawing
             itemView.setOnClickListener {
                 val position: Int = bindingAdapterPosition
-                printToast(itemView.context, "clicked on $position")
+
+                val sharedPrefService = SharedPreferencesService(itemView.context)
+                sharedPrefService.setItem(Constants.STORAGE_KEY.DRAWING_ROOM_ID, drawingMenus[position].id)
+                MyFragmentManager(itemView.context as FragmentActivity).open(R.id.main_gallery_fragment, GalleryDrawingFragment())
+
+                // set clicked bitmap to canvas
+                CanvasService.createExistingBitmap(drawingMenus[position].imageBitmap)
+                CanvasUpdateService.invalidate()
             }
         }
     }

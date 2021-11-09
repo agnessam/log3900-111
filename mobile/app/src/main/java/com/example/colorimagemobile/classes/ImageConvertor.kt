@@ -4,16 +4,14 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.util.Base64
+import com.caverock.androidsvg.SVG
 import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
 import com.example.colorimagemobile.utils.CommonFun.Companion.printToast
 import java.lang.NullPointerException
 import java.nio.charset.StandardCharsets
-import com.caverock.androidsvg.SVG
 import kotlin.math.ceil
 
 class ImageConvertor(val context: Context) {
-
-    private val DEFAULT_CANVAS_SIZE: Float = 500f
 
     companion object ErrorMessage {
         const val Base64ToBitmap = "Error converting Base64 into Bitmap"
@@ -30,8 +28,8 @@ class ImageConvertor(val context: Context) {
             val svg: SVG = SVG.getFromString(svgAsString)
 
             // Create a bitmap and canvas to draw onto
-            val svgWidth = if (svg.documentWidth.toInt() !== -1) svg.documentWidth else DEFAULT_CANVAS_SIZE
-            val svgHeight = if (svg.documentHeight.toInt() !== -1) svg.documentHeight else DEFAULT_CANVAS_SIZE
+            val svgWidth = svg.documentWidth
+            val svgHeight = svg.documentHeight
 
             val newBitmap = Bitmap.createBitmap(
                 ceil(svgWidth.toDouble()).toInt(),
@@ -40,8 +38,8 @@ class ImageConvertor(val context: Context) {
             )
             val bitmapCanvas = Canvas(newBitmap)
 
-            // Clear background to white if you want
-//            bitmapCanvas.drawRGB(25, 255, 255)
+            // TO CHANGE
+            bitmapCanvas.drawRGB(255, 255, 255)
 
             // Render our document onto our canvas
             svg.renderToCanvas(bitmapCanvas);

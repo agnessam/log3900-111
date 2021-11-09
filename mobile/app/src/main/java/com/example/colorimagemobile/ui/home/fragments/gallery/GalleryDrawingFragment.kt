@@ -19,13 +19,17 @@ import com.example.colorimagemobile.R
 import com.example.colorimagemobile.classes.MyFragmentManager
 import com.example.colorimagemobile.classes.tools.ToolsFactory
 import com.example.colorimagemobile.enumerators.ToolType
+import com.example.colorimagemobile.services.SharedPreferencesService
 import com.example.colorimagemobile.services.drawing.ToolTypeService
 import com.example.colorimagemobile.services.socket.DrawingSocketService
+import com.example.colorimagemobile.utils.Constants
 
 class GalleryDrawingFragment : Fragment(R.layout.fragment_gallery_drawing) {
     private lateinit var galleryDrawingFragment: ConstraintLayout;
     private lateinit var panelView: CardView
     private lateinit var toolsFactory: ToolsFactory
+    private lateinit var sharedPreferencesService: SharedPreferencesService
+    private var roomName: String? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -33,22 +37,37 @@ class GalleryDrawingFragment : Fragment(R.layout.fragment_gallery_drawing) {
         galleryDrawingFragment = view.findViewById(R.id.galleryDrawingFragment)
         panelView = galleryDrawingFragment.findViewById<CardView>(R.id.canvas_tools_attributes_cardview)
         toolsFactory = ToolsFactory()
+        sharedPreferencesService = SharedPreferencesService(requireContext())
 
+        setCurrentRoomName()
         addToolsOnSidebar()
         setToolsListener()
         connectToSocket()
     }
 
+    private fun setCurrentRoomName() {
+        roomName = sharedPreferencesService.getItem(Constants.STORAGE_KEY.DRAWING_ROOM_ID)
+
+        // go to gallery menu
+        if (roomName == null) {
+            MyFragmentManager(requireActivity()).open(R.id.main_gallery_fragment, GalleryMenuFragment())
+            return
+        }
+    }
+
     private fun connectToSocket() {
         DrawingSocketService.connect()
         DrawingSocketService.setFragmentActivity(requireActivity())
-        DrawingSocketService.joinRoom("618983858790ec3e1fd4f887") // TEMP: TO CHANGE roomID
+        DrawingSocketService.joinRoom(roomName!!)
     }
 
     override fun onDestroy() {
         super.onDestroy()
         DrawingSocketService.disconnect()
-        DrawingSocketService.leaveRoom("618983858790ec3e1fd4f887") // TEMP: TO CHANGE roomID
+        DrawingSocketService.leaveRoom(roomName!!)
+
+        roomName = null
+        sharedPreferencesService.removeItem(Constants.STORAGE_KEY.DRAWING_ROOM_ID)
     }
 
     // dynamically add tools on sidebar
