@@ -18,7 +18,7 @@ class PencilView(context: Context?): CanvasView(context) {
     private var inProgressPencil: InProgressPencil? = null
 
     private fun createObject() {
-        paintPath = PaintPath(0, CustomPaint(), Path(), arrayListOf())
+        paintPath = PaintPath(UUIDService.generateUUID(), CustomPaint(), Path(), arrayListOf())
         paintPath!!.brush.setStrokeWidth(PencilService.getCurrentWidthAsFloat())
         paintPath!!.brush.setColor(ColorService.getColorAsInt())
 

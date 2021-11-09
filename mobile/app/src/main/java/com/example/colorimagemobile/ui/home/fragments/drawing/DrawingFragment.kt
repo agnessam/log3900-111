@@ -37,14 +37,14 @@ class DrawingFragment : Fragment(R.layout.fragment_drawing) {
         // TEMP: TO CHANGE
         DrawingSocketService.connect()
         DrawingSocketService.setFragmentActivity(requireActivity())
-        DrawingSocketService.joinRoom("6188cd3440fe00c8f62a3996")
+        DrawingSocketService.joinRoom("6188cfdf40fe00c8f62a39f8")
     }
 
     // TEMP: TO CHANGE
     override fun onDestroy() {
         super.onDestroy()
         DrawingSocketService.disconnect()
-        DrawingSocketService.leaveRoom("6188cd3440fe00c8f62a3996")
+        DrawingSocketService.leaveRoom("6188cfdf40fe00c8f62a39f8")
     }
 
     // dynamically add tools on sidebar
@@ -77,10 +77,7 @@ class DrawingFragment : Fragment(R.layout.fragment_drawing) {
     // update tool when changed tool
     private fun setToolsListener() {
         ToolTypeService.getCurrentToolType().observe(viewLifecycleOwner, { toolType ->
-            val context = requireContext()
-
-            // client
-            val toolView = toolsFactory.getTool(toolType).getView(context)
+            val toolView = toolsFactory.getTool(toolType).getView(requireContext())
 
             if (toolView != null) {
                 val canvasLayout = drawingFragment.findViewById<RelativeLayout>(R.id.canvas_view)

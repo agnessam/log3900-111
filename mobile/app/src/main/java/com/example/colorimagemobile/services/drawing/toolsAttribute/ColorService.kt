@@ -5,6 +5,10 @@ import android.graphics.Color
 object ColorService {
     private var currentColor: String = "#000000"
 
+    fun convertColorToInt(colorToConvert: String): Int {
+        return Color.parseColor(colorToConvert)
+    }
+
     fun setColorAsString(newColor: Int) {
         currentColor = String.format("#%06X", 0xFFFFFF and newColor)
     }
@@ -14,6 +18,6 @@ object ColorService {
     }
 
     fun getColorAsInt(): Int {
-        return Color.parseColor(currentColor)
+        return convertColorToInt(currentColor)
     }
 }

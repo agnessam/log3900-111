@@ -4,7 +4,8 @@ import androidx.fragment.app.FragmentActivity
 import com.example.colorimagemobile.classes.AbsSocket
 import com.example.colorimagemobile.classes.JSONConvertor
 import com.example.colorimagemobile.interfaces.SocketTool
-import com.example.colorimagemobile.interfaces.SyncronisationDrawing
+import com.example.colorimagemobile.interfaces.SyncCreateDrawing
+import com.example.colorimagemobile.interfaces.SyncUpdateDrawing
 import com.example.colorimagemobile.services.drawing.SynchronisationService
 import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
 import com.example.colorimagemobile.utils.Constants.SOCKETS
@@ -54,8 +55,18 @@ object DrawingSocketService: AbsSocket(SOCKETS.COLLABORATIVE_DRAWING_NAMESPACE) 
         Emitter.Listener { args ->
             fragmentActivity!!.runOnUiThread(Runnable {
                 try {
-                    val drawingCommand = JSONConvertor.getJSONObject(args, SyncronisationDrawing::class.java)
-                    SynchronisationService.draw(drawingCommand)
+                    val currentArg = args[0].toString()
+
+                    // gotta deep check object type in a better way
+                    if ("fill" in currentArg) {
+                        // other client pressed the screen
+                        val drawingCommand = JSONConvertor.getJSONObject(args, SyncCreateDrawing::class.java)
+                        SynchronisationService.createCommand(drawingCommand)
+                    } else {
+                        // other client is drawing
+                        val drawingUpdateCommand = JSONConvertor.getJSONObject(args, SyncUpdateDrawing::class.java)
+                        SynchronisationService.drawAndUpdate(drawingUpdateCommand)
+                    }
                 } catch (e: JSONException) {
                     printMsg("listenInProgressDrawingCommand error: ${e.message}")
                     return@Runnable
