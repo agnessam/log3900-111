@@ -8,8 +8,8 @@ import android.view.ViewGroup
 import android.widget.NumberPicker
 import android.widget.RadioGroup
 import com.example.colorimagemobile.R
-import com.example.colorimagemobile.services.drawing.toolsAttribute.PencilService
-import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
+import com.example.colorimagemobile.services.drawing.toolsAttribute.RectangleService
+import com.example.colorimagemobile.services.drawing.toolsAttribute.RectangleStyle
 
 class RectangleFragment : Fragment() {
     private lateinit var borderWidthPicker: NumberPicker
@@ -27,25 +27,29 @@ class RectangleFragment : Fragment() {
 
     private fun setBorderWidthPicker(view: View) {
         borderWidthPicker = view.findViewById(R.id.rec_border_width_picker)
-        borderWidthPicker.minValue = PencilService.minWidth
-        borderWidthPicker.maxValue = PencilService.maxWidth
-        borderWidthPicker.value = PencilService.currentWidth
+        borderWidthPicker.minValue = RectangleService.minWidth
+        borderWidthPicker.maxValue = RectangleService.maxWidth
+        borderWidthPicker.value = RectangleService.currentWidth
 
-        borderWidthPicker.setOnValueChangedListener { numberPicker, oldValue, newValue ->
-            printMsg(newValue.toString() + " new border")
-//            PencilService.currentWidth = newValue
+        // set border width
+        borderWidthPicker.setOnValueChangedListener { _, _, newValue ->
+            RectangleService.currentWidth = newValue
         }
     }
 
-    fun onRectRadioListener(view: View) {
+    private fun onRectRadioListener(view: View) {
         val radioGroup: RadioGroup = view.findViewById(R.id.rectangle_radioGroup)
 
+        // apply border style
         radioGroup.setOnCheckedChangeListener { _, checkedId -> // checkedId is the RadioButton selected
-            when (checkedId) {
-                R.id.rect_border_fill -> printMsg("fill")
-                R.id.rect_no_border -> printMsg("no border")
-                R.id.rect_only_border -> printMsg("onlyyy border")
+            val borderStyle = when (checkedId) {
+                R.id.rect_border_fill -> RectangleStyle.WITH_BORDER_FILL
+                R.id.rect_no_border -> RectangleStyle.NO_BORDER
+                R.id.rect_only_border -> RectangleStyle.ONLY_BORDER
+                else -> RectangleStyle.WITH_BORDER_FILL
             }
+
+            RectangleService.updateBorderStyle(borderStyle)
         }
     }
 }
