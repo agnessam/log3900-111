@@ -10,8 +10,9 @@ class ToolsFactory {
         this.tool = toolType
 
         return when(this.tool) {
-            ToolType.PENCIL -> PencilTool()
             ToolType.ERASER -> EraserTool()
+            ToolType.PENCIL -> PencilTool()
+            ToolType.RECTANGLE -> RectangleTool()
             ToolType.COLOR_PALETTE -> ColorPaletteTool()
         }
     }
