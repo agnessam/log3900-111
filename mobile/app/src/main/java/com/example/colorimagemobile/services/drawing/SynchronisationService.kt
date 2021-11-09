@@ -1,11 +1,11 @@
 package com.example.colorimagemobile.services.drawing
 
-import android.graphics.Color
 import android.graphics.Path
 import com.example.colorimagemobile.classes.CommandFactory
 import com.example.colorimagemobile.interfaces.ICommand
 import com.example.colorimagemobile.interfaces.SyncCreateDrawing
 import com.example.colorimagemobile.interfaces.SyncUpdateDrawing
+import com.example.colorimagemobile.services.drawing.toolsAttribute.ColorService
 
 object SynchronisationService {
 
@@ -17,11 +17,9 @@ object SynchronisationService {
         paintPath.points.add(drawingCommand.drawingCommand.pointsList[0])
 
         // set paint brush and stuff
-        paintPath.brush.setColor(Color.BLACK)
+        paintPath.brush.setColor(ColorService.rgbToInt(drawingCommand.drawingCommand.stroke))
         paintPath.brush.setStrokeWidth(drawingCommand.drawingCommand.strokeWidth.toFloat())
         paintPath.path.moveTo(paintPath.points[0].x, paintPath.points[0].y)
-
-//        paintPath.brush.getPaint().color = ColorService.convertColorToInt(drawingCommand.drawingCommand.stroke)
 
         val command: ICommand? = CommandFactory.createCommand(drawingCommand.type, paintPath)
 
