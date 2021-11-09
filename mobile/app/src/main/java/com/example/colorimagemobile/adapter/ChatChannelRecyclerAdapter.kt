@@ -6,7 +6,6 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.colorimagemobile.R
-import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
 
 
 class ChatChannelRecyclerAdapter : RecyclerView.Adapter<ChatChannelRecyclerAdapter.ViewHolder>() {
@@ -27,7 +26,6 @@ class ChatChannelRecyclerAdapter : RecyclerView.Adapter<ChatChannelRecyclerAdapt
     }
 
     override fun getItemCount(): Int {
-        printMsg("size= "+channelName.size)
        return channelName.size
     }
     inner class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView){
