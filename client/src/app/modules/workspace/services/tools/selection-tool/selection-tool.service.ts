@@ -18,6 +18,8 @@ import { Selection } from "./selection.model";
 import { Translation } from "./translate-command/translate.model";
 import { SynchronisationService } from "../../synchronisation/synchronisation.service";
 import { Subject } from "rxjs";
+import { PrimaryColorCommand } from "./primary-color-command/primary-color-command.service";
+import { SecondaryColorCommand } from "./secondary-color-command/secondary-color-command.service";
 
 @Injectable({
   providedIn: "root",
@@ -703,33 +705,21 @@ export class SelectionToolService implements Tools {
     ).getBoundingClientRect().left;
   }
 
+
   setSelectedObjectPrimaryColor(primaryColor: RGB, opacity: number) {
-    if (!this.objects) return;
+    if (!this.objects || this.objects.length == 0) return;
+
     const selectedObject = this.objects[0];
-    const r = primaryColor.r;
-    const b = primaryColor.b;
-    const g = primaryColor.g;
-    const color = `rgb(${r},${g},${b}`;
-    const opacityString = `${opacity}`;
-    if (selectedObject.tagName == "polyline") {
-      selectedObject.style.stroke = color;
-      selectedObject.style.strokeOpacity = opacityString;
-      return;
-    }
-    selectedObject.style.fill = color;
-    selectedObject.style.fillOpacity = opacityString;
+    let primaryColorCommand = new PrimaryColorCommand(selectedObject, primaryColor, opacity);
+    primaryColorCommand.execute();
+    this.drawingSocketService.sendObjectPrimaryColorChange(selectedObject.id, primaryColor, opacity);
   }
 
-  setSelectedObjectSecondaryColor(primaryColor: RGB, opacity: number) {
+  setSelectedObjectSecondaryColor(secondaryColor: RGB, opacity: number) {
     if (!this.objects) return;
     const selectedObject = this.objects[0];
-    const r = primaryColor.r;
-    const b = primaryColor.b;
-    const g = primaryColor.g;
-    const color = `rgb(${r},${g},${b}`;
-    const opacityString = `${opacity}`;
-    if (selectedObject.tagName == "polyline") return;
-    selectedObject.style.stroke = color;
-    selectedObject.style.strokeOpacity = opacityString;
+    let secondaryColorCommand = new SecondaryColorCommand(selectedObject, secondaryColor, opacity);
+    secondaryColorCommand.execute();
+    this.drawingSocketService.sendObjectSecondaryColorChange(selectedObject.id, secondaryColor, opacity);
   }
 }

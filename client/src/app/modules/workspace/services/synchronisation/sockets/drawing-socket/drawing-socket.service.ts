@@ -14,12 +14,18 @@ import {
   FETCH_DRIVING_EVENT,
   UPDATE_DRAWING_NOTIFICATION,
   ONE_USER_RESPONSE,
+  RGB,
+  PRIMARY_COLOR_EVENT,
+  SECONDARY_COLOR_EVENT,
+  Color
 } from "src/app/shared";
 import { Selection } from "../../../tools/selection-tool/selection.model";
 import { SocketTool } from "../../../tools/socket-tool";
 import { SynchronisationService } from "../../synchronisation.service";
 import { DrawingHttpClientService } from "src/app/modules/backend-communication";
 import { DrawingService } from "src/app/modules/workspace";
+import { PrimaryColorCommand } from "../../../tools/selection-tool/primary-color-command/primary-color-command.service";
+import { SecondaryColorCommand } from "../../../tools/selection-tool/secondary-color-command/secondary-color-command.service";
 
 @Injectable({
   providedIn: "root",
@@ -31,7 +37,7 @@ export class DrawingSocketService extends AbstractSocketService {
   constructor(
     private synchronisationService: SynchronisationService,
     private drawingHttpClientService: DrawingHttpClientService,
-    private drawingService: DrawingService
+    private drawingService: DrawingService,
   ) {
     super();
     this.init();
@@ -60,6 +66,8 @@ export class DrawingSocketService extends AbstractSocketService {
     this.listenDeleteSelectionCommand();
     this.listenUpdateDrawingRequest();
     this.listenFetchDrawingNotification();
+    this.listenObjectPrimaryColorChange();
+    this.listenObjectSecondaryColorChange();
   }
 
   async sendGetUpdateDrawingRequest(): Promise<void> {
@@ -235,5 +243,43 @@ export class DrawingSocketService extends AbstractSocketService {
 
   private sendDrawingUpdatedNotification(clientSocketId: string): void {
     this.namespaceSocket.emit(UPDATE_DRAWING_NOTIFICATION, clientSocketId);
+  }
+
+  private listenObjectPrimaryColorChange(): void {
+    this.namespaceSocket.on(PRIMARY_COLOR_EVENT, (colorData:Color) => {
+      const objectToRecolor = this.drawingService.objects.get(colorData.id);
+      if(!objectToRecolor) return;
+      let primaryColorCommand = new PrimaryColorCommand(objectToRecolor, colorData.color, colorData.opacity);
+      primaryColorCommand.execute();
+    })
+  }
+
+  private listenObjectSecondaryColorChange(): void {
+    this.namespaceSocket.on(SECONDARY_COLOR_EVENT, (colorData:Color) => {
+      const objectToRecolor = this.drawingService.objects.get(colorData.id);
+      if(!objectToRecolor) return;
+      let secondaryColorCommand = new SecondaryColorCommand(objectToRecolor, colorData.color, colorData.opacity);
+      secondaryColorCommand.execute();
+    })
+  }
+
+  sendObjectPrimaryColorChange(objectId: string, color: RGB, opacity: number): void {
+    let colorData:Color = {
+      id: objectId,
+      color: color,
+      opacity: opacity,
+      roomName: this.roomName,
+    }
+    this.namespaceSocket.emit(PRIMARY_COLOR_EVENT, colorData);
+  }
+
+  sendObjectSecondaryColorChange(objectId: string, color: RGB, opacity: number): void {
+    let colorData: Color = {
+      id: objectId,
+      color: color,
+      opacity: opacity,
+      roomName: this.roomName,
+    }
+    this.namespaceSocket.emit(SECONDARY_COLOR_EVENT, colorData);
   }
 }

@@ -14,11 +14,14 @@ import {
   ROOM_NOT_FOUND_RESPONSE,
   ONE_USER_RESPONSE,
   NEW_USER_RESPONSE,
+  PRIMARY_COLOR_EVENT,
+  SECONDARY_COLOR_EVENT
 } from '../../constants/socket-constants';
 import { SocketServiceInterface } from '../../../domain/interfaces/socket.interface';
 import { injectable } from 'inversify';
 import { Server, Socket } from 'socket.io';
 import { DrawingCommand } from '../../../domain/interfaces/drawing-command.interface';
+import { Color } from '@app/domain/models/Color';
 
 @injectable()
 export class DrawingSocketService extends SocketServiceInterface {
@@ -38,6 +41,30 @@ export class DrawingSocketService extends SocketServiceInterface {
     this.listenDeleteSelectionCommand(socket);
     this.listenGetUpdatedDrawing(socket);
     this.listenDrawingRequestBroadcastRequest(socket);
+    this.listenObjectPrimaryColorChange(socket);
+    this.listenObjectSecondaryColorChange(socket);
+  }
+
+  private listenObjectPrimaryColorChange(socket:Socket): void {
+    socket.on(PRIMARY_COLOR_EVENT, (colorData) => {
+      this.sendObjectPrimaryColorChange(socket, colorData);
+    });
+  }
+
+  private sendObjectPrimaryColorChange(socket:Socket, colorData:Color){
+    socket.to(colorData.roomName)
+      .emit(PRIMARY_COLOR_EVENT, colorData);
+  }
+
+  private listenObjectSecondaryColorChange(socket:Socket): void {
+    socket.on(SECONDARY_COLOR_EVENT, (colorData) => {
+      this.sendObjectSecondaryColorChange(socket, colorData);
+    });
+  }
+
+  private sendObjectSecondaryColorChange(socket:Socket, colorData:Color){
+    socket.to(colorData.roomName)
+      .emit(SECONDARY_COLOR_EVENT, colorData);
   }
 
   private listenInProgressDrawingCommand(socket: Socket): void {

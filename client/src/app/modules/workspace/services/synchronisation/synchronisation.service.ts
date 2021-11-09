@@ -2,6 +2,8 @@ import { Injectable } from "@angular/core";
 import { ICommand } from "../../interfaces/command.interface";
 import { SocketTool } from "../tools/socket-tool";
 import { CommandFactoryService } from "./factories/command-factory/command-factory.service";
+// import { SelectionToolService } from "src/app/modules/workspace";
+
 
 @Injectable({
   providedIn: "root",
@@ -9,7 +11,10 @@ import { CommandFactoryService } from "./factories/command-factory/command-facto
 export class SynchronisationService {
   previewShapes: Map<string, ICommand> = new Map<string, ICommand>();
 
-  constructor(private commandFactory: CommandFactoryService) {}
+  constructor(private commandFactory: CommandFactoryService,
+    // private selectionToolService: SelectionToolService
+  ) 
+  {}
 
   removeFromPreview(id: string): boolean {
     if (this.previewShapes.has(id)) {

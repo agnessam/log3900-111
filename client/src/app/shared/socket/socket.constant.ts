@@ -18,3 +18,5 @@ export const UPDATE_DRAWING_EVENT = "drawing-update";
 export const FETCH_DRIVING_EVENT = "drawing-fetch";
 export const UPDATE_DRAWING_NOTIFICATION = "drawing-update-notification";
 export const ONE_USER_RESPONSE = "One User";
+export const PRIMARY_COLOR_EVENT = "color-primary-update";
+export const SECONDARY_COLOR_EVENT = "color-secondary-update";

@@ -21,3 +21,5 @@ export const ROOM_EMPTY_RESPONSE = "Room empty";
 export const ROOM_NOT_FOUND_RESPONSE = "Room not found";
 export const ONE_USER_RESPONSE = "One User";
 export const NEW_USER_RESPONSE = "New User";
+export const PRIMARY_COLOR_EVENT = "color-primary-update";
+export const SECONDARY_COLOR_EVENT = "color-secondary-update";
