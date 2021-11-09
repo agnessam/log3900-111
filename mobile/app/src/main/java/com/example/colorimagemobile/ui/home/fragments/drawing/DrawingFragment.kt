@@ -36,17 +36,15 @@ class DrawingFragment : Fragment(R.layout.fragment_drawing) {
     }
 
     private fun connectToSocket() {
-        // TEMP: TO CHANGE
         DrawingSocketService.connect()
         DrawingSocketService.setFragmentActivity(requireActivity())
-        DrawingSocketService.joinRoom("618983858790ec3e1fd4f887")
+        DrawingSocketService.joinRoom("618983858790ec3e1fd4f887") // TEMP: TO CHANGE roomID
     }
 
-    // TEMP: TO CHANGE
     override fun onDestroy() {
         super.onDestroy()
         DrawingSocketService.disconnect()
-        DrawingSocketService.leaveRoom("618983858790ec3e1fd4f887")
+        DrawingSocketService.leaveRoom("618983858790ec3e1fd4f887") // TEMP: TO CHANGE roomID
     }
 
     // dynamically add tools on sidebar
