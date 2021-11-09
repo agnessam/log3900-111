@@ -3,14 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".ui.home.fragments.chat.ChatFragment">
-
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:id="@+id/chatFragment"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="CHAAAT" />
+    tools:context=".ui.home.fragments.chat.ChatFragment"
+    android:id="@+id/chatChannelFragment">
 
 </androidx.constraintlayout.widget.ConstraintLayout>

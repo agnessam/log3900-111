@@ -6,12 +6,12 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.colorimagemobile.R
+import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
 
 
 class ChatChannelRecyclerAdapter : RecyclerView.Adapter<ChatChannelRecyclerAdapter.ViewHolder>() {
 
-    private var channelName = arrayOf("")
-
+    private var channelName = arrayOf("bobo","boba","bobim","bobo","bobo")
 
 
     override fun onCreateViewHolder(
@@ -23,17 +23,18 @@ class ChatChannelRecyclerAdapter : RecyclerView.Adapter<ChatChannelRecyclerAdapt
     }
 
     override fun onBindViewHolder(holder: ChatChannelRecyclerAdapter.ViewHolder, position: Int) {
-       holder.channelName.text = channelName[position]
+       holder.chName.text = channelName[position]
     }
 
     override fun getItemCount(): Int {
+        printMsg("size= "+channelName.size)
        return channelName.size
     }
     inner class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView){
-         var channelName : TextView;
+         var chName : TextView;
 
         init {
-            channelName = itemView.findViewById(R.id.channel_name)
+            chName = itemView.findViewById<TextView>(R.id.channel_name)
         }
     }
 }
