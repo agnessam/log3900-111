@@ -34,6 +34,9 @@ class NewDrawingMenuBottomSheet: BottomSheetDialogFragment() {
     private lateinit var heightLayout: TextInputLayout
     private lateinit var dialog: BottomSheetDialog
 
+    private var widthValue = 0
+    private var heightValue = 0
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.bottomsheet_drawing_menu, container, false)
     }
@@ -61,13 +64,15 @@ class NewDrawingMenuBottomSheet: BottomSheetDialogFragment() {
 
         // width input validation
         widthInput.doOnTextChanged { text, _, _, _ ->
-            widthLayout.error = getErrorMessage(getCurrentValue(text), MIN_WIDTH, MAX_WIDTH)
+            widthValue = getCurrentValue(text)
+            widthLayout.error = getErrorMessage(widthValue, MIN_WIDTH, MAX_WIDTH)
             updateCreateBtn()
         }
 
         // height input validation
         heightInput.doOnTextChanged { text, _, _, _ ->
-            heightLayout.error = getErrorMessage(getCurrentValue(text), MIN_HEIGHT, MAX_HEIGHT)
+            heightValue = getCurrentValue(text)
+            heightLayout.error = getErrorMessage(heightValue, MIN_HEIGHT, MAX_HEIGHT)
             updateCreateBtn()
         }
 
@@ -106,7 +111,8 @@ class NewDrawingMenuBottomSheet: BottomSheetDialogFragment() {
 
     // activate/deactivate button depending on input fields
     private fun updateCreateBtn() {
-        val isValid = widthLayout.error == null && heightLayout.error == null
-        toggleButton(createDrawingBtn, isValid)
+        val areLayoutsValid = widthLayout.error == null && heightLayout.error == null
+        val areInputsValid = widthValue > 0 && heightValue > 0
+        toggleButton(createDrawingBtn, areLayoutsValid && areInputsValid)
     }
 }

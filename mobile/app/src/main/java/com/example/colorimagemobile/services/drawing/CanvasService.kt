@@ -2,13 +2,14 @@ package com.example.colorimagemobile.services.drawing
 
 import android.graphics.Bitmap
 import android.graphics.Canvas
+import com.example.colorimagemobile.utils.Constants
 
 object CanvasService {
     lateinit var extraBitmap: Bitmap
     lateinit var extraCanvas: Canvas
 
-    private var width = 200
-    private var height = 200
+    private var width = Constants.DRAWING.MAX_WIDTH
+    private var height = Constants.DRAWING.MAX_HEIGHT
 
     fun setWidth(newWidth: Int) {
         width = newWidth

@@ -51,11 +51,11 @@ class Constants {
 
     class DRAWING {
         companion object {
-            const val MIN_WIDTH = 300
-            const val MAX_WIDTH = 1500
+            const val MIN_WIDTH = 10
+            const val MAX_WIDTH = 2440
 
-            const val MIN_HEIGHT = 200
-            const val MAX_HEIGHT = 1000
+            const val MIN_HEIGHT = 10
+            const val MAX_HEIGHT = 1215
         }
     }
 

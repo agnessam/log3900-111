@@ -15,25 +15,56 @@
         android:textSize="20sp"
         android:textStyle="bold"/>
 
+<!--drawing name-->
+    <TextView
+        android:layout_marginTop="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Enter details" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:orientation="horizontal">
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/newDrawingNameLayout"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="10px"
+            android:hint="Drawing Name"
+            app:errorEnabled="true"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/newDrawingNameInputText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+    </LinearLayout>
+
     <TextView
         android:layout_marginTop="5dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Enter canvas dimensions (px)" />
 
-<!--    Width and height-->
-    <GridLayout
-        android:layout_marginTop="5dp"
+    <!--    Width and height-->
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:rowCount="1"
-        android:columnCount="2">
+        android:layout_marginTop="5dp"
+        android:orientation="horizontal">
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/newDrawingWidthInputLayout"
-            android:layout_gravity="fill"
-            android:layout_columnWeight="1"
-            android:layout_rowWeight="1"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
             android:layout_marginRight="10px"
             android:hint="Width"
             app:suffixText="px"
@@ -49,9 +80,9 @@
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/newDrawingHeightInputLayout"
-            android:layout_gravity="fill"
-            android:layout_columnWeight="1"
-            android:layout_rowWeight="1"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
             android:layout_marginLeft="10px"
             android:hint="Height"
             app:suffixText="px"
@@ -64,19 +95,20 @@
                 android:layout_height="wrap_content"
                 android:inputType="number" />
         </com.google.android.material.textfield.TextInputLayout>
+    </LinearLayout>
 
-    </GridLayout>
 
     <TextView
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="0dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Choose canvas color"/>
 
     <include
         layout="@layout/view_color_picker"
-        android:layout_marginTop="-20dp"
+        android:layout_marginTop="-15dp"
         android:id="@+id/colorPickerNewDrawing"
+        android:layout_gravity="center"
         android:layout_height="300dp"
         android:layout_width="match_parent"/>
 
