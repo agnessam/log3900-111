@@ -1,11 +1,11 @@
 package com.example.colorimagemobile.services.drawing
 
+import android.graphics.Color
 import android.graphics.Path
 import com.example.colorimagemobile.classes.CommandFactory
 import com.example.colorimagemobile.interfaces.ICommand
 import com.example.colorimagemobile.interfaces.SyncCreateDrawing
 import com.example.colorimagemobile.interfaces.SyncUpdateDrawing
-import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
 
 object SynchronisationService {
 
@@ -16,9 +16,12 @@ object SynchronisationService {
         val paintPath = PaintPath(commandId, CustomPaint(), Path(), arrayListOf())
         paintPath.points.add(drawingCommand.drawingCommand.pointsList[0])
 
-        // set paint brush ..
+        // set paint brush and stuff
+        paintPath.brush.setColor(Color.BLACK)
+        paintPath.brush.setStrokeWidth(drawingCommand.drawingCommand.strokeWidth.toFloat())
+        paintPath.path.moveTo(paintPath.points[0].x, paintPath.points[0].y)
+
 //        paintPath.brush.getPaint().color = ColorService.convertColorToInt(drawingCommand.drawingCommand.stroke)
-        paintPath.brush.getPaint().strokeWidth = drawingCommand.drawingCommand.strokeWidth.toFloat()
 
         val command: ICommand? = CommandFactory.createCommand(drawingCommand.type, paintPath)
 
@@ -33,8 +36,6 @@ object SynchronisationService {
         val command = previewShapes[commandId]
 
         if (!previewShapes.containsKey(commandId) || command == null) { return }
-
-        printMsg("Sync: $command")
 
         command.update(drawingCommand.drawingCommand)
         command.execute()

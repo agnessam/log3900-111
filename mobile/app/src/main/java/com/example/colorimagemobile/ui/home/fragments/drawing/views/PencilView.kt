@@ -28,7 +28,6 @@ class PencilView(context: Context?): CanvasView(context) {
     private fun updateCanvas() {
         pencilCommand!!.addPoint(Point(currentX, currentY))
         pencilCommand!!.execute()
-        invalidate()
     }
 
     override fun onTouchDown() {

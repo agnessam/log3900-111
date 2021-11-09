@@ -5,8 +5,8 @@ import android.graphics.*
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewConfiguration
+import androidx.lifecycle.LifecycleOwner
 import com.example.colorimagemobile.services.drawing.*
-import com.example.colorimagemobile.services.drawing.toolsAttribute.ColorService
 
 abstract class CanvasView(context: Context?): View(context) {
     protected var motionTouchEventX = 0f
@@ -20,6 +20,18 @@ abstract class CanvasView(context: Context?): View(context) {
         CanvasService.setWidth(width)
         CanvasService.setHeight(height)
         CanvasService.drawPreviousCanvas()
+
+        invalidateCanvasListener()
+    }
+
+    // emitter to update canvas
+    private fun invalidateCanvasListener() {
+        CanvasUpdateService.getLiveData().observe(context as LifecycleOwner, {
+            if (it) {
+                invalidate()
+                CanvasUpdateService.deactivate()
+            }
+        })
     }
 
     override fun onDraw(canvas: Canvas) {
