@@ -6,3 +6,6 @@ data class ToolData(val id: String, val pointsList: ArrayList<Point>, val fill: 
 data class SocketTool(val type: String, val roomName: String, val drawingCommand: Any)
 
 data class InProgressPencil(val id: String, var point: Point)
+
+// object used during synchronisation
+data class SyncronisationDrawing(val type: String, val roomName: String, val drawingCommand: ToolData)
