@@ -16,7 +16,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 //import com.example.colorimagemobile.adapter.ChatMessageRecyclerAdapter
-import com.example.colorimagemobile.services.SocketHandler
+import com.example.colorimagemobile.services.socket.SocketHandler
 import com.example.colorimagemobile.ui.login.LoginActivity
 import com.example.colorimagemobile.utils.CommonFun.Companion.closeKeyboard
 import com.example.colorimagemobile.utils.CommonFun.Companion.printToast
@@ -62,7 +62,7 @@ class ChatActivity : AppCompatActivity() {
         chatText.append(" ${this.username}!")
 
         // init socket
-        SocketHandler.setSocket()
+        SocketHandler.setSocket("")
         mSocket = SocketHandler.getSocket()
         mSocket.connect()
         mSocket.emit("room", DEFAULT_ROOM_NAME)
