@@ -1,7 +1,6 @@
 package com.example.colorimagemobile.services.drawing.toolsAttribute
 
 import android.graphics.Color
-import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
 
 object ColorService {
     private var currentColor: String = "#000000"

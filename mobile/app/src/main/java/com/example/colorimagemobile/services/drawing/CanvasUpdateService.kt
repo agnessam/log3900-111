@@ -7,12 +7,9 @@ object CanvasUpdateService {
 
     private val updateCanvas: MutableLiveData<Boolean> = MutableLiveData()
 
+    // just emitting something to tell the canvas to update
     fun invalidate() {
         updateCanvas.value = true
-    }
-
-    fun deactivate() {
-        updateCanvas.value = false
     }
 
     fun getLiveData(): LiveData<Boolean> {

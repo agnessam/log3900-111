@@ -27,10 +27,7 @@ abstract class CanvasView(context: Context?): View(context) {
     // emitter to update canvas
     private fun invalidateCanvasListener() {
         CanvasUpdateService.getLiveData().observe(context as LifecycleOwner, {
-            if (it) {
-                invalidate()
-                CanvasUpdateService.deactivate()
-            }
+            invalidate()
         })
     }
 
