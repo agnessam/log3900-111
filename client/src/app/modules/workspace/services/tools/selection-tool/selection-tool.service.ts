@@ -3,7 +3,7 @@ import { FormGroup } from "@angular/forms";
 import { IconDefinition } from "@fortawesome/fontawesome-common-types";
 import { faMousePointer } from "@fortawesome/free-solid-svg-icons";
 import { ICommand } from "src/app/modules/workspace/interfaces/command.interface";
-import { Point } from "src/app/shared";
+import { Point, RGB } from "src/app/shared";
 import { Tools } from "../../../interfaces/tools.interface";
 import { DrawingService } from "../../drawing/drawing.service";
 import { KeyCodes } from "../../hotkeys/hotkeys-constants";
@@ -126,6 +126,7 @@ export class SelectionToolService implements Tools {
             (this.objects.length < 2 || !this.objects.includes(obj)) &&
             !this.synchronisationService.previewShapes.has(target.id)
           ) {
+            if (obj.tagName == "g") return;
             this.objects.push(obj);
 
             // Initializes the selection model that will be synchronised
@@ -700,5 +701,35 @@ export class SelectionToolService implements Tools {
     return (
       this.drawingService.drawing as SVGSVGElement
     ).getBoundingClientRect().left;
+  }
+
+  setSelectedObjectPrimaryColor(primaryColor: RGB, opacity: number) {
+    if (!this.objects) return;
+    const selectedObject = this.objects[0];
+    const r = primaryColor.r;
+    const b = primaryColor.b;
+    const g = primaryColor.g;
+    const color = `rgb(${r},${g},${b}`;
+    const opacityString = `${opacity}`;
+    if (selectedObject.tagName == "polyline") {
+      selectedObject.style.stroke = color;
+      selectedObject.style.strokeOpacity = opacityString;
+      return;
+    }
+    selectedObject.style.fill = color;
+    selectedObject.style.fillOpacity = opacityString;
+  }
+
+  setSelectedObjectSecondaryColor(primaryColor: RGB, opacity: number) {
+    if (!this.objects) return;
+    const selectedObject = this.objects[0];
+    const r = primaryColor.r;
+    const b = primaryColor.b;
+    const g = primaryColor.g;
+    const color = `rgb(${r},${g},${b}`;
+    const opacityString = `${opacity}`;
+    if (selectedObject.tagName == "polyline") return;
+    selectedObject.style.stroke = color;
+    selectedObject.style.strokeOpacity = opacityString;
   }
 }

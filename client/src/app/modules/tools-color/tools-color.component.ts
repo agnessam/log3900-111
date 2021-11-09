@@ -15,6 +15,7 @@ import {
   PRIMARY_SIZE,
   SECONDARY_SIZE,
 } from "./tools-color.constant";
+import { SelectionToolService } from "../workspace";
 
 @Component({
   selector: "app-tools-color",
@@ -43,23 +44,58 @@ export class ToolsColorComponent {
 
   constructor(
     private toolsColor: ToolsColorService,
+    private selectionToolService: SelectionToolService,
     public dialog: MatDialog
   ) {}
 
   get primaryColor(): string {
-    return this.toolsColor.primaryColorString;
+    if (this.selectionToolService.getObjectList().length == 0) {
+      return this.toolsColor.primaryColorString;
+    }
+    const selectionObject = this.selectionToolService.getObjectList()[0];
+
+    const selectionObjectColor =
+      selectionObject.tagName == "polyline"
+        ? selectionObject.style.stroke
+        : selectionObject.style.fill;
+    return selectionObjectColor == null ? "rgb(0,0,0)" : selectionObjectColor;
   }
 
   get primaryAlpha(): number {
-    return this.toolsColor.primaryAlpha;
+    if (this.selectionToolService.getObjectList().length == 0) {
+      return this.toolsColor.primaryAlpha;
+    }
+    const selectionObject = this.selectionToolService.getObjectList()[0];
+
+    const selectionObjectOpacityString =
+      selectionObject.tagName == "polyline"
+        ? selectionObject.style.strokeOpacity
+        : selectionObject.style.fillOpacity;
+    const selectionObjectOpacity = parseFloat(selectionObjectOpacityString);
+    return selectionObjectOpacity == NaN ? 1 : selectionObjectOpacity;
   }
 
   get secondaryColor(): string {
-    return this.toolsColor.secondaryColorString;
+    if (this.selectionToolService.getObjectList().length == 0) {
+      return this.toolsColor.secondaryColorString;
+    }
+    const selectionObjectColor =
+      this.selectionToolService.getObjectList()[0].style.stroke;
+    return selectionObjectColor == null ||
+      this.selectionToolService.getObjectList()[0].tagName == "polyline"
+      ? "rgb(255,255,255)"
+      : selectionObjectColor;
   }
 
   get secondaryAlpha(): number {
-    return this.toolsColor.secondaryAlpha;
+    if (this.selectionToolService.getObjectList().length == 0) {
+      return this.toolsColor.secondaryAlpha;
+    }
+    const selectionObject = this.selectionToolService.getObjectList()[0];
+
+    const selectionObjectOpacityString = selectionObject.style.strokeOpacity;
+    const selectionObjectOpacity = parseFloat(selectionObjectOpacityString);
+    return selectionObjectOpacity == NaN ? 1 : selectionObjectOpacity;
   }
 
   /// Ouvre un dialog qui fait appel a colorPickerOpen
@@ -74,7 +110,14 @@ export class ToolsColorComponent {
           .afterClosed()
           .subscribe((result: RGBA) => {
             if (result) {
-              this.toolsColor.setPrimaryColor(result.rgb, result.a);
+              if (this.selectionToolService.getObjectList().length == 0) {
+                this.toolsColor.setPrimaryColor(result.rgb, result.a);
+              } else {
+                this.selectionToolService.setSelectedObjectPrimaryColor(
+                  result.rgb,
+                  result.a
+                );
+              }
             }
           });
         break;
@@ -87,7 +130,14 @@ export class ToolsColorComponent {
           .afterClosed()
           .subscribe((result: RGBA) => {
             if (result) {
-              this.toolsColor.setSecondaryColor(result.rgb, result.a);
+              if (this.selectionToolService.getObjectList().length == 0) {
+                this.toolsColor.setSecondaryColor(result.rgb, result.a);
+              } else {
+                this.selectionToolService.setSelectedObjectSecondaryColor(
+                  result.rgb,
+                  result.a
+                );
+              }
             }
           });
         break;
