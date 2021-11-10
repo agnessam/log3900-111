@@ -27,4 +27,9 @@ interface API {
     @PATCH(Constants.ENDPOINTS.UPDATE_USER+"{id}")
     fun updateUser(@Header("Authorization")token: String, @Path ("id") id : String, @Body  newUser: UserModel.UpdateUser) : Call<HTTPResponseModel.UpdateUser>
 
+    @Headers("Content-Type: application/json" , "Accept:application/json")
+    @GET(Constants.ENDPOINTS.GET_ALL_CHAT_NAME)
+    fun getAllChatChannel(@Header("Authorization")token: String): Call<List<HTTPResponseModel.GetChannelList>>
+
+
 }

@@ -5,21 +5,22 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.view.menu.ActionMenuItemView
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.example.colorimagemobile.ui.login.LoginActivity
 import com.example.colorimagemobile.R
-import com.example.colorimagemobile.adapter.ChatChannelRecyclerAdapter
+import com.example.colorimagemobile.models.ChatChannelModel
 import com.example.colorimagemobile.services.UserService
 import com.example.colorimagemobile.models.UserModel
 import com.example.colorimagemobile.models.DataWrapper
 import com.example.colorimagemobile.models.HTTPResponseModel
+import com.example.colorimagemobile.repositories.ChatChannelRepository
 import com.example.colorimagemobile.services.SharedPreferencesService
+import com.example.colorimagemobile.services.chat.ChatChannelService
 import com.example.colorimagemobile.utils.CommonFun.Companion.printToast
 import com.example.colorimagemobile.utils.CommonFun.Companion.redirectTo
 import com.example.colorimagemobile.utils.Constants
@@ -28,6 +29,8 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 class HomeActivity : AppCompatActivity() {
     private lateinit var homeViewModel: HomeActivityViewModel
     private lateinit var sharedPreferencesService: SharedPreferencesService
+    private lateinit var chatChannelRepository: ChatChannelRepository
+    private lateinit var allChannelList : List<ChatChannelModel.TextChannelInfo>
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -39,6 +42,8 @@ class HomeActivity : AppCompatActivity() {
 
         setBottomNavigationView()
         checkCurrentUser()
+        chatChannelRepository= ChatChannelRepository()
+        getChannel()
     }
 
     // side navigation navbar: upon click, change to new fragment
@@ -80,6 +85,7 @@ class HomeActivity : AppCompatActivity() {
         // user is null -> GET user
         if (UserService.isNull()) {
             val token = sharedPreferencesService.getItem(Constants.STORAGE_KEY.TOKEN)
+            UserService.setToken(token)
             homeViewModel.getUserByToken(token).observe(this, { handleGetUserMe(it) })
         }
     }
@@ -111,5 +117,24 @@ class HomeActivity : AppCompatActivity() {
         redirectTo(this, LoginActivity::class.java)
     }
 
+    private fun getChannel() {
+        if (UserService.getToken().isNotEmpty()){
+            getChatChannel(UserService.getToken()).observe(this, { handleGetAllChannel(it) })
+        }
+    }
 
-}
+    private fun handleGetAllChannel(response: DataWrapper<List<HTTPResponseModel.GetChannelList>>) {
+
+        response.data.let{
+            if (it != null) {
+                ChatChannelService.setAllChatInfo(it)
+            }
+        }
+    }
+
+
+    private fun getChatChannel(userToken : String): LiveData<DataWrapper<List<HTTPResponseModel.GetChannelList>>> {
+        return chatChannelRepository.getAllChatChannel(userToken)
+    }
+
+    }

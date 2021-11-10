@@ -8,9 +8,10 @@ import java.time.LocalDateTime
 
 object UserService {
     private lateinit var info: UserModel.AllInfo
-    private  var lastLogin: String = "Has never login"
-    private  var lastLogout: String = "Has never logout"
-    private  var date : ArrayList<String> = arrayListOf("","")
+    private  var lastLogin: String = Constants.EMPTY_STRING
+    private  var lastLogout: String = Constants.EMPTY_STRING
+    private  var date : ArrayList<String> = arrayListOf(Constants.EMPTY_STRING,Constants.EMPTY_STRING)
+    private var token : String =Constants.EMPTY_STRING
 
     fun setUserInfo(newUserInfo: UserModel.AllInfo) {
         this.info = newUserInfo
@@ -41,6 +42,15 @@ object UserService {
     // get login and logout history
     fun getLogHistory(): ArrayList<String>{
         return this.date
+    }
+
+    fun setToken(token:String){
+        this.token = token
+    }
+
+    fun getToken(): String{
+
+        return this.token
     }
 
 }

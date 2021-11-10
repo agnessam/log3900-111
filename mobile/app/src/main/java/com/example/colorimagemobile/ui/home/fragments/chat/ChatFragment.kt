@@ -20,7 +20,6 @@ private const val ARG_PARAM2 = "param2"
 class ChatFragment : Fragment() {
 
 
-
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
@@ -31,6 +30,8 @@ class ChatFragment : Fragment() {
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
         }
+
+
     }
 
     override fun onCreateView(
@@ -43,21 +44,17 @@ class ChatFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val showAllChannel = ChannelNameFragment()
-        parentFragmentManager.beginTransaction().replace(R.id.chatChannelFragment, showAllChannel)
-            .commit()
+
+//        view.findViewById<TextView>(R.id.showAllChannel).setOnClickListener{
+            val showAllChannel = ChannelNameFragment()
+            parentFragmentManager.beginTransaction().replace(R.id.chatChannelFragment, showAllChannel)
+                .commit()
+//        }
+
+//        setListeners()
     }
 
     companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment ChatFragment.
-         */
-        // TODO: Rename and change types and number of parameters
         @JvmStatic
         fun newInstance(param1: String, param2: String) =
             ChatFragment().apply {
@@ -67,5 +64,19 @@ class ChatFragment : Fragment() {
                 }
             }
     }
+
+
+
+
+//
+//    private fun setListeners() {
+//        showAllChannel.setOnClickListener {
+//            val showAllChannel = ChannelNameFragment()
+//            parentFragmentManager.beginTransaction().replace(R.id.chatChannelFragment, showAllChannel)
+//                .commit()
+//
+//        }
+//
+//    }
 
 }
