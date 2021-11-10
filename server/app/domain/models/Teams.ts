@@ -8,6 +8,7 @@ export interface TeamInterface extends Document {
   members: string[];
 
   drawings: string[];
+  publishedDrawings: string[];
 }
 
 const TeamSchema = new mongoose.Schema({
@@ -18,6 +19,7 @@ const TeamSchema = new mongoose.Schema({
   members: [{ type: Schema.Types.ObjectId, ref: 'User' }],
 
   drawings: [{ type: Schema.Types.ObjectId, ref: 'Drawing' }],
+  publishedDrawings: [{ type: Schema.Types.ObjectId, ref: 'PublishedDrawing'}]
 });
 
 export const Team: Model<TeamInterface> = mongoose.model('Team', TeamSchema);
