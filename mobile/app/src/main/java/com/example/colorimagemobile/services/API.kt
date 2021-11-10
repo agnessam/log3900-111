@@ -3,6 +3,7 @@ package com.example.colorimagemobile.services
 import com.example.colorimagemobile.models.DrawingModel
 import com.example.colorimagemobile.models.UserModel
 import com.example.colorimagemobile.models.HTTPResponseModel
+import com.example.colorimagemobile.models.TeamModel
 import com.example.colorimagemobile.utils.Constants
 import retrofit2.Call
 import retrofit2.http.*
@@ -30,4 +31,7 @@ interface API {
 
     @GET(Constants.ENDPOINTS.GET_ALL_DRAWINGS)
     fun getAllDrawings(@Header("Authorization") token: String): Call<List<DrawingModel.Drawing>>
+
+    @GET("${Constants.ENDPOINTS.USER}{id}/teams")
+    fun getUserTeams(@Header("Authorization") token: String, @Path ("id") id: String): Call<List<TeamModel>>
 }

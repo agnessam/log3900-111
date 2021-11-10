@@ -39,7 +39,7 @@ class Constants {
             const val REGISTER_USER = "api/auth/register"
 
             const val GET_USER_BY_TOKEN = "api/users/me"
-            const val GET_ALL_USER = "api/users/"
+            const val USER = "api/users/"
             const val GET_USER_BY_ID = "api/users/"
             const val UPDATE_USER = "api/users/"
             const val DELETE_USER = "api/users/:id"

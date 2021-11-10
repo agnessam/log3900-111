@@ -10,10 +10,17 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import androidx.core.widget.doOnTextChanged
+import androidx.lifecycle.LifecycleOwner
 import com.example.colorimagemobile.R
-import com.example.colorimagemobile.classes.MyFragmentManager
-import com.example.colorimagemobile.ui.home.fragments.gallery.GalleryDrawingFragment
+import com.example.colorimagemobile.classes.ImageConvertor
+import com.example.colorimagemobile.models.TeamModel
+import com.example.colorimagemobile.repositories.UserRepository
+import com.example.colorimagemobile.services.SharedPreferencesService
+import com.example.colorimagemobile.services.UserService
+import com.example.colorimagemobile.services.drawing.CanvasService
+import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
 import com.example.colorimagemobile.utils.CommonFun.Companion.toggleButton
+import com.example.colorimagemobile.utils.Constants
 import com.example.colorimagemobile.utils.Constants.DRAWING.Companion.MAX_HEIGHT
 import com.example.colorimagemobile.utils.Constants.DRAWING.Companion.MAX_WIDTH
 import com.example.colorimagemobile.utils.Constants.DRAWING.Companion.MIN_HEIGHT
@@ -25,8 +32,6 @@ import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import top.defaults.colorpicker.ColorPickerView
 import java.io.Serializable
-
-data class NewDrawing(val canvas: Canvas, val bitmap: Bitmap): Serializable
 
 class NewDrawingMenuBottomSheet: BottomSheetDialogFragment() {
     private lateinit var createDrawingBtn: Button
@@ -51,26 +56,41 @@ class NewDrawingMenuBottomSheet: BottomSheetDialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        val widthInput = view.findViewById<TextInputEditText>(R.id.newDrawingWidthInputText)
-        val heightInput = view.findViewById<TextInputEditText>(R.id.newDrawingHeightInputText)
-        var color: Int = Color.WHITE
-
         createDrawingBtn = view.findViewById(R.id.createDrawingBtn)
         widthLayout = view.findViewById(R.id.newDrawingWidthInputLayout)
         heightLayout = view.findViewById(R.id.newDrawingHeightInputLayout)
 
         toggleButton(createDrawingBtn, false)
+        fetchTeams()
+        setListeners(view)
+    }
+
+    private fun fetchTeams() {
+        val sharedPrefService = SharedPreferencesService(requireContext())
+        val token = sharedPrefService.getItem(Constants.STORAGE_KEY.TOKEN)
+
+        UserRepository().getUserTeams(token, UserService.getUserInfo()._id).observe(context as LifecycleOwner, {
+            if (it.isError as Boolean) {
+                return@observe
+            }
+
+            val teams: List<TeamModel> = it.data as List<TeamModel>
+            printMsg(teams.toString())
+        })
+    }
+
+    private fun setListeners(view: View) {
+        var color: Int = Color.WHITE
 
         // width input validation
-        widthInput.doOnTextChanged { text, _, _, _ ->
+        view.findViewById<TextInputEditText>(R.id.newDrawingWidthInputText).doOnTextChanged { text, _, _, _ ->
             widthValue = getCurrentValue(text)
             widthLayout.error = getErrorMessage(widthValue, MIN_WIDTH, MAX_WIDTH)
             updateCreateBtn()
         }
 
         // height input validation
-        heightInput.doOnTextChanged { text, _, _, _ ->
+        view.findViewById<TextInputEditText>(R.id.newDrawingHeightInputText).doOnTextChanged { text, _, _, _ ->
             heightValue = getCurrentValue(text)
             heightLayout.error = getErrorMessage(heightValue, MIN_HEIGHT, MAX_HEIGHT)
             updateCreateBtn()
@@ -81,15 +101,23 @@ class NewDrawingMenuBottomSheet: BottomSheetDialogFragment() {
         }
 
         view.findViewById<Button>(R.id.createDrawingBtn).setOnClickListener {
-            val bitmap = Bitmap.createBitmap(getCurrentValue(widthInput.text), getCurrentValue(heightInput.text), Bitmap.Config.ARGB_8888)
+            CanvasService.setWidth(widthValue)
+            CanvasService.setHeight(heightValue)
+
+            val bitmap = Bitmap.createBitmap(widthValue, heightValue, Bitmap.Config.ARGB_8888)
             val canvas = Canvas(bitmap)
             canvas.drawColor(color)
 
-            closeSheet()
+            val base64URI = ImageConvertor(requireContext()).bitmapToBase64(bitmap)
+            val ownerModel = "User"
+            val ownerId = ""
+            val drawingName = "MyDrawing"
 
-            val fragmentManager = MyFragmentManager(requireActivity())
-            fragmentManager.closeFragment(this@NewDrawingMenuBottomSheet)
-            fragmentManager.openWithData(R.id.main_gallery_fragment, GalleryDrawingFragment(), NewDrawing(canvas, bitmap))
+//            closeSheet()
+
+//            val fragmentManager = MyFragmentManager(requireActivity())
+//            fragmentManager.closeFragment(this@NewDrawingMenuBottomSheet)
+//            fragmentManager.openWithData(R.id.main_gallery_fragment, GalleryDrawingFragment(), NewDrawing(canvas, bitmap))
         }
     }
 

@@ -20,7 +20,7 @@ object CanvasService {
     }
 
     fun initialize() {
-        if (::extraBitmap.isInitialized) extraBitmap.recycle()
+//        if (::extraBitmap.isInitialized) extraBitmap.recycle()
         extraBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
         extraCanvas = Canvas(extraBitmap)
     }

@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.example.colorimagemobile.models.DataWrapper
 import com.example.colorimagemobile.models.HTTPResponseModel
+import com.example.colorimagemobile.models.TeamModel
 import com.example.colorimagemobile.models.UserModel
 import com.example.colorimagemobile.services.RetrofitInstance
 import com.example.colorimagemobile.utils.Constants
@@ -71,4 +72,25 @@ class UserRepository {
         return updateLiveData
     }
 
+    fun getUserTeams(token: String, userId: String): MutableLiveData<DataWrapper<List<TeamModel>>> {
+        val teamsLiveData: MutableLiveData<DataWrapper<List<TeamModel>>> = MutableLiveData()
+
+        httpClient.getUserTeams(token = "Bearer $token", userId).enqueue(object: Callback<List<TeamModel>> {
+            override fun onResponse(call: Call<List<TeamModel>>, response: Response<List<TeamModel>>) {
+                if (!response.isSuccessful) {
+                    teamsLiveData.value = DataWrapper(null, "An error occurred!", true)
+                    return
+                }
+
+                // account successfully update
+                teamsLiveData.value = DataWrapper(response.body(), "", false)
+            }
+
+            override fun onFailure(call: Call<List<TeamModel>>, t: Throwable) {
+                teamsLiveData.value = DataWrapper(null, "Failed to fetch teams!", true)
+            }
+        })
+
+        return teamsLiveData
+    }
 }
