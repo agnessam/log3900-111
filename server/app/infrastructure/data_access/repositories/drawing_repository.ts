@@ -1,7 +1,8 @@
 import {
   PublishedDrawing,
   PublishedDrawingInterface,
-} from '@app/domain/models/PublishedDrawing';
+} from '../../../domain/models/PublishedDrawing';
+import { User, UserInterface } from '../../../domain/models/user';
 import { injectable } from 'inversify';
 import { Types } from 'mongoose';
 import { Drawing, DrawingInterface } from '../../../domain/models/Drawing';

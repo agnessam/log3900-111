@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { injectable } from 'inversify';
 import { request, response } from 'inversify-express-utils';
-import { User, UserInterface } from '../../../domain/models/User';
+import { User, UserInterface } from '../../../domain/models/user';
 import { GenericRepository } from './generic_repository';
 import { Team } from '../../../domain/models/teams';
 
