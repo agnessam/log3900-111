@@ -5,10 +5,15 @@ import { ToolsColorPickerComponent } from "./tools-color-picker/tools-color-pick
 import { SharedModule } from "src/app/shared/shared.module";
 import { ColorPickerModule } from "../color-picker/color-picker.module";
 import { ReactiveFormsModule } from "@angular/forms";
+import { BackgroundColorPickerComponent } from "./background-color-picker/background-color-picker.component";
 
 @NgModule({
-  declarations: [ToolsColorComponent, ToolsColorPickerComponent],
+  declarations: [
+    ToolsColorComponent,
+    ToolsColorPickerComponent,
+    BackgroundColorPickerComponent,
+  ],
   imports: [CommonModule, SharedModule, ColorPickerModule, ReactiveFormsModule],
-  exports: [ToolsColorComponent],
+  exports: [ToolsColorComponent, BackgroundColorPickerComponent],
 })
 export class ToolsColorModule {}
