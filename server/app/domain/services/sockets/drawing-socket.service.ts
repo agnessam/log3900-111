@@ -43,6 +43,17 @@ export class DrawingSocketService extends SocketServiceInterface {
     this.listenDrawingRequestBroadcastRequest(socket);
     this.listenObjectPrimaryColorChange(socket);
     this.listenObjectSecondaryColorChange(socket);
+    this.listenLineWidthChange(socket);
+  }
+
+  private listenLineWidthChange(socket:Socket): void {
+    socket.on("line-width-update", (lineWidthData) => {
+      this.sendLineWidthData(socket, lineWidthData);
+    });
+  }
+
+  private sendLineWidthData(socket:Socket, lineWidthData: any){
+    socket.to(lineWidthData.roomName).emit("line-width-update", lineWidthData);
   }
 
   private listenObjectPrimaryColorChange(socket:Socket): void {

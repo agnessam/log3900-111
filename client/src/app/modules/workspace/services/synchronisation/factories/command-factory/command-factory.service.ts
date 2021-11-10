@@ -15,6 +15,7 @@ import { Pencil } from "../../../tools/pencil-tool/pencil.model";
 import { Rectangle } from "../../../tools/tool-rectangle/rectangle.model";
 import { Ellipse } from "../../../tools/tool-ellipse/ellipse.model";
 import { SelectionStartCommand } from "../../../tools/selection-tool/start-command/selection-start-command.service";
+import { LineWidthCommand } from "../../../tools/selection-tool/line-width-command/line-width-command.service";
 @Injectable({
   providedIn: "root",
 })
@@ -98,6 +99,13 @@ export class CommandFactoryService {
         if (deletedShape == undefined)
           throw new Error("Couldn't find the shape you wanted to delete.");
         return new DeleteCommand(this.drawingService, deletedShape);
+      case "LineWidth":
+        const lineWidthShapeId = commandParameters.id;
+        const lineWidthShape = this.drawingService.getObject(lineWidthShapeId);
+        if(lineWidthShape == undefined)
+          throw new Error("Couldn't find the shape you wanted to delete.");
+        return new LineWidthCommand(lineWidthShape, commandParameters.lineWidth, this.rendererService);
+
       default:
         throw new Error("Unable to create command");
     }

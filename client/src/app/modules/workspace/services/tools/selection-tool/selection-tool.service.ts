@@ -20,6 +20,7 @@ import { SynchronisationService } from "../../synchronisation/synchronisation.se
 import { Subject } from "rxjs";
 import { PrimaryColorCommand } from "./primary-color-command/primary-color-command.service";
 import { SecondaryColorCommand } from "./secondary-color-command/secondary-color-command.service";
+import { LineWidthCommand } from "./line-width-command/line-width-command.service"
 
 @Injectable({
   providedIn: "root",
@@ -347,20 +348,9 @@ export class SelectionToolService implements Tools {
   setSelectionLineWidth(strokeWidth: number): void {
     if (this.objects.length > 0) {
       const currentObject = this.objects[0];
-      const strokeWidthString = `${strokeWidth}px`;
-      if (currentObject.tagName == "circle") {
-        this.rendererService.renderer.setAttribute(
-          currentObject,
-          "r",
-          strokeWidthString
-        );
-      } else {
-        this.rendererService.renderer.setStyle(
-          currentObject,
-          "stroke-width",
-          strokeWidthString
-        );
-      }
+      let lineWidthCommand = new LineWidthCommand(currentObject, strokeWidth, this.rendererService);
+      lineWidthCommand.execute();
+      this.drawingSocketService.sendSelectionLineWidthChange(currentObject.id, strokeWidth);
     }
   }
 

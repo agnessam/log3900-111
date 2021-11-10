@@ -68,6 +68,7 @@ export class DrawingSocketService extends AbstractSocketService {
     this.listenFetchDrawingNotification();
     this.listenObjectPrimaryColorChange();
     this.listenObjectSecondaryColorChange();
+    this.listenLineWidthChange();
   }
 
   async sendGetUpdateDrawingRequest(): Promise<void> {
@@ -281,5 +282,21 @@ export class DrawingSocketService extends AbstractSocketService {
       roomName: this.roomName,
     }
     this.namespaceSocket.emit(SECONDARY_COLOR_EVENT, colorData);
+  }
+
+  
+  sendSelectionLineWidthChange(objectId: string, lineWidth: number): void {
+    let lineWidthData : any = {
+      id: objectId,
+      lineWidth: lineWidth,
+      roomName: this.roomName
+    }
+    this.namespaceSocket.emit("line-width-update", lineWidthData);
+  }
+
+  private listenLineWidthChange(): void {
+    this.namespaceSocket.on("line-width-update", (lineWidthData: any) => {
+      this.synchronisationService.setSelectionLineWidth(lineWidthData);
+    })
   }
 }

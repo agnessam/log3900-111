@@ -2,7 +2,6 @@ import { Injectable } from "@angular/core";
 import { ICommand } from "../../interfaces/command.interface";
 import { SocketTool } from "../tools/socket-tool";
 import { CommandFactoryService } from "./factories/command-factory/command-factory.service";
-// import { SelectionToolService } from "src/app/modules/workspace";
 
 
 @Injectable({
@@ -11,9 +10,7 @@ import { CommandFactoryService } from "./factories/command-factory/command-facto
 export class SynchronisationService {
   previewShapes: Map<string, ICommand> = new Map<string, ICommand>();
 
-  constructor(private commandFactory: CommandFactoryService,
-    // private selectionToolService: SelectionToolService
-  ) 
+  constructor(private commandFactory: CommandFactoryService) 
   {}
 
   removeFromPreview(id: string): boolean {
@@ -105,5 +102,10 @@ export class SynchronisationService {
       deleteSelectionData.drawingCommand
     );
     transformCommand.execute();
+  }
+
+  setSelectionLineWidth(lineWidthData:any): void {
+    let lineWidthCommand = this.commandFactory.createCommand("LineWidth", lineWidthData);
+    lineWidthCommand.execute();
   }
 }
