@@ -29,9 +29,13 @@ interface API {
     @PATCH(Constants.ENDPOINTS.UPDATE_USER+"{id}")
     fun updateUser(@Header("Authorization")token: String, @Path ("id") id : String, @Body  newUser: UserModel.UpdateUser) : Call<HTTPResponseModel.UpdateUser>
 
-    @GET(Constants.ENDPOINTS.GET_ALL_DRAWINGS)
+    @GET(Constants.ENDPOINTS.ALL_DRAWINGS)
     fun getAllDrawings(@Header("Authorization") token: String): Call<List<DrawingModel.Drawing>>
 
     @GET("${Constants.ENDPOINTS.USER}{id}/teams")
     fun getUserTeams(@Header("Authorization") token: String, @Path ("id") id: String): Call<List<TeamModel>>
+
+    @Headers("Content-Type: application/json")
+    @POST(Constants.ENDPOINTS.ALL_DRAWINGS)
+    fun createNewDrawing(@Header("Authorization") token: String, @Body drawing: DrawingModel.CreateDrawing): Call<DrawingModel.CreateDrawing>
 }

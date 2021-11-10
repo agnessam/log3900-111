@@ -13,6 +13,26 @@ class DrawingRepository {
 
     private val httpClient = RetrofitInstance.HTTP
 
+    fun createNewDrawing(token: String, drawing: DrawingModel.CreateDrawing): MutableLiveData<DataWrapper<DrawingModel.CreateDrawing>> {
+        val drawingLiveData: MutableLiveData<DataWrapper<DrawingModel.CreateDrawing>> = MutableLiveData()
+
+        httpClient.createNewDrawing(token = "Bearer $token", drawing).enqueue(object : Callback<DrawingModel.CreateDrawing>{
+            override fun onResponse(call: Call<DrawingModel.CreateDrawing>, response: Response<DrawingModel.CreateDrawing>) {
+                if (!response.isSuccessful) {
+                    drawingLiveData.value = DataWrapper(null, "An error occurred!", true)
+                    return
+                }
+                drawingLiveData.value = DataWrapper(response.body(), "", false)
+            }
+
+            override fun onFailure(call: Call<DrawingModel.CreateDrawing>, t: Throwable) {
+                drawingLiveData.value = DataWrapper(null, "Failed to create new drawing!", true)
+            }
+        })
+
+        return drawingLiveData
+    }
+
     fun getAllDrawings(token: String): MutableLiveData<DataWrapper<List<DrawingModel.Drawing>>> {
         val liveData: MutableLiveData<DataWrapper<List<DrawingModel.Drawing>>> = MutableLiveData()
         printMsg("Fetching all drawings")
@@ -23,11 +43,9 @@ class DrawingRepository {
                     liveData.value = DataWrapper(null, "An error occurred!", true)
                     return
                 }
-
                 liveData.value = DataWrapper(response.body(), null, false)
             }
 
-            // duplicate username is coming through here
             override fun onFailure(call: Call<List<DrawingModel.Drawing>>, t: Throwable) {
                 printMsg("Failed to get all drawings ${t.message!!}")
                 liveData.value = DataWrapper(null, "Failed to get all drawings!", true)

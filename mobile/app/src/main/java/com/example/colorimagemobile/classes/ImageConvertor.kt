@@ -14,6 +14,8 @@ import kotlin.math.ceil
 
 class ImageConvertor(val context: Context) {
 
+    private val BASE_64_URI = "data:image/svg+xml;base64,"
+
     companion object ErrorMessage {
         const val Base64ToBitmap = "Error converting Base64 into Bitmap"
         const val BitmapToBase64 = "Error converting Bitmap into Base64"
@@ -23,7 +25,7 @@ class ImageConvertor(val context: Context) {
     fun base64ToBitmap(dataURI: String): Bitmap? {
         return try {
             // remove data:image/svg+xml;base64, from URI and decode String
-            val base64Data = dataURI.replace("data:image/svg+xml;base64,", "");
+            val base64Data = dataURI.replace(BASE_64_URI, "");
             val imageBytes = Base64.decode(base64Data, Base64.DEFAULT);
             val svgAsString = String(imageBytes, StandardCharsets.UTF_8)
             val svg: SVG = SVG.getFromString(svgAsString)
@@ -57,6 +59,6 @@ class ImageConvertor(val context: Context) {
         val bytesArray = ByteArrayOutputStream()
         bitmap.compress(Bitmap.CompressFormat.PNG, 100, bytesArray)
         val bytes = bytesArray.toByteArray()
-        return Base64.encodeToString(bytes, Base64.NO_WRAP)
+        return BASE_64_URI + Base64.encodeToString(bytes, Base64.NO_WRAP)
     }
 }

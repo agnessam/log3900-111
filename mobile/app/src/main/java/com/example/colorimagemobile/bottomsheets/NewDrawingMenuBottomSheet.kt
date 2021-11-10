@@ -10,14 +10,20 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import androidx.core.widget.doOnTextChanged
+import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.LifecycleOwner
 import com.example.colorimagemobile.R
 import com.example.colorimagemobile.classes.ImageConvertor
+import com.example.colorimagemobile.classes.MyFragmentManager
+import com.example.colorimagemobile.models.DrawingModel
 import com.example.colorimagemobile.models.TeamModel
+import com.example.colorimagemobile.repositories.DrawingRepository
 import com.example.colorimagemobile.repositories.UserRepository
 import com.example.colorimagemobile.services.SharedPreferencesService
 import com.example.colorimagemobile.services.UserService
 import com.example.colorimagemobile.services.drawing.CanvasService
+import com.example.colorimagemobile.services.drawing.CanvasUpdateService
+import com.example.colorimagemobile.ui.home.fragments.gallery.GalleryDrawingFragment
 import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
 import com.example.colorimagemobile.utils.CommonFun.Companion.toggleButton
 import com.example.colorimagemobile.utils.Constants
@@ -31,13 +37,15 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import top.defaults.colorpicker.ColorPickerView
-import java.io.Serializable
 
 class NewDrawingMenuBottomSheet: BottomSheetDialogFragment() {
     private lateinit var createDrawingBtn: Button
     private lateinit var widthLayout: TextInputLayout
     private lateinit var heightLayout: TextInputLayout
     private lateinit var dialog: BottomSheetDialog
+
+    private lateinit var sharedPrefService: SharedPreferencesService
+    private lateinit var token: String
 
     private var widthValue = 0
     private var heightValue = 0
@@ -60,15 +68,15 @@ class NewDrawingMenuBottomSheet: BottomSheetDialogFragment() {
         widthLayout = view.findViewById(R.id.newDrawingWidthInputLayout)
         heightLayout = view.findViewById(R.id.newDrawingHeightInputLayout)
 
+        sharedPrefService = SharedPreferencesService(requireContext())
+        token = sharedPrefService.getItem(Constants.STORAGE_KEY.TOKEN)
+
         toggleButton(createDrawingBtn, false)
         fetchTeams()
         setListeners(view)
     }
 
     private fun fetchTeams() {
-        val sharedPrefService = SharedPreferencesService(requireContext())
-        val token = sharedPrefService.getItem(Constants.STORAGE_KEY.TOKEN)
-
         UserRepository().getUserTeams(token, UserService.getUserInfo()._id).observe(context as LifecycleOwner, {
             if (it.isError as Boolean) {
                 return@observe
@@ -109,15 +117,28 @@ class NewDrawingMenuBottomSheet: BottomSheetDialogFragment() {
             canvas.drawColor(color)
 
             val base64URI = ImageConvertor(requireContext()).bitmapToBase64(bitmap)
-            val ownerModel = "User"
-            val ownerId = ""
-            val drawingName = "MyDrawing"
+            // to change dynamically once lourd has completed the UI
+            val newDrawing = DrawingModel.CreateDrawing(_id = null, dataUri = base64URI, ownerModel = "User", ownerId = "", name = "MyDrawing2")
 
-//            closeSheet()
+            DrawingRepository().createNewDrawing(token, newDrawing).observe(context as LifecycleOwner, {
+                if (it.isError as Boolean) {
+                    return@observe
+                }
 
-//            val fragmentManager = MyFragmentManager(requireActivity())
-//            fragmentManager.closeFragment(this@NewDrawingMenuBottomSheet)
-//            fragmentManager.openWithData(R.id.main_gallery_fragment, GalleryDrawingFragment(), NewDrawing(canvas, bitmap))
+                // open drawing
+                val drawing = it.data as DrawingModel.CreateDrawing
+                if (drawing._id != null) {
+
+                    closeSheet()
+
+                    sharedPrefService.setItem(Constants.STORAGE_KEY.DRAWING_ROOM_ID, drawing._id)
+                    MyFragmentManager(context as FragmentActivity).open(R.id.main_gallery_fragment, GalleryDrawingFragment())
+
+                    CanvasService.createExistingBitmap(bitmap)
+                    CanvasService.updateCanvasColor(color)
+                    CanvasUpdateService.invalidate()
+                }
+            })
         }
     }
 

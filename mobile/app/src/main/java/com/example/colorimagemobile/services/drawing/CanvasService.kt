@@ -19,10 +19,8 @@ object CanvasService {
         height = newHeight
     }
 
-    fun initialize() {
-//        if (::extraBitmap.isInitialized) extraBitmap.recycle()
-        extraBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
-        extraCanvas = Canvas(extraBitmap)
+    fun updateCanvasColor(color: Int) {
+        extraCanvas.drawColor(color)
     }
 
     // pass bitmap retrieved/calculated from Server data
