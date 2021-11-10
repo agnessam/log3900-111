@@ -1,4 +1,4 @@
-import { User, UserInterface } from '../../../domain/models/User';
+import { User, UserInterface } from '../../../domain/models/user';
 import { injectable } from 'inversify';
 import { Types } from 'mongoose';
 import { Drawing, DrawingInterface } from '../../../domain/models/Drawing';
@@ -21,7 +21,7 @@ export class DrawingRepository extends GenericRepository<DrawingInterface> {
         dataUri: item.dataUri,
         ownerId: ownerId,
         ownerModel: 'User',
-        name: item.name
+        name: item.name,
       });
       drawing.save().then((drawing) => {
         User.findById(
@@ -48,7 +48,7 @@ export class DrawingRepository extends GenericRepository<DrawingInterface> {
         dataUri: item.dataUri,
         ownerId: item.ownerId,
         ownerModel: 'Team',
-        name: item.name
+        name: item.name,
       });
       drawing.save().then((drawing) => {
         Team.findById(

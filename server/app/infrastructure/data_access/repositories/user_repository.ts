@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { injectable } from 'inversify';
 import { request, response } from 'inversify-express-utils';
-import { User, UserInterface } from '../../../domain/models/User';
+import { User, UserInterface } from '../../../domain/models/user';
 import { GenericRepository } from './generic_repository';
 import { Team } from '../../../domain/models/teams';
 
@@ -38,14 +38,13 @@ export class UserRepository extends GenericRepository<UserInterface> {
 
   public async getUserTeams(userId: string) {
     return new Promise((resolve, reject) => {
-      Team.find({members: userId})
-        .exec((err, teams) => {
-          if (err || !teams) {
-            reject(err);
-          }
-          const userTeams = teams;
-          resolve(userTeams);
-        });
+      Team.find({ members: userId }).exec((err, teams) => {
+        if (err || !teams) {
+          reject(err);
+        }
+        const userTeams = teams;
+        resolve(userTeams);
+      });
     });
   }
 
