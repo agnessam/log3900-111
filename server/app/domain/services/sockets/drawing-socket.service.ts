@@ -22,7 +22,7 @@ import { SocketServiceInterface } from '../../../domain/interfaces/socket.interf
 import { injectable } from 'inversify';
 import { Server, Socket } from 'socket.io';
 import { DrawingCommand } from '../../../domain/interfaces/drawing-command.interface';
-import { Color } from '@app/domain/models/Color';
+import { Color } from '../../../domain/interfaces/color.interface';
 import { LineWidth } from '../../../domain/interfaces/line-width.interface';
 
 @injectable()
