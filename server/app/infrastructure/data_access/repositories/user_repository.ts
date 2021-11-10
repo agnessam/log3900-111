@@ -60,4 +60,17 @@ export class UserRepository extends GenericRepository<UserInterface> {
         });
     });
   }
+
+  public async getPublishedDrawings(userId: string) {
+    return new Promise((resolve, reject) => {
+      User.findById({ _id: userId })
+        .populate('publishedDrawings')
+        .exec((err, user) => {
+          if (err || !user) {
+            reject(err);
+          }
+          resolve(user!.publishedDrawings);
+        });
+    });
+  }
 }
