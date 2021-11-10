@@ -17,7 +17,9 @@ import {
   RGB,
   PRIMARY_COLOR_EVENT,
   SECONDARY_COLOR_EVENT,
-  Color
+  Color,
+  LINE_WIDTH_EVENT,
+  LineWidth
 } from "src/app/shared";
 import { Selection } from "../../../tools/selection-tool/selection.model";
 import { SocketTool } from "../../../tools/socket-tool";
@@ -286,16 +288,16 @@ export class DrawingSocketService extends AbstractSocketService {
 
   
   sendSelectionLineWidthChange(objectId: string, lineWidth: number): void {
-    let lineWidthData : any = {
+    let lineWidthData: LineWidth = {
       id: objectId,
       lineWidth: lineWidth,
       roomName: this.roomName
     }
-    this.namespaceSocket.emit("line-width-update", lineWidthData);
+    this.namespaceSocket.emit(LINE_WIDTH_EVENT, lineWidthData);
   }
 
   private listenLineWidthChange(): void {
-    this.namespaceSocket.on("line-width-update", (lineWidthData: any) => {
+    this.namespaceSocket.on(LINE_WIDTH_EVENT, (lineWidthData: LineWidth) => {
       this.synchronisationService.setSelectionLineWidth(lineWidthData);
     })
   }

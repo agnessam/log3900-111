@@ -15,13 +15,15 @@ import {
   ONE_USER_RESPONSE,
   NEW_USER_RESPONSE,
   PRIMARY_COLOR_EVENT,
-  SECONDARY_COLOR_EVENT
+  SECONDARY_COLOR_EVENT,
+  LINE_WIDTH_EVENT
 } from '../../constants/socket-constants';
 import { SocketServiceInterface } from '../../../domain/interfaces/socket.interface';
 import { injectable } from 'inversify';
 import { Server, Socket } from 'socket.io';
 import { DrawingCommand } from '../../../domain/interfaces/drawing-command.interface';
 import { Color } from '@app/domain/models/Color';
+import { LineWidth } from '../../../domain/interfaces/line-width.interface';
 
 @injectable()
 export class DrawingSocketService extends SocketServiceInterface {
@@ -47,13 +49,13 @@ export class DrawingSocketService extends SocketServiceInterface {
   }
 
   private listenLineWidthChange(socket:Socket): void {
-    socket.on("line-width-update", (lineWidthData) => {
+    socket.on(LINE_WIDTH_EVENT, (lineWidthData) => {
       this.sendLineWidthData(socket, lineWidthData);
     });
   }
 
-  private sendLineWidthData(socket:Socket, lineWidthData: any){
-    socket.to(lineWidthData.roomName).emit("line-width-update", lineWidthData);
+  private sendLineWidthData(socket:Socket, lineWidthData: LineWidth){
+    socket.to(lineWidthData.roomName).emit(LINE_WIDTH_EVENT, lineWidthData);
   }
 
   private listenObjectPrimaryColorChange(socket:Socket): void {
