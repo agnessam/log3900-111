@@ -1,8 +1,12 @@
-import { User, UserInterface } from '../../../domain/models/User';
+import {
+  PublishedDrawing,
+  PublishedDrawingInterface,
+} from '@app/domain/models/PublishedDrawing';
 import { injectable } from 'inversify';
 import { Types } from 'mongoose';
 import { Drawing, DrawingInterface } from '../../../domain/models/Drawing';
 import { Team, TeamInterface } from '../../../domain/models/teams';
+import { User, UserInterface } from '../../../domain/models/User';
 import { GenericRepository } from './generic_repository';
 
 @injectable()
@@ -21,7 +25,7 @@ export class DrawingRepository extends GenericRepository<DrawingInterface> {
         dataUri: item.dataUri,
         ownerId: ownerId,
         ownerModel: 'User',
-        name: item.name
+        name: item.name,
       });
       drawing.save().then((drawing) => {
         User.findById(
@@ -48,7 +52,7 @@ export class DrawingRepository extends GenericRepository<DrawingInterface> {
         dataUri: item.dataUri,
         ownerId: item.ownerId,
         ownerModel: 'Team',
-        name: item.name
+        name: item.name,
       });
       drawing.save().then((drawing) => {
         Team.findById(
@@ -63,6 +67,46 @@ export class DrawingRepository extends GenericRepository<DrawingInterface> {
         );
       });
       resolve(drawing);
+    });
+  }
+
+  public async publishDrawing(
+    drawing: DrawingInterface,
+  ): Promise<PublishedDrawingInterface> {
+    return new Promise<PublishedDrawingInterface>((resolve, reject) => {
+      const publishedDrawing = new PublishedDrawing({
+        _id: new Types.ObjectId(),
+        dataUri: drawing.dataUri,
+        ownerId: drawing.ownerId,
+        ownerModel: drawing.ownerModel,
+        name: drawing.name,
+      });
+      publishedDrawing.save().then((publishedDrawing) => {
+        if (publishedDrawing.ownerModel == 'Team') {
+          Team.findById(
+            { _id: publishedDrawing.ownerId },
+            (err: Error, team: TeamInterface) => {
+              if (err || !team) {
+                reject(err);
+              }
+              team.publishedDrawings.push(publishedDrawing._id);
+              team.save();
+            },
+          );
+        } else {
+          User.findById(
+            { _id: publishedDrawing.ownerId },
+            (err: Error, user: UserInterface) => {
+              if (err || !user) {
+                reject(err);
+              }
+              user.publishedDrawings.push(publishedDrawing._id);
+              user.save();
+            },
+          );
+        }
+      });
+      resolve(publishedDrawing);
     });
   }
 }

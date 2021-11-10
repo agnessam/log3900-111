@@ -52,6 +52,11 @@ export class UserController {
     return await this.userRepository.getUserDrawings(req.params.id);
   }
 
+  @httpGet('/:id/publishedDrawings')
+  public async getPublishedDrawings(@request() req: Request) {
+    return await this.userRepository.getPublishedDrawings(req.params.id);
+  }
+
   @httpGet('/:id/teams')
   public async getTeams(@request() req: Request) {
     return await this.userRepository.getUserTeams(req.params.id);

@@ -38,14 +38,13 @@ export class UserRepository extends GenericRepository<UserInterface> {
 
   public async getUserTeams(userId: string) {
     return new Promise((resolve, reject) => {
-      Team.find({members: userId})
-        .exec((err, teams) => {
-          if (err || !teams) {
-            reject(err);
-          }
-          const userTeams = teams;
-          resolve(userTeams);
-        });
+      Team.find({ members: userId }).exec((err, teams) => {
+        if (err || !teams) {
+          reject(err);
+        }
+        const userTeams = teams;
+        resolve(userTeams);
+      });
     });
   }
 
@@ -58,6 +57,19 @@ export class UserRepository extends GenericRepository<UserInterface> {
             reject(err);
           }
           resolve(user!.drawings);
+        });
+    });
+  }
+
+  public async getPublishedDrawings(userId: string) {
+    return new Promise((resolve, reject) => {
+      User.findById({ _id: userId })
+        .populate('publishedDrawings')
+        .exec((err, user) => {
+          if (err || !user) {
+            reject(err);
+          }
+          resolve(user!.publishedDrawings);
         });
     });
   }
