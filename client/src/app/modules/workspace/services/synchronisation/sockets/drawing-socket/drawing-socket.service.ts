@@ -26,8 +26,6 @@ import { SocketTool } from "../../../tools/socket-tool";
 import { SynchronisationService } from "../../synchronisation.service";
 import { DrawingHttpClientService } from "src/app/modules/backend-communication";
 import { DrawingService } from "src/app/modules/workspace";
-import { PrimaryColorCommand } from "../../../tools/selection-tool/primary-color-command/primary-color-command.service";
-import { SecondaryColorCommand } from "../../../tools/selection-tool/secondary-color-command/secondary-color-command.service";
 
 @Injectable({
   providedIn: "root",
@@ -250,19 +248,13 @@ export class DrawingSocketService extends AbstractSocketService {
 
   private listenObjectPrimaryColorChange(): void {
     this.namespaceSocket.on(PRIMARY_COLOR_EVENT, (colorData:Color) => {
-      const objectToRecolor = this.drawingService.objects.get(colorData.id);
-      if(!objectToRecolor) return;
-      let primaryColorCommand = new PrimaryColorCommand(objectToRecolor, colorData.color, colorData.opacity);
-      primaryColorCommand.execute();
+      this.synchronisationService.setObjectPrimaryColor(colorData);
     })
   }
 
   private listenObjectSecondaryColorChange(): void {
     this.namespaceSocket.on(SECONDARY_COLOR_EVENT, (colorData:Color) => {
-      const objectToRecolor = this.drawingService.objects.get(colorData.id);
-      if(!objectToRecolor) return;
-      let secondaryColorCommand = new SecondaryColorCommand(objectToRecolor, colorData.color, colorData.opacity);
-      secondaryColorCommand.execute();
+      this.synchronisationService.setObjectSecondaryColor(colorData);
     })
   }
 

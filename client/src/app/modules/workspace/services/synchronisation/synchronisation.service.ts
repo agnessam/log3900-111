@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { LineWidth } from "src/app/shared";
+import { Color, LineWidth } from "src/app/shared";
 import { ICommand } from "../../interfaces/command.interface";
 import { SocketTool } from "../tools/socket-tool";
 import { CommandFactoryService } from "./factories/command-factory/command-factory.service";
@@ -108,5 +108,15 @@ export class SynchronisationService {
   setSelectionLineWidth(lineWidthData:LineWidth): void {
     let lineWidthCommand = this.commandFactory.createCommand("LineWidth", lineWidthData);
     lineWidthCommand.execute();
+  }
+
+  setObjectPrimaryColor(colorData:Color): void {
+    const primaryColorCommand = this.commandFactory.createCommand("PrimaryColor", colorData);
+    primaryColorCommand.execute();
+  }
+
+  setObjectSecondaryColor(colorData:Color): void {
+    const secondaryColorCommand = this.commandFactory.createCommand("SecondaryColor", colorData);
+    secondaryColorCommand.execute()
   }
 }
