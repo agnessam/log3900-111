@@ -17,6 +17,8 @@ class Constants {
         // profile user log history
         const val LAST_LOGIN_DATE = "lastLogin"
         const val LAST_LOGOUT_DATE ="lastLogout"
+
+        val TEST_ID_CHANNEL ="6188d7750e5bad79805f9e88"
     }
 
     class URL {
@@ -39,6 +41,7 @@ class Constants {
             const val DELETE_USER = "api/users/:id"
 
             const val GET_ALL_CHAT_NAME ="api/channels/"
+            const val GET_CHANNEL ="api/channels/"
 
 
         }
@@ -62,4 +65,6 @@ class Constants {
              const val LEAVE_ROOM_EVENT_NAME = "leaveRoom";
         }
     }
+
+
 }

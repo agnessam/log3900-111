@@ -2,21 +2,22 @@ package com.example.colorimagemobile.services.chat
 
 import com.example.colorimagemobile.models.ChatChannelModel
 import com.example.colorimagemobile.models.HTTPResponseModel
+import com.example.colorimagemobile.models.UserModel
 import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
 
 object ChatChannelService {
-    private lateinit var chatInfo: ChatChannelModel.TextChannelInfo
-    private lateinit var  allChatInfo: List<ChatChannelModel.TextChannelInfo>
+    private lateinit var chatInfo: ChatChannelModel.AllInfo
+    private lateinit var  allChatInfo: List<ChatChannelModel.AllInfo>
     private lateinit var data : List<HTTPResponseModel.GetChannelList>
-    private  lateinit var content : ChatChannelModel.TextChannelInfo
-    private lateinit var res : List<ChatChannelModel.TextChannelInfo>
+    private  lateinit var content : ChatChannelModel.AllInfo
+    private lateinit var res : List<ChatChannelModel.AllInfo>
    var listName : Array<String> = arrayOf()
 
-    fun setChatInfo(newChatInfo: ChatChannelModel.TextChannelInfo) {
+    fun setChatInfo(newChatInfo: ChatChannelModel.AllInfo) {
         this.chatInfo = newChatInfo
     }
 
-    fun getChatInfo(): ChatChannelModel.TextChannelInfo {
+    fun getChatInfo(): ChatChannelModel.AllInfo{
         return this.chatInfo
     }
 
@@ -63,7 +64,7 @@ object ChatChannelService {
 
     }
 
-    fun getAllChatInfo(): List<ChatChannelModel.TextChannelInfo> {
+    fun getAllChatInfo(): List<ChatChannelModel.AllInfo> {
         return this.allChatInfo
     }
 

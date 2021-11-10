@@ -8,8 +8,10 @@ class HTTPResponseModel {
     data class GetUser(val user: UserModel.AllInfo, val err: String)
     data class UpdateUser(val user: UserModel.AllInfo, val err: String)
 
-    data class GetChannelList(val channelInfo : ChatChannelModel.TextChannelInfo, val err : String )
-    data class DeleteChatChannel(val channelInfo : ChatChannelModel.TextChannelInfo, val err : String )
+    data class GetChannelList(val channelInfo : ChatChannelModel.AllInfo, val err : String )
+
+    data class GetChannel(val channelInfo : ChatChannelModel.AllInfo, val err: String)
+    data class DeleteChatChannel(val channelInfo : ChatChannelModel.AllInfo, val err : String )
 
     data class GetChatMessage(val chatMessage : MessageModel.MessageAllInfo , val err : String )
     data class GetChatMessageHistory (val channelName : String, val chatMessage : MessageModel.MessageAllInfo , val err : String )
