@@ -8,6 +8,7 @@ import {
   userRepository,
 } from '../constants/decorators';
 import { SearchServiceInterface } from '../interfaces/search-service.interface';
+import { DrawingInterface } from '../models/Drawing';
 import { TeamInterface } from '../models/teams';
 import { UserInterface } from '../models/user';
 
@@ -52,7 +53,7 @@ export class SearchService implements SearchServiceInterface {
     return {
       users: [...users],
       teams: [...teams],
-      drawings: [...new Set([...drawings, ...drawingsFromOwners])],
+      drawings: this.removeDuplicates([...drawings, ...drawingsFromOwners]),
     };
   }
 
@@ -60,5 +61,23 @@ export class SearchService implements SearchServiceInterface {
     return owners
       .map((owner) => owner.drawings)
       .reduce((p, c) => [...p, ...c], []);
+  }
+
+  private removeDuplicates(items: DrawingInterface[]): DrawingInterface[] {
+    const uniqueDrawings = [];
+    const hasSeen = new Set();
+
+    const len = items.length;
+
+    for (let i = 0; i < len; ++i) {
+      const item = items[i];
+      if (hasSeen.has(item._id.toString())) {
+        continue;
+      }
+      uniqueDrawings.push(item);
+      hasSeen.add(item._id.toString());
+    }
+
+    return uniqueDrawings;
   }
 }
