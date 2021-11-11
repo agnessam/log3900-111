@@ -72,7 +72,7 @@ export abstract class GenericRepository<TModel extends Document>
     });
   }
 
-  findManyById(ids: string[]): Promise<TModel[]> {
+  public findManyById(ids: string[]): Promise<TModel[]> {
     return new Promise<TModel[]>((resolve, reject) => {
       const query = { _id: { $in: ids } };
       this.model.find(query as any, (err, res) => {
@@ -84,7 +84,7 @@ export abstract class GenericRepository<TModel extends Document>
     });
   }
 
-  findManyByQuery(query: any) {
+  public findManyByQuery(query: any) {
     return new Promise<TModel[]>((resolve, reject) => {
       this.model.find(query as any, (err, res) => {
         if (err) {
