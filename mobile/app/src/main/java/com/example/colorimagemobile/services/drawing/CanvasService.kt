@@ -11,6 +11,14 @@ object CanvasService {
     private var width = Constants.DRAWING.MAX_WIDTH
     private var height = Constants.DRAWING.MAX_HEIGHT
 
+    fun getWidth(): Int {
+        return width
+    }
+
+    fun getHeight(): Int {
+        return height
+    }
+
     fun setWidth(newWidth: Int) {
         width = newWidth
     }
@@ -21,6 +29,12 @@ object CanvasService {
 
     fun updateCanvasColor(color: Int) {
         extraCanvas.drawColor(color)
+    }
+
+    // initialize and create new canvas/bitmap
+    fun createNewBitmap() {
+        extraBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
+        extraCanvas = Canvas(extraBitmap)
     }
 
     // pass bitmap retrieved/calculated from Server data

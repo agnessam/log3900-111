@@ -1,9 +1,6 @@
 package com.example.colorimagemobile.bottomsheets
 
 import android.app.Dialog
-import android.graphics.Bitmap
-import android.graphics.Canvas
-import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -15,6 +12,7 @@ import androidx.lifecycle.LifecycleOwner
 import com.example.colorimagemobile.R
 import com.example.colorimagemobile.classes.ImageConvertor
 import com.example.colorimagemobile.classes.MyFragmentManager
+import com.example.colorimagemobile.classes.xml_json.SVGBuilder
 import com.example.colorimagemobile.models.DrawingModel
 import com.example.colorimagemobile.models.TeamModel
 import com.example.colorimagemobile.repositories.DrawingRepository
@@ -23,6 +21,7 @@ import com.example.colorimagemobile.services.SharedPreferencesService
 import com.example.colorimagemobile.services.UserService
 import com.example.colorimagemobile.services.drawing.CanvasService
 import com.example.colorimagemobile.services.drawing.CanvasUpdateService
+import com.example.colorimagemobile.services.drawing.toolsAttribute.ColorService
 import com.example.colorimagemobile.ui.home.fragments.gallery.GalleryDrawingFragment
 import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
 import com.example.colorimagemobile.utils.CommonFun.Companion.toggleButton
@@ -88,8 +87,6 @@ class NewDrawingMenuBottomSheet: BottomSheetDialogFragment() {
     }
 
     private fun setListeners(view: View) {
-        var color: Int = Color.WHITE
-
         // width input validation
         view.findViewById<TextInputEditText>(R.id.newDrawingWidthInputText).doOnTextChanged { text, _, _, _ ->
             widthValue = getCurrentValue(text)
@@ -105,20 +102,22 @@ class NewDrawingMenuBottomSheet: BottomSheetDialogFragment() {
         }
 
         view.findViewById<ColorPickerView>(R.id.colorPickerNewDrawing).subscribe { newColor, _, _ ->
-            color = newColor
+            ColorService.setColorAsString(newColor)
         }
 
         view.findViewById<Button>(R.id.createDrawingBtn).setOnClickListener {
             CanvasService.setWidth(widthValue)
             CanvasService.setHeight(heightValue)
 
-            val bitmap = Bitmap.createBitmap(widthValue, heightValue, Bitmap.Config.ARGB_8888)
-            val canvas = Canvas(bitmap)
-            canvas.drawColor(color)
+            val svgBuilder = SVGBuilder()
+            svgBuilder.addAttr("width", CanvasService.getWidth())
+            svgBuilder.addAttr("height", CanvasService.getHeight())
+            svgBuilder.addAttr("style", "background-color: ${ColorService.getColorAsString()}")
 
-            val base64URI = ImageConvertor(requireContext()).bitmapToBase64(bitmap)
+            val base64 = ImageConvertor(requireContext()).XMLToBase64(svgBuilder.getXML())
+
             // to change dynamically once lourd has completed the UI
-            val newDrawing = DrawingModel.CreateDrawing(_id = null, dataUri = base64URI, ownerModel = "User", ownerId = "", name = "MyDrawing2")
+            val newDrawing = DrawingModel.CreateDrawing(_id = null, dataUri = base64, ownerModel = "User", ownerId = "", name = "MyDrawing2")
 
             DrawingRepository().createNewDrawing(token, newDrawing).observe(context as LifecycleOwner, {
                 if (it.isError as Boolean) {
@@ -128,14 +127,13 @@ class NewDrawingMenuBottomSheet: BottomSheetDialogFragment() {
                 // open drawing
                 val drawing = it.data as DrawingModel.CreateDrawing
                 if (drawing._id != null) {
-
                     closeSheet()
 
                     sharedPrefService.setItem(Constants.STORAGE_KEY.DRAWING_ROOM_ID, drawing._id)
                     MyFragmentManager(context as FragmentActivity).open(R.id.main_gallery_fragment, GalleryDrawingFragment())
 
-                    CanvasService.createExistingBitmap(bitmap)
-                    CanvasService.updateCanvasColor(color)
+                    CanvasService.createNewBitmap()
+                    CanvasService.updateCanvasColor(ColorService.getColorAsInt())
                     CanvasUpdateService.invalidate()
                 }
             })

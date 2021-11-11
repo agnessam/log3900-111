@@ -69,4 +69,7 @@ dependencies {
 
     // Android Base64 svg+xml to Bitmap: https://bigbadaboom.github.io/androidsvg/
     implementation 'com.caverock:androidsvg-aar:1.4'
+
+    // XML - JSON: https://github.com/javadev/underscore-java
+    implementation 'com.github.javadev:underscore:1.71'
 }

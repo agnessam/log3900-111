@@ -7,7 +7,6 @@ import android.util.Base64
 import com.caverock.androidsvg.SVG
 import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
 import com.example.colorimagemobile.utils.CommonFun.Companion.printToast
-import java.io.ByteArrayOutputStream
 import java.lang.NullPointerException
 import java.nio.charset.StandardCharsets
 import kotlin.math.ceil
@@ -55,10 +54,7 @@ class ImageConvertor(val context: Context) {
         }
     }
 
-    fun bitmapToBase64(bitmap: Bitmap): String {
-        val bytesArray = ByteArrayOutputStream()
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, bytesArray)
-        val bytes = bytesArray.toByteArray()
-        return BASE_64_URI + Base64.encodeToString(bytes, Base64.NO_WRAP)
+    fun XMLToBase64(xmlString: String): String {
+        return BASE_64_URI + Base64.encodeToString(xmlString.toByteArray(), Base64.NO_WRAP)
     }
 }
