@@ -10,7 +10,6 @@ export class SearchService implements SearchServiceInterface {
   @userRepository private userRepository: UserRepository;
 
   async search(query: string): Promise<any[]> {
-    console.log(query);
     const users = await this.userRepository.findManyByQuery({
       $or: [
         { username: { $regex: new RegExp(query, 'ig') } },
