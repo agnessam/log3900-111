@@ -6,7 +6,7 @@ import { injectable } from 'inversify';
 import { Types } from 'mongoose';
 import { Drawing, DrawingInterface } from '../../../domain/models/Drawing';
 import { Team, TeamInterface } from '../../../domain/models/teams';
-import { User, UserInterface } from '../../../domain/models/User';
+import { User, UserInterface } from '../../../domain/models/user';
 import { GenericRepository } from './generic_repository';
 
 @injectable()
