@@ -7,7 +7,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.lifecycle.LiveData
+import com.example.colorimagemobile.MainActivity
 import com.example.colorimagemobile.R
+import com.example.colorimagemobile.models.DataWrapper
+import com.example.colorimagemobile.models.HTTPResponseModel
 import com.example.colorimagemobile.models.UserModel
 import com.example.colorimagemobile.repositories.UserRepository
 import com.example.colorimagemobile.services.HandleHTTP
@@ -16,10 +20,6 @@ import com.example.colorimagemobile.services.UserService
 import com.example.colorimagemobile.ui.home.HomeActivity
 import com.example.colorimagemobile.utils.CommonFun
 import com.example.colorimagemobile.utils.Constants
-import androidx.lifecycle.LiveData
-import com.example.colorimagemobile.models.DataWrapper
-import com.example.colorimagemobile.models.HTTPResponseModel
-
 
 
 class PasswordFragment : Fragment() {
@@ -40,8 +40,6 @@ class PasswordFragment : Fragment() {
     private lateinit var matchnewP : TextView
 
     private  lateinit var userProfileFragment : UserProfileFragment
-
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -109,7 +107,6 @@ class PasswordFragment : Fragment() {
 // always false beacuse user.password from database is encrypt
     private fun isOldPassword(): Boolean{
         edtOldPassword = (infview!!.findViewById<View>(R.id.oldpassword) as TextView).text.toString()
-        Log.d("oldpassword","old ="+edtOldPassword +" from db="+user.password)
         if (edtOldPassword != user.password){
             context?.let { CommonFun.printToast(it, "OldPassword doesn't match") }
             return false
@@ -122,8 +119,6 @@ class PasswordFragment : Fragment() {
     private fun isNewPasswordMatch(): Boolean{
         edtPassword = (infview!!.findViewById<View>(R.id.newpassword) as TextView).text.toString()
         edtMatchPassword = (infview!!.findViewById<View>(R.id.vnewpassword) as TextView).text.toString()
-        Log.d("newpassword","new ="+edtPassword)
-        Log.d("matchnewpassword","match ="+edtMatchPassword )
         if(edtPassword  != edtMatchPassword){
             context?.let { CommonFun.printToast(it, "Password doesn't match") }
             return false
@@ -139,15 +134,16 @@ class PasswordFragment : Fragment() {
         if (areFieldEmpty() || !isOldPassword() || !isNewPasswordMatch()) return
         // form body to make HTTP request
         val newUserData = UserModel.UpdateUser(user.username, user.password, edtPassword)
-        val updateObserver = updateUserInfo(newUserData)
+        UserService.setNewProfileData(newUserData)
+        val updateObserver = updateUserInfo(token,user._id)
 
         updateObserver.observe(viewLifecycleOwner, { context?.let { it1 -> handleHTTP.Response(it1,it) } })
-        CommonFun.redirectTo_(this.requireActivity(), HomeActivity::class.java)
+//        HomeActivity().checkCurrentUser()
+        CommonFun.redirectTo_(this.requireActivity(), MainActivity::class.java)
 
     }
-
-    private fun updateUserInfo(newUserData: UserModel.UpdateUser): LiveData<DataWrapper<HTTPResponseModel.UpdateUser>> {
-        return userRepository.updateUserData(token, user._id,newUserData)
+    fun updateUserInfo(token : String, id: String): LiveData<DataWrapper<HTTPResponseModel.UserResponse>> {
+        return userRepository.updateUserData(token, id)
     }
 
 }

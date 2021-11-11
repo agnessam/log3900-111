@@ -8,6 +8,7 @@ import retrofit2.http.*
 
 interface API {
 
+    // login logout region
     @Headers("Content-Type: application/json")
     @POST(Constants.ENDPOINTS.LOGIN_USER)
     fun loginUser(@Body user: UserModel.Login): Call<HTTPResponseModel.LoginResponse>
@@ -16,23 +17,42 @@ interface API {
     @POST(Constants.ENDPOINTS.LOGOUT_USER)
     fun logoutUser(@Body user: UserModel.Logout): Call<Boolean>
 
+
+    // register region
     @Headers("Content-Type: application/json")
     @POST(Constants.ENDPOINTS.REGISTER_USER)
     fun registerUser(@Body newUser: UserModel.Register): Call<HTTPResponseModel.RegisterResponse>
 
+
+    // User crud region
     @GET(Constants.ENDPOINTS.GET_USER_BY_TOKEN)
-    fun getUserByToken(@Header("Authorization") token: String): Call<HTTPResponseModel.GetUser>
+    fun getUserByToken(@Header("Authorization") token: String): Call<HTTPResponseModel.UserResponse>
 
     @Headers("Content-Type: application/json")
-    @PATCH(Constants.ENDPOINTS.UPDATE_USER+"{id}")
-    fun updateUser(@Header("Authorization")token: String, @Path ("id") id : String, @Body  newUser: UserModel.UpdateUser) : Call<HTTPResponseModel.UpdateUser>
+    @GET(Constants.ENDPOINTS.USER_PATH)
+    fun getAllUser(@Header("Authorization") token: String): Call<List<UserModel.AllInfo>>
 
+    @Headers("Content-Type: application/json")
+    @GET(Constants.ENDPOINTS.USER_PATH+"{id}")
+    fun getUserById(@Header("Authorization") token: String, @Path ("id") id : String): Call<UserModel.AllInfo>
+
+    @Headers("Content-Type: application/json")
+    @PATCH(Constants.ENDPOINTS.USER_PATH+"{id}")
+    fun updateUser(@Header("Authorization")token: String, @Path ("id") id : String, @Body  newUser: UserModel.UpdateUser) : Call<HTTPResponseModel.UserResponse>
+
+    @Headers("Content-Type: application/json")
+    @DELETE(Constants.ENDPOINTS.USER_PATH+"{id}")
+    fun deleteUserById(@Header("Authorization")token: String, @Path ("id") id : String) : Call<HTTPResponseModel.UserResponse>
+
+
+    //  TextChannel region
     @Headers("Content-Type: application/json" , "Accept:application/json")
-    @GET(Constants.ENDPOINTS.GET_ALL_CHAT_NAME)
-    fun getAllChatChannel(@Header("Authorization")token: String): Call<List<HTTPResponseModel.GetChannelList>>
+    @GET(Constants.ENDPOINTS.TEXT_CHANNEL_PATH)
+    fun getAllChatChannel(@Header("Authorization")token: String): Call<List<HTTPResponseModel.TextChannelResponse>>
 
     @Headers("Content-Type: application/json")
-    @GET(Constants.ENDPOINTS.GET_CHANNEL+"{id}")
-    fun getChannelByid(@Header("Authorization")token: String, @Path ("id") id : String) : Call<HTTPResponseModel.GetChannel>
+    @GET(Constants.ENDPOINTS.TEXT_CHANNEL_PATH+"{id}")
+    fun getChannelByid(@Header("Authorization")token: String, @Path ("id") id : String) : Call<HTTPResponseModel.TextChannelResponse>
+
 
 }

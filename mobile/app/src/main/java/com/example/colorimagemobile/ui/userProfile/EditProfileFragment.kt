@@ -53,6 +53,7 @@ class EditProfileFragment : Fragment() {
 
         // listeners
         inf.findViewById<View>(R.id.updatebutton).setOnClickListener { update() }
+//        inf.findViewById<View>(R.id.updatebutton).setOnClickListener { getUsers() }
         inf.findViewById<View>(R.id.editprofileview).setOnTouchListener { v, event -> CommonFun.closeKeyboard_(this.requireActivity()) }
 
        // keyboard
@@ -94,15 +95,22 @@ class EditProfileFragment : Fragment() {
 
         // form body to make HTTP request
         val newUserData = UserModel.UpdateUser(edtUsername, edtDescription, user.password)
-        val updateObserver = updateUserInfo(newUserData)
+        UserService.setNewProfileData(newUserData)
+        val updateObserver = updateUserInfo()
 
         updateObserver.observe(viewLifecycleOwner, { context?.let { it1 -> handleHTTP.Response(it1,it) } })
         CommonFun.redirectTo_(this.requireActivity(), HomeActivity::class.java)
 
     }
 
-    private fun updateUserInfo(newUserData: UserModel.UpdateUser): LiveData<DataWrapper<HTTPResponseModel.UpdateUser>> {
-        return userRepository.updateUserData(token, user._id,newUserData)
+    private fun updateUserInfo(): LiveData<DataWrapper<HTTPResponseModel.UserResponse>> {
+        return userRepository.updateUserData(token, user._id)
     }
+
+
+
+
+
+
 
 }

@@ -18,7 +18,9 @@ class Constants {
         const val LAST_LOGIN_DATE = "lastLogin"
         const val LAST_LOGOUT_DATE ="lastLogout"
 
-        val TEST_ID_CHANNEL ="6188d7750e5bad79805f9e88"
+        const val TEST_ID_CHANNEL ="6188d7820e5bad79805f9e8a"
+        const val TEST_ID_USER = "6188c941f458df3e258d7b54"
+
     }
 
     class URL {
@@ -33,15 +35,9 @@ class Constants {
             const val LOGIN_USER = "api/auth/login"
             const val LOGOUT_USER = "api/auth/logout"
             const val REGISTER_USER = "api/auth/register"
-
             const val GET_USER_BY_TOKEN = "api/users/me"
-            const val GET_ALL_USER = "api/users/"
-            const val GET_USER_BY_ID = "api/users/"
-            const val UPDATE_USER = "api/users/"
-            const val DELETE_USER = "api/users/:id"
-
-            const val GET_ALL_CHAT_NAME ="api/channels/"
-            const val GET_CHANNEL ="api/channels/"
+            const val USER_PATH ="api/users/"
+            const val TEXT_CHANNEL_PATH ="api/channels/"
 
 
         }

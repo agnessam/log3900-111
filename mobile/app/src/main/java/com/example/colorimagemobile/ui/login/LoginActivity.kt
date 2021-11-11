@@ -29,7 +29,7 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var sharedPreferencesService: SharedPreferencesService
     private lateinit var binding: ActivityLoginBinding
     private lateinit var formValidator: FormValidator
-    private var canSubmit: Boolean = false
+    private var canSubmit: Boolean = true
 
 
     override fun onCreate(savedInstanceState: Bundle?) {

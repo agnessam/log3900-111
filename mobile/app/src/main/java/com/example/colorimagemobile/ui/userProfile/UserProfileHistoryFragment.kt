@@ -7,14 +7,26 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.lifecycle.LiveData
 import com.example.colorimagemobile.R
+import com.example.colorimagemobile.models.DataWrapper
+import com.example.colorimagemobile.models.HTTPResponseModel
+import com.example.colorimagemobile.models.UserModel
+import com.example.colorimagemobile.repositories.UserRepository
 import com.example.colorimagemobile.services.UserService
+import com.example.colorimagemobile.utils.CommonFun
+import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
+import com.example.colorimagemobile.utils.Constants
 
 
 class UserProfileHistoryFragment : Fragment() {
+    private val userRepository: UserRepository = UserRepository()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+
     }
 
     override fun onCreateView(
@@ -35,9 +47,12 @@ class UserProfileHistoryFragment : Fragment() {
        // sets the derived data in the textView
         lastLogin.text = log.get(0)
         lastLogout.text =log.get(1)
+        printMsg("before get user")
 
         return inf
     }
+
+
 
 }
 

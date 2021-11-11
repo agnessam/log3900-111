@@ -14,6 +14,9 @@
         android:theme="@style/Theme.ColorImageMobile"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".ui.test.CrudTestActivity"
+            android:exported="true" />
+        <activity
             android:name=".ui.register.RegisterActivity"
             android:exported="true" />
         <activity

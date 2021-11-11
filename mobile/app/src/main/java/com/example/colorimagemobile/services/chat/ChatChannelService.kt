@@ -2,13 +2,12 @@ package com.example.colorimagemobile.services.chat
 
 import com.example.colorimagemobile.models.ChatChannelModel
 import com.example.colorimagemobile.models.HTTPResponseModel
-import com.example.colorimagemobile.models.UserModel
 import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
 
 object ChatChannelService {
     private lateinit var chatInfo: ChatChannelModel.AllInfo
     private lateinit var  allChatInfo: List<ChatChannelModel.AllInfo>
-    private lateinit var data : List<HTTPResponseModel.GetChannelList>
+    private lateinit var data : List<HTTPResponseModel.TextChannelResponse>
     private  lateinit var content : ChatChannelModel.AllInfo
     private lateinit var res : List<ChatChannelModel.AllInfo>
    var listName : Array<String> = arrayOf()
@@ -25,7 +24,7 @@ object ChatChannelService {
         return !ChatChannelService::chatInfo.isInitialized
     }
 
-    fun setAllChatInfo(allChatInfoResponse: List<HTTPResponseModel.GetChannelList>){
+    fun setAllChatInfo(allChatInfoResponse: List<HTTPResponseModel.TextChannelResponse>){
       data = allChatInfoResponse
         printMsg("allChatInfoResponse with channel and err ==== "+data)
         for (post in data){

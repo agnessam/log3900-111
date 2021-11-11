@@ -36,6 +36,7 @@ export class UserRepository extends GenericRepository<UserInterface> {
     }
   }
 
+
   public async getUserTeams(userId: string) {
     return new Promise((resolve, reject) => {
       Team.find({members: userId})

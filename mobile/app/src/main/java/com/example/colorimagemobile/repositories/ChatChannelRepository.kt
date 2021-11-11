@@ -5,7 +5,6 @@ import androidx.lifecycle.MutableLiveData
 import com.example.colorimagemobile.models.DataWrapper
 import com.example.colorimagemobile.models.HTTPResponseModel
 import com.example.colorimagemobile.services.RetrofitInstance
-import com.example.colorimagemobile.services.chat.ChatChannelService.getAllChatInfo
 import com.example.colorimagemobile.services.chat.ChatChannelService.getAllChatInfoName
 import com.example.colorimagemobile.services.chat.ChatChannelService.setAllChatInfo
 import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
@@ -17,14 +16,14 @@ import retrofit2.Response
 class ChatChannelRepository {
     private val httpClient = RetrofitInstance.HTTP
 
-    fun getAllChatChannel(token : String): MutableLiveData<DataWrapper<List<HTTPResponseModel.GetChannelList>>> {
-        val ChannelListLiveData: MutableLiveData<DataWrapper<List<HTTPResponseModel.GetChannelList>>> = MutableLiveData()
+    fun getAllChatChannel(token : String): MutableLiveData<DataWrapper<List<HTTPResponseModel.TextChannelResponse>>> {
+        val ChannelListLiveData: MutableLiveData<DataWrapper<List<HTTPResponseModel.TextChannelResponse>>> = MutableLiveData()
 
         httpClient.getAllChatChannel(token = "Bearer $token").enqueue(object :
-            Callback<List<HTTPResponseModel.GetChannelList>> {
+            Callback<List<HTTPResponseModel.TextChannelResponse>> {
             override fun onResponse(
-                call: Call<List<HTTPResponseModel.GetChannelList>>,
-                response: Response<List<HTTPResponseModel.GetChannelList>>
+                call: Call<List<HTTPResponseModel.TextChannelResponse>>,
+                response: Response<List<HTTPResponseModel.TextChannelResponse>>
             ) {
                 printMsg("response.body  inside onresponse================================================= "+response.body())
 
@@ -33,17 +32,17 @@ class ChatChannelRepository {
                     return
                 }
 
-                val body: List<HTTPResponseModel.GetChannelList> = response.body()!!
+                val body: List<HTTPResponseModel.TextChannelResponse> = response.body()!!
 
                 setAllChatInfo(body)
 
-//                for (post in body) {
-//                    if (post.err.isNullOrEmpty()){
-//                        ChannelListLiveData.value = DataWrapper(null, post.err, true)
-//                        printMsg("inside poat.err is empty ================================================= "+post.channelInfo)
-//                        return
-//                    }
-//                }
+                for (post in body) {
+                    if (post.err.isNullOrEmpty()){
+                        ChannelListLiveData.value = DataWrapper(null, post.err, true)
+                        printMsg("inside poat.err is empty ================================================= "+post.channelInfo)
+                        return
+                    }
+                }
 
                 // channel
                 ChannelListLiveData.value = DataWrapper(response.body(), "", false)
@@ -53,7 +52,7 @@ class ChatChannelRepository {
 
 
             }
-            override fun onFailure(call: Call<List<HTTPResponseModel.GetChannelList>>, t: Throwable) {
+            override fun onFailure(call: Call<List<HTTPResponseModel.TextChannelResponse>>, t: Throwable) {
                 Log.d(Constants.DEBUG_KEY, "Failed to get all channel ${t.message!!}")
                 ChannelListLiveData.value = DataWrapper(null, "Failed to get chat channel!", true)
             }
@@ -63,34 +62,33 @@ class ChatChannelRepository {
         return ChannelListLiveData
     }
 
-    fun getChannelByid(token: String,id: String): MutableLiveData<DataWrapper<HTTPResponseModel.GetChannel>> {
-        val userLiveData: MutableLiveData<DataWrapper<HTTPResponseModel.GetChannel>> = MutableLiveData()
+    fun getChannelByid(token: String,id: String): MutableLiveData<DataWrapper<HTTPResponseModel.TextChannelResponse>> {
+        val cHannelData: MutableLiveData<DataWrapper<HTTPResponseModel.TextChannelResponse>> = MutableLiveData()
 
-        httpClient.getChannelByid(token = "Bearer $token",id).enqueue(object : Callback<HTTPResponseModel.GetChannel> {
-            override fun onResponse(call: Call<HTTPResponseModel.GetChannel>, response: Response<HTTPResponseModel.GetChannel>) {
+        httpClient.getChannelByid(token = "Bearer $token",id).enqueue(object : Callback<HTTPResponseModel.TextChannelResponse> {
+            override fun onResponse(call: Call<HTTPResponseModel.TextChannelResponse>, response: Response<HTTPResponseModel.TextChannelResponse>) {
                 if (!response.isSuccessful) {
-                    userLiveData.value = DataWrapper(null, "An error occurred!", true)
+                    cHannelData.value = DataWrapper(null, "An error occurred!", true)
                     return
                 }
 
-                val body = response.body() as HTTPResponseModel.GetChannel
+                val body = response.body() as HTTPResponseModel.TextChannelResponse
                 if (!body.err.isNullOrEmpty()) {
-                    userLiveData.value = DataWrapper(null, body.err, true)
+                    cHannelData.value = DataWrapper(null, body.err, true)
                     return
                 }
 
-                // account successfully created
-                userLiveData.value = DataWrapper(response.body(), null, false)
+
+                cHannelData.value = DataWrapper(response.body(), null, false)
             }
 
-            // duplicate username is coming through here
-            override fun onFailure(call: Call<HTTPResponseModel.GetChannel>, t: Throwable) {
+            override fun onFailure(call: Call<HTTPResponseModel.TextChannelResponse>, t: Throwable) {
                 Log.d(Constants.DEBUG_KEY, "Failed to get user account ${t.message!!}")
-                userLiveData.value = DataWrapper(null, "Failed to get User!", true)
+                cHannelData.value = DataWrapper(null, "Failed to get User!", true)
             }
         })
 
-        return userLiveData
+        return cHannelData
     }
 
 

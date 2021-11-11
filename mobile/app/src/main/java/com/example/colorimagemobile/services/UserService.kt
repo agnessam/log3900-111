@@ -1,6 +1,7 @@
 package com.example.colorimagemobile.services
 
 import com.example.colorimagemobile.models.UserModel
+import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
 import com.example.colorimagemobile.utils.Constants
 import java.time.LocalDateTime
 
@@ -12,6 +13,23 @@ object UserService {
     private  var lastLogout: String = Constants.EMPTY_STRING
     private  var date : ArrayList<String> = arrayListOf(Constants.EMPTY_STRING,Constants.EMPTY_STRING)
     private var token : String =Constants.EMPTY_STRING
+    private lateinit var updateProfileData : UserModel.UpdateUser
+    private lateinit var AllUserInfo : List<UserModel.AllInfo>
+
+    fun setAllUserInfo(allInfo:List<UserModel.AllInfo>){
+        this.AllUserInfo = allInfo
+    }
+    fun getAllUserInfo() : List<UserModel.AllInfo> {
+        return this.AllUserInfo
+    }
+
+    fun setNewProfileData (newValues: UserModel.UpdateUser){
+        this.updateProfileData = newValues
+    }
+
+    fun getNewProfileData(): UserModel.UpdateUser{
+        return this.updateProfileData
+    }
 
     fun setUserInfo(newUserInfo: UserModel.AllInfo) {
         this.info = newUserInfo

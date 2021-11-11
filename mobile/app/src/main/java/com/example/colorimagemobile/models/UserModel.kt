@@ -1,5 +1,7 @@
 package com.example.colorimagemobile.models
 
+import com.google.gson.annotations.SerializedName
+
 // class for different uses related to User
 class UserModel {
     data class Login(val username: String, val password: String)
@@ -9,13 +11,32 @@ class UserModel {
 
     // holds all the data of User
     data class AllInfo(
+        @SerializedName("_id")
         val _id: String,
+
+        @SerializedName("username")
         var username: String,
+
+        @SerializedName("firstName")
         val firstName: String,
+
+        @SerializedName("lastName")
         val lastName: String,
+
+        @SerializedName("password")
         val password: String,
+
+        @SerializedName("email")
         val email: String,
+
+        @SerializedName("description")
         var description: String,
+
+        @SerializedName("teams")
+        val teams: Array<String>,
+
+        @SerializedName("drawings")
+        val drawings: Array<String>
     )
 }
 
