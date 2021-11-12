@@ -10,7 +10,6 @@ import {
 import { SocketServiceInterface } from './domain/interfaces/socket.interface';
 import { ChatSocketService } from './domain/services/sockets/chat-socket.service';
 import { DrawingSocketService } from './domain/services/sockets/drawing-socket.service';
-import { S3UploadService } from './domain/services/upload.service';
 import { DrawingRepository } from './infrastructure/data_access/repositories/drawing_repository';
 import { MessageRepository } from './infrastructure/data_access/repositories/message_repository';
 import { TeamRepository } from './infrastructure/data_access/repositories/team_repository';
@@ -25,10 +24,6 @@ export const referenceDataIoCModule = new ContainerModule((bind) => {
 
   bind<DrawingSocketService>(TYPES.DrawingSocketService)
     .to(DrawingSocketService)
-    .inSingletonScope();
-
-  bind<S3UploadService>(TYPES.UploadService)
-    .to(S3UploadService)
     .inSingletonScope();
 
   // Repositories
