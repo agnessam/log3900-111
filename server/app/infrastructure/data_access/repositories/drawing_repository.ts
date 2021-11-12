@@ -21,7 +21,6 @@ export class DrawingRepository extends GenericRepository<DrawingInterface> {
   ): Promise<DrawingInterface> {
     return new Promise<DrawingInterface>((resolve, reject) => {
       const drawing = new Drawing({
-        _id: new Types.ObjectId(),
         dataUri: item.dataUri,
         ownerId: ownerId,
         ownerModel: 'User',
@@ -48,7 +47,6 @@ export class DrawingRepository extends GenericRepository<DrawingInterface> {
   ): Promise<DrawingInterface> {
     return new Promise<DrawingInterface>((resolve, reject) => {
       const drawing = new Drawing({
-        _id: new Types.ObjectId(),
         dataUri: item.dataUri,
         ownerId: item.ownerId,
         ownerModel: 'Team',

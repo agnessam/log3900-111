@@ -1,6 +1,5 @@
 import mongoose, { Document, Model, Schema } from 'mongoose';
 import bcrypt from 'bcrypt';
-import { DrawingInterface } from './Drawing';
 import { TeamInterface } from './teams';
 
 export interface UserInterface extends Document {
@@ -14,7 +13,7 @@ export interface UserInterface extends Document {
 
   teams: string[] | TeamInterface[];
 
-  drawings: string[] | DrawingInterface[];
+  drawings: string[];
   publishedDrawings: string[];
 
   isValidPassword(password: string): Promise<boolean>;
@@ -32,7 +31,7 @@ const UserSchema = new mongoose.Schema({
   teams: [{ type: Schema.Types.ObjectId, ref: 'Team' }],
 
   drawings: [{ type: Schema.Types.ObjectId, ref: 'Drawing' }],
-  publishedDrawings: [{ type: Schema.Types.ObjectId, ref: 'PublishedDrawing' }]
+  publishedDrawings: [{ type: Schema.Types.ObjectId, ref: 'PublishedDrawing' }],
 });
 
 UserSchema.pre('save', async function (next) {

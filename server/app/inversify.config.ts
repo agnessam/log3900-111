@@ -15,6 +15,7 @@ import { TeamRepository } from './infrastructure/data_access/repositories/team_r
 import { DrawingRepository } from './infrastructure/data_access/repositories/drawing_repository';
 import { MessageRepository } from './infrastructure/data_access/repositories/message_repository';
 import { DrawingSocketService } from './domain/services/sockets/drawing-socket.service';
+import { SearchService } from './domain/services/search.service';
 
 export const referenceDataIoCModule = new ContainerModule((bind) => {
   // Services
@@ -25,6 +26,8 @@ export const referenceDataIoCModule = new ContainerModule((bind) => {
   bind<DrawingSocketService>(TYPES.DrawingSocketService)
     .to(DrawingSocketService)
     .inSingletonScope();
+
+  bind<SearchService>(TYPES.SearchService).to(SearchService).inSingletonScope();
 
   // Repositories
   bind<UserRepositoryInterface>(TYPES.UserRepository)
@@ -43,7 +46,7 @@ export const referenceDataIoCModule = new ContainerModule((bind) => {
     .to(DrawingRepository)
     .inSingletonScope();
 
-    bind<MessageRepositoryInterface>(TYPES.MessageRepository)
+  bind<MessageRepositoryInterface>(TYPES.MessageRepository)
     .to(MessageRepository)
     .inSingletonScope();
 });
