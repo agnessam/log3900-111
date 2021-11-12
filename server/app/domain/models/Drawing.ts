@@ -5,6 +5,9 @@ export interface DrawingInterface extends Document {
   ownerId: string;
   ownerModel: string;
   name: string;
+
+  createdAt: string;
+  updatedAt: string;
 }
 
 const DrawingSchema = new mongoose.Schema(

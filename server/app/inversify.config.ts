@@ -17,6 +17,7 @@ import { MessageRepository } from './infrastructure/data_access/repositories/mes
 import { TeamRepository } from './infrastructure/data_access/repositories/team_repository';
 import { TextChannelRepository } from './infrastructure/data_access/repositories/text_channel_repository';
 import { UserRepository } from './infrastructure/data_access/repositories/user_repository';
+import { SearchService } from './domain/services/search.service';
 
 export const referenceDataIoCModule = new ContainerModule((bind) => {
   // Services
@@ -27,6 +28,8 @@ export const referenceDataIoCModule = new ContainerModule((bind) => {
   bind<DrawingSocketService>(TYPES.DrawingSocketService)
     .to(DrawingSocketService)
     .inSingletonScope();
+
+  bind<SearchService>(TYPES.SearchService).to(SearchService).inSingletonScope();
 
   // Repositories
   bind<UserRepositoryInterface>(TYPES.UserRepository)

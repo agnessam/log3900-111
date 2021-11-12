@@ -1,7 +1,6 @@
 import bcrypt from 'bcrypt';
 import mongoose, { Document, Model, Schema } from 'mongoose';
 import { AvatarInterface, AvatarSchema } from './Avatar';
-import { DrawingInterface } from './Drawing';
 import { TeamInterface } from './teams';
 
 export interface UserInterface extends Document {
@@ -16,7 +15,7 @@ export interface UserInterface extends Document {
 
   teams: string[] | TeamInterface[];
 
-  drawings: string[] | DrawingInterface[];
+  drawings: string[];
   publishedDrawings: string[];
 
   isValidPassword(password: string): Promise<boolean>;
