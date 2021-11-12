@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.view.menu.ActionMenuItemView
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
@@ -18,11 +17,7 @@ import com.example.colorimagemobile.services.UserService
 import com.example.colorimagemobile.models.UserModel
 import com.example.colorimagemobile.models.DataWrapper
 import com.example.colorimagemobile.models.HTTPResponseModel
-import com.example.colorimagemobile.models.TextChannelModel
-import com.example.colorimagemobile.repositories.TextChannelRepository
 import com.example.colorimagemobile.services.SharedPreferencesService
-import com.example.colorimagemobile.ui.home.fragments.chat.textChannelHandler
-import com.example.colorimagemobile.utils.CommonFun
 import com.example.colorimagemobile.utils.CommonFun.Companion.printToast
 import com.example.colorimagemobile.utils.CommonFun.Companion.redirectTo
 import com.example.colorimagemobile.utils.Constants
@@ -33,7 +28,6 @@ class HomeActivity : AppCompatActivity() {
     private lateinit var sharedPreferencesService: SharedPreferencesService
     private lateinit var globalHandler: GlobalHandler
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
@@ -41,7 +35,6 @@ class HomeActivity : AppCompatActivity() {
         homeViewModel = ViewModelProvider(this).get(HomeActivityViewModel::class.java)
         sharedPreferencesService = SharedPreferencesService(this)
         setBottomNavigationView()
-        AllTextChannel(UserService.getToken())
     }
     // side navigation navbar: upon click, change to new fragment
     private fun setBottomNavigationView() {
@@ -52,6 +45,7 @@ class HomeActivity : AppCompatActivity() {
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
     }
+
     // add options to Home Navbar
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         val inflater = menuInflater
@@ -127,15 +121,4 @@ class HomeActivity : AppCompatActivity() {
         val updateObserver = homeViewModel.updateLogHistory(UserService.getUserInfo()._id)
         updateObserver.observe(this, { this?.let { it1 -> globalHandler.response(it1,it) } })
     }
-
-    fun getAllTextChannel(token: String): LiveData<DataWrapper<List<TextChannelModel.AllInfo>>> {
-        return TextChannelRepository().getAllTextChannel(token)
-    }
-
-    fun AllTextChannel(token: String){
-        val updateObserver = getAllTextChannel(token)
-        updateObserver.observe(this, { this?.let { it1 -> textChannelHandler.responseGetAll(it1,it) } })
-    }
-
-
-    }
+}

@@ -4,8 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.home.fragments.chat.ChatFragment"
-    android:id="@+id/chatChannelFragment">
-
-
+    android:id="@+id/chatChannelFragment"
+    android:background="@color/mainTheme">
 
 </androidx.constraintlayout.widget.ConstraintLayout>

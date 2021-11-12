@@ -3,35 +3,26 @@ package com.example.colorimagemobile.services.chat
 import com.example.colorimagemobile.models.TextChannelModel
 
 object TextChannelService {
-    private lateinit var textChannelInfo: TextChannelModel.AllInfo
-    private lateinit var allTextChannel: List<TextChannelModel.AllInfo>
-    private var allTextChannelName: MutableList<String> = mutableListOf()
-    private var allTextChannelOwner: MutableList<String> = mutableListOf()
+    private lateinit var currentChannel: TextChannelModel.AllInfo
+    private lateinit var allChannels: List<TextChannelModel.AllInfo>
 
-    fun setAllTextChannel(allInfo: List<TextChannelModel.AllInfo>){
-        this.allTextChannel = allInfo
-        setChannelsName()
+    init {
+        allChannels = arrayListOf()
     }
 
-    fun setChannelsName(){
-            for(data in allTextChannel){
-                this.allTextChannelName.add(data.name)
-                this.allTextChannelOwner.add(data.ownerId)
-            }
+    fun getChannels(): List<TextChannelModel.AllInfo> {
+        return this.allChannels
     }
 
-
-    fun getAllTextChannelName(): MutableList<String>{
-        return this.allTextChannelName
+    fun setChannels(allChannels: List<TextChannelModel.AllInfo>){
+        this.allChannels = allChannels
     }
 
-    fun setChatInfo(newTextInfo: TextChannelModel.AllInfo) {
-        this.textChannelInfo = newTextInfo
-
+    fun getCurrentChannel(): TextChannelModel.AllInfo {
+        return currentChannel
     }
 
-    fun getChatInfo(): TextChannelModel.AllInfo{
-        return this.textChannelInfo
+    fun setCurrentChannelByPosition(position: Int) {
+        this.currentChannel = allChannels[position]
     }
-
 }

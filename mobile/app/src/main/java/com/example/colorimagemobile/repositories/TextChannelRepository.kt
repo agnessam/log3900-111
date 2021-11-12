@@ -6,6 +6,7 @@ import com.example.colorimagemobile.models.DataWrapper
 import com.example.colorimagemobile.models.TextChannelModel
 import com.example.colorimagemobile.services.RetrofitInstance
 import com.example.colorimagemobile.services.UserService
+import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
 import com.example.colorimagemobile.utils.Constants
 import retrofit2.Call
 import retrofit2.Callback
@@ -15,6 +16,7 @@ class TextChannelRepository {
     private val httpClient = RetrofitInstance.HTTP
 
     fun getAllTextChannel(token : String): MutableLiveData<DataWrapper<List<TextChannelModel.AllInfo>>> {
+        printMsg("Fetching all chat channels")
         val ChannelListLiveData: MutableLiveData<DataWrapper<List<TextChannelModel.AllInfo>>> = MutableLiveData()
 
         httpClient.getAllTextChannel(token = "Bearer $token").enqueue(object :
