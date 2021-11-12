@@ -49,8 +49,6 @@ class LoginActivity : AppCompatActivity() {
 
         toggleButton(binding.loginBtn, false) // deactivate login button by default
         setListeners()
-
-
     }
 
     private fun setListeners() {
@@ -74,18 +72,17 @@ class LoginActivity : AppCompatActivity() {
         val invalidInputLength = formValidator.isInputEmpty(resources.getString(R.string.required))
 
         // activate/deactivate login button if form contains error or isEmpty canSubmit = !containsError && !invalidInputLength
+        canSubmit = !containsError && !invalidInputLength
         toggleButton(binding.loginBtn, canSubmit)
     }
 
     private fun executeLogin() {
         if (!canSubmit) return
         val user = UserModel.Login(binding.usernameInputText.text.toString(), binding.passwordInputText.text.toString())
-
+        
         // username ok -> make HTTP POST request
         val loginObserver = loginActivityViewModel.loginUser(user)
         loginObserver.observe(this, { handleLoginResponse(it) })
-
-
     }
 
     // response from HTTP request

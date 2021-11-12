@@ -1,0 +1,26 @@
+package com.example.colorimagemobile.ui.home.fragments.gallery.attributes.eraser
+
+import android.os.Bundle
+import androidx.fragment.app.Fragment
+import android.view.View
+import android.widget.NumberPicker
+import com.example.colorimagemobile.R
+import com.example.colorimagemobile.services.drawing.toolsAttribute.EraserService
+
+class EraserFragment : Fragment(R.layout.fragment_eraser) {
+
+    private lateinit var widthPicker: NumberPicker
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        widthPicker = view.findViewById(R.id.eraser_width_picker)
+        widthPicker.minValue = EraserService.minWidth
+        widthPicker.maxValue = EraserService.maxWidth
+        widthPicker.value = EraserService.currentWidth
+
+        widthPicker.setOnValueChangedListener { numberPicker, oldValue, newValue ->
+            EraserService.currentWidth = newValue
+        }
+    }
+}

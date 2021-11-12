@@ -11,9 +11,6 @@ class Constants {
         const val CHAT_NAMESPACE_NAME = "chat"
         const val TEXT_MESSAGE_EVENT_NAME = "text"
 
-        //global
-        const val EMPTY_STRING =""
-
         // profile user log history
         const val LAST_LOGIN_DATE = "lastLogin"
         const val LAST_LOGOUT_DATE ="lastLogout"
@@ -21,6 +18,15 @@ class Constants {
         const val TEST_ID_CHANNEL ="6188d7820e5bad79805f9e8a"
         const val TEST_ID_USER = "6188c941f458df3e258d7b54"
 
+    }
+
+    class SOCKETS {
+        companion object {
+            const val ROOM_EVENT_NAME = "room"
+            const val LEAVE_ROOM_EVENT_NAME = "leaveRoom"
+            const val COLLABORATIVE_DRAWING_NAMESPACE = "drawing"
+            const val IN_PROGRESS_DRAWING_EVENT = "draw-in-progress"
+        }
     }
 
     class URL {
@@ -39,8 +45,20 @@ class Constants {
             const val USER_PATH ="api/users/"
             const val TEXT_CHANNEL_PATH ="api/channels/"
             const val MESSAGES_PATH = "api/messages"
+            const val USER = "api/users/"
 
+            // drawings
+            const val ALL_DRAWINGS = "api/drawings/"
+        }
+    }
 
+    class DRAWING {
+        companion object {
+            const val MIN_WIDTH = 10
+            const val MAX_WIDTH = 2440
+
+            const val MIN_HEIGHT = 10
+            const val MAX_HEIGHT = 1215
         }
     }
 
@@ -49,6 +67,7 @@ class Constants {
         companion object {
             const val MAIN = "localStorage"
             const val TOKEN = "token"
+            const val DRAWING_ROOM_ID = "drawingRoomName"
         }
     }
 

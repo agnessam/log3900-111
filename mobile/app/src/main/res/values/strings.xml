@@ -3,7 +3,7 @@
 
     <!--    Fragments-->
     <string name="title_notifications">Notifications</string>
-    <string name="title_drawing">Drawing</string>
+    <string name="title_gallery">Gallery</string>
     <string name="title_chat">Chat</string>
     <string name="title_user_profile">User Profile</string>
     <string name="title_activity_home">HomeActivity</string>

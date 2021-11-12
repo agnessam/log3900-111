@@ -34,14 +34,6 @@ class CommonFun {
             currentActivity.finish()
         }
 
-        // close Activity and start another one
-        fun redirectTo_(currentActivity: FragmentActivity, destinationClass: Class<*>?) {
-            val intent: Intent = Intent(currentActivity, destinationClass)
-            currentActivity.startActivity(intent)
-            currentActivity.finish()
-        }
-
-
         // close/hide Android keyboard
         fun closeKeyboard(currentActivity: Activity): Boolean {
             return try {
@@ -53,6 +45,7 @@ class CommonFun {
                 false
             }
         }
+
         // close/hide Android keyboard
         fun closeKeyboard_(currentActivity: FragmentActivity): Boolean {
             return try {

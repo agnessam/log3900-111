@@ -69,11 +69,15 @@ export class PencilToolService implements Tools {
         };
 
         if (event.button === LEFT_CLICK) {
-          this.pencil.stroke = this.colorTool.primaryColorString;
-          this.pencil.strokeOpacity = this.colorTool.primaryAlpha.toString();
+          this.setPencilStrokeAndOpacity(
+            this.colorTool.primaryColorString,
+            this.colorTool.primaryAlpha.toString()
+          );
         } else {
-          this.pencil.stroke = this.colorTool.secondaryColorString;
-          this.pencil.strokeOpacity = this.colorTool.secondaryAlpha.toString();
+          this.setPencilStrokeAndOpacity(
+            this.colorTool.secondaryColorString,
+            this.colorTool.secondaryAlpha.toString()
+          );
         }
         this.pencilCommand = new PencilCommand(
           this.rendererService.renderer,
@@ -87,6 +91,15 @@ export class PencilToolService implements Tools {
         );
       }
     }
+  }
+
+  private setPencilStrokeAndOpacity(
+    strokeColorString: string,
+    strokeOpacityString: string
+  ): void {
+    if (!this.pencil) return;
+    this.pencil.stroke = strokeColorString;
+    this.pencil.strokeOpacity = strokeOpacityString;
   }
 
   /// Réinitialisation de l'outil après avoir laisser le clique de la souris

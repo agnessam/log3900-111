@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.home.fragments.drawing.attributes.eraser.EraserFragment">
+    tools:context=".ui.home.fragments.gallery.attributes.eraser.EraserFragment">
 
     <LinearLayout
         android:layout_width="match_parent"

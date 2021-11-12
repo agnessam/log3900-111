@@ -1,9 +1,11 @@
 package com.example.colorimagemobile.services
 
+import com.example.colorimagemobile.models.DrawingModel
 import com.example.colorimagemobile.models.UserModel
 import com.example.colorimagemobile.models.HTTPResponseModel
 import com.example.colorimagemobile.models.MessageModel
 import com.example.colorimagemobile.models.TextChannelModel
+import com.example.colorimagemobile.models.TeamModel
 import com.example.colorimagemobile.utils.Constants
 import retrofit2.Call
 import retrofit2.http.*
@@ -82,4 +84,13 @@ interface API {
     @POST(Constants.ENDPOINTS.MESSAGES_PATH)
     fun storeMessage(@Header("Authorization")token: String, @Body newMessage: List<MessageModel.SendMessage> ): Call<List<MessageModel.AllInfo>>
 
+    @GET(Constants.ENDPOINTS.ALL_DRAWINGS)
+    fun getAllDrawings(@Header("Authorization") token: String): Call<List<DrawingModel.Drawing>>
+
+    @GET("${Constants.ENDPOINTS.USER}{id}/teams")
+    fun getUserTeams(@Header("Authorization") token: String, @Path ("id") id: String): Call<List<TeamModel>>
+
+    @Headers("Content-Type: application/json")
+    @POST(Constants.ENDPOINTS.ALL_DRAWINGS)
+    fun createNewDrawing(@Header("Authorization") token: String, @Body drawing: DrawingModel.CreateDrawing): Call<DrawingModel.CreateDrawing>
 }
