@@ -1,7 +1,6 @@
 package com.example.colorimagemobile.services.drawing.toolsAttribute
 
 import android.graphics.Color
-import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
 
 object ColorService {
     private var currentColor: String = "rgba(0, 0, 0, 1)"
@@ -23,8 +22,6 @@ object ColorService {
         val rgbValues = color.substring(color.indexOf('(') + 1, color.indexOf(')'))
         val splitRGB = rgbValues.replace("\\s".toRegex(),"").split(",")
         val alpha = if (splitRGB.size == 4) splitRGB[3].toInt() else 255
-
-        printMsg(alpha.toString())
 
         return Color.argb(alpha, splitRGB[0].toInt(), splitRGB[1].toInt(), splitRGB[2].toInt())
     }

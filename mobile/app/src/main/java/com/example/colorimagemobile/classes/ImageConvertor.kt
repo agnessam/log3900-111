@@ -27,6 +27,7 @@ class ImageConvertor(val context: Context) {
             val imageBytes = Base64.decode(base64Data, Base64.DEFAULT);
             val svgAsString = String(imageBytes, StandardCharsets.UTF_8)
 
+            // parse svg to object
             val svgParser = SVGParser(svgAsString)
             val svgObject = svgParser.getCustomSVG()
 
