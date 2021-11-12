@@ -15,4 +15,12 @@ export class AvatarClientService {
   getDefaultAvatars(): Observable<Avatar[]> {
     return this.httpClient.get<Avatar[]>(`${this.AVATAR_ENDPOINT}/default`);
   }
+
+  uploadAvatar(avatar: FormData) {
+    return this.httpClient
+      .post(`${this.AVATAR_ENDPOINT}/upload`, avatar)
+      .pipe((response) => {
+        return response;
+      });
+  }
 }

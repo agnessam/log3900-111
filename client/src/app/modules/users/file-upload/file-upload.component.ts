@@ -1,5 +1,5 @@
 import { Component, OnInit } from "@angular/core";
-import { UsersService } from "../services/users.service";
+import { AvatarClientService } from "../../backend-communication/avatar-client/avatar-client.service";
 
 @Component({
   selector: "app-file-upload",
@@ -10,7 +10,7 @@ export class FileUploadComponent implements OnInit {
   fileName = "";
   formData: FormData | null;
 
-  constructor(private usersService: UsersService) {}
+  constructor(private avatarClient: AvatarClientService) {}
 
   ngOnInit(): void {}
 
@@ -26,14 +26,11 @@ export class FileUploadComponent implements OnInit {
 
   upload() {
     if (this.formData) {
-      this.usersService
-        .uploadAvatar(localStorage.getItem("userId")!, this.formData)
-        .subscribe((response) => {
-          console.log(response);
-          this.formData = null;
-          this.fileName = "";
-          console.log("LOL");
-        });
+      this.avatarClient.uploadAvatar(this.formData).subscribe((response) => {
+        console.log(response);
+        this.formData = null;
+        this.fileName = "";
+      });
     }
   }
 }

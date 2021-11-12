@@ -8,6 +8,7 @@ import {
 } from 'inversify-express-utils';
 import { AvatarRepository } from '../../infrastructure/data_access/repositories/avatar_repository';
 import { Request } from 'express';
+import { upload } from '../middleware/upload_middleware';
 
 @controller('/avatars')
 export class AvatarController {
@@ -21,6 +22,14 @@ export class AvatarController {
   @httpPost('/')
   public async postAvatar(@request() req: Request) {
     return await this.avatarRepository.create(req.body);
+  }
+
+  @httpPost('/upload', upload.single('avatar'))
+  public async uploadAvatar(@request() req: Request) {
+    if (req.file) {
+      console.log(req.file);
+      // return await this.avatarRepository.create(req.file.location);
+    }
   }
 
   @httpPost('/:id')

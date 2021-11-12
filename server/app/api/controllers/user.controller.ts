@@ -50,6 +50,7 @@ export class UserController {
 
   @httpPost('/:id/avatar', upload.single('avatar'))
   public async setAvatar(@request() req: Request) {
+    // We have access to the AWS file url at req.file.location
     console.log(req);
   }
 

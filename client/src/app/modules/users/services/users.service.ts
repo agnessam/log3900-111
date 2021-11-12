@@ -36,14 +36,6 @@ export class UsersService {
       });
   }
 
-  uploadAvatar(userId: string, avatar: FormData) {
-    return this.httpClient
-      .post(`${this.endpointUrl}/${userId}/avatar`, avatar)
-      .pipe((response) => {
-        return response;
-      });
-  }
-
   getUserTeams(userId: string): Observable<Team[]> {
     return this.httpClient
       .get<Team[]>(`${this.endpointUrl}/${userId}/teams`)
