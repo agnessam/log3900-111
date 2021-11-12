@@ -94,9 +94,10 @@ class EditProfileFragment : Fragment() {
 
         // form body to make HTTP request
         val newUserData = UserModel.UpdateUser(edtUsername, edtDescription, user.password)
-        val updateObserver = updateUserInfo(newUserData)
+        UserService.setNewProfileData(newUserData)
+        val updateObserver = updateUserInfo()
 
-        updateObserver.observe(viewLifecycleOwner, { context?.let { it1 -> handleHTTP.Response(it1,it) } })
+        updateObserver.observe(viewLifecycleOwner, { context?.let { it1 ->globalHandler.response(it1,it) } })
         MyFragmentManager(requireActivity()).open(R.id.fragment, UserProfileFragment())
     }
 

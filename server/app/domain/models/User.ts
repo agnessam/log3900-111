@@ -12,7 +12,7 @@ export interface UserInterface extends Document {
   lastName: string;
 
   teams: string[] | TeamInterface[];
-  drawings: string[] | DrawingInterface[];
+  drawings: string[];
   lastLoginDate : string;
   lastLogoutDate : string;
 

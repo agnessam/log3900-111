@@ -15,8 +15,7 @@ class Constants {
         const val LAST_LOGIN_DATE = "lastLogin"
         const val LAST_LOGOUT_DATE ="lastLogout"
 
-        const val TEST_ID_CHANNEL ="6188d7820e5bad79805f9e8a"
-        const val TEST_ID_USER = "6188c941f458df3e258d7b54"
+        const val EMPTY_STRING =""
 
     }
 
