@@ -2,19 +2,20 @@ import { ContainerModule } from 'inversify';
 import { TYPES } from './domain/constants/types';
 import {
   DrawingRepositoryInterface,
-  UserRepositoryInterface,
-  TextChannelRepositoryInterface,
   MessageRepositoryInterface,
+  TeamRepositoryInterface,
+  TextChannelRepositoryInterface,
+  UserRepositoryInterface,
 } from './domain/interfaces/repository.interface';
 import { SocketServiceInterface } from './domain/interfaces/socket.interface';
 import { ChatSocketService } from './domain/services/sockets/chat-socket.service';
-import { TextChannelRepository } from './infrastructure/data_access/repositories/text_channel_repository';
-import { UserRepository } from './infrastructure/data_access/repositories/user_repository';
-import { TeamRepositoryInterface } from './domain/interfaces/repository.interface';
-import { TeamRepository } from './infrastructure/data_access/repositories/team_repository';
+import { DrawingSocketService } from './domain/services/sockets/drawing-socket.service';
+import { S3UploadService } from './domain/services/upload.service';
 import { DrawingRepository } from './infrastructure/data_access/repositories/drawing_repository';
 import { MessageRepository } from './infrastructure/data_access/repositories/message_repository';
-import { DrawingSocketService } from './domain/services/sockets/drawing-socket.service';
+import { TeamRepository } from './infrastructure/data_access/repositories/team_repository';
+import { TextChannelRepository } from './infrastructure/data_access/repositories/text_channel_repository';
+import { UserRepository } from './infrastructure/data_access/repositories/user_repository';
 
 export const referenceDataIoCModule = new ContainerModule((bind) => {
   // Services
@@ -24,6 +25,10 @@ export const referenceDataIoCModule = new ContainerModule((bind) => {
 
   bind<DrawingSocketService>(TYPES.DrawingSocketService)
     .to(DrawingSocketService)
+    .inSingletonScope();
+
+  bind<S3UploadService>(TYPES.UploadService)
+    .to(S3UploadService)
     .inSingletonScope();
 
   // Repositories
@@ -43,7 +48,7 @@ export const referenceDataIoCModule = new ContainerModule((bind) => {
     .to(DrawingRepository)
     .inSingletonScope();
 
-    bind<MessageRepositoryInterface>(TYPES.MessageRepository)
+  bind<MessageRepositoryInterface>(TYPES.MessageRepository)
     .to(MessageRepository)
     .inSingletonScope();
 });
