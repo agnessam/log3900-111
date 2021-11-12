@@ -12,15 +12,25 @@ import { UserProfileComponent } from "./user-profile/user-profile.component";
 import { JwtInterceptor } from "../authentication/jwt.interceptor";
 import { HTTP_INTERCEPTORS } from "@angular/common/http";
 import { AuthGuard } from "../authentication";
-import { UsersComponent } from './users/users.component';
+import { UsersComponent } from "./users/users.component";
+import { FileUploadComponent } from "./file-upload/file-upload.component";
+import { MatIconModule } from "@angular/material/icon";
+import { AvatarComponent } from './avatar/avatar.component';
 
 @NgModule({
-  declarations: [TellMeAboutYourselfComponent, UserProfileComponent, UsersComponent],
+  declarations: [
+    TellMeAboutYourselfComponent,
+    UserProfileComponent,
+    UsersComponent,
+    FileUploadComponent,
+    AvatarComponent,
+  ],
   imports: [
     MatCardModule,
     MatGridListModule,
     MatFormFieldModule,
     MatInputModule,
+    MatIconModule,
     ReactiveFormsModule,
     MatButtonModule,
     CommonModule,

@@ -2,8 +2,8 @@
   <mat-grid-tile>
     <mat-card>
       <mat-card-title id="title-card">Tell us about yourself</mat-card-title>
-      <mat-card-title>TODO: AVATAR</mat-card-title>
       <mat-card-content>
+        <app-avatar></app-avatar>
         <form
           [formGroup]="customizeProfileForm"
           (ngSubmit)="onSubmit()"
