@@ -18,7 +18,6 @@ class TextChannelHandler {
         }
         // set all channel when request successful
         TextChannelService.setAllTextChannel(HTTPResponse.data!!)
-
         // request successfully
         context?.let { CommonFun.printToast(it, Constants.EMPTY_STRING) }
     }

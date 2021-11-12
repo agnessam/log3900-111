@@ -48,7 +48,6 @@ class AuthRepository {
 
             // HTTP failure
             override fun onFailure(call: Call<HTTPResponseModel.LoginResponse>, t: Throwable) {
-                printMsg("User failed to login ${t.message!!}")
                 authLiveData.value = DataWrapper(null, "An error occurred while logging you in!", true)
             }
         })
@@ -75,7 +74,6 @@ class AuthRepository {
             }
 
             override fun onFailure(call: Call<Boolean>, t: Throwable) {
-                printMsg("User failed to log out ${t.message!!}")
                 authLiveData.value = DataWrapper(null, "Failed to you logout!", true)
             }
         })

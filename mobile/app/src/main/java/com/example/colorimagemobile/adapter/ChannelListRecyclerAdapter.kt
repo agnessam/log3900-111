@@ -7,6 +7,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.colorimagemobile.R
 import com.example.colorimagemobile.services.chat.TextChannelService
+import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
 
 
 class ChannelListRecyclerAdapter : RecyclerView.Adapter<ChannelListRecyclerAdapter.ViewHolder>() {
@@ -23,13 +24,12 @@ class ChannelListRecyclerAdapter : RecyclerView.Adapter<ChannelListRecyclerAdapt
     }
 
     override fun onBindViewHolder(holder: ChannelListRecyclerAdapter.ViewHolder, position: Int) {
-
         channelName =TextChannelService.getAllTextChannelName()
         holder.chName.text = channelName[position]
     }
 
     override fun getItemCount(): Int {
-       return channelName.size
+       return TextChannelService.getAllTextChannelName().size
     }
     inner class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView){
          var chName : TextView;

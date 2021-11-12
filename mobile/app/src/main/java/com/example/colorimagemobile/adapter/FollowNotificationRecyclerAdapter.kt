@@ -9,7 +9,7 @@ import com.example.colorimagemobile.R
 
 class FollowNotificationRecyclerAdapter : RecyclerView.Adapter<FollowNotificationRecyclerAdapter.ViewHolder>() {
 
-    private  var userName : MutableList<String> = mutableListOf()
+    private  var userName : MutableList<String> = mutableListOf("boba","bobo")
 
     override fun onBindViewHolder(holder: FollowNotificationRecyclerAdapter.ViewHolder, position: Int) {
 
@@ -20,7 +20,7 @@ class FollowNotificationRecyclerAdapter : RecyclerView.Adapter<FollowNotificatio
         var userName : TextView;
 
         init {
-            userName = itemView.findViewById<TextView>(R.id.channel_name)
+            userName = itemView.findViewById<TextView>(R.id.displayNameText)
 
         }
     }
@@ -29,7 +29,7 @@ class FollowNotificationRecyclerAdapter : RecyclerView.Adapter<FollowNotificatio
         parent: ViewGroup,
         viewType: Int
     ): FollowNotificationRecyclerAdapter.ViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.card_all_chat_channel_layout,parent,false)
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.fragment_follow_list,parent,false)
         return ViewHolder(view)
     }
 

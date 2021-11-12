@@ -20,7 +20,6 @@ import com.example.colorimagemobile.utils.Constants
 
 
 class UserProfileHistoryFragment : Fragment() {
-    private val userRepository: UserRepository = UserRepository()
     private lateinit var lastLogin : TextView
     private lateinit var lastLogout : TextView
 
@@ -51,14 +50,11 @@ class UserProfileHistoryFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // get log history
-//        val log : ArrayList<String> = UserService.getLogHistory()
         val user = UserService.getUserInfo()
-        printMsg("user in historique: "+user)
+
         // sets the derived data in the textView
         lastLogin.text = user.lastLoginDate
         lastLogout.text =user.lastLogoutDate
-        printMsg("before get user")
     }
 
 

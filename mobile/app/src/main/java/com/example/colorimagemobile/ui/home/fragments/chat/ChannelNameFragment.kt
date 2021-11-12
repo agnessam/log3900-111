@@ -18,8 +18,8 @@ private const val ARG_PARAM2 = "param2"
 
 class ChannelNameFragment : Fragment() {
 
-    private var layoutManager : RecyclerView.LayoutManager?=null
-    private  var adapter: RecyclerView.Adapter<ChannelListRecyclerAdapter.ViewHolder>?=null
+    private lateinit var layoutManager : RecyclerView.LayoutManager
+    private lateinit var adapter: RecyclerView.Adapter<ChannelListRecyclerAdapter.ViewHolder>
 
 
 
@@ -48,9 +48,9 @@ class ChannelNameFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         layoutManager = LinearLayoutManager(context)
-        recyclerView.layoutManager = layoutManager
+        ChannelRecycleView.layoutManager = layoutManager
         adapter = ChannelListRecyclerAdapter()
-        recyclerView.adapter = adapter
+        ChannelRecycleView.adapter = adapter
 
     }
 
