@@ -49,4 +49,8 @@ export class AvatarComponent implements OnInit {
       });
     });
   }
+
+  uploadedAvatar(uploadedAvatar: Avatar) {
+    this.currentAvatar = uploadedAvatar;
+  }
 }

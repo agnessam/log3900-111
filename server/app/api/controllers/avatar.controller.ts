@@ -5,9 +5,10 @@ import {
   httpGet,
   httpPost,
   request,
+  response,
 } from 'inversify-express-utils';
 import { AvatarRepository } from '../../infrastructure/data_access/repositories/avatar_repository';
-import { Request } from 'express';
+import { Request, Response } from 'express';
 import { upload } from '../middleware/upload_middleware';
 
 @controller('/avatars')
@@ -25,11 +26,18 @@ export class AvatarController {
   }
 
   @httpPost('/upload', upload.single('avatar'))
-  public async uploadAvatar(@request() req: Request) {
+  public async uploadAvatar(
+    @request() req: Request,
+    @response() res: Response,
+  ) {
     if (req.file) {
-      console.log(req.file);
-      // return await this.avatarRepository.create(req.file.location);
+      // HACK: Need to do casting as the imageUrl contained in req.file.location does not match the AvatarInterface
+      const avatar = {
+        imageUrl: (req.file as any).location,
+      };
+      return await this.avatarRepository.create(avatar as any);
     }
+    return res.send(404).send('Failed to upload file');
   }
 
   @httpPost('/:id')

@@ -1,4 +1,6 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, Output } from "@angular/core";
+import { Avatar } from "src/app/shared/models/avatar.model";
+import { EventEmitter } from "@angular/core";
 import { AvatarClientService } from "../../backend-communication/avatar-client/avatar-client.service";
 
 @Component({
@@ -9,6 +11,8 @@ import { AvatarClientService } from "../../backend-communication/avatar-client/a
 export class FileUploadComponent implements OnInit {
   fileName = "";
   formData: FormData | null;
+
+  @Output() uploadedAvatarEvent = new EventEmitter<Avatar>();
 
   constructor(private avatarClient: AvatarClientService) {}
 
@@ -26,11 +30,11 @@ export class FileUploadComponent implements OnInit {
 
   upload() {
     if (this.formData) {
-      this.avatarClient.uploadAvatar(this.formData).subscribe((response) => {
-        console.log(response);
-        this.formData = null;
-        this.fileName = "";
-      });
+      this.avatarClient
+        .uploadAvatar(this.formData)
+        .subscribe((uploadedAvatar) => {
+          this.uploadedAvatarEvent.emit(uploadedAvatar);
+        });
     }
   }
 }
