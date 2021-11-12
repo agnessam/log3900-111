@@ -22,7 +22,16 @@ export class AvatarDialogComponent implements OnInit {
 
   onAvatarClicked(avatarInformation: NgxAvatarInformation) {
     // Event is the information about the avatar
-    this.dialogRef.close(avatarInformation);
+    this.dialogRef.close(this.getCorrespondingAvatar(avatarInformation));
+  }
+
+  getCorrespondingAvatar(avatarInformation: NgxAvatarInformation) {
+    for (let i = 0; i < this.data.avatars.length; ++i) {
+      if (this.data.avatars[i].imageUrl === avatarInformation.sourceId) {
+        return this.data.avatars[i];
+      }
+    }
+    return this.data.avatars[0];
   }
 
   onCancel(): void {

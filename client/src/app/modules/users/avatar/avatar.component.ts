@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from "@angular/core";
+import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
 import { MatDialog, MatDialogRef } from "@angular/material/dialog";
 import { Avatar } from "src/app/shared/models/avatar.model";
 import { User } from "../../authentication/models/user";
@@ -19,6 +19,9 @@ export class AvatarComponent implements OnInit {
       "https://colorimage-111.s3.amazonaws.com/default/anime-aesthetic-pfp-boy-luxury-boy-aesthetic-profile-sad-anime-boy-pfp-for-boys-anime-of-anime-aesthetic-pfp-boy.jpeg",
     _id: "1",
   };
+
+  @Output() currentAvatarChanged: EventEmitter<Avatar> =
+    new EventEmitter<Avatar>();
 
   chooseAvatarDialogRef: MatDialogRef<AvatarDialogComponent>;
   constructor(
@@ -41,16 +44,18 @@ export class AvatarComponent implements OnInit {
           avatars: response,
         },
       });
-      this.chooseAvatarDialogRef.afterClosed().subscribe((avatar) => {
-        if (!avatar) {
+      this.chooseAvatarDialogRef.afterClosed().subscribe((chosenAvatar) => {
+        if (!chosenAvatar) {
           return;
         }
-        this.currentAvatar.imageUrl = avatar.sourceId;
+        this.currentAvatar = chosenAvatar;
+        this.currentAvatarChanged.emit(this.currentAvatar);
       });
     });
   }
 
   uploadedAvatar(uploadedAvatar: Avatar) {
     this.currentAvatar = uploadedAvatar;
+    this.currentAvatarChanged.emit(uploadedAvatar);
   }
 }
