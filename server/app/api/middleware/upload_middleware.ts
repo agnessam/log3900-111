@@ -20,7 +20,7 @@ export const upload = multer({
       cb(null, { fieldName: file.fieldname });
     },
     key: (req, file, cb) => {
-      cb(null, Date.now() + '-' + file.filename);
+      cb(null, Date.now() + '-' + file.originalname);
     },
   }),
   fileFilter: (req, file, cb) => {
