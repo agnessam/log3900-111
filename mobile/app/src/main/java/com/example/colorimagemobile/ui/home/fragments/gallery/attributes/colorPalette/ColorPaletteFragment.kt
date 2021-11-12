@@ -19,7 +19,8 @@ class ColorPaletteFragment : Fragment(R.layout.fragment_color_palette) {
         colorPicker.setInitialColor(ColorService.getColorAsInt())
 
         colorPicker.subscribe { color, _, _ ->
-            ColorService.setColorAsString(color)
+            val rgbaColor = ColorService.intToRGB(color)
+            ColorService.setColor(rgbaColor)
         }
     }
 }

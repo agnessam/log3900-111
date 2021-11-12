@@ -87,6 +87,8 @@ class NewDrawingMenuBottomSheet: BottomSheetDialogFragment() {
     }
 
     private fun setListeners(view: View) {
+        var color = "rgba(255, 255, 255, 1)"
+
         // width input validation
         view.findViewById<TextInputEditText>(R.id.newDrawingWidthInputText).doOnTextChanged { text, _, _, _ ->
             widthValue = getCurrentValue(text)
@@ -102,17 +104,18 @@ class NewDrawingMenuBottomSheet: BottomSheetDialogFragment() {
         }
 
         view.findViewById<ColorPickerView>(R.id.colorPickerNewDrawing).subscribe { newColor, _, _ ->
-            ColorService.setColorAsString(newColor)
+            color = ColorService.intToRGB(newColor)
         }
 
         view.findViewById<Button>(R.id.createDrawingBtn).setOnClickListener {
             CanvasService.setWidth(widthValue)
             CanvasService.setHeight(heightValue)
 
+            // create SVG object
             val svgBuilder = SVGBuilder()
             svgBuilder.addAttr("width", CanvasService.getWidth())
             svgBuilder.addAttr("height", CanvasService.getHeight())
-            svgBuilder.addAttr("style", "background-color: ${ColorService.getColorAsString()}")
+            svgBuilder.addAttr("style", "background-color: $color")
 
             val base64 = ImageConvertor(requireContext()).XMLToBase64(svgBuilder.getXML())
 
@@ -133,7 +136,7 @@ class NewDrawingMenuBottomSheet: BottomSheetDialogFragment() {
                     MyFragmentManager(context as FragmentActivity).open(R.id.main_gallery_fragment, GalleryDrawingFragment())
 
                     CanvasService.createNewBitmap()
-                    CanvasService.updateCanvasColor(ColorService.getColorAsInt())
+                    CanvasService.updateCanvasColor(ColorService.rgbaToInt(color))
                     CanvasUpdateService.invalidate()
                 }
             })

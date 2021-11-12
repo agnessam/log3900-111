@@ -17,7 +17,7 @@ object SynchronisationService {
         paintPath.points.add(drawingCommand.drawingCommand.pointsList[0])
 
         // set paint brush and stuff
-        paintPath.brush.setColor(ColorService.rgbToInt(drawingCommand.drawingCommand.stroke))
+        paintPath.brush.setColor(ColorService.rgbaToInt(drawingCommand.drawingCommand.stroke))
         paintPath.brush.setStrokeWidth(drawingCommand.drawingCommand.strokeWidth.toFloat())
         paintPath.path.moveTo(paintPath.points[0].x, paintPath.points[0].y)
 

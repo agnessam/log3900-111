@@ -15,7 +15,9 @@ import kotlin.math.ceil
 
 class ImageConvertor(val context: Context) {
 
-    private val BASE_64_URI = "data:image/svg+xml;base64,"
+    companion object {
+        const val BASE_64_URI = "data:image/svg+xml;base64,"
+    }
 
     // convert a base64 image to Bitmap: https://stackoverflow.com/questions/37327038/svg-data-uri-to-bitmap
     fun base64ToBitmap(dataURI: String): Bitmap? {
@@ -40,10 +42,8 @@ class ImageConvertor(val context: Context) {
             val bitmapCanvas = Canvas(newBitmap)
 
             // set background color of canvas
-            var backgroundColor = svgParser.getBackgroundColor()
-            if (!backgroundColor.contains("#")) {
-                bitmapCanvas.drawColor(ColorService.rgbToInt(backgroundColor))
-            }
+            val backgroundColor = svgParser.getBackgroundColor()
+            bitmapCanvas.drawColor(ColorService.rgbaToInt(backgroundColor))
 
             svg.renderToCanvas(bitmapCanvas);
 
