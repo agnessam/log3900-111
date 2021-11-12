@@ -13,9 +13,9 @@ class JSONConvertor {
             return JSONObject(jsonData)
         }
 
-        // convert receving data into JSON object
-        fun <T> getJSONObject(args: Array<*>, objClass: Class<T>): T {
-            return Gson().fromJson(args[0].toString(), objClass)
+        // convert receiving data into JSON object
+        fun <T> getJSONObject(args: String, objClass: Class<T>): T {
+            return Gson().fromJson(args, objClass)
         }
     }
 }

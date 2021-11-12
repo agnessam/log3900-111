@@ -12,7 +12,6 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import com.example.colorimagemobile.utils.Constants.Companion.DEBUG_KEY
 
@@ -35,14 +34,6 @@ class CommonFun {
             currentActivity.finish()
         }
 
-        // close Activity and start another one
-        fun redirectTo_(currentActivity: FragmentActivity, destinationClass: Class<*>?) {
-            val intent: Intent = Intent(currentActivity, destinationClass)
-            currentActivity.startActivity(intent)
-            currentActivity.finish()
-        }
-
-
         // close/hide Android keyboard
         fun closeKeyboard(currentActivity: Activity): Boolean {
             return try {
@@ -54,6 +45,7 @@ class CommonFun {
                 false
             }
         }
+
         // close/hide Android keyboard
         fun closeKeyboard_(currentActivity: FragmentActivity): Boolean {
             return try {

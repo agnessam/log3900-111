@@ -1,4 +1,4 @@
-package com.example.colorimagemobile.ui.home.fragments.drawing.attributes.colorPalette
+package com.example.colorimagemobile.ui.home.fragments.gallery.attributes.colorPalette
 
 import android.graphics.Color
 import android.os.Bundle
@@ -19,7 +19,8 @@ class ColorPaletteFragment : Fragment(R.layout.fragment_color_palette) {
         colorPicker.setInitialColor(ColorService.getColorAsInt())
 
         colorPicker.subscribe { color, _, _ ->
-            ColorService.setColorAsString(color)
+            val rgbaColor = ColorService.intToRGB(color)
+            ColorService.setColor(rgbaColor)
         }
     }
 }

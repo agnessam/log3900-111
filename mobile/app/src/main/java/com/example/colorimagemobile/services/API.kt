@@ -1,7 +1,9 @@
 package com.example.colorimagemobile.services
 
+import com.example.colorimagemobile.models.DrawingModel
 import com.example.colorimagemobile.models.UserModel
 import com.example.colorimagemobile.models.HTTPResponseModel
+import com.example.colorimagemobile.models.TeamModel
 import com.example.colorimagemobile.utils.Constants
 import retrofit2.Call
 import retrofit2.http.*
@@ -27,4 +29,13 @@ interface API {
     @PATCH(Constants.ENDPOINTS.UPDATE_USER+"{id}")
     fun updateUser(@Header("Authorization")token: String, @Path ("id") id : String, @Body  newUser: UserModel.UpdateUser) : Call<HTTPResponseModel.UpdateUser>
 
+    @GET(Constants.ENDPOINTS.ALL_DRAWINGS)
+    fun getAllDrawings(@Header("Authorization") token: String): Call<List<DrawingModel.Drawing>>
+
+    @GET("${Constants.ENDPOINTS.USER}{id}/teams")
+    fun getUserTeams(@Header("Authorization") token: String, @Path ("id") id: String): Call<List<TeamModel>>
+
+    @Headers("Content-Type: application/json")
+    @POST(Constants.ENDPOINTS.ALL_DRAWINGS)
+    fun createNewDrawing(@Header("Authorization") token: String, @Body drawing: DrawingModel.CreateDrawing): Call<DrawingModel.CreateDrawing>
 }

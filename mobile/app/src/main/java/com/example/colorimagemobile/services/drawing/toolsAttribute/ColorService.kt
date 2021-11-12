@@ -3,14 +3,10 @@ package com.example.colorimagemobile.services.drawing.toolsAttribute
 import android.graphics.Color
 
 object ColorService {
-    private var currentColor: String = "#000000"
+    private var currentColor: String = "rgba(0, 0, 0, 1)"
 
-    fun convertColorToInt(colorToConvert: String): Int {
-        return Color.parseColor(colorToConvert)
-    }
-
-    fun setColorAsString(newColor: Int) {
-        currentColor = String.format("#%06X", 0xFFFFFF and newColor)
+    fun setColor(newColor: String) {
+        currentColor = newColor
     }
 
     fun getColorAsString(): String {
@@ -18,14 +14,24 @@ object ColorService {
     }
 
     fun getColorAsInt(): Int {
-        return convertColorToInt(currentColor)
+        return rgbaToInt(currentColor)
     }
 
     // convert rgb() to Android Color in Integer
-    fun rgbToInt(color: String): Int {
+    fun rgbaToInt(color: String): Int {
         val rgbValues = color.substring(color.indexOf('(') + 1, color.indexOf(')'))
-        val splitRGB = rgbValues.split(",")
+        val splitRGB = rgbValues.replace("\\s".toRegex(),"").split(",")
+        val alpha = if (splitRGB.size == 4) splitRGB[3].toInt() else 255
 
-        return Color.rgb(splitRGB[0].toInt(), splitRGB[1].toInt(), splitRGB[2].toInt())
+        return Color.argb(alpha, splitRGB[0].toInt(), splitRGB[1].toInt(), splitRGB[2].toInt())
+    }
+
+    fun intToRGB(color: Int): String {
+        val red = Color.red(color)
+        val green = Color.green(color)
+        val blue = Color.blue(color)
+        val alpha = Color.alpha(color)
+
+        return "rgba($red, $green, $blue, $alpha)"
     }
 }

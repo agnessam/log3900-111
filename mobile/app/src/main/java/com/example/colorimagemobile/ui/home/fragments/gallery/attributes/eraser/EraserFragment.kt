@@ -1,10 +1,8 @@
-package com.example.colorimagemobile.ui.home.fragments.drawing.attributes.eraser
+package com.example.colorimagemobile.ui.home.fragments.gallery.attributes.eraser
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.NumberPicker
 import com.example.colorimagemobile.R
 import com.example.colorimagemobile.services.drawing.toolsAttribute.EraserService
