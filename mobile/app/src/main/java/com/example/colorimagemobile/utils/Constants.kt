@@ -38,7 +38,8 @@ class Constants {
             const val GET_USER_BY_TOKEN = "api/users/me"
             const val USER_PATH ="api/users/"
             const val TEXT_CHANNEL_PATH ="api/channels/"
-            const val SEARCH_CHANNEL_PATH ="api/search/"
+            const val TEXT_CHANNEL_MESSAGE_PATH ="api/channels/"
+            const val MESSAGES_PATH = "api/messages"
 
 
         }

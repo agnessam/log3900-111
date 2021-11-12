@@ -2,6 +2,7 @@ package com.example.colorimagemobile.services
 
 import com.example.colorimagemobile.models.UserModel
 import com.example.colorimagemobile.models.HTTPResponseModel
+import com.example.colorimagemobile.models.MessageModel
 import com.example.colorimagemobile.models.TextChannelModel
 import com.example.colorimagemobile.utils.Constants
 import retrofit2.Call
@@ -64,5 +65,9 @@ interface API {
     @DELETE(Constants.ENDPOINTS.TEXT_CHANNEL_PATH+"{id}")
     fun deleteChannelById(@Header("Authorization")token: String,@Path ("id") id : String): Call<TextChannelModel.AllInfo>
 
+    // region message
+    @Headers("Content-Type: application/json")
+    @GET(Constants.ENDPOINTS.MESSAGES_PATH)
+    fun getAllMessage(@Header("Authorization")token: String): Call<List<MessageModel.AllInfo>>
 
 }

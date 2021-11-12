@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import com.example.colorimagemobile.R
 import com.example.colorimagemobile.httpresponsehandler.TextChannelHandler
 import com.example.colorimagemobile.models.TextChannelModel
+import com.example.colorimagemobile.repositories.MessageRepository
 import com.example.colorimagemobile.repositories.TextChannelRepository
 import com.example.colorimagemobile.services.UserService
 
@@ -51,7 +52,7 @@ class ChatFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-//        TextChannelRepository().deleteChannelById(id)
+        MessageRepository().getAllMessage(UserService.getToken())
         val showAllChannel = ChannelNameFragment()
             parentFragmentManager.beginTransaction().replace(R.id.chatChannelFragment, showAllChannel)
                 .commit()
