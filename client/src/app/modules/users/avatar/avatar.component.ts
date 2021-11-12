@@ -1,5 +1,7 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, Input, OnInit } from "@angular/core";
 import { MatDialog, MatDialogRef } from "@angular/material/dialog";
+import { Avatar } from "src/app/shared/models/avatar.model";
+import { User } from "../../authentication/models/user";
 import { AvatarClientService } from "../../backend-communication/avatar-client/avatar-client.service";
 import { AvatarDialogComponent } from "./avatar-dialog/avatar-dialog.component";
 
@@ -9,13 +11,26 @@ import { AvatarDialogComponent } from "./avatar-dialog/avatar-dialog.component";
   styleUrls: ["./avatar.component.scss"],
 })
 export class AvatarComponent implements OnInit {
+  @Input() currentUser: User;
+
+  // TODO: remove default
+  currentAvatar: Avatar = {
+    imageUrl:
+      "https://colorimage-111.s3.amazonaws.com/default/anime-aesthetic-pfp-boy-luxury-boy-aesthetic-profile-sad-anime-boy-pfp-for-boys-anime-of-anime-aesthetic-pfp-boy.jpeg",
+    _id: "1",
+  };
+
   chooseAvatarDialogRef: MatDialogRef<AvatarDialogComponent>;
   constructor(
     private avatarClient: AvatarClientService,
     private dialog: MatDialog
   ) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    if (this.currentUser) {
+      this.currentAvatar = this.currentUser.avatar;
+    }
+  }
 
   openChooseAvatarDialog() {
     this.avatarClient.getDefaultAvatars().subscribe((response) => {
@@ -25,6 +40,12 @@ export class AvatarComponent implements OnInit {
         data: {
           avatars: response,
         },
+      });
+      this.chooseAvatarDialogRef.afterClosed().subscribe((avatar) => {
+        if (!avatar) {
+          return;
+        }
+        this.currentAvatar.imageUrl = avatar.sourceId;
       });
     });
   }

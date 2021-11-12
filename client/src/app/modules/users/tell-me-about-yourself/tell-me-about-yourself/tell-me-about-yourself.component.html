@@ -3,7 +3,7 @@
     <mat-card>
       <mat-card-title id="title-card">Tell us about yourself</mat-card-title>
       <mat-card-content>
-        <app-avatar></app-avatar>
+        <app-avatar [currentUser]="currentUser"></app-avatar>
         <form
           [formGroup]="customizeProfileForm"
           (ngSubmit)="onSubmit()"

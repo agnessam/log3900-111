@@ -18,6 +18,7 @@ import { MatIconModule } from "@angular/material/icon";
 import { AvatarComponent } from "./avatar/avatar.component";
 import { AvatarDialogComponent } from "./avatar/avatar-dialog/avatar-dialog.component";
 import { MatDialogModule } from "@angular/material/dialog";
+import { AvatarModule } from "ngx-avatar";
 
 @NgModule({
   declarations: [
@@ -40,6 +41,7 @@ import { MatDialogModule } from "@angular/material/dialog";
     CommonModule,
     FormsModule,
     UsersRoutingModule,
+    AvatarModule,
   ],
   providers: [
     {

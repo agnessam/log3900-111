@@ -1,3 +1,8 @@
 <div *ngFor="let avatar of data.avatars">
-  <img [src]="avatar.imageUrl" />
+  <ngx-avatar
+    class="avatar"
+    [src]="avatar.imageUrl"
+    size="125"
+    (clickOnAvatar)="onAvatarClicked($event)"
+  ></ngx-avatar>
 </div>
