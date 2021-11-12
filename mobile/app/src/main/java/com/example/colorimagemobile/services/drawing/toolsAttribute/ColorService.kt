@@ -1,6 +1,7 @@
 package com.example.colorimagemobile.services.drawing.toolsAttribute
 
 import android.graphics.Color
+import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
 
 object ColorService {
     private var currentColor: String = "#000000"
@@ -24,7 +25,7 @@ object ColorService {
     // convert rgb() to Android Color in Integer
     fun rgbToInt(color: String): Int {
         val rgbValues = color.substring(color.indexOf('(') + 1, color.indexOf(')'))
-        val splitRGB = rgbValues.split(",")
+        val splitRGB = rgbValues.replace("\\s".toRegex(),"").split(",")
 
         return Color.rgb(splitRGB[0].toInt(), splitRGB[1].toInt(), splitRGB[2].toInt())
     }

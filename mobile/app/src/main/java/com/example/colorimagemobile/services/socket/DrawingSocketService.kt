@@ -60,11 +60,11 @@ object DrawingSocketService: AbsSocket(SOCKETS.COLLABORATIVE_DRAWING_NAMESPACE) 
                     // gotta deep check object type in a better way
                     if ("fill" in currentArg) {
                         // other client pressed the screen
-                        val drawingCommand = JSONConvertor.getJSONObject(args, SyncCreateDrawing::class.java)
+                        val drawingCommand = JSONConvertor.getJSONObject(currentArg, SyncCreateDrawing::class.java)
                         SynchronisationService.createCommand(drawingCommand)
                     } else {
                         // other client is drawing
-                        val drawingUpdateCommand = JSONConvertor.getJSONObject(args, SyncUpdateDrawing::class.java)
+                        val drawingUpdateCommand = JSONConvertor.getJSONObject(currentArg, SyncUpdateDrawing::class.java)
                         SynchronisationService.drawAndUpdate(drawingUpdateCommand)
                     }
                 } catch (e: JSONException) {

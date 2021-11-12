@@ -4,8 +4,8 @@ import com.github.underscore.lodash.U
 
 class SVGBuilder {
 
-    private val parentBuilder: U.Builder = U.objectBuilder(); // root SVG element
-    private val innerBuilder: U.Builder = U.objectBuilder(); // SVG inner styles
+    private val parentBuilder: U.Builder = U.objectBuilder(); // root CustomSVG element
+    private val innerBuilder: U.Builder = U.objectBuilder(); // CustomSVG inner styles
 
     init {
         addDefaultAttributes()
@@ -16,7 +16,7 @@ class SVGBuilder {
         addAttr("xmlns", "http://www.w3.org/2000/svg")
     }
 
-    // add all attributes to SVG (parent) element
+    // add all attributes to CustomSVG (parent) element
     fun completeBuild() {
         parentBuilder.add("svg", innerBuilder)
     }

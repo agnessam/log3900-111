@@ -5,6 +5,8 @@ import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.util.Base64
 import com.caverock.androidsvg.SVG
+import com.example.colorimagemobile.classes.xml_json.SVGParser
+import com.example.colorimagemobile.services.drawing.toolsAttribute.ColorService
 import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
 import com.example.colorimagemobile.utils.CommonFun.Companion.printToast
 import java.lang.NullPointerException
@@ -15,11 +17,6 @@ class ImageConvertor(val context: Context) {
 
     private val BASE_64_URI = "data:image/svg+xml;base64,"
 
-    companion object ErrorMessage {
-        const val Base64ToBitmap = "Error converting Base64 into Bitmap"
-        const val BitmapToBase64 = "Error converting Bitmap into Base64"
-    }
-
     // convert a base64 image to Bitmap: https://stackoverflow.com/questions/37327038/svg-data-uri-to-bitmap
     fun base64ToBitmap(dataURI: String): Bitmap? {
         return try {
@@ -27,29 +24,33 @@ class ImageConvertor(val context: Context) {
             val base64Data = dataURI.replace(BASE_64_URI, "");
             val imageBytes = Base64.decode(base64Data, Base64.DEFAULT);
             val svgAsString = String(imageBytes, StandardCharsets.UTF_8)
+
+            val svgParser = SVGParser(svgAsString)
+            val svgObject = svgParser.getCustomSVG()
+
+            // render to canvas
             val svg: SVG = SVG.getFromString(svgAsString)
 
-            // Create a bitmap and canvas to draw onto
-            val svgWidth = svg.documentWidth
-            val svgHeight = svg.documentHeight
-
+            // set width and height to canvas
             val newBitmap = Bitmap.createBitmap(
-                ceil(svgWidth.toDouble()).toInt(),
-                ceil(svgHeight.toDouble()).toInt(),
+                ceil(svgObject.width.toDouble()).toInt(),
+                ceil(svgObject.height.toDouble()).toInt(),
                 Bitmap.Config.ARGB_8888
             )
             val bitmapCanvas = Canvas(newBitmap)
 
-            // TO CHANGE
-            bitmapCanvas.drawRGB(255, 255, 255)
+            // set background color of canvas
+            var backgroundColor = svgParser.getBackgroundColor()
+            if (!backgroundColor.contains("#")) {
+                bitmapCanvas.drawColor(ColorService.rgbToInt(backgroundColor))
+            }
 
-            // Render our document onto our canvas
             svg.renderToCanvas(bitmapCanvas);
 
             return newBitmap
         } catch (error: NullPointerException) {
-            printToast(context, ErrorMessage.Base64ToBitmap)
-            printMsg("${ErrorMessage.Base64ToBitmap}: $error")
+            printToast(context, "Error converting Base64 into Bitmap")
+            printMsg("Error converting Base64 into Bitmap: $error")
             null
         }
     }
