@@ -9,4 +9,5 @@ export const TYPES = {
   TeamRepository: Symbol('TeamRepository'),
   DrawingRepository: Symbol('DrawingRepository'),
   MessageRepository: Symbol('MessageRepository'),
+  AvatarRepository: Symbol('AvatarRepository'),
 };

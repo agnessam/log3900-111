@@ -3,6 +3,7 @@ import { TextChannelInterface } from '../models/TextChannel';
 import { TeamInterface } from '../models/teams';
 import { DrawingInterface } from '../models/Drawing';
 import { MessageInterface } from '../models/Message';
+import { AvatarInterface } from '../models/Avatar';
 
 export interface Repository<T> {
   save(doc: T): Promise<T>;
@@ -18,3 +19,4 @@ export type TeamRepositoryInterface = Repository<TeamInterface>;
 export type DrawingRepositoryInterface = Repository<DrawingInterface>;
 export type TextChannelRepositoryInterface = Repository<TextChannelInterface>;
 export type MessageRepositoryInterface = Repository<MessageInterface>;
+export type AvatarRepositoryInterface = Repository<AvatarInterface>;

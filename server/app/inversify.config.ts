@@ -1,6 +1,7 @@
 import { ContainerModule } from 'inversify';
 import { TYPES } from './domain/constants/types';
 import {
+  AvatarRepositoryInterface,
   DrawingRepositoryInterface,
   MessageRepositoryInterface,
   TeamRepositoryInterface,
@@ -10,6 +11,7 @@ import {
 import { SocketServiceInterface } from './domain/interfaces/socket.interface';
 import { ChatSocketService } from './domain/services/sockets/chat-socket.service';
 import { DrawingSocketService } from './domain/services/sockets/drawing-socket.service';
+import { AvatarRepository } from './infrastructure/data_access/repositories/avatar_repository';
 import { DrawingRepository } from './infrastructure/data_access/repositories/drawing_repository';
 import { MessageRepository } from './infrastructure/data_access/repositories/message_repository';
 import { TeamRepository } from './infrastructure/data_access/repositories/team_repository';
@@ -45,5 +47,9 @@ export const referenceDataIoCModule = new ContainerModule((bind) => {
 
   bind<MessageRepositoryInterface>(TYPES.MessageRepository)
     .to(MessageRepository)
+    .inSingletonScope();
+
+  bind<AvatarRepositoryInterface>(TYPES.AvatarRepository)
+    .to(AvatarRepository)
     .inSingletonScope();
 });
