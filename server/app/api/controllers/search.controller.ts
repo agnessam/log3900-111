@@ -1,5 +1,5 @@
-import { searchService } from '@app/domain/constants/decorators';
-import { SearchService } from '@app/domain/services/search.service';
+import { searchService } from '../../domain/constants/decorators';
+import { SearchService } from '../../domain/services/search.service';
 import { controller, httpGet, queryParam } from 'inversify-express-utils';
 
 @controller('/search')

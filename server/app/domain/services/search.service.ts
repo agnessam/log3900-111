@@ -1,6 +1,6 @@
-import { DrawingRepository } from '@app/infrastructure/data_access/repositories/drawing_repository';
-import { TeamRepository } from '@app/infrastructure/data_access/repositories/team_repository';
-import { UserRepository } from '@app/infrastructure/data_access/repositories/user_repository';
+import { DrawingRepository } from '../../infrastructure/data_access/repositories/drawing_repository';
+import { TeamRepository } from '../../infrastructure/data_access/repositories/team_repository';
+import { UserRepository } from '../../infrastructure/data_access/repositories/user_repository';
 import { injectable } from 'inversify';
 import {
   drawingRepository,
