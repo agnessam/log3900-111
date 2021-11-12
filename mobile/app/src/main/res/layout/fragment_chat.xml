@@ -6,4 +6,6 @@
     tools:context=".ui.home.fragments.chat.ChatFragment"
     android:id="@+id/chatChannelFragment">
 
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

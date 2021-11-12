@@ -16,4 +16,8 @@
     <string name="required">* Required</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="create_a_new_channel">Create a new channel!</string>
+    <string name="enter_a_channel_name">Enter a channel name</string>
+    <string name="create_a_new_channel">Create a new channel!</string>
+    <string name="displaynametext">displayNameText</string>
 </resources>

@@ -9,7 +9,7 @@ import com.example.colorimagemobile.R
 import com.example.colorimagemobile.services.chat.TextChannelService
 
 
-class ChatChannelRecyclerAdapter : RecyclerView.Adapter<ChatChannelRecyclerAdapter.ViewHolder>() {
+class ChannelNameRecyclerAdapter : RecyclerView.Adapter<ChannelNameRecyclerAdapter.ViewHolder>() {
 
     private var channelName : MutableList<String> = mutableListOf()
 
@@ -17,12 +17,12 @@ class ChatChannelRecyclerAdapter : RecyclerView.Adapter<ChatChannelRecyclerAdapt
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
-    ): ChatChannelRecyclerAdapter.ViewHolder {
+    ): ChannelNameRecyclerAdapter.ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.card_all_chat_channel_layout,parent,false)
         return ViewHolder(view)
     }
 
-    override fun onBindViewHolder(holder: ChatChannelRecyclerAdapter.ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ChannelNameRecyclerAdapter.ViewHolder, position: Int) {
 
         channelName =TextChannelService.getAllTextChannelName()
         holder.chName.text = channelName[position]
