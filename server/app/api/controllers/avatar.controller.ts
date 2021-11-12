@@ -22,4 +22,11 @@ export class AvatarController {
   public async postAvatar(@request() req: Request) {
     return await this.avatarRepository.create(req.body);
   }
+
+  @httpGet('/default')
+  public async getDefaultAvatars() {
+    return await this.avatarRepository.findManyByQuery({
+      default: true,
+    });
+  }
 }

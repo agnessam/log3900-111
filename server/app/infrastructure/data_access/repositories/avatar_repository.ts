@@ -7,8 +7,4 @@ export class AvatarRepository extends GenericRepository<AvatarInterface> {
   constructor() {
     super(Avatar);
   }
-
-  getDefaultAvatars(): Promise<AvatarInterface[]> {
-    return new Promise<AvatarInterface[]>((resolve, reject) => {});
-  }
 }
