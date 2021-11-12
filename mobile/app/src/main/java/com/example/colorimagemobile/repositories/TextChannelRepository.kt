@@ -6,8 +6,6 @@ import com.example.colorimagemobile.models.DataWrapper
 import com.example.colorimagemobile.models.TextChannelModel
 import com.example.colorimagemobile.services.RetrofitInstance
 import com.example.colorimagemobile.services.UserService
-import com.example.colorimagemobile.services.chat.TextChannelService
-import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
 import com.example.colorimagemobile.utils.Constants
 import retrofit2.Call
 import retrofit2.Callback
@@ -62,6 +60,27 @@ class TextChannelRepository {
 
         return newChannelData
     }
+    // delete channel by id
+    fun deleteChannelById(id: String): MutableLiveData<DataWrapper<TextChannelModel.AllInfo>> {
+        val token = UserService.getToken()
+        val deleteChannelData: MutableLiveData<DataWrapper<TextChannelModel.AllInfo>> = MutableLiveData()
+        httpClient.deleteChannelById(token = "Bearer $token",id).enqueue(object :
+            Callback<TextChannelModel.AllInfo> {
+            override fun onResponse(call: Call<TextChannelModel.AllInfo>, response: Response<TextChannelModel.AllInfo>) {
+                if (!response.isSuccessful) {
+                    deleteChannelData.value = DataWrapper(null, "An error occurred!", true)
+                    return
+                }
+                // channel successfully delete
+                deleteChannelData.value = DataWrapper(response.body(), "", false)
+            }
+            override fun onFailure(call: Call<TextChannelModel.AllInfo>, t: Throwable) {
+                deleteChannelData.value = DataWrapper(null, "Failed to delete channel!", true)
+            }
 
+        })
 
+        return deleteChannelData
     }
+
+}

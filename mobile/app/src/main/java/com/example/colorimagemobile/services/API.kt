@@ -60,11 +60,9 @@ interface API {
     @POST(Constants.ENDPOINTS.TEXT_CHANNEL_PATH)
     fun addChannel(@Header("Authorization")token: String,@Body newUser: TextChannelModel.CreateChannel): Call<TextChannelModel.AllInfo>
 
-
-
-//    @Headers("Content-Type: application/json")
-//    @GET(Constants.ENDPOINTS.TEXT_CHANNEL_PATH+"{id}")
-//    fun getChannelByid(@Header("Authorization")token: String, @Path ("id") id : String) : Call<TextChannelModel.AllInfo>
+    @Headers("Content-Type: application/json")
+    @DELETE(Constants.ENDPOINTS.TEXT_CHANNEL_PATH+"{id}")
+    fun deleteChannelById(@Header("Authorization")token: String,@Path ("id") id : String): Call<TextChannelModel.AllInfo>
 
 
 }

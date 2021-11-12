@@ -51,8 +51,7 @@ class ChatFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-//        val newchannel = TextChannelModel.CreateChannel ("bbhdchannel","618951d4da8fff5216f92a1c")
-//        TextChannelRepository().addChannel(newchannel)
+//        TextChannelRepository().deleteChannelById(id)
         val showAllChannel = ChannelNameFragment()
             parentFragmentManager.beginTransaction().replace(R.id.chatChannelFragment, showAllChannel)
                 .commit()
