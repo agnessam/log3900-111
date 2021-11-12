@@ -7,11 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.example.colorimagemobile.R
 import com.example.colorimagemobile.httpresponsehandler.TextChannelHandler
-import com.example.colorimagemobile.models.MessageModel
-import com.example.colorimagemobile.models.TextChannelModel
-import com.example.colorimagemobile.repositories.MessageRepository
-import com.example.colorimagemobile.repositories.TextChannelRepository
-import com.example.colorimagemobile.services.UserService
+
 
 var textChannelHandler : TextChannelHandler = TextChannelHandler()
 
@@ -53,8 +49,6 @@ class ChatFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-//        val newmessage = MessageModel.SendMessage("pomme seche","2021-11-12T00:25:12.319","beatrice","6188d86b0e5bad79805f9ea9","testleger")
-//        MessageRepository().sendMessage(newmessage)
         val showAllChannel = ChannelNameFragment()
             parentFragmentManager.beginTransaction().replace(R.id.chatChannelFragment, showAllChannel)
                 .commit()

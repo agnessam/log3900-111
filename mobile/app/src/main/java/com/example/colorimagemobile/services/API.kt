@@ -62,8 +62,8 @@ interface API {
     fun addChannel(@Header("Authorization")token: String,@Body newUser: TextChannelModel.CreateChannel): Call<TextChannelModel.AllInfo>
 
     @Headers("Content-Type: application/json")
-    @DELETE(Constants.ENDPOINTS.TEXT_CHANNEL_PATH+"{id}")
-    fun deleteChannelById(@Header("Authorization")token: String,@Path ("id") id : String): Call<TextChannelModel.AllInfo>
+    @DELETE(Constants.ENDPOINTS.TEXT_CHANNEL_PATH+"{channelId}")
+    fun deleteChannelById(@Header("Authorization")token: String,@Path ("channelId") channelId: String): Call<TextChannelModel.AllInfo>
 
     // region message
     @Headers("Content-Type: application/json")
@@ -72,6 +72,14 @@ interface API {
 
     @Headers("Content-Type: application/json")
     @POST(Constants.ENDPOINTS.MESSAGES_PATH)
-    fun sendMessage(@Header("Authorization")token: String, @Body newMessage: MessageModel.SendMessage ): Call<MessageModel.SendMessage>
+    fun sendMessage(@Header("Authorization")token: String, @Body newMessage: MessageModel.SendMessage ): Call<MessageModel.AllInfo>
+
+    @Headers("Content-Type: application/json")
+    @DELETE(Constants.ENDPOINTS.MESSAGES_PATH+"/"+"{messageId}")
+    fun deleteMessageById(@Header("Authorization")token: String,@Path ("messageId") messageId : String): Call<MessageModel.AllInfo>
+
+    @Headers("Content-Type: application/json")
+    @POST(Constants.ENDPOINTS.MESSAGES_PATH)
+    fun storeMessage(@Header("Authorization")token: String, @Body newMessage: List<MessageModel.SendMessage> ): Call<List<MessageModel.AllInfo>>
 
 }

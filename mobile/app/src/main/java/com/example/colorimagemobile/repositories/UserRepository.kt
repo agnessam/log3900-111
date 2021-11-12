@@ -6,7 +6,6 @@ import com.example.colorimagemobile.models.HTTPResponseModel
 import com.example.colorimagemobile.models.UserModel
 import com.example.colorimagemobile.services.RetrofitInstance
 import com.example.colorimagemobile.services.UserService
-import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -146,12 +145,12 @@ class UserRepository {
                     updateLogHistoryData.value = DataWrapper(null, "An error occurred!", true)
                     return
                 }
-                // account successfully update
+                // log history successfully update
                 updateLogHistoryData.value = DataWrapper(response.body(), "", false)
             }
 
             override fun onFailure(call: Call<HTTPResponseModel.UserResponse>, t: Throwable) {
-                updateLogHistoryData.value = DataWrapper(null, "Failed to create account!", true)
+                updateLogHistoryData.value = DataWrapper(null, "Failed to update log history account!", true)
             }
         })
 

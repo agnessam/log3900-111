@@ -1,13 +1,10 @@
 package com.example.colorimagemobile.repositories
 
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.example.colorimagemobile.models.DataWrapper
 import com.example.colorimagemobile.models.MessageModel
-import com.example.colorimagemobile.models.TextChannelModel
 import com.example.colorimagemobile.services.RetrofitInstance
 import com.example.colorimagemobile.services.UserService
-import com.example.colorimagemobile.utils.Constants
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -27,10 +24,11 @@ class MessageRepository {
                     AllMessageData.value = DataWrapper(null, "An error occurred!", true)
                     return
                 }
+                //all message get successfully
                 AllMessageData.value = DataWrapper(response.body(), null, false)
             }
             override fun onFailure(call: Call<List<MessageModel.AllInfo>>, t: Throwable) {
-                AllMessageData.value = DataWrapper(null, "Failed to get Message!", true)
+                AllMessageData.value = DataWrapper(null, "Failed to get all Message!", true)
             }
         })
 
@@ -38,24 +36,67 @@ class MessageRepository {
     }
 
     // send new message
-    fun sendMessage(newChannel: MessageModel.SendMessage): MutableLiveData<DataWrapper<MessageModel.SendMessage>> {
-        val newChannelData: MutableLiveData<DataWrapper<MessageModel.SendMessage>> = MutableLiveData()
+    fun sendMessage(newChannel: MessageModel.SendMessage): MutableLiveData<DataWrapper<MessageModel.AllInfo>> {
+        val newMessageData: MutableLiveData<DataWrapper<MessageModel.AllInfo>> = MutableLiveData()
         val token = UserService.getToken()
-        httpClient.sendMessage(token = "Bearer $token",newChannel).enqueue(object : Callback<MessageModel.SendMessage> {
-            override fun onResponse(call: Call<MessageModel.SendMessage>, response: Response<MessageModel.SendMessage>) {
+        httpClient.sendMessage(token = "Bearer $token",newChannel).enqueue(object : Callback<MessageModel.AllInfo> {
+            override fun onResponse(call: Call<MessageModel.AllInfo>, response: Response<MessageModel.AllInfo>) {
                 if (!response.isSuccessful) {
-                    Log.d(Constants.DEBUG_KEY, response.message())
-                    newChannelData.value = DataWrapper(null, "An error occurred!", true)
+                    newMessageData.value = DataWrapper(null, "An error occurred!", true)
                     return
                 }
-                // message send successfully
-                newChannelData.value = DataWrapper(response.body(), "", false)
+                // message send successfully create
+                newMessageData.value = DataWrapper(response.body(), "", false)
             }
-            override fun onFailure(call: Call<MessageModel.SendMessage>, t: Throwable) {
-                newChannelData.value = DataWrapper(null, "Failed to create message!", true)
+            override fun onFailure(call: Call<MessageModel.AllInfo>, t: Throwable) {
+                newMessageData.value = DataWrapper(null, "Failed to create message!", true)
             }
         })
 
-        return newChannelData
+        return newMessageData
+    }
+
+    // delete message by id
+    fun deleteMessageById(id: String): MutableLiveData<DataWrapper<MessageModel.AllInfo>> {
+        val token = UserService.getToken()
+        val deleteMessageData: MutableLiveData<DataWrapper<MessageModel.AllInfo>> = MutableLiveData()
+        httpClient.deleteMessageById(token = "Bearer $token",id).enqueue(object :
+            Callback<MessageModel.AllInfo> {
+            override fun onResponse(call: Call<MessageModel.AllInfo>, response: Response<MessageModel.AllInfo>) {
+                if (!response.isSuccessful) {
+                    deleteMessageData.value = DataWrapper(null, "An error occurred!", true)
+                    return
+                }
+                // message successfully delete
+                deleteMessageData.value = DataWrapper(response.body(), "", false)
+            }
+            override fun onFailure(call: Call<MessageModel.AllInfo>, t: Throwable) {
+                deleteMessageData.value = DataWrapper(null, "Failed to delete message!", true)
+            }
+
+        })
+
+        return deleteMessageData
+    }
+
+    // store all message
+    fun storeMessage(listMessage: List<MessageModel.SendMessage>): MutableLiveData<DataWrapper<List<MessageModel.AllInfo>>> {
+        val listMessageToStore: MutableLiveData<DataWrapper<List<MessageModel.AllInfo>>> = MutableLiveData()
+        val token = UserService.getToken()
+        httpClient.storeMessage(token = "Bearer $token",listMessage).enqueue(object : Callback<List<MessageModel.AllInfo>> {
+            override fun onResponse(call: Call<List<MessageModel.AllInfo>>, response: Response<List<MessageModel.AllInfo>>) {
+                if (!response.isSuccessful) {
+                    listMessageToStore.value = DataWrapper(null, "An error occurred!", true)
+                    return
+                }
+                // all messages successfully stored
+                listMessageToStore.value = DataWrapper(response.body(), "", false)
+            }
+            override fun onFailure(call: Call<List<MessageModel.AllInfo>>, t: Throwable) {
+                listMessageToStore.value = DataWrapper(null, "Failed to store all message!", true)
+            }
+        })
+
+        return listMessageToStore
     }
 }
