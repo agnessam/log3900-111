@@ -23,6 +23,11 @@ export class AvatarController {
     return await this.avatarRepository.create(req.body);
   }
 
+  @httpPost('/:id')
+  public async deleteAvatar(@request() req: Request) {
+    return await this.avatarRepository.deleteById(req.params.id);
+  }
+
   @httpGet('/default')
   public async getDefaultAvatars() {
     return await this.avatarRepository.findManyByQuery({
