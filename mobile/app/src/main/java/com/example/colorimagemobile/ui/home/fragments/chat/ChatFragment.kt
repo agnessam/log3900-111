@@ -11,6 +11,6 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        MyFragmentManager(requireActivity()).open(R.id.chatChannelFragment, ChannelNameFragment())
+        MyFragmentManager(requireActivity()).open(R.id.chat_channel_framelayout, ChannelNameFragment())
     }
 }
