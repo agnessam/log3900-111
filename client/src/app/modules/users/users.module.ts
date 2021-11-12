@@ -15,7 +15,9 @@ import { AuthGuard } from "../authentication";
 import { UsersComponent } from "./users/users.component";
 import { FileUploadComponent } from "./file-upload/file-upload.component";
 import { MatIconModule } from "@angular/material/icon";
-import { AvatarComponent } from './avatar/avatar.component';
+import { AvatarComponent } from "./avatar/avatar.component";
+import { AvatarDialogComponent } from "./avatar/avatar-dialog/avatar-dialog.component";
+import { MatDialogModule } from "@angular/material/dialog";
 
 @NgModule({
   declarations: [
@@ -24,6 +26,7 @@ import { AvatarComponent } from './avatar/avatar.component';
     UsersComponent,
     FileUploadComponent,
     AvatarComponent,
+    AvatarDialogComponent,
   ],
   imports: [
     MatCardModule,
@@ -31,6 +34,7 @@ import { AvatarComponent } from './avatar/avatar.component';
     MatFormFieldModule,
     MatInputModule,
     MatIconModule,
+    MatDialogModule,
     ReactiveFormsModule,
     MatButtonModule,
     CommonModule,
