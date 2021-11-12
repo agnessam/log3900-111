@@ -1,7 +1,6 @@
 package com.example.colorimagemobile.services.chat
 
 import com.example.colorimagemobile.models.TextChannelModel
-import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
 
 object TextChannelService {
     private lateinit var textChannelInfo: TextChannelModel.AllInfo
@@ -10,9 +9,7 @@ object TextChannelService {
     private var allTextChannelOwner: MutableList<String> = mutableListOf()
 
     fun setAllTextChannel(allInfo: List<TextChannelModel.AllInfo>){
-
         this.allTextChannel = allInfo
-        printMsg("all channel in service data  "+ this.allTextChannel)
         setChannelsName()
     }
 
@@ -21,12 +18,10 @@ object TextChannelService {
                 this.allTextChannelName.add(data.name)
                 this.allTextChannelOwner.add(data.ownerId)
             }
-        printMsg("all channel in service "+ allTextChannelName)
     }
 
 
     fun getAllTextChannelName(): MutableList<String>{
-        printMsg("inside get channelname  "+ allTextChannelName)
         return this.allTextChannelName
     }
 

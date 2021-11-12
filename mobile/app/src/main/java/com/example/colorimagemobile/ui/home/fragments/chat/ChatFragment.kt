@@ -7,6 +7,10 @@ import android.view.View
 import android.view.ViewGroup
 import com.example.colorimagemobile.R
 import com.example.colorimagemobile.httpresponsehandler.TextChannelHandler
+import com.example.colorimagemobile.models.TextChannelModel
+import com.example.colorimagemobile.repositories.TextChannelRepository
+import com.example.colorimagemobile.services.UserService
+
 var textChannelHandler : TextChannelHandler = TextChannelHandler()
 
 
@@ -47,6 +51,8 @@ class ChatFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+//        val newchannel = TextChannelModel.CreateChannel ("bbhdchannel","618951d4da8fff5216f92a1c")
+//        TextChannelRepository().addChannel(newchannel)
         val showAllChannel = ChannelNameFragment()
             parentFragmentManager.beginTransaction().replace(R.id.chatChannelFragment, showAllChannel)
                 .commit()

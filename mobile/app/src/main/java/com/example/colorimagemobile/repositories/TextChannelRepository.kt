@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import com.example.colorimagemobile.models.DataWrapper
 import com.example.colorimagemobile.models.TextChannelModel
 import com.example.colorimagemobile.services.RetrofitInstance
+import com.example.colorimagemobile.services.UserService
 import com.example.colorimagemobile.services.chat.TextChannelService
 import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
 import com.example.colorimagemobile.utils.Constants
@@ -40,24 +41,22 @@ class TextChannelRepository {
         return ChannelListLiveData
     }
 
-    // create new user
+    // create new channel
     fun addChannel(newChannel: TextChannelModel.CreateChannel): MutableLiveData<DataWrapper<TextChannelModel.AllInfo>> {
         val newChannelData: MutableLiveData<DataWrapper<TextChannelModel.AllInfo>> = MutableLiveData()
-
-        httpClient.addChannel(newChannel).enqueue(object : Callback<TextChannelModel.AllInfo> {
+        val token = UserService.getToken()
+        httpClient.addChannel(token = "Bearer $token",newChannel).enqueue(object : Callback<TextChannelModel.AllInfo> {
             override fun onResponse(call: Call<TextChannelModel.AllInfo>, response: Response<TextChannelModel.AllInfo>) {
                 if (!response.isSuccessful) {
                     Log.d(Constants.DEBUG_KEY, response.message())
                     newChannelData.value = DataWrapper(null, "An error occurred!", true)
                     return
                 }
-
                 // channel successfully created
                 newChannelData.value = DataWrapper(response.body(), "", false)
             }
-
             override fun onFailure(call: Call<TextChannelModel.AllInfo>, t: Throwable) {
-                newChannelData.value = DataWrapper(null, "Failed to create account!", true)
+                newChannelData.value = DataWrapper(null, "Failed to create channel!", true)
             }
         })
 

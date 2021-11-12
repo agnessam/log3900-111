@@ -58,7 +58,7 @@ interface API {
 
     @Headers("Content-Type: application/json")
     @POST(Constants.ENDPOINTS.TEXT_CHANNEL_PATH)
-    fun addChannel(@Body newUser: TextChannelModel.CreateChannel): Call<TextChannelModel.AllInfo>
+    fun addChannel(@Header("Authorization")token: String,@Body newUser: TextChannelModel.CreateChannel): Call<TextChannelModel.AllInfo>
 
 
 

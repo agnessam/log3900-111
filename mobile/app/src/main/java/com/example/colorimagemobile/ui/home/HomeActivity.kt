@@ -136,7 +136,6 @@ class HomeActivity : AppCompatActivity() {
     }
 
     fun AllTextChannel(token: String){
-        CommonFun.printMsg("inside getAlltextchannel")
         val updateObserver = getAllTextChannel(token)
         updateObserver.observe(this, { this?.let { it1 -> textChannelHandler.responseGetAll(it1,it) } })
     }
