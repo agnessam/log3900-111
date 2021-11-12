@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.colorimagemobile.R
-import com.example.colorimagemobile.adapter.ChannelNameRecyclerAdapter
+import com.example.colorimagemobile.adapter.ChannelListRecyclerAdapter
 import kotlinx.android.synthetic.main.fragment_channel_name.*
 
 
@@ -19,7 +19,7 @@ private const val ARG_PARAM2 = "param2"
 class ChannelNameFragment : Fragment() {
 
     private var layoutManager : RecyclerView.LayoutManager?=null
-    private  var adapter: RecyclerView.Adapter<ChannelNameRecyclerAdapter.ViewHolder>?=null
+    private  var adapter: RecyclerView.Adapter<ChannelListRecyclerAdapter.ViewHolder>?=null
 
 
 
@@ -49,7 +49,7 @@ class ChannelNameFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         layoutManager = LinearLayoutManager(context)
         recyclerView.layoutManager = layoutManager
-        adapter = ChannelNameRecyclerAdapter()
+        adapter = ChannelListRecyclerAdapter()
         recyclerView.adapter = adapter
 
     }

@@ -16,8 +16,13 @@
     <string name="required">* Required</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="create_a_new_channel">Create a new channel!</string>
     <string name="enter_a_channel_name">Enter a channel name</string>
     <string name="create_a_new_channel">Create a new channel!</string>
     <string name="displaynametext">displayNameText</string>
+    <string name="user_image">User Image</string>
+    <string name="username">UserName</string>
+    <string name="new_friend_request" />
+    <string name="accept"> Accept</string>
+    <string name="decline">Decline</string>
+    <string name="new_friends_request">New friend request</string>
 </resources>
