@@ -70,4 +70,8 @@ interface API {
     @GET(Constants.ENDPOINTS.MESSAGES_PATH)
     fun getAllMessage(@Header("Authorization")token: String): Call<List<MessageModel.AllInfo>>
 
+    @Headers("Content-Type: application/json")
+    @POST(Constants.ENDPOINTS.MESSAGES_PATH)
+    fun sendMessage(@Header("Authorization")token: String, @Body newMessage: MessageModel.SendMessage ): Call<MessageModel.SendMessage>
+
 }
