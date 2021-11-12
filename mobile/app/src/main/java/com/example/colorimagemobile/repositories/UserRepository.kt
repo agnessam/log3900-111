@@ -1,22 +1,21 @@
 package com.example.colorimagemobile.repositories
 
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.example.colorimagemobile.models.DataWrapper
 import com.example.colorimagemobile.models.HTTPResponseModel
 import com.example.colorimagemobile.models.UserModel
 import com.example.colorimagemobile.services.RetrofitInstance
 import com.example.colorimagemobile.services.UserService
-import com.example.colorimagemobile.utils.Constants
+import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
 
 
 class UserRepository {
     private val httpClient = RetrofitInstance.HTTP
     private lateinit var newProfileDate : UserModel.UpdateUser
+    private lateinit var logHistory : UserModel.UpdateLogHistory
 
     fun getUserByToken(token: String): MutableLiveData<DataWrapper<HTTPResponseModel.UserResponse>> {
         val userLiveData: MutableLiveData<DataWrapper<HTTPResponseModel.UserResponse>> = MutableLiveData()
@@ -34,11 +33,9 @@ class UserRepository {
                 }
                 // account successfully created
                 userLiveData.value = DataWrapper(response.body(), null, false)
-                printMsg("body inside getuserbytoken "+response.body())
             }
             // duplicate username is coming through here
             override fun onFailure(call: Call<HTTPResponseModel.UserResponse>, t: Throwable) {
-                Log.d(Constants.DEBUG_KEY, "Failed to get user account ${t.message!!}")
                 userLiveData.value = DataWrapper(null, "Failed to get User!", true)
             }
         })
@@ -46,9 +43,10 @@ class UserRepository {
         return userLiveData
     }
 
-    // update user data
+    // update user profile data
     fun updateUserData(token: String, id: String): MutableLiveData<DataWrapper<HTTPResponseModel.UserResponse>> {
         newProfileDate =UserService.getNewProfileData()
+
         val updateLiveData: MutableLiveData<DataWrapper<HTTPResponseModel.UserResponse>> = MutableLiveData()
 
         httpClient.updateUser(token = "Bearer $token",id, newProfileDate).enqueue(object :
@@ -58,13 +56,11 @@ class UserRepository {
                     updateLiveData.value = DataWrapper(null, "An error occurred!", true)
                     return
                 }
-
                 // account successfully update
                 updateLiveData.value = DataWrapper(response.body(), "", false)
             }
 
             override fun onFailure(call: Call<HTTPResponseModel.UserResponse>, t: Throwable) {
-                Log.d(Constants.DEBUG_KEY, "Failed update account ${t.message!!}")
                 updateLiveData.value = DataWrapper(null, "Failed to create account!", true)
             }
 
@@ -73,6 +69,7 @@ class UserRepository {
         return updateLiveData
     }
 
+    // get user by id
     fun getUserById(token: String,id:String): MutableLiveData<DataWrapper<UserModel.AllInfo>> {
         val userData: MutableLiveData<DataWrapper<UserModel.AllInfo>> = MutableLiveData()
 
@@ -85,7 +82,6 @@ class UserRepository {
                 userData.value = DataWrapper(response.body(), null, false)
             }
             override fun onFailure(call: Call<UserModel.AllInfo>, t: Throwable) {
-                Log.d(Constants.DEBUG_KEY, "Failed to get user account ${t.message!!}")
                 userData.value = DataWrapper(null, "Failed to get User!", true)
             }
         })
@@ -95,6 +91,7 @@ class UserRepository {
 
     // delete user by id
     fun deleteUserById(token: String, id: String): MutableLiveData<DataWrapper<HTTPResponseModel.UserResponse>> {
+
         val deleteUserData: MutableLiveData<DataWrapper<HTTPResponseModel.UserResponse>> = MutableLiveData()
         httpClient.deleteUserById(token = "Bearer $token",id).enqueue(object :
             Callback<HTTPResponseModel.UserResponse> {
@@ -109,7 +106,6 @@ class UserRepository {
             }
 
             override fun onFailure(call: Call<HTTPResponseModel.UserResponse>, t: Throwable) {
-                Log.d(Constants.DEBUG_KEY, "Failed update account ${t.message!!}")
                 deleteUserData.value = DataWrapper(null, "Failed to delete account!", true)
             }
 
@@ -118,6 +114,7 @@ class UserRepository {
         return deleteUserData
     }
 
+    // get all user
     fun getAllUser(token: String): MutableLiveData<DataWrapper<List<UserModel.AllInfo>>> {
         val AllUserData: MutableLiveData<DataWrapper<List<UserModel.AllInfo>>> = MutableLiveData()
 
@@ -130,7 +127,6 @@ class UserRepository {
                 AllUserData.value = DataWrapper(response.body(), null, false)
             }
             override fun onFailure(call: Call<List<UserModel.AllInfo>>, t: Throwable) {
-                Log.d(Constants.DEBUG_KEY, "Failed to get user account ${t.message!!}")
                 AllUserData.value = DataWrapper(null, "Failed to get User!", true)
             }
         })
@@ -138,5 +134,28 @@ class UserRepository {
         return AllUserData
     }
 
+    // update login or logout history
+    fun updateLogHistoryData(token: String, id: String): MutableLiveData<DataWrapper<HTTPResponseModel.UserResponse>> {
+
+        logHistory=UserService.getLogHistory()
+        val updateLogHistoryData: MutableLiveData<DataWrapper<HTTPResponseModel.UserResponse>> = MutableLiveData()
+        httpClient.updateLogHistory(token = "Bearer $token",id, logHistory).enqueue(object :
+            Callback<HTTPResponseModel.UserResponse> {
+            override fun onResponse(call: Call<HTTPResponseModel.UserResponse>, response: Response<HTTPResponseModel.UserResponse>) {
+                if (!response.isSuccessful) {
+                    updateLogHistoryData.value = DataWrapper(null, "An error occurred!", true)
+                    return
+                }
+                // account successfully update
+                updateLogHistoryData.value = DataWrapper(response.body(), "", false)
+            }
+
+            override fun onFailure(call: Call<HTTPResponseModel.UserResponse>, t: Throwable) {
+                updateLogHistoryData.value = DataWrapper(null, "Failed to create account!", true)
+            }
+        })
+
+        return updateLogHistoryData
+    }
 
 }

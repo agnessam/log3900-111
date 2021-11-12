@@ -9,6 +9,7 @@ import com.example.colorimagemobile.classes.FormValidator
 import com.example.colorimagemobile.services.UserService
 import com.example.colorimagemobile.models.UserModel
 import com.example.colorimagemobile.databinding.ActivityLoginBinding
+import com.example.colorimagemobile.httpresponsehandler.GlobalHandler
 import com.example.colorimagemobile.models.DataWrapper
 import com.example.colorimagemobile.models.HTTPResponseModel
 import com.example.colorimagemobile.services.SharedPreferencesService
@@ -26,15 +27,17 @@ import com.google.android.material.textfield.TextInputLayout
 class LoginActivity : AppCompatActivity() {
 
     private lateinit var loginViewModel: LoginActivityViewModel
+    private lateinit var globalHandler: GlobalHandler
     private lateinit var sharedPreferencesService: SharedPreferencesService
     private lateinit var binding: ActivityLoginBinding
     private lateinit var formValidator: FormValidator
     private var canSubmit: Boolean = true
 
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        globalHandler = GlobalHandler()
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -83,6 +86,7 @@ class LoginActivity : AppCompatActivity() {
         val loginObserver = loginViewModel.loginUser(user)
         loginObserver.observe(this, { handleLoginResponse(it) })
 
+
     }
 
     // response from HTTP request
@@ -93,17 +97,23 @@ class LoginActivity : AppCompatActivity() {
         if (HTTPResponse.isError as Boolean) {
             return
         }
-        // Set lastLogin date to localtime
-        UserService.setLogHistory(Constants.LAST_LOGIN_DATE)
 
         val response = HTTPResponse.data as HTTPResponseModel.LoginResponse
 
-        // Set lastLogin date to localtime
-        UserService.setLogHistory(Constants.LAST_LOGIN_DATE)
-
         // save users info and token and redirect to /Home
         UserService.setUserInfo(response.user)
+
         sharedPreferencesService.setItem(Constants.STORAGE_KEY.TOKEN, response.token)
+
+        // Update login date
+        UserService.setLogHistory(Constants.LAST_LOGIN_DATE)
+
         redirectTo(this@LoginActivity, HomeActivity::class.java)
+
     }
+
+
+
+
+
 }

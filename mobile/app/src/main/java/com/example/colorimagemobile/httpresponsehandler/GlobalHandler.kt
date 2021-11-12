@@ -1,14 +1,14 @@
-package com.example.colorimagemobile.services
+package com.example.colorimagemobile.httpresponsehandler
 
 import android.content.Context
 import com.example.colorimagemobile.models.DataWrapper
 import com.example.colorimagemobile.models.HTTPResponseModel
 import com.example.colorimagemobile.utils.CommonFun
 
-class HandleHTTP{
+class GlobalHandler{
 
     // for all update and delete request
-    fun Response(context : Context, HTTPResponse: DataWrapper<HTTPResponseModel.UserResponse>) {
+    fun response(context : Context, HTTPResponse: DataWrapper<HTTPResponseModel.UserResponse>) {
 
         // some error occurred during HTTP request
         if (HTTPResponse.isError as Boolean) {

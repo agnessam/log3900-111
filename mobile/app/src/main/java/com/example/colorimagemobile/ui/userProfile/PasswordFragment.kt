@@ -1,7 +1,6 @@
 package com.example.colorimagemobile.ui.userProfile
 
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -14,10 +13,9 @@ import com.example.colorimagemobile.models.DataWrapper
 import com.example.colorimagemobile.models.HTTPResponseModel
 import com.example.colorimagemobile.models.UserModel
 import com.example.colorimagemobile.repositories.UserRepository
-import com.example.colorimagemobile.services.HandleHTTP
+import com.example.colorimagemobile.httpresponsehandler.GlobalHandler
 import com.example.colorimagemobile.services.SharedPreferencesService
 import com.example.colorimagemobile.services.UserService
-import com.example.colorimagemobile.ui.home.HomeActivity
 import com.example.colorimagemobile.utils.CommonFun
 import com.example.colorimagemobile.utils.Constants
 
@@ -26,7 +24,7 @@ class PasswordFragment : Fragment() {
 
     private lateinit var sharedPreferencesService: SharedPreferencesService
     private lateinit var userRepository: UserRepository
-    private lateinit var handleHTTP: HandleHTTP
+    private lateinit var globalHandler: GlobalHandler
     private lateinit var token : String
     private lateinit var user : UserModel.AllInfo
     private var infview : View ? = null
@@ -45,7 +43,7 @@ class PasswordFragment : Fragment() {
         super.onCreate(savedInstanceState)
         user = UserService.getUserInfo()
         userRepository = UserRepository()
-        handleHTTP = HandleHTTP()
+        globalHandler = GlobalHandler()
         sharedPreferencesService = context?.let { SharedPreferencesService(it) }!!
         token = sharedPreferencesService.getItem(Constants.STORAGE_KEY.TOKEN)
         userProfileFragment = UserProfileFragment()
@@ -130,15 +128,13 @@ class PasswordFragment : Fragment() {
 
 
     private fun updatePassword(){
-        Log.d("updatePassword","fieldempty = "+areFieldEmpty() +" isOldPassword = "+isOldPassword() +"isnewpasswordmatch= "+isNewPasswordMatch())
         if (areFieldEmpty() || !isOldPassword() || !isNewPasswordMatch()) return
         // form body to make HTTP request
         val newUserData = UserModel.UpdateUser(user.username, user.password, edtPassword)
         UserService.setNewProfileData(newUserData)
         val updateObserver = updateUserInfo(token,user._id)
 
-        updateObserver.observe(viewLifecycleOwner, { context?.let { it1 -> handleHTTP.Response(it1,it) } })
-//        HomeActivity().checkCurrentUser()
+        updateObserver.observe(viewLifecycleOwner, { context?.let { it1 -> globalHandler.response(it1,it) } })
         CommonFun.redirectTo_(this.requireActivity(), MainActivity::class.java)
 
     }

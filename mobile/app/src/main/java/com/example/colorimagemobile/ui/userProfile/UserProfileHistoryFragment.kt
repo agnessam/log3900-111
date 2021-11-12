@@ -21,6 +21,8 @@ import com.example.colorimagemobile.utils.Constants
 
 class UserProfileHistoryFragment : Fragment() {
     private val userRepository: UserRepository = UserRepository()
+    private lateinit var lastLogin : TextView
+    private lateinit var lastLogout : TextView
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,18 +40,25 @@ class UserProfileHistoryFragment : Fragment() {
         val inf: View = inflater.inflate(R.layout.fragment_user_profile_history, container, false)
 
         // find the texView
-        val lastLogin= inf.findViewById<View>(R.id.lastLogin) as TextView
-        val lastLogout = inf.findViewById<View>(R.id.lastLogout) as TextView
+        lastLogin= inf.findViewById<View>(R.id.lastLogin) as TextView
+        lastLogout = inf.findViewById<View>(R.id.lastLogout) as TextView
 
-        // get log history
-        val log : ArrayList<String> = UserService.getLogHistory()
 
-       // sets the derived data in the textView
-        lastLogin.text = log.get(0)
-        lastLogout.text =log.get(1)
-        printMsg("before get user")
 
         return inf
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        // get log history
+//        val log : ArrayList<String> = UserService.getLogHistory()
+        val user = UserService.getUserInfo()
+        printMsg("user in historique: "+user)
+        // sets the derived data in the textView
+        lastLogin.text = user.lastLoginDate
+        lastLogout.text =user.lastLogoutDate
+        printMsg("before get user")
     }
 
 

@@ -12,6 +12,7 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.colorimagemobile.ui.login.LoginActivity
 import com.example.colorimagemobile.R
+import com.example.colorimagemobile.httpresponsehandler.GlobalHandler
 import com.example.colorimagemobile.services.UserService
 import com.example.colorimagemobile.models.UserModel
 import com.example.colorimagemobile.models.DataWrapper
@@ -25,11 +26,13 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 class HomeActivity : AppCompatActivity() {
     private lateinit var homeViewModel: HomeActivityViewModel
     private lateinit var sharedPreferencesService: SharedPreferencesService
+    private lateinit var globalHandler: GlobalHandler
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
-
+        globalHandler = GlobalHandler()
         homeViewModel = ViewModelProvider(this).get(HomeActivityViewModel::class.java)
         sharedPreferencesService = SharedPreferencesService(this)
 
@@ -90,6 +93,7 @@ class HomeActivity : AppCompatActivity() {
     }
 
     private fun logUserOut() {
+
         val user = UserModel.Logout(UserService.getUserInfo().username)
         val logOutObserver = homeViewModel.logoutUser(user)
         logOutObserver.observe(this, { handleLogOutResponse(it) })
@@ -103,10 +107,21 @@ class HomeActivity : AppCompatActivity() {
             return
         }
 
+        val token = sharedPreferencesService.getItem(Constants.STORAGE_KEY.TOKEN)
+        UserService.setToken(token)
+        UserService.setLogHistory(Constants.LAST_LOGOUT_DATE)
+        LogHistory()
+
         // remove items from "local storage"
         sharedPreferencesService.removeItem(Constants.STORAGE_KEY.TOKEN)
+
         redirectTo(this, LoginActivity::class.java)
     }
 
+    private fun LogHistory(){
+        UserService.setLogHistory(Constants.LAST_LOGOUT_DATE)
+        val updateObserver = homeViewModel.updateLogHistory(UserService.getUserInfo()._id)
+        updateObserver.observe(this, { this?.let { it1 -> globalHandler.response(it1,it) } })
+    }
 
     }

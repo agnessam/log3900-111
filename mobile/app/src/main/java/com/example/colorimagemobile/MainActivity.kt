@@ -21,6 +21,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         sharedPreferencesService = SharedPreferencesService(this)
+        sharedPreferencesService.clear()
         val token = sharedPreferencesService.getItem(Constants.STORAGE_KEY.TOKEN)
 
         // if token exists, go to Home else go to Login for auth verification

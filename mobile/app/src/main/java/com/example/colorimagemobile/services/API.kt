@@ -40,19 +40,24 @@ interface API {
     @PATCH(Constants.ENDPOINTS.USER_PATH+"{id}")
     fun updateUser(@Header("Authorization")token: String, @Path ("id") id : String, @Body  newUser: UserModel.UpdateUser) : Call<HTTPResponseModel.UserResponse>
 
+
+    @Headers("Content-Type: application/json")
+    @PATCH(Constants.ENDPOINTS.USER_PATH+"{id}")
+    fun updateLogHistory(@Header("Authorization")token: String, @Path ("id") id : String, @Body  newLogHistory:  UserModel.UpdateLogHistory) : Call<HTTPResponseModel.UserResponse>
+
     @Headers("Content-Type: application/json")
     @DELETE(Constants.ENDPOINTS.USER_PATH+"{id}")
     fun deleteUserById(@Header("Authorization")token: String, @Path ("id") id : String) : Call<HTTPResponseModel.UserResponse>
 
 
-    //  TextChannel region
-    @Headers("Content-Type: application/json" , "Accept:application/json")
-    @GET(Constants.ENDPOINTS.TEXT_CHANNEL_PATH)
-    fun getAllChatChannel(@Header("Authorization")token: String): Call<List<HTTPResponseModel.TextChannelResponse>>
-
-    @Headers("Content-Type: application/json")
-    @GET(Constants.ENDPOINTS.TEXT_CHANNEL_PATH+"{id}")
-    fun getChannelByid(@Header("Authorization")token: String, @Path ("id") id : String) : Call<HTTPResponseModel.TextChannelResponse>
-
+//    //  TextChannel region
+//    @Headers("Content-Type: application/json" , "Accept:application/json")
+//    @GET(Constants.ENDPOINTS.TEXT_CHANNEL_PATH)
+//    fun getAllChatChannel(@Header("Authorization")token: String): Call<List<HTTPResponseModel.TextChannelResponse>>
+//
+//    @Headers("Content-Type: application/json")
+//    @GET(Constants.ENDPOINTS.TEXT_CHANNEL_PATH+"{id}")
+//    fun getChannelByid(@Header("Authorization")token: String, @Path ("id") id : String) : Call<HTTPResponseModel.TextChannelResponse>
+//
 
 }

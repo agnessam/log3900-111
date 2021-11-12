@@ -14,6 +14,8 @@ export interface UserInterface extends Document {
 
   teams: string[] | TeamInterface[];
   drawings: string[] | DrawingInterface[];
+  lastLoginDate : string;
+  lastLogoutDate : string;
 
   isValidPassword(password: string): Promise<boolean>;
 }
@@ -21,11 +23,13 @@ export interface UserInterface extends Document {
 const UserSchema = new mongoose.Schema({
   username: { type: String, required: true, index: { unique: true } },
   description: String,
-
+  lastLoginDate:  String ,
+  lastLogoutDate: String,
   email: { type: String, required: true, index: { unique: true } },
   password: { type: String, required: true },
   firstName: { type: String, required: true },
   lastName: { type: String, required: true },
+
 
   teams: [{ type: Schema.Types.ObjectId, ref: 'Team' }],
   drawings: [{ type: Schema.Types.ObjectId, ref: 'Drawing' }],

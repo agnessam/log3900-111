@@ -11,7 +11,7 @@ import com.example.colorimagemobile.R
 import com.example.colorimagemobile.models.DataWrapper
 import com.example.colorimagemobile.models.HTTPResponseModel
 import com.example.colorimagemobile.models.UserModel
-import com.example.colorimagemobile.services.HandleHTTP
+import com.example.colorimagemobile.httpresponsehandler.GlobalHandler
 import com.example.colorimagemobile.services.UserService
 import com.example.colorimagemobile.repositories.UserRepository
 import com.example.colorimagemobile.services.SharedPreferencesService
@@ -26,7 +26,7 @@ class EditProfileFragment : Fragment() {
     private lateinit var edtDescription: String
     private lateinit var infDescription: TextView
     private lateinit var edtUsername: String
-    private lateinit var handleHTTP: HandleHTTP
+    private lateinit var globalHandler: GlobalHandler
     private lateinit var infName: TextView
     private var infview : View ? = null
     private lateinit var token : String
@@ -37,7 +37,7 @@ class EditProfileFragment : Fragment() {
         super.onCreate(savedInstanceState)
         user = UserService.getUserInfo()
         userRepository = UserRepository()
-        handleHTTP = HandleHTTP()
+        globalHandler = GlobalHandler()
         sharedPreferencesService = context?.let { SharedPreferencesService(it) }!!
         token = sharedPreferencesService.getItem(Constants.STORAGE_KEY.TOKEN)
 
@@ -53,7 +53,6 @@ class EditProfileFragment : Fragment() {
 
         // listeners
         inf.findViewById<View>(R.id.updatebutton).setOnClickListener { update() }
-//        inf.findViewById<View>(R.id.updatebutton).setOnClickListener { getUsers() }
         inf.findViewById<View>(R.id.editprofileview).setOnTouchListener { v, event -> CommonFun.closeKeyboard_(this.requireActivity()) }
 
        // keyboard
@@ -98,7 +97,7 @@ class EditProfileFragment : Fragment() {
         UserService.setNewProfileData(newUserData)
         val updateObserver = updateUserInfo()
 
-        updateObserver.observe(viewLifecycleOwner, { context?.let { it1 -> handleHTTP.Response(it1,it) } })
+        updateObserver.observe(viewLifecycleOwner, { context?.let { it1 -> globalHandler.response(it1,it) } })
         CommonFun.redirectTo_(this.requireActivity(), HomeActivity::class.java)
 
     }
@@ -106,11 +105,6 @@ class EditProfileFragment : Fragment() {
     private fun updateUserInfo(): LiveData<DataWrapper<HTTPResponseModel.UserResponse>> {
         return userRepository.updateUserData(token, user._id)
     }
-
-
-
-
-
 
 
 }

@@ -4,7 +4,7 @@ import com.example.colorimagemobile.models.DataWrapper
 import com.example.colorimagemobile.models.UserModel
 import com.example.colorimagemobile.services.UserService
 
-class CrudUserResponse {
+class UserResponseHandler {
     fun handleGetUser(response: DataWrapper<UserModel.AllInfo>) {
         UserService.setUserInfo(response.data as UserModel.AllInfo)
     }
