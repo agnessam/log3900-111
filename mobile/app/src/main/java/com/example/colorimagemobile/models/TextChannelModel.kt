@@ -3,7 +3,7 @@ package com.example.colorimagemobile.models
 import com.google.gson.annotations.SerializedName
 
 class TextChannelModel {
-    data class CreateChatChannel(var nom: String,var owner:String)
+    data class CreateChannel(var nom: String, var owner:String)
 
     data class AllInfo(
         @SerializedName("_id")

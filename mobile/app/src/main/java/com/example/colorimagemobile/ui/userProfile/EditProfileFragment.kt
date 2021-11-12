@@ -96,7 +96,6 @@ class EditProfileFragment : Fragment() {
         val newUserData = UserModel.UpdateUser(edtUsername, edtDescription, user.password)
         UserService.setNewProfileData(newUserData)
         val updateObserver = updateUserInfo()
-
         updateObserver.observe(viewLifecycleOwner, { context?.let { it1 -> globalHandler.response(it1,it) } })
         CommonFun.redirectTo_(this.requireActivity(), HomeActivity::class.java)
 

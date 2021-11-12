@@ -4,23 +4,20 @@
     android:layout_height="wrap_content"
     xmlns:app = "http://schemas.android.com/apk/res-auto"
     android:id="@+id/all_chat_channel_card_view"
-    android:layout_margin="5dp"
+
     app:cardBackgroundColor="@color/white"
-    app:cardCornerRadius="12dp"
-    app:cardElevation="3dp"
     app:contentPadding="4dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/relativeLayout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:padding="16dp">
+        android:layout_width="250dp"
+        android:layout_height="70dp">
 
 
         <TextView
             android:id="@+id/channel_name"
-            android:layout_width="260dp"
-            android:layout_height="70dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:padding="16dp"
             android:textSize="30sp"

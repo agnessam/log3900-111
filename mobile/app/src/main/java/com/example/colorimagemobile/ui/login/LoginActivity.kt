@@ -3,7 +3,6 @@ package com.example.colorimagemobile.ui.login
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.core.widget.doOnTextChanged
-import androidx.lifecycle.ViewModelProvider
 import com.example.colorimagemobile.R
 import com.example.colorimagemobile.classes.FormValidator
 import com.example.colorimagemobile.services.UserService
@@ -26,7 +25,7 @@ import com.google.android.material.textfield.TextInputLayout
 
 class LoginActivity : AppCompatActivity() {
 
-    private lateinit var loginViewModel: LoginActivityViewModel
+    private  var loginActivityViewModel: LoginActivityViewModel= LoginActivityViewModel()
     private lateinit var globalHandler: GlobalHandler
     private lateinit var sharedPreferencesService: SharedPreferencesService
     private lateinit var binding: ActivityLoginBinding
@@ -42,7 +41,7 @@ class LoginActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         sharedPreferencesService = SharedPreferencesService(this)
-        loginViewModel = ViewModelProvider(this).get(LoginActivityViewModel::class.java)
+
 
         val loginLayouts = arrayListOf<TextInputLayout>(binding.usernameInputLayout, binding.passwordInputLayout)
         val loginInputs = arrayListOf<TextInputEditText>(binding.usernameInputText, binding.passwordInputText)
@@ -83,7 +82,7 @@ class LoginActivity : AppCompatActivity() {
         val user = UserModel.Login(binding.usernameInputText.text.toString(), binding.passwordInputText.text.toString())
 
         // username ok -> make HTTP POST request
-        val loginObserver = loginViewModel.loginUser(user)
+        val loginObserver = loginActivityViewModel.loginUser(user)
         loginObserver.observe(this, { handleLoginResponse(it) })
 
 
@@ -111,6 +110,8 @@ class LoginActivity : AppCompatActivity() {
         redirectTo(this@LoginActivity, HomeActivity::class.java)
 
     }
+
+
 
 
 

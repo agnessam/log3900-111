@@ -6,6 +6,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.example.colorimagemobile.R
+import com.example.colorimagemobile.httpresponsehandler.TextChannelHandler
+var textChannelHandler : TextChannelHandler = TextChannelHandler()
+
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -44,8 +47,7 @@ class ChatFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-            val showAllChannel = ChannelNameFragment()
+        val showAllChannel = ChannelNameFragment()
             parentFragmentManager.beginTransaction().replace(R.id.chatChannelFragment, showAllChannel)
                 .commit()
 
@@ -62,6 +64,9 @@ class ChatFragment : Fragment() {
                 }
             }
     }
+
+
+
 
 
 }

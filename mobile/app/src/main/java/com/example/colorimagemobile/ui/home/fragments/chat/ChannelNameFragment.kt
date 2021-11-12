@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.colorimagemobile.R
 import com.example.colorimagemobile.adapter.ChatChannelRecyclerAdapter
+import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
 import kotlinx.android.synthetic.main.fragment_channel_name.*
 
 
@@ -22,6 +23,7 @@ class ChannelNameFragment : Fragment() {
     private  var adapter: RecyclerView.Adapter<ChatChannelRecyclerAdapter.ViewHolder>?=null
 
 
+
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
@@ -32,6 +34,7 @@ class ChannelNameFragment : Fragment() {
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
         }
+
 
     }
 
@@ -51,9 +54,6 @@ class ChannelNameFragment : Fragment() {
         recyclerView.adapter = adapter
 
     }
-
-
-
 
 
 }

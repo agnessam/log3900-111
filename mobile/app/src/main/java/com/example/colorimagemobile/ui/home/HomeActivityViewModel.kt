@@ -16,13 +16,13 @@ class HomeActivityViewModel : ViewModel() {
     private val authRepository: AuthRepository
     private val userRepository: UserRepository
 
-    private val textChannelRepository : TextChannelRepository
+//    private val textChannelRepository : TextChannelRepository
 
     init {
         authRepository = AuthRepository()
         userRepository = UserRepository()
 
-        textChannelRepository = TextChannelRepository()
+//        textChannelRepository = TextChannelRepository()
     }
 
     fun getUserByToken(token: String): LiveData<DataWrapper<HTTPResponseModel.UserResponse>> {
@@ -35,8 +35,8 @@ class HomeActivityViewModel : ViewModel() {
     fun updateLogHistory(id: String): LiveData<DataWrapper<HTTPResponseModel.UserResponse>> {
         return userRepository.updateLogHistoryData(UserService.getToken(), id)
     }
-    fun getAllTextChannel(token: String): LiveData<DataWrapper<List<TextChannelModel.AllInfo>>> {
-        return TextChannelRepository().getAllTextChannel(token)
-    }
+//    fun getAllTextChannel(token: String): LiveData<DataWrapper<List<TextChannelModel.AllInfo>>> {
+//        return TextChannelRepository().getAllTextChannel(token)
+//    }
 
 }

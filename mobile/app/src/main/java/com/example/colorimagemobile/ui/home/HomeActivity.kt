@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.view.menu.ActionMenuItemView
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
@@ -13,12 +14,15 @@ import androidx.navigation.ui.setupWithNavController
 import com.example.colorimagemobile.ui.login.LoginActivity
 import com.example.colorimagemobile.R
 import com.example.colorimagemobile.httpresponsehandler.GlobalHandler
-import com.example.colorimagemobile.httpresponsehandler.TextChannelHandler
 import com.example.colorimagemobile.services.UserService
 import com.example.colorimagemobile.models.UserModel
 import com.example.colorimagemobile.models.DataWrapper
 import com.example.colorimagemobile.models.HTTPResponseModel
+import com.example.colorimagemobile.models.TextChannelModel
+import com.example.colorimagemobile.repositories.TextChannelRepository
 import com.example.colorimagemobile.services.SharedPreferencesService
+import com.example.colorimagemobile.ui.home.fragments.chat.textChannelHandler
+import com.example.colorimagemobile.utils.CommonFun
 import com.example.colorimagemobile.utils.CommonFun.Companion.printToast
 import com.example.colorimagemobile.utils.CommonFun.Companion.redirectTo
 import com.example.colorimagemobile.utils.Constants
@@ -28,19 +32,19 @@ class HomeActivity : AppCompatActivity() {
     private lateinit var homeViewModel: HomeActivityViewModel
     private lateinit var sharedPreferencesService: SharedPreferencesService
     private lateinit var globalHandler: GlobalHandler
-    private lateinit var textChannelHandler : TextChannelHandler
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
         globalHandler = GlobalHandler()
-        textChannelHandler = TextChannelHandler()
         homeViewModel = ViewModelProvider(this).get(HomeActivityViewModel::class.java)
         sharedPreferencesService = SharedPreferencesService(this)
 
         setBottomNavigationView()
         checkCurrentUser()
+        AllTextChannel(UserService.getToken())
+
     }
 
     // side navigation navbar: upon click, change to new fragment
@@ -84,7 +88,6 @@ class HomeActivity : AppCompatActivity() {
             val token = sharedPreferencesService.getItem(Constants.STORAGE_KEY.TOKEN)
             UserService.setToken(token)
             homeViewModel.getUserByToken(token).observe(this, { handleGetUserMe(it) })
-            AllTextChannel(UserService.getToken())
         }
     }
 
@@ -127,9 +130,16 @@ class HomeActivity : AppCompatActivity() {
         val updateObserver = homeViewModel.updateLogHistory(UserService.getUserInfo()._id)
         updateObserver.observe(this, { this?.let { it1 -> globalHandler.response(it1,it) } })
     }
-    private fun AllTextChannel(token: String){
-        val updateObserver = homeViewModel.getAllTextChannel(token)
+
+    fun getAllTextChannel(token: String): LiveData<DataWrapper<List<TextChannelModel.AllInfo>>> {
+        return TextChannelRepository().getAllTextChannel(token)
+    }
+
+    fun AllTextChannel(token: String){
+        CommonFun.printMsg("inside getAlltextchannel")
+        val updateObserver = getAllTextChannel(token)
         updateObserver.observe(this, { this?.let { it1 -> textChannelHandler.responseGetAll(it1,it) } })
     }
+
 
     }

@@ -29,7 +29,7 @@ class ChatChannelRecyclerAdapter : RecyclerView.Adapter<ChatChannelRecyclerAdapt
     }
 
     override fun getItemCount(): Int {
-       return channelName.size
+       return TextChannelService.getAllTextChannelName().size
     }
     inner class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView){
          var chName : TextView;
