@@ -40,7 +40,6 @@ export class TellMeAboutYourselfComponent implements OnInit {
   }
 
   onSubmit(): void {
-    console.log(this.customizeProfileForm.value.avatar);
     const updatedUserParameters = new EditableUserParameters(
       this.customizeProfileForm.value
     );
