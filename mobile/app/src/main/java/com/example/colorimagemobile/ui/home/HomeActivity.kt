@@ -13,6 +13,7 @@ import androidx.navigation.ui.setupWithNavController
 import com.example.colorimagemobile.ui.login.LoginActivity
 import com.example.colorimagemobile.R
 import com.example.colorimagemobile.httpresponsehandler.GlobalHandler
+import com.example.colorimagemobile.httpresponsehandler.TextChannelHandler
 import com.example.colorimagemobile.services.UserService
 import com.example.colorimagemobile.models.UserModel
 import com.example.colorimagemobile.models.DataWrapper
@@ -27,12 +28,14 @@ class HomeActivity : AppCompatActivity() {
     private lateinit var homeViewModel: HomeActivityViewModel
     private lateinit var sharedPreferencesService: SharedPreferencesService
     private lateinit var globalHandler: GlobalHandler
+    private lateinit var textChannelHandler : TextChannelHandler
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
         globalHandler = GlobalHandler()
+        textChannelHandler = TextChannelHandler()
         homeViewModel = ViewModelProvider(this).get(HomeActivityViewModel::class.java)
         sharedPreferencesService = SharedPreferencesService(this)
 
@@ -74,13 +77,14 @@ class HomeActivity : AppCompatActivity() {
         }
     }
 
-    // check if User exists! If not, make HTTP request to init the User
+    // check if User exists! If not, make HTTP request to init the User and All text channel
     fun checkCurrentUser() {
         // user is null -> GET user
         if (UserService.isNull()) {
             val token = sharedPreferencesService.getItem(Constants.STORAGE_KEY.TOKEN)
             UserService.setToken(token)
             homeViewModel.getUserByToken(token).observe(this, { handleGetUserMe(it) })
+            AllTextChannel(UserService.getToken())
         }
     }
 
@@ -122,6 +126,10 @@ class HomeActivity : AppCompatActivity() {
         UserService.setLogHistory(Constants.LAST_LOGOUT_DATE)
         val updateObserver = homeViewModel.updateLogHistory(UserService.getUserInfo()._id)
         updateObserver.observe(this, { this?.let { it1 -> globalHandler.response(it1,it) } })
+    }
+    private fun AllTextChannel(token: String){
+        val updateObserver = homeViewModel.getAllTextChannel(token)
+        updateObserver.observe(this, { this?.let { it1 -> textChannelHandler.responseGetAll(it1,it) } })
     }
 
     }

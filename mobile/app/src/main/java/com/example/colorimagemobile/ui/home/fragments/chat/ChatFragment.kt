@@ -45,14 +45,11 @@ class ChatFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-//        view.findViewById<TextView>(R.id.showAllChannel).setOnClickListener{
             val showAllChannel = ChannelNameFragment()
             parentFragmentManager.beginTransaction().replace(R.id.chatChannelFragment, showAllChannel)
                 .commit()
-//        }
 
 
-//        setListeners()
     }
 
     companion object {
@@ -66,18 +63,5 @@ class ChatFragment : Fragment() {
             }
     }
 
-
-
-
-//
-//    private fun setListeners() {
-//        showAllChannel.setOnClickListener {
-//            val showAllChannel = ChannelNameFragment()
-//            parentFragmentManager.beginTransaction().replace(R.id.chatChannelFragment, showAllChannel)
-//                .commit()
-//
-//        }
-//
-//    }
 
 }
