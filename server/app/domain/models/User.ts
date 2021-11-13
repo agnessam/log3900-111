@@ -1,11 +1,12 @@
-import mongoose, { Document, Model, Schema } from 'mongoose';
 import bcrypt from 'bcrypt';
-import { DrawingInterface } from './Drawing';
+import mongoose, { Document, Model, Schema } from 'mongoose';
+import { AvatarInterface, AvatarSchema } from './Avatar';
 import { TeamInterface } from './teams';
 
 export interface UserInterface extends Document {
   username: string;
   description: string;
+  avatar: AvatarInterface;
 
   email: string;
   password: string;
@@ -13,7 +14,9 @@ export interface UserInterface extends Document {
   lastName: string;
 
   teams: string[] | TeamInterface[];
-  drawings: string[] | DrawingInterface[];
+
+  drawings: string[];
+  publishedDrawings: string[];
 
   isValidPassword(password: string): Promise<boolean>;
 }
@@ -21,6 +24,12 @@ export interface UserInterface extends Document {
 const UserSchema = new mongoose.Schema({
   username: { type: String, required: true, index: { unique: true } },
   description: String,
+  avatar: {
+    type: AvatarSchema,
+    default: {
+      imageUrl: 'https://colorimage-111.s3.amazonaws.com/default/default.jpeg',
+    },
+  },
 
   email: { type: String, required: true, index: { unique: true } },
   password: { type: String, required: true },
@@ -28,7 +37,9 @@ const UserSchema = new mongoose.Schema({
   lastName: { type: String, required: true },
 
   teams: [{ type: Schema.Types.ObjectId, ref: 'Team' }],
+
   drawings: [{ type: Schema.Types.ObjectId, ref: 'Drawing' }],
+  publishedDrawings: [{ type: Schema.Types.ObjectId, ref: 'PublishedDrawing' }],
 });
 
 UserSchema.pre('save', async function (next) {

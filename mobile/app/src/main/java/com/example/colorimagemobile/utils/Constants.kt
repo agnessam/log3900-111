@@ -11,12 +11,18 @@ class Constants {
         const val CHAT_NAMESPACE_NAME = "chat"
         const val TEXT_MESSAGE_EVENT_NAME = "text"
 
-        //global
-        const val EMPTY_STRING =""
-
         // profile user log history
         const val LAST_LOGIN_DATE = "lastLogin"
         const val LAST_LOGOUT_DATE ="lastLogout"
+    }
+
+    class SOCKETS {
+        companion object {
+            const val ROOM_EVENT_NAME = "room"
+            const val LEAVE_ROOM_EVENT_NAME = "leaveRoom"
+            const val COLLABORATIVE_DRAWING_NAMESPACE = "drawing"
+            const val IN_PROGRESS_DRAWING_EVENT = "draw-in-progress"
+        }
     }
 
     class URL {
@@ -33,12 +39,23 @@ class Constants {
             const val REGISTER_USER = "api/auth/register"
 
             const val GET_USER_BY_TOKEN = "api/users/me"
-            const val GET_ALL_USER = "api/users/"
+            const val USER = "api/users/"
             const val GET_USER_BY_ID = "api/users/"
             const val UPDATE_USER = "api/users/"
             const val DELETE_USER = "api/users/:id"
 
+            // drawings
+            const val ALL_DRAWINGS = "api/drawings/"
+        }
+    }
 
+    class DRAWING {
+        companion object {
+            const val MIN_WIDTH = 10
+            const val MAX_WIDTH = 2440
+
+            const val MIN_HEIGHT = 10
+            const val MAX_HEIGHT = 1215
         }
     }
 
@@ -47,6 +64,7 @@ class Constants {
         companion object {
             const val MAIN = "localStorage"
             const val TOKEN = "token"
+            const val DRAWING_ROOM_ID = "drawingRoomName"
         }
     }
 }

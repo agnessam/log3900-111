@@ -1,12 +1,13 @@
 package com.example.colorimagemobile.services.drawing
 
+import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Path
 
 data class Point(val x: Float, val y: Float)
 
 // contains paint customizations and path's points
-data class PaintPath(val id: Int, val brush: CustomPaint, val path: Path, val points: ArrayList<Point>)
+data class PaintPath(val id: String, val brush: CustomPaint, val path: Path, val points: ArrayList<Point>)
 
 // Paint/brush customizations
 class CustomPaint() {
@@ -48,17 +49,7 @@ object PathService {
         return paintPath
     }
 
-    fun removeByID(id: Int) {
+    fun removeByID(id: String) {
         paintPath = paintPath.filterIndexed { _, paintPath -> paintPath.id != id  } as ArrayList<PaintPath>
-    }
-}
-
-// generate new id [temporary?]
-object IDGenerator {
-    private var id = 0
-
-    fun getNewId(): Int {
-        id++
-        return id
     }
 }

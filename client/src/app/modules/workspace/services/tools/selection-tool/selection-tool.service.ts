@@ -3,7 +3,7 @@ import { FormGroup } from "@angular/forms";
 import { IconDefinition } from "@fortawesome/fontawesome-common-types";
 import { faMousePointer } from "@fortawesome/free-solid-svg-icons";
 import { ICommand } from "src/app/modules/workspace/interfaces/command.interface";
-import { Point } from "src/app/shared";
+import { Point, RGB } from "src/app/shared";
 import { Tools } from "../../../interfaces/tools.interface";
 import { DrawingService } from "../../drawing/drawing.service";
 import { KeyCodes } from "../../hotkeys/hotkeys-constants";
@@ -17,6 +17,10 @@ import { SelectionTransformService } from "./selection-transform.service";
 import { Selection } from "./selection.model";
 import { Translation } from "./translate-command/translate.model";
 import { SynchronisationService } from "../../synchronisation/synchronisation.service";
+import { Subject } from "rxjs";
+import { PrimaryColorCommand } from "./primary-color-command/primary-color-command.service";
+import { SecondaryColorCommand } from "./secondary-color-command/secondary-color-command.service";
+import { LineWidthCommand } from "./line-width-command/line-width-command.service"
 
 @Injectable({
   providedIn: "root",
@@ -54,6 +58,8 @@ export class SelectionToolService implements Tools {
   private isIn = false;
 
   private translation: Translation;
+
+  public lineWidthSubject: Subject<number> = new Subject();
 
   constructor(
     private drawingService: DrawingService,
@@ -114,16 +120,25 @@ export class SelectionToolService implements Tools {
 
           if (this.objects.length > 0) {
             this.removeSelection();
+            this.resetLineWidthSubject();
           }
 
           // Initializes the selection
-          if (obj && (this.objects.length < 2 || !this.objects.includes(obj)) && !this.synchronisationService.previewShapes.has(target.id)) {
+          if (
+            obj &&
+            (this.objects.length < 2 || !this.objects.includes(obj)) &&
+            !this.synchronisationService.previewShapes.has(target.id)
+          ) {
+            if (obj.tagName == "g") return;
             this.objects.push(obj);
 
             // Initializes the selection model that will be synchronised
             this.currentSelection = {
               id: obj.id,
             };
+
+            // Send current lineWidth event to lineWidth subject
+            this.changeLineWidthParameterComponent(obj);
 
             this.drawingSocketService.sendStartSelectionCommand(
               this.currentSelection,
@@ -310,6 +325,32 @@ export class SelectionToolService implements Tools {
     ) {
       this.selectionTransformService.resizeWithLastOffset();
       this.setSelection();
+    }
+  }
+
+  private changeLineWidthParameterComponent(obj: SVGElement): void {
+    if (obj.style.strokeWidth != "" || obj.getAttribute("r") != "") {
+      const propertyString =
+        obj.tagName == "circle" ? obj.getAttribute("r") : obj.style.strokeWidth;
+      if (propertyString != null && propertyString != "") {
+        const objectLineWidth = parseInt(propertyString);
+        this.lineWidthSubject.next(objectLineWidth);
+      }
+    } else {
+      this.resetLineWidthSubject();
+    }
+  }
+
+  private resetLineWidthSubject(): void {
+    this.lineWidthSubject.next(1);
+  }
+
+  setSelectionLineWidth(strokeWidth: number): void {
+    if (this.objects.length > 0) {
+      const currentObject = this.objects[0];
+      let lineWidthCommand = new LineWidthCommand(currentObject, strokeWidth, this.rendererService);
+      lineWidthCommand.execute();
+      this.drawingSocketService.sendSelectionLineWidthChange(currentObject.id, strokeWidth);
     }
   }
 
@@ -652,5 +693,23 @@ export class SelectionToolService implements Tools {
     return (
       this.drawingService.drawing as SVGSVGElement
     ).getBoundingClientRect().left;
+  }
+
+
+  setSelectedObjectPrimaryColor(primaryColor: RGB, opacity: number) {
+    if (!this.objects || this.objects.length == 0) return;
+
+    const selectedObject = this.objects[0];
+    let primaryColorCommand = new PrimaryColorCommand(selectedObject, primaryColor, opacity);
+    primaryColorCommand.execute();
+    this.drawingSocketService.sendObjectPrimaryColorChange(selectedObject.id, primaryColor, opacity);
+  }
+
+  setSelectedObjectSecondaryColor(secondaryColor: RGB, opacity: number) {
+    if (!this.objects) return;
+    const selectedObject = this.objects[0];
+    let secondaryColorCommand = new SecondaryColorCommand(selectedObject, secondaryColor, opacity);
+    secondaryColorCommand.execute();
+    this.drawingSocketService.sendObjectSecondaryColorChange(selectedObject.id, secondaryColor, opacity);
   }
 }

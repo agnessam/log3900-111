@@ -13,14 +13,12 @@ import com.example.colorimagemobile.repositories.UserRepository
 import com.example.colorimagemobile.services.HandleHTTP
 import com.example.colorimagemobile.services.SharedPreferencesService
 import com.example.colorimagemobile.services.UserService
-import com.example.colorimagemobile.ui.home.HomeActivity
 import com.example.colorimagemobile.utils.CommonFun
 import com.example.colorimagemobile.utils.Constants
 import androidx.lifecycle.LiveData
+import com.example.colorimagemobile.classes.MyFragmentManager
 import com.example.colorimagemobile.models.DataWrapper
 import com.example.colorimagemobile.models.HTTPResponseModel
-
-
 
 class PasswordFragment : Fragment() {
 
@@ -142,12 +140,10 @@ class PasswordFragment : Fragment() {
         val updateObserver = updateUserInfo(newUserData)
 
         updateObserver.observe(viewLifecycleOwner, { context?.let { it1 -> handleHTTP.Response(it1,it) } })
-        CommonFun.redirectTo_(this.requireActivity(), HomeActivity::class.java)
-
+        MyFragmentManager(requireActivity()).open(R.id.fragment, UserProfileFragment())
     }
 
     private fun updateUserInfo(newUserData: UserModel.UpdateUser): LiveData<DataWrapper<HTTPResponseModel.UpdateUser>> {
         return userRepository.updateUserData(token, user._id,newUserData)
     }
-
 }

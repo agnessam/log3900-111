@@ -3,7 +3,7 @@ import jwt from 'jsonwebtoken';
 import passport from 'passport';
 import JWTstrategy, { ExtractJwt } from 'passport-jwt';
 import localStrategy from 'passport-local';
-import { User } from '../../domain/models/User';
+import { User } from '../../domain/models/user';
 
 export const passportRegisterMiddleware = () => {
   passport.use(

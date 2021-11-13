@@ -15,6 +15,9 @@ import { Pencil } from "../../../tools/pencil-tool/pencil.model";
 import { Rectangle } from "../../../tools/tool-rectangle/rectangle.model";
 import { Ellipse } from "../../../tools/tool-ellipse/ellipse.model";
 import { SelectionStartCommand } from "../../../tools/selection-tool/start-command/selection-start-command.service";
+import { LineWidthCommand } from "../../../tools/selection-tool/line-width-command/line-width-command.service";
+import { PrimaryColorCommand } from "../../../tools/selection-tool/primary-color-command/primary-color-command.service";
+import { SecondaryColorCommand } from "../../../tools/selection-tool/secondary-color-command/secondary-color-command.service";
 @Injectable({
   providedIn: "root",
 })
@@ -98,6 +101,23 @@ export class CommandFactoryService {
         if (deletedShape == undefined)
           throw new Error("Couldn't find the shape you wanted to delete.");
         return new DeleteCommand(this.drawingService, deletedShape);
+      case "LineWidth":
+        const lineWidthShapeId = commandParameters.id;
+        const lineWidthShape = this.drawingService.getObject(lineWidthShapeId);
+        if(lineWidthShape == undefined)
+          throw new Error("Couldn't find the shape you wanted to delete.");
+        return new LineWidthCommand(lineWidthShape, commandParameters.lineWidth, this.rendererService);
+      case "PrimaryColor":
+        const objectToRecolorId = commandParameters.id;
+        const objectToRecolor = this.drawingService.getObject(objectToRecolorId);
+        if(objectToRecolor == undefined)
+          throw new Error("Couldn't find the shape you wanted to delete.");
+        return new PrimaryColorCommand(objectToRecolor, commandParameters.color, commandParameters.opacity);
+      case "SecondaryColor":
+        const objectToRecolorSecondary = this.drawingService.objects.get(commandParameters.id);
+        if(objectToRecolorSecondary == undefined)
+          throw new Error("Couldn't find the shape you wanted to delete.");
+        return new SecondaryColorCommand(objectToRecolorSecondary, commandParameters.color, commandParameters.opacity);
       default:
         throw new Error("Unable to create command");
     }

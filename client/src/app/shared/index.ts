@@ -10,3 +10,5 @@ export * from "./models/polygon-style.model";
 export * from "./socket/socket.constant";
 export * from "./models/texture-options.model";
 export * from "./models/drawing.model";
+export * from "./models/color.model";
+export * from "./models/line-width.model";

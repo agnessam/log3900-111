@@ -34,7 +34,6 @@ class HomeActivity : AppCompatActivity() {
         sharedPreferencesService = SharedPreferencesService(this)
 
         setBottomNavigationView()
-        checkCurrentUser()
     }
 
     // side navigation navbar: upon click, change to new fragment
@@ -42,7 +41,7 @@ class HomeActivity : AppCompatActivity() {
         val navView: BottomNavigationView = findViewById(R.id.bottomNavigationView)
         val navController = findNavController(R.id.fragment)
         val appBarConfiguration = AppBarConfiguration(setOf(
-            R.id.drawingFragment, R.id.chatFragment, R.id.notificationFragment, R.id.userProfileFragment))
+            R.id.galleryFragment, R.id.chatFragment, R.id.notificationFragment, R.id.userProfileFragment))
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
     }
@@ -55,6 +54,8 @@ class HomeActivity : AppCompatActivity() {
         if (!UserService.isNull()) {
             val usernameMenuItem: MenuItem = (menu as Menu).findItem(R.id.username_menu_item)
             usernameMenuItem.title = UserService.getUserInfo().username
+        } else {
+            checkCurrentUser()
         }
 
         return true

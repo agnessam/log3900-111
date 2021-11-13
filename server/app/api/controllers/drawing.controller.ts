@@ -39,4 +39,9 @@ export class DrawingController {
       req.body,
     );
   }
+
+  @httpPost('/:drawingId/publish')
+  public async publishDrawing(@request() req: Request) {
+    return await this.drawingRepository.publishDrawing(req.body);
+  }
 }
