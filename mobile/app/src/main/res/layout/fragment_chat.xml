@@ -22,9 +22,7 @@
                 android:id="@+id/chat_sidebar_header"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginLeft="8dp"
-                android:layout_marginRight="4dp" >
+                android:orientation="horizontal" >
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -33,7 +31,8 @@
                     android:paddingBottom="15px"
                     android:text="Channels"
                     android:textSize="20sp"
-                    android:textColor="@color/black" />
+                    android:textColor="@color/black"
+                    android:layout_marginLeft="10dp" />
 
             </LinearLayout>
 
