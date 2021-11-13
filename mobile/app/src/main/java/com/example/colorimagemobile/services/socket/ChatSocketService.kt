@@ -11,6 +11,7 @@ import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
 import com.example.colorimagemobile.utils.Constants.SOCKETS
 import io.socket.emitter.Emitter
 import org.json.JSONException
+import org.json.JSONObject
 
 object ChatSocketService: AbsSocket(SOCKETS.CHAT_NAMESPACE_NAME) {
     private var fragmentActivity: FragmentActivity? = null
@@ -33,7 +34,7 @@ object ChatSocketService: AbsSocket(SOCKETS.CHAT_NAMESPACE_NAME) {
         super.emit(event, data)
     }
 
-    fun sendMessage(message: ChatSocketModel) {
+    fun sendMessage(message: JSONObject) {
         super.emit(SOCKETS.TEXT_MESSAGE_EVENT_NAME, message);
     }
 

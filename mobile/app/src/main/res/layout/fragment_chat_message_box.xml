@@ -64,15 +64,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
                 android:layout_marginLeft="10px"
                 android:layout_marginRight="10px"
                 android:layout_toLeftOf="@id/chat_sent_btn"
-                android:hint="Enter your message here"
                 android:background="@drawable/chat_edit_text"
-                android:padding="20px"
-                android:layout_centerVertical="true"
+                android:hint="Enter your message here"
                 android:inputType="text"
-                android:maxLines="1" />
+                android:maxLines="1"
+                android:padding="20px" />
 
             <Button
                 android:id="@+id/chat_sent_btn"
@@ -80,7 +80,7 @@
                 android:layout_height="40dp"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
-                android:background="@drawable/ic_send"/>
+                android:background="@drawable/ic_send" />
 
         </RelativeLayout>
 
