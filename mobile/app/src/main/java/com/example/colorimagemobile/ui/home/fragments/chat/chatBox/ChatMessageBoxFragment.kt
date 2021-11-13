@@ -4,14 +4,15 @@ import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.View
 import android.widget.TextView
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.colorimagemobile.R
+import com.example.colorimagemobile.models.ChatSocketModel
 import com.example.colorimagemobile.models.TextChannelModel
+import com.example.colorimagemobile.services.chat.ChatAdapterService
 import com.example.colorimagemobile.services.chat.ChatService
 import com.example.colorimagemobile.services.chat.TextChannelService
 import com.example.colorimagemobile.services.socket.ChatSocketService
-import com.example.colorimagemobile.services.socket.DrawingSocketService
-import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
-import com.example.colorimagemobile.utils.Constants
 
 class ChatMessageBoxFragment : Fragment(R.layout.fragment_chat_message_box) {
 
@@ -23,6 +24,7 @@ class ChatMessageBoxFragment : Fragment(R.layout.fragment_chat_message_box) {
 
         myView = view
         channel = TextChannelService.getCurrentChannel()
+
         connectToSocket()
         updateUI()
     }
@@ -35,6 +37,15 @@ class ChatMessageBoxFragment : Fragment(R.layout.fragment_chat_message_box) {
 
     private fun updateUI() {
         myView.findViewById<TextView>(R.id.chat_username).text = channel.name
+
+        // set up Recycler View
+        val recyclerView = myView.findViewById<RecyclerView>(R.id.chat_message_recycler_view)
+        recyclerView.layoutManager = LinearLayoutManager(context)
+        recyclerView.adapter = ChatAdapterService.getAdapter()
+
+        // update chat messages
+        val currentChat = ChatService.getChannelMessages(channel.name) as MutableSet<ChatSocketModel>
+        ChatAdapterService.getAdapter().setChat(currentChat)
     }
 
     override fun onStop() {

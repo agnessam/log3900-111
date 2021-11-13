@@ -4,7 +4,9 @@ import androidx.fragment.app.FragmentActivity
 import com.example.colorimagemobile.classes.AbsSocket
 import com.example.colorimagemobile.classes.JSONConvertor
 import com.example.colorimagemobile.models.ChatSocketModel
+import com.example.colorimagemobile.services.chat.ChatAdapterService
 import com.example.colorimagemobile.services.chat.ChatService
+import com.example.colorimagemobile.services.chat.TextChannelService
 import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
 import com.example.colorimagemobile.utils.Constants.SOCKETS
 import io.socket.emitter.Emitter
@@ -42,7 +44,11 @@ object ChatSocketService: AbsSocket(SOCKETS.CHAT_NAMESPACE_NAME) {
                     val currentArg = args[0].toString()
                     val message = JSONConvertor.getJSONObject(currentArg, ChatSocketModel::class.java)
                     ChatService.addMessage(message)
-                    printMsg(ChatService.getChannelMessages(message.roomName).toString())
+
+                    val currentRoom = TextChannelService.getCurrentChannel().name
+                    if (message.roomName == currentRoom) {
+                        ChatAdapterService.getAdapter().addChatItem(message)
+                    }
                 } catch (e: JSONException) {
                     printMsg("listenMessage error: ${e.message}")
                     return@Runnable
