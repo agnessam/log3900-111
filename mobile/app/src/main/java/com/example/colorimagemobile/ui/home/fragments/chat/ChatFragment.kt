@@ -1,5 +1,6 @@
 package com.example.colorimagemobile.ui.home.fragments.chat
 
+import android.graphics.Color
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.View
@@ -40,6 +41,7 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
             val channels = it.data as ArrayList<TextChannelModel.AllInfo>
             TextChannelService.setChannels(channels)
             setRecyclerView()
+            setButtonListeners()
         })
     }
 
@@ -47,10 +49,24 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
         val recyclerView = myView.findViewById<RecyclerView>(R.id.ChannelRecycleView)
         recyclerView.layoutManager = LinearLayoutManager(context)
         recyclerView.adapter = adapter
+    }
+
+    private fun setButtonListeners() {
+        val connectedBtn = myView.findViewById<Button>(R.id.chat_connected_channels_btn)
+        val allBtn = myView.findViewById<Button>(R.id.chat_all_channels_btn)
 
         showAllChannels()
-        myView.findViewById<Button>(R.id.chat_connected_channels_btn).setOnClickListener { showConnectedChannels() }
-        myView.findViewById<Button>(R.id.chat_all_channels_btn).setOnClickListener { showAllChannels() }
+        changeBtnColor(allBtn, connectedBtn)
+
+        allBtn.setOnClickListener {
+            showAllChannels()
+            changeBtnColor(allBtn, connectedBtn)
+        }
+
+        connectedBtn.setOnClickListener {
+            showConnectedChannels()
+            changeBtnColor(connectedBtn, allBtn)
+        }
     }
 
     private fun showAllChannels() {
@@ -59,5 +75,10 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
 
     private fun showConnectedChannels() {
         adapter.setData(TextChannelService.getConnectedChannels())
+    }
+
+    private fun changeBtnColor(selectedBtn: Button, normalBtn: Button) {
+        selectedBtn.setTextColor(Color.parseColor("#4050b5"))
+        normalBtn.setTextColor(Color.parseColor("#888888"))
     }
 }

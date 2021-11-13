@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".ui.home.fragments.chat.ChatFragment"
     android:id="@+id/chatChannelFragment"
     android:background="@color/mainTheme">
@@ -53,6 +54,8 @@
                         android:layout_width="0dp"
                         android:layout_weight="1"
                         android:layout_height="wrap_content"
+                        app:backgroundTint="@color/white"
+                        android:textColor="#888888"
                         android:text="ALL" />
 
                     <Button
@@ -60,6 +63,8 @@
                         android:layout_width="0dp"
                         android:layout_weight="1"
                         android:layout_height="wrap_content"
+                        app:backgroundTint="@color/white"
+                        android:textColor="#888888"
                         android:text="CONNECTED" />
                 </LinearLayout>
 
