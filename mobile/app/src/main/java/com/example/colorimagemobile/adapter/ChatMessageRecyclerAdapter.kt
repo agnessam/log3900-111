@@ -7,16 +7,17 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.colorimagemobile.R
 import com.example.colorimagemobile.models.ChatSocketModel
+import com.example.colorimagemobile.services.UserService
 
 class ChatMessageRecyclerAdapter(): RecyclerView.Adapter<ChatMessageRecyclerAdapter.ViewHolder>() {
-    private val THEIR_CHAT = 0
-    private val OWN_CHAT = 1
+    private val PUBLIC_MESSAGE = 0
+    private val MY_MESSAGE = 1
 
     private lateinit var chatMessages: MutableSet<ChatSocketModel>
 
     // creates card view referencing to individual cards
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ChatMessageRecyclerAdapter.ViewHolder {
-        return if (viewType === OWN_CHAT) {
+        return if (viewType === MY_MESSAGE) {
             val view: View = LayoutInflater.from(parent.context)
                 .inflate(R.layout.card_own_chat, parent, false)
             ViewHolder(view)
@@ -53,12 +54,12 @@ class ChatMessageRecyclerAdapter(): RecyclerView.Adapter<ChatMessageRecyclerAdap
 
     // calculate whose chat it is
     override fun getItemViewType(position: Int): Int {
-        return 1
-//        return if (chatMessages.get(position).author.equals(this.currentAuthor)) {
-//            OWN_CHAT
-//        } else {
-//            THEIR_CHAT
-//        }
+        val currentUser = UserService.getUserInfo().username
+        return if (chatMessages.elementAt(position).author == currentUser) {
+            MY_MESSAGE
+        } else {
+            PUBLIC_MESSAGE
+        }
     }
 
     inner class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
