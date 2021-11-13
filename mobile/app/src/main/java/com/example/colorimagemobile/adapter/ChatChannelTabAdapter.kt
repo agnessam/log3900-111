@@ -4,8 +4,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Lifecycle
 import androidx.viewpager2.adapter.FragmentStateAdapter
-import com.example.colorimagemobile.ui.home.fragments.chat.AllChannelsFragment
-import com.example.colorimagemobile.ui.home.fragments.chat.ConnectedChannelsFragment
+import com.example.colorimagemobile.ui.home.fragments.chat.sidebar.AllChannelsFragment
+import com.example.colorimagemobile.ui.home.fragments.chat.sidebar.ConnectedChannelsFragment
 
 class ChatChannelAdapter(fragmentManager: FragmentManager, lifecycle: Lifecycle) :
     FragmentStateAdapter(fragmentManager, lifecycle) {
