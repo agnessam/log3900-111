@@ -9,28 +9,35 @@ import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.example.colorimagemobile.R
 import com.example.colorimagemobile.classes.MyFragmentManager
+import com.example.colorimagemobile.models.TextChannelModel
 import com.example.colorimagemobile.services.chat.TextChannelService
 import com.example.colorimagemobile.ui.home.fragments.chat.chatBox.ChatMessageBoxFragment
 
-class ChannelListRecyclerAdapter: RecyclerView.Adapter<ChannelListRecyclerAdapter.ViewHolder>() {
+class AllChannelsRecyclerAdapter():
+    RecyclerView.Adapter<AllChannelsRecyclerAdapter.ViewHolder>() {
 
     private var currentPosition: Int = -1
+    private lateinit var channels: ArrayList<TextChannelModel.AllInfo>
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ChannelListRecyclerAdapter.ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AllChannelsRecyclerAdapter.ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.recycler_chat_channels, parent,false)
         return ViewHolder(view)
     }
 
-    override fun onBindViewHolder(holder: ChannelListRecyclerAdapter.ViewHolder, position: Int) {
-        val allChannels = TextChannelService.getChannels()
-        holder.chanelName.text = allChannels[position].name
+    override fun onBindViewHolder(holder: AllChannelsRecyclerAdapter.ViewHolder, position: Int) {
+        holder.chanelName.text = channels[position].name
 
         val backgroundColor = if (position == currentPosition) "#f5f5f5" else "#ffffff"
         holder.chanelName.setBackgroundColor(Color.parseColor(backgroundColor))
     }
 
     override fun getItemCount(): Int {
-       return TextChannelService.getChannels().size
+       return channels.size
+    }
+
+    fun setData(newChannels: ArrayList<TextChannelModel.AllInfo>) {
+        channels = newChannels
+        notifyDataSetChanged()
     }
 
     inner class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView){
@@ -40,7 +47,7 @@ class ChannelListRecyclerAdapter: RecyclerView.Adapter<ChannelListRecyclerAdapte
             itemView.setOnClickListener {
                 currentPosition = bindingAdapterPosition
 
-                TextChannelService.setCurrentChannelByPosition(currentPosition)
+                TextChannelService.setCurrentChannelByPosition(currentPosition, true)
                 MyFragmentManager(itemView.context as FragmentActivity).open(R.id.chat_channel_framelayout, ChatMessageBoxFragment())
                 notifyDataSetChanged()
             }
