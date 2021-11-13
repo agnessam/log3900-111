@@ -18,6 +18,7 @@ import com.example.colorimagemobile.models.UserModel
 import com.example.colorimagemobile.models.DataWrapper
 import com.example.colorimagemobile.models.HTTPResponseModel
 import com.example.colorimagemobile.services.SharedPreferencesService
+import com.example.colorimagemobile.services.socket.SocketManagerService
 import com.example.colorimagemobile.utils.CommonFun.Companion.printToast
 import com.example.colorimagemobile.utils.CommonFun.Companion.redirectTo
 import com.example.colorimagemobile.utils.Constants
@@ -34,11 +35,19 @@ class HomeActivity : AppCompatActivity() {
         globalHandler = GlobalHandler()
         homeViewModel = ViewModelProvider(this).get(HomeActivityViewModel::class.java)
         sharedPreferencesService = SharedPreferencesService(this)
+
         setBottomNavigationView()
     }
     // side navigation navbar: upon click, change to new fragment
     private fun setBottomNavigationView() {
         val navView: BottomNavigationView = findViewById(R.id.bottomNavigationView)
+
+        // remove every socket events
+        navView.setOnItemSelectedListener {
+            SocketManagerService.disconnectFromAll()
+            return@setOnItemSelectedListener true
+        }
+
         val navController = findNavController(R.id.fragment)
         val appBarConfiguration = AppBarConfiguration(setOf(
             R.id.galleryFragment, R.id.chatFragment, R.id.notificationFragment, R.id.userProfileFragment))

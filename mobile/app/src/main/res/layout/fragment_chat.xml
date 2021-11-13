@@ -7,10 +7,50 @@
     android:id="@+id/chatChannelFragment"
     android:background="@color/mainTheme">
 
-    <FrameLayout
-        android:id="@+id/chat_channel_framelayout"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/mainTheme" />
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:id="@+id/chat_sidebar"
+            android:layout_width="400px"
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true"
+            android:background="#fff5ee">
+
+            <LinearLayout
+                android:id="@+id/chat_sidebar_header"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="4dp" >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="15px"
+                    android:paddingBottom="15px"
+                    android:text="Channels"
+                    android:textSize="20sp"
+                    android:textColor="@color/black" />
+
+            </LinearLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/ChannelRecycleView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@id/chat_sidebar_header"/>
+        </RelativeLayout>
+
+        <FrameLayout
+            android:id="@+id/chat_channel_framelayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_toRightOf="@id/chat_sidebar"
+            android:layout_alignParentRight="true"
+            android:background="@color/mainTheme" />
+    </RelativeLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

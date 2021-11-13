@@ -4,10 +4,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.example.colorimagemobile.R
+import com.example.colorimagemobile.classes.MyFragmentManager
 import com.example.colorimagemobile.services.chat.TextChannelService
-import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
+import com.example.colorimagemobile.ui.home.fragments.chat.ChatMessageBoxFragment
 
 class ChannelListRecyclerAdapter: RecyclerView.Adapter<ChannelListRecyclerAdapter.ViewHolder>() {
 
@@ -33,8 +35,7 @@ class ChannelListRecyclerAdapter: RecyclerView.Adapter<ChannelListRecyclerAdapte
                 val position: Int = bindingAdapterPosition
 
                 TextChannelService.setCurrentChannelByPosition(position)
-                printMsg(TextChannelService.getCurrentChannel().name)
-//                MyFragmentManager(itemView.context as FragmentActivity).open(R.id.main_gallery_fragment, GalleryDrawingFragment())
+                MyFragmentManager(itemView.context as FragmentActivity).open(R.id.chat_channel_framelayout, ChatMessageBoxFragment())
             }
         }
     }

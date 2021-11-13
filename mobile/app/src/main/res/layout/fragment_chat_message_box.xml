@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".ui.home.fragments.chat.ChatMessageBoxFragment">
+
+    <RelativeLayout
+        android:id="@+id/chat_box_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="5px"
+        android:background="@color/white">
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/chat_header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cardElevation="2dp" >
+
+            <LinearLayout
+                android:layout_alignParentTop="true"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal" >
+
+                <TextView
+                    android:id="@+id/chat_username"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="15px"
+                    android:paddingBottom="15px"
+                    android:textSize="20sp"
+                    android:textColor="@color/black"
+                    android:text="Hello" />
+
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
+
+        <LinearLayout
+            android:layout_below="@id/chat_header"
+            android:layout_above="@id/chat_footer"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+        </LinearLayout>
+
+        <RelativeLayout
+            android:id="@+id/chat_footer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true" >
+
+            <EditText
+                android:id="@+id/chat_text_input"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_marginLeft="10px"
+                android:layout_marginRight="10px"
+                android:layout_toLeftOf="@id/chat_sent_btn"
+                android:hint="Enter your message here"
+                android:background="@drawable/chat_edit_text"
+                android:padding="20px"
+                android:layout_centerVertical="true"
+                android:inputType="text"
+                android:maxLines="1" />
+
+            <Button
+                android:id="@+id/chat_sent_btn"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:background="@drawable/ic_send"/>
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
