@@ -1,10 +1,12 @@
 package com.example.colorimagemobile.ui.home.fragments.chat.chatBox
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -18,6 +20,7 @@ import com.example.colorimagemobile.services.chat.TextChannelService
 import com.example.colorimagemobile.services.socket.ChatSocketService
 import com.example.colorimagemobile.utils.CommonFun.Companion.closeKeyboard
 import com.example.colorimagemobile.utils.CommonFun.Companion.onEnterKeyPressed
+import com.example.colorimagemobile.utils.CommonFun.Companion.printToast
 
 class ChatMessageBoxFragment : Fragment(R.layout.fragment_chat_message_box) {
 
@@ -71,16 +74,24 @@ class ChatMessageBoxFragment : Fragment(R.layout.fragment_chat_message_box) {
         ChatAdapterService.getAdapter().setChat(currentChat)
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     private fun setListeners() {
-        val sendBtn: Button = myView.findViewById(R.id.chat_sent_btn)
-
-        sendBtn.setOnClickListener { sendChat() }
         onEnterKeyPressed(chatMsgEditText) { sendChat() }
+        myView.findViewById<Button>(R.id.chat_sent_btn).setOnClickListener { sendChat() }
+        myView.findViewById<RecyclerView>(R.id.chat_message_recycler_view).setOnTouchListener { _, _ -> closeKeyboard(requireActivity()) }
+        myView.findViewById<LinearLayout>(R.id.chat_message_main).setOnTouchListener { _, _ -> closeKeyboard(requireActivity()) }
     }
 
     private fun sendChat() {
+        val msg = chatMsgEditText.text.toString()
         closeKeyboard(requireActivity())
-        val newMessage = ChatService.createMessage(chatMsgEditText.text.toString())
+
+        if (msg.isEmpty()) {
+            printToast(requireContext(), "Please enter a valid message")
+            return
+        }
+
+        val newMessage = ChatService.createMessage(msg)
         val newMessageJSON = JSONConvertor.convertToJSON(newMessage)
         ChatSocketService.sendMessage(newMessageJSON)
 
