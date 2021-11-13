@@ -15,8 +15,7 @@
             android:id="@+id/chat_sidebar"
             android:layout_width="400px"
             android:layout_height="match_parent"
-            android:layout_alignParentLeft="true"
-            android:background="#fff5ee">
+            android:layout_alignParentLeft="true" >
 
             <LinearLayout
                 android:id="@+id/chat_sidebar_header"
@@ -36,11 +35,19 @@
 
             </LinearLayout>
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/ChannelRecycleView"
+            <com.google.android.material.tabs.TabLayout
+                android:id="@+id/chat_channel_tablayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/chat_sidebar_header"/>
+
+            <androidx.viewpager2.widget.ViewPager2
+                android:id="@+id/chat_view_pager"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_below="@id/chat_sidebar_header"/>
+                android:background="@color/white"
+                android:layout_below="@id/chat_channel_tablayout" />
+
         </RelativeLayout>
 
         <FrameLayout
@@ -49,7 +56,7 @@
             android:layout_height="match_parent"
             android:layout_toRightOf="@id/chat_sidebar"
             android:layout_alignParentRight="true"
-            android:background="@color/mainTheme" />
+            android:layout_marginLeft="3px"/>
     </RelativeLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
