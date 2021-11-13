@@ -12,7 +12,7 @@ import { Subject } from "rxjs";
 })
 export class ChatSocketService extends AbstractSocketService {
   chatSubject: Subject<Message>;
-	messageHistory: Subject<Message[]>;
+  messageHistory: Subject<Message[]>;
 
   constructor() {
     super();
