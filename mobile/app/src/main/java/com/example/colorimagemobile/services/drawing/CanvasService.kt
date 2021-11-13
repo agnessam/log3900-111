@@ -2,11 +2,15 @@ package com.example.colorimagemobile.services.drawing
 
 import android.graphics.Bitmap
 import android.graphics.Canvas
+import android.graphics.drawable.Drawable
+import android.graphics.drawable.LayerDrawable
 import com.example.colorimagemobile.utils.Constants
 
 object CanvasService {
     lateinit var extraBitmap: Bitmap
     lateinit var extraCanvas: Canvas
+    var drawableList: Array<Drawable> = arrayOf<Drawable>()
+    var layerDrawable: LayerDrawable = LayerDrawable(drawableList)
 
     private var width = Constants.DRAWING.MAX_WIDTH
     private var height = Constants.DRAWING.MAX_HEIGHT
