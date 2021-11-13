@@ -6,10 +6,12 @@ import android.view.View
 import android.widget.TextView
 import com.example.colorimagemobile.R
 import com.example.colorimagemobile.models.TextChannelModel
+import com.example.colorimagemobile.services.chat.ChatService
 import com.example.colorimagemobile.services.chat.TextChannelService
-import com.example.colorimagemobile.utils.CommonFun
+import com.example.colorimagemobile.services.socket.ChatSocketService
+import com.example.colorimagemobile.services.socket.DrawingSocketService
 import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
-import com.example.colorimagemobile.utils.CommonFun.Companion.printToast
+import com.example.colorimagemobile.utils.Constants
 
 class ChatMessageBoxFragment : Fragment(R.layout.fragment_chat_message_box) {
 
@@ -21,8 +23,14 @@ class ChatMessageBoxFragment : Fragment(R.layout.fragment_chat_message_box) {
 
         myView = view
         channel = TextChannelService.getCurrentChannel()
-
+        connectToSocket()
         updateUI()
+    }
+
+    private fun connectToSocket() {
+        ChatSocketService.connect()
+        ChatSocketService.setFragmentActivity(requireActivity())
+        ChatSocketService.joinRoom(channel.name)
     }
 
     private fun updateUI() {
@@ -41,6 +49,6 @@ class ChatMessageBoxFragment : Fragment(R.layout.fragment_chat_message_box) {
 
     // leave sockets here
     private fun closeSockets() {
-        printMsg("Leave ${channel.name}")
+//        printMsg("${channel.name} left chat room")
     }
 }

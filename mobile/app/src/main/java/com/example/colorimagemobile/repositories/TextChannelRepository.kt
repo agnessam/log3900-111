@@ -15,15 +15,15 @@ import retrofit2.Response
 class TextChannelRepository {
     private val httpClient = RetrofitInstance.HTTP
 
-    fun getAllTextChannel(token : String): MutableLiveData<DataWrapper<List<TextChannelModel.AllInfo>>> {
+    fun getAllTextChannel(token : String): MutableLiveData<DataWrapper<ArrayList<TextChannelModel.AllInfo>>> {
         printMsg("Fetching all chat channels")
-        val ChannelListLiveData: MutableLiveData<DataWrapper<List<TextChannelModel.AllInfo>>> = MutableLiveData()
+        val ChannelListLiveData: MutableLiveData<DataWrapper<ArrayList<TextChannelModel.AllInfo>>> = MutableLiveData()
 
         httpClient.getAllTextChannel(token = "Bearer $token").enqueue(object :
-            Callback<List<TextChannelModel.AllInfo>> {
+            Callback<ArrayList<TextChannelModel.AllInfo>> {
             override fun onResponse(
-                call: Call<List<TextChannelModel.AllInfo>>,
-                response: Response<List<TextChannelModel.AllInfo>>
+                call: Call<ArrayList<TextChannelModel.AllInfo>>,
+                response: Response<ArrayList<TextChannelModel.AllInfo>>
             ) {
                 if (!response.isSuccessful) {
                     ChannelListLiveData.value = DataWrapper(null, "An error occurred!", true)
@@ -32,7 +32,7 @@ class TextChannelRepository {
                 // channel
                 ChannelListLiveData.value = DataWrapper(response.body(), "", false)
             }
-            override fun onFailure(call: Call<List<TextChannelModel.AllInfo>>, t: Throwable) {
+            override fun onFailure(call: Call<ArrayList<TextChannelModel.AllInfo>>, t: Throwable) {
                 ChannelListLiveData.value = DataWrapper(null, "Failed to get chat channel!", true)
             }
 

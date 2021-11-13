@@ -13,18 +13,18 @@ import com.example.colorimagemobile.models.TextChannelModel
 import com.example.colorimagemobile.services.chat.TextChannelService
 import com.example.colorimagemobile.ui.home.fragments.chat.chatBox.ChatMessageBoxFragment
 
-class AllChannelsRecyclerAdapter():
-    RecyclerView.Adapter<AllChannelsRecyclerAdapter.ViewHolder>() {
+class ChannelsRecyclerAdapter():
+    RecyclerView.Adapter<ChannelsRecyclerAdapter.ViewHolder>() {
 
     private var currentPosition: Int = -1
     private lateinit var channels: ArrayList<TextChannelModel.AllInfo>
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AllChannelsRecyclerAdapter.ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ChannelsRecyclerAdapter.ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.recycler_chat_channels, parent,false)
         return ViewHolder(view)
     }
 
-    override fun onBindViewHolder(holder: AllChannelsRecyclerAdapter.ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ChannelsRecyclerAdapter.ViewHolder, position: Int) {
         holder.chanelName.text = channels[position].name
 
         val backgroundColor = if (position == currentPosition) "#f5f5f5" else "#ffffff"

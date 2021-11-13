@@ -8,7 +8,6 @@ class Constants {
 
         // chat
         const val DEFAULT_ROOM_NAME = "default"
-        const val CHAT_NAMESPACE_NAME = "chat"
         const val TEXT_MESSAGE_EVENT_NAME = "text"
 
         // profile user log history
@@ -23,6 +22,10 @@ class Constants {
         companion object {
             const val ROOM_EVENT_NAME = "room"
             const val LEAVE_ROOM_EVENT_NAME = "leaveRoom"
+
+            const val CHAT_NAMESPACE_NAME = "chat"
+            const val TEXT_MESSAGE_EVENT_NAME = "text"
+
             const val COLLABORATIVE_DRAWING_NAMESPACE = "drawing"
             const val IN_PROGRESS_DRAWING_EVENT = "draw-in-progress"
         }

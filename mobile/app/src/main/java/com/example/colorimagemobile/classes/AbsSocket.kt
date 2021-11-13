@@ -29,7 +29,7 @@ abstract class AbsSocket(namespace: String) {
         emit(SOCKETS.LEAVE_ROOM_EVENT_NAME, roomName)
     }
 
-    protected fun emit(event: String, data: Any) {
+    protected open fun emit(event: String, data: Any) {
         mSocket.emit(event, data)
     }
 

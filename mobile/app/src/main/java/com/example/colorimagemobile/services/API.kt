@@ -57,7 +57,7 @@ interface API {
     //  TextChannel region
     @Headers("Content-Type: application/json")
     @GET(Constants.ENDPOINTS.TEXT_CHANNEL_PATH)
-    fun getAllTextChannel(@Header("Authorization")token: String): Call<List<TextChannelModel.AllInfo>>
+    fun getAllTextChannel(@Header("Authorization")token: String): Call<ArrayList<TextChannelModel.AllInfo>>
 
     @Headers("Content-Type: application/json")
     @POST(Constants.ENDPOINTS.TEXT_CHANNEL_PATH)
