@@ -22,6 +22,7 @@ class CustomPaint() {
         paint.isDither = true
         paint.style = Paint.Style.STROKE
         paint.strokeJoin = Paint.Join.ROUND
+        paint.strokeCap = Paint.Cap.ROUND
     }
 
     fun setColor(newColor: Int) {
