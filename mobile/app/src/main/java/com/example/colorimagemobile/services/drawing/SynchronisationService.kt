@@ -21,12 +21,12 @@ object SynchronisationService {
         paintPath.brush.setStrokeWidth(drawingCommand.drawingCommand.strokeWidth.toFloat())
         paintPath.path.moveTo(paintPath.points[0].x, paintPath.points[0].y)
 
-        val command: ICommand? = CommandFactory.createCommand(drawingCommand.type, paintPath)
+//        val command: ICommand? = CommandFactory.createCommand(drawingCommand.type, paintPath)
 
-        if (command != null) {
-            command.execute()
-            previewShapes[commandId] = command
-        }
+//        if (command != null) {
+//            command.execute()
+//            previewShapes[commandId] = command
+//        }
     }
 
     fun drawAndUpdate(drawingCommand: SyncUpdateDrawing) {

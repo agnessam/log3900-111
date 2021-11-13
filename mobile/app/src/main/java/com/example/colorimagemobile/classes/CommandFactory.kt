@@ -7,11 +7,11 @@ import com.example.colorimagemobile.services.drawing.PaintPath
 class CommandFactory {
 
     companion object {
-        fun createCommand(commandType: String, paintPath: PaintPath): ICommand? {
-            return when(commandType) {
-                "Pencil" -> PencilCommand(paintPath)
-                else -> null
-            }
-        }
+//        fun createCommand(commandType: String, paintPath: PaintPath): ICommand? {
+//            return when(commandType) {
+//                "Pencil" -> PencilCommand(paintPath)
+//                else -> null
+//            }
+//        }
     }
 }

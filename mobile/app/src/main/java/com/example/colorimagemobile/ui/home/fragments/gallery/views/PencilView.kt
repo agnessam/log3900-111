@@ -1,7 +1,10 @@
 package com.example.colorimagemobile.ui.home.fragments.gallery.views
 
 import android.content.Context
+import android.graphics.Paint
 import android.graphics.Path
+import android.graphics.drawable.ShapeDrawable
+import android.graphics.drawable.shapes.PathShape
 import com.example.colorimagemobile.classes.toolsCommand.PencilCommand
 import com.example.colorimagemobile.models.InProgressPencil
 import com.example.colorimagemobile.models.ToolData
@@ -14,16 +17,24 @@ import kotlin.math.abs
 
 class PencilView(context: Context?): CanvasView(context) {
     private var paintPath: PaintPath? = null
+
     private var pencilCommand: PencilCommand? = null
     private var inProgressPencil: InProgressPencil? = null
     private val pencilType = "Pencil"
+
 
     override fun createPathObject() {
         paintPath = PaintPath(UUIDService.generateUUID(), CustomPaint(), Path(), arrayListOf())
         paintPath!!.brush.setStrokeWidth(PencilService.getCurrentWidthAsFloat())
         paintPath!!.brush.setColor(ColorService.getColorAsInt())
 
-        pencilCommand = PencilCommand(paintPath as PaintPath)
+        // supposed to put the exact width and height of the path drawn...... but wtf how
+        val pathShape = PathShape(paintPath!!.path,
+            CanvasService.extraCanvas.width.toFloat(), CanvasService.extraCanvas.height.toFloat()
+        )
+        var shapeDrawable = ShapeDrawable(pathShape)
+        var layerIndex = CanvasService.layerDrawable.addLayer(shapeDrawable)
+        pencilCommand = PencilCommand(paintPath as PaintPath, layerIndex)
     }
 
     private fun updateCanvas() {
@@ -32,6 +43,7 @@ class PencilView(context: Context?): CanvasView(context) {
     }
 
     override fun onTouchDown() {
+        CanvasService.extraCanvas.save()
         createPathObject()
         paintPath!!.path.moveTo(motionTouchEventX, motionTouchEventY)
 
