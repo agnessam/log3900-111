@@ -27,6 +27,7 @@ class ChatMessageBoxFragment : Fragment(R.layout.fragment_chat_message_box) {
     private lateinit var myView: View
     private lateinit var channel: TextChannelModel.AllInfo
     private lateinit var chatMsgEditText: EditText
+    private lateinit var recyclerView: RecyclerView
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -34,6 +35,7 @@ class ChatMessageBoxFragment : Fragment(R.layout.fragment_chat_message_box) {
         myView = view
         channel = TextChannelService.getCurrentChannel()
         chatMsgEditText = myView.findViewById(R.id.chat_text_input)
+        recyclerView = myView.findViewById(R.id.chat_message_recycler_view)
 
         connectToSocket()
         updateUI()
@@ -65,7 +67,6 @@ class ChatMessageBoxFragment : Fragment(R.layout.fragment_chat_message_box) {
         myView.findViewById<TextView>(R.id.chat_username).text = channel.name
 
         // set up Recycler View
-        val recyclerView = myView.findViewById<RecyclerView>(R.id.chat_message_recycler_view)
         recyclerView.layoutManager = LinearLayoutManager(context)
         recyclerView.adapter = ChatAdapterService.getAdapter()
 
@@ -77,8 +78,8 @@ class ChatMessageBoxFragment : Fragment(R.layout.fragment_chat_message_box) {
     @SuppressLint("ClickableViewAccessibility")
     private fun setListeners() {
         onEnterKeyPressed(chatMsgEditText) { sendChat() }
+        recyclerView.setOnTouchListener { _, _ -> closeKeyboard(requireActivity()) }
         myView.findViewById<Button>(R.id.chat_sent_btn).setOnClickListener { sendChat() }
-        myView.findViewById<RecyclerView>(R.id.chat_message_recycler_view).setOnTouchListener { _, _ -> closeKeyboard(requireActivity()) }
         myView.findViewById<LinearLayout>(R.id.chat_message_main).setOnTouchListener { _, _ -> closeKeyboard(requireActivity()) }
     }
 

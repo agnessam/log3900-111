@@ -10,14 +10,17 @@ object ChatService {
     // roomName: [messages]
     private var channelMessages: HashMap<String, MutableSet<ChatSocketModel>> = HashMap()
 
+    // create message list for specific room
     fun addChat(name: String) {
         channelMessages[name] = mutableSetOf()
     }
 
+    // add message to a room
     fun addMessage(message: ChatSocketModel) {
         channelMessages[message.roomName]!!.add(message)
     }
 
+    // get messages of a specific room
     fun getChannelMessages(roomName: String): MutableSet<ChatSocketModel>? {
         return channelMessages[roomName]
     }
