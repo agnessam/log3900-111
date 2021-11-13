@@ -3,18 +3,18 @@ package com.example.colorimagemobile.services.chat
 import com.example.colorimagemobile.models.ChatSocketModel
 
 object ChatService {
-    private lateinit var currentChat: ChatSocketModel
-    private var chatMessages: ArrayList<ChatSocketModel> = arrayListOf()
+    // roomName: [messages]
+    private var channelMessages: HashMap<String, MutableSet<ChatSocketModel>> = HashMap()
 
-    fun getMessages(): ArrayList<ChatSocketModel> {
-        return chatMessages
-    }
-
-    fun setMessages(newChat: ArrayList<ChatSocketModel>) {
-        this.chatMessages = newChat
+    fun addChat(name: String) {
+        channelMessages[name] = mutableSetOf()
     }
 
     fun addMessage(message: ChatSocketModel) {
-        chatMessages.add(message)
+        channelMessages[message.roomName]!!.add(message)
+    }
+
+    fun getChannelMessages(roomName: String): MutableSet<ChatSocketModel>? {
+        return channelMessages[roomName]
     }
 }

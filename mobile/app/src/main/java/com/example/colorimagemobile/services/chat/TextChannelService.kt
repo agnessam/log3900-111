@@ -34,8 +34,10 @@ object TextChannelService {
     }
 
     private fun addToConnectedChannels() {
+        // add to connected only if user hasn't connected yet
         if (!connectedChannels.contains(currentChannel)) {
             connectedChannels.add(currentChannel)
+            ChatService.addChat(currentChannel.name)
         }
     }
 }

@@ -42,7 +42,7 @@ object ChatSocketService: AbsSocket(SOCKETS.CHAT_NAMESPACE_NAME) {
                     val currentArg = args[0].toString()
                     val message = JSONConvertor.getJSONObject(currentArg, ChatSocketModel::class.java)
                     ChatService.addMessage(message)
-                    printMsg(message.toString())
+                    printMsg(ChatService.getChannelMessages(message.roomName).toString())
                 } catch (e: JSONException) {
                     printMsg("listenMessage error: ${e.message}")
                     return@Runnable
