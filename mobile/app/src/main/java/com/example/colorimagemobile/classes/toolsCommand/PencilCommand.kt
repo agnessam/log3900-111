@@ -13,8 +13,7 @@ import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
 class PencilCommand(paintPath: PaintPath, layerIndex: Int): ICommand {
     private val pencilPaintPath: PaintPath = paintPath
     private var layerIndex: Int = layerIndex
-    var width: Int = 0
-    var height: Int = 0
+    var boundingRectangle = Rect(0, 0, CanvasService.extraCanvas.width, CanvasService.extraCanvas.height)
 
     fun addPoint(point: Point) {
         pencilPaintPath.points.add(point)
@@ -40,17 +39,8 @@ class PencilCommand(paintPath: PaintPath, layerIndex: Int): ICommand {
     // update canvas
     override fun execute() {
 //        CanvasService.extraCanvas.drawPath(pencilPaintPath.path, pencilPaintPath.brush.getPaint())
-        val rectF = getDimensions(pencilPaintPath.path)
-        var rect = Rect()
-        rectF.round(rect)
-        this.getPathDrawable().setBounds( rect
-//            0, 0, CanvasService.getWidth(), CanvasService.getHeight()
-//            0, 0, rect.right.toInt(), rect.bottom.toInt()
-//            rect.left.toInt(),
-//            rect.top.toInt(),
-//            rect.right.toInt(),
-//            rect.bottom.toInt()
-        )
+
+        this.getPathDrawable().setBounds( this.boundingRectangle)
 
         this.getPathDrawable().paint.set(pencilPaintPath.brush.getPaint())
         CanvasUpdateService.invalidate()
