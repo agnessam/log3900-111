@@ -7,7 +7,7 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.example.colorimagemobile.ui.home.fragments.chat.sidebar.AllChannelsFragment
 import com.example.colorimagemobile.ui.home.fragments.chat.sidebar.ConnectedChannelsFragment
 
-class ChatChannelAdapter(fragmentManager: FragmentManager, lifecycle: Lifecycle) :
+class ChatChannelTabAdapter(fragmentManager: FragmentManager, lifecycle: Lifecycle) :
     FragmentStateAdapter(fragmentManager, lifecycle) {
     override fun getItemCount(): Int {
         return 2

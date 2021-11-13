@@ -1,4 +1,4 @@
-package com.example.colorimagemobile.ui.home.fragments.chat
+package com.example.colorimagemobile.ui.home.fragments.chat.sidebar
 
 import androidx.fragment.app.Fragment
 import com.example.colorimagemobile.R

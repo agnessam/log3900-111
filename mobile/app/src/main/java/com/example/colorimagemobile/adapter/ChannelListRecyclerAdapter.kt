@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.colorimagemobile.R
 import com.example.colorimagemobile.classes.MyFragmentManager
 import com.example.colorimagemobile.services.chat.TextChannelService
-import com.example.colorimagemobile.ui.home.fragments.chat.ChatMessageBoxFragment
+import com.example.colorimagemobile.ui.home.fragments.chat.chatBox.ChatMessageBoxFragment
 
 class ChannelListRecyclerAdapter: RecyclerView.Adapter<ChannelListRecyclerAdapter.ViewHolder>() {
 

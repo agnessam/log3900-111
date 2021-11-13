@@ -1,4 +1,4 @@
-package com.example.colorimagemobile.ui.home.fragments.chat
+package com.example.colorimagemobile.ui.home.fragments.chat.chatBox
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment

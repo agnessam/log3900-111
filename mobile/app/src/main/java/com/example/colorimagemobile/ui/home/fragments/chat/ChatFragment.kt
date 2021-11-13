@@ -5,8 +5,9 @@ import androidx.fragment.app.Fragment
 import android.view.View
 import androidx.viewpager2.widget.ViewPager2
 import com.example.colorimagemobile.R
-import com.example.colorimagemobile.adapter.ChatChannelAdapter
+import com.example.colorimagemobile.adapter.ChatChannelTabAdapter
 import com.example.colorimagemobile.classes.MyFragmentManager
+import com.example.colorimagemobile.ui.home.fragments.chat.chatBox.ChatWelcomeFragment
 import com.google.android.material.tabs.TabLayout
 
 class ChatFragment : Fragment(R.layout.fragment_chat) {
@@ -22,7 +23,7 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
         val tabLayout = view.findViewById<TabLayout>(R.id.chat_channel_tablayout)
         val viewPager = view.findViewById<ViewPager2>(R.id.chat_view_pager)
 
-        viewPager.adapter = ChatChannelAdapter(parentFragmentManager, requireActivity().lifecycle)
+        viewPager.adapter = ChatChannelTabAdapter(parentFragmentManager, requireActivity().lifecycle)
 
         tabLayout.addTab(tabLayout.newTab().setText("All"))
         tabLayout.addTab(tabLayout.newTab().setText("Connected"))
