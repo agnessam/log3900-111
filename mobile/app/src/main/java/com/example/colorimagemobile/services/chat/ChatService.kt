@@ -12,7 +12,9 @@ object ChatService {
 
     // create message list for specific room
     fun addChat(name: String) {
-        channelMessages[name] = mutableSetOf()
+        if (!channelMessages.containsKey(name)) {
+            channelMessages[name] = mutableSetOf()
+        }
     }
 
     // add message to a room
