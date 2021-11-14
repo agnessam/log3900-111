@@ -34,6 +34,18 @@ class RectangleData(
     var height: Int
 ): ToolData
 
+class EllipseData(
+    override var id: String,
+    override var fill: String,
+    override var stroke: String,
+    override var fillOpacity: String,
+    override var strokeOpacity: String,
+    override var strokeWidth: Int,
+    var x: Int,
+    var y: Int,
+    var width: Int,
+    var height: Int
+): ToolData
 
 data class SocketTool(val type: String, val roomName: String, val drawingCommand: Any)
 
