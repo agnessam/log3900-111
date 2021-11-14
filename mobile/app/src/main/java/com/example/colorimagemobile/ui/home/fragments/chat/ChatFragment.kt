@@ -15,6 +15,7 @@ import com.example.colorimagemobile.models.TextChannelModel
 import com.example.colorimagemobile.repositories.TextChannelRepository
 import com.example.colorimagemobile.services.UserService
 import com.example.colorimagemobile.services.chat.TextChannelService
+import com.example.colorimagemobile.ui.home.fragments.chat.chatBox.ChatMessageBoxFragment
 import com.example.colorimagemobile.ui.home.fragments.chat.chatBox.ChatWelcomeFragment
 
 class ChatFragment : Fragment(R.layout.fragment_chat) {
@@ -42,6 +43,7 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
             TextChannelService.setChannels(channels)
             setRecyclerView()
             setButtonListeners()
+            addDefaultChannel(channels)
         })
     }
 
@@ -82,5 +84,16 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
     private fun changeBtnColor(selectedBtn: Button, normalBtn: Button) {
         selectedBtn.setTextColor(Color.parseColor("#4050b5"))
         normalBtn.setTextColor(Color.parseColor("#888888"))
+    }
+
+    // add channel named General as connected! usually its the first channel in the list
+    private fun addDefaultChannel(channels: ArrayList<TextChannelModel.AllInfo>) {
+        channels.forEach {
+            if (it.name == "General") {
+                TextChannelService.setCurrentChannel(it)
+                MyFragmentManager(requireActivity()).open(R.id.chat_channel_framelayout, ChatMessageBoxFragment())
+                return
+            }
+        }
     }
 }
