@@ -24,6 +24,11 @@ object TextChannelService {
         return currentChannel
     }
 
+    fun setCurrentChannel(newChannel: TextChannelModel.AllInfo) {
+        this.currentChannel = newChannel
+        addToConnectedChannels()
+    }
+
     fun setCurrentChannelByPosition(position: Int, isAllChannel: Boolean) {
         this.currentChannel = if (isAllChannel) allChannels[position] else connectedChannels[position]
         addToConnectedChannels()

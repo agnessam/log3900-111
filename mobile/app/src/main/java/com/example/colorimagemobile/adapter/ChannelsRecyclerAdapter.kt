@@ -48,7 +48,6 @@ class ChannelsRecyclerAdapter():
                 currentPosition = bindingAdapterPosition
 
                 TextChannelService.setCurrentChannelByPosition(currentPosition, true)
-                MyFragmentManager(itemView.context as FragmentActivity).open(R.id.chat_channel_framelayout, ChatMessageBoxFragment())
                 notifyDataSetChanged()
             }
         }
