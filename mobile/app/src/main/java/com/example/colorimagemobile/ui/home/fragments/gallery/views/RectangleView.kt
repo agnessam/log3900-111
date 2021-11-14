@@ -4,6 +4,8 @@ import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Path
+import android.graphics.drawable.Drawable
+import android.graphics.drawable.LayerDrawable
 import android.graphics.drawable.ShapeDrawable
 import android.graphics.drawable.shapes.RectShape
 import com.example.colorimagemobile.classes.toolsCommand.PencilCommand
@@ -17,6 +19,7 @@ import com.example.colorimagemobile.services.drawing.Point
 import com.example.colorimagemobile.services.drawing.toolsAttribute.ColorService
 import com.example.colorimagemobile.services.drawing.toolsAttribute.PencilService
 import com.example.colorimagemobile.services.drawing.toolsAttribute.RectangleService
+import com.example.colorimagemobile.services.drawing.toolsAttribute.RectangleStyle
 import com.example.colorimagemobile.ui.home.fragments.gallery.views.CanvasView
 import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
 import kotlin.math.abs
@@ -30,10 +33,27 @@ class RectangleView(context: Context?): CanvasView(context) {
         currentX = motionTouchEventX
         currentY = motionTouchEventY
         val id = UUIDService.generateUUID()
+        var rectangleStyle = RectangleService.getBorderStyle()
+        var fill = "none"
+        var stroke = "none"
+        var color = ColorService.getColorAsInt()
+        when(rectangleStyle){
+            RectangleStyle.WITH_BORDER_FILL -> {
+                fill = Integer.toHexString(color) // TODO IMPLEMENT PRIMARY AND SECONDARY COLORS
+                stroke = Integer.toHexString(color)
+            }
+            RectangleStyle.NO_BORDER ->{
+                stroke = Integer.toHexString(color)
+            }
+            RectangleStyle.ONLY_BORDER -> {
+                fill = Integer.toHexString(color)
+            }
+        }
+
         var rectangleData = RectangleData(
             id = id,
-            fill = "none",
-            stroke = ColorService.getColorAsString(),
+            fill = fill,
+            stroke = stroke,
             fillOpacity = "1",
             strokeOpacity = "1",
             strokeWidth = RectangleService.currentWidth,
@@ -43,9 +63,7 @@ class RectangleView(context: Context?): CanvasView(context) {
             height = 0
         )
 
-        var shapeDrawable: ShapeDrawable = ShapeDrawable(RectShape())
-        var layerIndex = CanvasService.layerDrawable.addLayer(shapeDrawable)
-        rectangleCommand = RectangleCommand(rectangleData, layerIndex)
+        rectangleCommand = RectangleCommand(rectangleData)
     }
 
     override fun onTouchDown() {
