@@ -22,6 +22,7 @@ import com.example.colorimagemobile.services.socket.ChatSocketService
 import com.example.colorimagemobile.utils.CommonFun.Companion.closeKeyboard
 import com.example.colorimagemobile.utils.CommonFun.Companion.onEnterKeyPressed
 import com.example.colorimagemobile.utils.CommonFun.Companion.printToast
+import com.example.colorimagemobile.utils.Constants.Companion.GENERAL_CHANNEL_NAME
 
 class ChatMessageBoxFragment : Fragment(R.layout.fragment_chat_message_box) {
 
@@ -68,7 +69,7 @@ class ChatMessageBoxFragment : Fragment(R.layout.fragment_chat_message_box) {
         myView.findViewById<TextView>(R.id.chat_username).text = channel.name
 
         // remove leaveRoom button for General
-        if (channel.name == "General") {
+        if (channel.name == GENERAL_CHANNEL_NAME) {
             myView.findViewById<Button>(R.id.channel_leave_btn).visibility = View.GONE
         }
 

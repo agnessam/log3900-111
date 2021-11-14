@@ -17,6 +17,7 @@ import com.example.colorimagemobile.services.UserService
 import com.example.colorimagemobile.services.chat.ChatAdapterService
 import com.example.colorimagemobile.services.chat.TextChannelService
 import com.example.colorimagemobile.ui.home.fragments.chat.chatBox.ChatMessageBoxFragment
+import com.example.colorimagemobile.utils.Constants.Companion.GENERAL_CHANNEL_NAME
 
 class ChatFragment : Fragment(R.layout.fragment_chat) {
 
@@ -95,7 +96,7 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
         if (TextChannelService.isConnectedToGeneral()) return
 
         channels.forEach {
-            if (it.name == "General") {
+            if (it.name == GENERAL_CHANNEL_NAME) {
                 TextChannelService.setCurrentChannel(it)
                 TextChannelService.connectToGeneral()
                 MyFragmentManager(requireActivity()).open(R.id.chat_channel_framelayout, ChatMessageBoxFragment())

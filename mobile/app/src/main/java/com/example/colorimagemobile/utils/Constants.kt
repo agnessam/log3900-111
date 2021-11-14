@@ -15,6 +15,7 @@ class Constants {
         const val LAST_LOGOUT_DATE ="lastLogout"
 
         const val EMPTY_STRING =""
+        const val GENERAL_CHANNEL_NAME = "General"
 
     }
 
