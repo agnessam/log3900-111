@@ -16,6 +16,7 @@ import com.example.colorimagemobile.ui.home.fragments.chat.chatBox.ChatMessageBo
 class ChannelsRecyclerAdapter():
     RecyclerView.Adapter<ChannelsRecyclerAdapter.ViewHolder>() {
 
+    private var isAllChannels = true
     private var currentPosition: Int = -1
     private lateinit var channels: ArrayList<TextChannelModel.AllInfo>
 
@@ -40,6 +41,10 @@ class ChannelsRecyclerAdapter():
         notifyDataSetChanged()
     }
 
+    fun setIsAllChannels(isAll: Boolean) {
+        this.isAllChannels = isAll
+    }
+
     inner class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView){
          var chanelName : TextView = itemView.findViewById<TextView>(R.id.channel_name);
 
@@ -47,7 +52,8 @@ class ChannelsRecyclerAdapter():
             itemView.setOnClickListener {
                 currentPosition = bindingAdapterPosition
 
-                TextChannelService.setCurrentChannelByPosition(currentPosition, true)
+                TextChannelService.setCurrentChannelByPosition(currentPosition, isAllChannels)
+                MyFragmentManager(itemView.context as FragmentActivity).open(R.id.chat_channel_framelayout, ChatMessageBoxFragment())
                 notifyDataSetChanged()
             }
         }
