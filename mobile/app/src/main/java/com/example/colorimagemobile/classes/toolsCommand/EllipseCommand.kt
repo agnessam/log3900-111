@@ -10,6 +10,8 @@ import com.example.colorimagemobile.services.drawing.CanvasService
 import com.example.colorimagemobile.services.drawing.CanvasUpdateService
 import com.example.colorimagemobile.services.drawing.Point
 import com.example.colorimagemobile.services.drawing.toolsAttribute.ColorService
+import com.example.colorimagemobile.services.drawing.toolsAttribute.EllipseService
+import com.example.colorimagemobile.services.drawing.toolsAttribute.EllipseStyle
 import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
 
 class EllipseCommand(ellipseData: EllipseData, layerIndex:Int): ICommand {
@@ -21,10 +23,15 @@ class EllipseCommand(ellipseData: EllipseData, layerIndex:Int): ICommand {
 
     init{
         paint.color = ColorService.getColorAsInt()
-        paint.style = Paint.Style.STROKE
-        paint.strokeJoin = Paint.Join.ROUND
-        paint.strokeCap = Paint.Cap.ROUND
+
+//        paint.strokeJoin = Paint.Join.ROUND
+//        paint.strokeCap = Paint.Cap.ROUND
         paint.strokeWidth = this.ellipse.strokeWidth.toFloat()
+        paint.style = when (EllipseService.getBorderStyle()) {
+            EllipseStyle.ONLY_BORDER -> Paint.Style.STROKE
+            EllipseStyle.NO_BORDER -> Paint.Style.FILL
+            else -> Paint.Style.FILL_AND_STROKE
+        }
         setStartPoint(Point(ellipse.x.toFloat(), ellipse.y.toFloat()))
     }
 
@@ -68,7 +75,6 @@ class EllipseCommand(ellipseData: EllipseData, layerIndex:Int): ICommand {
     }
 
     override fun execute() {
-//        printMsg()
         var left = ellipse.x
         var top = ellipse.y
         var right = ellipse.x + ellipse.width
