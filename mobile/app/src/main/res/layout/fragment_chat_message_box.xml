@@ -29,13 +29,12 @@
                     android:id="@+id/chat_username"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_marginLeft="10px"
                     android:paddingTop="15px"
                     android:paddingBottom="15px"
-                    android:textSize="20sp"
                     android:textColor="@color/black"
-                    android:layout_marginLeft="10px"
-                    android:layout_alignParentLeft="true"
-                    android:text="Hello" />
+                    android:textSize="20sp" />
 
                 <Button
                     android:id="@+id/channel_leave_btn"

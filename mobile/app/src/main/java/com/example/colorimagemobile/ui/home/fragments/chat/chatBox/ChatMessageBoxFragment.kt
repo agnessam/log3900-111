@@ -2,6 +2,7 @@ package com.example.colorimagemobile.ui.home.fragments.chat.chatBox
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.view.MotionEvent
 import androidx.fragment.app.Fragment
 import android.view.View
 import android.widget.Button
@@ -15,6 +16,7 @@ import com.example.colorimagemobile.classes.JSONConvertor
 import com.example.colorimagemobile.classes.MyFragmentManager
 import com.example.colorimagemobile.models.ChatSocketModel
 import com.example.colorimagemobile.models.TextChannelModel
+import com.example.colorimagemobile.services.UserService
 import com.example.colorimagemobile.services.chat.ChatAdapterService
 import com.example.colorimagemobile.services.chat.ChatService
 import com.example.colorimagemobile.services.chat.TextChannelService
@@ -85,10 +87,17 @@ class ChatMessageBoxFragment : Fragment(R.layout.fragment_chat_message_box) {
     @SuppressLint("ClickableViewAccessibility")
     private fun setListeners() {
         onEnterKeyPressed(chatMsgEditText) { sendChat() }
-        recyclerView.setOnTouchListener { _, _ -> closeKeyboard(requireActivity()) }
         myView.findViewById<Button>(R.id.chat_sent_btn).setOnClickListener { sendChat() }
         myView.findViewById<LinearLayout>(R.id.chat_message_main).setOnTouchListener { _, _ -> closeKeyboard(requireActivity()) }
         myView.findViewById<Button>(R.id.channel_leave_btn).setOnClickListener { leaveRoom() }
+
+        // close keyboard when clicked on screen but allow scroll
+        recyclerView.setOnTouchListener { v, event ->
+            when (event?.action) {
+                MotionEvent.ACTION_DOWN -> closeKeyboard(requireActivity())
+            }
+            v?.onTouchEvent(event) ?: true
+        }
     }
 
     private fun sendChat() {
@@ -105,6 +114,15 @@ class ChatMessageBoxFragment : Fragment(R.layout.fragment_chat_message_box) {
         ChatSocketService.sendMessage(newMessageJSON)
 
         chatMsgEditText.text = null
+
+        // scroll down if I send the message
+        if (newMessage.author == UserService.getUserInfo().username) {
+            scrollDown()
+        }
+    }
+
+    private fun scrollDown() {
+        recyclerView.scrollToPosition(ChatService.getChannelMessages(channel.name)!!.size - 1);
     }
 
     private fun leaveRoom() {
