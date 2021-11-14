@@ -46,8 +46,7 @@ class RectangleCommand(rectangleData: RectangleData): ICommand {
         borderPaint.style = Paint.Style.STROKE
         fillPaint.style = Paint.Style.FILL
 
-        borderPaint.strokeJoin = Paint.Join.ROUND
-        borderPaint.strokeCap = Paint.Cap.ROUND
+        borderPaint.strokeJoin = Paint.Join.MITER
         borderPaint.strokeWidth = this.rectangle.strokeWidth.toFloat()
 
 
