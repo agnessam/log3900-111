@@ -10,10 +10,13 @@ import com.example.colorimagemobile.models.PencilData
 import com.example.colorimagemobile.models.SyncUpdate
 import com.example.colorimagemobile.services.drawing.*
 import com.example.colorimagemobile.services.drawing.toolsAttribute.ColorService
+import android.graphics.RectF
+import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
+
 
 class PencilCommand(pencilData: PencilData): ICommand {
     var path: Path = Path()
-    private var pencil: PencilData = pencilData
+    var pencil: PencilData = pencilData
     private var layerIndex: Int = -1
     private var boundingRectangle = Rect(0,0, CanvasService.extraCanvas.width, CanvasService.extraCanvas.height)
     private var paint: Paint = Paint()
@@ -25,7 +28,7 @@ class PencilCommand(pencilData: PencilData): ICommand {
         var shapeDrawable = ShapeDrawable(pathShape)
         layerIndex = CanvasService.layerDrawable.addLayer(shapeDrawable)
 
-        paint.color = ColorService.getPrimaryColorAsInt()
+        paint.color = ColorService.rgbaToInt(this.pencil.stroke)
         paint.style = Paint.Style.STROKE
         paint.strokeJoin = Paint.Join.ROUND
         paint.strokeCap = Paint.Cap.ROUND
@@ -57,6 +60,7 @@ class PencilCommand(pencilData: PencilData): ICommand {
         val pathShape = PathShape(path,
             CanvasService.extraCanvas.width.toFloat(), CanvasService.extraCanvas.height.toFloat()
         )
+
 
         var shapeDrawable = ShapeDrawable(pathShape)
         this.getPathDrawable().bounds = this.boundingRectangle
