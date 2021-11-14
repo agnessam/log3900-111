@@ -3,6 +3,8 @@ package com.example.colorimagemobile.classes.toolsCommand
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
+import android.graphics.drawable.Drawable
+import android.graphics.drawable.LayerDrawable
 import android.graphics.drawable.ShapeDrawable
 import android.graphics.drawable.shapes.RectShape
 import com.example.colorimagemobile.interfaces.ICommand
@@ -16,19 +18,30 @@ import com.example.colorimagemobile.services.drawing.toolsAttribute.ColorService
 import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
 import kotlin.math.round
 
-class RectangleCommand(rectangleData: RectangleData, layerIndex:Int): ICommand {
+class RectangleCommand(rectangleData: RectangleData): ICommand {
     private var startingPoint: Point? = null
     private var endingPoint: Point? = null
-    private var layerIndex: Int = layerIndex
-    private var rectangle: RectangleData = rectangleData
-    private var paint: Paint = Paint()
 
+    private var layerIndex: Int = -1
+    private var fillRectangleIndex: Int = -1
+    private var borderRectangleIndex: Int = -1
+
+    private var rectangle: RectangleData = rectangleData
+    private lateinit var rectangleShape: LayerDrawable
+    private var borderPaint: Paint = Paint()
+    private var fillPaint: Paint = Paint()
     init{
-        paint.color = ColorService.getColorAsInt()
-        paint.style = Paint.Style.STROKE
-        paint.strokeJoin = Paint.Join.ROUND
-        paint.strokeCap = Paint.Cap.ROUND
-        paint.strokeWidth = this.rectangle.strokeWidth.toFloat()
+        borderPaint.color = Color.WHITE // TODO put secondary color here
+        fillPaint.color = ColorService.getColorAsInt() // TODO put primary color here
+
+        borderPaint.style = Paint.Style.STROKE
+        fillPaint.style = Paint.Style.FILL
+
+        borderPaint.strokeJoin = Paint.Join.ROUND
+        borderPaint.strokeCap = Paint.Cap.ROUND
+        borderPaint.strokeWidth = this.rectangle.strokeWidth.toFloat()
+
+
         setStartPoint(Point(rectangle.x.toFloat(), rectangle.y.toFloat()))
     }
 
@@ -63,8 +76,16 @@ class RectangleCommand(rectangleData: RectangleData, layerIndex:Int): ICommand {
         }
     }
 
-    fun getRectangleDrawable(): ShapeDrawable{
-        return CanvasService.layerDrawable.getDrawable(this.layerIndex) as ShapeDrawable
+    private fun getFillRectangle(): ShapeDrawable{
+        return rectangleShape.getDrawable(fillRectangleIndex) as ShapeDrawable
+    }
+
+    private fun getBorderRectangle(): ShapeDrawable{
+        return rectangleShape.getDrawable(borderRectangleIndex) as ShapeDrawable
+    }
+
+    private fun getRectangleDrawable(): LayerDrawable{
+        return CanvasService.layerDrawable.getDrawable(this.layerIndex) as LayerDrawable
     }
 
     override fun update(drawingCommand: SyncUpdate) {
@@ -72,12 +93,29 @@ class RectangleCommand(rectangleData: RectangleData, layerIndex:Int): ICommand {
     }
 
     override fun execute() {
+        if(layerIndex == -1){
+            var borderRectangle = ShapeDrawable(RectShape())
+            var fillRectangle = ShapeDrawable(RectShape())
+            var rectangleShapeArray = arrayOf<Drawable>()
+            rectangleShape = LayerDrawable(rectangleShapeArray)
+            fillRectangleIndex = rectangleShape.addLayer(fillRectangle)
+            borderRectangleIndex = rectangleShape.addLayer(borderRectangle)
+            layerIndex = CanvasService.layerDrawable.addLayer(rectangleShape)
+        }
+
         var left = rectangle.x
         var top = rectangle.y
         var right = rectangle.x + rectangle.width
         var bottom = rectangle.y + rectangle.height
-        this.getRectangleDrawable().setBounds(left, top, right, bottom)
-        this.getRectangleDrawable().paint.set(this.paint)
+
+        if(rectangle.fill != "none"){
+            this.getFillRectangle().setBounds(left , top , right , bottom )
+            this.getFillRectangle().paint.set(this.fillPaint)
+        }
+        if(rectangle.stroke != "none"){
+            this.getBorderRectangle().setBounds(left, top, right, bottom)
+            this.getBorderRectangle().paint.set(this.borderPaint)
+        }
         CanvasUpdateService.invalidate()
     }
 }
