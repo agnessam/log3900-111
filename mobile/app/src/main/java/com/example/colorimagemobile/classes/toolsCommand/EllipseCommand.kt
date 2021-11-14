@@ -2,7 +2,10 @@ package com.example.colorimagemobile.classes.toolsCommand
 
 import android.graphics.Color
 import android.graphics.Paint
+import android.graphics.drawable.Drawable
+import android.graphics.drawable.LayerDrawable
 import android.graphics.drawable.ShapeDrawable
+import android.graphics.drawable.shapes.OvalShape
 import com.example.colorimagemobile.interfaces.ICommand
 import com.example.colorimagemobile.models.EllipseData
 import com.example.colorimagemobile.models.SyncUpdate
@@ -10,28 +13,40 @@ import com.example.colorimagemobile.services.drawing.CanvasService
 import com.example.colorimagemobile.services.drawing.CanvasUpdateService
 import com.example.colorimagemobile.services.drawing.Point
 import com.example.colorimagemobile.services.drawing.toolsAttribute.ColorService
-import com.example.colorimagemobile.services.drawing.toolsAttribute.EllipseService
-import com.example.colorimagemobile.services.drawing.toolsAttribute.EllipseStyle
-import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
 
-class EllipseCommand(ellipseData: EllipseData, layerIndex:Int): ICommand {
+class EllipseCommand(ellipseData: EllipseData): ICommand {
     private var startingPoint: Point? = null
     private var endingPoint: Point? = null
-    private var layerIndex: Int = layerIndex
+
+    private var layerIndex: Int = -1
+    private var fillEllipseIndex: Int = -1
+    private var borderEllipseIndex: Int = -1
+
     private var ellipse: EllipseData = ellipseData
-    private var paint: Paint = Paint()
-
+    private lateinit var ellipseShape: LayerDrawable
+    private var borderPaint: Paint = Paint()
+    private var fillPaint: Paint = Paint()
     init{
-        paint.color = ColorService.getColorAsInt()
-
-//        paint.strokeJoin = Paint.Join.ROUND
-//        paint.strokeCap = Paint.Cap.ROUND
-        paint.strokeWidth = this.ellipse.strokeWidth.toFloat()
-        paint.style = when (EllipseService.getBorderStyle()) {
-            EllipseStyle.ONLY_BORDER -> Paint.Style.STROKE
-            EllipseStyle.NO_BORDER -> Paint.Style.FILL
-            else -> Paint.Style.FILL_AND_STROKE
+        if(layerIndex == -1){
+            var borderEllipse = ShapeDrawable(OvalShape())
+            var fillEllipse = ShapeDrawable(OvalShape())
+            var ellipseShapeArray = arrayOf<Drawable>()
+            ellipseShape = LayerDrawable(ellipseShapeArray)
+            fillEllipseIndex = ellipseShape.addLayer(fillEllipse)
+            borderEllipseIndex = ellipseShape.addLayer(borderEllipse)
+            layerIndex = CanvasService.layerDrawable.addLayer(ellipseShape)
         }
+        borderPaint.color = Color.WHITE // TODO put secondary color here
+        fillPaint.color = ColorService.getColorAsInt() // TODO put primary color here
+
+        borderPaint.style = Paint.Style.STROKE
+        fillPaint.style = Paint.Style.FILL
+
+        borderPaint.strokeJoin = Paint.Join.ROUND
+        borderPaint.strokeCap = Paint.Cap.ROUND
+        borderPaint.strokeWidth = this.ellipse.strokeWidth.toFloat()
+
+
         setStartPoint(Point(ellipse.x.toFloat(), ellipse.y.toFloat()))
     }
 
@@ -66,8 +81,16 @@ class EllipseCommand(ellipseData: EllipseData, layerIndex:Int): ICommand {
         }
     }
 
-    fun getEllipseDrawable(): ShapeDrawable{
-        return CanvasService.layerDrawable.getDrawable(this.layerIndex) as ShapeDrawable
+    private fun getFillEllipse(): ShapeDrawable{
+        return ellipseShape.getDrawable(fillEllipseIndex) as ShapeDrawable
+    }
+
+    private fun getBorderEllipse(): ShapeDrawable{
+        return ellipseShape.getDrawable(borderEllipseIndex) as ShapeDrawable
+    }
+
+    private fun getEllipseDrawable(): LayerDrawable {
+        return CanvasService.layerDrawable.getDrawable(this.layerIndex) as LayerDrawable
     }
 
     override fun update(drawingCommand: SyncUpdate) {
@@ -79,8 +102,15 @@ class EllipseCommand(ellipseData: EllipseData, layerIndex:Int): ICommand {
         var top = ellipse.y
         var right = ellipse.x + ellipse.width
         var bottom = ellipse.y + ellipse.height
-        this.getEllipseDrawable().setBounds(left, top, right, bottom)
-        this.getEllipseDrawable().paint.set(this.paint)
+
+        if(ellipse.fill != "none"){
+            this.getFillEllipse().setBounds(left , top , right , bottom )
+            this.getFillEllipse().paint.set(this.fillPaint)
+        }
+        if(ellipse.stroke != "none"){
+            this.getBorderEllipse().setBounds(left, top, right, bottom)
+            this.getBorderEllipse().paint.set(this.borderPaint)
+        }
         CanvasUpdateService.invalidate()
     }
 }
