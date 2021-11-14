@@ -25,21 +25,18 @@ class RectangleView(context: Context?): CanvasView(context) {
     private val rectangleType = "Rectangle"
 
     override fun createPathObject() {
-        paintPath = PaintPath(UUIDService.generateUUID(), CustomPaint(), Path(), arrayListOf())
-        paintPath!!.brush.setStrokeWidth(RectangleService.getCurrentWidthAsFloat())
-        paintPath!!.brush.setColor(ColorService.getColorAsInt())
+        var color = ColorService.getColorAsInt()
+        var borderWidth = RectangleService.getCurrentWidthAsFloat()
+        var commandId = UUIDService.generateUUID()
 
-        printMsg("ATTEMP INSTANTIATION RECT")
-        printMsg("RECT INSTANTIATION")
         var shapeDrawable: ShapeDrawable = ShapeDrawable(RectShape())
         var layerIndex = CanvasService.layerDrawable.addLayer(shapeDrawable)
-        rectangleCommand = RectangleCommand(paintPath as PaintPath, layerIndex)
+        rectangleCommand = RectangleCommand(layerIndex)
     }
 
     override fun onTouchDown() {
         CanvasService.extraCanvas.save()
         createPathObject()
-        paintPath!!.path.moveTo(motionTouchEventX, motionTouchEventY)
 
         currentX = motionTouchEventX
         currentY = motionTouchEventY

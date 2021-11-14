@@ -47,11 +47,4 @@ object CanvasService {
         extraCanvas = Canvas(extraBitmap)
         extraCanvas.drawBitmap(extraBitmap, 0f, 0f, null)
     }
-
-    // maybe get previous bitmap and draw it instead of drawing everything
-    fun drawPreviousCanvas() {
-        for (paintPathItem in PathService.getPaintPath()) {
-            extraCanvas.drawPath(paintPathItem.path, paintPathItem.brush.getPaint())
-        }
-    }
 }

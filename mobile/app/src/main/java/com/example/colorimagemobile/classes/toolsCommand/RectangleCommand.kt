@@ -13,8 +13,7 @@ import com.example.colorimagemobile.services.drawing.Point
 import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
 import kotlin.math.round
 
-class RectangleCommand(paintPath: PaintPath, layerIndex:Int): ICommand {
-    private val rectPaintPath: PaintPath = paintPath
+class RectangleCommand(layerIndex:Int): ICommand {
     private var startingPoint: Point? = null
     private var endingPoint: Point? = null
     private var layerIndex: Int = layerIndex
@@ -37,11 +36,6 @@ class RectangleCommand(paintPath: PaintPath, layerIndex:Int): ICommand {
     }
 
     override fun execute() {
-//        CanvasService.extraCanvas.drawRect(startingPoint!!.x, startingPoint!!.y, endingPoint!!.x, endingPoint!!.y, rectPaintPath.brush.getPaint())
-//        CanvasUpdateService.invalidate()
-
-//        var shapeDrawable: ShapeDrawable = ShapeDrawable(RectShape())
-
         var startX = startingPoint!!.x.toInt()
         var startY = startingPoint!!.y.toInt()
         var endX = endingPoint!!.x.toInt()
@@ -69,8 +63,7 @@ class RectangleCommand(paintPath: PaintPath, layerIndex:Int): ICommand {
             bottom = endY
         }
         this.getRectangleDrawable().setBounds(left, top, right, bottom)
-        this.getRectangleDrawable().getPaint().setColor(Color.parseColor("#000000"))
-        printMsg(this.getRectangleDrawable().getShape().toString())
+        this.getRectangleDrawable().paint.color = Color.parseColor("#000000")
         CanvasUpdateService.invalidate()
     }
 }

@@ -1,12 +1,7 @@
 package com.example.colorimagemobile.services.drawing.toolsAttribute
 
-enum class RectangleStyle {
-    WITH_BORDER_FILL,
-    NO_BORDER,
-    ONLY_BORDER
-}
-
 object RectangleService: Attributes {
+
     override val minWidth = 1
     override val maxWidth = 50
     override var currentWidth: Int = 0
@@ -24,4 +19,10 @@ object RectangleService: Attributes {
     fun getBorderStyle(): RectangleStyle {
         return currentStyle
     }
+}
+
+enum class RectangleStyle {
+    WITH_BORDER_FILL,
+    NO_BORDER,
+    ONLY_BORDER
 }

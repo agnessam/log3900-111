@@ -14,7 +14,7 @@ object SynchronisationService {
     fun createCommand(drawingCommand: SyncCreateDrawing) {
         val commandId = drawingCommand.drawingCommand.id
         val paintPath = PaintPath(commandId, CustomPaint(), Path(), arrayListOf())
-        paintPath.points.add(drawingCommand.drawingCommand.pointsList[0])
+//        paintPath.points.add(drawingCommand.drawingCommand.pointsList[0])
 
         // set paint brush and stuff
         paintPath.brush.setColor(ColorService.rgbaToInt(drawingCommand.drawingCommand.stroke))

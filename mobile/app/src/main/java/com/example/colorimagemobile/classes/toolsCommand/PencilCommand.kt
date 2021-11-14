@@ -3,46 +3,60 @@ package com.example.colorimagemobile.classes.toolsCommand
 import android.graphics.Paint
 import android.graphics.Path
 import android.graphics.Rect
-import android.graphics.RectF
 import android.graphics.drawable.ShapeDrawable
+import android.graphics.drawable.shapes.PathShape
 import com.example.colorimagemobile.interfaces.ICommand
+import com.example.colorimagemobile.models.PencilData
 import com.example.colorimagemobile.models.SyncUpdate
 import com.example.colorimagemobile.services.drawing.*
-import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
+import com.example.colorimagemobile.services.drawing.toolsAttribute.ColorService
 
-class PencilCommand(paintPath: PaintPath, layerIndex: Int): ICommand {
-    private val pencilPaintPath: PaintPath = paintPath
+class PencilCommand(pencilData: PencilData, layerIndex:Int): ICommand {
+    var path: Path = Path()
+    private var pencil: PencilData = pencilData
     private var layerIndex: Int = layerIndex
-    var boundingRectangle = Rect(0, 0, CanvasService.extraCanvas.width, CanvasService.extraCanvas.height)
+    private var boundingRectangle = Rect(0,0, CanvasService.extraCanvas.width, CanvasService.extraCanvas.height)
+    private var paint: Paint = Paint()
 
-    fun addPoint(point: Point) {
-        pencilPaintPath.points.add(point)
-        PathService.addPaintPath(pencilPaintPath)
+    init{
+        paint.color = ColorService.getColorAsInt()
+        paint.style = Paint.Style.STROKE
+        paint.strokeJoin = Paint.Join.ROUND
+        paint.strokeCap = Paint.Cap.ROUND
+        paint.strokeWidth = this.pencil.strokeWidth.toFloat()
+        this.setStartingPoint()
+    }
+    private fun setStartingPoint(){
+        this.path.moveTo(pencil.pointsList[0].x, pencil.pointsList[0].y)
+    }
+
+    fun addPoint(x: Float, y: Float) {
+        val point = Point(x, y)
+        pencil.pointsList.add(point)
+        this.path.lineTo(point.x, point.y)
     }
 
     // for synchro
     override fun update(drawingCommand: SyncUpdate) {
-        pencilPaintPath.path.lineTo(drawingCommand.point.x, drawingCommand.point.y)
-        addPoint(drawingCommand.point)
+        this.addPoint(drawingCommand.point.x, drawingCommand.point.y)
     }
 
     private fun getPathDrawable(): ShapeDrawable {
         return CanvasService.layerDrawable.getDrawable(this.layerIndex) as ShapeDrawable
     }
 
-    private fun getDimensions(path: Path): RectF {
-        val rectF = RectF()
-        path.computeBounds(rectF, true)
-        return rectF
-    }
-
     // update canvas
     override fun execute() {
 //        CanvasService.extraCanvas.drawPath(pencilPaintPath.path, pencilPaintPath.brush.getPaint())
+        val pathShape = PathShape(path,
+            CanvasService.extraCanvas.width.toFloat(), CanvasService.extraCanvas.height.toFloat()
+        )
 
-        this.getPathDrawable().setBounds( this.boundingRectangle)
+        var shapeDrawable = ShapeDrawable(pathShape)
+        this.getPathDrawable().bounds = this.boundingRectangle
+        CanvasService.layerDrawable.setDrawable(layerIndex, shapeDrawable)
 
-        this.getPathDrawable().paint.set(pencilPaintPath.brush.getPaint())
+        this.getPathDrawable().paint.set(this.paint)
         CanvasUpdateService.invalidate()
     }
 }

@@ -2,7 +2,39 @@ package com.example.colorimagemobile.models
 
 import com.example.colorimagemobile.services.drawing.Point
 
-data class ToolData(val id: String, val pointsList: ArrayList<Point>, val fill: String, val stroke: String, val fillOpacity: String, val strokeOpacity: String, val strokeWidth: Int)
+interface ToolData{
+    var id: String
+    var fill: String
+    var stroke: String
+    var fillOpacity: String
+    var strokeOpacity: String
+    var strokeWidth: Int
+}
+
+class PencilData(
+    override var id: String,
+    override var fill: String,
+    override var stroke: String,
+    override var fillOpacity: String,
+    override var strokeOpacity: String,
+    override var strokeWidth: Int,
+    var pointsList: ArrayList<Point>,
+    ): ToolData
+
+class RectangleData(
+    override var id: String,
+    override var fill: String,
+    override var stroke: String,
+    override var fillOpacity: String,
+    override var strokeOpacity: String,
+    override var strokeWidth: Int,
+    x: Int,
+    y: Int,
+    width: Int,
+    height: Int
+): ToolData
+
+
 data class SocketTool(val type: String, val roomName: String, val drawingCommand: Any)
 
 data class InProgressPencil(val id: String, var point: Point)
