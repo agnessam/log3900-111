@@ -17,6 +17,7 @@ import com.example.colorimagemobile.services.UserService
 import com.example.colorimagemobile.services.chat.TextChannelService
 import com.example.colorimagemobile.ui.home.fragments.chat.chatBox.ChatMessageBoxFragment
 import com.example.colorimagemobile.ui.home.fragments.chat.chatBox.ChatWelcomeFragment
+import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
 
 class ChatFragment : Fragment(R.layout.fragment_chat) {
 
@@ -30,7 +31,11 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
         adapter = ChannelsRecyclerAdapter()
 
         getAllChannels()
-        MyFragmentManager(requireActivity()).open(R.id.chat_channel_framelayout, ChatWelcomeFragment())
+
+        // means its not the first time we are opening the chat
+        if (TextChannelService.getChannels().isNotEmpty()) {
+            MyFragmentManager(requireActivity()).open(R.id.chat_channel_framelayout, ChatMessageBoxFragment())
+        }
     }
 
     private fun getAllChannels() {
@@ -88,9 +93,12 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
 
     // add channel named General as connected! usually its the first channel in the list
     private fun addDefaultChannel(channels: ArrayList<TextChannelModel.AllInfo>) {
+        if (TextChannelService.isConnectedToGeneral()) return
+
         channels.forEach {
             if (it.name == "General") {
                 TextChannelService.setCurrentChannel(it)
+                TextChannelService.connectToGeneral()
                 MyFragmentManager(requireActivity()).open(R.id.chat_channel_framelayout, ChatMessageBoxFragment())
                 return
             }

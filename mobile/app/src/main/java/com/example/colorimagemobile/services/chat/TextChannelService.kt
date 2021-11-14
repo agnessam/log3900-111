@@ -3,6 +3,7 @@ package com.example.colorimagemobile.services.chat
 import com.example.colorimagemobile.models.TextChannelModel
 
 object TextChannelService {
+    private var hasConnectedToGeneral = false
     private lateinit var currentChannel: TextChannelModel.AllInfo
     private var allChannels: ArrayList<TextChannelModel.AllInfo>
     private var connectedChannels: ArrayList<TextChannelModel.AllInfo>
@@ -10,6 +11,14 @@ object TextChannelService {
     init {
         allChannels = arrayListOf()
         connectedChannels = arrayListOf()
+    }
+
+    fun connectToGeneral() {
+        this.hasConnectedToGeneral = true
+    }
+
+    fun isConnectedToGeneral(): Boolean {
+        return this.hasConnectedToGeneral
     }
 
     fun getChannels(): List<TextChannelModel.AllInfo> {
