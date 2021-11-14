@@ -18,6 +18,26 @@
 #nav-bar span div a {
   font-size: 24px;
 }
+#searchBar {
+  height: 90%;
+  width: 40%;
+  border-radius: 25px;
+  background-color: #fef9f7;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#searchbar-input {
+  border: none;
+  background-color: transparent;
+  width: 90%;
+  margin-right: 20px;
+}
+
+#searchbar-input:focus {
+  outline: none;
+}
 
 #main-logo {
   color: #924642;

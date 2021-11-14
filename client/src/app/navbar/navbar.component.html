@@ -11,6 +11,19 @@
   </div>
 
   <span class="user-properties"></span>
+  <div id="searchBar">
+    <button mat-icon-button class="icon">
+      <mat-icon>search</mat-icon>
+    </button>
+    <input
+      type="search"
+      #searchInput
+      id="searchbar-input"
+      autocomplete="off"
+      spellcheck="false"
+      placeholder="Search"
+    />
+  </div>
 
   <div class="page-link">{{ user.username }}</div>
   <button mat-icon-button (click)="onChatClick()">
