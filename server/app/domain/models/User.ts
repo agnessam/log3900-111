@@ -1,23 +1,21 @@
-import mongoose, { Document, Model, Schema } from 'mongoose';
 import bcrypt from 'bcrypt';
+import mongoose, { Document, Model, Schema } from 'mongoose';
+import { AvatarInterface, AvatarSchema } from './Avatar';
 import { TeamInterface } from './teams';
 
 export interface UserInterface extends Document {
   username: string;
   description: string;
-
+  avatar: AvatarInterface;
   email: string;
   password: string;
   firstName: string;
   lastName: string;
-
   teams: string[] | TeamInterface[];
   drawings: string[];
   lastLoginDate : string;
   lastLogoutDate : string;
-
   publishedDrawings: string[];
-
   isValidPassword(password: string): Promise<boolean>;
 }
 
@@ -26,6 +24,13 @@ const UserSchema = new mongoose.Schema({
   description: String,
   lastLoginDate:  String ,
   lastLogoutDate: String,
+  avatar: {
+    type: AvatarSchema,
+    default: {
+      imageUrl: 'https://colorimage-111.s3.amazonaws.com/default/default.jpeg',
+    },
+  },
+
   email: { type: String, required: true, index: { unique: true } },
   password: { type: String, required: true },
   firstName: { type: String, required: true },

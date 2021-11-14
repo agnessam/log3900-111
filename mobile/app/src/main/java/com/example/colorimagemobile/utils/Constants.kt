@@ -29,6 +29,7 @@ class Constants {
 
             const val COLLABORATIVE_DRAWING_NAMESPACE = "drawing"
             const val IN_PROGRESS_DRAWING_EVENT = "draw-in-progress"
+            const val CONFIRM_DRAWING_EVENT = "draw-confirm"
         }
     }
 

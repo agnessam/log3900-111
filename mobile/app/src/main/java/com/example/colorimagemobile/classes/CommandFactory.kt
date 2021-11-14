@@ -2,14 +2,16 @@ package com.example.colorimagemobile.classes
 
 import com.example.colorimagemobile.classes.toolsCommand.PencilCommand
 import com.example.colorimagemobile.interfaces.ICommand
+import com.example.colorimagemobile.models.PencilData
+import com.example.colorimagemobile.models.ToolData
 import com.example.colorimagemobile.services.drawing.PaintPath
 
 class CommandFactory {
 
     companion object {
-        fun createCommand(commandType: String, paintPath: PaintPath): ICommand? {
+        fun createCommand(commandType: String, toolData: ToolData): ICommand? {
             return when(commandType) {
-                "Pencil" -> PencilCommand(paintPath)
+                "Pencil" -> PencilCommand(toolData as PencilData)
                 else -> null
             }
         }
