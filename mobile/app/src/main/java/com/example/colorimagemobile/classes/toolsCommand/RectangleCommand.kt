@@ -1,6 +1,5 @@
 package com.example.colorimagemobile.classes.toolsCommand
 
-import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.drawable.Drawable
@@ -12,11 +11,8 @@ import com.example.colorimagemobile.models.RectangleData
 import com.example.colorimagemobile.models.SyncUpdate
 import com.example.colorimagemobile.services.drawing.CanvasService
 import com.example.colorimagemobile.services.drawing.CanvasUpdateService
-import com.example.colorimagemobile.services.drawing.PaintPath
 import com.example.colorimagemobile.services.drawing.Point
 import com.example.colorimagemobile.services.drawing.toolsAttribute.ColorService
-import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
-import kotlin.math.round
 
 class RectangleCommand(rectangleData: RectangleData): ICommand {
     private var startingPoint: Point? = null
@@ -41,7 +37,7 @@ class RectangleCommand(rectangleData: RectangleData): ICommand {
         layerIndex = CanvasService.layerDrawable.addLayer(rectangleShape)
 
         borderPaint.color = Color.WHITE // TODO put secondary color here
-        fillPaint.color = ColorService.getColorAsInt() // TODO put primary color here
+        fillPaint.color = ColorService.getPrimaryColorAsInt() // TODO put primary color here
 
         borderPaint.style = Paint.Style.STROKE
         fillPaint.style = Paint.Style.FILL

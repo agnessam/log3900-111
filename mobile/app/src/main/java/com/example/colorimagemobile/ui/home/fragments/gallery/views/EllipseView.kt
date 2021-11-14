@@ -23,7 +23,7 @@ class EllipseView(context: Context?): CanvasView(context) {
         var ellipseStyle = EllipseService.getBorderStyle()
         var fill = "none"
         var stroke = "none"
-        var color = ColorService.getColorAsInt()
+        var color = ColorService.getPrimaryColorAsInt()
         when(ellipseStyle){
             EllipseStyle.WITH_BORDER_FILL -> {
                 fill = Integer.toHexString(color) // TODO IMPLEMENT PRIMARY AND SECONDARY COLORS

@@ -25,7 +25,7 @@ class PencilCommand(pencilData: PencilData): ICommand {
         var shapeDrawable = ShapeDrawable(pathShape)
         layerIndex = CanvasService.layerDrawable.addLayer(shapeDrawable)
 
-        paint.color = ColorService.getColorAsInt()
+        paint.color = ColorService.getPrimaryColorAsInt()
         paint.style = Paint.Style.STROKE
         paint.strokeJoin = Paint.Join.ROUND
         paint.strokeCap = Paint.Cap.ROUND

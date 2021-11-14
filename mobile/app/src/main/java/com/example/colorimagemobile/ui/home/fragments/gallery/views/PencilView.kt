@@ -1,20 +1,13 @@
 package com.example.colorimagemobile.ui.home.fragments.gallery.views
 
 import android.content.Context
-import android.graphics.Paint
-import android.graphics.Path
-import android.graphics.drawable.ShapeDrawable
-import android.graphics.drawable.shapes.PathShape
 import com.example.colorimagemobile.classes.toolsCommand.PencilCommand
 import com.example.colorimagemobile.models.InProgressPencil
 import com.example.colorimagemobile.models.PencilData
-import com.example.colorimagemobile.models.ToolData
 import com.example.colorimagemobile.services.UUIDService
 import com.example.colorimagemobile.services.drawing.*
 import com.example.colorimagemobile.services.drawing.toolsAttribute.ColorService
 import com.example.colorimagemobile.services.drawing.toolsAttribute.PencilService
-import com.example.colorimagemobile.services.socket.DrawingSocketService
-import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
 import kotlin.math.abs
 
 class PencilView(context: Context?): CanvasView(context) {
@@ -35,7 +28,7 @@ class PencilView(context: Context?): CanvasView(context) {
         pencil = PencilData(
             id = id,
             fill = "none",
-            stroke = ColorService.getColorAsString(),
+            stroke = ColorService.getPrimaryColorAsString(),
             fillOpacity = "1",
             strokeOpacity = "1",
             strokeWidth = PencilService.currentWidth,

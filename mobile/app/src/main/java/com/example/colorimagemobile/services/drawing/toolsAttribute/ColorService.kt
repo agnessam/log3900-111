@@ -3,18 +3,31 @@ package com.example.colorimagemobile.services.drawing.toolsAttribute
 import android.graphics.Color
 
 object ColorService {
-    private var currentColor: String = "rgba(0, 0, 0, 1)"
+    private var primaryColor: String = "rgba(0, 0, 0, 1)"
+    private var secondaryColor: String = "rgba(0, 0, 0, 1)"
 
-    fun setColor(newColor: String) {
-        currentColor = newColor
+    fun setPrimaryColor(newColor: String) {
+        primaryColor = newColor
     }
 
-    fun getColorAsString(): String {
-        return currentColor
+    fun setSecondaryColor(newColor: String){
+        secondaryColor = newColor
     }
 
-    fun getColorAsInt(): Int {
-        return rgbaToInt(currentColor)
+    fun getPrimaryColorAsString(): String {
+        return primaryColor
+    }
+
+    fun getSecondaryColorAsString(): String {
+        return secondaryColor
+    }
+
+    fun getPrimaryColorAsInt(): Int {
+        return rgbaToInt(primaryColor)
+    }
+
+    fun getSecondaryColorAsInt(): Int{
+        return rgbaToInt(secondaryColor)
     }
 
     // convert rgb() to Android Color in Integer

@@ -37,7 +37,7 @@ class EllipseCommand(ellipseData: EllipseData): ICommand {
             layerIndex = CanvasService.layerDrawable.addLayer(ellipseShape)
         }
         borderPaint.color = Color.WHITE // TODO put secondary color here
-        fillPaint.color = ColorService.getColorAsInt() // TODO put primary color here
+        fillPaint.color = ColorService.getPrimaryColorAsInt() // TODO put primary color here
 
         borderPaint.style = Paint.Style.STROKE
         fillPaint.style = Paint.Style.FILL
