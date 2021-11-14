@@ -11,6 +11,7 @@ object CanvasService {
     lateinit var extraCanvas: Canvas
     var drawableList: Array<Drawable> = arrayOf<Drawable>()
     var layerDrawable: LayerDrawable = LayerDrawable(drawableList)
+    var idShapePair: HashMap<Int, Drawable> = HashMap()
 
     private var width = Constants.DRAWING.MAX_WIDTH
     private var height = Constants.DRAWING.MAX_HEIGHT
