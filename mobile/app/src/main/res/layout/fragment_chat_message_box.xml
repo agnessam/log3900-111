@@ -37,15 +37,31 @@
                     android:textSize="20sp" />
 
                 <Button
-                    android:id="@+id/channel_leave_btn"
+                    android:id="@+id/channel_load_more_btn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
                     android:layout_marginRight="10dp"
-                    android:backgroundTint="@color/primary"
-                    android:drawableEnd="@drawable/ic_close"
-                    android:text="Leave Room"
+                    android:layout_toLeftOf="@id/channel_leave_btn_main"
+                    android:backgroundTint="#0b96cf"
+                    android:drawableEnd="@drawable/ic_message_plus"
+                    android:text="Load previous messages"
                     android:textColor="@color/black" />
+
+                <RelativeLayout
+                    android:id="@+id/channel_leave_btn_main"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true">
+                    <Button
+                        android:id="@+id/channel_leave_btn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:backgroundTint="@color/primary"
+                        android:drawableEnd="@drawable/ic_close"
+                        android:text="Leave Room"
+                        android:layout_marginRight="10dp"
+                        android:textColor="@color/black" />
+                </RelativeLayout>
 
             </RelativeLayout>
 
