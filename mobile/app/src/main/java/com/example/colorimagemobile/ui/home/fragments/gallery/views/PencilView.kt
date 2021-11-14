@@ -42,12 +42,8 @@ class PencilView(context: Context?): CanvasView(context) {
             pointsList = arrayListOf(point),
         )
         // supposed to put the exact width and height of the path drawn...... but wtf how
-        val pathShape = PathShape(Path(),
-            CanvasService.extraCanvas.width.toFloat(), CanvasService.extraCanvas.height.toFloat())
 
-        var shapeDrawable = ShapeDrawable(pathShape)
-        var layerIndex = CanvasService.layerDrawable.addLayer(shapeDrawable)
-        pencilCommand = PencilCommand(pencil, layerIndex)
+        pencilCommand = PencilCommand(pencil)
 //        pencilCommand.pencil.path.moveTo(motionTouchEventX, motionTouchEventY)
 //        pencilCommand!!.path.moveTo(motionTouchEventX, motionTouchEventY)
     }

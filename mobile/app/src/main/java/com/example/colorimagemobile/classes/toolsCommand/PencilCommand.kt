@@ -11,14 +11,20 @@ import com.example.colorimagemobile.models.SyncUpdate
 import com.example.colorimagemobile.services.drawing.*
 import com.example.colorimagemobile.services.drawing.toolsAttribute.ColorService
 
-class PencilCommand(pencilData: PencilData, layerIndex:Int): ICommand {
+class PencilCommand(pencilData: PencilData): ICommand {
     var path: Path = Path()
     private var pencil: PencilData = pencilData
-    private var layerIndex: Int = layerIndex
+    private var layerIndex: Int = -1
     private var boundingRectangle = Rect(0,0, CanvasService.extraCanvas.width, CanvasService.extraCanvas.height)
     private var paint: Paint = Paint()
 
     init{
+        val pathShape = PathShape(Path(),
+            CanvasService.extraCanvas.width.toFloat(), CanvasService.extraCanvas.height.toFloat())
+
+        var shapeDrawable = ShapeDrawable(pathShape)
+        layerIndex = CanvasService.layerDrawable.addLayer(shapeDrawable)
+
         paint.color = ColorService.getColorAsInt()
         paint.style = Paint.Style.STROKE
         paint.strokeJoin = Paint.Join.ROUND

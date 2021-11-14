@@ -31,6 +31,15 @@ class RectangleCommand(rectangleData: RectangleData): ICommand {
     private var borderPaint: Paint = Paint()
     private var fillPaint: Paint = Paint()
     init{
+
+        var borderRectangle = ShapeDrawable(RectShape())
+        var fillRectangle = ShapeDrawable(RectShape())
+        var rectangleShapeArray = arrayOf<Drawable>()
+        rectangleShape = LayerDrawable(rectangleShapeArray)
+        fillRectangleIndex = rectangleShape.addLayer(fillRectangle)
+        borderRectangleIndex = rectangleShape.addLayer(borderRectangle)
+        layerIndex = CanvasService.layerDrawable.addLayer(rectangleShape)
+
         borderPaint.color = Color.WHITE // TODO put secondary color here
         fillPaint.color = ColorService.getColorAsInt() // TODO put primary color here
 
@@ -93,15 +102,6 @@ class RectangleCommand(rectangleData: RectangleData): ICommand {
     }
 
     override fun execute() {
-        if(layerIndex == -1){
-            var borderRectangle = ShapeDrawable(RectShape())
-            var fillRectangle = ShapeDrawable(RectShape())
-            var rectangleShapeArray = arrayOf<Drawable>()
-            rectangleShape = LayerDrawable(rectangleShapeArray)
-            fillRectangleIndex = rectangleShape.addLayer(fillRectangle)
-            borderRectangleIndex = rectangleShape.addLayer(borderRectangle)
-            layerIndex = CanvasService.layerDrawable.addLayer(rectangleShape)
-        }
 
         var left = rectangle.x
         var top = rectangle.y
