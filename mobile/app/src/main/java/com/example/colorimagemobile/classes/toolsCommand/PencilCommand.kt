@@ -46,8 +46,10 @@ class PencilCommand(pencilData: PencilData): ICommand {
     }
 
     // for synchro
-    override fun update(drawingCommand: SyncUpdate) {
-        this.addPoint(drawingCommand.point.x, drawingCommand.point.y)
+    override fun update(drawingCommand: Any) {
+        if(drawingCommand is SyncUpdate){
+            this.addPoint(drawingCommand.point.x, drawingCommand.point.y)
+        }
     }
 
     private fun getPathDrawable(): ShapeDrawable {
