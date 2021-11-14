@@ -1,27 +1,15 @@
 package com.example.colorimagemobile.ui.home.fragments.gallery.views
 
 import android.content.Context
-import android.graphics.Canvas
-import android.graphics.Color
-import android.graphics.Path
-import android.graphics.drawable.Drawable
-import android.graphics.drawable.LayerDrawable
-import android.graphics.drawable.ShapeDrawable
-import android.graphics.drawable.shapes.RectShape
-import com.example.colorimagemobile.classes.toolsCommand.PencilCommand
 import com.example.colorimagemobile.classes.toolsCommand.RectangleCommand
 import com.example.colorimagemobile.models.RectangleData
 import com.example.colorimagemobile.services.UUIDService
 import com.example.colorimagemobile.services.drawing.CanvasService
-import com.example.colorimagemobile.services.drawing.CustomPaint
 import com.example.colorimagemobile.services.drawing.PaintPath
 import com.example.colorimagemobile.services.drawing.Point
 import com.example.colorimagemobile.services.drawing.toolsAttribute.ColorService
-import com.example.colorimagemobile.services.drawing.toolsAttribute.PencilService
 import com.example.colorimagemobile.services.drawing.toolsAttribute.RectangleService
 import com.example.colorimagemobile.services.drawing.toolsAttribute.RectangleStyle
-import com.example.colorimagemobile.ui.home.fragments.gallery.views.CanvasView
-import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
 import kotlin.math.abs
 
 class RectangleView(context: Context?): CanvasView(context) {
@@ -36,17 +24,18 @@ class RectangleView(context: Context?): CanvasView(context) {
         var rectangleStyle = RectangleService.getBorderStyle()
         var fill = "none"
         var stroke = "none"
-        var color = ColorService.getColorAsInt()
+        var color = ColorService.getPrimaryColorAsInt()
+        var secondaryColor = ColorService.getSecondaryColorAsInt()
         when(rectangleStyle){
             RectangleStyle.WITH_BORDER_FILL -> {
                 fill = Integer.toHexString(color) // TODO IMPLEMENT PRIMARY AND SECONDARY COLORS
-                stroke = Integer.toHexString(color)
+                stroke = Integer.toHexString(secondaryColor)
             }
             RectangleStyle.NO_BORDER ->{
-                stroke = Integer.toHexString(color)
+                fill = Integer.toHexString(color)
             }
             RectangleStyle.ONLY_BORDER -> {
-                fill = Integer.toHexString(color)
+                stroke = Integer.toHexString(secondaryColor)
             }
         }
 

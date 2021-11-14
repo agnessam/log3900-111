@@ -1,6 +1,7 @@
 package com.example.colorimagemobile.ui.home.fragments.gallery.views
 
 import android.content.Context
+import android.graphics.Color
 import com.example.colorimagemobile.classes.toolsCommand.EllipseCommand
 import com.example.colorimagemobile.models.EllipseData
 import com.example.colorimagemobile.services.UUIDService
@@ -23,17 +24,18 @@ class EllipseView(context: Context?): CanvasView(context) {
         var ellipseStyle = EllipseService.getBorderStyle()
         var fill = "none"
         var stroke = "none"
-        var color = ColorService.getColorAsInt()
+        var color = ColorService.getPrimaryColorAsInt()
+        var secondaryColor = ColorService.getSecondaryColorAsInt()
         when(ellipseStyle){
             EllipseStyle.WITH_BORDER_FILL -> {
                 fill = Integer.toHexString(color) // TODO IMPLEMENT PRIMARY AND SECONDARY COLORS
-                stroke = Integer.toHexString(color)
+                stroke = Integer.toHexString(secondaryColor)
             }
             EllipseStyle.NO_BORDER ->{
-                stroke = Integer.toHexString(color)
+                fill = Integer.toHexString(color)
             }
             EllipseStyle.ONLY_BORDER -> {
-                fill = Integer.toHexString(color)
+                stroke = Integer.toHexString(secondaryColor)
             }
         }
 
