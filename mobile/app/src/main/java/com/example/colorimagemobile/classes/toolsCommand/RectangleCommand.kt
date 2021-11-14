@@ -8,6 +8,7 @@ import android.graphics.drawable.ShapeDrawable
 import android.graphics.drawable.shapes.RectShape
 import com.example.colorimagemobile.interfaces.ICommand
 import com.example.colorimagemobile.models.RectangleData
+import com.example.colorimagemobile.models.RectangleUpdate
 import com.example.colorimagemobile.models.SyncUpdate
 import com.example.colorimagemobile.services.drawing.CanvasService
 import com.example.colorimagemobile.services.drawing.CanvasUpdateService
@@ -22,8 +23,8 @@ class RectangleCommand(rectangleData: RectangleData): ICommand {
     private var fillRectangleIndex: Int = -1
     private var borderRectangleIndex: Int = -1
 
-    private var rectangle: RectangleData = rectangleData
-    private lateinit var rectangleShape: LayerDrawable
+    var rectangle: RectangleData = rectangleData
+    private var rectangleShape: LayerDrawable
     private var borderPaint: Paint = Paint()
     private var fillPaint: Paint = Paint()
     init{
@@ -36,8 +37,10 @@ class RectangleCommand(rectangleData: RectangleData): ICommand {
         borderRectangleIndex = rectangleShape.addLayer(borderRectangle)
         layerIndex = CanvasService.layerDrawable.addLayer(rectangleShape)
 
-        borderPaint.color = Color.WHITE // TODO put secondary color here
-        fillPaint.color = ColorService.getPrimaryColorAsInt() // TODO put primary color here
+        borderPaint.color = if(rectangleData.stroke != "none") ColorService.rgbaToInt(rectangleData.stroke)
+            else Color.WHITE
+        fillPaint.color = if(rectangleData.fill != "none") ColorService.rgbaToInt(rectangleData.fill)
+            else Color.BLACK
 
         borderPaint.style = Paint.Style.STROKE
         fillPaint.style = Paint.Style.FILL
@@ -92,12 +95,16 @@ class RectangleCommand(rectangleData: RectangleData): ICommand {
         return CanvasService.layerDrawable.getDrawable(this.layerIndex) as LayerDrawable
     }
 
-    override fun update(drawingCommand: SyncUpdate) {
-        TODO("Not yet implemented")
+    override fun update(drawingCommand: Any) {
+        if(drawingCommand is RectangleUpdate){
+            rectangle.x = drawingCommand.x
+            rectangle.y = drawingCommand.y
+            rectangle.width = drawingCommand.width
+            rectangle.height = drawingCommand.height
+        }
     }
 
     override fun execute() {
-
         var left = rectangle.x
         var top = rectangle.y
         var right = rectangle.x + rectangle.width

@@ -93,7 +93,7 @@ class EllipseCommand(ellipseData: EllipseData): ICommand {
         return CanvasService.layerDrawable.getDrawable(this.layerIndex) as LayerDrawable
     }
 
-    override fun update(drawingCommand: SyncUpdate) {
+    override fun update(drawingCommand: Any) {
         TODO("Not yet implemented")
     }
 
