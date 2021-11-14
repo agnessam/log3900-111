@@ -18,6 +18,12 @@ object ChatSocketService: AbsSocket(SOCKETS.CHAT_NAMESPACE_NAME) {
 
     override fun disconnect() {
         mSocket.off(SOCKETS.TEXT_MESSAGE_EVENT_NAME, listenMessage)
+
+        // leave each connected room
+        TextChannelService.getConnectedChannels().forEach {
+            leaveRoom(it.name)
+        }
+
         super.disconnect()
     }
 
