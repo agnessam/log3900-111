@@ -1,0 +1,68 @@
+package com.example.colorimagemobile.classes.toolsCommand
+
+import android.graphics.Color
+import android.graphics.Paint
+import android.graphics.drawable.ShapeDrawable
+import com.example.colorimagemobile.interfaces.ICommand
+import com.example.colorimagemobile.models.SyncUpdate
+import com.example.colorimagemobile.services.drawing.CanvasService
+import com.example.colorimagemobile.services.drawing.CanvasUpdateService
+import com.example.colorimagemobile.services.drawing.Point
+import com.example.colorimagemobile.services.drawing.toolsAttribute.ColorService
+
+class EllipseCommand(layerIndex:Int): ICommand {
+    private var startingPoint: Point? = null
+    private var endingPoint: Point? = null
+    private var layerIndex: Int = layerIndex
+    private var paint: Paint = Paint()
+
+    init {
+        paint.color = ColorService.getColorAsInt()
+    }
+
+    fun setStartPoint(startPoint: Point) {
+        startingPoint = startPoint
+    }
+
+    fun setEndPoint(endPoint: Point) {
+        endingPoint = endPoint
+    }
+
+    private fun getEllipseDrawable(): ShapeDrawable {
+        return CanvasService.layerDrawable.getDrawable(this.layerIndex) as ShapeDrawable
+    }
+
+    override fun update(drawingCommand: SyncUpdate) {
+        TODO("Not yet implemented")
+    }
+
+    override fun execute() {
+        var startX = startingPoint!!.x.toInt()
+        var startY = startingPoint!!.y.toInt()
+        var endX = endingPoint!!.x.toInt()
+        var endY = endingPoint!!.y.toInt()
+
+        var left = 0
+        var right = 0
+        var top = 0
+        var bottom = 0
+        if (startX > endX) {
+            right = startX
+            left = endX
+        } else {
+            left = startX
+            right = endX
+        }
+
+        if (startY > endY) {
+            top = endY
+            bottom = startY
+        } else {
+            top = startY
+            bottom = endY
+        }
+        this.getEllipseDrawable().setBounds(left, top, right, bottom)
+        this.getEllipseDrawable().paint.set(this.paint)
+        CanvasUpdateService.invalidate()
+    }
+}
