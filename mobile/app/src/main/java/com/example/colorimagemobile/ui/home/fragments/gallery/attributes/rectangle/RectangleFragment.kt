@@ -8,11 +8,14 @@ import android.view.ViewGroup
 import android.widget.NumberPicker
 import android.widget.RadioGroup
 import com.example.colorimagemobile.R
+import com.example.colorimagemobile.services.drawing.toolsAttribute.EllipseService
+import com.example.colorimagemobile.services.drawing.toolsAttribute.EllipseStyle
 import com.example.colorimagemobile.services.drawing.toolsAttribute.RectangleService
 import com.example.colorimagemobile.services.drawing.toolsAttribute.RectangleStyle
 
 class RectangleFragment : Fragment() {
     private lateinit var borderWidthPicker: NumberPicker
+    private lateinit var radioGroup: RadioGroup
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_rectangle, container, false)
@@ -38,7 +41,13 @@ class RectangleFragment : Fragment() {
     }
 
     private fun onRectRadioListener(view: View) {
-        val radioGroup: RadioGroup = view.findViewById(R.id.rectangle_radioGroup)
+        this.radioGroup = view.findViewById(R.id.rectangle_radioGroup)
+        val radioButton = when(RectangleService.getBorderStyle()){
+            RectangleStyle.WITH_BORDER_FILL ->R.id.rect_border_fill
+            RectangleStyle.NO_BORDER -> R.id.rect_no_border
+            RectangleStyle.ONLY_BORDER -> R.id.rect_only_border
+        }
+        this.radioGroup.check(radioButton)
 
         // apply border style
         radioGroup.setOnCheckedChangeListener { _, checkedId -> // checkedId is the RadioButton selected

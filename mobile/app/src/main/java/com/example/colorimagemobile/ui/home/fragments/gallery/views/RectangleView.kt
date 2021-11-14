@@ -25,16 +25,17 @@ class RectangleView(context: Context?): CanvasView(context) {
         var fill = "none"
         var stroke = "none"
         var color = ColorService.getPrimaryColorAsInt()
+        var secondaryColor = ColorService.getSecondaryColorAsInt()
         when(rectangleStyle){
             RectangleStyle.WITH_BORDER_FILL -> {
                 fill = Integer.toHexString(color) // TODO IMPLEMENT PRIMARY AND SECONDARY COLORS
-                stroke = Integer.toHexString(color)
+                stroke = Integer.toHexString(secondaryColor)
             }
             RectangleStyle.NO_BORDER ->{
-                stroke = Integer.toHexString(color)
+                fill = Integer.toHexString(color)
             }
             RectangleStyle.ONLY_BORDER -> {
-                fill = Integer.toHexString(color)
+                stroke = Integer.toHexString(secondaryColor)
             }
         }
 
