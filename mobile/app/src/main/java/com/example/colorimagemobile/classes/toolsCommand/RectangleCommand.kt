@@ -22,7 +22,7 @@ class RectangleCommand(rectangleData: RectangleData): ICommand {
     private var fillRectangleIndex: Int = -1
     private var borderRectangleIndex: Int = -1
 
-    private var rectangle: RectangleData = rectangleData
+    var rectangle: RectangleData = rectangleData
     private lateinit var rectangleShape: LayerDrawable
     private var borderPaint: Paint = Paint()
     private var fillPaint: Paint = Paint()
@@ -36,8 +36,10 @@ class RectangleCommand(rectangleData: RectangleData): ICommand {
         borderRectangleIndex = rectangleShape.addLayer(borderRectangle)
         layerIndex = CanvasService.layerDrawable.addLayer(rectangleShape)
 
-        borderPaint.color = Color.WHITE // TODO put secondary color here
-        fillPaint.color = ColorService.getPrimaryColorAsInt() // TODO put primary color here
+        borderPaint.color = if(rectangleData.stroke != "none") ColorService.rgbaToInt(rectangleData.stroke)
+            else Color.WHITE
+        fillPaint.color = if(rectangleData.fill != "none") ColorService.rgbaToInt(rectangleData.fill)
+            else Color.BLACK
 
         borderPaint.style = Paint.Style.STROKE
         fillPaint.style = Paint.Style.FILL
