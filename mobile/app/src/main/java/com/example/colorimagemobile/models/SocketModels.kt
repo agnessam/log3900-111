@@ -28,10 +28,10 @@ class RectangleData(
     override var fillOpacity: String,
     override var strokeOpacity: String,
     override var strokeWidth: Int,
-    x: Int,
-    y: Int,
-    width: Int,
-    height: Int
+    var x: Int,
+    var y: Int,
+    var width: Int,
+    var height: Int
 ): ToolData
 
 

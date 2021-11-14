@@ -8,12 +8,14 @@ import android.graphics.drawable.ShapeDrawable
 import android.graphics.drawable.shapes.RectShape
 import com.example.colorimagemobile.classes.toolsCommand.PencilCommand
 import com.example.colorimagemobile.classes.toolsCommand.RectangleCommand
+import com.example.colorimagemobile.models.RectangleData
 import com.example.colorimagemobile.services.UUIDService
 import com.example.colorimagemobile.services.drawing.CanvasService
 import com.example.colorimagemobile.services.drawing.CustomPaint
 import com.example.colorimagemobile.services.drawing.PaintPath
 import com.example.colorimagemobile.services.drawing.Point
 import com.example.colorimagemobile.services.drawing.toolsAttribute.ColorService
+import com.example.colorimagemobile.services.drawing.toolsAttribute.PencilService
 import com.example.colorimagemobile.services.drawing.toolsAttribute.RectangleService
 import com.example.colorimagemobile.ui.home.fragments.gallery.views.CanvasView
 import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
@@ -25,22 +27,30 @@ class RectangleView(context: Context?): CanvasView(context) {
     private val rectangleType = "Rectangle"
 
     override fun createPathObject() {
-        var color = ColorService.getColorAsInt()
-        var borderWidth = RectangleService.getCurrentWidthAsFloat()
-        var commandId = UUIDService.generateUUID()
+        currentX = motionTouchEventX
+        currentY = motionTouchEventY
+        val id = UUIDService.generateUUID()
+        var rectangleData = RectangleData(
+            id = id,
+            fill = "none",
+            stroke = ColorService.getColorAsString(),
+            fillOpacity = "1",
+            strokeOpacity = "1",
+            strokeWidth = RectangleService.currentWidth,
+            x = currentX.toInt(),
+            y = currentY.toInt(),
+            width = 0,
+            height = 0
+        )
 
         var shapeDrawable: ShapeDrawable = ShapeDrawable(RectShape())
         var layerIndex = CanvasService.layerDrawable.addLayer(shapeDrawable)
-        rectangleCommand = RectangleCommand(layerIndex)
+        rectangleCommand = RectangleCommand(rectangleData, layerIndex)
     }
 
     override fun onTouchDown() {
         CanvasService.extraCanvas.save()
         createPathObject()
-
-        currentX = motionTouchEventX
-        currentY = motionTouchEventY
-        rectangleCommand!!.setStartPoint(Point(currentX, currentY))
     }
 
     override fun onTouchMove() {
@@ -57,6 +67,5 @@ class RectangleView(context: Context?): CanvasView(context) {
     }
 
     override fun onTouchUp() {
-        paintPath = null
     }
 }
