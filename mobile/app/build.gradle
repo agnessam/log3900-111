@@ -75,4 +75,10 @@ dependencies {
 
     // XML - JSON: https://github.com/javadev/underscore-java
     implementation 'com.github.javadev:underscore:1.71'
+
+    // user permission
+    implementation 'com.karumi:dexter:6.2.2'
+
+    //coil
+    implementation("io.coil-kt:coil:1.1.1")
 }
