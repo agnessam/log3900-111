@@ -47,6 +47,10 @@ object TextChannelService {
         return connectedChannels
     }
 
+    fun removeFromConnectedChannels(channelToRemove: TextChannelModel.AllInfo) {
+        connectedChannels.remove(channelToRemove)
+    }
+
     private fun addToConnectedChannels() {
         // add to connected only if user hasn't connected yet
         if (!connectedChannels.contains(currentChannel)) {

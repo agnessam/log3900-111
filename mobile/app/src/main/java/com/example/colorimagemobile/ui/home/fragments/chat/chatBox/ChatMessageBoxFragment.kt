@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.colorimagemobile.R
 import com.example.colorimagemobile.classes.JSONConvertor
+import com.example.colorimagemobile.classes.MyFragmentManager
 import com.example.colorimagemobile.models.ChatSocketModel
 import com.example.colorimagemobile.models.TextChannelModel
 import com.example.colorimagemobile.services.chat.ChatAdapterService
@@ -66,13 +67,18 @@ class ChatMessageBoxFragment : Fragment(R.layout.fragment_chat_message_box) {
     private fun updateUI() {
         myView.findViewById<TextView>(R.id.chat_username).text = channel.name
 
+        // remove leaveRoom button for General
+        if (channel.name == "General") {
+            myView.findViewById<Button>(R.id.channel_leave_btn).visibility = View.GONE
+        }
+
         // set up Recycler View
         recyclerView.layoutManager = LinearLayoutManager(context)
-        recyclerView.adapter = ChatAdapterService.getAdapter()
+        recyclerView.adapter = ChatAdapterService.getChatMsgAdapter()
 
         // update chat messages
         val currentChat = ChatService.getChannelMessages(channel.name) as MutableSet<ChatSocketModel>
-        ChatAdapterService.getAdapter().setChat(currentChat)
+        ChatAdapterService.getChatMsgAdapter().setChat(currentChat)
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -81,6 +87,7 @@ class ChatMessageBoxFragment : Fragment(R.layout.fragment_chat_message_box) {
         recyclerView.setOnTouchListener { _, _ -> closeKeyboard(requireActivity()) }
         myView.findViewById<Button>(R.id.chat_sent_btn).setOnClickListener { sendChat() }
         myView.findViewById<LinearLayout>(R.id.chat_message_main).setOnTouchListener { _, _ -> closeKeyboard(requireActivity()) }
+        myView.findViewById<Button>(R.id.channel_leave_btn).setOnClickListener { leaveRoom() }
     }
 
     private fun sendChat() {
@@ -97,5 +104,19 @@ class ChatMessageBoxFragment : Fragment(R.layout.fragment_chat_message_box) {
         ChatSocketService.sendMessage(newMessageJSON)
 
         chatMsgEditText.text = null
+    }
+
+    private fun leaveRoom() {
+        TextChannelService.removeFromConnectedChannels(channel)
+        ChatSocketService.leaveRoom(channel.name)
+
+        // set current channel: 0 if only General exists, else last connected channels' position
+        val connectedChannelSize = TextChannelService.getConnectedChannels().size
+        val newPosition =  if (connectedChannelSize == 1) 0 else connectedChannelSize - 1
+        TextChannelService.setCurrentChannelByPosition(newPosition, false)
+
+        // update UI
+        MyFragmentManager(requireActivity()).open(R.id.chat_channel_framelayout, ChatMessageBoxFragment())
+        ChatAdapterService.getChannelListAdapter().notifyDataSetChanged()
     }
 }

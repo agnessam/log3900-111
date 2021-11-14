@@ -14,10 +14,9 @@ import com.example.colorimagemobile.classes.MyFragmentManager
 import com.example.colorimagemobile.models.TextChannelModel
 import com.example.colorimagemobile.repositories.TextChannelRepository
 import com.example.colorimagemobile.services.UserService
+import com.example.colorimagemobile.services.chat.ChatAdapterService
 import com.example.colorimagemobile.services.chat.TextChannelService
 import com.example.colorimagemobile.ui.home.fragments.chat.chatBox.ChatMessageBoxFragment
-import com.example.colorimagemobile.ui.home.fragments.chat.chatBox.ChatWelcomeFragment
-import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
 
 class ChatFragment : Fragment(R.layout.fragment_chat) {
 
@@ -28,7 +27,7 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
         super.onViewCreated(view, savedInstanceState)
 
         myView = view
-        adapter = ChannelsRecyclerAdapter()
+        adapter = ChatAdapterService.getChannelListAdapter()
 
         getAllChannels()
 

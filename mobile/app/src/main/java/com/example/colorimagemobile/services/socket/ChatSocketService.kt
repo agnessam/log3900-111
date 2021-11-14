@@ -54,7 +54,7 @@ object ChatSocketService: AbsSocket(SOCKETS.CHAT_NAMESPACE_NAME) {
 
                     val currentRoom = TextChannelService.getCurrentChannel().name
                     if (message.roomName == currentRoom) {
-                        ChatAdapterService.getAdapter().addChatItem(message)
+                        ChatAdapterService.getChatMsgAdapter().addChatItem(message)
                     }
                 } catch (e: JSONException) {
                     printMsg("listenMessage error: ${e.message}")
