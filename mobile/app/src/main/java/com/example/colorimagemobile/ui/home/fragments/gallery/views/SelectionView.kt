@@ -18,10 +18,6 @@ import kotlin.io.path.Path
 class SelectionView(context: Context?): CanvasView(context) {
     private var selectionCommand: SelectionCommand? = null
 
-    init {
-        createPathObject()
-    }
-
     override fun createPathObject() {
         selectionCommand = SelectionCommand()
 
@@ -51,9 +47,13 @@ class SelectionView(context: Context?): CanvasView(context) {
 
     override fun onTouchDown() {
         CanvasService.extraCanvas.save()
+        createPathObject()
+        SelectionService.clearSelection()
         val numberOfLayers = CanvasService.layerDrawable.numberOfLayers
         for (index in numberOfLayers - 1 downTo 0) {
             val drawable = CanvasService.layerDrawable.getDrawable(index)
+            // PathDrawables have bounds equal to the dimensions of the canvas and
+            // click will always be inside of them
 
             // if is inside bounding box
             if (motionTouchEventX <= drawable.bounds.right &&
@@ -66,7 +66,7 @@ class SelectionView(context: Context?): CanvasView(context) {
                     is ShapeDrawable -> {
                         var isInsidePath = false
                         var boundingBox = Region()
-                        PencilService.paths.get(index)?.let {path ->
+                        PencilService.paths[index]?.let { path ->
                             boundingBox = getPathBoundingBox(path, drawable.paint.strokeWidth.toFloat())
                             isInsidePath = boundingBox.contains(motionTouchEventX.toInt(),motionTouchEventY.toInt())
                         }
@@ -75,23 +75,25 @@ class SelectionView(context: Context?): CanvasView(context) {
                                 boundingBox.bounds.left,
                                 boundingBox.bounds.top,
                                 boundingBox.bounds.right,
-                                boundingBox.bounds.bottom)
+                                boundingBox.bounds.bottom
+                            )
                             selectionCommand!!.execute()
+                            break
                         }
                     }
                     // Ellipse and Rectangle
                     is LayerDrawable -> {
-
                         SelectionService.setSelectionBounds(
                             drawable.bounds.left,
                             drawable.bounds.top,
                             drawable.bounds.right,
                             drawable.bounds.bottom)
                         selectionCommand!!.execute()
+                        break
                     }
                 }
             } else {
-                SelectionService.clearSelection()
+//                SelectionService.clearSelection()
                 selectionCommand!!.execute()
             }
         }
