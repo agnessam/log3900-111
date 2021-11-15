@@ -65,26 +65,24 @@ class TextChannelRepository {
     }
 
     // delete channel by id
-    fun deleteChannelById(id: String): MutableLiveData<DataWrapper<TextChannelModel.AllInfo>> {
-        val token = UserService.getToken()
+    fun deleteChannelById(id: String, channelName: String): MutableLiveData<DataWrapper<TextChannelModel.AllInfo>> {
         val deleteChannelData: MutableLiveData<DataWrapper<TextChannelModel.AllInfo>> = MutableLiveData()
-        httpClient.deleteChannelById(token = "Bearer $token",id).enqueue(object :
-            Callback<TextChannelModel.AllInfo> {
+
+        httpClient.deleteChannelById(token = "Bearer ${UserService.getToken()}", id).enqueue(object : Callback<TextChannelModel.AllInfo> {
             override fun onResponse(call: Call<TextChannelModel.AllInfo>, response: Response<TextChannelModel.AllInfo>) {
                 if (!response.isSuccessful) {
-                    deleteChannelData.value = DataWrapper(null, "An error occurred!", true)
+                    deleteChannelData.value = DataWrapper(null, "An error occurred while deleting channel!", true)
                     return
                 }
+
                 // channel successfully delete
-                deleteChannelData.value = DataWrapper(response.body(), "", false)
+                deleteChannelData.value = DataWrapper(response.body(), "Channel \"$channelName\" has successfully been deleted!", false)
             }
             override fun onFailure(call: Call<TextChannelModel.AllInfo>, t: Throwable) {
-                deleteChannelData.value = DataWrapper(null, "Failed to delete channel!", true)
+                deleteChannelData.value = DataWrapper(null, "Sorry, failed to delete channel!", true)
             }
-
         })
 
         return deleteChannelData
     }
-
 }

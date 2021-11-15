@@ -138,15 +138,9 @@ class ChatMessageBoxFragment : Fragment(R.layout.fragment_chat_message_box) {
 
     private fun leaveRoom() {
         TextChannelService.removeFromConnectedChannels(channel)
-        ChatSocketService.leaveRoom(channel.name)
-
-        // set current channel: 0 if only General exists, else last connected channels' position
-        val connectedChannelSize = TextChannelService.getConnectedChannels().size
-        val newPosition =  if (connectedChannelSize == 1) 0 else connectedChannelSize - 1
-        TextChannelService.setCurrentChannelByPosition(newPosition, false)
 
         // update UI
-        MyFragmentManager(requireActivity()).open(R.id.chat_channel_framelayout, ChatMessageBoxFragment())
-        ChatAdapterService.getChannelListAdapter().notifyDataSetChanged()
+        ChatService.refreshChatBox(requireActivity())
+        TextChannelService.refreshChannelList()
     }
 }

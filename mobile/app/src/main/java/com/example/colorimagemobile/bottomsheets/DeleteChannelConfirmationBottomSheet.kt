@@ -51,27 +51,24 @@ class DeleteChannelConfirmationBottomSheet: BottomSheetDialogFragment() {
 
     private fun setListeners() {
         cancelBtn.setOnClickListener { closeSheet() }
-
-        deleteBtn.setOnClickListener {
-
-        }
+        deleteBtn.setOnClickListener { deleteChannel() }
     }
 
-//    private fun createChannel(newChannelModel: TextChannelModel.AllInfo) {
-//        val channelRepository = TextChannelRepository()
-//
-//        channelRepository.addChannel(newChannelModel).observe(this, {
-//            closeSheet()
-//
-//            if (it.isError as Boolean) {
-//                printToast(requireActivity(), it.message!!)
-//                return@observe
-//            }
-//
-//            val channel = it.data as TextChannelModel.AllInfo
-//            TextChannelService.createNewChannel(channel)
-//            TextChannelService.refreshChannelList()
-//            ChatService.refreshChatBox(context as FragmentActivity)
-//        })
-//    }
+    private fun deleteChannel() {
+        val channelRepository = TextChannelRepository()
+        val currentChannel = TextChannelService.getCurrentChannel()
+
+        channelRepository.deleteChannelById(currentChannel._id as String, currentChannel.name).observe(this, {
+            closeSheet()
+            printToast(requireActivity(), it.message!!)
+
+            if (it.isError as Boolean) {
+                return@observe
+            }
+
+            TextChannelService.deleteChannel(currentChannel)
+            ChatService.refreshChatBox(requireActivity())
+            TextChannelService.refreshChannelList()
+        })
+    }
 }

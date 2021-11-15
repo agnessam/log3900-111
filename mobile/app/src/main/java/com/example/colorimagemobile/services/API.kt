@@ -64,7 +64,7 @@ interface API {
     fun addChannel(@Header("Authorization")token: String,@Body newUser: TextChannelModel.AllInfo): Call<TextChannelModel.AllInfo>
 
     @Headers("Content-Type: application/json")
-    @DELETE(Constants.ENDPOINTS.TEXT_CHANNEL_PATH+"{channelId}")
+    @DELETE(Constants.ENDPOINTS.TEXT_CHANNEL_PATH + "{channelId}")
     fun deleteChannelById(@Header("Authorization")token: String,@Path ("channelId") channelId: String): Call<TextChannelModel.AllInfo>
 
     // region message
