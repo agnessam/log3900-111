@@ -60,9 +60,9 @@
                 android:layout_height="0dp"
                 android:layout_above="@id/chatTextInputLayout"
                 android:layout_alignParentTop="true"
+                android:layout_marginBottom="5px"
                 android:layout_weight="1"
                 android:background="#eeeeee"
-                android:layout_marginBottom="5px"
                 android:padding="8dp">
 
             </androidx.recyclerview.widget.RecyclerView>

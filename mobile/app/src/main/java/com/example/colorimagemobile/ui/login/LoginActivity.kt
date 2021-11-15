@@ -3,12 +3,12 @@ package com.example.colorimagemobile.ui.login
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.core.widget.doOnTextChanged
-import androidx.lifecycle.ViewModelProvider
 import com.example.colorimagemobile.R
 import com.example.colorimagemobile.classes.FormValidator
 import com.example.colorimagemobile.services.UserService
 import com.example.colorimagemobile.models.UserModel
 import com.example.colorimagemobile.databinding.ActivityLoginBinding
+import com.example.colorimagemobile.httpresponsehandler.GlobalHandler
 import com.example.colorimagemobile.models.DataWrapper
 import com.example.colorimagemobile.models.HTTPResponseModel
 import com.example.colorimagemobile.services.SharedPreferencesService
@@ -25,21 +25,23 @@ import com.google.android.material.textfield.TextInputLayout
 
 class LoginActivity : AppCompatActivity() {
 
-    private lateinit var loginViewModel: LoginActivityViewModel
+    private  var loginActivityViewModel: LoginActivityViewModel= LoginActivityViewModel()
+    private lateinit var globalHandler: GlobalHandler
     private lateinit var sharedPreferencesService: SharedPreferencesService
     private lateinit var binding: ActivityLoginBinding
     private lateinit var formValidator: FormValidator
-    private var canSubmit: Boolean = false
+    private var canSubmit: Boolean = true
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        globalHandler = GlobalHandler()
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         sharedPreferencesService = SharedPreferencesService(this)
-        loginViewModel = ViewModelProvider(this).get(LoginActivityViewModel::class.java)
+
 
         val loginLayouts = arrayListOf<TextInputLayout>(binding.usernameInputLayout, binding.passwordInputLayout)
         val loginInputs = arrayListOf<TextInputEditText>(binding.usernameInputText, binding.passwordInputText)
@@ -77,9 +79,9 @@ class LoginActivity : AppCompatActivity() {
     private fun executeLogin() {
         if (!canSubmit) return
         val user = UserModel.Login(binding.usernameInputText.text.toString(), binding.passwordInputText.text.toString())
-
+        
         // username ok -> make HTTP POST request
-        val loginObserver = loginViewModel.loginUser(user)
+        val loginObserver = loginActivityViewModel.loginUser(user)
         loginObserver.observe(this, { handleLoginResponse(it) })
     }
 
@@ -91,17 +93,12 @@ class LoginActivity : AppCompatActivity() {
         if (HTTPResponse.isError as Boolean) {
             return
         }
-        // Set lastLogin date to localtime
-        UserService.setLogHistory(Constants.LAST_LOGIN_DATE)
-
         val response = HTTPResponse.data as HTTPResponseModel.LoginResponse
-
-        // Set lastLogin date to localtime
-        UserService.setLogHistory(Constants.LAST_LOGIN_DATE)
 
         // save users info and token and redirect to /Home
         UserService.setUserInfo(response.user)
         sharedPreferencesService.setItem(Constants.STORAGE_KEY.TOKEN, response.token)
+
         redirectTo(this@LoginActivity, HomeActivity::class.java)
     }
 }

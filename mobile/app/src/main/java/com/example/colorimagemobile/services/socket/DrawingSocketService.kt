@@ -17,8 +17,9 @@ object DrawingSocketService: AbsSocket(SOCKETS.COLLABORATIVE_DRAWING_NAMESPACE) 
     private var fragmentActivity: FragmentActivity? = null
 
     override fun disconnect() {
-        super.disconnect()
+        leaveRoom(this.roomName!!)
         mSocket.off(IN_PROGRESS_DRAWING_EVENT, onProgressDrawing)
+        super.disconnect()
     }
 
     override fun setFragmentActivity(fragmentAct: FragmentActivity) {

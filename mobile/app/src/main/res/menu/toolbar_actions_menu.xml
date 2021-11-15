@@ -12,4 +12,11 @@
         android:icon="@drawable/ic_power_off"
         android:title="Log Out"
         app:showAsAction="never"/>
+    <item
+        android:id="@+id/chatchannel"
+        android:enabled="true"
+        android:icon="@drawable/ic_chatchannel"
+        android:title=""
+        android:visible="true"
+        app:showAsAction="always|withText" />
 </menu>

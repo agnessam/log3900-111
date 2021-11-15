@@ -1,7 +1,9 @@
 package com.example.colorimagemobile.repositories
 
 import android.util.Log
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.example.colorimagemobile.httpresponsehandler.GlobalHandler
 import com.example.colorimagemobile.models.UserModel
 import com.example.colorimagemobile.services.RetrofitInstance
 import com.example.colorimagemobile.models.DataWrapper
@@ -17,6 +19,7 @@ import retrofit2.Response
 class AuthRepository {
 
     private val httpClient = RetrofitInstance.HTTP
+
 
     fun loginUser(user: UserModel.Login): MutableLiveData<DataWrapper<HTTPResponseModel.LoginResponse>> {
         val authLiveData: MutableLiveData<DataWrapper<HTTPResponseModel.LoginResponse>> = MutableLiveData()
@@ -45,7 +48,6 @@ class AuthRepository {
 
             // HTTP failure
             override fun onFailure(call: Call<HTTPResponseModel.LoginResponse>, t: Throwable) {
-                printMsg("User failed to login ${t.message!!}")
                 authLiveData.value = DataWrapper(null, "An error occurred while logging you in!", true)
             }
         })
@@ -66,13 +68,9 @@ class AuthRepository {
                 }
 
                 authLiveData.value = DataWrapper(null, "Logging you out ${user.username}!", false)
-
-                // Set lastLogin date to localtime
-                UserService.setLogHistory(Constants.LAST_LOGOUT_DATE)
             }
 
             override fun onFailure(call: Call<Boolean>, t: Throwable) {
-                printMsg("User failed to log out ${t.message!!}")
                 authLiveData.value = DataWrapper(null, "Failed to you logout!", true)
             }
         })
@@ -105,4 +103,8 @@ class AuthRepository {
 
         return authLiveData
     }
+
+
+
+
 }
