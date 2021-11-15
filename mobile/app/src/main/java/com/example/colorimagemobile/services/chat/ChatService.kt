@@ -50,6 +50,14 @@ object ChatService {
         MyFragmentManager(fragmentActivity).open(R.id.chat_channel_framelayout, ChatMessageBoxFragment())
     }
 
+    // add previous channels to the beginning of channel
+    fun addToStartOfChannel(channelName: String, oldMessages: ArrayList<ChatSocketModel>) {
+        val currentMessages = channelMessages[channelName]!!.messages
+        oldMessages.addAll(currentMessages)
+        channelMessages[channelName]!!.messages.clear()
+        channelMessages[channelName]!!.messages.addAll(oldMessages)
+    }
+
     fun createMessage(message: String): ChatSocketModel {
         return ChatSocketModel(
             _id = null,

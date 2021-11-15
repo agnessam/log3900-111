@@ -155,12 +155,9 @@ class ChatMessageBoxFragment : Fragment(R.layout.fragment_chat_message_box) {
             ChatService.setHasFetchedMessages(channel.name)
             hideLoadPreviousBtn()
 
-            val channels = it.data as ArrayList<TextChannelModel.AllInfo>
-            printMsg(channels.size.toString())
-//            TextChannelService.setChannels(channels)
-//            setRecyclerView()
-//            setButtonListeners()
-//            addDefaultChannel(channels)
+            val oldChannels = it.data as ArrayList<ChatSocketModel>
+            ChatService.addToStartOfChannel(channel.name, oldChannels)
+            ChatService.refreshChatBox(requireActivity())
         })
     }
 

@@ -1,11 +1,6 @@
 package com.example.colorimagemobile.services
 
-import com.example.colorimagemobile.models.DrawingModel
-import com.example.colorimagemobile.models.UserModel
-import com.example.colorimagemobile.models.HTTPResponseModel
-import com.example.colorimagemobile.models.MessageModel
-import com.example.colorimagemobile.models.TextChannelModel
-import com.example.colorimagemobile.models.TeamModel
+import com.example.colorimagemobile.models.*
 import com.example.colorimagemobile.utils.Constants
 import retrofit2.Call
 import retrofit2.http.*
@@ -56,7 +51,7 @@ interface API {
     //  TextChannel region
     @Headers("Content-Type: application/json")
     @GET(Constants.ENDPOINTS.TEXT_CHANNEL_PATH + "{channelId}" + "/messages")
-    fun getAllTextChannelMessages(@Header("Authorization") token: String, @Path ("channelId") channelId: String): Call<ArrayList<TextChannelModel.AllInfo>>
+    fun getAllTextChannelMessages(@Header("Authorization") token: String, @Path ("channelId") channelId: String): Call<ArrayList<ChatSocketModel>>
 
     //  TextChannel region
     @Headers("Content-Type: application/json")

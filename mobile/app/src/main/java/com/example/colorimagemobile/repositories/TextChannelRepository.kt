@@ -1,6 +1,7 @@
 package com.example.colorimagemobile.repositories
 
 import androidx.lifecycle.MutableLiveData
+import com.example.colorimagemobile.models.ChatSocketModel
 import com.example.colorimagemobile.models.DataWrapper
 import com.example.colorimagemobile.models.TextChannelModel
 import com.example.colorimagemobile.services.RetrofitInstance
@@ -13,18 +14,18 @@ import retrofit2.Response
 class TextChannelRepository {
     private val httpClient = RetrofitInstance.HTTP
 
-    fun getTextChannelMessages(channelId: String): MutableLiveData<DataWrapper<ArrayList<TextChannelModel.AllInfo>>> {
-        val channelListLiveData: MutableLiveData<DataWrapper<ArrayList<TextChannelModel.AllInfo>>> = MutableLiveData()
+    fun getTextChannelMessages(channelId: String): MutableLiveData<DataWrapper<ArrayList<ChatSocketModel>>> {
+        val channelListLiveData: MutableLiveData<DataWrapper<ArrayList<ChatSocketModel>>> = MutableLiveData()
 
-        httpClient.getAllTextChannelMessages(token = "Bearer ${UserService.getToken()}", channelId).enqueue(object : Callback<ArrayList<TextChannelModel.AllInfo>> {
-            override fun onResponse(call: Call<ArrayList<TextChannelModel.AllInfo>>, response: Response<ArrayList<TextChannelModel.AllInfo>>) {
+        httpClient.getAllTextChannelMessages(token = "Bearer ${UserService.getToken()}", channelId).enqueue(object : Callback<ArrayList<ChatSocketModel>> {
+            override fun onResponse(call: Call<ArrayList<ChatSocketModel>>, response: Response<ArrayList<ChatSocketModel>>) {
                 if (!response.isSuccessful) {
                     channelListLiveData.value = DataWrapper(null, "An error occurred while loading previous messages!", true)
                     return
                 }
                 channelListLiveData.value = DataWrapper(response.body(), "", false)
             }
-            override fun onFailure(call: Call<ArrayList<TextChannelModel.AllInfo>>, t: Throwable) {
+            override fun onFailure(call: Call<ArrayList<ChatSocketModel>>, t: Throwable) {
                 channelListLiveData.value = DataWrapper(null, "Sorry, failed to get previous chat messages!", true)
             }
         })
