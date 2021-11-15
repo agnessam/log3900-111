@@ -12,11 +12,13 @@ import com.example.colorimagemobile.utils.Constants
 import java.util.*
 import android.graphics.Bitmap
 import android.widget.Button
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.colorimagemobile.adapter.DrawingMenuRecyclerAdapter
 import com.example.colorimagemobile.bottomsheets.NewDrawingMenuBottomSheet
 import com.example.colorimagemobile.classes.ImageConvertor
+import com.example.colorimagemobile.classes.MyFragmentManager
 import com.example.colorimagemobile.models.recyclerAdapters.DrawingMenuData
 import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
 import kotlin.collections.ArrayList
@@ -37,6 +39,7 @@ class GalleryMenuFragment : Fragment(R.layout.fragment_gallery_menu) {
         galleryView = view.findViewById(R.id.galleryMenuView)
         drawings = arrayListOf()
 
+        MyFragmentManager(requireActivity()).hideBackButton()
         setListeners()
         getAllDrawings()
     }

@@ -67,7 +67,6 @@ class Constants {
         companion object {
             const val MAIN = "localStorage"
             const val TOKEN = "token"
-            const val DRAWING_ROOM_ID = "drawingRoomName"
         }
     }
 }

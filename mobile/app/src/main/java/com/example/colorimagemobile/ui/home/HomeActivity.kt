@@ -12,6 +12,7 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.colorimagemobile.ui.login.LoginActivity
 import com.example.colorimagemobile.R
+import com.example.colorimagemobile.classes.MyFragmentManager
 import com.example.colorimagemobile.httpresponsehandler.GlobalHandler
 import com.example.colorimagemobile.services.UserService
 import com.example.colorimagemobile.models.UserModel
@@ -19,6 +20,7 @@ import com.example.colorimagemobile.models.DataWrapper
 import com.example.colorimagemobile.models.HTTPResponseModel
 import com.example.colorimagemobile.services.SharedPreferencesService
 import com.example.colorimagemobile.services.socket.SocketManagerService
+import com.example.colorimagemobile.ui.home.fragments.gallery.GalleryMenuFragment
 import com.example.colorimagemobile.utils.CommonFun.Companion.printToast
 import com.example.colorimagemobile.utils.CommonFun.Companion.redirectTo
 import com.example.colorimagemobile.utils.Constants
@@ -78,6 +80,20 @@ class HomeActivity : AppCompatActivity() {
         }
         else -> {
             super.onOptionsItemSelected(item)
+        }
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        val navController = this.findNavController(R.id.fragment)
+
+        return when(navController.currentDestination?.id) {
+            // back button clicked on Gallery Drawing
+            R.id.galleryFragment -> {
+                SocketManagerService.leaveDrawingRoom()
+                MyFragmentManager(this).open(R.id.main_gallery_fragment, GalleryMenuFragment())
+                true
+            }
+            else -> navController.navigateUp()
         }
     }
 
