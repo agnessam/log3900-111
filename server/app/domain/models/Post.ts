@@ -1,4 +1,5 @@
 import mongoose, { Document, Model, Schema } from 'mongoose';
+import { CommentInterface } from './Comment';
 
 export interface PostInterface extends Document {
   dataUri: string;
@@ -7,7 +8,7 @@ export interface PostInterface extends Document {
   name: string;
 
   // TODO: Add comments and likes as a seperate model
-  comments: string[];
+  comments: string[] | CommentInterface[];
 }
 
 const PostSchema = new Schema(

@@ -1,5 +1,3 @@
-import { TYPES } from '../../domain/constants/types';
-import { UserRepository } from '../../infrastructure/data_access/repositories/user_repository';
 import { Request, Response } from 'express';
 import { inject } from 'inversify';
 import {
@@ -12,7 +10,8 @@ import {
   response,
 } from 'inversify-express-utils';
 import passport from 'passport';
-import { upload } from '../middleware/upload_middleware';
+import { TYPES } from '../../domain/constants/types';
+import { UserRepository } from '../../infrastructure/data_access/repositories/user_repository';
 
 @controller('/users', passport.authenticate('jwt', { session: false }))
 export class UserController {
