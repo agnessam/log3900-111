@@ -7,6 +7,7 @@ export interface PostInterface extends Document {
   name: string;
 
   // TODO: Add comments and likes as a seperate model
+  comments: string[];
 }
 
 const PostSchema = new Schema(
@@ -26,6 +27,7 @@ const PostSchema = new Schema(
       type: String,
       required: true,
     },
+    comments: [{ type: Schema.Types.ObjectId, ref: 'Comment' }],
   },
   { timestamps: true },
 );

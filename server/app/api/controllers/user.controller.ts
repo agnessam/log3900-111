@@ -49,20 +49,14 @@ export class UserController {
     return await this.userRepository.deleteById(req.params.id);
   }
 
-  @httpPost('/:id/avatar', upload.single('avatar'))
-  public async setAvatar(@request() req: Request) {
-    // We have access to the AWS file url at req.file.location
-    console.log(req);
-  }
-
   @httpGet('/:id/drawings')
   public async getDrawings(@request() req: Request) {
     return await this.userRepository.getUserDrawings(req.params.id);
   }
 
-  @httpGet('/:id/publishedDrawings')
+  @httpGet('/:id/posts')
   public async getPublishedDrawings(@request() req: Request) {
-    return await this.userRepository.getPublishedDrawings(req.body);
+    return await this.userRepository.getPosts(req.params.id);
   }
 
   @httpGet('/:id/teams')

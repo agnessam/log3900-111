@@ -61,7 +61,7 @@ export class UserRepository extends GenericRepository<UserInterface> {
     });
   }
 
-  public async getPublishedDrawings(userId: string) {
+  public async getPosts(userId: string) {
     return new Promise((resolve, reject) => {
       User.findById({ _id: userId })
         .populate('posts')
