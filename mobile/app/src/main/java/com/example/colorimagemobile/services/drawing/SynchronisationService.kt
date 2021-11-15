@@ -13,6 +13,15 @@ object SynchronisationService {
 
     private val previewShapes: HashMap<String, ICommand> = HashMap()
 
+
+    fun removeFromPreview( toolCommandString: String): Boolean{
+        val toolCommand = JSONObject(toolCommandString)
+        val shapeId = JSONObject(toolCommand["drawingCommand"].toString())["id"]
+
+        var removedCommand = previewShapes.remove(shapeId)
+        return removedCommand != null
+    }
+
     fun draw(socketToolArgs: String) {
 
         val drawingCommandJSON = JSONObject(socketToolArgs)

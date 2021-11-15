@@ -33,6 +33,7 @@ object DrawingSocketService: AbsSocket(SOCKETS.COLLABORATIVE_DRAWING_NAMESPACE) 
 
     override fun setSocketListeners() {
         this.listenInProgressDrawingCommand()
+        this.listenConfirmDrawingCommand()
     }
 
     fun sendInProgressDrawingCommand(drawingCommand: Any, type: String) {
@@ -55,6 +56,24 @@ object DrawingSocketService: AbsSocket(SOCKETS.COLLABORATIVE_DRAWING_NAMESPACE) 
         val jsonSocket = JSONConvertor.convertToJSON(socketToolCommand)
         super.emit(CONFIRM_DRAWING_EVENT, jsonSocket)
 
+    }
+
+    private fun listenConfirmDrawingCommand(){
+        mSocket.on(CONFIRM_DRAWING_EVENT, onConfirmDrawing)
+    }
+
+
+    private val onConfirmDrawing = Emitter.Listener { args ->
+        fragmentActivity!!.runOnUiThread(Runnable {
+            try {
+                val toolCommandString = args[0].toString()
+                SynchronisationService.removeFromPreview(toolCommandString)
+
+            } catch (e: JSONException) {
+                printMsg("listenInProgressDrawingCommand error: ${e.message}")
+                return@Runnable
+            }
+        })
     }
 
     private fun listenInProgressDrawingCommand() {
