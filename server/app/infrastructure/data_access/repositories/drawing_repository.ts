@@ -1,7 +1,4 @@
-import {
-  PublishedDrawing,
-  PublishedDrawingInterface,
-} from '../../../domain/models/PublishedDrawing';
+import { Post, PostInterface } from '../../../domain/models/Post';
 import { injectable } from 'inversify';
 import { Types } from 'mongoose';
 import { Drawing, DrawingInterface } from '../../../domain/models/Drawing';
@@ -70,41 +67,41 @@ export class DrawingRepository extends GenericRepository<DrawingInterface> {
 
   public async publishDrawing(
     drawing: DrawingInterface,
-  ): Promise<PublishedDrawingInterface> {
-    return new Promise<PublishedDrawingInterface>((resolve, reject) => {
-      const publishedDrawing = new PublishedDrawing({
+  ): Promise<PostInterface> {
+    return new Promise<PostInterface>((resolve, reject) => {
+      const post = new Post({
         _id: new Types.ObjectId(),
         dataUri: drawing.dataUri,
         ownerId: drawing.ownerId,
         ownerModel: drawing.ownerModel,
         name: drawing.name,
       });
-      publishedDrawing.save().then((publishedDrawing) => {
-        if (publishedDrawing.ownerModel == 'Team') {
+      post.save().then((createdPost) => {
+        if (createdPost.ownerModel == 'Team') {
           Team.findById(
-            { _id: publishedDrawing.ownerId },
+            { _id: createdPost.ownerId },
             (err: Error, team: TeamInterface) => {
               if (err || !team) {
                 reject(err);
               }
-              team.publishedDrawings.push(publishedDrawing._id);
+              team.posts.push(createdPost._id);
               team.save();
             },
           );
         } else {
           User.findById(
-            { _id: publishedDrawing.ownerId },
+            { _id: createdPost.ownerId },
             (err: Error, user: UserInterface) => {
               if (err || !user) {
                 reject(err);
               }
-              user.publishedDrawings.push(publishedDrawing._id);
+              user.posts.push(createdPost._id);
               user.save();
             },
           );
         }
       });
-      resolve(publishedDrawing);
+      resolve(post);
     });
   }
 }

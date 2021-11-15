@@ -1,13 +1,10 @@
-import {
-  PublishedDrawing,
-  PublishedDrawingInterface,
-} from '@app/domain/models/PublishedDrawing';
+import { Post, PostInterface } from '../../../domain/models/Post';
 import { injectable } from 'inversify';
 import { GenericRepository } from './generic_repository';
 
 @injectable()
-export class PostRepository extends GenericRepository<PublishedDrawingInterface> {
+export class PostRepository extends GenericRepository<PostInterface> {
   constructor() {
-    super(PublishedDrawing);
+    super(Post);
   }
 }
