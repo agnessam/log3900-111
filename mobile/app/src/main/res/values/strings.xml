@@ -25,4 +25,8 @@
     <string name="accept"> Accept</string>
     <string name="decline">Decline</string>
     <string name="new_friends_request">New friend request</string>
+    <string name="Choose_an_avatar"><b>Choose an avatar</b></string>
+    <string name="choose_an_avatar">Choose an avatar</string>
+    <string name="upload_an_avatar">Upload an avatar</string>
+
 </resources>

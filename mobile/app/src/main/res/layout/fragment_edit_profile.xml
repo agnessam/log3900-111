@@ -38,17 +38,27 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="2"
-                android:orientation="vertical">
+                android:orientation="horizontal">
 
                 <Button
-                    android:layout_marginTop="60dp"
-                    android:layout_width="match_parent"
+                    android:id="@+id/choose_default_avatar"
+                    android:layout_width="217dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="40dp"
+                    android:layout_marginTop="60dp"
                     android:layout_marginEnd="40dp"
-                    android:text="Change avatar"
-                    android:backgroundTint="@color/primary"/>
+                    android:backgroundTint="@color/primary"
+                    android:text="@string/choose_an_avatar" />
 
+                <Button
+                    android:id="@+id/upload_avatar_from_camera"
+                    android:layout_width="213dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="30dp"
+                    android:layout_marginTop="60dp"
+                    android:layout_marginEnd="40dp"
+                    android:backgroundTint="@color/primary"
+                    android:text="@string/upload_an_avatar" />
 
 
             </LinearLayout>
@@ -105,9 +115,10 @@
             android:id="@+id/updatebutton"
             android:layout_width="595dp"
             android:layout_height="wrap_content"
+            android:layout_margin="300dp"
             android:layout_weight="1"
-            android:text="Valider"
-            android:backgroundTint="@color/primary"/>
+            android:backgroundTint="@color/primary"
+            android:text="Customize" />
 
     </LinearLayout>
 </ScrollView>

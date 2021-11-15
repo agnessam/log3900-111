@@ -49,7 +49,7 @@ class Constants {
             const val USER_PATH ="api/users/"
             const val TEXT_CHANNEL_PATH ="api/channels/"
             const val MESSAGES_PATH = "api/messages"
-            const val USER = "api/users/"
+            const val DEFAULT_AVATAR_PATH ="api/avatars/default"
 
             // drawings
             const val ALL_DRAWINGS = "api/drawings/"

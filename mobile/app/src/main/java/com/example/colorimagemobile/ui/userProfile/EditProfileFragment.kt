@@ -7,6 +7,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.lifecycle.LiveData
+import com.afollestad.materialdialogs.MaterialDialog
+import com.afollestad.materialdialogs.customview.customView
 import com.example.colorimagemobile.R
 import com.example.colorimagemobile.classes.MyFragmentManager
 import com.example.colorimagemobile.models.DataWrapper
@@ -16,6 +18,7 @@ import com.example.colorimagemobile.httpresponsehandler.GlobalHandler
 import com.example.colorimagemobile.services.UserService
 import com.example.colorimagemobile.repositories.UserRepository
 import com.example.colorimagemobile.services.SharedPreferencesService
+import com.example.colorimagemobile.ui.avatar.AvatarFragment
 import com.example.colorimagemobile.utils.CommonFun
 import com.example.colorimagemobile.utils.Constants
 
@@ -54,6 +57,7 @@ class EditProfileFragment : Fragment() {
         // listeners
         inf.findViewById<View>(R.id.updatebutton).setOnClickListener { update() }
         inf.findViewById<View>(R.id.editprofileview).setOnTouchListener { v, event -> CommonFun.closeKeyboard_(this.requireActivity()) }
+        inf.findViewById<View>(R.id.choose_default_avatar).setOnClickListener { showAvatarDialog() }
 
        // keyboard
         CommonFun.onEnterKeyPressed_(inf.findViewById<View>(R.id.edtusername) as TextView) { update() }
@@ -104,6 +108,20 @@ class EditProfileFragment : Fragment() {
     private fun updateUserInfo(): LiveData<DataWrapper<HTTPResponseModel.UserResponse>> {
         return userRepository.updateUserData(token, user._id)
     }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+    }
+
+    fun showAvatarDialog(){
+
+        val dialog = context?.let {
+            MaterialDialog(it)
+                .customView(R.layout.fragment_avatar)
+        }
+        dialog!!.show()
+    }
+
 
 
 }

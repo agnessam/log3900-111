@@ -13,14 +13,14 @@ object UserService {
     private  var date : ArrayList<String> = arrayListOf(Constants.EMPTY_STRING,Constants.EMPTY_STRING)
     private var token : String =Constants.EMPTY_STRING
     private var updateProfileData : UserModel.UpdateUser = UserModel.UpdateUser(Constants.EMPTY_STRING,Constants.EMPTY_STRING,Constants.EMPTY_STRING)
-    private lateinit var AllUserInfo : List<UserModel.AllInfo>
+    private lateinit var allUserInfo : List<UserModel.AllInfo>
     private lateinit var logHistory : UserModel.UpdateLogHistory
 
     fun setAllUserInfo(allInfo:List<UserModel.AllInfo>){
-        this.AllUserInfo = allInfo
+        this.allUserInfo = allInfo
     }
     fun getAllUserInfo() : List<UserModel.AllInfo> {
-        return this.AllUserInfo
+        return this.allUserInfo
     }
 
     fun setNewProfileData (newValues: UserModel.UpdateUser){
