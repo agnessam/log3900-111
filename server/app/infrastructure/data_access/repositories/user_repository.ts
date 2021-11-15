@@ -36,7 +36,6 @@ export class UserRepository extends GenericRepository<UserInterface> {
     }
   }
 
-
   public async getUserTeams(userId: string) {
     return new Promise((resolve, reject) => {
       Team.find({ members: userId }).exec((err, teams) => {
@@ -65,12 +64,12 @@ export class UserRepository extends GenericRepository<UserInterface> {
   public async getPublishedDrawings(userId: string) {
     return new Promise((resolve, reject) => {
       User.findById({ _id: userId })
-        .populate('publishedDrawings')
+        .populate('posts')
         .exec((err, user) => {
           if (err || !user) {
             reject(err);
           }
-          resolve(user!.publishedDrawings);
+          resolve(user!.posts);
         });
     });
   }

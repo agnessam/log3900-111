@@ -19,7 +19,7 @@ import { TeamRepository } from './infrastructure/data_access/repositories/team_r
 import { TextChannelRepository } from './infrastructure/data_access/repositories/text_channel_repository';
 import { UserRepository } from './infrastructure/data_access/repositories/user_repository';
 import { SearchService } from './domain/services/search.service';
-import { PostRepository } from './infrastructure/data_access/repositories/published-drawing_repository';
+import { PostRepository } from './infrastructure/data_access/repositories/post_repository';
 
 export const referenceDataIoCModule = new ContainerModule((bind) => {
   // Services
