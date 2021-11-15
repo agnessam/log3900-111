@@ -1,3 +1,5 @@
+import { Drawing } from "..";
+
 export interface Team {
   _id: string;
 
@@ -8,5 +10,5 @@ export interface Team {
 
   members: string[];
 
-  drawings: string[];
+  drawings: string[] | Drawing[];
 }

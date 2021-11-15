@@ -1,3 +1,4 @@
+import { Drawing } from "src/app/shared";
 import { Avatar } from "src/app/shared/models/avatar.model";
 
 export interface User {
@@ -9,4 +10,6 @@ export interface User {
   lastName?: string;
   email?: string;
   description?: string;
+
+  drawings?: Drawing[];
 }
