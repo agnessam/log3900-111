@@ -20,7 +20,7 @@ export class UsersService {
 
   getUser(userId: string): Observable<User> {
     return this.httpClient
-      .get(`${this.endpointUrl}/${userId}`)
+      .get<User>(`${this.endpointUrl}/${userId}`)
       .pipe((response) => {
         return response;
       });
@@ -28,7 +28,7 @@ export class UsersService {
 
   updateUser(userId: string, user: EditableUserParameters): Observable<User> {
     return this.httpClient
-      .patch(`${this.endpointUrl}/${userId}`, user, {
+      .patch<User>(`${this.endpointUrl}/${userId}`, user, {
         headers: this.httpHeaders,
       })
       .pipe((response) => {

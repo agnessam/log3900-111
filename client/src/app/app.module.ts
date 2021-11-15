@@ -26,6 +26,7 @@ import { DrawingsModule } from "./modules/drawings/drawings.module";
 import { BackendCommunicationModule } from "./modules/backend-communication/backend-communication.module";
 import { TeamModule } from "./modules/team/team.module";
 import { SearchModule } from "./modules/search/search.module";
+import { CardsModule } from "./modules/cards/cards.module";
 
 @NgModule({
   declarations: [AppComponent],
@@ -57,6 +58,7 @@ import { SearchModule } from "./modules/search/search.module";
     DrawingsModule,
     TeamModule,
     BackendCommunicationModule,
+    CardsModule,
   ],
   exports: [],
   providers: [],

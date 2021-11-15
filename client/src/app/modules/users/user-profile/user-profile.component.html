@@ -26,4 +26,16 @@
   </div>
   <br />
   <!-- TODO: Add the teams drawings here -->
+  <div id="user-drawings">
+    <mat-tab-group mat-align-tabs="center">
+      <mat-tab label="Published Drawings"> </mat-tab>
+      <mat-tab label="All Drawings">
+        <div fxLayout="row wrap" id="drawings">
+          <div fxFlex="33%" *ngFor="let drawing of user.drawings">
+            <app-drawing-card [drawing]="drawing"></app-drawing-card>
+          </div>
+        </div>
+      </mat-tab>
+    </mat-tab-group>
+  </div>
 </div>
