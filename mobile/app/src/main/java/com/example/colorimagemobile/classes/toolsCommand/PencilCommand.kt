@@ -10,6 +10,7 @@ import com.example.colorimagemobile.models.PencilData
 import com.example.colorimagemobile.models.SyncUpdate
 import com.example.colorimagemobile.services.drawing.*
 import com.example.colorimagemobile.services.drawing.toolsAttribute.ColorService
+import com.example.colorimagemobile.services.drawing.toolsAttribute.PencilService
 
 class PencilCommand(pencilData: PencilData): ICommand {
     var path: Path = Path()
@@ -24,6 +25,7 @@ class PencilCommand(pencilData: PencilData): ICommand {
 
         var shapeDrawable = ShapeDrawable(pathShape)
         layerIndex = CanvasService.layerDrawable.addLayer(shapeDrawable)
+        PencilService.paths.putIfAbsent(layerIndex, path)
 
         paint.color = ColorService.getColorAsInt()
         paint.style = Paint.Style.STROKE
@@ -61,6 +63,7 @@ class PencilCommand(pencilData: PencilData): ICommand {
         var shapeDrawable = ShapeDrawable(pathShape)
         this.getPathDrawable().bounds = this.boundingRectangle
         CanvasService.layerDrawable.setDrawable(layerIndex, shapeDrawable)
+        PencilService.paths[layerIndex] = path
 
         this.getPathDrawable().paint.set(this.paint)
         CanvasUpdateService.invalidate()
