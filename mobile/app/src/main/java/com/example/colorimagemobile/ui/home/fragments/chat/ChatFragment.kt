@@ -5,21 +5,18 @@ import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.View
 import android.widget.Button
-import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.colorimagemobile.R
 import com.example.colorimagemobile.adapter.ChannelsRecyclerAdapter
 import com.example.colorimagemobile.bottomsheets.NewChannelBottomSheet
-import com.example.colorimagemobile.classes.MyFragmentManager
 import com.example.colorimagemobile.models.TextChannelModel
 import com.example.colorimagemobile.repositories.TextChannelRepository
 import com.example.colorimagemobile.services.UserService
 import com.example.colorimagemobile.services.chat.ChatAdapterService
 import com.example.colorimagemobile.services.chat.ChatService
 import com.example.colorimagemobile.services.chat.TextChannelService
-import com.example.colorimagemobile.ui.home.fragments.chat.chatBox.ChatMessageBoxFragment
 import com.example.colorimagemobile.utils.Constants.Companion.GENERAL_CHANNEL_NAME
 
 class ChatFragment : Fragment(R.layout.fragment_chat) {

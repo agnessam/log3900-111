@@ -82,7 +82,7 @@ class HomeActivity : AppCompatActivity() {
     }
 
     // check if User exists! If not, make HTTP request to init the User and All text channel
-    fun checkCurrentUser() {
+    private fun checkCurrentUser() {
         // user is null -> GET user
         if (UserService.isNull()) {
             val token = sharedPreferencesService.getItem(Constants.STORAGE_KEY.TOKEN)

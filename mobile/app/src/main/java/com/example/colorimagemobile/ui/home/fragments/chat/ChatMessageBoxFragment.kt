@@ -1,4 +1,4 @@
-package com.example.colorimagemobile.ui.home.fragments.chat.chatBox
+package com.example.colorimagemobile.ui.home.fragments.chat
 
 import android.annotation.SuppressLint
 import android.os.Bundle
@@ -25,7 +25,6 @@ import com.example.colorimagemobile.services.chat.TextChannelService
 import com.example.colorimagemobile.services.socket.ChatSocketService
 import com.example.colorimagemobile.utils.CommonFun.Companion.closeKeyboard
 import com.example.colorimagemobile.utils.CommonFun.Companion.onEnterKeyPressed
-import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
 import com.example.colorimagemobile.utils.CommonFun.Companion.printToast
 import com.example.colorimagemobile.utils.Constants.Companion.GENERAL_CHANNEL_NAME
 

@@ -5,7 +5,7 @@ import com.example.colorimagemobile.R
 import com.example.colorimagemobile.classes.MyFragmentManager
 import com.example.colorimagemobile.models.ChatSocketModel
 import com.example.colorimagemobile.services.UserService
-import com.example.colorimagemobile.ui.home.fragments.chat.chatBox.ChatMessageBoxFragment
+import com.example.colorimagemobile.ui.home.fragments.chat.ChatMessageBoxFragment
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.HashMap
