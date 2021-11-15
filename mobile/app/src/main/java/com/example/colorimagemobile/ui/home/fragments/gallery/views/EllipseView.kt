@@ -1,6 +1,7 @@
 package com.example.colorimagemobile.ui.home.fragments.gallery.views
 
 import android.content.Context
+import android.graphics.Color
 import com.example.colorimagemobile.classes.toolsCommand.EllipseCommand
 import com.example.colorimagemobile.models.EllipseData
 import com.example.colorimagemobile.services.UUIDService
@@ -10,11 +11,12 @@ import com.example.colorimagemobile.services.drawing.Point
 import com.example.colorimagemobile.services.drawing.toolsAttribute.ColorService
 import com.example.colorimagemobile.services.drawing.toolsAttribute.EllipseService
 import com.example.colorimagemobile.services.drawing.toolsAttribute.EllipseStyle
+import com.example.colorimagemobile.services.socket.DrawingSocketService
 import kotlin.math.abs
 
 class EllipseView(context: Context?): CanvasView(context) {
-    private var paintPath: PaintPath? = null
     private var ellipseCommand: EllipseCommand? = null
+    private var ellipseType = "Ellipse"
 
     override fun createPathObject() {
         currentX = motionTouchEventX
@@ -23,17 +25,18 @@ class EllipseView(context: Context?): CanvasView(context) {
         var ellipseStyle = EllipseService.getBorderStyle()
         var fill = "none"
         var stroke = "none"
-        var color = ColorService.getColorAsInt()
+        var color = ColorService.getPrimaryColorAsString()
+        var secondaryColor = ColorService.getSecondaryColorAsString()
         when(ellipseStyle){
             EllipseStyle.WITH_BORDER_FILL -> {
-                fill = Integer.toHexString(color) // TODO IMPLEMENT PRIMARY AND SECONDARY COLORS
-                stroke = Integer.toHexString(color)
+                fill = color // TODO IMPLEMENT PRIMARY AND SECONDARY COLORS
+                stroke = secondaryColor
             }
             EllipseStyle.NO_BORDER ->{
-                stroke = Integer.toHexString(color)
+                fill = color
             }
             EllipseStyle.ONLY_BORDER -> {
-                fill = Integer.toHexString(color)
+                stroke = secondaryColor
             }
         }
 
@@ -56,6 +59,7 @@ class EllipseView(context: Context?): CanvasView(context) {
     override fun onTouchDown() {
         CanvasService.extraCanvas.save()
         createPathObject()
+        DrawingSocketService.sendInProgressDrawingCommand(ellipseCommand!!.ellipse, ellipseType)
     }
 
     override fun onTouchMove() {
@@ -68,9 +72,13 @@ class EllipseView(context: Context?): CanvasView(context) {
             currentY = motionTouchEventY
             ellipseCommand!!.setEndPoint(Point(currentX, currentY))
             ellipseCommand!!.execute()
+            DrawingSocketService.sendInProgressDrawingCommand(ellipseCommand!!.ellipse, ellipseType)
+
         }
     }
 
     override fun onTouchUp() {
+        DrawingSocketService.sendConfirmDrawingCommand(ellipseCommand!!.ellipse, ellipseType)
+        ellipseCommand = null
     }
 }

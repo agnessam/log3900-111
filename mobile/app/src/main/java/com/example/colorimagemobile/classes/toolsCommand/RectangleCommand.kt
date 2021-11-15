@@ -1,6 +1,5 @@
 package com.example.colorimagemobile.classes.toolsCommand
 
-import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.drawable.Drawable
@@ -9,14 +8,13 @@ import android.graphics.drawable.ShapeDrawable
 import android.graphics.drawable.shapes.RectShape
 import com.example.colorimagemobile.interfaces.ICommand
 import com.example.colorimagemobile.models.RectangleData
+import com.example.colorimagemobile.models.RectangleUpdate
 import com.example.colorimagemobile.models.SyncUpdate
 import com.example.colorimagemobile.services.drawing.CanvasService
 import com.example.colorimagemobile.services.drawing.CanvasUpdateService
-import com.example.colorimagemobile.services.drawing.PaintPath
 import com.example.colorimagemobile.services.drawing.Point
 import com.example.colorimagemobile.services.drawing.toolsAttribute.ColorService
-import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
-import kotlin.math.round
+import java.lang.Integer.min
 
 class RectangleCommand(rectangleData: RectangleData): ICommand {
     private var startingPoint: Point? = null
@@ -26,8 +24,8 @@ class RectangleCommand(rectangleData: RectangleData): ICommand {
     private var fillRectangleIndex: Int = -1
     private var borderRectangleIndex: Int = -1
 
-    private var rectangle: RectangleData = rectangleData
-    private lateinit var rectangleShape: LayerDrawable
+    var rectangle: RectangleData = rectangleData
+    private var rectangleShape: LayerDrawable
     private var borderPaint: Paint = Paint()
     private var fillPaint: Paint = Paint()
     init{
@@ -40,8 +38,10 @@ class RectangleCommand(rectangleData: RectangleData): ICommand {
         borderRectangleIndex = rectangleShape.addLayer(borderRectangle)
         layerIndex = CanvasService.layerDrawable.addLayer(rectangleShape)
 
-        borderPaint.color = Color.WHITE // TODO put secondary color here
-        fillPaint.color = ColorService.getColorAsInt() // TODO put primary color here
+        borderPaint.color = if(rectangleData.stroke != "none") ColorService.rgbaToInt(rectangleData.stroke)
+            else Color.WHITE
+        fillPaint.color = if(rectangleData.fill != "none") ColorService.rgbaToInt(rectangleData.fill)
+            else Color.BLACK
 
         borderPaint.style = Paint.Style.STROKE
         fillPaint.style = Paint.Style.FILL
@@ -59,29 +59,11 @@ class RectangleCommand(rectangleData: RectangleData): ICommand {
 
     fun setEndPoint(endPoint: Point) {
         endingPoint = endPoint
-        var startX = startingPoint!!.x.toInt()
-        var startY = startingPoint!!.y.toInt()
-        var endX = endingPoint!!.x.toInt()
-        var endY = endingPoint!!.y.toInt()
 
-
-        if(startX > endX){
-            rectangle.width = startX - endX
-            rectangle.x = endX
-        }
-        else{
-            rectangle.x = startX
-            rectangle.width = endX - startX
-        }
-
-        if(startY > endY){
-            rectangle.y = endY
-            rectangle.height = startY - endY
-        }
-        else{
-            rectangle.y = startY
-            rectangle.height = endY - startY
-        }
+        rectangle.width = kotlin.math.abs(endingPoint!!.x - startingPoint!!.x).toInt()
+        rectangle.x = min(endingPoint!!.x.toInt(), startingPoint!!.x.toInt())
+        rectangle.height = kotlin.math.abs(endingPoint!!.y - startingPoint!!.y).toInt()
+        rectangle.y = min(endingPoint!!.y.toInt(), startingPoint!!.y.toInt())
     }
 
     private fun getFillRectangle(): ShapeDrawable{
@@ -96,12 +78,16 @@ class RectangleCommand(rectangleData: RectangleData): ICommand {
         return CanvasService.layerDrawable.getDrawable(this.layerIndex) as LayerDrawable
     }
 
-    override fun update(drawingCommand: SyncUpdate) {
-        TODO("Not yet implemented")
+    override fun update(drawingCommand: Any) {
+        if(drawingCommand is RectangleUpdate){
+            rectangle.x = drawingCommand.x
+            rectangle.y = drawingCommand.y
+            rectangle.width = drawingCommand.width
+            rectangle.height = drawingCommand.height
+        }
     }
 
     override fun execute() {
-
         var left = rectangle.x
         var top = rectangle.y
         var right = rectangle.x + rectangle.width

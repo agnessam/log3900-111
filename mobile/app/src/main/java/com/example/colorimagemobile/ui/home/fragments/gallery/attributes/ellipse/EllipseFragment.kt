@@ -14,6 +14,7 @@ import com.example.colorimagemobile.services.drawing.toolsAttribute.EllipseStyle
 
 class EllipseFragment : Fragment() {
     private lateinit var borderWidthPicker: NumberPicker
+    private lateinit var radioGroup: RadioGroup
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_ellipse, container, false)
@@ -39,10 +40,17 @@ class EllipseFragment : Fragment() {
     }
 
     private fun onEllipseRadioListener(view: View) {
-        val radioGroup: RadioGroup = view.findViewById(R.id.ellipse_radioGroup)
+        this.radioGroup = view.findViewById(R.id.ellipse_radioGroup)
+        val radioButton = when(EllipseService.getBorderStyle()){
+            EllipseStyle.WITH_BORDER_FILL ->R.id.ellipse_border_fill
+            EllipseStyle.NO_BORDER -> R.id.ellipse_no_border
+            EllipseStyle.ONLY_BORDER -> R.id.ellipse_only_border
+        }
+        this.radioGroup.check(radioButton)
 
         // apply border style
         radioGroup.setOnCheckedChangeListener { _, checkedId -> // checkedId is the RadioButton selected
+
             val borderStyle = when (checkedId) {
                 R.id.ellipse_border_fill -> EllipseStyle.WITH_BORDER_FILL
                 R.id.ellipse_no_border -> EllipseStyle.NO_BORDER

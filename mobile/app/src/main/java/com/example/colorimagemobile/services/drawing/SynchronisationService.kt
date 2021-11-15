@@ -2,40 +2,94 @@ package com.example.colorimagemobile.services.drawing
 
 import android.graphics.Path
 import com.example.colorimagemobile.classes.CommandFactory
+import com.example.colorimagemobile.classes.JSONConvertor
 import com.example.colorimagemobile.interfaces.ICommand
-import com.example.colorimagemobile.models.SyncCreateDrawing
-import com.example.colorimagemobile.models.SyncUpdateDrawing
+import com.example.colorimagemobile.models.*
 import com.example.colorimagemobile.services.drawing.toolsAttribute.ColorService
+import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
+import org.json.JSONObject
 
 object SynchronisationService {
 
     private val previewShapes: HashMap<String, ICommand> = HashMap()
 
-    fun createCommand(drawingCommand: SyncCreateDrawing) {
-        val commandId = drawingCommand.drawingCommand.id
-        val paintPath = PaintPath(commandId, CustomPaint(), Path(), arrayListOf())
-//        paintPath.points.add(drawingCommand.drawingCommand.pointsList[0])
+    fun draw(socketToolArgs: String) {
 
-        // set paint brush and stuff
-        paintPath.brush.setColor(ColorService.rgbaToInt(drawingCommand.drawingCommand.stroke))
-        paintPath.brush.setStrokeWidth(drawingCommand.drawingCommand.strokeWidth.toFloat())
-        paintPath.path.moveTo(paintPath.points[0].x, paintPath.points[0].y)
+        val drawingCommandJSON = JSONObject(socketToolArgs)
 
-//        val command: ICommand? = CommandFactory.createCommand(drawingCommand.type, paintPath)
+        val drawingCommand = JSONObject(drawingCommandJSON["drawingCommand"].toString())
+        val commandId: String = drawingCommand["id"].toString()
+        val toolType: String = drawingCommandJSON["type"] as String
 
-//        if (command != null) {
-//            command.execute()
-//            previewShapes[commandId] = command
-//        }
+        var command: ICommand?
+        if(previewShapes.containsKey(commandId)){
+            command = this.previewShapes[commandId]!!
+            var updateData = when(toolType){
+                "Pencil" -> {
+                    var point = JSONObject(drawingCommand["point"].toString())
+                    var x: Float = (point["x"] as Int).toFloat()
+                    var y: Float = (point["y"] as Int).toFloat()
+                    var newPoint = Point(x, y)
+                    SyncUpdate(newPoint)
+                }
+                "Rectangle" -> {
+                    var x: Int = when(drawingCommand["x"]){
+                      is Double -> (drawingCommand["x"] as Double).toInt()
+                      is Int -> drawingCommand["x"] as Int
+                      else -> throw Exception("Rectangle x received isn't a number?")
+                    }
+
+                    var y: Int = when(drawingCommand["y"]){
+                        is Double -> (drawingCommand["y"] as Double).toInt()
+                        is Int -> drawingCommand["y"] as Int
+                        else -> throw Exception("Rectangle y received isn't a number?")
+                    }
+
+                    var width: Int = drawingCommand["width"] as Int
+                    var height: Int = drawingCommand["height"] as Int
+                    RectangleUpdate(x, y, width, height)
+                }
+                "Ellipse" -> {
+                    var x: Int = when(drawingCommand["x"]){
+                        is Double -> (drawingCommand["x"] as Double).toInt()
+                        is Int -> drawingCommand["x"] as Int
+                        else -> throw Exception("Rectangle x received isn't a number?")
+                    }
+
+                    var y: Int = when(drawingCommand["y"]){
+                        is Double -> (drawingCommand["y"] as Double).toInt()
+                        is Int -> drawingCommand["y"] as Int
+                        else -> throw Exception("Rectangle y received isn't a number?")
+                    }
+
+                    var width: Int = drawingCommand["width"] as Int
+                    var height: Int = drawingCommand["height"] as Int
+                    EllipseUpdate(x, y, width, height)
+                }
+                else -> null
+            }
+//            var toolData =
+            if(updateData != null){
+                command?.update(updateData)
+            }
+        } else{
+            var toolData = this.getToolData(toolType, drawingCommandJSON)
+            command = CommandFactory.createCommand(toolType, toolData)
+        }
+        if(command != null){
+            previewShapes[commandId] = command
+            command.execute()
+        }
     }
 
-    fun drawAndUpdate(drawingCommand: SyncUpdateDrawing) {
-        val commandId = drawingCommand.drawingCommand.id
-        val command = previewShapes[commandId]
-
-        if (!previewShapes.containsKey(commandId) || command == null) { return }
-
-        command.update(drawingCommand.drawingCommand)
-        command.execute()
+    private fun getToolData(toolType: String, drawingCommandJSON: JSONObject): ToolData{
+        val derivedToolClass = when (toolType) {
+            "Pencil" -> PencilData::class.java
+            "Rectangle" -> RectangleData::class.java
+            "Ellipse" -> EllipseData::class.java
+            else -> throw Exception("Unrecognized tool type received in socket")
+        }
+        var toolDataString = drawingCommandJSON["drawingCommand"].toString()
+        return JSONConvertor.getJSONObject(toolDataString, derivedToolClass)
     }
 }
