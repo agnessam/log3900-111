@@ -30,9 +30,8 @@ export class UserController {
 
   @httpGet('/:id')
   public async getUserById(@request() req: Request) {
-   const user =  await this.userRepository.findById(req.params.id);
-   console.log(user);
-   return user;
+    const user = await this.userRepository.findById(req.params.id);
+    return user;
   }
 
   @httpPost('/')
