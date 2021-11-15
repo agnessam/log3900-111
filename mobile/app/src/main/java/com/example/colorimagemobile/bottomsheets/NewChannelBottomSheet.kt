@@ -7,9 +7,15 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import androidx.core.widget.doOnTextChanged
+import androidx.fragment.app.FragmentActivity
 import com.example.colorimagemobile.R
+import com.example.colorimagemobile.models.TextChannelModel
+import com.example.colorimagemobile.repositories.TextChannelRepository
+import com.example.colorimagemobile.services.UserService
+import com.example.colorimagemobile.services.chat.ChatService
 import com.example.colorimagemobile.services.chat.TextChannelService
 import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
+import com.example.colorimagemobile.utils.CommonFun.Companion.printToast
 import com.example.colorimagemobile.utils.CommonFun.Companion.toggleButton
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -66,6 +72,8 @@ class NewChannelBottomSheet: BottomSheetDialogFragment() {
 
         createChannelBtn.setOnClickListener {
             printMsg(channelInputName.text.toString())
+            val newChannel = TextChannelModel.AllInfo(_id = null, name = channelInputName.text.toString(), ownerId = UserService.getUserInfo()._id)
+            createChannel(newChannel)
         }
     }
 
@@ -73,5 +81,23 @@ class NewChannelBottomSheet: BottomSheetDialogFragment() {
     private fun updateCreateBtn() {
         val isValid = channelLayout.error.isNullOrBlank() && !channelInputName.text.isNullOrEmpty()
         toggleButton(createChannelBtn, isValid)
+    }
+
+    private fun createChannel(newChannelModel: TextChannelModel.AllInfo) {
+        val channelRepository = TextChannelRepository()
+
+        channelRepository.addChannel(newChannelModel).observe(this, {
+            closeSheet()
+
+            if (it.isError as Boolean) {
+                printToast(requireActivity(), it.message!!)
+                return@observe
+            }
+
+            val channel = it.data as TextChannelModel.AllInfo
+            TextChannelService.createNewChannel(channel)
+            TextChannelService.refreshChannelList()
+            ChatService.refreshChatBox(context as FragmentActivity)
+        })
     }
 }

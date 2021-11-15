@@ -1,7 +1,11 @@
 package com.example.colorimagemobile.services.chat
 
+import androidx.fragment.app.FragmentActivity
+import com.example.colorimagemobile.R
+import com.example.colorimagemobile.classes.MyFragmentManager
 import com.example.colorimagemobile.models.ChatSocketModel
 import com.example.colorimagemobile.services.UserService
+import com.example.colorimagemobile.ui.home.fragments.chat.chatBox.ChatMessageBoxFragment
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.HashMap
@@ -25,6 +29,10 @@ object ChatService {
     // get messages of a specific room
     fun getChannelMessages(roomName: String): MutableSet<ChatSocketModel>? {
         return channelMessages[roomName]
+    }
+
+    fun refreshChatBox(fragmentActivity: FragmentActivity) {
+        MyFragmentManager(fragmentActivity).open(R.id.chat_channel_framelayout, ChatMessageBoxFragment())
     }
 
     fun createMessage(message: String): ChatSocketModel {

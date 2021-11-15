@@ -21,6 +21,11 @@ object TextChannelService {
         return this.hasConnectedToGeneral
     }
 
+    fun createNewChannel(newChannel: TextChannelModel.AllInfo) {
+        this.allChannels.add(newChannel)
+        this.setCurrentChannel(newChannel)
+    }
+
     fun getChannels(): List<TextChannelModel.AllInfo> {
         return this.allChannels
     }
@@ -54,6 +59,10 @@ object TextChannelService {
     fun doesChannelExists(channelName: String): Boolean {
         val filteredChannel = allChannels.filter { channel -> channel.name == channelName }
         return filteredChannel.isNotEmpty()
+    }
+
+    fun refreshChannelList() {
+        ChatAdapterService.getChannelListAdapter().notifyDataSetChanged()
     }
 
     private fun addToConnectedChannels() {

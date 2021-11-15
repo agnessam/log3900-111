@@ -42,21 +42,22 @@ class TextChannelRepository {
     }
 
     // create new channel
-    fun addChannel(newChannel: TextChannelModel.CreateChannel): MutableLiveData<DataWrapper<TextChannelModel.AllInfo>> {
+    fun addChannel(newChannel: TextChannelModel.AllInfo): MutableLiveData<DataWrapper<TextChannelModel.AllInfo>> {
         val newChannelData: MutableLiveData<DataWrapper<TextChannelModel.AllInfo>> = MutableLiveData()
-        val token = UserService.getToken()
-        httpClient.addChannel(token = "Bearer $token",newChannel).enqueue(object : Callback<TextChannelModel.AllInfo> {
+
+        httpClient.addChannel(token = "Bearer ${UserService.getToken()}",newChannel).enqueue(object : Callback<TextChannelModel.AllInfo> {
             override fun onResponse(call: Call<TextChannelModel.AllInfo>, response: Response<TextChannelModel.AllInfo>) {
                 if (!response.isSuccessful) {
-                    Log.d(Constants.DEBUG_KEY, response.message())
-                    newChannelData.value = DataWrapper(null, "An error occurred!", true)
+                    newChannelData.value = DataWrapper(null, "An error occurred while creating new channel!", true)
                     return
                 }
+
                 // channel successfully created
                 newChannelData.value = DataWrapper(response.body(), "", false)
             }
+
             override fun onFailure(call: Call<TextChannelModel.AllInfo>, t: Throwable) {
-                newChannelData.value = DataWrapper(null, "Failed to create channel!", true)
+                newChannelData.value = DataWrapper(null, "Sorry, failed to create channel!", true)
             }
         })
 
