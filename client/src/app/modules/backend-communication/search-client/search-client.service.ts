@@ -1,5 +1,7 @@
 import { HttpClient, HttpParams } from "@angular/common/http";
 import { Injectable } from "@angular/core";
+import { Observable } from "rxjs";
+import { SearchResult } from "src/app/shared/models/search-result.model";
 import { environment } from "src/environments/environment";
 
 @Injectable({
@@ -10,8 +12,8 @@ export class SearchClientService {
 
   constructor(private httpClient: HttpClient) {}
 
-  search(query: string) {
-    return this.httpClient.get(`${this.SEARCH_ENDPOINT}`, {
+  search(query: string): Observable<SearchResult> {
+    return this.httpClient.get<SearchResult>(`${this.SEARCH_ENDPOINT}`, {
       params: new HttpParams().set("q", query),
     });
   }

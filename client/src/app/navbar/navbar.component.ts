@@ -1,4 +1,4 @@
-import { Component, OnInit} from "@angular/core";
+import { Component, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
 import { AuthenticationService } from "src/app/modules/authentication";
 import { User } from "../modules/authentication/models/user";
@@ -11,11 +11,12 @@ import { ChatService } from "../modules/chat/services/chat.service";
 })
 export class NavbarComponent implements OnInit {
   public user: User | null;
+  public searchQuery: string;
 
   constructor(
     private router: Router,
     private authenticationService: AuthenticationService,
-    private chatService:ChatService
+    private chatService: ChatService
   ) {
     this.authenticationService.currentUserObservable.subscribe(
       (user) => (this.user = user)
@@ -26,6 +27,11 @@ export class NavbarComponent implements OnInit {
     this.chatService.toggleChannelOverlay.subscribe();
   }
 
+  search(): void {
+    console.log(this.searchQuery);
+    this.router.navigate(["/search"], { queryParams: { q: this.searchQuery } });
+  }
+
   logout(): void {
     this.authenticationService.logout().subscribe((response) => {
       console.log(response);
@@ -33,8 +39,7 @@ export class NavbarComponent implements OnInit {
     this.router.navigate(["/login"]);
   }
 
-  onChatClick() :void {
+  onChatClick(): void {
     this.chatService.toggleChannelOverlay.emit();
   }
-
 }

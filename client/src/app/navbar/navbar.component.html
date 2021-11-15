@@ -11,8 +11,8 @@
   </div>
 
   <span class="user-properties"></span>
-  <div id="searchBar">
-    <button mat-icon-button class="icon">
+  <form id="searchBar" (ngSubmit)="search()">
+    <button mat-icon-button class="icon" type="submit">
       <mat-icon>search</mat-icon>
     </button>
     <input
@@ -22,8 +22,10 @@
       autocomplete="off"
       spellcheck="false"
       placeholder="Search"
+      [(ngModel)]="this.searchQuery"
+      name="search"
     />
-  </div>
+  </form>
 
   <div class="page-link">{{ user.username }}</div>
   <button mat-icon-button (click)="onChatClick()">

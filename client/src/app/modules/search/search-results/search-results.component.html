@@ -1,1 +1,47 @@
-<p>search-results works!</p>
+<div id="search">
+  <h1>Search results for {{ this.searchQuery }}</h1>
+  <div fxLayout="column" fxLayoutAlign="center center">
+    <div fxFlex="33%" id="users">
+      <div fxLayout="column">
+        <div fxFlex="50%">
+          <h1>Users</h1>
+        </div>
+        <div fxFlex="50%">
+          <div fxLayout="row" fxLayoutAlign="center center">
+            <div fxFlex="33%" *ngFor="let user of searchResults.users">
+              <h2>{{ user.username }}</h2>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div fxFlex="33%" id="teams">
+      <div fxLayout="column">
+        <div fxFlex="50%">
+          <h1>Teams</h1>
+        </div>
+        <div fxFlex="50%">
+          <div fxLayout="row" fxLayoutAlign="center center">
+            <div fxFlex="33%" *ngFor="let team of searchResults.teams">
+              <h2>{{ team.name }}</h2>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div fxFlex="33%" id="drawings">
+      <div fxLayout="column">
+        <div fxFlex="50%">
+          <h1>Drawings</h1>
+        </div>
+        <div fxFlex="50%">
+          <div fxLayout="row" fxLayoutAlign="center center">
+            <div fxFlex="33%" *ngFor="let drawing of searchResults.drawings">
+              <h2>{{ drawing.name }}</h2>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

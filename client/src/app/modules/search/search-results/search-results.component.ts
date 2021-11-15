@@ -1,5 +1,6 @@
 import { Component, OnInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
+import { SearchResult } from "src/app/shared/models/search-result.model";
 import { SearchClientService } from "../../backend-communication/search-client/search-client.service";
 
 @Component({
@@ -8,6 +9,9 @@ import { SearchClientService } from "../../backend-communication/search-client/s
   styleUrls: ["./search-results.component.scss"],
 })
 export class SearchResultsComponent implements OnInit {
+  searchQuery: string;
+  searchResults: SearchResult;
+
   constructor(
     private activatedRoute: ActivatedRoute,
     private searchClient: SearchClientService
@@ -15,9 +19,9 @@ export class SearchResultsComponent implements OnInit {
 
   ngOnInit(): void {
     this.activatedRoute.queryParams.subscribe((params) => {
-      const searchQuery: string = params.q;
-      this.searchClient.search(searchQuery).subscribe((searchResult) => {
-        console.log(searchResult);
+      this.searchQuery = params.q;
+      this.searchClient.search(this.searchQuery).subscribe((searchResult) => {
+        this.searchResults = searchResult;
       });
     });
   }
