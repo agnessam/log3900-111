@@ -12,20 +12,42 @@ import { UserProfileComponent } from "./user-profile/user-profile.component";
 import { JwtInterceptor } from "../authentication/jwt.interceptor";
 import { HTTP_INTERCEPTORS } from "@angular/common/http";
 import { AuthGuard } from "../authentication";
-import { UsersComponent } from './users/users.component';
+import { UsersComponent } from "./users/users.component";
+import { FileUploadComponent } from "./avatar/file-upload/file-upload.component";
+import { MatIconModule } from "@angular/material/icon";
+import { AvatarComponent } from "./avatar/avatar.component";
+import { AvatarDialogComponent } from "./avatar/avatar-dialog/avatar-dialog.component";
+import { MatDialogModule } from "@angular/material/dialog";
+import { AvatarModule } from "ngx-avatar";
+import { FlexLayoutModule } from "@angular/flex-layout";
+import { MatTabsModule } from "@angular/material/tabs";
+import { CardsModule } from "../cards/cards.module";
 
 @NgModule({
-  declarations: [TellMeAboutYourselfComponent, UserProfileComponent, UsersComponent],
+  declarations: [
+    TellMeAboutYourselfComponent,
+    UserProfileComponent,
+    UsersComponent,
+    FileUploadComponent,
+    AvatarComponent,
+    AvatarDialogComponent,
+  ],
   imports: [
     MatCardModule,
     MatGridListModule,
     MatFormFieldModule,
     MatInputModule,
+    MatIconModule,
+    MatDialogModule,
     ReactiveFormsModule,
     MatButtonModule,
     CommonModule,
     FormsModule,
     UsersRoutingModule,
+    AvatarModule,
+    FlexLayoutModule,
+    MatTabsModule,
+    CardsModule,
   ],
   providers: [
     {

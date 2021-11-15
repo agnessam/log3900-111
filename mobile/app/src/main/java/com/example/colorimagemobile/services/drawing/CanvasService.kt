@@ -2,11 +2,15 @@ package com.example.colorimagemobile.services.drawing
 
 import android.graphics.Bitmap
 import android.graphics.Canvas
+import android.graphics.drawable.Drawable
+import android.graphics.drawable.LayerDrawable
 import com.example.colorimagemobile.utils.Constants
 
 object CanvasService {
     lateinit var extraBitmap: Bitmap
     lateinit var extraCanvas: Canvas
+    var drawableList: Array<Drawable> = arrayOf<Drawable>()
+    var layerDrawable: LayerDrawable = LayerDrawable(drawableList)
 
     private var width = Constants.DRAWING.MAX_WIDTH
     private var height = Constants.DRAWING.MAX_HEIGHT
@@ -42,12 +46,5 @@ object CanvasService {
         extraBitmap = newBitmap
         extraCanvas = Canvas(extraBitmap)
         extraCanvas.drawBitmap(extraBitmap, 0f, 0f, null)
-    }
-
-    // maybe get previous bitmap and draw it instead of drawing everything
-    fun drawPreviousCanvas() {
-        for (paintPathItem in PathService.getPaintPath()) {
-            extraCanvas.drawPath(paintPathItem.path, paintPathItem.brush.getPaint())
-        }
     }
 }
