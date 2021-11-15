@@ -102,6 +102,7 @@ class EllipseCommand(ellipseData: EllipseData): ICommand {
             this.getBorderEllipse().setBounds(left, top, right, bottom)
             this.getBorderEllipse().paint.set(this.borderPaint)
         }
+        this.getEllipseDrawable().setBounds(left, top, right, bottom)
         CanvasUpdateService.invalidate()
     }
 }

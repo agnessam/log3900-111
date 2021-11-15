@@ -13,6 +13,7 @@ import com.example.colorimagemobile.services.drawing.toolsAttribute.ColorService
 import android.graphics.RectF
 import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
 
+import com.example.colorimagemobile.services.drawing.toolsAttribute.PencilService
 
 class PencilCommand(pencilData: PencilData): ICommand {
     var path: Path = Path()
@@ -27,6 +28,7 @@ class PencilCommand(pencilData: PencilData): ICommand {
 
         var shapeDrawable = ShapeDrawable(pathShape)
         layerIndex = CanvasService.layerDrawable.addLayer(shapeDrawable)
+        PencilService.paths.putIfAbsent(layerIndex, path)
 
         paint.color = ColorService.rgbaToInt(this.pencil.stroke)
         paint.style = Paint.Style.STROKE
@@ -63,10 +65,10 @@ class PencilCommand(pencilData: PencilData): ICommand {
             CanvasService.extraCanvas.width.toFloat(), CanvasService.extraCanvas.height.toFloat()
         )
 
-
         var shapeDrawable = ShapeDrawable(pathShape)
         this.getPathDrawable().bounds = this.boundingRectangle
         CanvasService.layerDrawable.setDrawable(layerIndex, shapeDrawable)
+        PencilService.paths[layerIndex] = path
 
         this.getPathDrawable().paint.set(this.paint)
         CanvasUpdateService.invalidate()
