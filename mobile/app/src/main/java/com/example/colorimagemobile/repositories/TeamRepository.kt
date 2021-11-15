@@ -31,4 +31,23 @@ class TeamRepository {
 
         return teamsLiveData
     }
+
+    fun joinTeam(teamId: String): MutableLiveData<DataWrapper<TeamModel>> {
+        val joinTeamLiveData: MutableLiveData<DataWrapper<TeamModel>> = MutableLiveData()
+
+        httpClient.joinTeam(token = "Bearer ${UserService.getToken()}", teamId).enqueue(object : Callback<TeamModel> {
+            override fun onResponse(call: Call<TeamModel>, response: Response<TeamModel>) {
+                if (!response.isSuccessful) {
+                    joinTeamLiveData.value = DataWrapper(null, "An error occurred while joining team!", true)
+                    return
+                }
+                joinTeamLiveData.value = DataWrapper(response.body(), "", false)
+            }
+            override fun onFailure(call: Call<TeamModel>, t: Throwable) {
+                joinTeamLiveData.value = DataWrapper(null, "Sorry, failed to get join team!", true)
+            }
+        })
+
+        return joinTeamLiveData
+    }
 }

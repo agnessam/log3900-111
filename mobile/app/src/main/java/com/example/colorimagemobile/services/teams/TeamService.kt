@@ -13,4 +13,12 @@ object TeamService {
     fun getAllTeams(): ArrayList<TeamModel> {
         return allTeams
     }
+
+    fun getTeam(position: Int): TeamModel {
+        return allTeams[position]
+    }
+
+    fun updateTeamByPosition(position: Int, newTeam: TeamModel) {
+        allTeams[position] = newTeam
+    }
 }

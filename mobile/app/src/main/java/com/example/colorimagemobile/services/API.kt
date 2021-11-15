@@ -96,4 +96,8 @@ interface API {
     // teams
     @GET(Constants.ENDPOINTS.TEAMS)
     fun getAllTeams(@Header("Authorization") token: String): Call<ArrayList<TeamModel>>
+
+    @Headers("Content-Type: application/json")
+    @POST("${Constants.ENDPOINTS.TEAMS}{id}/join")
+    fun joinTeam(@Header("Authorization") token: String, @Path ("id") id: String): Call<TeamModel>
 }

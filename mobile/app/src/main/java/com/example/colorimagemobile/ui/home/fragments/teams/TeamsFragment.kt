@@ -11,6 +11,7 @@ import com.example.colorimagemobile.adapter.TeamsMenuRecyclerAdapter
 import com.example.colorimagemobile.classes.MyFragmentManager
 import com.example.colorimagemobile.models.TeamModel
 import com.example.colorimagemobile.repositories.TeamRepository
+import com.example.colorimagemobile.services.teams.TeamAdapterService
 import com.example.colorimagemobile.services.teams.TeamService
 import com.example.colorimagemobile.utils.CommonFun.Companion.printToast
 import com.example.colorimagemobile.utils.Constants
@@ -30,7 +31,7 @@ class TeamsFragment : Fragment(R.layout.fragment_teams) {
     private fun getAllTeams() {
         myView.findViewById<TextView>(R.id.loadingTeamsText).visibility = View.VISIBLE
 
-        TeamRepository().getAllTeams().observe(viewLifecycleOwner, {
+        TeamRepository().getAllTeams().observe(viewLifecycleOwner, { it ->
             // some error occurred during HTTP request
             if (it.isError as Boolean) {
                 printToast(requireContext(), it.message!!)
@@ -44,7 +45,25 @@ class TeamsFragment : Fragment(R.layout.fragment_teams) {
 
             val recyclerView = myView.findViewById<RecyclerView>(R.id.teamsMenuRecyclerView)
             recyclerView.layoutManager = GridLayoutManager(requireContext(), Constants.NB_DATA_ROWS)
-            recyclerView.adapter = TeamsMenuRecyclerAdapter()
+
+            val adapter = TeamsMenuRecyclerAdapter { teamPosition -> joinTeamClicked(teamPosition) }
+            recyclerView.adapter = adapter
+            TeamAdapterService.setAdapter(adapter)
+        })
+    }
+
+    private fun joinTeamClicked(position: Int) {
+        val team = TeamService.getTeam(position)
+
+        TeamRepository().joinTeam(team._id).observe(viewLifecycleOwner, {
+            if (it.isError as Boolean) {
+                printToast(requireContext(), it.message!!)
+                return@observe
+            }
+
+            val joinedTeam = it.data as TeamModel
+            TeamService.updateTeamByPosition(position, joinedTeam)
+            TeamAdapterService.getTeamMenuAdapter().notifyItemChanged(position)
         })
     }
 }
