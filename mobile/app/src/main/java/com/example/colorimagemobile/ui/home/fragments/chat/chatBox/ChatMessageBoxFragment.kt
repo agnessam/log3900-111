@@ -75,6 +75,11 @@ class ChatMessageBoxFragment : Fragment(R.layout.fragment_chat_message_box) {
             myView.findViewById<Button>(R.id.channel_leave_btn).visibility = View.GONE
         }
 
+        // show delete button if I created the channel
+        if (channel.ownerId == UserService.getUserInfo()._id) {
+            myView.findViewById<Button>(R.id.channel_delete_btn).visibility = View.VISIBLE
+        }
+
         // set up Recycler View
         recyclerView.layoutManager = LinearLayoutManager(context)
         recyclerView.adapter = ChatAdapterService.getChatMsgAdapter()
