@@ -12,6 +12,9 @@ import android.graphics.drawable.shapes.RectShape
 
 // Helper to draw selection box to canvas
 object SelectionService {
+    lateinit var selectedShape: Drawable
+    var selectedShapeIndex: Int = -1
+
     var selectionBox: LayerDrawable = LayerDrawable(arrayOf<Drawable>())
     private lateinit var selectionRectangle: ShapeDrawable
     private lateinit var topCtrl: LayerDrawable
@@ -28,6 +31,9 @@ object SelectionService {
 
     private val pointWidth: Int = 5
 
+    private var borderPaint = Paint()
+    private var fillPaint = Paint()
+
     fun initSelectionRectangle() {
         var paint = Paint()
         paint.style = Paint.Style.STROKE
@@ -40,13 +46,25 @@ object SelectionService {
 
         selectionRectangle = ShapeDrawable(RectShape())
         selectionRectangle.paint.set(paint)
+
+        borderPaint.style = Paint.Style.STROKE
+        borderPaint.strokeJoin = Paint.Join.MITER
+        borderPaint.color = Color.BLACK
+        borderPaint.strokeWidth = 1F
+        borderPaint.alpha = 255
+
+        fillPaint.style = Paint.Style.FILL
+        fillPaint.strokeJoin = Paint.Join.MITER
+        fillPaint.color = Color.WHITE
+        fillPaint.strokeWidth = 1F
+        fillPaint.alpha = 255
     }
 
     fun setSelectionBounds(left: Int, top: Int, right: Int, bottom: Int) {
         var selectionBounds = Rect()
         selectionBounds.set(left, top, right, bottom)
 
-        selectionRectangle.setBounds(selectionBounds)
+        selectionRectangle.bounds = selectionBounds
         selectionBox.addLayer(selectionRectangle)
 
         var width = right - left
@@ -63,7 +81,6 @@ object SelectionService {
         bottomLeftCtrl = setResizingPoint(left, bottom)
         bottomRightCtrl = setResizingPoint(right, bottom)
 
-
         selectionBox.addLayer(topCtrl)
         selectionBox.addLayer(leftCtrl)
         selectionBox.addLayer(rightCtrl)
@@ -78,20 +95,7 @@ object SelectionService {
         var borderShape = ShapeDrawable(RectShape())
         var fillShape = ShapeDrawable(RectShape())
 
-        var borderPaint = Paint()
-        borderPaint.style = Paint.Style.STROKE
-        borderPaint.strokeJoin = Paint.Join.MITER
-        borderPaint.color = Color.BLACK
-        borderPaint.strokeWidth = 1F
-        borderPaint.alpha = 255
         borderShape.paint.set(borderPaint)
-
-        var fillPaint = Paint()
-        fillPaint.style = Paint.Style.FILL
-        fillPaint.strokeJoin = Paint.Join.MITER
-        fillPaint.color = Color.WHITE
-        fillPaint.strokeWidth = 1F
-        fillPaint.alpha = 255
         fillShape.paint.set(fillPaint)
 
         borderShape.setBounds(
@@ -116,5 +120,13 @@ object SelectionService {
 
     fun clearSelection() {
         selectionBox = LayerDrawable(arrayOf<Drawable>())
+
+    }
+
+    fun touchedInside(x: Float, y: Float, bounds: Rect): Boolean {
+        return x <= bounds.right &&
+                x >= bounds.left &&
+                y >= bounds.top &&
+                y <= bounds.bottom
     }
 }
