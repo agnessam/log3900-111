@@ -15,9 +15,6 @@ export interface UserInterface extends Document {
 
   teams: string[] | TeamInterface[];
   drawings: string[];
-  lastLoginDate: string;
-  lastLogoutDate: string;
-
   publishedDrawings: string[];
 
   isValidPassword(password: string): Promise<boolean>;
