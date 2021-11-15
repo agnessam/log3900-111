@@ -3,7 +3,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.home.fragments.notification.NotificationFragment"
-    android:id="@+id/notificationFragment">
+    tools:context=".ui.home.fragments.teams.TeamsFragment"
+    android:id="@+id/teamsFragment">
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="feofe" />
 </androidx.constraintlayout.widget.ConstraintLayout>
