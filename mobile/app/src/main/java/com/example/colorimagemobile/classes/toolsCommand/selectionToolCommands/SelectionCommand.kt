@@ -20,16 +20,13 @@ class SelectionCommand(): ICommand {
 
     init {
         SelectionService.initSelectionRectangle()
-
     }
 
-    override fun update(drawingCommand: SyncUpdate) {
+    override fun update(drawingCommand: Any) {
         TODO("Not yet implemented")
     }
 
     override fun execute() {
-
-
 
         CanvasUpdateService.invalidate()
     }

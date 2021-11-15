@@ -4,7 +4,7 @@ import com.example.colorimagemobile.interfaces.ICommand
 import com.example.colorimagemobile.models.SyncUpdate
 
 class TranslateCommand: ICommand {
-    override fun update(drawingCommand: SyncUpdate) {
+    override fun update(drawingCommand: Any) {
         TODO("Not yet implemented")
     }
 

@@ -18,6 +18,10 @@ import kotlin.io.path.Path
 class SelectionView(context: Context?): CanvasView(context) {
     private var selectionCommand: SelectionCommand? = null
 
+    init {
+        createPathObject()
+    }
+
     override fun createPathObject() {
         selectionCommand = SelectionCommand()
 
@@ -28,22 +32,17 @@ class SelectionView(context: Context?): CanvasView(context) {
         )
     }
 
-    private fun drawSelectionBox() {
-
-    }
-
     private fun getPathBoundingBox(path: Path, strokeWidth: Float): Region {
         val rectF = RectF()
         path.computeBounds(rectF, true)
-        val margin = (strokeWidth / 2).toInt()
         var region = Region()
         region.setPath(
             path,
             Region(
-                rectF.left.toInt() - margin,
-                rectF.top.toInt() - margin,
-                rectF.right.toInt() + margin,
-                rectF.bottom.toInt() + margin
+                rectF.left.toInt() - strokeWidth.toInt(),
+                rectF.top.toInt() - strokeWidth.toInt(),
+                rectF.right.toInt() + strokeWidth.toInt(),
+                rectF.bottom.toInt() + strokeWidth.toInt()
             )
         )
 
@@ -72,7 +71,6 @@ class SelectionView(context: Context?): CanvasView(context) {
                             isInsidePath = boundingBox.contains(motionTouchEventX.toInt(),motionTouchEventY.toInt())
                         }
                         if (isInsidePath) {
-                            createPathObject()
                             SelectionService.setSelectionBounds(
                                 boundingBox.bounds.left,
                                 boundingBox.bounds.top,
@@ -83,7 +81,7 @@ class SelectionView(context: Context?): CanvasView(context) {
                     }
                     // Ellipse and Rectangle
                     is LayerDrawable -> {
-                        createPathObject()
+
                         SelectionService.setSelectionBounds(
                             drawable.bounds.left,
                             drawable.bounds.top,
@@ -92,6 +90,9 @@ class SelectionView(context: Context?): CanvasView(context) {
                         selectionCommand!!.execute()
                     }
                 }
+            } else {
+                SelectionService.clearSelection()
+                selectionCommand!!.execute()
             }
         }
         currentX = motionTouchEventX
