@@ -1,10 +1,10 @@
-<mat-card class="mat-elevation-z2 user">
+<mat-card class="user-card">
   <mat-card-header>
-    <mat-card-title (click)="goToUserProfile()">
-      {{ this.user.username }}
+    <mat-card-title>
+      <ngx-avatar [src]="this.user.avatar.imageUrl"></ngx-avatar>
     </mat-card-title>
+    <mat-card-content (click)="goToUserProfile()">
+      {{ this.user.username }}
+    </mat-card-content>
   </mat-card-header>
-  <mat-card-content>
-    <p>{{ this.user.description }}</p>
-  </mat-card-content>
 </mat-card>

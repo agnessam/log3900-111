@@ -15,9 +15,7 @@ export class SearchResultsComponent implements OnInit {
   constructor(
     private activatedRoute: ActivatedRoute,
     private searchClient: SearchClientService
-  ) {}
-
-  ngOnInit(): void {
+  ) {
     this.activatedRoute.queryParams.subscribe((params) => {
       this.searchQuery = params.q;
       this.searchClient.search(this.searchQuery).subscribe((searchResult) => {
@@ -25,4 +23,6 @@ export class SearchResultsComponent implements OnInit {
       });
     });
   }
+
+  ngOnInit(): void {}
 }
