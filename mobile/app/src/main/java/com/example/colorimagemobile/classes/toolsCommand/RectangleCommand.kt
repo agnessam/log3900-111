@@ -14,6 +14,7 @@ import com.example.colorimagemobile.services.drawing.CanvasService
 import com.example.colorimagemobile.services.drawing.CanvasUpdateService
 import com.example.colorimagemobile.services.drawing.Point
 import com.example.colorimagemobile.services.drawing.toolsAttribute.ColorService
+import java.lang.Integer.min
 
 class RectangleCommand(rectangleData: RectangleData): ICommand {
     private var startingPoint: Point? = null
@@ -58,29 +59,11 @@ class RectangleCommand(rectangleData: RectangleData): ICommand {
 
     fun setEndPoint(endPoint: Point) {
         endingPoint = endPoint
-        var startX = startingPoint!!.x.toInt()
-        var startY = startingPoint!!.y.toInt()
-        var endX = endingPoint!!.x.toInt()
-        var endY = endingPoint!!.y.toInt()
 
-
-        if(startX > endX){
-            rectangle.width = startX - endX
-            rectangle.x = endX
-        }
-        else{
-            rectangle.x = startX
-            rectangle.width = endX - startX
-        }
-
-        if(startY > endY){
-            rectangle.y = endY
-            rectangle.height = startY - endY
-        }
-        else{
-            rectangle.y = startY
-            rectangle.height = endY - startY
-        }
+        rectangle.width = kotlin.math.abs(endingPoint!!.x - startingPoint!!.x).toInt()
+        rectangle.x = min(endingPoint!!.x.toInt(), startingPoint!!.x.toInt())
+        rectangle.height = kotlin.math.abs(endingPoint!!.y - startingPoint!!.y).toInt()
+        rectangle.y = min(endingPoint!!.y.toInt(), startingPoint!!.y.toInt())
     }
 
     private fun getFillRectangle(): ShapeDrawable{
