@@ -49,6 +49,23 @@ object SynchronisationService {
                     var height: Int = drawingCommand["height"] as Int
                     RectangleUpdate(x, y, width, height)
                 }
+                "Ellipse" -> {
+                    var x: Int = when(drawingCommand["x"]){
+                        is Double -> (drawingCommand["x"] as Double).toInt()
+                        is Int -> drawingCommand["x"] as Int
+                        else -> throw Exception("Rectangle x received isn't a number?")
+                    }
+
+                    var y: Int = when(drawingCommand["y"]){
+                        is Double -> (drawingCommand["y"] as Double).toInt()
+                        is Int -> drawingCommand["y"] as Int
+                        else -> throw Exception("Rectangle y received isn't a number?")
+                    }
+
+                    var width: Int = drawingCommand["width"] as Int
+                    var height: Int = drawingCommand["height"] as Int
+                    EllipseUpdate(x, y, width, height)
+                }
                 else -> null
             }
 //            var toolData =
@@ -69,6 +86,7 @@ object SynchronisationService {
         val derivedToolClass = when (toolType) {
             "Pencil" -> PencilData::class.java
             "Rectangle" -> RectangleData::class.java
+            "Ellipse" -> EllipseData::class.java
             else -> throw Exception("Unrecognized tool type received in socket")
         }
         var toolDataString = drawingCommandJSON["drawingCommand"].toString()

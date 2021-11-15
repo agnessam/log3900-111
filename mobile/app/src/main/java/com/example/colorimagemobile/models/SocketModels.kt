@@ -56,4 +56,6 @@ data class SyncCreateDrawing(val type: String, val roomName: String, val drawing
 
 data class SyncUpdate(var point: Point)
 data class RectangleUpdate(var x:Int, var y:Int, var width: Int, var height: Int)
+data class EllipseUpdate(var x:Int, var y:Int, var width: Int, var height: Int)
+
 data class SyncUpdateDrawing(val type: String, val roomName: String, val drawingCommand: SyncUpdate)

@@ -8,11 +8,14 @@ import android.graphics.drawable.ShapeDrawable
 import android.graphics.drawable.shapes.OvalShape
 import com.example.colorimagemobile.interfaces.ICommand
 import com.example.colorimagemobile.models.EllipseData
+import com.example.colorimagemobile.models.EllipseUpdate
 import com.example.colorimagemobile.models.SyncUpdate
 import com.example.colorimagemobile.services.drawing.CanvasService
 import com.example.colorimagemobile.services.drawing.CanvasUpdateService
 import com.example.colorimagemobile.services.drawing.Point
 import com.example.colorimagemobile.services.drawing.toolsAttribute.ColorService
+import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
+import java.lang.Math.abs
 
 class EllipseCommand(ellipseData: EllipseData): ICommand {
     private var startingPoint: Point? = null
@@ -22,7 +25,7 @@ class EllipseCommand(ellipseData: EllipseData): ICommand {
     private var fillEllipseIndex: Int = -1
     private var borderEllipseIndex: Int = -1
 
-    private var ellipse: EllipseData = ellipseData
+    var ellipse: EllipseData = ellipseData
     private lateinit var ellipseShape: LayerDrawable
     private var borderPaint: Paint = Paint()
     private var fillPaint: Paint = Paint()
@@ -36,8 +39,10 @@ class EllipseCommand(ellipseData: EllipseData): ICommand {
             borderEllipseIndex = ellipseShape.addLayer(borderEllipse)
             layerIndex = CanvasService.layerDrawable.addLayer(ellipseShape)
         }
-        borderPaint.color = Color.WHITE // TODO put secondary color here
-        fillPaint.color = ColorService.getPrimaryColorAsInt() // TODO put primary color here
+        borderPaint.color = if(ellipseData.stroke != "none") ColorService.rgbaToInt(ellipseData.stroke)
+        else Color.WHITE
+        fillPaint.color = if(ellipseData.fill != "none") ColorService.rgbaToInt(ellipseData.fill)
+        else Color.BLACK
 
         borderPaint.style = Paint.Style.STROKE
         fillPaint.style = Paint.Style.FILL
@@ -56,29 +61,10 @@ class EllipseCommand(ellipseData: EllipseData): ICommand {
 
     fun setEndPoint(endPoint: Point) {
         endingPoint = endPoint
-        var startX = startingPoint!!.x.toInt()
-        var startY = startingPoint!!.y.toInt()
-        var endX = endingPoint!!.x.toInt()
-        var endY = endingPoint!!.y.toInt()
-
-
-        if(startX > endX){
-            ellipse.width = startX - endX
-            ellipse.x = endX
-        }
-        else{
-            ellipse.x = startX
-            ellipse.width = endX - startX
-        }
-
-        if(startY > endY){
-            ellipse.y = endY
-            ellipse.height = startY - endY
-        }
-        else{
-            ellipse.y = startY
-            ellipse.height = endY - startY
-        }
+        ellipse.width = kotlin.math.abs(endingPoint!!.x - startingPoint!!.x).toInt()
+        ellipse.x = ((endingPoint!!.x + startingPoint!!.x) / 2).toInt()
+        ellipse.height = kotlin.math.abs(endingPoint!!.y - startingPoint!!.y).toInt()
+        ellipse.y = ((endingPoint!!.y + startingPoint!!.y) / 2).toInt()
     }
 
     private fun getFillEllipse(): ShapeDrawable{
@@ -94,14 +80,19 @@ class EllipseCommand(ellipseData: EllipseData): ICommand {
     }
 
     override fun update(drawingCommand: Any) {
-        TODO("Not yet implemented")
+        if(drawingCommand is EllipseUpdate){
+            ellipse.x = drawingCommand.x
+            ellipse.y = drawingCommand.y
+            ellipse.width = drawingCommand.width
+            ellipse.height = drawingCommand.height
+        }
     }
 
     override fun execute() {
-        var left = ellipse.x
-        var top = ellipse.y
-        var right = ellipse.x + ellipse.width
-        var bottom = ellipse.y + ellipse.height
+        var left = ellipse.x - ellipse.width / 2
+        var top = ellipse.y - ellipse.height / 2
+        var right = ellipse.x + ellipse.width / 2
+        var bottom = ellipse.y + ellipse.height / 2
 
         if(ellipse.fill != "none"){
             this.getFillEllipse().setBounds(left , top , right , bottom )
