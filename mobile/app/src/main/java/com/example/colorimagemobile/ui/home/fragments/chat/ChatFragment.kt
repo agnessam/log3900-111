@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.colorimagemobile.R
 import com.example.colorimagemobile.adapter.ChannelsRecyclerAdapter
+import com.example.colorimagemobile.bottomsheets.NewChannelBottomSheet
 import com.example.colorimagemobile.classes.MyFragmentManager
 import com.example.colorimagemobile.models.TextChannelModel
 import com.example.colorimagemobile.repositories.TextChannelRepository
@@ -61,6 +62,7 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
     private fun setButtonListeners() {
         val connectedBtn = myView.findViewById<Button>(R.id.chat_connected_channels_btn)
         val allBtn = myView.findViewById<Button>(R.id.chat_all_channels_btn)
+        val createChannelBtn = myView.findViewById<Button>(R.id.channel_add_btn)
 
         showAllChannels()
         changeBtnColor(allBtn, connectedBtn)
@@ -73,6 +75,11 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
         connectedBtn.setOnClickListener {
             showConnectedChannels()
             changeBtnColor(connectedBtn, allBtn)
+        }
+
+        createChannelBtn.setOnClickListener {
+            val newChannelMenu = NewChannelBottomSheet()
+            newChannelMenu.show(parentFragmentManager, "NewChannelBottomSheet")
         }
     }
 

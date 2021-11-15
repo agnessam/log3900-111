@@ -51,6 +51,11 @@ object TextChannelService {
         connectedChannels.remove(channelToRemove)
     }
 
+    fun doesChannelExists(channelName: String): Boolean {
+        val filteredChannel = allChannels.filter { channel -> channel.name == channelName }
+        return filteredChannel.isNotEmpty()
+    }
+
     private fun addToConnectedChannels() {
         // add to connected only if user hasn't connected yet
         if (!connectedChannels.contains(currentChannel)) {
