@@ -56,9 +56,9 @@
                         android:id="@+id/channel_leave_btn"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
                         android:backgroundTint="@color/primary"
                         android:drawableEnd="@drawable/ic_close"
-                        android:layout_marginLeft="10dp"
                         android:text="Leave Room"
                         android:textColor="@color/black" />
                 </RelativeLayout>
