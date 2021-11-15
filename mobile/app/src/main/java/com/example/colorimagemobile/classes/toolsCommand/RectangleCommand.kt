@@ -94,13 +94,14 @@ class RectangleCommand(rectangleData: RectangleData): ICommand {
         var bottom = rectangle.y + rectangle.height
 
         if(rectangle.fill != "none"){
-            this.getFillRectangle().setBounds(left , top , right , bottom )
+            this.getFillRectangle().setBounds(left , top , right , bottom)
             this.getFillRectangle().paint.set(this.fillPaint)
         }
         if(rectangle.stroke != "none"){
             this.getBorderRectangle().setBounds(left, top, right, bottom)
             this.getBorderRectangle().paint.set(this.borderPaint)
         }
+        this.getRectangleDrawable().setBounds(left, top, right, bottom)
         CanvasUpdateService.invalidate()
     }
 }

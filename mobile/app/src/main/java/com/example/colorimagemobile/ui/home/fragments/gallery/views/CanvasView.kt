@@ -43,6 +43,7 @@ abstract class CanvasView(context: Context?): View(context) {
         super.onDraw(canvas)
         canvas.drawBitmap(CanvasService.extraBitmap, 0f, 0f, null)
         CanvasService.layerDrawable.draw(canvas)
+        SelectionService.selectionBox.draw(canvas)
     }
 
     // when taking an action on canvas
