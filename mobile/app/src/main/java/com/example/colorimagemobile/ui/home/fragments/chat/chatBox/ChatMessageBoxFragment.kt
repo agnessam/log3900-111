@@ -76,6 +76,12 @@ class ChatMessageBoxFragment : Fragment(R.layout.fragment_chat_message_box) {
         // remove leaveRoom button for General
         if (channel.name == GENERAL_CHANNEL_NAME) {
             myView.findViewById<Button>(R.id.channel_leave_btn).visibility = View.GONE
+            hideLoadPreviousBtn()
+        }
+
+        // hide Load Previous Messages button if we have already loaded old messages
+        if (ChatService.shouldHideLoadPreviousBtn(channel.name)) {
+            hideLoadPreviousBtn()
         }
 
         // show delete button if I created the channel
@@ -146,6 +152,9 @@ class ChatMessageBoxFragment : Fragment(R.layout.fragment_chat_message_box) {
                 return@observe
             }
 
+            ChatService.setHasFetchedMessages(channel.name)
+            hideLoadPreviousBtn()
+
             val channels = it.data as ArrayList<TextChannelModel.AllInfo>
             printMsg(channels.size.toString())
 //            TextChannelService.setChannels(channels)
@@ -153,6 +162,10 @@ class ChatMessageBoxFragment : Fragment(R.layout.fragment_chat_message_box) {
 //            setButtonListeners()
 //            addDefaultChannel(channels)
         })
+    }
+
+    private fun hideLoadPreviousBtn() {
+        myView.findViewById<Button>(R.id.channel_load_more_btn).visibility = View.GONE
     }
 
     private fun leaveRoom() {

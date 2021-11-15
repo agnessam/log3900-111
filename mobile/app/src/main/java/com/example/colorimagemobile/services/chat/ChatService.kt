@@ -10,25 +10,40 @@ import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.HashMap
 
+/**
+ * based on current channel:
+ * hasFetchedOldMsg: Boolean to check if we have already loaded previous messages or not
+ * messages: its chat messages
+ */
+data class ChatMessage(var hasFetchedOldMsg: Boolean, val messages: MutableSet<ChatSocketModel>)
+
 object ChatService {
     // roomName: [messages]
-    private var channelMessages: HashMap<String, MutableSet<ChatSocketModel>> = HashMap()
+    private var channelMessages: HashMap<String, ChatMessage> = HashMap()
 
     // create message list for specific room
     fun addChat(name: String) {
         if (!channelMessages.containsKey(name)) {
-            channelMessages[name] = mutableSetOf()
+            channelMessages[name] = ChatMessage(false, mutableSetOf())
         }
     }
 
     // add message to a room
     fun addMessage(message: ChatSocketModel) {
-        channelMessages[message.roomName]!!.add(message)
+        channelMessages[message.roomName]!!.messages.add(message)
     }
 
     // get messages of a specific room
     fun getChannelMessages(roomName: String): MutableSet<ChatSocketModel>? {
-        return channelMessages[roomName]
+        return channelMessages[roomName]!!.messages
+    }
+
+    fun setHasFetchedMessages(channelName: String) {
+        channelMessages[channelName]!!.hasFetchedOldMsg = true
+    }
+
+    fun shouldHideLoadPreviousBtn(channelName: String): Boolean {
+        return channelMessages[channelName]!!.hasFetchedOldMsg
     }
 
     fun refreshChatBox(fragmentActivity: FragmentActivity) {
