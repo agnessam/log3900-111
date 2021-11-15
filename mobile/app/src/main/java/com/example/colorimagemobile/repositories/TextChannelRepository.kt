@@ -1,19 +1,36 @@
 package com.example.colorimagemobile.repositories
 
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.example.colorimagemobile.models.DataWrapper
 import com.example.colorimagemobile.models.TextChannelModel
 import com.example.colorimagemobile.services.RetrofitInstance
 import com.example.colorimagemobile.services.UserService
 import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
-import com.example.colorimagemobile.utils.Constants
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
 class TextChannelRepository {
     private val httpClient = RetrofitInstance.HTTP
+
+    fun getTextChannelMessages(channelId: String): MutableLiveData<DataWrapper<ArrayList<TextChannelModel.AllInfo>>> {
+        val channelListLiveData: MutableLiveData<DataWrapper<ArrayList<TextChannelModel.AllInfo>>> = MutableLiveData()
+
+        httpClient.getAllTextChannelMessages(token = "Bearer ${UserService.getToken()}", channelId).enqueue(object : Callback<ArrayList<TextChannelModel.AllInfo>> {
+            override fun onResponse(call: Call<ArrayList<TextChannelModel.AllInfo>>, response: Response<ArrayList<TextChannelModel.AllInfo>>) {
+                if (!response.isSuccessful) {
+                    channelListLiveData.value = DataWrapper(null, "An error occurred while loading previous messages!", true)
+                    return
+                }
+                channelListLiveData.value = DataWrapper(response.body(), "", false)
+            }
+            override fun onFailure(call: Call<ArrayList<TextChannelModel.AllInfo>>, t: Throwable) {
+                channelListLiveData.value = DataWrapper(null, "Sorry, failed to get previous chat messages!", true)
+            }
+        })
+
+        return channelListLiveData
+    }
 
     fun getAllTextChannel(token : String): MutableLiveData<DataWrapper<ArrayList<TextChannelModel.AllInfo>>> {
         printMsg("Fetching all chat channels")

@@ -9,6 +9,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.colorimagemobile.R
@@ -16,6 +17,7 @@ import com.example.colorimagemobile.bottomsheets.DeleteChannelConfirmationBottom
 import com.example.colorimagemobile.classes.JSONConvertor
 import com.example.colorimagemobile.models.ChatSocketModel
 import com.example.colorimagemobile.models.TextChannelModel
+import com.example.colorimagemobile.repositories.TextChannelRepository
 import com.example.colorimagemobile.services.UserService
 import com.example.colorimagemobile.services.chat.ChatAdapterService
 import com.example.colorimagemobile.services.chat.ChatService
@@ -23,6 +25,7 @@ import com.example.colorimagemobile.services.chat.TextChannelService
 import com.example.colorimagemobile.services.socket.ChatSocketService
 import com.example.colorimagemobile.utils.CommonFun.Companion.closeKeyboard
 import com.example.colorimagemobile.utils.CommonFun.Companion.onEnterKeyPressed
+import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
 import com.example.colorimagemobile.utils.CommonFun.Companion.printToast
 import com.example.colorimagemobile.utils.Constants.Companion.GENERAL_CHANNEL_NAME
 
@@ -137,6 +140,19 @@ class ChatMessageBoxFragment : Fragment(R.layout.fragment_chat_message_box) {
     }
 
     private fun loadPreviousMessages() {
+        TextChannelRepository().getTextChannelMessages(channel._id!!).observe(context as LifecycleOwner, {
+            if (it.isError as Boolean) {
+                printToast(requireActivity(), it.message!!)
+                return@observe
+            }
+
+            val channels = it.data as ArrayList<TextChannelModel.AllInfo>
+            printMsg(channels.size.toString())
+//            TextChannelService.setChannels(channels)
+//            setRecyclerView()
+//            setButtonListeners()
+//            addDefaultChannel(channels)
+        })
     }
 
     private fun leaveRoom() {

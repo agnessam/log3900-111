@@ -53,6 +53,10 @@ interface API {
     @DELETE(Constants.ENDPOINTS.USER_PATH+"{id}")
     fun deleteUserById(@Header("Authorization")token: String, @Path ("id") id : String) : Call<HTTPResponseModel.UserResponse>
 
+    //  TextChannel region
+    @Headers("Content-Type: application/json")
+    @GET(Constants.ENDPOINTS.TEXT_CHANNEL_PATH + "{channelId}" + "/messages")
+    fun getAllTextChannelMessages(@Header("Authorization") token: String, @Path ("channelId") channelId: String): Call<ArrayList<TextChannelModel.AllInfo>>
 
     //  TextChannel region
     @Headers("Content-Type: application/json")
