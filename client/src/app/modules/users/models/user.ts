@@ -11,5 +11,5 @@ export interface User {
   email?: string;
   description?: string;
 
-  drawings: Drawing[];
+  drawings?: Drawing[];
 }
