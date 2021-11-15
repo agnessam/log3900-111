@@ -14,7 +14,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.colorimagemobile.R
 import com.example.colorimagemobile.bottomsheets.DeleteChannelConfirmationBottomSheet
 import com.example.colorimagemobile.classes.JSONConvertor
-import com.example.colorimagemobile.classes.MyFragmentManager
 import com.example.colorimagemobile.models.ChatSocketModel
 import com.example.colorimagemobile.models.TextChannelModel
 import com.example.colorimagemobile.services.UserService
@@ -96,6 +95,7 @@ class ChatMessageBoxFragment : Fragment(R.layout.fragment_chat_message_box) {
         myView.findViewById<Button>(R.id.chat_sent_btn).setOnClickListener { sendChat() }
         myView.findViewById<LinearLayout>(R.id.chat_message_main).setOnTouchListener { _, _ -> closeKeyboard(requireActivity()) }
         myView.findViewById<Button>(R.id.channel_leave_btn).setOnClickListener { leaveRoom() }
+        myView.findViewById<Button>(R.id.channel_load_more_btn).setOnClickListener { loadPreviousMessages() }
 
         myView.findViewById<Button>(R.id.channel_delete_btn).setOnClickListener {
             val deleteConfirmation = DeleteChannelConfirmationBottomSheet()
@@ -134,6 +134,9 @@ class ChatMessageBoxFragment : Fragment(R.layout.fragment_chat_message_box) {
 
     private fun scrollDown() {
         recyclerView.scrollToPosition(ChatService.getChannelMessages(channel.name)!!.size - 1);
+    }
+
+    private fun loadPreviousMessages() {
     }
 
     private fun leaveRoom() {

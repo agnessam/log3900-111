@@ -58,17 +58,13 @@ class DeleteChannelConfirmationBottomSheet: BottomSheetDialogFragment() {
         val channelRepository = TextChannelRepository()
         val currentChannel = TextChannelService.getCurrentChannel()
 
+        TextChannelService.deleteChannel(currentChannel)
+        ChatService.refreshChatBox(requireActivity())
+        TextChannelService.refreshChannelList()
+
         channelRepository.deleteChannelById(currentChannel._id as String, currentChannel.name).observe(this, {
             closeSheet()
             printToast(requireActivity(), it.message!!)
-
-            if (it.isError as Boolean) {
-                return@observe
-            }
-
-            TextChannelService.deleteChannel(currentChannel)
-            ChatService.refreshChatBox(requireActivity())
-            TextChannelService.refreshChannelList()
         })
     }
 }
