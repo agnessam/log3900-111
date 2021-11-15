@@ -22,6 +22,7 @@ import com.example.colorimagemobile.enumerators.ToolType
 import com.example.colorimagemobile.services.SharedPreferencesService
 import com.example.colorimagemobile.services.drawing.ToolTypeService
 import com.example.colorimagemobile.services.socket.DrawingSocketService
+import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
 import com.example.colorimagemobile.utils.Constants
 
 class GalleryDrawingFragment : Fragment(R.layout.fragment_gallery_drawing) {
@@ -61,13 +62,28 @@ class GalleryDrawingFragment : Fragment(R.layout.fragment_gallery_drawing) {
         DrawingSocketService.joinRoom(roomName!!)
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        DrawingSocketService.disconnect()
+    private fun leaveDrawingRoom(){
+        if(roomName == null) return
         DrawingSocketService.leaveRoom(roomName!!)
+        DrawingSocketService.disconnect()
 
         roomName = null
         sharedPreferencesService.removeItem(Constants.STORAGE_KEY.DRAWING_ROOM_ID)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        this.leaveDrawingRoom()
+    }
+
+    override fun onStop(){
+        super.onStop()
+        this.leaveDrawingRoom()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        this.leaveDrawingRoom()
     }
 
     // dynamically add tools on sidebar
