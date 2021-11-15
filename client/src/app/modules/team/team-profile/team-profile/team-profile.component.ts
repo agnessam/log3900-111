@@ -24,12 +24,9 @@ export class TeamProfileComponent implements OnInit {
       this.teamClient.getTeam(this.teamId).subscribe((team) => {
         this.team = team;
       });
-    });
-  }
-
-  ngAfterViewInit(): void {
-    this.teamClient.getTeam(this.teamId).subscribe((team) => {
-      this.team = team;
+      this.teamClient.getTeamDrawings(this.teamId).subscribe((drawings) => {
+        this.team.drawings = drawings;
+      });
     });
   }
 
