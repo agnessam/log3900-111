@@ -31,6 +31,10 @@ export class NavbarComponent implements OnInit {
     this.router.navigate(["/search"], { queryParams: { q: this.searchQuery } });
   }
 
+  goToProfile(): void {
+    this.router.navigate(["/users/" + this.user?._id]);
+  }
+
   logout(): void {
     this.authenticationService.logout().subscribe((response) => {
       console.log(response);
