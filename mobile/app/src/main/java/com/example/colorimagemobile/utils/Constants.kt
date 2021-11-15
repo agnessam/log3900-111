@@ -6,10 +6,6 @@ class Constants {
     companion object {
         const val DEBUG_KEY = "PRIVATE"  // debug log key
 
-        // chat
-        const val DEFAULT_ROOM_NAME = "default"
-        const val TEXT_MESSAGE_EVENT_NAME = "text"
-
         // profile user log history
         const val LAST_LOGIN_DATE = "lastLogin"
         const val LAST_LOGOUT_DATE ="lastLogout"
@@ -74,17 +70,4 @@ class Constants {
             const val DRAWING_ROOM_ID = "drawingRoomName"
         }
     }
-
-    class SOCKET_KEY{
-        companion object{
-             const val CHAT_NAMESPACE_NAME = "chat";
-             const val ROOM_EVENT_NAME = "room";
-             const val TEXT_MESSAGE_EVENT_NAME = "text";
-             const val CONNECTION_EVENT_NAME = "connection";
-             const val DISCONNECTION_EVENT_NAME = "disconnect";
-             const val LEAVE_ROOM_EVENT_NAME = "leaveRoom";
-        }
-    }
-
-
 }

@@ -26,8 +26,6 @@ export interface UserInterface extends Document {
 const UserSchema = new mongoose.Schema({
   username: { type: String, required: true, index: { unique: true } },
   description: String,
-  lastLoginDate: String,
-  lastLogoutDate: String,
   avatar: {
     type: AvatarSchema,
     default: {
