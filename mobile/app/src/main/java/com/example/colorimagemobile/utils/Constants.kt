@@ -13,6 +13,7 @@ class Constants {
         const val EMPTY_STRING =""
         const val GENERAL_CHANNEL_NAME = "General"
 
+        const val NB_DATA_ROWS = 3
     }
 
     class SOCKETS {
@@ -49,6 +50,9 @@ class Constants {
 
             // drawings
             const val ALL_DRAWINGS = "api/drawings/"
+
+            // teams
+            const val TEAMS = "api/teams/"
         }
     }
 

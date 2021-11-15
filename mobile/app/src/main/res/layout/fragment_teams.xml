@@ -4,10 +4,42 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.home.fragments.teams.TeamsFragment"
-    android:id="@+id/teamsFragment">
+    android:id="@+id/teamsFragment"
+    android:background="@color/mainTheme">
 
-    <TextView
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="feofe" />
+        android:padding="8dp">
+
+        <Button
+            android:id="@+id/newTeamBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Create New Team"
+            android:layout_alignParentRight="true"
+            android:backgroundTint="@color/primary"/>
+
+        <TextView
+            android:id="@+id/loadingTeamsText"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:textSize="27sp"
+            android:text="LOADING TEAMS .."
+            android:textStyle="bold|italic"
+            android:layout_below="@id/newTeamBtn"
+            android:textAlignment="center" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/teamsMenuRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/newTeamBtn"
+            android:layout_marginTop="20px">
+
+        </androidx.recyclerview.widget.RecyclerView>
+
+    </RelativeLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
