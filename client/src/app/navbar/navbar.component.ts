@@ -28,7 +28,6 @@ export class NavbarComponent implements OnInit {
   }
 
   search(): void {
-    console.log(this.searchQuery);
     this.router.navigate(["/search"], { queryParams: { q: this.searchQuery } });
   }
 

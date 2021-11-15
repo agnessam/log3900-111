@@ -1,0 +1,10 @@
+<mat-card class="mat-elevation-z2 user">
+  <mat-card-header>
+    <mat-card-title (click)="goToUserProfile()">
+      {{ this.user.username }}
+    </mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <p>{{ this.user.description }}</p>
+  </mat-card-content>
+</mat-card>

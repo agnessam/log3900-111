@@ -9,7 +9,7 @@
         <div fxFlex="50%">
           <div fxLayout="row" fxLayoutAlign="center center">
             <div fxFlex="33%" *ngFor="let user of searchResults.users">
-              <h2>{{ user.username }}</h2>
+              <app-user-card [user]="user"></app-user-card>
             </div>
           </div>
         </div>
@@ -21,9 +21,9 @@
           <h1>Teams</h1>
         </div>
         <div fxFlex="50%">
-          <div fxLayout="row" fxLayoutAlign="center center">
+          <div fxLayout="row wrap" fxLayoutAlign="center center">
             <div fxFlex="33%" *ngFor="let team of searchResults.teams">
-              <h2>{{ team.name }}</h2>
+              <app-team-card [team]="team"></app-team-card>
             </div>
           </div>
         </div>
@@ -37,7 +37,7 @@
         <div fxFlex="50%">
           <div fxLayout="row" fxLayoutAlign="center center">
             <div fxFlex="33%" *ngFor="let drawing of searchResults.drawings">
-              <h2>{{ drawing.name }}</h2>
+              <app-drawing-card [drawing]="drawing"></app-drawing-card>
             </div>
           </div>
         </div>

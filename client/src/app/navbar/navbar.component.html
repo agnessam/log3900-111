@@ -9,9 +9,9 @@
     <a mat-button routerLink="/gallery" class="page-link">Gallery</a>
     <a mat-button routerLink="/teams" class="page-link">Teams</a>
   </div>
+  <span class="menu-spacer"></span>
 
-  <span class="user-properties"></span>
-  <form id="searchBar" (ngSubmit)="search()">
+  <form id="search-bar" (ngSubmit)="search()">
     <button mat-icon-button class="icon" type="submit">
       <mat-icon>search</mat-icon>
     </button>
@@ -26,6 +26,7 @@
       name="search"
     />
   </form>
+  <span class="user-properties"></span>
 
   <div class="page-link">{{ user.username }}</div>
   <button mat-icon-button (click)="onChatClick()">
