@@ -132,18 +132,10 @@ class HomeActivity : AppCompatActivity() {
 
         val token = sharedPreferencesService.getItem(Constants.STORAGE_KEY.TOKEN)
         UserService.setToken(token)
-        UserService.setLogHistory(Constants.LAST_LOGOUT_DATE)
-        LogHistory()
 
         // remove items from "local storage"
         sharedPreferencesService.removeItem(Constants.STORAGE_KEY.TOKEN)
 
         redirectTo(this, LoginActivity::class.java)
-    }
-
-    private fun LogHistory(){
-        UserService.setLogHistory(Constants.LAST_LOGOUT_DATE)
-        val updateObserver = homeViewModel.updateLogHistory(UserService.getUserInfo()._id)
-        updateObserver.observe(this, { this?.let { it1 -> globalHandler.response(it1,it) } })
     }
 }

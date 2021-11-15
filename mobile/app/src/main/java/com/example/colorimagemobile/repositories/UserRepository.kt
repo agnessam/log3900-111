@@ -134,30 +134,6 @@ class UserRepository {
         return AllUserData
     }
 
-    // update login or logout history
-    fun updateLogHistoryData(token: String, id: String): MutableLiveData<DataWrapper<HTTPResponseModel.UserResponse>> {
-
-        logHistory=UserService.getLogHistory()
-        val updateLogHistoryData: MutableLiveData<DataWrapper<HTTPResponseModel.UserResponse>> = MutableLiveData()
-        httpClient.updateLogHistory(token = "Bearer $token",id, logHistory).enqueue(object :
-            Callback<HTTPResponseModel.UserResponse> {
-            override fun onResponse(call: Call<HTTPResponseModel.UserResponse>, response: Response<HTTPResponseModel.UserResponse>) {
-                if (!response.isSuccessful) {
-                    updateLogHistoryData.value = DataWrapper(null, "An error occurred!", true)
-                    return
-                }
-                // log history successfully update
-                updateLogHistoryData.value = DataWrapper(response.body(), "", false)
-            }
-
-            override fun onFailure(call: Call<HTTPResponseModel.UserResponse>, t: Throwable) {
-                updateLogHistoryData.value = DataWrapper(null, "Failed to update log history account!", true)
-            }
-        })
-
-        return updateLogHistoryData
-    }
-
     fun getUserTeams(token: String, userId: String): MutableLiveData<DataWrapper<List<TeamModel>>> {
         val teamsLiveData: MutableLiveData<DataWrapper<List<TeamModel>>> = MutableLiveData()
 

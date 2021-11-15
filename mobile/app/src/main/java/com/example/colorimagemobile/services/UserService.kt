@@ -43,27 +43,6 @@ object UserService {
         return !::info.isInitialized
     }
 
-    // set login and logout history
-    fun setLogHistory(logType : String){
-
-        if (logType == Constants.LAST_LOGIN_DATE){
-            this.lastLogin = (LocalDateTime.now()).toString()
-            this.date[0] = this.lastLogin
-        }
-        else if (logType == Constants.LAST_LOGOUT_DATE){
-            this.lastLogout = (LocalDateTime.now()).toString();
-            this.date[1] = this.lastLogout
-        }
-
-        this.logHistory = UserModel.UpdateLogHistory(this.date[0], this.date[1])
-    }
-
-
-    // get login and logout history
-    fun getLogHistory(): UserModel.UpdateLogHistory{
-        return this.logHistory
-    }
-
     fun setToken(token:String){
         this.token = token
     }

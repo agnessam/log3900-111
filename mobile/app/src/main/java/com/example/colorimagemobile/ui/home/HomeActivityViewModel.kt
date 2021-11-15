@@ -19,7 +19,6 @@ class HomeActivityViewModel : ViewModel() {
     init {
         authRepository = AuthRepository()
         userRepository = UserRepository()
-
     }
 
     fun getUserByToken(token: String): LiveData<DataWrapper<HTTPResponseModel.UserResponse>> {
@@ -29,8 +28,4 @@ class HomeActivityViewModel : ViewModel() {
     fun logoutUser(user: UserModel.Logout): LiveData<DataWrapper<HTTPResponseModel>> {
         return authRepository.logoutUser(user)
     }
-    fun updateLogHistory(id: String): LiveData<DataWrapper<HTTPResponseModel.UserResponse>> {
-        return userRepository.updateLogHistoryData(UserService.getToken(), id)
-    }
-
 }
