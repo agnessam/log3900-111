@@ -4,6 +4,7 @@ import { TeamInterface } from '../models/teams';
 import { DrawingInterface } from '../models/Drawing';
 import { MessageInterface } from '../models/Message';
 import { AvatarInterface } from '../models/Avatar';
+import { PublishedDrawingInterface } from '../models/PublishedDrawing';
 
 export type Query<T> = {
   [P in keyof T]?: T[P] | { $regex: RegExp } | Date;
@@ -23,6 +24,7 @@ export interface Repository<T> {
 export type UserRepositoryInterface = Repository<UserInterface>;
 export type TeamRepositoryInterface = Repository<TeamInterface>;
 export type DrawingRepositoryInterface = Repository<DrawingInterface>;
+export type PostRepositoryInterface = Repository<PublishedDrawingInterface>;
 export type TextChannelRepositoryInterface = Repository<TextChannelInterface>;
 export type MessageRepositoryInterface = Repository<MessageInterface>;
 export type AvatarRepositoryInterface = Repository<AvatarInterface>;
