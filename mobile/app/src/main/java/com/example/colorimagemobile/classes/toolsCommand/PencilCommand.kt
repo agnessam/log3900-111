@@ -11,6 +11,8 @@ import com.example.colorimagemobile.models.SyncUpdate
 import com.example.colorimagemobile.services.drawing.*
 import com.example.colorimagemobile.services.drawing.toolsAttribute.ColorService
 import android.graphics.RectF
+import android.graphics.drawable.ScaleDrawable
+import android.view.Gravity
 import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
 
 import com.example.colorimagemobile.services.drawing.toolsAttribute.PencilService
@@ -28,6 +30,10 @@ class PencilCommand(pencilData: PencilData): ICommand {
 
         var shapeDrawable = ShapeDrawable(pathShape)
         layerIndex = CanvasService.layerDrawable.addLayer(shapeDrawable)
+
+        // Add layerIndex with id to CanvasService
+        CanvasService.addNewDrawableToDrawing(pencilData.id, layerIndex)
+
         PencilService.paths.putIfAbsent(layerIndex, path)
 
         paint.color = ColorService.rgbaToInt(this.pencil.stroke)
@@ -72,5 +78,42 @@ class PencilCommand(pencilData: PencilData): ICommand {
 
         this.getPathDrawable().paint.set(this.paint)
         CanvasUpdateService.invalidate()
+
+    }
+
+    fun scaleTest(){
+//        var quadrant = 3
+//        var ratio = 2
+//        var currentPathBoundsRectF = RectF()
+//        this.path.computeBounds(currentPathBoundsRectF, true)
+//        var xTranslation: Int
+//        var yTranslation: Int
+//        when(quadrant){
+//            1 -> {
+//                xTranslation = -(currentPathBoundsRectF.left * (ratio - 1)).toInt()
+//                yTranslation = -(currentPathBoundsRectF.bottom * (ratio - 1)).toInt()
+//            }
+//            2 -> {
+//                xTranslation = -(currentPathBoundsRectF.right * (ratio - 1)).toInt()
+//                yTranslation = -(currentPathBoundsRectF.bottom * (ratio - 1)).toInt()
+//            }
+//            3-> {
+//                xTranslation = -(currentPathBoundsRectF.right * (ratio - 1)).toInt()
+//                yTranslation = -(currentPathBoundsRectF.top * (ratio - 1)).toInt()
+//            }
+//            4 -> {
+//                xTranslation = -(currentPathBoundsRectF.left * (ratio - 1)).toInt()
+//                yTranslation = -(currentPathBoundsRectF.top * (ratio - 1)).toInt()
+//            }
+//            else -> {
+//                xTranslation = 0
+//                yTranslation = 0
+//            }
+//        }
+//
+//        this.getPathDrawable().bounds = Rect(0 + xTranslation,
+//            0 + yTranslation,
+//            CanvasService.extraCanvas.width * ratio + xTranslation,
+//            CanvasService.extraCanvas.height * ratio + yTranslation)
     }
 }

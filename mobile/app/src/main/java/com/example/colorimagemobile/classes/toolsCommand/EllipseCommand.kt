@@ -2,6 +2,8 @@ package com.example.colorimagemobile.classes.toolsCommand
 
 import android.graphics.Color
 import android.graphics.Paint
+import android.graphics.Rect
+import android.graphics.RectF
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.LayerDrawable
 import android.graphics.drawable.ShapeDrawable
@@ -38,6 +40,9 @@ class EllipseCommand(ellipseData: EllipseData): ICommand {
             fillEllipseIndex = ellipseShape.addLayer(fillEllipse)
             borderEllipseIndex = ellipseShape.addLayer(borderEllipse)
             layerIndex = CanvasService.layerDrawable.addLayer(ellipseShape)
+
+            // Add layerIndex with id to CanvasService
+            CanvasService.addNewDrawableToDrawing(ellipseData.id, layerIndex)
         }
         borderPaint.color = if(ellipseData.stroke != "none") ColorService.rgbaToInt(ellipseData.stroke)
         else Color.WHITE
@@ -105,4 +110,40 @@ class EllipseCommand(ellipseData: EllipseData): ICommand {
         this.getEllipseDrawable().setBounds(left, top, right, bottom)
         CanvasUpdateService.invalidate()
     }
+
+//    fun scaleTest(){
+//        var quadrant = 3
+//        var ratio = 2
+//        var currentPathBoundsRectF = RectF()
+//
+//        var xTranslation: Int
+//        var yTranslation: Int
+//        when(quadrant){
+//            1 -> {
+//                xTranslation = -(currentPathBoundsRectF.left * (ratio - 1)).toInt()
+//                yTranslation = -(currentPathBoundsRectF.bottom * (ratio - 1)).toInt()
+//            }
+//            2 -> {
+//                xTranslation = -(currentPathBoundsRectF.right * (ratio - 1)).toInt()
+//                yTranslation = -(currentPathBoundsRectF.bottom * (ratio - 1)).toInt()
+//            }
+//            3-> {
+//                xTranslation = -(currentPathBoundsRectF.right * (ratio - 1)).toInt()
+//                yTranslation = -(currentPathBoundsRectF.top * (ratio - 1)).toInt()
+//            }
+//            4 -> {
+//                xTranslation = -(currentPathBoundsRectF.left * (ratio - 1)).toInt()
+//                yTranslation = -(currentPathBoundsRectF.top * (ratio - 1)).toInt()
+//            }
+//            else -> {
+//                xTranslation = 0
+//                yTranslation = 0
+//            }
+//        }
+//
+//        this.getPathDrawable().bounds = Rect(0 + xTranslation,
+//            0 + yTranslation,
+//            CanvasService.extraCanvas.width * ratio + xTranslation,
+//            CanvasService.extraCanvas.height * ratio + yTranslation)
+//    }
 }

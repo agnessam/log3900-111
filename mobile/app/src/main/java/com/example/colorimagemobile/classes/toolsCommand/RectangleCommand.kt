@@ -2,6 +2,8 @@ package com.example.colorimagemobile.classes.toolsCommand
 
 import android.graphics.Color
 import android.graphics.Paint
+import android.graphics.Rect
+import android.graphics.RectF
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.LayerDrawable
 import android.graphics.drawable.ShapeDrawable
@@ -37,6 +39,9 @@ class RectangleCommand(rectangleData: RectangleData): ICommand {
         fillRectangleIndex = rectangleShape.addLayer(fillRectangle)
         borderRectangleIndex = rectangleShape.addLayer(borderRectangle)
         layerIndex = CanvasService.layerDrawable.addLayer(rectangleShape)
+
+        // Add layerIndex with id to CanvasService
+        CanvasService.addNewDrawableToDrawing(rectangleData.id, layerIndex)
 
         borderPaint.color = if(rectangleData.stroke != "none") ColorService.rgbaToInt(rectangleData.stroke)
             else Color.WHITE
@@ -101,7 +106,42 @@ class RectangleCommand(rectangleData: RectangleData): ICommand {
             this.getBorderRectangle().setBounds(left, top, right, bottom)
             this.getBorderRectangle().paint.set(this.borderPaint)
         }
-        this.getRectangleDrawable().setBounds(left, top, right, bottom)
+        this.getRectangleDrawable().setBounds(left , top , right , bottom)
         CanvasUpdateService.invalidate()
+    }
+
+    fun scaleTest(){
+//        var originalBounds = this.getFillRectangle().bounds
+//        this.getRectangleDrawable().bounds = Rect(originalBounds.left, originalBounds.top, originalBounds.right * 2, originalBounds.bottom * 2)
+//        CanvasUpdateService.invalidate()
+//        var quadrant = 1
+//        var ratio = 2
+//        var left = rectangle.x
+//        var top = rectangle.y
+//        var right = rectangle.x + rectangle.width
+//        var bottom = rectangle.y + rectangle.height
+//        when(quadrant){
+//            1 -> {
+//                right *= ratio
+//                top -= 0
+//            }
+//            2 -> {
+//                left *= ratio
+//                top *= ratio
+//            }
+//            3-> {
+//                left *= ratio
+//                bottom *= ratio
+//            }
+//            4 -> {
+//                right *= ratio
+//                bottom *= ratio
+//            }
+//            else -> {}
+//        }
+//
+//        this.getRectangleDrawable().bounds = Rect(left, top, right, bottom)
+//
+//        CanvasUpdateService.invalidate()
     }
 }
