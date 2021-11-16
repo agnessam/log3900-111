@@ -84,6 +84,6 @@ class GalleryMenuFragment : Fragment(R.layout.fragment_gallery_menu) {
         }
 
         recyclerView.layoutManager = GridLayoutManager(requireContext(), Constants.NB_DATA_ROWS)
-        recyclerView.adapter = DrawingMenuRecyclerAdapter(drawingsMenu)
+        recyclerView.adapter = DrawingMenuRecyclerAdapter(drawingsMenu, R.id.main_gallery_fragment)
     }
 }

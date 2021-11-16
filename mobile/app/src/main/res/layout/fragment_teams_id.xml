@@ -124,10 +124,34 @@
         </RelativeLayout>
 
         <RelativeLayout
-            android:layout_toEndOf="@id/teamsLeftMenu"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_toEndOf="@id/teamsLeftMenu"
             android:background="@color/white">
+
+            <com.google.android.material.tabs.TabLayout
+                android:id="@+id/teamProfileDrawingsTabLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
+                <com.google.android.material.tabs.TabItem
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="All Drawings" />
+
+                <com.google.android.material.tabs.TabItem
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Published Drawings" />
+            </com.google.android.material.tabs.TabLayout>
+
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/teamProfileDrawingsRecycler"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@id/teamProfileDrawingsTabLayout" >
+            </androidx.recyclerview.widget.RecyclerView>
+
         </RelativeLayout>
 
     </RelativeLayout>
