@@ -1,6 +1,7 @@
 package com.example.colorimagemobile.repositories
 
 import androidx.lifecycle.MutableLiveData
+import com.example.colorimagemobile.models.CreateTeamModel
 import com.example.colorimagemobile.models.DataWrapper
 import com.example.colorimagemobile.models.TeamModel
 import com.example.colorimagemobile.services.RetrofitInstance
@@ -49,5 +50,24 @@ class TeamRepository {
         })
 
         return joinTeamLiveData
+    }
+
+    fun createTeam(team: CreateTeamModel): MutableLiveData<DataWrapper<TeamModel>> {
+        val createTeamLiveData: MutableLiveData<DataWrapper<TeamModel>> = MutableLiveData()
+
+        httpClient.createNewTeam(token = "Bearer ${UserService.getToken()}", team).enqueue(object : Callback<TeamModel> {
+            override fun onResponse(call: Call<TeamModel>, response: Response<TeamModel>) {
+                if (!response.isSuccessful) {
+                    createTeamLiveData.value = DataWrapper(null, "An error occurred while creating team!", true)
+                    return
+                }
+                createTeamLiveData.value = DataWrapper(response.body(), "", false)
+            }
+            override fun onFailure(call: Call<TeamModel>, t: Throwable) {
+                createTeamLiveData.value = DataWrapper(null, "Sorry, failed to create team!", true)
+            }
+        })
+
+        return createTeamLiveData
     }
 }

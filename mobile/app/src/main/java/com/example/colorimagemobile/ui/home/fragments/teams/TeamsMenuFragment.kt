@@ -3,11 +3,14 @@ package com.example.colorimagemobile.ui.home.fragments.teams
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.View
+import android.widget.Button
 import android.widget.TextView
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.colorimagemobile.R
 import com.example.colorimagemobile.adapter.TeamsMenuRecyclerAdapter
+import com.example.colorimagemobile.bottomsheets.NewDrawingMenuBottomSheet
+import com.example.colorimagemobile.bottomsheets.NewTeamBottomSheet
 import com.example.colorimagemobile.classes.MyFragmentManager
 import com.example.colorimagemobile.models.TeamModel
 import com.example.colorimagemobile.repositories.TeamRepository
@@ -26,6 +29,14 @@ class TeamsMenuFragment : Fragment(R.layout.fragment_teams_menu) {
         myView = view
         MyFragmentManager(requireActivity()).hideBackButton()
         getAllTeams()
+        setListeners()
+    }
+
+    private fun setListeners() {
+        myView.findViewById<Button>(R.id.newTeamBtn).setOnClickListener {
+            val newTeamBS = NewTeamBottomSheet()
+            newTeamBS.show(parentFragmentManager, "NewTeamBottomSheet")
+        }
     }
 
     private fun getAllTeams() {

@@ -100,4 +100,8 @@ interface API {
     @Headers("Content-Type: application/json")
     @POST("${Constants.ENDPOINTS.TEAMS}{id}/join")
     fun joinTeam(@Header("Authorization") token: String, @Path ("id") id: String): Call<TeamModel>
+
+    @Headers("Content-Type: application/json")
+    @POST(Constants.ENDPOINTS.TEAMS)
+    fun createNewTeam(@Header("Authorization") token: String, @Body team: CreateTeamModel): Call<TeamModel>
 }

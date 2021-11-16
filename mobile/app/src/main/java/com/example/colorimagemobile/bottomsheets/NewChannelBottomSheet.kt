@@ -14,7 +14,6 @@ import com.example.colorimagemobile.repositories.TextChannelRepository
 import com.example.colorimagemobile.services.UserService
 import com.example.colorimagemobile.services.chat.ChatService
 import com.example.colorimagemobile.services.chat.TextChannelService
-import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
 import com.example.colorimagemobile.utils.CommonFun.Companion.printToast
 import com.example.colorimagemobile.utils.CommonFun.Companion.toggleButton
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -71,7 +70,6 @@ class NewChannelBottomSheet: BottomSheetDialogFragment() {
         }
 
         createChannelBtn.setOnClickListener {
-            printMsg(channelInputName.text.toString())
             val newChannel = TextChannelModel.AllInfo(_id = null, name = channelInputName.text.toString(), ownerId = UserService.getUserInfo()._id)
             createChannel(newChannel)
         }

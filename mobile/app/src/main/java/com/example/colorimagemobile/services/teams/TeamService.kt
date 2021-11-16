@@ -7,7 +7,6 @@ object TeamService {
     val JOINED_KEYWORD = "Joined"
     private var allTeams: ArrayList<TeamModel> = arrayListOf()
 
-
     fun setAllTeams(newTeams: ArrayList<TeamModel>) {
         allTeams = newTeams
     }
@@ -18,6 +17,10 @@ object TeamService {
 
     fun getTeam(position: Int): TeamModel {
         return allTeams[position]
+    }
+
+    fun addTeam(team: TeamModel) {
+        allTeams.add(team)
     }
 
     fun updateTeamByPosition(position: Int, newTeam: TeamModel) {
