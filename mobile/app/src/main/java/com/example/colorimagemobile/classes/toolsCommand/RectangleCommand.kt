@@ -26,39 +26,48 @@ class RectangleCommand(rectangleData: RectangleData): ICommand {
 
     var rectangle: RectangleData = rectangleData
 
-    private var rectangleShape: LayerDrawable
+    private lateinit var rectangleShape: LayerDrawable
 
     private var borderPaint: Paint = Paint()
     private var fillPaint: Paint = Paint()
+
+    private var borderPath = Path()
+    private var fillPath = Path()
     init{
-        val borderPathShape = PathShape(Path(),
-            CanvasService.extraCanvas.width.toFloat(), CanvasService.extraCanvas.height.toFloat())
-        var borderRectangle = ShapeDrawable(borderPathShape)
+        var fillRectangle = createNewRectangle()
+        var borderRectangle = createNewRectangle()
 
-        val fillPathShape = PathShape(Path(),
-            CanvasService.extraCanvas.width.toFloat(), CanvasService.extraCanvas.height.toFloat())
-        var fillRectangle = ShapeDrawable(fillPathShape)
+        initializeRectangleLayers(fillRectangle, borderRectangle)
 
+        borderPaint = initializePaint(rectangleData.stroke, Color.WHITE)
+        fillPaint = initializePaint(rectangleData.fill, Color.BLACK)
+
+        setStartPoint(Point(rectangle.x.toFloat(), rectangle.y.toFloat()))
+    }
+
+    private fun initializePaint(color: String, defaultColor: Int): Paint{
+        var paint = Paint()
+        paint.color = if(color != "none") ColorService.rgbaToInt(color)
+        else Color.BLACK
+        paint.isAntiAlias = true
+        paint.style = Paint.Style.FILL
+        paint.isDither = true
+        return paint
+    }
+
+    private fun initializeRectangleLayers(fillRectangle: ShapeDrawable, borderRectangle: ShapeDrawable) {
         var rectangleShapeArray = arrayOf<Drawable>()
         rectangleShape = LayerDrawable(rectangleShapeArray)
 
         fillRectangleIndex = rectangleShape.addLayer(fillRectangle)
         borderRectangleIndex = rectangleShape.addLayer(borderRectangle)
         layerIndex = CanvasService.layerDrawable.addLayer(rectangleShape)
+    }
 
-        borderPaint.color = if(rectangleData.stroke != "none") ColorService.rgbaToInt(rectangleData.stroke)
-            else Color.BLACK
-        borderPaint.isAntiAlias = true
-        borderPaint.style = Paint.Style.FILL
-        borderPaint.isDither = true
-
-        fillPaint.color = if(rectangleData.fill != "none") ColorService.rgbaToInt(rectangleData.fill)
-            else Color.BLUE
-        fillPaint.style = Paint.Style.FILL
-        fillPaint.isAntiAlias = true
-        fillPaint.isDither = true
-
-        setStartPoint(Point(rectangle.x.toFloat(), rectangle.y.toFloat()))
+    private fun createNewRectangle(): ShapeDrawable{
+        val pathShape = PathShape(Path(),
+            CanvasService.extraCanvas.width.toFloat(), CanvasService.extraCanvas.height.toFloat())
+        return ShapeDrawable(pathShape)
     }
 
     private fun setStartPoint(startPoint: Point) {
@@ -96,10 +105,9 @@ class RectangleCommand(rectangleData: RectangleData): ICommand {
     }
 
     override fun execute() {
-
         if(rectangle.stroke != "none"){
-            var borderRectPath = this.generateBorderPath()
-            val borderRectPathShape = PathShape(borderRectPath,
+            this.generateBorderPath()
+            val borderRectPathShape = PathShape(borderPath,
                 CanvasService.extraCanvas.width.toFloat(), CanvasService.extraCanvas.height.toFloat()
             )
             var borderRectDrawable = ShapeDrawable(borderRectPathShape)
@@ -110,8 +118,8 @@ class RectangleCommand(rectangleData: RectangleData): ICommand {
         }
 
         if(rectangle.fill != "none"){
-            val fillRectPath = this.generateFillPath()
-            val fillRectPathShape = PathShape(fillRectPath,
+            this.generateFillPath()
+            val fillRectPathShape = PathShape(fillPath,
                 CanvasService.extraCanvas.width.toFloat(), CanvasService.extraCanvas.height.toFloat()
             )
 
@@ -126,27 +134,25 @@ class RectangleCommand(rectangleData: RectangleData): ICommand {
         CanvasUpdateService.invalidate()
     }
 
-    private fun generateFillPath(): Path {
+    private fun generateFillPath(){
         var left = rectangle.x
         var top = rectangle.y
         var right = rectangle.x + rectangle.width
         var bottom = rectangle.y + rectangle.height
         var rect = RectF(left.toFloat(), top.toFloat(), right.toFloat(), bottom.toFloat())
 
-        val fillPath = Path()
+        fillPath = Path()
         fillPath.addRect(rect, Path.Direction.CW)
-
-        return fillPath
     }
 
-    private fun generateBorderPath(): Path {
+    private fun generateBorderPath(){
         var left = rectangle.x
         var top = rectangle.y
         var right = rectangle.x + rectangle.width
         var bottom = rectangle.y + rectangle.height
         var rect = RectF(left.toFloat(), top.toFloat(), right.toFloat(), bottom.toFloat())
 
-        val borderPath = Path()
+        borderPath = Path()
 
         borderPath.addRect(rect, Path.Direction.CW)
         borderPath.close()
@@ -159,6 +165,5 @@ class RectangleCommand(rectangleData: RectangleData): ICommand {
         }
 
         borderPath.fillType = Path.FillType.EVEN_ODD
-        return borderPath
     }
 }
