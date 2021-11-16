@@ -66,6 +66,12 @@ class Constants {
         }
     }
 
+    class TEAMS {
+        companion object {
+            const val CURRENT_TEAM_ID_KEY = "CurrentTeam"
+        }
+    }
+
     // sharedPreferences keys
     class STORAGE_KEY {
         companion object {

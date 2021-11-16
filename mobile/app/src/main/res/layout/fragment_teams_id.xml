@@ -3,15 +3,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.home.fragments.teams.TeamsFragment"
-    android:id="@+id/teamsFragment"
-    android:background="@color/mainTheme">
+    tools:context=".ui.home.fragments.teams.TeamsIdFragment">
 
-    <FrameLayout
-        android:id="@+id/teamsMenuFrameLayout"
+    <!-- TODO: Update blank fragment layout -->
+    <TextView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/mainTheme" />
-
+        android:text="dwdwdwdw" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
