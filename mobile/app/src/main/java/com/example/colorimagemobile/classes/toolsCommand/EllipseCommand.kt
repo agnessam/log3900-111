@@ -82,6 +82,9 @@ class EllipseCommand(ellipseData: EllipseData): ICommand {
         ellipse.x = ((endingPoint!!.x + startingPoint!!.x) / 2).toInt()
         ellipse.height = kotlin.math.abs(endingPoint!!.y - startingPoint!!.y).toInt()
         ellipse.y = ((endingPoint!!.y + startingPoint!!.y) / 2).toInt()
+
+        this.generateBorderPath()
+        this.generateFillPath()
     }
 
     private fun getFillEllipse(): ShapeDrawable{
@@ -107,7 +110,6 @@ class EllipseCommand(ellipseData: EllipseData): ICommand {
 
     override fun execute() {
         if(ellipse.stroke != "none"){
-            this.generateBorderPath()
             val borderRectPathShape = PathShape(borderPath,
                 CanvasService.extraCanvas.width.toFloat(), CanvasService.extraCanvas.height.toFloat()
             )
@@ -119,7 +121,6 @@ class EllipseCommand(ellipseData: EllipseData): ICommand {
         }
 
         if(ellipse.fill != "none"){
-            this.generateFillPath()
             val fillRectPathShape = PathShape(fillPath,
                 CanvasService.extraCanvas.width.toFloat(), CanvasService.extraCanvas.height.toFloat()
             )
@@ -164,7 +165,6 @@ class EllipseCommand(ellipseData: EllipseData): ICommand {
             borderPath.addOval(innerRect, Path.Direction.CW)
             borderPath.close()
         }
-
         borderPath.fillType = Path.FillType.EVEN_ODD
     }
 }
