@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.SearchView
 import androidx.appcompat.view.menu.ActionMenuItemView
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
@@ -22,6 +23,7 @@ import com.example.colorimagemobile.services.SharedPreferencesService
 import com.example.colorimagemobile.services.socket.SocketManagerService
 import com.example.colorimagemobile.ui.home.fragments.gallery.GalleryMenuFragment
 import com.example.colorimagemobile.ui.home.fragments.teams.TeamsMenuFragment
+import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
 import com.example.colorimagemobile.utils.CommonFun.Companion.printToast
 import com.example.colorimagemobile.utils.CommonFun.Companion.redirectTo
 import com.example.colorimagemobile.utils.Constants
@@ -70,7 +72,22 @@ class HomeActivity : AppCompatActivity() {
             checkCurrentUser()
         }
 
+        setSearchIcon(menu)
         return true
+    }
+
+    private fun setSearchIcon(menu: Menu?) {
+        val searchView = menu?.findItem(R.id.searchIcon)?.actionView as SearchView
+        searchView.queryHint = "Quick Search"
+
+        searchView.setOnQueryTextListener(object: SearchView.OnQueryTextListener {
+            override fun onQueryTextChange(newText: String): Boolean { return false }
+            override fun onQueryTextSubmit(query: String): Boolean {
+                printMsg(query.toString())
+                searchView.clearFocus()
+                return true
+            }
+        })
     }
 
     // when clicked on individual menu icons
