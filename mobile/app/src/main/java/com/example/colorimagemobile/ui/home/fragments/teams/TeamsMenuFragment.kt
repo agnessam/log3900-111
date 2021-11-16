@@ -9,7 +9,6 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.colorimagemobile.R
 import com.example.colorimagemobile.adapter.TeamsMenuRecyclerAdapter
-import com.example.colorimagemobile.bottomsheets.NewDrawingMenuBottomSheet
 import com.example.colorimagemobile.bottomsheets.NewTeamBottomSheet
 import com.example.colorimagemobile.classes.MyFragmentManager
 import com.example.colorimagemobile.models.TeamModel
@@ -79,6 +78,6 @@ class TeamsMenuFragment : Fragment(R.layout.fragment_teams_menu) {
     }
 
     private fun openTeam(position: Int) {
-        MyFragmentManager(requireActivity()).openWithData(R.id.teamsMenuFrameLayout, TeamsIdFragment(), Constants.TEAMS.CURRENT_TEAM_ID_KEY, position)
+        MyFragmentManager(requireActivity()).openWithData(R.id.teamsMenuFrameLayout, TeamsProfileFragment(), Constants.TEAMS.CURRENT_TEAM_ID_KEY, position)
     }
 }

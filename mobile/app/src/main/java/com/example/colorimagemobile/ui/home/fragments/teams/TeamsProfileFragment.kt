@@ -20,7 +20,7 @@ import com.example.colorimagemobile.utils.CommonFun.Companion.toggleButton
 import com.example.colorimagemobile.utils.Constants
 import com.google.android.material.tabs.TabLayout
 
-class TeamsIdFragment : Fragment(R.layout.fragment_teams_id) {
+class TeamsProfileFragment : Fragment(R.layout.fragment_teams_profile) {
     private var teamPosition: Int? = null
     private lateinit var currentTeam: TeamModel
     private lateinit var myView: View
