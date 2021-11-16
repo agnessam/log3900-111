@@ -5,10 +5,6 @@ import com.example.colorimagemobile.services.drawing.CanvasUpdateService
 import com.example.colorimagemobile.services.drawing.toolsAttribute.SelectionService
 
 class SelectionCommand(): ICommand {
-
-
-//    private lateinit var selectionRectangle: RectangleData
-
     init {
         SelectionService.initSelectionRectangle()
     }
@@ -18,7 +14,6 @@ class SelectionCommand(): ICommand {
     }
 
     override fun execute() {
-
         CanvasUpdateService.invalidate()
     }
 }
