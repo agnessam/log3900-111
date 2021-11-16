@@ -12,9 +12,9 @@
         android:title="@string/title_chat"/>
 
     <item
-        android:id="@+id/notificationFragment"
-        android:icon="@drawable/ic_notifications_black_24dp"
-        android:title="@string/title_notifications" />
+        android:id="@+id/teamsFragment"
+        android:icon="@drawable/ic_teams"
+        android:title="@string/title_teams" />
 
     <item
         android:id="@+id/userProfileFragment"
