@@ -56,24 +56,12 @@ class TeamsMenuFragment : Fragment(R.layout.fragment_teams_menu) {
             val recyclerView = myView.findViewById<RecyclerView>(R.id.teamsMenuRecyclerView)
             recyclerView.layoutManager = GridLayoutManager(requireContext(), Constants.NB_DATA_ROWS)
 
-            val adapter = TeamsMenuRecyclerAdapter({ pos -> joinTeamClicked(pos)}, { pos -> openTeam(pos)})
+            val adapter = TeamsMenuRecyclerAdapter(
+                { pos -> TeamService.joinTeam(pos, requireContext())},
+                { pos -> openTeam(pos)},
+                { pos -> TeamService.leaveTeam(pos, requireContext())})
             recyclerView.adapter = adapter
             TeamAdapterService.setAdapter(adapter)
-        })
-    }
-
-    private fun joinTeamClicked(position: Int) {
-        val team = TeamService.getTeam(position)
-
-        TeamRepository().joinTeam(team._id).observe(viewLifecycleOwner, {
-            if (it.isError as Boolean) {
-                CommonFun.printToast(requireContext(), it.message!!)
-                return@observe
-            }
-
-            val joinedTeam = it.data as TeamModel
-            TeamService.updateTeamByPosition(position, joinedTeam)
-            TeamAdapterService.getTeamMenuAdapter().notifyItemChanged(position)
         })
     }
 

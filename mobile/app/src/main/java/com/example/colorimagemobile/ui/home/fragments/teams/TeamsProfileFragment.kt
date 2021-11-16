@@ -55,10 +55,15 @@ class TeamsProfileFragment : Fragment(R.layout.fragment_teams_profile) {
         myView.findViewById<TextView>(R.id.teamIdNbOfMembers).text = "${currentTeam.members.size} members"
         myView.findViewById<TextView>(R.id.teamIdDescription).text = currentTeam.description
 
-        if (TeamService.shouldHideJoinTeamButton(teamPosition!!)) {
-            val joinBtn = myView.findViewById<Button>(R.id.teamIdJoinBtn)
-            joinBtn.text = TeamService.JOINED_KEYWORD
-            toggleButton(joinBtn, false)
+        val joinBtn = myView.findViewById<Button>(R.id.teamIdJoinBtn)
+        val leaveBtn = myView.findViewById<Button>(R.id.leaveTeamIdBtn)
+
+        if (TeamService.isUserAlreadyTeamMember(teamPosition!!)) {
+            joinBtn.visibility = View.GONE
+            leaveBtn.visibility = View.VISIBLE
+        } else {
+            joinBtn.visibility = View.VISIBLE
+            leaveBtn.visibility = View.GONE
         }
     }
 

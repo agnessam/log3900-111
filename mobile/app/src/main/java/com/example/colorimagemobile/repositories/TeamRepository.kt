@@ -72,6 +72,25 @@ class TeamRepository {
         return joinTeamLiveData
     }
 
+    fun leaveTeam(teamId: String): MutableLiveData<DataWrapper<TeamModel>> {
+        val joinTeamLiveData: MutableLiveData<DataWrapper<TeamModel>> = MutableLiveData()
+
+        httpClient.leaveTeam(token = "Bearer ${UserService.getToken()}", teamId).enqueue(object : Callback<TeamModel> {
+            override fun onResponse(call: Call<TeamModel>, response: Response<TeamModel>) {
+                if (!response.isSuccessful) {
+                    joinTeamLiveData.value = DataWrapper(null, "An error occurred while leaving team!", true)
+                    return
+                }
+                joinTeamLiveData.value = DataWrapper(response.body(), "", false)
+            }
+            override fun onFailure(call: Call<TeamModel>, t: Throwable) {
+                joinTeamLiveData.value = DataWrapper(null, "Sorry, failed to leave team!", true)
+            }
+        })
+
+        return joinTeamLiveData
+    }
+
     fun createTeam(team: CreateTeamModel): MutableLiveData<DataWrapper<TeamModel>> {
         val createTeamLiveData: MutableLiveData<DataWrapper<TeamModel>> = MutableLiveData()
 

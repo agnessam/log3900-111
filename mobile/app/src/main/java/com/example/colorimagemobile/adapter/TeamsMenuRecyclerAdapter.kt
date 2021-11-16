@@ -10,8 +10,12 @@ import com.example.colorimagemobile.R
 import com.example.colorimagemobile.services.UserService
 import com.example.colorimagemobile.services.teams.TeamService
 import com.example.colorimagemobile.utils.CommonFun.Companion.toggleButton
+import com.google.android.material.button.MaterialButton
 
-class TeamsMenuRecyclerAdapter(val joinTeamClicked: (Int) -> Unit, val openTeam: (Int) -> Unit):
+class TeamsMenuRecyclerAdapter(
+        val joinTeamClicked: (Int) -> Unit,
+        val openTeam: (Int) -> Unit,
+        val leaveTeam: (Int) -> Unit):
     RecyclerView.Adapter<TeamsMenuRecyclerAdapter.ViewHolder>() {
 
     // create card view and sets its contents format
@@ -25,9 +29,12 @@ class TeamsMenuRecyclerAdapter(val joinTeamClicked: (Int) -> Unit, val openTeam:
         holder.teamName.text = TeamService.getAllTeams()[position].name
         holder.teamDescription.text = TeamService.getAllTeams()[position].description
 
-        if (TeamService.shouldHideJoinTeamButton(position)) {
-            holder.joinTeamBtn.text = TeamService.JOINED_KEYWORD
-            toggleButton(holder.joinTeamBtn, false)
+        if (TeamService.isUserAlreadyTeamMember(position)) {
+            holder.joinTeamBtn.visibility = View.GONE
+            holder.leaveTeamBtn.visibility = View.VISIBLE
+        } else {
+            holder.joinTeamBtn.visibility = View.VISIBLE
+            holder.leaveTeamBtn.visibility = View.GONE
         }
     }
 
@@ -40,10 +47,12 @@ class TeamsMenuRecyclerAdapter(val joinTeamClicked: (Int) -> Unit, val openTeam:
         var teamName : TextView = itemView.findViewById(R.id.card_team_name);
         var teamDescription : TextView = itemView.findViewById(R.id.card_team_description);
         var joinTeamBtn : Button = itemView.findViewById(R.id.joinTeamBtn);
+        var leaveTeamBtn : MaterialButton = itemView.findViewById(R.id.leaveTeamBtn);
 
         init {
             itemView.setOnClickListener { openTeam(bindingAdapterPosition) }
             joinTeamBtn.setOnClickListener { joinTeamClicked(bindingAdapterPosition) }
+            leaveTeamBtn.setOnClickListener { leaveTeam(bindingAdapterPosition) }
         }
     }
 }

@@ -44,6 +44,21 @@
             android:layout_alignParentBottom="true"
             android:text="Join Team" />
 
+        <com.google.android.material.button.MaterialButton
+            android:visibility="gone"
+            android:id="@+id/leaveTeamBtn"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentBottom="true"
+            android:text="Leave Team"
+            android:textColor="@color/primary"
+            app:cornerRadius="4dp"
+            app:strokeColor="@color/primary"
+            app:strokeWidth="1dp" />
+
 
     </RelativeLayout>
 
