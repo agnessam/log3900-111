@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.colorimagemobile.R
 import com.example.colorimagemobile.adapter.DrawingMenuRecyclerAdapter
 import com.example.colorimagemobile.classes.ImageConvertor
+import com.example.colorimagemobile.classes.MyFragmentManager
 import com.example.colorimagemobile.models.DrawingModel
 import com.example.colorimagemobile.models.TeamModel
 import com.example.colorimagemobile.models.recyclerAdapters.DrawingMenuData
@@ -47,6 +48,8 @@ class TeamsProfileFragment : Fragment(R.layout.fragment_teams_profile) {
     }
 
     private fun updateUI() {
+        MyFragmentManager(requireActivity()).showBackButton()
+        
         myView.findViewById<TextView>(R.id.teamIdNameCard).text = currentTeam.name
 //        myView.findViewById<ImageView>(R.id.teamIdImageView).
         myView.findViewById<TextView>(R.id.teamIdNbOfMembers).text = "${currentTeam.members.size} members"

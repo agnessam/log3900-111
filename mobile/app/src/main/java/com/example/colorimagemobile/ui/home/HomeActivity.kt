@@ -21,6 +21,7 @@ import com.example.colorimagemobile.models.HTTPResponseModel
 import com.example.colorimagemobile.services.SharedPreferencesService
 import com.example.colorimagemobile.services.socket.SocketManagerService
 import com.example.colorimagemobile.ui.home.fragments.gallery.GalleryMenuFragment
+import com.example.colorimagemobile.ui.home.fragments.teams.TeamsMenuFragment
 import com.example.colorimagemobile.utils.CommonFun.Companion.printToast
 import com.example.colorimagemobile.utils.CommonFun.Companion.redirectTo
 import com.example.colorimagemobile.utils.Constants
@@ -91,6 +92,10 @@ class HomeActivity : AppCompatActivity() {
             R.id.galleryFragment -> {
                 SocketManagerService.leaveDrawingRoom()
                 MyFragmentManager(this).open(R.id.main_gallery_fragment, GalleryMenuFragment())
+                true
+            }
+            R.id.teamsFragment -> {
+                MyFragmentManager(this).open(R.id.teamsMenuFrameLayout, TeamsMenuFragment())
                 true
             }
             else -> navController.navigateUp()
