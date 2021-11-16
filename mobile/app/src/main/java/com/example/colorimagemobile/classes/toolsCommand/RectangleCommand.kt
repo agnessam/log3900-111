@@ -116,7 +116,4 @@ class RectangleCommand(rectangleData: RectangleData): ICommand {
         this.getRectangleDrawable().setBounds(left , top , right , bottom)
         CanvasUpdateService.invalidate()
     }
-
-    fun scaleTest(){
-    }
 }

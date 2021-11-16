@@ -84,18 +84,4 @@ class PencilCommand(pencilData: PencilData): ICommand {
         CanvasUpdateService.invalidate()
 
     }
-
-    fun scaleTest(){
-        val matrix = Matrix()
-
-        var bounds = RectF()
-        this.path.computeBounds(bounds, true)
-
-//        matrix.setScale(2f, 2f, bounds.right, bounds.bottom)
-
-        matrix.postScale(-2f, -2f, bounds.right,  bounds.bottom)
-        path.transform(matrix)
-        this.paint.strokeWidth *= 2f
-        execute()
-    }
 }

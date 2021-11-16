@@ -73,7 +73,6 @@ class PencilView(context: Context?): CanvasView(context) {
     override fun onTouchUp() {
         updateCanvas()
         DrawingSocketService.sendConfirmDrawingCommand(this.pencil!!, this.pencilType)
-        pencilCommand!!.scaleTest()
         // Clean up properties
         this.pencilCommand = null
         this.inProgressPencil = null
