@@ -12,6 +12,7 @@ import com.example.colorimagemobile.models.EllipseUpdate
 import com.example.colorimagemobile.models.SyncUpdate
 import com.example.colorimagemobile.services.drawing.CanvasService
 import com.example.colorimagemobile.services.drawing.CanvasUpdateService
+import com.example.colorimagemobile.services.drawing.DrawingObjectManager
 import com.example.colorimagemobile.services.drawing.Point
 import com.example.colorimagemobile.services.drawing.toolsAttribute.ColorService
 import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
@@ -37,7 +38,7 @@ class EllipseCommand(ellipseData: EllipseData): ICommand {
             ellipseShape = LayerDrawable(ellipseShapeArray)
             fillEllipseIndex = ellipseShape.addLayer(fillEllipse)
             borderEllipseIndex = ellipseShape.addLayer(borderEllipse)
-            layerIndex = CanvasService.layerDrawable.addLayer(ellipseShape)
+            layerIndex = DrawingObjectManager.layerDrawable.addLayer(ellipseShape)
         }
         borderPaint.color = if(ellipseData.stroke != "none") ColorService.rgbaToInt(ellipseData.stroke)
         else Color.WHITE
@@ -76,7 +77,7 @@ class EllipseCommand(ellipseData: EllipseData): ICommand {
     }
 
     private fun getEllipseDrawable(): LayerDrawable {
-        return CanvasService.layerDrawable.getDrawable(this.layerIndex) as LayerDrawable
+        return DrawingObjectManager.layerDrawable.getDrawable(this.layerIndex) as LayerDrawable
     }
 
     override fun update(drawingCommand: Any) {

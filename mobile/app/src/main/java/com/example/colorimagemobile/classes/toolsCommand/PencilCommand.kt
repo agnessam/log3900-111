@@ -27,7 +27,7 @@ class PencilCommand(pencilData: PencilData): ICommand {
             CanvasService.extraCanvas.width.toFloat(), CanvasService.extraCanvas.height.toFloat())
 
         var shapeDrawable = ShapeDrawable(pathShape)
-        layerIndex = CanvasService.layerDrawable.addLayer(shapeDrawable)
+        layerIndex = DrawingObjectManager.layerDrawable.addLayer(shapeDrawable)
         PencilService.paths.putIfAbsent(layerIndex, path)
 
         paint.color = ColorService.rgbaToInt(this.pencil.stroke)
@@ -55,7 +55,7 @@ class PencilCommand(pencilData: PencilData): ICommand {
     }
 
     private fun getPathDrawable(): ShapeDrawable {
-        return CanvasService.layerDrawable.getDrawable(this.layerIndex) as ShapeDrawable
+        return DrawingObjectManager.layerDrawable.getDrawable(this.layerIndex) as ShapeDrawable
     }
 
     // update canvas
@@ -67,7 +67,7 @@ class PencilCommand(pencilData: PencilData): ICommand {
 
         var shapeDrawable = ShapeDrawable(pathShape)
         this.getPathDrawable().bounds = this.boundingRectangle
-        CanvasService.layerDrawable.setDrawable(layerIndex, shapeDrawable)
+        DrawingObjectManager.layerDrawable.setDrawable(layerIndex, shapeDrawable)
         PencilService.paths[layerIndex] = path
 
         this.getPathDrawable().paint.set(this.paint)

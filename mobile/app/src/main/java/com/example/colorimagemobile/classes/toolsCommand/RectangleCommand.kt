@@ -12,6 +12,7 @@ import com.example.colorimagemobile.models.RectangleUpdate
 import com.example.colorimagemobile.models.SyncUpdate
 import com.example.colorimagemobile.services.drawing.CanvasService
 import com.example.colorimagemobile.services.drawing.CanvasUpdateService
+import com.example.colorimagemobile.services.drawing.DrawingObjectManager
 import com.example.colorimagemobile.services.drawing.Point
 import com.example.colorimagemobile.services.drawing.toolsAttribute.ColorService
 import java.lang.Integer.min
@@ -36,7 +37,7 @@ class RectangleCommand(rectangleData: RectangleData): ICommand {
         rectangleShape = LayerDrawable(rectangleShapeArray)
         fillRectangleIndex = rectangleShape.addLayer(fillRectangle)
         borderRectangleIndex = rectangleShape.addLayer(borderRectangle)
-        layerIndex = CanvasService.layerDrawable.addLayer(rectangleShape)
+        layerIndex = DrawingObjectManager.layerDrawable.addLayer(rectangleShape)
 
         borderPaint.color = if(rectangleData.stroke != "none") ColorService.rgbaToInt(rectangleData.stroke)
             else Color.WHITE
@@ -75,7 +76,7 @@ class RectangleCommand(rectangleData: RectangleData): ICommand {
     }
 
     private fun getRectangleDrawable(): LayerDrawable{
-        return CanvasService.layerDrawable.getDrawable(this.layerIndex) as LayerDrawable
+        return DrawingObjectManager.layerDrawable.getDrawable(this.layerIndex) as LayerDrawable
     }
 
     override fun update(drawingCommand: Any) {
