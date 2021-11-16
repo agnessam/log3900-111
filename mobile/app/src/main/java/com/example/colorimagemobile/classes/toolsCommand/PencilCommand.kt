@@ -1,16 +1,14 @@
 package com.example.colorimagemobile.classes.toolsCommand
 
-import android.graphics.Paint
-import android.graphics.Path
-import android.graphics.Rect
+import android.graphics.*
 import android.graphics.drawable.ShapeDrawable
 import android.graphics.drawable.shapes.PathShape
 import com.example.colorimagemobile.interfaces.ICommand
 import com.example.colorimagemobile.models.PencilData
 import com.example.colorimagemobile.models.SyncUpdate
 import com.example.colorimagemobile.services.drawing.*
+import com.example.colorimagemobile.services.drawing.Point
 import com.example.colorimagemobile.services.drawing.toolsAttribute.ColorService
-import android.graphics.RectF
 import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
 
 import com.example.colorimagemobile.services.drawing.toolsAttribute.PencilService
@@ -61,6 +59,9 @@ class PencilCommand(pencilData: PencilData): ICommand {
     // update canvas
     override fun execute() {
 //        CanvasService.extraCanvas.drawPath(pencilPaintPath.path, pencilPaintPath.brush.getPaint())
+        path = generateFillPath()
+//        path.fillType = Path.FillType.EVEN_ODD
+        paint = generatePaint()
         val pathShape = PathShape(path,
             CanvasService.extraCanvas.width.toFloat(), CanvasService.extraCanvas.height.toFloat()
         )
@@ -72,5 +73,37 @@ class PencilCommand(pencilData: PencilData): ICommand {
 
         this.getPathDrawable().paint.set(this.paint)
         CanvasUpdateService.invalidate()
+    }
+
+    private fun generatePaint(): Paint{
+        var paint = Paint()
+        paint.color = Color.BLUE
+        paint.style = Paint.Style.FILL
+        paint.isDither = true
+        paint.isAntiAlias = true
+        return paint
+    }
+
+    private fun generateFillPath(): Path {
+        var left = 10f
+        var top = 10f
+        var right = 200f
+        var bottom = 200f
+        var rect = RectF(left.toFloat(), top.toFloat(), right.toFloat(), bottom.toFloat())
+
+        val borderPath = Path()
+
+        borderPath.addRect(rect, Path.Direction.CW)
+        borderPath.close()
+
+        val innerRect = RectF(rect)
+        innerRect.inset(34f, 34f)
+        if (innerRect.width() > 0 && innerRect.height() > 0) {
+            borderPath.addRect(innerRect, Path.Direction.CW)
+            borderPath.close()
+        }
+
+        borderPath.setFillType(Path.FillType.EVEN_ODD)
+        return borderPath
     }
 }
