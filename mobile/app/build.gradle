@@ -84,4 +84,10 @@ dependencies {
 
     // material dialogs
     implementation 'com.afollestad.material-dialogs:core:3.1.0'
+
+    // image loading library
+    implementation 'com.squareup.picasso:picasso:2.71828'
+
+    // circular image for avatar library
+    implementation 'de.hdodenhof:circleimageview:3.1.0'
 }

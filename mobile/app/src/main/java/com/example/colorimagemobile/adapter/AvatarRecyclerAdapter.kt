@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.colorimagemobile.R
 import com.example.colorimagemobile.models.AvatarModel
 import com.example.colorimagemobile.services.avatar.AvatarService
-import com.google.android.material.imageview.ShapeableImageView
+import com.squareup.picasso.Picasso
 
 class AvatarRecyclerAdapter:
     RecyclerView.Adapter<AvatarRecyclerAdapter.ViewHolder>() {
@@ -25,8 +25,9 @@ class AvatarRecyclerAdapter:
 
     override fun onBindViewHolder(holder: AvatarRecyclerAdapter.ViewHolder, position: Int) {
         avatars = AvatarService.getAvatars()
-        var currentItem = avatars[position]
-        holder.avatarUrl = avatars[position].imageUrl
+        Picasso.get()
+            .load(avatars[position].imageUrl)
+            .into(holder.cardAvatarview)
     }
 
     override fun getItemCount(): Int {
@@ -34,12 +35,10 @@ class AvatarRecyclerAdapter:
     }
 
     inner class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView){
-        var avatar : ShapeableImageView
-        var avatarUrl : String
+        var cardAvatarview : ImageView
 
         init {
-            avatar = itemView.findViewById(R.id.card_avatar)
-            avatarUrl = itemView.findViewById<ImageView>(R.id.avatar_url).toString()
+            cardAvatarview = itemView.findViewById(R.id.card_avatar_view)
 
         }
     }

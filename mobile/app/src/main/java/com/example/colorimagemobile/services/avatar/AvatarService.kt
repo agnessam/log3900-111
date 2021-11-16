@@ -7,6 +7,7 @@ object AvatarService {
 
     fun setAvatars(allAvatar:ArrayList<AvatarModel.AllInfo>){
         this.allAvatar  = allAvatar
+
     }
     fun getAvatars() : ArrayList<AvatarModel.AllInfo> {
         return this.allAvatar

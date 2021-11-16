@@ -25,8 +25,24 @@
     <string name="accept"> Accept</string>
     <string name="decline">Decline</string>
     <string name="new_friends_request">New friend request</string>
-    <string name="Choose_an_avatar"><b>Choose an avatar</b></string>
+    <string name="Choose_an_avatar"><b>Choose an avatar !</b></string>
     <string name="choose_an_avatar">Choose an avatar</string>
     <string name="upload_an_avatar">Upload an avatar</string>
+    <string name="Username">Username</string>
+    <string name="customize">UPDATE</string>
+    <string name="description">Description</string>
+    <string name="first_name">First Name</string>
+    <string name="last_name">Last Name</string>
+    <string name="last_login">Last Login Date</string>
+    <string name="last_logout">Last Logout Date</string>
+    <string name="last_edition_date">Last Edition Date</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="new_password">New Password</string>
+    <string name="current_password">Current Password</string>
+    <string name="change_password">Change Password</string>
+    <string name="edit_password">Edit Password</string>
+    <string name="history_log">History Log</string>
+    <string name="edit_profil">Edit Profil</string>
+    <string name="compte_parameter">COMPTE PARAMETER</string>
 
 </resources>

@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:orientation="horizontal"
+    android:background="@color/container"
     android:layout_height="match_parent">
 
     <LinearLayout
@@ -8,7 +11,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="20dp"
-        android:background="@color/container"
         android:orientation="vertical">
 
 
@@ -16,7 +18,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="20dp"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:baselineAligned="false">
 
             <LinearLayout
                 android:layout_width="0dp"
@@ -25,7 +28,7 @@
                 android:orientation="vertical">
 
                 <ImageView
-                    android:id="@+id/avatar"
+                    android:id="@+id/current_avatar"
                     android:layout_width="200dp"
                     android:layout_height="200dp"
                     android:layout_gravity="center"
@@ -49,6 +52,11 @@
                     android:layout_marginEnd="40dp"
                     android:backgroundTint="@color/primary"
                     android:text="@string/choose_an_avatar" />
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    tools:ignore="NestedWeights" />
 
                 <Button
                     android:id="@+id/upload_avatar_from_camera"
@@ -75,7 +83,7 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="Pseudonyme"
+                android:text="@string/Username"
                 android:textSize="30sp" />
 
             <EditText
@@ -83,7 +91,8 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:textSize="30sp" />
+                android:textSize="30sp"
+                tools:ignore="SpeakableTextPresentCheck" />
 
 
         </LinearLayout>
@@ -98,7 +107,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Description"
+                android:text="@string/description"
                 android:textSize="30sp" />
 
             <EditText
@@ -106,19 +115,19 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:textSize="30sp" />
-
+                android:textSize="30sp"
+                tools:ignore="SpeakableTextPresentCheck" />
 
         </LinearLayout>
 
         <Button
             android:id="@+id/updatebutton"
-            android:layout_width="595dp"
-            android:layout_height="wrap_content"
-            android:layout_margin="300dp"
+            android:layout_width="741dp"
+            android:layout_gravity="end"
+            android:layout_height="0dp"
             android:layout_weight="1"
             android:backgroundTint="@color/primary"
-            android:text="Customize" />
+            android:text="@string/customize" />
 
     </LinearLayout>
 </ScrollView>

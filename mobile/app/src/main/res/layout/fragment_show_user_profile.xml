@@ -1,17 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
 android:layout_width="match_parent"
+android:background="@color/container"
 android:layout_height="match_parent">
-
 
 <LinearLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="20dp"
-    android:background="@color/white"
     android:orientation="vertical">
-
-
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -78,15 +75,15 @@ android:layout_height="match_parent">
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="nom"
+            android:text="@string/last_name"
             android:textSize="30sp" />
 
         <TextView
-            android:id="@+id/firstname"
+            android:id="@+id/lastname"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="bance"
+            android:hint="De Laroche"
             android:textSize="30sp" />
 
 
@@ -103,15 +100,15 @@ android:layout_height="match_parent">
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="prenom"
+            android:text="@string/first_name"
             android:textSize="30sp" />
 
         <TextView
-            android:id="@+id/lastname"
+            android:id="@+id/firstname"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="beatrice"
+            android:hint="jenifer"
             android:textSize="30sp" />
 
 
@@ -136,7 +133,7 @@ android:layout_height="match_parent">
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="test@test.com"
+            android:hint="j.roche@gmail.com"
             android:textSize="30sp" />
     </LinearLayout>
 </LinearLayout>

@@ -16,6 +16,7 @@ class Constants {
 
         const val EMPTY_STRING =""
         const val GENERAL_CHANNEL_NAME = "General"
+        const val FIELD_IS_REQUIRED = "Field is required"
 
     }
 

@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.customview.customView
@@ -15,10 +16,12 @@ import com.example.colorimagemobile.models.DataWrapper
 import com.example.colorimagemobile.models.HTTPResponseModel
 import com.example.colorimagemobile.models.UserModel
 import com.example.colorimagemobile.httpresponsehandler.GlobalHandler
+import com.example.colorimagemobile.models.AvatarModel
+import com.example.colorimagemobile.repositories.AvatarRepository
 import com.example.colorimagemobile.services.UserService
 import com.example.colorimagemobile.repositories.UserRepository
 import com.example.colorimagemobile.services.SharedPreferencesService
-import com.example.colorimagemobile.ui.avatar.AvatarFragment
+import com.example.colorimagemobile.services.avatar.AvatarService
 import com.example.colorimagemobile.utils.CommonFun
 import com.example.colorimagemobile.utils.Constants
 
@@ -26,6 +29,7 @@ class EditProfileFragment : Fragment() {
 
     private lateinit var sharedPreferencesService: SharedPreferencesService
     private lateinit var userRepository: UserRepository
+    private lateinit var avatarRepository : AvatarRepository
     private lateinit var edtDescription: String
     private lateinit var infDescription: TextView
     private lateinit var edtUsername: String
@@ -40,6 +44,7 @@ class EditProfileFragment : Fragment() {
         super.onCreate(savedInstanceState)
         user = UserService.getUserInfo()
         userRepository = UserRepository()
+        avatarRepository = AvatarRepository()
         globalHandler = GlobalHandler()
         sharedPreferencesService = context?.let { SharedPreferencesService(it) }!!
         token = sharedPreferencesService.getItem(Constants.STORAGE_KEY.TOKEN)
@@ -77,12 +82,12 @@ class EditProfileFragment : Fragment() {
         edtDescription = infDescription.text.toString()
 
         if (edtUsername.length == 0) {
-            infName.error = "Field is required"
+            infName.error = Constants.FIELD_IS_REQUIRED
             required = true
             view = infName
 
         } else if (edtDescription.length == 0) {
-            infDescription.error = "Field is required"
+            infDescription.error = Constants.FIELD_IS_REQUIRED
             required = true
             view = infDescription
         }
@@ -109,19 +114,33 @@ class EditProfileFragment : Fragment() {
         return userRepository.updateUserData(token, user._id)
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-    }
 
+    // show modal with default avatar
     fun showAvatarDialog(){
 
         val dialog = context?.let {
             MaterialDialog(it)
-                .customView(R.layout.fragment_avatar)
+                .customView(R.layout.avatar_view)
         }
         dialog!!.show()
     }
+     // Get all default avatar from database
+     private fun getAllAvatar(){
+        AvatarRepository().getAllAvatar(UserService.getToken()).observe(context as LifecycleOwner,{
+            if (it.isError as Boolean) {
+                return@observe
+            }
+            val avatars = it.data as ArrayList<AvatarModel.AllInfo>
+            AvatarService.setAvatars(avatars)
 
+        })
+
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        getAllAvatar()
+    }
 
 
 }
