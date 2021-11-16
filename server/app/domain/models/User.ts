@@ -7,13 +7,17 @@ export interface UserInterface extends Document {
   username: string;
   description: string;
   avatar: AvatarInterface;
+
   email: string;
   password: string;
   firstName: string;
   lastName: string;
+
   teams: string[] | TeamInterface[];
+
   drawings: string[];
-  publishedDrawings: string[];
+  posts: string[];
+
   isValidPassword(password: string): Promise<boolean>;
 }
 
@@ -35,7 +39,7 @@ const UserSchema = new mongoose.Schema({
   teams: [{ type: Schema.Types.ObjectId, ref: 'Team' }],
 
   drawings: [{ type: Schema.Types.ObjectId, ref: 'Drawing' }],
-  publishedDrawings: [{ type: Schema.Types.ObjectId, ref: 'PublishedDrawing' }],
+  posts: [{ type: Schema.Types.ObjectId, ref: 'PublishedDrawing' }],
 });
 
 UserSchema.pre('save', async function (next) {

@@ -110,4 +110,17 @@ export class TeamRepository extends GenericRepository<TeamInterface> {
         });
     });
   }
+
+  public async getPosts(teamId: string) {
+    return new Promise((resolve, reject) => {
+      Team.findById({ _id: teamId })
+        .populate('posts')
+        .exec((err, team) => {
+          if (err || !team) {
+            reject(err);
+          }
+          resolve(team!.posts);
+        });
+    });
+  }
 }
