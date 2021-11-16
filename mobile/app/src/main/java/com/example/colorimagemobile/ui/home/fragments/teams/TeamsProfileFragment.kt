@@ -17,7 +17,6 @@ import com.example.colorimagemobile.models.TeamModel
 import com.example.colorimagemobile.models.recyclerAdapters.DrawingMenuData
 import com.example.colorimagemobile.repositories.TeamRepository
 import com.example.colorimagemobile.services.teams.TeamService
-import com.example.colorimagemobile.utils.CommonFun.Companion.toggleButton
 import com.example.colorimagemobile.utils.Constants
 import com.google.android.material.tabs.TabLayout
 
@@ -25,8 +24,10 @@ class TeamsProfileFragment : Fragment(R.layout.fragment_teams_profile) {
     private var teamPosition: Int? = null
     private lateinit var currentTeam: TeamModel
     private lateinit var myView: View
-    private val drawingsMenu: ArrayList<DrawingMenuData> = arrayListOf()
     private lateinit var recyclerView: RecyclerView
+    private val drawingsMenu: ArrayList<DrawingMenuData> = arrayListOf()
+    private lateinit var joinBtn: Button
+    private lateinit var leaveBtn: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,16 +56,28 @@ class TeamsProfileFragment : Fragment(R.layout.fragment_teams_profile) {
         myView.findViewById<TextView>(R.id.teamIdNbOfMembers).text = "${currentTeam.members.size} members"
         myView.findViewById<TextView>(R.id.teamIdDescription).text = currentTeam.description
 
-        val joinBtn = myView.findViewById<Button>(R.id.teamIdJoinBtn)
-        val leaveBtn = myView.findViewById<Button>(R.id.leaveTeamIdBtn)
+        joinBtn = myView.findViewById<Button>(R.id.teamIdJoinBtn)
+        leaveBtn = myView.findViewById<Button>(R.id.leaveTeamIdBtn)
 
+        updateTeamButtons()
+    }
+
+    private fun updateTeamButtons() {
         if (TeamService.isUserAlreadyTeamMember(teamPosition!!)) {
-            joinBtn.visibility = View.GONE
-            leaveBtn.visibility = View.VISIBLE
+            hideJoinBtn()
         } else {
-            joinBtn.visibility = View.VISIBLE
-            leaveBtn.visibility = View.GONE
+            showJoinBtn()
         }
+    }
+
+    private fun hideJoinBtn() {
+        joinBtn.visibility = View.GONE
+        leaveBtn.visibility = View.VISIBLE
+    }
+
+    private fun showJoinBtn() {
+        joinBtn.visibility = View.VISIBLE
+        leaveBtn.visibility = View.GONE
     }
 
     private fun setListeners() {
@@ -79,6 +92,15 @@ class TeamsProfileFragment : Fragment(R.layout.fragment_teams_profile) {
             override fun onTabReselected(tab: TabLayout.Tab?) { }
             override fun onTabUnselected(tab: TabLayout.Tab?) { }
         })
+
+        joinBtn.setOnClickListener {
+            TeamService.joinTeam(teamPosition!!, requireContext())
+            hideJoinBtn()
+        }
+        leaveBtn.setOnClickListener {
+            TeamService.leaveTeam(teamPosition!!, requireContext())
+            showJoinBtn()
+        }
     }
 
     private fun getTeamDrawings() {
