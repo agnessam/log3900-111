@@ -1,15 +1,13 @@
 package com.example.colorimagemobile.classes.toolsCommand
 
-import android.graphics.Color
-import android.graphics.Paint
+import android.graphics.*
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.LayerDrawable
 import android.graphics.drawable.ShapeDrawable
-import android.graphics.drawable.shapes.RectShape
+import android.graphics.drawable.shapes.PathShape
 import com.example.colorimagemobile.interfaces.ICommand
 import com.example.colorimagemobile.models.RectangleData
 import com.example.colorimagemobile.models.RectangleUpdate
-import com.example.colorimagemobile.models.SyncUpdate
 import com.example.colorimagemobile.services.drawing.CanvasService
 import com.example.colorimagemobile.services.drawing.CanvasUpdateService
 import com.example.colorimagemobile.services.drawing.DrawingObjectManager
@@ -18,6 +16,8 @@ import com.example.colorimagemobile.services.drawing.toolsAttribute.ColorService
 import java.lang.Integer.min
 
 class RectangleCommand(rectangleData: RectangleData): ICommand {
+    private var boundingRectangle = Rect(0,0, CanvasService.extraCanvas.width, CanvasService.extraCanvas.height)
+
     private var startingPoint: Point? = null
     private var endingPoint: Point? = null
 
@@ -26,32 +26,49 @@ class RectangleCommand(rectangleData: RectangleData): ICommand {
     private var borderRectangleIndex: Int = -1
 
     var rectangle: RectangleData = rectangleData
-    private var rectangleShape: LayerDrawable
+
+    private lateinit var rectangleShape: LayerDrawable
+
     private var borderPaint: Paint = Paint()
     private var fillPaint: Paint = Paint()
-    init{
 
-        var borderRectangle = ShapeDrawable(RectShape())
-        var fillRectangle = ShapeDrawable(RectShape())
+    private var borderPath = Path()
+    private var fillPath = Path()
+    init{
+        var fillRectangle = createNewRectangle()
+        var borderRectangle = createNewRectangle()
+
+        initializeRectangleLayers(fillRectangle, borderRectangle)
+
+        borderPaint = initializePaint(rectangleData.stroke, Color.WHITE)
+        fillPaint = initializePaint(rectangleData.fill, Color.BLACK)
+
+        setStartPoint(Point(rectangle.x.toFloat(), rectangle.y.toFloat()))
+    }
+
+    private fun initializePaint(color: String, defaultColor: Int): Paint{
+        var paint = Paint()
+        paint.color = if(color != "none") ColorService.rgbaToInt(color)
+        else Color.BLACK
+        paint.isAntiAlias = true
+        paint.style = Paint.Style.FILL
+        paint.isDither = true
+        return paint
+    }
+
+    private fun initializeRectangleLayers(fillRectangle: ShapeDrawable, borderRectangle: ShapeDrawable) {
         var rectangleShapeArray = arrayOf<Drawable>()
         rectangleShape = LayerDrawable(rectangleShapeArray)
+
         fillRectangleIndex = rectangleShape.addLayer(fillRectangle)
         borderRectangleIndex = rectangleShape.addLayer(borderRectangle)
         layerIndex = DrawingObjectManager.addLayer(rectangleShape, rectangle.id)
+    }
 
-        borderPaint.color = if(rectangleData.stroke != "none") ColorService.rgbaToInt(rectangleData.stroke)
-            else Color.WHITE
-        fillPaint.color = if(rectangleData.fill != "none") ColorService.rgbaToInt(rectangleData.fill)
-            else Color.BLACK
-
-        borderPaint.style = Paint.Style.STROKE
-        fillPaint.style = Paint.Style.FILL
-
-        borderPaint.strokeJoin = Paint.Join.MITER
-        borderPaint.strokeWidth = this.rectangle.strokeWidth.toFloat()
-
-
-        setStartPoint(Point(rectangle.x.toFloat(), rectangle.y.toFloat()))
+    private fun createNewRectangle(): ShapeDrawable{
+        val pathShape = PathShape(Path(),
+            CanvasService.extraCanvas.width.toFloat(), CanvasService.extraCanvas.height.toFloat())
+        return ShapeDrawable(pathShape)
     }
 
     private fun setStartPoint(startPoint: Point) {
@@ -65,6 +82,9 @@ class RectangleCommand(rectangleData: RectangleData): ICommand {
         rectangle.x = min(endingPoint!!.x.toInt(), startingPoint!!.x.toInt())
         rectangle.height = kotlin.math.abs(endingPoint!!.y - startingPoint!!.y).toInt()
         rectangle.y = min(endingPoint!!.y.toInt(), startingPoint!!.y.toInt())
+
+        this.generateBorderPath()
+        this.generateFillPath()
     }
 
     private fun getFillRectangle(): ShapeDrawable{
@@ -89,21 +109,63 @@ class RectangleCommand(rectangleData: RectangleData): ICommand {
     }
 
     override fun execute() {
+        if(rectangle.stroke != "none"){
+            val borderRectPathShape = PathShape(borderPath,
+                CanvasService.extraCanvas.width.toFloat(), CanvasService.extraCanvas.height.toFloat()
+            )
+            var borderRectDrawable = ShapeDrawable(borderRectPathShape)
+            this.getBorderRectangle().bounds = this.boundingRectangle
+
+            this.getRectangleDrawable().setDrawable(this.borderRectangleIndex, borderRectDrawable)
+            this.getBorderRectangle().paint.set(this.borderPaint)
+        }
+
+        if(rectangle.fill != "none"){
+            val fillRectPathShape = PathShape(fillPath,
+                CanvasService.extraCanvas.width.toFloat(), CanvasService.extraCanvas.height.toFloat()
+            )
+
+            var fillRectDrawable = ShapeDrawable(fillRectPathShape)
+            this.getFillRectangle().bounds = this.boundingRectangle
+
+            this.getRectangleDrawable().setDrawable(this.fillRectangleIndex, fillRectDrawable)
+            this.getFillRectangle().paint.set(this.fillPaint)
+        }
+
+        DrawingObjectManager.setDrawable(layerIndex, rectangleShape)
+        CanvasUpdateService.invalidate()
+    }
+
+    private fun generateFillPath(){
         var left = rectangle.x
         var top = rectangle.y
         var right = rectangle.x + rectangle.width
         var bottom = rectangle.y + rectangle.height
+        var rect = RectF(left.toFloat(), top.toFloat(), right.toFloat(), bottom.toFloat())
 
-        if(rectangle.fill != "none"){
-            this.getFillRectangle().setBounds(left , top , right , bottom)
-            this.getFillRectangle().paint.set(this.fillPaint)
+        fillPath = Path()
+        fillPath.addRect(rect, Path.Direction.CW)
+    }
+
+    private fun generateBorderPath(){
+        var left = rectangle.x
+        var top = rectangle.y
+        var right = rectangle.x + rectangle.width
+        var bottom = rectangle.y + rectangle.height
+        var rect = RectF(left.toFloat(), top.toFloat(), right.toFloat(), bottom.toFloat())
+
+        borderPath = Path()
+
+        borderPath.addRect(rect, Path.Direction.CW)
+        borderPath.close()
+
+        val innerRect = RectF(rect)
+        innerRect.inset(this.rectangle.strokeWidth.toFloat(), this.rectangle.strokeWidth.toFloat())
+        if (innerRect.width() > 0 && innerRect.height() > 0) {
+            borderPath.addRect(innerRect, Path.Direction.CW)
+            borderPath.close()
         }
-        if(rectangle.stroke != "none"){
-            this.getBorderRectangle().setBounds(left, top, right, bottom)
-            this.getBorderRectangle().paint.set(this.borderPaint)
-        }
-        this.getRectangleDrawable().setBounds(left, top, right, bottom)
-        DrawingObjectManager.addCommand(rectangle.id, this)
-        CanvasUpdateService.invalidate()
+
+        borderPath.fillType = Path.FillType.EVEN_ODD
     }
 }

@@ -16,10 +16,10 @@
         android:label="Chat"
         tools:layout="@layout/fragment_chat" />
     <fragment
-        android:id="@+id/notificationFragment"
-        android:name="com.example.colorimagemobile.ui.home.fragments.notification.NotificationFragment"
-        android:label="Notification"
-        tools:layout="@layout/fragment_notification" />
+        android:id="@+id/teamsFragment"
+        android:name="com.example.colorimagemobile.ui.home.fragments.teams.TeamsFragment"
+        android:label="Teams"
+        tools:layout="@layout/fragment_teams" />
     <fragment
         android:id="@+id/userProfileFragment"
         android:name="com.example.colorimagemobile.ui.userProfile.UserProfileFragment"

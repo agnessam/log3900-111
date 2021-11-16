@@ -13,6 +13,7 @@ class Constants {
         const val EMPTY_STRING =""
         const val GENERAL_CHANNEL_NAME = "General"
 
+        const val NB_DATA_ROWS = 3
     }
 
     class SOCKETS {
@@ -49,6 +50,9 @@ class Constants {
 
             // drawings
             const val ALL_DRAWINGS = "api/drawings/"
+
+            // teams
+            const val TEAMS = "api/teams/"
         }
     }
 
@@ -59,6 +63,12 @@ class Constants {
 
             const val MIN_HEIGHT = 10
             const val MAX_HEIGHT = 1215
+        }
+    }
+
+    class TEAMS {
+        companion object {
+            const val CURRENT_TEAM_ID_KEY = "CurrentTeam"
         }
     }
 
