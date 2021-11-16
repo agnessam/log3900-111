@@ -1,5 +1,6 @@
 package com.example.colorimagemobile.classes.toolsCommand
 
+import android.R.attr
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Rect
@@ -17,8 +18,14 @@ import com.example.colorimagemobile.services.drawing.CanvasUpdateService
 import com.example.colorimagemobile.services.drawing.Point
 import com.example.colorimagemobile.services.drawing.toolsAttribute.ColorService
 import java.lang.Integer.min
+import android.R.attr.path
+
+
+
 
 class RectangleCommand(rectangleData: RectangleData): ICommand {
+    private var boundingRectangle = Rect(0,0, CanvasService.extraCanvas.width, CanvasService.extraCanvas.height)
+
     private var startingPoint: Point? = null
     private var endingPoint: Point? = null
 
@@ -111,37 +118,5 @@ class RectangleCommand(rectangleData: RectangleData): ICommand {
     }
 
     fun scaleTest(){
-//        var originalBounds = this.getFillRectangle().bounds
-//        this.getRectangleDrawable().bounds = Rect(originalBounds.left, originalBounds.top, originalBounds.right * 2, originalBounds.bottom * 2)
-//        CanvasUpdateService.invalidate()
-//        var quadrant = 1
-//        var ratio = 2
-//        var left = rectangle.x
-//        var top = rectangle.y
-//        var right = rectangle.x + rectangle.width
-//        var bottom = rectangle.y + rectangle.height
-//        when(quadrant){
-//            1 -> {
-//                right *= ratio
-//                top -= 0
-//            }
-//            2 -> {
-//                left *= ratio
-//                top *= ratio
-//            }
-//            3-> {
-//                left *= ratio
-//                bottom *= ratio
-//            }
-//            4 -> {
-//                right *= ratio
-//                bottom *= ratio
-//            }
-//            else -> {}
-//        }
-//
-//        this.getRectangleDrawable().bounds = Rect(left, top, right, bottom)
-//
-//        CanvasUpdateService.invalidate()
     }
 }

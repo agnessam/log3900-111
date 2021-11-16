@@ -16,6 +16,8 @@ abstract class CanvasView(context: Context?): View(context) {
     protected var motionTouchEventY = 0f
     protected var currentX = 0f
     protected var currentY = 0f
+    protected var offSetX = 0f
+    protected var offSetY = 0f
     protected val touchTolerance = ViewConfiguration.get(context).scaledTouchSlop
 
     protected var counter = 0
