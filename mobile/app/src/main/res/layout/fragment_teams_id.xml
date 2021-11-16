@@ -144,13 +144,12 @@
                     android:text="Published Drawings" />
             </com.google.android.material.tabs.TabLayout>
 
-
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/teamProfileDrawingsRecycler"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_below="@id/teamProfileDrawingsTabLayout" >
-            </androidx.recyclerview.widget.RecyclerView>
+                android:padding="4dp"
+                android:layout_below="@id/teamProfileDrawingsTabLayout"></androidx.recyclerview.widget.RecyclerView>
 
         </RelativeLayout>
 

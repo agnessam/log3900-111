@@ -79,6 +79,9 @@ class TeamsIdFragment : Fragment(R.layout.fragment_teams_id) {
                 return@observe
             }
 
+            /**
+             * CREATE OBJECT TO HANDLE DUPLICATE LOGIC (IN GALLERY MENU FRAGMENT)
+             */
             val drawings = it.data as ArrayList<DrawingModel.CreateDrawing>
             drawings.forEach { drawing ->
                 val bitmap: Bitmap? = ImageConvertor(requireContext()).base64ToBitmap(drawing.dataUri)
@@ -91,6 +94,9 @@ class TeamsIdFragment : Fragment(R.layout.fragment_teams_id) {
         })
     }
 
+    /**
+     * TO CHANGE LOGIC OF OPENING DRAWING
+     */
     private fun setAllDrawings() {
         recyclerView.adapter = DrawingMenuRecyclerAdapter(drawingsMenu, R.id.teamsMenuFrameLayout)
     }
