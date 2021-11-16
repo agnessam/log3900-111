@@ -68,7 +68,6 @@ class TeamsMenuFragment : Fragment(R.layout.fragment_teams_menu) {
     }
 
     private fun openTeam(position: Int) {
-        val team = TeamService.getTeam(position)
-        MyFragmentManager(requireActivity()).openWithData(R.id.teamsMenuFrameLayout, TeamsIdFragment(), Constants.TEAMS.CURRENT_TEAM_ID_KEY, team._id)
+        MyFragmentManager(requireActivity()).openWithData(R.id.teamsMenuFrameLayout, TeamsIdFragment(), Constants.TEAMS.CURRENT_TEAM_ID_KEY, position)
     }
 }

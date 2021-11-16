@@ -25,8 +25,8 @@ class TeamsMenuRecyclerAdapter(val joinTeamClicked: (Int) -> Unit, val openTeam:
         holder.teamName.text = TeamService.getAllTeams()[position].name
         holder.teamDescription.text = TeamService.getAllTeams()[position].description
 
-        if (TeamService.getAllTeams()[position].members.contains(UserService.getUserInfo()._id)) {
-            holder.joinTeamBtn.text = "Joined"
+        if (TeamService.shouldHideJoinTeamButton(position)) {
+            holder.joinTeamBtn.text = TeamService.JOINED_KEYWORD
             toggleButton(holder.joinTeamBtn, false)
         }
     }
