@@ -37,7 +37,7 @@ class RectangleCommand(rectangleData: RectangleData): ICommand {
         rectangleShape = LayerDrawable(rectangleShapeArray)
         fillRectangleIndex = rectangleShape.addLayer(fillRectangle)
         borderRectangleIndex = rectangleShape.addLayer(borderRectangle)
-        layerIndex = DrawingObjectManager.layerDrawable.addLayer(rectangleShape)
+        layerIndex = DrawingObjectManager.addLayer(rectangleShape, rectangle.id)
 
         borderPaint.color = if(rectangleData.stroke != "none") ColorService.rgbaToInt(rectangleData.stroke)
             else Color.WHITE
@@ -76,7 +76,7 @@ class RectangleCommand(rectangleData: RectangleData): ICommand {
     }
 
     private fun getRectangleDrawable(): LayerDrawable{
-        return DrawingObjectManager.layerDrawable.getDrawable(this.layerIndex) as LayerDrawable
+        return DrawingObjectManager.getDrawable(this.layerIndex) as LayerDrawable
     }
 
     override fun update(drawingCommand: Any) {
@@ -103,6 +103,7 @@ class RectangleCommand(rectangleData: RectangleData): ICommand {
             this.getBorderRectangle().paint.set(this.borderPaint)
         }
         this.getRectangleDrawable().setBounds(left, top, right, bottom)
+        DrawingObjectManager.addCommand(rectangle.id, this)
         CanvasUpdateService.invalidate()
     }
 }

@@ -38,7 +38,7 @@ class EllipseCommand(ellipseData: EllipseData): ICommand {
             ellipseShape = LayerDrawable(ellipseShapeArray)
             fillEllipseIndex = ellipseShape.addLayer(fillEllipse)
             borderEllipseIndex = ellipseShape.addLayer(borderEllipse)
-            layerIndex = DrawingObjectManager.layerDrawable.addLayer(ellipseShape)
+            layerIndex = DrawingObjectManager.addLayer(ellipseShape, ellipse.id)
         }
         borderPaint.color = if(ellipseData.stroke != "none") ColorService.rgbaToInt(ellipseData.stroke)
         else Color.WHITE
@@ -77,7 +77,7 @@ class EllipseCommand(ellipseData: EllipseData): ICommand {
     }
 
     private fun getEllipseDrawable(): LayerDrawable {
-        return DrawingObjectManager.layerDrawable.getDrawable(this.layerIndex) as LayerDrawable
+        return DrawingObjectManager.getDrawable(this.layerIndex) as LayerDrawable
     }
 
     override fun update(drawingCommand: Any) {
@@ -104,6 +104,7 @@ class EllipseCommand(ellipseData: EllipseData): ICommand {
             this.getBorderEllipse().paint.set(this.borderPaint)
         }
         this.getEllipseDrawable().setBounds(left, top, right, bottom)
+        DrawingObjectManager.addCommand(ellipse.id, this)
         CanvasUpdateService.invalidate()
     }
 }
