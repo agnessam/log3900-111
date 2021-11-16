@@ -81,6 +81,9 @@ class RectangleCommand(rectangleData: RectangleData): ICommand {
         rectangle.x = min(endingPoint!!.x.toInt(), startingPoint!!.x.toInt())
         rectangle.height = kotlin.math.abs(endingPoint!!.y - startingPoint!!.y).toInt()
         rectangle.y = min(endingPoint!!.y.toInt(), startingPoint!!.y.toInt())
+
+        this.generateBorderPath()
+        this.generateFillPath()
     }
 
     private fun getFillRectangle(): ShapeDrawable{
@@ -106,7 +109,6 @@ class RectangleCommand(rectangleData: RectangleData): ICommand {
 
     override fun execute() {
         if(rectangle.stroke != "none"){
-            this.generateBorderPath()
             val borderRectPathShape = PathShape(borderPath,
                 CanvasService.extraCanvas.width.toFloat(), CanvasService.extraCanvas.height.toFloat()
             )
@@ -118,7 +120,6 @@ class RectangleCommand(rectangleData: RectangleData): ICommand {
         }
 
         if(rectangle.fill != "none"){
-            this.generateFillPath()
             val fillRectPathShape = PathShape(fillPath,
                 CanvasService.extraCanvas.width.toFloat(), CanvasService.extraCanvas.height.toFloat()
             )
