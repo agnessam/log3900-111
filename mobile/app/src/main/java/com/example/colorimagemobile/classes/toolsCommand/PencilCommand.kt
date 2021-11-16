@@ -1,16 +1,14 @@
 package com.example.colorimagemobile.classes.toolsCommand
 
-import android.graphics.Paint
-import android.graphics.Path
-import android.graphics.Rect
+import android.graphics.*
 import android.graphics.drawable.ShapeDrawable
 import android.graphics.drawable.shapes.PathShape
 import com.example.colorimagemobile.interfaces.ICommand
 import com.example.colorimagemobile.models.PencilData
 import com.example.colorimagemobile.models.SyncUpdate
 import com.example.colorimagemobile.services.drawing.*
+import com.example.colorimagemobile.services.drawing.Point
 import com.example.colorimagemobile.services.drawing.toolsAttribute.ColorService
-import android.graphics.RectF
 import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
 
 import com.example.colorimagemobile.services.drawing.toolsAttribute.PencilService
@@ -60,7 +58,6 @@ class PencilCommand(pencilData: PencilData): ICommand {
 
     // update canvas
     override fun execute() {
-//        CanvasService.extraCanvas.drawPath(pencilPaintPath.path, pencilPaintPath.brush.getPaint())
         val pathShape = PathShape(path,
             CanvasService.extraCanvas.width.toFloat(), CanvasService.extraCanvas.height.toFloat()
         )
