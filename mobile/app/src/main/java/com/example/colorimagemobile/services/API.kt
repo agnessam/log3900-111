@@ -39,10 +39,9 @@ interface API {
     @PATCH(Constants.ENDPOINTS.USER_PATH+"{id}")
     fun updateUser(@Header("Authorization")token: String, @Path ("id") id : String, @Body  newUser: UserModel.UpdateUser) : Call<HTTPResponseModel.UserResponse>
 
-
     @Headers("Content-Type: application/json")
     @PATCH(Constants.ENDPOINTS.USER_PATH+"{id}")
-    fun updateLogHistory(@Header("Authorization")token: String, @Path ("id") id : String, @Body  newLogHistory:  UserModel.UpdateLogHistory) : Call<HTTPResponseModel.UserResponse>
+    fun updateUserAvatar(@Header("Authorization")token: String, @Path ("id") id : String, @Body  newAvatar: AvatarModel.UpdateAvatar) : Call<HTTPResponseModel.UserResponse>
 
     @Headers("Content-Type: application/json")
     @DELETE(Constants.ENDPOINTS.USER_PATH+"{id}")

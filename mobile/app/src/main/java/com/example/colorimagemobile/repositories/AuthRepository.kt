@@ -69,8 +69,6 @@ class AuthRepository {
 
                 authLiveData.value = DataWrapper(null, "Logging you out ${user.username}!", false)
 
-                // Set lastLogin date to localtime
-                UserService.setLogHistory(Constants.LAST_LOGOUT_DATE)
             }
 
             override fun onFailure(call: Call<Boolean>, t: Throwable) {

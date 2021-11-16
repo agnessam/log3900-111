@@ -21,18 +21,17 @@ import com.example.colorimagemobile.services.SharedPreferencesService
 import com.example.colorimagemobile.services.socket.SocketManagerService
 import com.example.colorimagemobile.utils.CommonFun.Companion.printToast
 import com.example.colorimagemobile.utils.CommonFun.Companion.redirectTo
+import com.example.colorimagemobile.utils.CommonFun.Companion.usernameMenuItem
 import com.example.colorimagemobile.utils.Constants
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class HomeActivity : AppCompatActivity() {
     private lateinit var homeViewModel: HomeActivityViewModel
     private lateinit var sharedPreferencesService: SharedPreferencesService
-    private lateinit var globalHandler: GlobalHandler
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
-        globalHandler = GlobalHandler()
         homeViewModel = ViewModelProvider(this).get(HomeActivityViewModel::class.java)
         sharedPreferencesService = SharedPreferencesService(this)
 
@@ -95,7 +94,9 @@ class HomeActivity : AppCompatActivity() {
         UserService.setUserInfo(response.data?.user as UserModel.AllInfo)
 
         // update username in menu item
-        val usernameMenuItem: ActionMenuItemView = findViewById(R.id.username_menu_item)
+//        val usernameMenuItem: ActionMenuItemView = findViewById(R.id.username_menu_item)
+//        usernameMenuItem.text = UserService.getUserInfo().username
+        usernameMenuItem = findViewById(R.id.username_menu_item)
         usernameMenuItem.text = UserService.getUserInfo().username
     }
 
@@ -115,19 +116,10 @@ class HomeActivity : AppCompatActivity() {
         }
 
         val token = sharedPreferencesService.getItem(Constants.STORAGE_KEY.TOKEN)
-        UserService.setToken(token)
-        UserService.setLogHistory(Constants.LAST_LOGOUT_DATE)
-        LogHistory()
-
         // remove items from "local storage"
         sharedPreferencesService.removeItem(Constants.STORAGE_KEY.TOKEN)
 
         redirectTo(this, LoginActivity::class.java)
     }
 
-    private fun LogHistory(){
-        UserService.setLogHistory(Constants.LAST_LOGOUT_DATE)
-        val updateObserver = homeViewModel.updateLogHistory(UserService.getUserInfo()._id)
-        updateObserver.observe(this, { this?.let { it1 -> globalHandler.response(it1,it) } })
-    }
 }

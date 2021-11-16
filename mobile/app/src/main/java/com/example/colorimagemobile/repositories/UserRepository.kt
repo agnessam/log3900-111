@@ -1,10 +1,7 @@
 package com.example.colorimagemobile.repositories
 
 import androidx.lifecycle.MutableLiveData
-import com.example.colorimagemobile.models.DataWrapper
-import com.example.colorimagemobile.models.HTTPResponseModel
-import com.example.colorimagemobile.models.TeamModel
-import com.example.colorimagemobile.models.UserModel
+import com.example.colorimagemobile.models.*
 import com.example.colorimagemobile.services.RetrofitInstance
 import com.example.colorimagemobile.services.UserService
 import retrofit2.Call
@@ -15,7 +12,6 @@ import retrofit2.Response
 class UserRepository {
     private val httpClient = RetrofitInstance.HTTP
     private lateinit var newProfileDate : UserModel.UpdateUser
-    private lateinit var logHistory : UserModel.UpdateLogHistory
 
     fun getUserByToken(token: String): MutableLiveData<DataWrapper<HTTPResponseModel.UserResponse>> {
         val userLiveData: MutableLiveData<DataWrapper<HTTPResponseModel.UserResponse>> = MutableLiveData()
@@ -67,6 +63,31 @@ class UserRepository {
         })
 
         return updateLiveData
+    }
+
+    // update user avatar
+    fun updateUserAvatar(token: String, id: String, avatar: AvatarModel.UpdateAvatar): MutableLiveData<DataWrapper<HTTPResponseModel.UserResponse>> {
+
+        val updateAvatar: MutableLiveData<DataWrapper<HTTPResponseModel.UserResponse>> = MutableLiveData()
+
+        httpClient.updateUserAvatar(token = "Bearer $token",id, avatar).enqueue(object :
+            Callback<HTTPResponseModel.UserResponse> {
+            override fun onResponse(call: Call<HTTPResponseModel.UserResponse>, response: Response<HTTPResponseModel.UserResponse>) {
+                if (!response.isSuccessful) {
+                    updateAvatar.value = DataWrapper(null, "An error occurred!", true)
+                    return
+                }
+                // avatar successfully update
+                updateAvatar.value = DataWrapper(response.body(), "", false)
+            }
+
+            override fun onFailure(call: Call<HTTPResponseModel.UserResponse>, t: Throwable) {
+                updateAvatar.value = DataWrapper(null, "Failed to update user avatar!", true)
+            }
+
+        })
+
+        return updateAvatar
     }
 
     // get user by id
@@ -132,30 +153,6 @@ class UserRepository {
         })
 
         return AllUserData
-    }
-
-    // update login or logout history
-    fun updateLogHistoryData(token: String, id: String): MutableLiveData<DataWrapper<HTTPResponseModel.UserResponse>> {
-
-        logHistory=UserService.getLogHistory()
-        val updateLogHistoryData: MutableLiveData<DataWrapper<HTTPResponseModel.UserResponse>> = MutableLiveData()
-        httpClient.updateLogHistory(token = "Bearer $token",id, logHistory).enqueue(object :
-            Callback<HTTPResponseModel.UserResponse> {
-            override fun onResponse(call: Call<HTTPResponseModel.UserResponse>, response: Response<HTTPResponseModel.UserResponse>) {
-                if (!response.isSuccessful) {
-                    updateLogHistoryData.value = DataWrapper(null, "An error occurred!", true)
-                    return
-                }
-                // log history successfully update
-                updateLogHistoryData.value = DataWrapper(response.body(), "", false)
-            }
-
-            override fun onFailure(call: Call<HTTPResponseModel.UserResponse>, t: Throwable) {
-                updateLogHistoryData.value = DataWrapper(null, "Failed to update log history account!", true)
-            }
-        })
-
-        return updateLogHistoryData
     }
 
     fun getUserTeams(token: String, userId: String): MutableLiveData<DataWrapper<List<TeamModel>>> {

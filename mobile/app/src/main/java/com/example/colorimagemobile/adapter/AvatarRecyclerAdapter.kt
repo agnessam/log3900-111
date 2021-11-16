@@ -8,9 +8,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.colorimagemobile.R
 import com.example.colorimagemobile.models.AvatarModel
 import com.example.colorimagemobile.services.avatar.AvatarService
-import com.squareup.picasso.Picasso
+import com.example.colorimagemobile.utils.CommonFun.Companion.loadUrl
 
-class AvatarRecyclerAdapter:
+class AvatarRecyclerAdapter(private val listener: OnItemClickListener ):
     RecyclerView.Adapter<AvatarRecyclerAdapter.ViewHolder>() {
 
     private lateinit var avatars: ArrayList<AvatarModel.AllInfo>
@@ -25,21 +25,31 @@ class AvatarRecyclerAdapter:
 
     override fun onBindViewHolder(holder: AvatarRecyclerAdapter.ViewHolder, position: Int) {
         avatars = AvatarService.getAvatars()
-        Picasso.get()
-            .load(avatars[position].imageUrl)
-            .into(holder.cardAvatarview)
+        loadUrl(avatars[position].imageUrl, holder.cardAvatarview)
     }
 
     override fun getItemCount(): Int {
         return AvatarService.getAvatars().size
     }
 
-    inner class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView){
+    inner class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView),
+        View.OnClickListener{
         var cardAvatarview : ImageView
 
         init {
             cardAvatarview = itemView.findViewById(R.id.card_avatar_view)
-
+            itemView.setOnClickListener(this)
         }
+
+        override fun onClick(v: View?) {
+            val position = bindingAdapterPosition
+            if (position!=RecyclerView.NO_POSITION){
+                listener.onItemClick(position)
+            }
+        }
+    }
+
+    interface OnItemClickListener{
+        fun onItemClick(position: Int)
     }
 }

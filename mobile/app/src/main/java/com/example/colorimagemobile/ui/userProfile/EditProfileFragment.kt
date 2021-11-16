@@ -5,13 +5,12 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
-import com.afollestad.materialdialogs.MaterialDialog
-import com.afollestad.materialdialogs.customview.customView
 import com.example.colorimagemobile.R
-import com.example.colorimagemobile.classes.MyFragmentManager
+import com.example.colorimagemobile.bottomsheets.DefaultAvatarListBottomSheet
 import com.example.colorimagemobile.models.DataWrapper
 import com.example.colorimagemobile.models.HTTPResponseModel
 import com.example.colorimagemobile.models.UserModel
@@ -23,7 +22,10 @@ import com.example.colorimagemobile.repositories.UserRepository
 import com.example.colorimagemobile.services.SharedPreferencesService
 import com.example.colorimagemobile.services.avatar.AvatarService
 import com.example.colorimagemobile.utils.CommonFun
+import com.example.colorimagemobile.utils.CommonFun.Companion.imageView
 import com.example.colorimagemobile.utils.Constants
+import kotlinx.android.synthetic.main.fragment_edit_profile.*
+import kotlinx.android.synthetic.main.fragment_show_user_profile.*
 
 class EditProfileFragment : Fragment() {
 
@@ -35,9 +37,12 @@ class EditProfileFragment : Fragment() {
     private lateinit var edtUsername: String
     private lateinit var globalHandler: GlobalHandler
     private lateinit var infName: TextView
-    private var infview : View ? = null
     private lateinit var token : String
     private lateinit var user : UserModel.AllInfo
+    private lateinit var currentAvatar : AvatarModel.AllInfo
+    private lateinit var newUserData : UserModel.UpdateUser
+    private var infview : View ? = null
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -60,18 +65,40 @@ class EditProfileFragment : Fragment() {
         val inf = inflater.inflate(R.layout.fragment_edit_profile, container, false)
 
         // listeners
-        inf.findViewById<View>(R.id.updatebutton).setOnClickListener { update() }
+        inf.findViewById<View>(R.id.updateprofile).setOnClickListener { update() }
+        inf.findViewById<View>(R.id.upload_avatar_from_camera).setOnClickListener { update() }
         inf.findViewById<View>(R.id.editprofileview).setOnTouchListener { v, event -> CommonFun.closeKeyboard_(this.requireActivity()) }
-        inf.findViewById<View>(R.id.choose_default_avatar).setOnClickListener { showAvatarDialog() }
+        inf.findViewById<View>(R.id.choosedefaultavatar).setOnClickListener {
+            val defaultAvatarList = DefaultAvatarListBottomSheet()
+            defaultAvatarList.show(parentFragmentManager, "DefaultAvatarListBottomSheetDialog")
+        }
 
        // keyboard
         CommonFun.onEnterKeyPressed_(inf.findViewById<View>(R.id.edtusername) as TextView) { update() }
         CommonFun.onEnterKeyPressed_(inf.findViewById<View>(R.id.edtdescription) as TextView) { update() }
+        imageView = (inf.findViewById<View>(R.id.current_avatar) as ImageView)
+        CommonFun.loadUrl(user.avatar.imageUrl, imageView )
         infview = inf
-
         return inf
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        getAllAvatar()
+    }
+
+    // Get all default avatar from database
+    private fun getAllAvatar(){
+        AvatarRepository().getAllAvatar(UserService.getToken()).observe(context as LifecycleOwner,{
+            if (it.isError as Boolean) {
+                return@observe
+            }
+            val avatars = it.data as ArrayList<AvatarModel.AllInfo>
+            AvatarService.setAvatars(avatars)
+        })
+    }
+
+    // verify field are empty
     private fun areFieldEmpty(): Boolean {
         var required: Boolean = false
         var view: View? = null
@@ -98,48 +125,33 @@ class EditProfileFragment : Fragment() {
         } else false
     }
 
+    // update user info
     private fun update(){
-        if (areFieldEmpty()) return
+        if (areFieldEmpty() && AvatarService.getCurrentAvatar().imageUrl== Constants.EMPTY_STRING ) return
 
+        if(AvatarService.getCurrentAvatar().imageUrl!= Constants.EMPTY_STRING && !areFieldEmpty()){
+            currentAvatar = AvatarService.getCurrentAvatar()
+            newUserData =UserModel.UpdateUser(edtUsername, edtDescription, user.password, currentAvatar)
+
+        }
+        else if (AvatarService.getCurrentAvatar().imageUrl!= Constants.EMPTY_STRING && areFieldEmpty()){
+            currentAvatar = AvatarService.getCurrentAvatar()
+            user = UserService.getUserInfo()
+            newUserData =UserModel.UpdateUser(user.username,user.description,user.password,currentAvatar)
+
+        }
+        else{
+            currentAvatar = UserService.getUserInfo().avatar
+            newUserData = UserModel.UpdateUser(edtUsername, edtDescription, user.password, currentAvatar)
+        }
         // form body to make HTTP request
-        val newUserData = UserModel.UpdateUser(edtUsername, edtDescription, user.password)
         UserService.setNewProfileData(newUserData)
         val updateObserver = updateUserInfo()
-
         updateObserver.observe(viewLifecycleOwner, { context?.let { it1 ->globalHandler.response(it1,it) } })
-        MyFragmentManager(requireActivity()).open(R.id.fragment, UserProfileFragment())
     }
 
     private fun updateUserInfo(): LiveData<DataWrapper<HTTPResponseModel.UserResponse>> {
         return userRepository.updateUserData(token, user._id)
-    }
-
-
-    // show modal with default avatar
-    fun showAvatarDialog(){
-
-        val dialog = context?.let {
-            MaterialDialog(it)
-                .customView(R.layout.avatar_view)
-        }
-        dialog!!.show()
-    }
-     // Get all default avatar from database
-     private fun getAllAvatar(){
-        AvatarRepository().getAllAvatar(UserService.getToken()).observe(context as LifecycleOwner,{
-            if (it.isError as Boolean) {
-                return@observe
-            }
-            val avatars = it.data as ArrayList<AvatarModel.AllInfo>
-            AvatarService.setAvatars(avatars)
-
-        })
-
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        getAllAvatar()
     }
 
 

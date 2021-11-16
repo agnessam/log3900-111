@@ -15,16 +15,16 @@
             android:id="@+id/newDrawingBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Create New Drawing"
             android:layout_alignParentRight="true"
-            android:backgroundTint="@color/primary"/>
+            android:backgroundTint="@color/primary"
+            android:text="Create New Drawing" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/drawingMenuRecyclerView"
-            android:layout_below="@id/newDrawingBtn"
-            android:layout_marginTop="20px"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_below="@id/newDrawingBtn"
+            android:layout_marginTop="20px">
 
 
         </androidx.recyclerview.widget.RecyclerView>

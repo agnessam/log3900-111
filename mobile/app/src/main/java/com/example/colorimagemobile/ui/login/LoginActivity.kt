@@ -101,8 +101,6 @@ class LoginActivity : AppCompatActivity() {
 
         sharedPreferencesService.setItem(Constants.STORAGE_KEY.TOKEN, response.token)
 
-        // Update login date
-        UserService.setLogHistory(Constants.LAST_LOGIN_DATE)
 
         redirectTo(this@LoginActivity, HomeActivity::class.java)
 

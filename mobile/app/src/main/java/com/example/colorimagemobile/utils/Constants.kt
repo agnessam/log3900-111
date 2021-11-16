@@ -10,10 +10,7 @@ class Constants {
         const val DEFAULT_ROOM_NAME = "default"
         const val TEXT_MESSAGE_EVENT_NAME = "text"
 
-        // profile user log history
-        const val LAST_LOGIN_DATE = "lastLogin"
-        const val LAST_LOGOUT_DATE ="lastLogout"
-
+        //global
         const val EMPTY_STRING =""
         const val GENERAL_CHANNEL_NAME = "General"
         const val FIELD_IS_REQUIRED = "Field is required"

@@ -7,20 +7,13 @@ class UserModel {
     data class Login(val username: String, val password: String)
     data class Register(val firstName: String, val lastName: String, val username: String, val email: String, val password: String,val createdAt : String)
     data class Logout(val username: String)
-    data class UpdateUser (var username: String,var description: String,var password: String)
-    data class UpdateLogHistory (var lastLoginDate: String , var lastLogoutDate: String)
-
+    data class UpdateUser (var username: String,var description: String,var password: String, var avatar : AvatarModel.AllInfo)
+    data class UpdateUserAvatar (var avatar : AvatarModel.AllInfo)
 
     // holds all the data of User
     data class AllInfo(
         @SerializedName("_id")
         val _id: String,
-
-        @SerializedName("lastLoginDate")
-        val lastLoginDate : String,
-
-        @SerializedName("lastLogoutDate")
-        val lastLogoutDate: String,
 
         @SerializedName("username")
         var username: String,
@@ -44,7 +37,10 @@ class UserModel {
         val teams: Array<String>,
 
         @SerializedName("drawings")
-        val drawings: Array<String>
+        val drawings: Array<String>,
+
+        @SerializedName("avatar")
+        val avatar : AvatarModel.AllInfo
     ) {
         override fun equals(other: Any?): Boolean {
             if (this === other) return true

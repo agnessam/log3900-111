@@ -129,7 +129,7 @@ class PasswordFragment : Fragment() {
     private fun updatePassword(){
         if (areFieldEmpty() || !isOldPassword() || !isNewPasswordMatch()) return
         // form body to make HTTP request
-        val newUserData = UserModel.UpdateUser(user.username, user.password, edtPassword)
+        val newUserData = UserModel.UpdateUser(user.username, user.password, edtPassword,user.avatar)
         UserService.setNewProfileData(newUserData)
         val updateObserver = updateUserInfo(token,user._id)
 

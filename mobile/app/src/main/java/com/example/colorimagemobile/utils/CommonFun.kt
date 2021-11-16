@@ -1,5 +1,6 @@
 package com.example.colorimagemobile.utils
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.Context.INPUT_METHOD_SERVICE
@@ -8,15 +9,18 @@ import android.util.Log
 import android.view.KeyEvent
 import android.view.View
 import android.view.inputmethod.InputMethodManager
-import android.widget.Button
-import android.widget.EditText
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
+import androidx.appcompat.view.menu.ActionMenuItemView
 import androidx.fragment.app.FragmentActivity
 import com.example.colorimagemobile.utils.Constants.Companion.DEBUG_KEY
+import com.squareup.picasso.Picasso
 
 class CommonFun {
     companion object {
+
+        lateinit var imageView: ImageView
+        lateinit var usernameMenuItem: ActionMenuItemView
+
         // print in the terminal with the tag: DEBUG
         fun printMsg(msg: String) {
             Log.d(DEBUG_KEY, msg)
@@ -85,6 +89,12 @@ class CommonFun {
             button.alpha = if (shouldEnable) 1f else .4f
             button.isClickable = shouldEnable
             button.isEnabled = shouldEnable
+        }
+
+        fun loadUrl(url: String, imageView: ImageView){
+            Picasso.get()
+                .load(url)
+                .into(imageView)
         }
     }
 }

@@ -7,27 +7,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.lifecycle.LiveData
 import com.example.colorimagemobile.R
-import com.example.colorimagemobile.models.DataWrapper
-import com.example.colorimagemobile.models.HTTPResponseModel
-import com.example.colorimagemobile.models.UserModel
-import com.example.colorimagemobile.repositories.UserRepository
-import com.example.colorimagemobile.services.UserService
-import com.example.colorimagemobile.utils.CommonFun
-import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
-import com.example.colorimagemobile.utils.Constants
 
 
 class UserProfileHistoryFragment : Fragment() {
     private lateinit var lastLogin : TextView
     private lateinit var lastLogout : TextView
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-
     }
 
     override fun onCreateView(
@@ -42,19 +30,7 @@ class UserProfileHistoryFragment : Fragment() {
         lastLogin= inf.findViewById<View>(R.id.lastLogin) as TextView
         lastLogout = inf.findViewById<View>(R.id.lastLogout) as TextView
 
-
-
         return inf
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        val user = UserService.getUserInfo()
-
-        // sets the derived data in the textView
-        lastLogin.text = user.lastLoginDate
-        lastLogout.text =user.lastLogoutDate
     }
 
 

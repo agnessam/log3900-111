@@ -3,8 +3,9 @@ package com.example.colorimagemobile.models
 import com.google.gson.annotations.SerializedName
 
 class AvatarModel {
-    data class Avatar(
-        val imageUrl: String
+    data class UpdateAvatar(
+        val imageUrl: String,
+        val default : Boolean
     )
 
     data class AllInfo(

@@ -27,12 +27,11 @@
                 android:layout_weight="1"
                 android:orientation="vertical">
 
-                <ImageView
+                <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/current_avatar"
                     android:layout_width="200dp"
                     android:layout_height="200dp"
-                    android:layout_gravity="center"
-                    android:src="@drawable/ic_home_black_24dp" />
+                    android:layout_gravity="center" />
 
 
             </LinearLayout>
@@ -44,7 +43,7 @@
                 android:orientation="horizontal">
 
                 <Button
-                    android:id="@+id/choose_default_avatar"
+                    android:id="@+id/choosedefaultavatar"
                     android:layout_width="217dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="40dp"
@@ -119,15 +118,33 @@
                 tools:ignore="SpeakableTextPresentCheck" />
 
         </LinearLayout>
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <Button
+        android:id="@+id/updateprofile"
+        android:layout_width="231dp"
+        android:layout_height="50dp"
+        android:layout_gravity="end"
+        android:layout_weight="1"
+        android:backgroundTint="@color/primary"
+        android:text="@string/customize" />
+    <View
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        tools:ignore="NestedWeights" />
+    <Button
+        android:id="@+id/updateavtar"
+        android:layout_width="231dp"
+        android:layout_height="50dp"
+        android:layout_gravity="start"
+        android:layout_weight="1"
+        android:backgroundTint="@color/primary"
+        android:text="@string/update_avatar" />
 
-        <Button
-            android:id="@+id/updatebutton"
-            android:layout_width="741dp"
-            android:layout_gravity="end"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:backgroundTint="@color/primary"
-            android:text="@string/customize" />
+</LinearLayout>
+
 
     </LinearLayout>
 </ScrollView>

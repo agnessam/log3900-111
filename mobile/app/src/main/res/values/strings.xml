@@ -29,7 +29,7 @@
     <string name="choose_an_avatar">Choose an avatar</string>
     <string name="upload_an_avatar">Upload an avatar</string>
     <string name="Username">Username</string>
-    <string name="customize">UPDATE</string>
+    <string name="customize">UPDATE PROFILE</string>
     <string name="description">Description</string>
     <string name="first_name">First Name</string>
     <string name="last_name">Last Name</string>
@@ -41,8 +41,14 @@
     <string name="current_password">Current Password</string>
     <string name="change_password">Change Password</string>
     <string name="edit_password">Edit Password</string>
-    <string name="history_log">History Log</string>
-    <string name="edit_profil">Edit Profil</string>
+    <string name="history_log">Log History</string>
+    <string name="edit_profil">Edit Profile</string>
     <string name="compte_parameter">COMPTE PARAMETER</string>
+    <string name="j_aime_le_bbq_korean">j\'aime le bbq korean</string>
+    <string name="de_laroche">De Laroche</string>
+    <string name="jenifer">jenifer</string>
+    <string name="email">Email</string>
+    <string name="j_roche_gmail_com">j.roche@gmail.com</string>
+    <string name="update_avatar">UPDATE AVATAR</string>
 
 </resources>
