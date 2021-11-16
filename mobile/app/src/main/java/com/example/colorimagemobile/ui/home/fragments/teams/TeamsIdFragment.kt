@@ -6,7 +6,9 @@ import android.view.View
 import android.widget.Button
 import android.widget.TextView
 import com.example.colorimagemobile.R
+import com.example.colorimagemobile.models.DrawingModel
 import com.example.colorimagemobile.models.TeamModel
+import com.example.colorimagemobile.repositories.TeamRepository
 import com.example.colorimagemobile.services.teams.TeamService
 import com.example.colorimagemobile.utils.CommonFun.Companion.toggleButton
 import com.example.colorimagemobile.utils.Constants
@@ -29,6 +31,7 @@ class TeamsIdFragment : Fragment(R.layout.fragment_teams_id) {
         myView = view
 
         updateUI()
+        getTeamDrawings()
     }
 
     private fun updateUI() {
@@ -42,5 +45,15 @@ class TeamsIdFragment : Fragment(R.layout.fragment_teams_id) {
             joinBtn.text = TeamService.JOINED_KEYWORD
             toggleButton(joinBtn, false)
         }
+    }
+
+    private fun getTeamDrawings() {
+        TeamRepository().getTeamDrawings(currentTeam._id).observe(viewLifecycleOwner, {
+            if (it.isError as Boolean) {
+                return@observe
+            }
+
+            val drawings = it.data as ArrayList<DrawingModel.CreateDrawing>
+        })
     }
 }

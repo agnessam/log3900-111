@@ -94,6 +94,9 @@ interface API {
     fun createNewDrawing(@Header("Authorization") token: String, @Body drawing: DrawingModel.CreateDrawing): Call<DrawingModel.CreateDrawing>
 
     // teams
+    @GET("${Constants.ENDPOINTS.TEAMS}{id}/drawings")
+    fun getTeamDrawings(@Header("Authorization") token: String, @Path ("id") id: String): Call<ArrayList<DrawingModel.CreateDrawing>>
+
     @GET(Constants.ENDPOINTS.TEAMS)
     fun getAllTeams(@Header("Authorization") token: String): Call<ArrayList<TeamModel>>
 
