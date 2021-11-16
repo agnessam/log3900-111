@@ -13,6 +13,7 @@ import com.example.colorimagemobile.models.TeamModel
 import com.example.colorimagemobile.repositories.TeamRepository
 import com.example.colorimagemobile.services.teams.TeamAdapterService
 import com.example.colorimagemobile.services.teams.TeamService
+import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
 import com.example.colorimagemobile.utils.CommonFun.Companion.printToast
 import com.example.colorimagemobile.utils.Constants
 
@@ -46,7 +47,7 @@ class TeamsFragment : Fragment(R.layout.fragment_teams) {
             val recyclerView = myView.findViewById<RecyclerView>(R.id.teamsMenuRecyclerView)
             recyclerView.layoutManager = GridLayoutManager(requireContext(), Constants.NB_DATA_ROWS)
 
-            val adapter = TeamsMenuRecyclerAdapter { teamPosition -> joinTeamClicked(teamPosition) }
+            val adapter = TeamsMenuRecyclerAdapter({ pos -> joinTeamClicked(pos)}, { pos -> openTeam(pos)})
             recyclerView.adapter = adapter
             TeamAdapterService.setAdapter(adapter)
         })
@@ -65,5 +66,9 @@ class TeamsFragment : Fragment(R.layout.fragment_teams) {
             TeamService.updateTeamByPosition(position, joinedTeam)
             TeamAdapterService.getTeamMenuAdapter().notifyItemChanged(position)
         })
+    }
+
+    private fun openTeam(position: Int) {
+        printMsg(position.toString())
     }
 }

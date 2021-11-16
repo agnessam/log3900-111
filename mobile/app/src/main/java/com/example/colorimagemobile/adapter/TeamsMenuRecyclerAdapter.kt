@@ -9,10 +9,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.colorimagemobile.R
 import com.example.colorimagemobile.services.UserService
 import com.example.colorimagemobile.services.teams.TeamService
-import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
 import com.example.colorimagemobile.utils.CommonFun.Companion.toggleButton
 
-class TeamsMenuRecyclerAdapter(val joinTeamClicked: (Int) -> Unit): RecyclerView.Adapter<TeamsMenuRecyclerAdapter.ViewHolder>() {
+class TeamsMenuRecyclerAdapter(val joinTeamClicked: (Int) -> Unit, val openTeam: (Int) -> Unit):
+    RecyclerView.Adapter<TeamsMenuRecyclerAdapter.ViewHolder>() {
 
     // create card view and sets its contents format
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TeamsMenuRecyclerAdapter.ViewHolder {
@@ -42,7 +42,7 @@ class TeamsMenuRecyclerAdapter(val joinTeamClicked: (Int) -> Unit): RecyclerView
         var joinTeamBtn : Button = itemView.findViewById(R.id.joinTeamBtn);
 
         init {
-            itemView.setOnClickListener { printMsg(bindingAdapterPosition.toString()) }
+            itemView.setOnClickListener { openTeam(bindingAdapterPosition) }
             joinTeamBtn.setOnClickListener { joinTeamClicked(bindingAdapterPosition) }
         }
     }
