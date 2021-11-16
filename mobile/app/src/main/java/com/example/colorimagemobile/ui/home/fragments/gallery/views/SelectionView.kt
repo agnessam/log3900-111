@@ -2,18 +2,14 @@ package com.example.colorimagemobile.ui.home.fragments.gallery.views
 
 import android.content.Context
 import android.graphics.*
-import android.graphics.drawable.Drawable
 import android.graphics.drawable.LayerDrawable
 import android.graphics.drawable.ShapeDrawable
-import android.graphics.drawable.shapes.PathShape
-import android.graphics.drawable.shapes.RectShape
 import com.example.colorimagemobile.classes.toolsCommand.SelectionCommand
 import com.example.colorimagemobile.models.SelectionData
 import com.example.colorimagemobile.services.UUIDService
 import com.example.colorimagemobile.services.drawing.CanvasService
-import com.example.colorimagemobile.services.drawing.SelectionService
+import com.example.colorimagemobile.services.drawing.toolsAttribute.SelectionService
 import com.example.colorimagemobile.services.drawing.toolsAttribute.PencilService
-import kotlin.io.path.Path
 
 class SelectionView(context: Context?): CanvasView(context) {
     private var selectionCommand: SelectionCommand? = null

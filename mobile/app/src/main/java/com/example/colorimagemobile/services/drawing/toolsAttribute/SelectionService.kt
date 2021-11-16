@@ -1,4 +1,4 @@
-package com.example.colorimagemobile.services.drawing
+package com.example.colorimagemobile.services.drawing.toolsAttribute
 
 import android.graphics.Color
 import android.graphics.DashPathEffect
@@ -7,11 +7,16 @@ import android.graphics.Rect
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.LayerDrawable
 import android.graphics.drawable.ShapeDrawable
-import android.graphics.drawable.shapes.OvalShape
 import android.graphics.drawable.shapes.RectShape
 
 // Helper to draw selection box to canvas
-object SelectionService {
+object SelectionService: Attributes {
+    override val minWidth = 1
+    override val maxWidth = 50
+    override var currentWidth: Int = 0
+
+    lateinit var selectedShape: Drawable
+
     var selectionBox: LayerDrawable = LayerDrawable(arrayOf<Drawable>())
     private lateinit var selectionRectangle: ShapeDrawable
     private lateinit var topCtrl: LayerDrawable
