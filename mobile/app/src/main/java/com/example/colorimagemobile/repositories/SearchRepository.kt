@@ -4,7 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import com.example.colorimagemobile.models.DataWrapper
 import com.example.colorimagemobile.models.SearchModel
 import com.example.colorimagemobile.services.RetrofitInstance
-import com.example.colorimagemobile.services.UserService
+import com.example.colorimagemobile.services.users.UserService
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

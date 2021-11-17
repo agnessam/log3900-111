@@ -7,9 +7,7 @@ import android.widget.Button
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.colorimagemobile.R
-import com.example.colorimagemobile.services.UserService
 import com.example.colorimagemobile.services.teams.TeamService
-import com.example.colorimagemobile.utils.CommonFun.Companion.toggleButton
 import com.google.android.material.button.MaterialButton
 
 class TeamsMenuRecyclerAdapter(

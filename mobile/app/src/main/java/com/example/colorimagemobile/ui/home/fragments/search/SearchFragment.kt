@@ -9,6 +9,8 @@ import com.example.colorimagemobile.R
 import com.example.colorimagemobile.models.SearchModel
 import com.example.colorimagemobile.services.teams.TeamAdapterService
 import com.example.colorimagemobile.services.teams.TeamService
+import com.example.colorimagemobile.services.users.UserAdapterService
+import com.example.colorimagemobile.services.users.UserService
 import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
 import com.example.colorimagemobile.utils.Constants
 import com.google.android.material.tabs.TabLayout
@@ -54,14 +56,18 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
     }
 
     private fun setUsers() {
-        recyclerView.adapter = null
+        recyclerView.layoutManager = LinearLayoutManager(requireContext())
+
+        UserService.setAllUserInfo(queryObject.users)
+        val adapter = UserAdapterService.createAdapter(requireContext(), requireActivity(), R.layout.recycler_search_user_menu, R.id.searchMainFragment)
+        recyclerView.adapter = adapter
+        UserAdapterService.setAdapter(adapter)
     }
 
     private fun setTeams() {
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
         TeamService.setAllTeams(queryObject.teams)
-
         val adapter = TeamAdapterService.createAdapter(requireContext(), requireActivity(), R.layout.recycler_search_team_menu, R.id.searchMainFragment)
         recyclerView.adapter = adapter
         TeamAdapterService.setAdapter(adapter)

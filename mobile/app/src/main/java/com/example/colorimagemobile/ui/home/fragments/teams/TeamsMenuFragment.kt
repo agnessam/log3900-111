@@ -8,7 +8,6 @@ import android.widget.TextView
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.colorimagemobile.R
-import com.example.colorimagemobile.adapter.TeamsMenuRecyclerAdapter
 import com.example.colorimagemobile.bottomsheets.NewTeamBottomSheet
 import com.example.colorimagemobile.classes.MyFragmentManager
 import com.example.colorimagemobile.models.TeamModel
