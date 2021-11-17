@@ -15,6 +15,7 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import com.example.colorimagemobile.R
 import com.example.colorimagemobile.bottomsheets.DefaultAvatarListBottomSheet
+import com.example.colorimagemobile.classes.MyFragmentManager
 import com.example.colorimagemobile.models.DataWrapper
 import com.example.colorimagemobile.models.HTTPResponseModel
 import com.example.colorimagemobile.models.UserModel
@@ -25,6 +26,7 @@ import com.example.colorimagemobile.services.UserService
 import com.example.colorimagemobile.repositories.UserRepository
 import com.example.colorimagemobile.services.SharedPreferencesService
 import com.example.colorimagemobile.services.avatar.AvatarService
+import com.example.colorimagemobile.ui.home.HomeActivity
 import com.example.colorimagemobile.utils.CommonFun
 import com.example.colorimagemobile.utils.CommonFun.Companion.imageView
 import com.example.colorimagemobile.utils.CommonFun.Companion.loadUrl
@@ -47,7 +49,6 @@ import java.time.LocalDateTime
 class EditProfileFragment : Fragment() {
 
     private lateinit var sharedPreferencesService: SharedPreferencesService
-    private lateinit var userRepository: UserRepository
     private lateinit var avatarRepository : AvatarRepository
     private lateinit var edtDescription: String
     private lateinit var infDescription: TextView
@@ -66,7 +67,6 @@ class EditProfileFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         user = UserService.getUserInfo()
-        userRepository = UserRepository()
         avatarRepository = AvatarRepository()
         globalHandler = GlobalHandler()
         sharedPreferencesService = context?.let { SharedPreferencesService(it) }!!
@@ -143,7 +143,6 @@ class EditProfileFragment : Fragment() {
 
     private fun activateBtn(){
         CommonFun.toggleButton(updateprofile, true)
-
     }
 
     // update profile with the data enter
@@ -236,6 +235,7 @@ class EditProfileFragment : Fragment() {
             ).onSameThread().check()
     }
 
+    // call whenever we try to take a picture
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         CommonFun.toggleButton(updateprofile, true)
         if (requestCode == 1 && data != null) {
