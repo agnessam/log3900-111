@@ -114,16 +114,17 @@ class HomeActivity : AppCompatActivity() {
 
     override fun onSupportNavigateUp(): Boolean {
         val navController = this.findNavController(R.id.fragment)
+        val bottomNav = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
 
         return when(navController.currentDestination?.id) {
             // back button clicked on Gallery Drawing
             R.id.galleryFragment -> {
                 SocketManagerService.leaveDrawingRoom()
-                MyFragmentManager(this).open(R.id.main_gallery_fragment, GalleryMenuFragment())
+                bottomNav.selectedItemId = R.id.main_gallery_fragment
                 true
             }
             R.id.teamsFragment -> {
-                MyFragmentManager(this).open(R.id.teamsMenuFrameLayout, TeamsMenuFragment())
+                bottomNav.selectedItemId = R.id.teamsFragment
                 true
             }
             else -> navController.navigateUp()
