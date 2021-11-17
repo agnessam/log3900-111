@@ -27,6 +27,7 @@ import { BackendCommunicationModule } from "./modules/backend-communication/back
 import { TeamModule } from "./modules/team/team.module";
 import { SearchModule } from "./modules/search/search.module";
 import { CardsModule } from "./modules/cards/cards.module";
+import { SettingsModule } from "./modules/settings/settings.module";
 
 @NgModule({
   declarations: [AppComponent],
@@ -59,6 +60,7 @@ import { CardsModule } from "./modules/cards/cards.module";
     TeamModule,
     BackendCommunicationModule,
     CardsModule,
+    SettingsModule,
   ],
   exports: [],
   providers: [],

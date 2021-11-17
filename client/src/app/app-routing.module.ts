@@ -37,6 +37,14 @@ const routes: Routes = [
     canActivate: [AuthGuard],
   },
   {
+    path: "settings",
+    loadChildren: () =>
+      import("./modules/settings/settings.module").then(
+        (m) => m.SettingsModule
+      ),
+    canActivate: [AuthGuard],
+  },
+  {
     path: "",
     redirectTo: "/gallery",
     pathMatch: "full",
