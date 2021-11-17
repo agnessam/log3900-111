@@ -4,23 +4,23 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Rect
 import android.graphics.RectF
+import android.graphics.*
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.LayerDrawable
 import android.graphics.drawable.ShapeDrawable
-import android.graphics.drawable.shapes.OvalShape
+import android.graphics.drawable.shapes.PathShape
 import com.example.colorimagemobile.interfaces.ICommand
 import com.example.colorimagemobile.models.EllipseData
 import com.example.colorimagemobile.models.EllipseUpdate
-import com.example.colorimagemobile.models.SyncUpdate
 import com.example.colorimagemobile.services.drawing.CanvasService
 import com.example.colorimagemobile.services.drawing.CanvasUpdateService
 import com.example.colorimagemobile.services.drawing.DrawingObjectManager
 import com.example.colorimagemobile.services.drawing.Point
 import com.example.colorimagemobile.services.drawing.toolsAttribute.ColorService
-import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
-import java.lang.Math.abs
 
 class EllipseCommand(ellipseData: EllipseData): ICommand {
+    private var boundingRectangle = Rect(0,0, CanvasService.extraCanvas.width, CanvasService.extraCanvas.height)
+
     private var startingPoint: Point? = null
     private var endingPoint: Point? = null
 
@@ -29,33 +29,48 @@ class EllipseCommand(ellipseData: EllipseData): ICommand {
     private var borderEllipseIndex: Int = -1
 
     var ellipse: EllipseData = ellipseData
+
     private lateinit var ellipseShape: LayerDrawable
+
     private var borderPaint: Paint = Paint()
     private var fillPaint: Paint = Paint()
+
+    private var borderPath = Path()
+    private var fillPath = Path()
     init{
-        if(layerIndex == -1){
-            var borderEllipse = ShapeDrawable(OvalShape())
-            var fillEllipse = ShapeDrawable(OvalShape())
-            var ellipseShapeArray = arrayOf<Drawable>()
-            ellipseShape = LayerDrawable(ellipseShapeArray)
-            fillEllipseIndex = ellipseShape.addLayer(fillEllipse)
-            borderEllipseIndex = ellipseShape.addLayer(borderEllipse)
-            layerIndex = DrawingObjectManager.addLayer(ellipseShape, ellipse.id)
-        }
-        borderPaint.color = if(ellipseData.stroke != "none") ColorService.rgbaToInt(ellipseData.stroke)
-        else Color.WHITE
-        fillPaint.color = if(ellipseData.fill != "none") ColorService.rgbaToInt(ellipseData.fill)
-        else Color.BLACK
+        var borderEllipse = createNewEllipse()
+        var fillEllipse = createNewEllipse()
+        initializeEllipseLayers(fillEllipse, borderEllipse)
 
-        borderPaint.style = Paint.Style.STROKE
-        fillPaint.style = Paint.Style.FILL
-
-        borderPaint.strokeJoin = Paint.Join.ROUND
-        borderPaint.strokeCap = Paint.Cap.ROUND
-        borderPaint.strokeWidth = this.ellipse.strokeWidth.toFloat()
-
+        borderPaint = initializePaint(this.ellipse.stroke, Color.WHITE)
+        fillPaint = initializePaint(this.ellipse.fill, Color.BLACK)
 
         setStartPoint(Point(ellipse.x.toFloat(), ellipse.y.toFloat()))
+    }
+
+    private fun initializePaint(color: String, defaultColor: Int): Paint{
+        var paint = Paint()
+        paint.color = if(color != "none") ColorService.rgbaToInt(color)
+        else defaultColor
+        paint.isAntiAlias = true
+        paint.style = Paint.Style.FILL
+        paint.isDither = true
+        return paint
+    }
+
+    private fun initializeEllipseLayers(fillRectangle: ShapeDrawable, borderRectangle: ShapeDrawable) {
+        var ellipseShapeArray = arrayOf<Drawable>()
+        ellipseShape = LayerDrawable(ellipseShapeArray)
+
+        fillEllipseIndex = ellipseShape.addLayer(fillRectangle)
+        borderEllipseIndex = ellipseShape.addLayer(borderRectangle)
+        layerIndex = DrawingObjectManager.addLayer(ellipseShape, ellipse.id)
+    }
+
+    private fun createNewEllipse(): ShapeDrawable{
+        val pathShape = PathShape(Path(),
+            CanvasService.extraCanvas.width.toFloat(), CanvasService.extraCanvas.height.toFloat())
+        return ShapeDrawable(pathShape)
     }
 
     private fun setStartPoint(startPoint: Point) {
@@ -68,6 +83,9 @@ class EllipseCommand(ellipseData: EllipseData): ICommand {
         ellipse.x = ((endingPoint!!.x + startingPoint!!.x) / 2).toInt()
         ellipse.height = kotlin.math.abs(endingPoint!!.y - startingPoint!!.y).toInt()
         ellipse.y = ((endingPoint!!.y + startingPoint!!.y) / 2).toInt()
+
+        this.generateBorderPath()
+        this.generateFillPath()
     }
 
     private fun getFillEllipse(): ShapeDrawable{
@@ -92,22 +110,63 @@ class EllipseCommand(ellipseData: EllipseData): ICommand {
     }
 
     override fun execute() {
+        if(ellipse.stroke != "none"){
+            val borderRectPathShape = PathShape(borderPath,
+                CanvasService.extraCanvas.width.toFloat(), CanvasService.extraCanvas.height.toFloat()
+            )
+            var borderRectDrawable = ShapeDrawable(borderRectPathShape)
+            this.getBorderEllipse().bounds = this.boundingRectangle
+
+            this.getEllipseDrawable().setDrawable(this.borderEllipseIndex, borderRectDrawable)
+            this.getBorderEllipse().paint.set(this.borderPaint)
+        }
+
+        if(ellipse.fill != "none"){
+            val fillRectPathShape = PathShape(fillPath,
+                CanvasService.extraCanvas.width.toFloat(), CanvasService.extraCanvas.height.toFloat()
+            )
+
+            var fillRectDrawable = ShapeDrawable(fillRectPathShape)
+            this.getFillEllipse().bounds = this.boundingRectangle
+
+            this.getEllipseDrawable().setDrawable(this.fillEllipseIndex, fillRectDrawable)
+            this.getFillEllipse().paint.set(this.fillPaint)
+        }
+
+        DrawingObjectManager.setDrawable(layerIndex, ellipseShape)
+        CanvasUpdateService.invalidate()
+    }
+
+    private fun generateFillPath(){
         var left = ellipse.x - ellipse.width / 2
         var top = ellipse.y - ellipse.height / 2
         var right = ellipse.x + ellipse.width / 2
         var bottom = ellipse.y + ellipse.height / 2
+        var rect = RectF(left.toFloat(), top.toFloat(), right.toFloat(), bottom.toFloat())
 
-        if(ellipse.fill != "none"){
-            this.getFillEllipse().setBounds(left , top , right , bottom )
-            this.getFillEllipse().paint.set(this.fillPaint)
+        fillPath = Path()
+        fillPath.addOval(rect, Path.Direction.CW)
+    }
+
+    private fun generateBorderPath(){
+        var left = ellipse.x - ellipse.width / 2
+        var top = ellipse.y - ellipse.height / 2
+        var right = ellipse.x + ellipse.width / 2
+        var bottom = ellipse.y + ellipse.height / 2
+        var rect = RectF(left.toFloat(), top.toFloat(), right.toFloat(), bottom.toFloat())
+
+        borderPath = Path()
+
+        borderPath.addOval(rect, Path.Direction.CW)
+        borderPath.close()
+
+        val innerRect = RectF(rect)
+        innerRect.inset(this.ellipse.strokeWidth.toFloat(), this.ellipse.strokeWidth.toFloat())
+        if (innerRect.width() > 0 && innerRect.height() > 0) {
+            borderPath.addOval(innerRect, Path.Direction.CW)
+            borderPath.close()
         }
-        if(ellipse.stroke != "none"){
-            this.getBorderEllipse().setBounds(left, top, right, bottom)
-            this.getBorderEllipse().paint.set(this.borderPaint)
-        }
-        this.getEllipseDrawable().setBounds(left, top, right, bottom)
-        DrawingObjectManager.addCommand(ellipse.id, this)
-        CanvasUpdateService.invalidate()
+        borderPath.fillType = Path.FillType.EVEN_ODD
     }
 
 //    fun scaleTest(){
