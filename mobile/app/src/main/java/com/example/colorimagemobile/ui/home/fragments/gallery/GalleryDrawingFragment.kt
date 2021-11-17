@@ -9,26 +9,23 @@ import android.transition.AutoTransition
 import android.transition.TransitionManager
 import androidx.fragment.app.Fragment
 import android.view.View
-import android.widget.Button
-import android.widget.LinearLayout
-import android.widget.RelativeLayout
-import android.widget.TextView
+import android.widget.*
+import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.example.colorimagemobile.R
 import com.example.colorimagemobile.classes.MyFragmentManager
 import com.example.colorimagemobile.classes.tools.ToolsFactory
 import com.example.colorimagemobile.enumerators.ToolType
-import com.example.colorimagemobile.services.SharedPreferencesService
+import com.example.colorimagemobile.services.drawing.DrawingService
 import com.example.colorimagemobile.services.drawing.ToolTypeService
 import com.example.colorimagemobile.services.socket.DrawingSocketService
-import com.example.colorimagemobile.utils.Constants
+import com.example.colorimagemobile.services.socket.SocketManagerService
 
 class GalleryDrawingFragment : Fragment(R.layout.fragment_gallery_drawing) {
     private lateinit var galleryDrawingFragment: ConstraintLayout;
     private lateinit var panelView: CardView
     private lateinit var toolsFactory: ToolsFactory
-    private lateinit var sharedPreferencesService: SharedPreferencesService
     private var roomName: String? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -37,8 +34,8 @@ class GalleryDrawingFragment : Fragment(R.layout.fragment_gallery_drawing) {
         galleryDrawingFragment = view.findViewById(R.id.galleryDrawingFragment)
         panelView = galleryDrawingFragment.findViewById<CardView>(R.id.canvas_tools_attributes_cardview)
         toolsFactory = ToolsFactory()
-        sharedPreferencesService = SharedPreferencesService(requireContext())
 
+        MyFragmentManager(requireActivity()).showBackButton()
         setCurrentRoomName()
         addToolsOnSidebar()
         setToolsListener()
@@ -46,7 +43,7 @@ class GalleryDrawingFragment : Fragment(R.layout.fragment_gallery_drawing) {
     }
 
     private fun setCurrentRoomName() {
-        roomName = sharedPreferencesService.getItem(Constants.STORAGE_KEY.DRAWING_ROOM_ID)
+        roomName = DrawingService.getCurrentDrawingID()
 
         // go to gallery menu
         if (roomName == null) {
@@ -56,28 +53,27 @@ class GalleryDrawingFragment : Fragment(R.layout.fragment_gallery_drawing) {
     }
 
     private fun connectToSocket() {
-        DrawingSocketService.connect()
-        DrawingSocketService.setFragmentActivity(requireActivity())
-        DrawingSocketService.joinRoom(roomName!!)
+        if (DrawingService.getCurrentDrawingID() != null) {
+            DrawingSocketService.connect()
+            DrawingSocketService.setFragmentActivity(requireActivity())
+            DrawingSocketService.joinRoom(roomName!!)
+        }
     }
 
-    private fun leaveDrawingRoom(){
-        if(roomName == null) return
-        DrawingSocketService.leaveRoom(roomName!!)
-        DrawingSocketService.disconnect()
-
+    private fun leaveDrawingRoom() {
+        if (roomName == null) return
         roomName = null
-        sharedPreferencesService.removeItem(Constants.STORAGE_KEY.DRAWING_ROOM_ID)
+        SocketManagerService.leaveDrawingRoom()
     }
 
     override fun onPause() {
         super.onPause()
-        this.leaveDrawingRoom()
+//        this.leaveDrawingRoom()
     }
 
     override fun onStop(){
         super.onStop()
-        this.leaveDrawingRoom()
+//        this.leaveDrawingRoom()
     }
 
     override fun onDestroy() {

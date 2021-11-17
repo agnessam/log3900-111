@@ -12,16 +12,18 @@ import com.example.colorimagemobile.utils.Constants
 import java.util.*
 import android.graphics.Bitmap
 import android.widget.Button
+import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.colorimagemobile.adapter.DrawingMenuRecyclerAdapter
 import com.example.colorimagemobile.bottomsheets.NewDrawingMenuBottomSheet
 import com.example.colorimagemobile.classes.ImageConvertor
+import com.example.colorimagemobile.classes.MyFragmentManager
 import com.example.colorimagemobile.models.recyclerAdapters.DrawingMenuData
+import com.example.colorimagemobile.services.drawing.DrawingService
 import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
 import kotlin.collections.ArrayList
-
-private const val NB_ROWS = 3
 
 class GalleryMenuFragment : Fragment(R.layout.fragment_gallery_menu) {
     private lateinit var drawingRepo: DrawingRepository
@@ -37,6 +39,8 @@ class GalleryMenuFragment : Fragment(R.layout.fragment_gallery_menu) {
         galleryView = view.findViewById(R.id.galleryMenuView)
         drawings = arrayListOf()
 
+        MyFragmentManager(requireActivity()).hideBackButton()
+        DrawingService.setCurrentDrawingID(null)
         setListeners()
         getAllDrawings()
     }
@@ -51,6 +55,7 @@ class GalleryMenuFragment : Fragment(R.layout.fragment_gallery_menu) {
 
     private fun getAllDrawings() {
         val token = sharedPreferencesService.getItem(Constants.STORAGE_KEY.TOKEN)
+        galleryView.findViewById<TextView>(R.id.loadingDrawingsText).visibility = View.VISIBLE
 
         drawingRepo.getAllDrawings(token).observe(viewLifecycleOwner, {
             // some error occurred during HTTP request
@@ -59,6 +64,7 @@ class GalleryMenuFragment : Fragment(R.layout.fragment_gallery_menu) {
             }
 
             drawings = it.data as List<DrawingModel.Drawing>
+            galleryView.findViewById<TextView>(R.id.loadingDrawingsText).visibility = View.GONE
             renderDrawings()
         })
     }
@@ -77,7 +83,7 @@ class GalleryMenuFragment : Fragment(R.layout.fragment_gallery_menu) {
             }
         }
 
-        recyclerView.layoutManager = GridLayoutManager(requireContext(), NB_ROWS)
-        recyclerView.adapter = DrawingMenuRecyclerAdapter(drawingsMenu)
+        recyclerView.layoutManager = GridLayoutManager(requireContext(), Constants.NB_DATA_ROWS)
+        recyclerView.adapter = DrawingMenuRecyclerAdapter(drawingsMenu, R.id.main_gallery_fragment)
     }
 }

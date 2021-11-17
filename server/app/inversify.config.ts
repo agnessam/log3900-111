@@ -4,6 +4,7 @@ import {
   AvatarRepositoryInterface,
   DrawingRepositoryInterface,
   MessageRepositoryInterface,
+  PostRepositoryInterface,
   TeamRepositoryInterface,
   TextChannelRepositoryInterface,
   UserRepositoryInterface,
@@ -18,6 +19,7 @@ import { TeamRepository } from './infrastructure/data_access/repositories/team_r
 import { TextChannelRepository } from './infrastructure/data_access/repositories/text_channel_repository';
 import { UserRepository } from './infrastructure/data_access/repositories/user_repository';
 import { SearchService } from './domain/services/search.service';
+import { PostRepository } from './infrastructure/data_access/repositories/post_repository';
 
 export const referenceDataIoCModule = new ContainerModule((bind) => {
   // Services
@@ -46,6 +48,10 @@ export const referenceDataIoCModule = new ContainerModule((bind) => {
 
   bind<DrawingRepositoryInterface>(TYPES.DrawingRepository)
     .to(DrawingRepository)
+    .inSingletonScope();
+
+  bind<PostRepositoryInterface>(TYPES.PostRepository)
+    .to(PostRepository)
     .inSingletonScope();
 
   bind<MessageRepositoryInterface>(TYPES.MessageRepository)

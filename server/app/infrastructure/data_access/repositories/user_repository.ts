@@ -61,15 +61,15 @@ export class UserRepository extends GenericRepository<UserInterface> {
     });
   }
 
-  public async getPublishedDrawings(userId: string) {
+  public async getPosts(userId: string) {
     return new Promise((resolve, reject) => {
       User.findById({ _id: userId })
-        .populate('publishedDrawings')
+        .populate('posts')
         .exec((err, user) => {
           if (err || !user) {
             reject(err);
           }
-          resolve(user!.publishedDrawings);
+          resolve(user!.posts);
         });
     });
   }

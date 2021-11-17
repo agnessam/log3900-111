@@ -1,60 +1,113 @@
 package com.example.colorimagemobile.ui.home.fragments.chat
 
+import android.graphics.Color
 import android.os.Bundle
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
+import android.widget.Button
+import androidx.lifecycle.LifecycleOwner
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.colorimagemobile.R
+import com.example.colorimagemobile.adapter.ChannelsRecyclerAdapter
+import com.example.colorimagemobile.bottomsheets.NewChannelBottomSheet
+import com.example.colorimagemobile.models.TextChannelModel
+import com.example.colorimagemobile.repositories.TextChannelRepository
+import com.example.colorimagemobile.services.UserService
+import com.example.colorimagemobile.services.chat.ChatAdapterService
+import com.example.colorimagemobile.services.chat.ChatService
+import com.example.colorimagemobile.services.chat.TextChannelService
+import com.example.colorimagemobile.utils.Constants.Companion.GENERAL_CHANNEL_NAME
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
+class ChatFragment : Fragment(R.layout.fragment_chat) {
 
-/**
- * A simple [Fragment] subclass.
- * Use the [ChatFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
-class ChatFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+    private lateinit var myView: View
+    private lateinit var adapter: ChannelsRecyclerAdapter
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        myView = view
+        adapter = ChatAdapterService.getChannelListAdapter()
+
+        getAllChannels()
+
+        // means its not the first time we are opening the chat
+        if (TextChannelService.getChannels().isNotEmpty()) {
+            ChatService.refreshChatBox(requireActivity())
         }
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_chat, container, false)
+    private fun getAllChannels() {
+        TextChannelRepository().getAllTextChannel(UserService.getToken()).observe(context as LifecycleOwner, {
+            if (it.isError as Boolean) {
+                return@observe
+            }
+
+            val channels = it.data as ArrayList<TextChannelModel.AllInfo>
+            TextChannelService.setChannels(channels)
+            setRecyclerView()
+            setButtonListeners()
+            addDefaultChannel(channels)
+        })
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment ChatFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            ChatFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
+    private fun setRecyclerView() {
+        val recyclerView = myView.findViewById<RecyclerView>(R.id.ChannelRecycleView)
+        recyclerView.layoutManager = LinearLayoutManager(context)
+        recyclerView.adapter = adapter
+    }
+
+    private fun setButtonListeners() {
+        val connectedBtn = myView.findViewById<Button>(R.id.chat_connected_channels_btn)
+        val allBtn = myView.findViewById<Button>(R.id.chat_all_channels_btn)
+        val createChannelBtn = myView.findViewById<Button>(R.id.channel_add_btn)
+
+        showAllChannels()
+        changeBtnColor(allBtn, connectedBtn)
+
+        allBtn.setOnClickListener {
+            showAllChannels()
+            changeBtnColor(allBtn, connectedBtn)
+        }
+
+        connectedBtn.setOnClickListener {
+            showConnectedChannels()
+            changeBtnColor(connectedBtn, allBtn)
+        }
+
+        createChannelBtn.setOnClickListener {
+            val newChannelMenu = NewChannelBottomSheet()
+            newChannelMenu.show(parentFragmentManager, "NewChannelBottomSheet")
+        }
+    }
+
+    private fun showAllChannels() {
+        adapter.setData(TextChannelService.getChannels() as ArrayList<TextChannelModel.AllInfo>)
+        adapter.setIsAllChannels(true)
+    }
+
+    private fun showConnectedChannels() {
+        adapter.setData(TextChannelService.getConnectedChannels())
+        adapter.setIsAllChannels(false)
+    }
+
+    private fun changeBtnColor(selectedBtn: Button, normalBtn: Button) {
+        selectedBtn.setTextColor(Color.parseColor("#4050b5"))
+        normalBtn.setTextColor(Color.parseColor("#888888"))
+    }
+
+    // add channel named General as connected! usually its the first channel in the list
+    private fun addDefaultChannel(channels: ArrayList<TextChannelModel.AllInfo>) {
+        if (TextChannelService.isConnectedToGeneral()) return
+
+        channels.forEach {
+            if (it.name == GENERAL_CHANNEL_NAME) {
+                TextChannelService.setCurrentChannel(it)
+                TextChannelService.connectToGeneral()
+                ChatService.refreshChatBox(requireActivity())
+                return
             }
+        }
     }
 }

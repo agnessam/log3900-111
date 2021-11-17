@@ -1,5 +1,3 @@
-import { TYPES } from '../../domain/constants/types';
-import { UserRepository } from '../../infrastructure/data_access/repositories/user_repository';
 import { Request, Response } from 'express';
 import { inject } from 'inversify';
 import {
@@ -12,7 +10,8 @@ import {
   response,
 } from 'inversify-express-utils';
 import passport from 'passport';
-import { upload } from '../middleware/upload_middleware';
+import { TYPES } from '../../domain/constants/types';
+import { UserRepository } from '../../infrastructure/data_access/repositories/user_repository';
 
 @controller('/users', passport.authenticate('jwt', { session: false }))
 export class UserController {
@@ -30,7 +29,8 @@ export class UserController {
 
   @httpGet('/:id')
   public async getUserById(@request() req: Request) {
-    return await this.userRepository.findById(req.params.id);
+    const user = await this.userRepository.findById(req.params.id);
+    return user;
   }
 
   @httpPost('/')
@@ -48,20 +48,14 @@ export class UserController {
     return await this.userRepository.deleteById(req.params.id);
   }
 
-  @httpPost('/:id/avatar', upload.single('avatar'))
-  public async setAvatar(@request() req: Request) {
-    // We have access to the AWS file url at req.file.location
-    console.log(req);
-  }
-
   @httpGet('/:id/drawings')
   public async getDrawings(@request() req: Request) {
     return await this.userRepository.getUserDrawings(req.params.id);
   }
 
-  @httpGet('/:id/publishedDrawings')
+  @httpGet('/:id/posts')
   public async getPublishedDrawings(@request() req: Request) {
-    return await this.userRepository.getPublishedDrawings(req.body);
+    return await this.userRepository.getPosts(req.params.id);
   }
 
   @httpGet('/:id/teams')
