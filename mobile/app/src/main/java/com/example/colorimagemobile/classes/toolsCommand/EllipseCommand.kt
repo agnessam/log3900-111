@@ -37,7 +37,7 @@ class EllipseCommand(ellipseData: EllipseData): ICommand {
     private var borderPath = Path()
     private var fillPath = Path()
     init{
-        var borderEllipse = ShapeDrawable(OvalShape())
+        var borderEllipse = createNewEllipse()
         var fillEllipse = createNewEllipse()
         initializeEllipseLayers(fillEllipse, borderEllipse)
 
