@@ -13,6 +13,7 @@ import com.example.colorimagemobile.utils.CommonFun.Companion.toggleButton
 import com.google.android.material.button.MaterialButton
 
 class TeamsMenuRecyclerAdapter(
+        val layoutID: Int,
         val joinTeamClicked: (Int) -> Unit,
         val openTeam: (Int) -> Unit,
         val leaveTeam: (Int) -> Unit):
@@ -20,7 +21,7 @@ class TeamsMenuRecyclerAdapter(
 
     // create card view and sets its contents format
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TeamsMenuRecyclerAdapter.ViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.recycler_team_menu, parent, false)
+        val view = LayoutInflater.from(parent.context).inflate(layoutID, parent, false)
         return ViewHolder(view)
     }
 
