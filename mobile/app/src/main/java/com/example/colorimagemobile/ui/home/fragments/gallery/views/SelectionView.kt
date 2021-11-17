@@ -38,10 +38,10 @@ class SelectionView(context: Context?): CanvasView(context) {
         region.setPath(
             path,
             Region(
-                rectF.left.toInt() - strokeWidth.toInt(),
-                rectF.top.toInt() - strokeWidth.toInt(),
-                rectF.right.toInt() + strokeWidth.toInt(),
-                rectF.bottom.toInt() + strokeWidth.toInt()
+                rectF.left.toInt(),
+                rectF.top.toInt(),
+                rectF.right.toInt(),
+                rectF.bottom.toInt()
             )
         )
 
