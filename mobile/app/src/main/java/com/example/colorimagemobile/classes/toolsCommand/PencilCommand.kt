@@ -10,8 +10,6 @@ import com.example.colorimagemobile.models.PencilData
 import com.example.colorimagemobile.models.SyncUpdate
 import com.example.colorimagemobile.services.drawing.*
 import com.example.colorimagemobile.services.drawing.toolsAttribute.ColorService
-import android.graphics.RectF
-import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
 
 
 class PencilCommand(pencilData: PencilData): ICommand {

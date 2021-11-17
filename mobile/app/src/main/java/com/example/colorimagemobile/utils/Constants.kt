@@ -13,7 +13,8 @@ class Constants {
         //global
         const val EMPTY_STRING =""
         const val GENERAL_CHANNEL_NAME = "General"
-        const val FIELD_IS_REQUIRED = "Field is required"
+        const val CAMERA_REQUEST_CODE = 1
+        const val PNG =".png"
 
     }
 
@@ -47,7 +48,7 @@ class Constants {
             const val USER_PATH ="api/users/"
             const val TEXT_CHANNEL_PATH ="api/channels/"
             const val MESSAGES_PATH = "api/messages"
-            const val DEFAULT_AVATAR_PATH ="api/avatars/default"
+            const val AVATAR_PATH ="api/avatars"
 
             // drawings
             const val ALL_DRAWINGS = "api/drawings/"

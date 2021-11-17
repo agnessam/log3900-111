@@ -21,7 +21,6 @@ import com.example.colorimagemobile.services.SharedPreferencesService
 import com.example.colorimagemobile.services.socket.SocketManagerService
 import com.example.colorimagemobile.utils.CommonFun.Companion.printToast
 import com.example.colorimagemobile.utils.CommonFun.Companion.redirectTo
-import com.example.colorimagemobile.utils.CommonFun.Companion.usernameMenuItem
 import com.example.colorimagemobile.utils.Constants
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
@@ -94,10 +93,9 @@ class HomeActivity : AppCompatActivity() {
         UserService.setUserInfo(response.data?.user as UserModel.AllInfo)
 
         // update username in menu item
-//        val usernameMenuItem: ActionMenuItemView = findViewById(R.id.username_menu_item)
-//        usernameMenuItem.text = UserService.getUserInfo().username
-        usernameMenuItem = findViewById(R.id.username_menu_item)
+        val usernameMenuItem: ActionMenuItemView = findViewById(R.id.username_menu_item)
         usernameMenuItem.text = UserService.getUserInfo().username
+
     }
 
     private fun logUserOut() {

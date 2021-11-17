@@ -19,7 +19,13 @@ class CommonFun {
     companion object {
 
         lateinit var imageView: ImageView
-        lateinit var usernameMenuItem: ActionMenuItemView
+
+        //load image into imageview
+        fun loadUrl(url: String, imageView: ImageView){
+            Picasso.get()
+                .load(url)
+                .into(imageView)
+        }
 
         // print in the terminal with the tag: DEBUG
         fun printMsg(msg: String) {
@@ -91,10 +97,5 @@ class CommonFun {
             button.isEnabled = shouldEnable
         }
 
-        fun loadUrl(url: String, imageView: ImageView){
-            Picasso.get()
-                .load(url)
-                .into(imageView)
-        }
     }
 }

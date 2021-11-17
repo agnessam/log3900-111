@@ -2,8 +2,15 @@ package com.example.colorimagemobile.services
 
 import com.example.colorimagemobile.models.*
 import com.example.colorimagemobile.utils.Constants
+import okhttp3.MultipartBody
 import retrofit2.Call
 import retrofit2.http.*
+import retrofit2.http.POST
+
+import retrofit2.http.Multipart
+
+
+
 
 interface API {
 
@@ -40,13 +47,8 @@ interface API {
     fun updateUser(@Header("Authorization")token: String, @Path ("id") id : String, @Body  newUser: UserModel.UpdateUser) : Call<HTTPResponseModel.UserResponse>
 
     @Headers("Content-Type: application/json")
-    @PATCH(Constants.ENDPOINTS.USER_PATH+"{id}")
-    fun updateUserAvatar(@Header("Authorization")token: String, @Path ("id") id : String, @Body  newAvatar: AvatarModel.UpdateAvatar) : Call<HTTPResponseModel.UserResponse>
-
-    @Headers("Content-Type: application/json")
     @DELETE(Constants.ENDPOINTS.USER_PATH+"{id}")
     fun deleteUserById(@Header("Authorization")token: String, @Path ("id") id : String) : Call<HTTPResponseModel.UserResponse>
-
 
     //  TextChannel region
     @Headers("Content-Type: application/json")
@@ -90,8 +92,14 @@ interface API {
 
     // region avatar
     @Headers("Content-Type: application/json")
-    @GET(Constants.ENDPOINTS.DEFAULT_AVATAR_PATH)
+    @GET(Constants.ENDPOINTS.AVATAR_PATH+"/default")
     fun getAllAvatar(@Header("Authorization") token: String): Call<ArrayList<AvatarModel.AllInfo>>
 
+    @Multipart
+    @POST(Constants.ENDPOINTS.AVATAR_PATH+"/upload")
+    fun uploadAvatar(@Header("Authorization") token: String, @Part filePart: MultipartBody.Part?): Call<AvatarModel.AllInfo>
 
+    @Headers("Content-Type: application/json")
+    @POST(Constants.ENDPOINTS.AVATAR_PATH)
+    fun postAvatar(@Header("Authorization") token: String, @Body newAvatar: AvatarModel.AllInfo): Call<AvatarModel.AllInfo>
 }

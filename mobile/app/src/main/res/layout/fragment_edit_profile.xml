@@ -118,32 +118,15 @@
                 tools:ignore="SpeakableTextPresentCheck" />
 
         </LinearLayout>
-<LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+
     <Button
         android:id="@+id/updateprofile"
         android:layout_width="231dp"
-        android:layout_height="50dp"
+        android:layout_height="0dp"
         android:layout_gravity="end"
         android:layout_weight="1"
         android:backgroundTint="@color/primary"
         android:text="@string/customize" />
-    <View
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        tools:ignore="NestedWeights" />
-    <Button
-        android:id="@+id/updateavtar"
-        android:layout_width="231dp"
-        android:layout_height="50dp"
-        android:layout_gravity="start"
-        android:layout_weight="1"
-        android:backgroundTint="@color/primary"
-        android:text="@string/update_avatar" />
-
-</LinearLayout>
 
 
     </LinearLayout>

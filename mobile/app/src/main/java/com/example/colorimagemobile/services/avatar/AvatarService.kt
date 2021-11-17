@@ -22,4 +22,5 @@ object AvatarService {
         return this.currentAvatar
     }
 
+
 }

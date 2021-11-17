@@ -1,6 +1,10 @@
 package com.example.colorimagemobile.ui.userProfile
 
+import android.content.Intent
+import android.graphics.Bitmap
 import android.os.Bundle
+import android.os.Environment
+import android.provider.MediaStore
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -23,9 +27,22 @@ import com.example.colorimagemobile.services.SharedPreferencesService
 import com.example.colorimagemobile.services.avatar.AvatarService
 import com.example.colorimagemobile.utils.CommonFun
 import com.example.colorimagemobile.utils.CommonFun.Companion.imageView
+import com.example.colorimagemobile.utils.CommonFun.Companion.loadUrl
 import com.example.colorimagemobile.utils.Constants
+import com.example.colorimagemobile.utils.Constants.Companion.CAMERA_REQUEST_CODE
+import com.karumi.dexter.Dexter
+import com.karumi.dexter.MultiplePermissionsReport
+import com.karumi.dexter.PermissionToken
+import com.karumi.dexter.listener.PermissionRequest
+import com.karumi.dexter.listener.multi.MultiplePermissionsListener
 import kotlinx.android.synthetic.main.fragment_edit_profile.*
 import kotlinx.android.synthetic.main.fragment_show_user_profile.*
+import java.io.File
+import java.io.ByteArrayOutputStream
+import java.io.FileOutputStream
+import java.lang.Exception
+import java.time.LocalDateTime
+
 
 class EditProfileFragment : Fragment() {
 
@@ -42,7 +59,8 @@ class EditProfileFragment : Fragment() {
     private lateinit var currentAvatar : AvatarModel.AllInfo
     private lateinit var newUserData : UserModel.UpdateUser
     private var infview : View ? = null
-
+    private lateinit var bitmap: Bitmap
+    private  var file : File? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -53,6 +71,7 @@ class EditProfileFragment : Fragment() {
         globalHandler = GlobalHandler()
         sharedPreferencesService = context?.let { SharedPreferencesService(it) }!!
         token = sharedPreferencesService.getItem(Constants.STORAGE_KEY.TOKEN)
+        newUserData =UserModel.UpdateUser(null,null,null)
 
     }
 
@@ -66,9 +85,11 @@ class EditProfileFragment : Fragment() {
 
         // listeners
         inf.findViewById<View>(R.id.updateprofile).setOnClickListener { update() }
-        inf.findViewById<View>(R.id.upload_avatar_from_camera).setOnClickListener { update() }
+        inf.findViewById<View>(R.id.upload_avatar_from_camera).setOnClickListener {
+            cameraCheckPermission() }
         inf.findViewById<View>(R.id.editprofileview).setOnTouchListener { v, event -> CommonFun.closeKeyboard_(this.requireActivity()) }
         inf.findViewById<View>(R.id.choosedefaultavatar).setOnClickListener {
+            activateBtn();
             val defaultAvatarList = DefaultAvatarListBottomSheet()
             defaultAvatarList.show(parentFragmentManager, "DefaultAvatarListBottomSheetDialog")
         }
@@ -77,7 +98,7 @@ class EditProfileFragment : Fragment() {
         CommonFun.onEnterKeyPressed_(inf.findViewById<View>(R.id.edtusername) as TextView) { update() }
         CommonFun.onEnterKeyPressed_(inf.findViewById<View>(R.id.edtdescription) as TextView) { update() }
         imageView = (inf.findViewById<View>(R.id.current_avatar) as ImageView)
-        CommonFun.loadUrl(user.avatar.imageUrl, imageView )
+        loadUrl(user.avatar.imageUrl, imageView )
         infview = inf
         return inf
     }
@@ -85,11 +106,13 @@ class EditProfileFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         getAllAvatar()
+        CommonFun.toggleButton(updateprofile, false)
+
     }
 
     // Get all default avatar from database
     private fun getAllAvatar(){
-        AvatarRepository().getAllAvatar(UserService.getToken()).observe(context as LifecycleOwner,{
+        AvatarRepository().getAllAvatar().observe(context as LifecycleOwner,{
             if (it.isError as Boolean) {
                 return@observe
             }
@@ -98,61 +121,130 @@ class EditProfileFragment : Fragment() {
         })
     }
 
-    // verify field are empty
-    private fun areFieldEmpty(): Boolean {
-        var required: Boolean = false
-        var view: View? = null
-
+    // set the data to be update
+    private fun setDataToUpdate(){
         infName = (infview!!.findViewById<View>(R.id.edtusername) as TextView)
         infDescription = (infview!!.findViewById<View>(R.id.edtdescription) as TextView)
         edtUsername = infName.text.toString()
         edtDescription = infDescription.text.toString()
 
-        if (edtUsername.length == 0) {
-            infName.error = Constants.FIELD_IS_REQUIRED
-            required = true
-            view = infName
-
-        } else if (edtDescription.length == 0) {
-            infDescription.error = Constants.FIELD_IS_REQUIRED
-            required = true
-            view = infDescription
+        if(AvatarService.getCurrentAvatar().imageUrl!= Constants.EMPTY_STRING){
+            currentAvatar = AvatarService.getCurrentAvatar()
+            newUserData.avatar = currentAvatar
+        }
+        if (edtUsername.length != 0) {
+            newUserData.username = edtUsername
+        }
+        if (edtDescription.length != 0){
+            newUserData.description = edtDescription
         }
 
-        return if (required) {
-            view?.requestFocus()
-            true
-        } else false
     }
 
-    // update user info
+    private fun activateBtn(){
+        CommonFun.toggleButton(updateprofile, true)
+
+    }
+
+    // update profile with the data enter
     private fun update(){
-        if (areFieldEmpty() && AvatarService.getCurrentAvatar().imageUrl== Constants.EMPTY_STRING ) return
-
-        if(AvatarService.getCurrentAvatar().imageUrl!= Constants.EMPTY_STRING && !areFieldEmpty()){
-            currentAvatar = AvatarService.getCurrentAvatar()
-            newUserData =UserModel.UpdateUser(edtUsername, edtDescription, user.password, currentAvatar)
-
+        var countExistingAvatar : Int = 0
+        for(indices in AvatarService.getAvatars().indices){
+            if (AvatarService.getCurrentAvatar() != AvatarService.getAvatars()[indices]){
+                countExistingAvatar++
+            }
         }
-        else if (AvatarService.getCurrentAvatar().imageUrl!= Constants.EMPTY_STRING && areFieldEmpty()){
-            currentAvatar = AvatarService.getCurrentAvatar()
-            user = UserService.getUserInfo()
-            newUserData =UserModel.UpdateUser(user.username,user.description,user.password,currentAvatar)
+        if (countExistingAvatar == 0){
+            postAvatar(AvatarService.getCurrentAvatar()).observe(viewLifecycleOwner, { handleResponse(it) })
+        }
 
-        }
-        else{
-            currentAvatar = UserService.getUserInfo().avatar
-            newUserData = UserModel.UpdateUser(edtUsername, edtDescription, user.password, currentAvatar)
-        }
-        // form body to make HTTP request
+        setDataToUpdate()
         UserService.setNewProfileData(newUserData)
-        val updateObserver = updateUserInfo()
-        updateObserver.observe(viewLifecycleOwner, { context?.let { it1 ->globalHandler.response(it1,it) } })
+        updateUserInfo().observe(viewLifecycleOwner, { context?.let { it1 ->globalHandler.response(it1,it) } })
     }
 
+    //call retrofit request to database to update user info
     private fun updateUserInfo(): LiveData<DataWrapper<HTTPResponseModel.UserResponse>> {
-        return userRepository.updateUserData(token, user._id)
+        return UserRepository().updateUserData(token, user._id)
     }
 
+    //call retrofit request to upload image and get imageUrl from amazon S3
+    private fun uploadAvatar(file: File):LiveData<DataWrapper<AvatarModel.AllInfo>> {
+        return AvatarRepository().uploadAvatar(file)
+    }
+
+    //call retrofit request to database to post the image to the avatar collection
+    private fun postAvatar(avatar: AvatarModel.AllInfo):LiveData<DataWrapper<AvatarModel.AllInfo>>{
+        return AvatarRepository().postAvatar(avatar)
+    }
+
+    // handler for response
+    private fun handleResponse(HTTPResponse: DataWrapper<AvatarModel.AllInfo>) {
+        if (HTTPResponse.isError as Boolean) {
+            CommonFun.printToast(requireContext(), HTTPResponse.message as String)
+            return
+        }
+        CommonFun.printToast(requireContext(), HTTPResponse.message!!)
+    }
+
+    // function to convert bitmap to file
+    fun bitmapToFile(bitmap: Bitmap, fileNameToSave: String): File? {
+        return try {
+            file = File(Environment.getExternalStorageDirectory().toString()+File.separator+fileNameToSave)
+            file!!.createNewFile()
+
+            //Convert bitmap to byte array
+            val bos = ByteArrayOutputStream()
+            bitmap.compress(Bitmap.CompressFormat.PNG, 0, bos)
+            val bitmapData = bos.toByteArray()
+            //write the bytes in file
+            val fos = FileOutputStream(file)
+            fos.write(bitmapData)
+            fos.flush()
+            fos.close()
+            file
+        } catch (e: Exception) {
+            e.printStackTrace()
+            file
+        }
+    }
+
+    // check for camera permission
+    private fun cameraCheckPermission() {
+
+        Dexter.withContext(requireContext())
+            .withPermissions(
+                android.Manifest.permission.READ_EXTERNAL_STORAGE,
+                android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                android.Manifest.permission.CAMERA).withListener(
+
+                object : MultiplePermissionsListener {
+                    override fun onPermissionsChecked(report: MultiplePermissionsReport?) {
+                        report?.let {
+
+                            if (report.areAllPermissionsGranted()) {
+                                val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+                                startActivityForResult(intent, CAMERA_REQUEST_CODE)
+                            }
+                        }
+                    }
+                    override fun onPermissionRationaleShouldBeShown(
+                        p0: MutableList<PermissionRequest>?,
+                        p1: PermissionToken?) {
+                    }
+                }
+            ).onSameThread().check()
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        CommonFun.toggleButton(updateprofile, true)
+        if (requestCode == 1 && data != null) {
+            bitmap = data.extras?.get("data") as Bitmap
+            imageView.setImageBitmap(bitmap)
+            val fileToUpload: File? =
+                bitmapToFile(bitmap, user.username.take(4)+LocalDateTime.now().toString()+Constants.PNG)
+            uploadAvatar(fileToUpload!!).observe(viewLifecycleOwner, { handleResponse(it) })
+        }
+    }
 
 }

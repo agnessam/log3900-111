@@ -1,6 +1,5 @@
 package com.example.colorimagemobile.services
 
-import com.example.colorimagemobile.models.AvatarModel
 import com.example.colorimagemobile.models.UserModel
 import com.example.colorimagemobile.utils.Constants
 
@@ -13,16 +12,8 @@ object UserService {
     private lateinit var allUserInfo : List<UserModel.AllInfo>
 
     init {
-        updateProfileData =UserModel.UpdateUser(
-            Constants.EMPTY_STRING,
-            Constants.EMPTY_STRING,
-            Constants.EMPTY_STRING,
-            AvatarModel.AllInfo(
-                Constants.EMPTY_STRING,
-                Constants.EMPTY_STRING,
-                true
-            )
-        )
+        updateProfileData =UserModel.UpdateUser(null,null,null)
+
     }
 
     fun setAllUserInfo(allInfo:List<UserModel.AllInfo>){

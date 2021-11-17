@@ -76,12 +76,6 @@ dependencies {
     // XML - JSON: https://github.com/javadev/underscore-java
     implementation 'com.github.javadev:underscore:1.71'
 
-    // user permission
-    implementation 'com.karumi:dexter:6.2.2'
-
-    //coil
-    implementation("io.coil-kt:coil:1.1.1")
-
     // material dialogs
     implementation 'com.afollestad.material-dialogs:core:3.1.0'
 
@@ -91,7 +85,10 @@ dependencies {
     // circular image for avatar library
     implementation 'de.hdodenhof:circleimageview:3.1.0'
 
-    // image picker
-    implementation 'com.github.florent37:inline-activity-result-kotlin:1.0.4'
-    implementation 'com.github.dhaval2404:imagepicker-support:1.7.1'
+    // user permission
+    implementation 'com.karumi:dexter:6.2.2'
+
+    //coil
+    implementation("io.coil-kt:coil:1.1.1")
+
 }

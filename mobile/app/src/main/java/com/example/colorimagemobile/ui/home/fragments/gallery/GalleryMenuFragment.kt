@@ -18,7 +18,6 @@ import com.example.colorimagemobile.adapter.DrawingMenuRecyclerAdapter
 import com.example.colorimagemobile.bottomsheets.NewDrawingMenuBottomSheet
 import com.example.colorimagemobile.classes.ImageConvertor
 import com.example.colorimagemobile.models.recyclerAdapters.DrawingMenuData
-import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
 import kotlin.collections.ArrayList
 
 private const val NB_ROWS = 3
