@@ -31,8 +31,8 @@ class EllipseCommand(ellipseData: EllipseData): ICommand {
     private var borderPaint: Paint = Paint()
     private var fillPaint: Paint = Paint()
 
-    private var borderPath = Path()
-    private var fillPath = Path()
+    var borderPath = Path()
+    var fillPath = Path()
     init{
         var borderEllipse = createNewEllipse()
         var fillEllipse = createNewEllipse()
@@ -128,7 +128,7 @@ class EllipseCommand(ellipseData: EllipseData): ICommand {
             this.getEllipseDrawable().setDrawable(this.fillEllipseIndex, fillRectDrawable)
             this.getFillEllipse().paint.set(this.fillPaint)
         }
-
+        DrawingObjectManager.addCommand(ellipse.id, this)
         DrawingObjectManager.setDrawable(layerIndex, ellipseShape)
         CanvasUpdateService.invalidate()
     }

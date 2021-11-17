@@ -32,8 +32,8 @@ class RectangleCommand(rectangleData: RectangleData): ICommand {
     private var borderPaint: Paint = Paint()
     private var fillPaint: Paint = Paint()
 
-    private var borderPath = Path()
-    private var fillPath = Path()
+    var borderPath = Path()
+    var fillPath = Path()
     init{
         var fillRectangle = createNewRectangle()
         var borderRectangle = createNewRectangle()
@@ -132,6 +132,7 @@ class RectangleCommand(rectangleData: RectangleData): ICommand {
             this.getFillRectangle().paint.set(this.fillPaint)
         }
 
+        DrawingObjectManager.addCommand(rectangle.id, this)
         DrawingObjectManager.setDrawable(layerIndex, rectangleShape)
         CanvasUpdateService.invalidate()
     }
