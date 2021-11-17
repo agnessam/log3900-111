@@ -14,9 +14,6 @@ import java.io.File
 import okhttp3.RequestBody
 import okhttp3.MultipartBody
 
-
-
-
 class AvatarRepository {
     private val httpClient = RetrofitInstance.HTTP
     private val token = UserService.getToken()

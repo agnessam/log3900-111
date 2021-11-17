@@ -16,7 +16,6 @@ class UserModel {
 
         @SerializedName("avatar")
         var avatar : AvatarModel.AllInfo?
-
         )
 
     // holds all the data of User

@@ -137,22 +137,10 @@ class EditProfileFragment : Fragment() {
 
     // set the data to be update
     private fun setDataToUpdate(){
-        infName = (infview!!.findViewById<View>(R.id.edtusername) as TextView)
-        infDescription = (infview!!.findViewById<View>(R.id.edtdescription) as TextView)
-        edtUsername = infName.text.toString()
-        edtDescription = infDescription.text.toString()
-
         if(AvatarService.getCurrentAvatar().imageUrl!= Constants.EMPTY_STRING){
             currentAvatar = AvatarService.getCurrentAvatar()
             newUserData.avatar = currentAvatar
         }
-//        if (edtUsername.length != 0) {
-//            newUserData.username = edtUsername
-//        }
-//        if (edtDescription.length != 0){
-//            newUserData.description = edtDescription
-//        }
-
     }
 
     private fun activateBtn(){

@@ -13,7 +13,6 @@ object UserService {
 
     init {
         updateProfileData =UserModel.UpdateUser(null,null,null)
-
     }
 
     fun setAllUserInfo(allInfo:List<UserModel.AllInfo>){
