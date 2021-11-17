@@ -1,25 +1,29 @@
 package com.example.colorimagemobile.services.drawing.toolsAttribute
 
-import android.graphics.Rect
-import android.graphics.RectF
-import android.graphics.drawable.Drawable
+import android.graphics.*
+import com.example.colorimagemobile.classes.toolsCommand.EllipseCommand
+import com.example.colorimagemobile.classes.toolsCommand.PencilCommand
+import com.example.colorimagemobile.classes.toolsCommand.RectangleCommand
 import com.example.colorimagemobile.classes.toolsCommand.ResizeCommand
+import com.example.colorimagemobile.interfaces.ICommand
 import com.example.colorimagemobile.services.drawing.AnchorIndexes
+import com.example.colorimagemobile.services.drawing.DrawingObjectManager
 import com.example.colorimagemobile.services.drawing.SelectionService
+import com.example.colorimagemobile.services.drawing.SelectionService.getPathBoundingBox
 
 object ResizeSelectionService {
 
     var resizeCommand: ResizeCommand? = null
 
-    fun createResizeCommand(drawable:Drawable): ResizeCommand?{
-        return ResizeCommand(drawable)
+    private fun createResizeCommand(objectId:String): ResizeCommand?{
+        return ResizeCommand(objectId)
     }
 
-    fun resize(motionTouchEventX: Float, motionTouchEventY: Float, oldRect: Rect){
+    private fun resize(motionTouchEventX: Float, motionTouchEventY: Float, oldRect: RectF){
         if(resizeCommand != null){
-            var scaleReturn = IScale(1f, 1f, 0f, 0f)
+            var scaleReturn = ResizeData(IScale(1f, 1f), PointF(0f, 0f))
 
-            scaleReturn = when(SelectionService.selectedAnchorIndex){ // TODO("Fix bug with inversion not being done properly")
+            var resizeData = when(SelectionService.selectedAnchorIndex){
                 AnchorIndexes.NONE -> scaleReturn
                 AnchorIndexes.TOP_LEFT -> topLeftResize(motionTouchEventX, motionTouchEventY, oldRect)
                 AnchorIndexes.TOP -> topResize(motionTouchEventX, motionTouchEventY,oldRect)
@@ -31,12 +35,12 @@ object ResizeSelectionService {
                 AnchorIndexes.BOTTOM_RIGHT -> bottomRightResize(motionTouchEventX, motionTouchEventY,oldRect)
             }
 
-            resizeCommand!!.setScales(scaleReturn.xScale, scaleReturn.yScale, scaleReturn.xTranslate, scaleReturn.yTranslate)
+            resizeCommand!!.setScales(resizeData.scale.xScale, resizeData.scale.yScale, resizeData.anchorPoint.x, resizeData.anchorPoint.y)
             resizeCommand!!.execute()
         }
     }
 
-    private fun returnScales(oldRect: Rect, newRect: RectF): IScale{
+    private fun getScales(oldRect: RectF, newRect: RectF): IScale{
         var newWidth = newRect.width()
         var newHeight = newRect.height()
         var originalWidth = oldRect.width()
@@ -44,99 +48,145 @@ object ResizeSelectionService {
 
         var xScale = newWidth / originalWidth
         var yScale = newHeight / originalHeight
-        var xOffSet = newRect.left
-        var yOffSet = newRect.right
 
-        return IScale(xScale, yScale, xOffSet, yOffSet)
+        return IScale(xScale, yScale)
     }
 
-    private fun topLeftResize(motionTouchEventX: Float, motionTouchEventY:Float, oldRect: Rect): IScale{
+    private fun topLeftResize(motionTouchEventX: Float, motionTouchEventY:Float, oldRect: RectF): ResizeData{
         var newLeft = motionTouchEventX
-        var newRight = oldRect.right.toFloat()
+        var newRight = oldRect.right
         var newTop = motionTouchEventY
-        var newBottom = oldRect.bottom.toFloat()
+        var newBottom = oldRect.bottom
         var newRect = RectF(newLeft, newTop, newRight, newBottom)
 
-        return returnScales(oldRect, newRect)
+        var scale = getScales(oldRect, newRect)
+        var anchorPoint = PointF(newRight, newBottom)
+        return ResizeData(scale, anchorPoint)
     }
 
-    private fun topResize(motionTouchEventX: Float, motionTouchEventY:Float, oldRect: Rect): IScale{
-        var newLeft = oldRect.left.toFloat()
-        var newRight = oldRect.right.toFloat()
+    private fun topResize(motionTouchEventX: Float, motionTouchEventY:Float, oldRect: RectF): ResizeData{
+        var newLeft = oldRect.left
+        var newRight = oldRect.right
         var newTop = motionTouchEventY
-        var newBottom = oldRect.bottom.toFloat()
-
+        var newBottom = oldRect.bottom
         var newRect = RectF(newLeft, newTop, newRight, newBottom)
-        return returnScales(oldRect, newRect)
+
+        var centerX = (newRight + newLeft) / 2
+
+        var scale = getScales(oldRect, newRect)
+        var anchorPoint = PointF(centerX, newBottom)
+        return ResizeData(scale, anchorPoint)
     }
 
-    private fun topRightResize(motionTouchEventX: Float, motionTouchEventY:Float, oldRect: Rect): IScale{ // TODO pretty much same as top left resize so must modify somehow
-        var newLeft = oldRect.right.toFloat()
+    private fun topRightResize(motionTouchEventX: Float, motionTouchEventY:Float, oldRect: RectF): ResizeData{
+        var newLeft = oldRect.left
         var newRight = motionTouchEventX
         var newTop = motionTouchEventY
-        var newBottom = oldRect.bottom.toFloat()
+        var newBottom = oldRect.bottom
         var newRect = RectF(newLeft, newTop, newRight, newBottom)
 
-        return returnScales(oldRect, newRect)
-
+        var scale = getScales(oldRect, newRect)
+        var anchorPoint = PointF(newLeft, newBottom)
+        return ResizeData(scale, anchorPoint)
     }
 
-    private fun leftResize(motionTouchEventX: Float, motionTouchEventY:Float, oldRect: Rect): IScale{
+    private fun leftResize(motionTouchEventX: Float, motionTouchEventY:Float, oldRect: RectF): ResizeData{
         var newLeft = motionTouchEventX
-        var newRight = oldRect.right.toFloat()
-        var newTop = oldRect.bottom.toFloat()
-        var newBottom = oldRect.bottom.toFloat()
+        var newRight = oldRect.right
+        var newTop = oldRect.top
+        var newBottom = oldRect.bottom
         var newRect = RectF(newLeft, newTop, newRight, newBottom)
 
-        return returnScales(oldRect, newRect)
+        var centerY = (newBottom + newTop) / 2
 
+        var scale = getScales(oldRect, newRect)
+        var anchorPoint = PointF(newRight, centerY)
+        return ResizeData(scale, anchorPoint)
     }
 
-    private fun rightResize(motionTouchEventX: Float, motionTouchEventY:Float, oldRect: Rect): IScale{
-        var newLeft = oldRect.left.toFloat()
-        var newRight =  motionTouchEventX
-        var newTop = oldRect.bottom.toFloat()
-        var newBottom = oldRect.bottom.toFloat()
-        var newRect = RectF(newLeft, newTop, newRight, newBottom)
-
-        return returnScales(oldRect, newRect)
-    }
-
-    private fun bottomLeftResize(motionTouchEventX: Float, motionTouchEventY:Float, oldRect: Rect): IScale{
-        var newLeft = motionTouchEventX
-        var newRight = oldRect.right.toFloat()
-        var newTop = oldRect.bottom.toFloat()
-        var newBottom = motionTouchEventY
-        var newRect = RectF(newLeft, newTop, newRight, newBottom)
-
-        return returnScales(oldRect, newRect)
-    }
-
-    private fun bottomResize(motionTouchEventX: Float, motionTouchEventY:Float, oldRect: Rect): IScale{
-        var newLeft = oldRect.left.toFloat()
-        var newRight = oldRect.right.toFloat()
-        var newTop = oldRect.top.toFloat()
-        var newBottom = motionTouchEventY
-        var newRect = RectF(newLeft, newTop, newRight, newBottom)
-
-        return returnScales(oldRect, newRect)
-    }
-
-    private fun bottomRightResize(motionTouchEventX: Float, motionTouchEventY:Float, oldRect: Rect): IScale{
-        var newLeft = oldRect.left.toFloat()
+    private fun rightResize(motionTouchEventX: Float, motionTouchEventY:Float, oldRect: RectF): ResizeData{
+        var newLeft = oldRect.left
         var newRight = motionTouchEventX
-        var newTop = oldRect.top.toFloat()
+        var newTop = oldRect.top
+        var newBottom = oldRect.bottom
+        var newRect = RectF(newLeft, newTop, newRight, newBottom)
+
+        var centerY = (newBottom + newTop) / 2
+
+        var scale = getScales(oldRect, newRect)
+        var anchorPoint = PointF(newLeft, centerY)
+        return ResizeData(scale, anchorPoint)
+    }
+
+    private fun bottomLeftResize(motionTouchEventX: Float, motionTouchEventY:Float, oldRect: RectF): ResizeData{
+        var newLeft = motionTouchEventX
+        var newRight = oldRect.right
+        var newTop = oldRect.top
         var newBottom = motionTouchEventY
         var newRect = RectF(newLeft, newTop, newRight, newBottom)
 
-        return returnScales(oldRect, newRect)
+        var scale = getScales(oldRect, newRect)
+        var anchorPoint = PointF(newRight, newTop)
+        return ResizeData(scale, anchorPoint)
+    }
+
+    private fun bottomResize(motionTouchEventX: Float, motionTouchEventY:Float, oldRect: RectF): ResizeData{
+        var newLeft = oldRect.left
+        var newRight = oldRect.right
+        var newTop = oldRect.top
+        var newBottom = motionTouchEventY
+        var newRect = RectF(newLeft, newTop, newRight, newBottom)
+
+        var centerX = (newRight + newLeft) / 2
+
+        var scale = getScales(oldRect, newRect)
+        var anchorPoint = PointF(centerX, newTop)
+        return ResizeData(scale, anchorPoint)
+    }
+
+    private fun bottomRightResize(motionTouchEventX: Float, motionTouchEventY:Float, oldRect: RectF): ResizeData{
+        var newLeft = oldRect.left
+        var newRight = motionTouchEventX
+        var newTop = oldRect.top
+        var newBottom = motionTouchEventY
+        var newRect = RectF(newLeft, newTop, newRight, newBottom)
+
+        var scale = getScales(oldRect, newRect)
+        var anchorPoint = PointF(newLeft, newTop)
+        return ResizeData(scale, anchorPoint)
+    }
+
+    fun onTouchMove(motionTouchEventX: Float, motionTouchEventY: Float) {
+        var command: ICommand = DrawingObjectManager.getCommand(SelectionService.selectedShapeIndex)
+            ?: return
+
+        if (resizeCommand == null) {
+            var objectId = when(command) {
+                is PencilCommand -> command.pencil.id
+                is EllipseCommand -> command.ellipse.id
+                is RectangleCommand -> command.rectangle.id
+                else -> return
+            }
+
+            resizeCommand = createResizeCommand(objectId)
+        }
+        var pathRect = when(command){
+            is PencilCommand -> getPathBoundingBox(command.path)
+            is EllipseCommand -> getPathBoundingBox(command.borderPath)
+            is RectangleCommand -> getPathBoundingBox(command.borderPath)
+            else -> return
+        }
+        resize(motionTouchEventX, motionTouchEventY, RectF(pathRect.bounds))
     }
 
 
     private data class IScale (
         var xScale: Float,
-        var yScale: Float,
-        var xTranslate: Float,
-        var yTranslate: Float,
+        var yScale: Float
+    )
+
+    private data class ResizeData(
+        var scale: IScale,
+        var anchorPoint: PointF
     )
 }

@@ -37,6 +37,18 @@ object DrawingObjectManager {
         commandList[uuid] =  command
     }
 
+    fun getCommand(uuid: String): ICommand?{
+        return commandList[uuid]
+    }
+
+    fun getUuid(layerIndex: Int): String?{
+        return layerIdUuidMap[layerIndex]
+    }
+
+    fun getCommand(layerIndex: Int): ICommand? {
+        return commandList[layerIdUuidMap[layerIndex]]
+    }
+
     fun clearLayers() {
         layerDrawable = LayerDrawable(arrayOf<Drawable>())
         commandList.clear()

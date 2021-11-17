@@ -36,8 +36,9 @@ class RectangleCommand(rectangleData: RectangleData): ICommand {
     private var borderPaint: Paint = Paint()
     private var fillPaint: Paint = Paint()
 
-    private var borderPath = Path()
-    private var fillPath = Path()
+    var borderPath = Path()
+    var fillPath = Path()
+
     init{
         var fillRectangle = createNewRectangle()
         var borderRectangle = createNewRectangle()

@@ -11,6 +11,8 @@ import com.example.colorimagemobile.services.drawing.Point
 import com.example.colorimagemobile.services.drawing.toolsAttribute.ColorService
 
 import com.example.colorimagemobile.services.drawing.toolsAttribute.PencilService
+import com.example.colorimagemobile.services.drawing.toolsAttribute.ResizeSelectionService
+import kotlin.math.abs
 
 class PencilCommand(pencilData: PencilData): ICommand {
     var path: Path = Path()
@@ -70,6 +72,5 @@ class PencilCommand(pencilData: PencilData): ICommand {
 
         this.getPathDrawable().paint.set(this.paint)
         CanvasUpdateService.invalidate()
-
     }
 }

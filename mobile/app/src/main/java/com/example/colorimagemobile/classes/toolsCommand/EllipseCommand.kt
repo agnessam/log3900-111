@@ -35,8 +35,9 @@ class EllipseCommand(ellipseData: EllipseData): ICommand {
     private var borderPaint: Paint = Paint()
     private var fillPaint: Paint = Paint()
 
-    private var borderPath = Path()
-    private var fillPath = Path()
+    var borderPath = Path()
+    var fillPath = Path()
+
     init{
         var borderEllipse = createNewEllipse()
         var fillEllipse = createNewEllipse()
@@ -168,40 +169,4 @@ class EllipseCommand(ellipseData: EllipseData): ICommand {
         }
         borderPath.fillType = Path.FillType.EVEN_ODD
     }
-
-//    fun scaleTest(){
-//        var quadrant = 3
-//        var ratio = 2
-//        var currentPathBoundsRectF = RectF()
-//
-//        var xTranslation: Int
-//        var yTranslation: Int
-//        when(quadrant){
-//            1 -> {
-//                xTranslation = -(currentPathBoundsRectF.left * (ratio - 1)).toInt()
-//                yTranslation = -(currentPathBoundsRectF.bottom * (ratio - 1)).toInt()
-//            }
-//            2 -> {
-//                xTranslation = -(currentPathBoundsRectF.right * (ratio - 1)).toInt()
-//                yTranslation = -(currentPathBoundsRectF.bottom * (ratio - 1)).toInt()
-//            }
-//            3-> {
-//                xTranslation = -(currentPathBoundsRectF.right * (ratio - 1)).toInt()
-//                yTranslation = -(currentPathBoundsRectF.top * (ratio - 1)).toInt()
-//            }
-//            4 -> {
-//                xTranslation = -(currentPathBoundsRectF.left * (ratio - 1)).toInt()
-//                yTranslation = -(currentPathBoundsRectF.top * (ratio - 1)).toInt()
-//            }
-//            else -> {
-//                xTranslation = 0
-//                yTranslation = 0
-//            }
-//        }
-//
-//        this.getPathDrawable().bounds = Rect(0 + xTranslation,
-//            0 + yTranslation,
-//            CanvasService.extraCanvas.width * ratio + xTranslation,
-//            CanvasService.extraCanvas.height * ratio + yTranslation)
-//    }
 }

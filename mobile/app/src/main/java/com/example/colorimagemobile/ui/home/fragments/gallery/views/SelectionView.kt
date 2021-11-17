@@ -5,14 +5,15 @@ import android.graphics.*
 import android.graphics.drawable.LayerDrawable
 import android.graphics.drawable.ShapeDrawable
 import android.graphics.drawable.shapes.PathShape
-import com.example.colorimagemobile.classes.toolsCommand.SelectionCommand
-import com.example.colorimagemobile.classes.toolsCommand.TranslateCommand
+import com.example.colorimagemobile.classes.toolsCommand.*
+import com.example.colorimagemobile.interfaces.ICommand
 import com.example.colorimagemobile.models.SelectionData
 import com.example.colorimagemobile.services.UUIDService
 import com.example.colorimagemobile.services.drawing.AnchorIndexes
 import com.example.colorimagemobile.services.drawing.CanvasService
 import com.example.colorimagemobile.services.drawing.DrawingObjectManager
 import com.example.colorimagemobile.services.drawing.SelectionService
+import com.example.colorimagemobile.services.drawing.SelectionService.getPathBoundingBox
 import com.example.colorimagemobile.services.drawing.SelectionService.inBounds
 import com.example.colorimagemobile.services.drawing.toolsAttribute.PencilService
 import com.example.colorimagemobile.services.drawing.toolsAttribute.ResizeSelectionService
@@ -34,23 +35,6 @@ class SelectionView(context: Context?): CanvasView(context) {
         )
     }
 
-    private fun getPathBoundingBox(path: Path): Region {
-        val rectF = RectF()
-        path.computeBounds(rectF, true)
-        var region = Region()
-        region.setPath(
-            path,
-            Region(
-                rectF.left.toInt(),
-                rectF.top.toInt(),
-                rectF.right.toInt(),
-                rectF.bottom.toInt()
-            )
-        )
-
-        return region
-    }
-
     private fun setSelectionBounds(bounds: Rect, strokeWidth: Int) {
         SelectionService.setSelectionBounds(
             (bounds.left - strokeWidth / 2),
@@ -64,20 +48,23 @@ class SelectionView(context: Context?): CanvasView(context) {
         CanvasService.extraCanvas.save()
         createPathObject()
         SelectionService.clearSelection()
+        currentX = motionTouchEventX
+        currentY = motionTouchEventY
+
+        if (SelectionService.getSelectedAnchor(
+                motionTouchEventX,
+                motionTouchEventY
+            ) != null
+        ) {
+            SelectionService.setSelectedAnchor(motionTouchEventX, motionTouchEventY)
+            return
+        }
         val numberOfLayers = DrawingObjectManager.numberOfLayers
         // TODO: Put anchor check before for loop
         for (index in numberOfLayers - 1 downTo 0) {
             val drawable = DrawingObjectManager.getDrawable(index)
 
             // if is inside bounding box
-            if (SelectionService.selectedDrawable == drawable && SelectionService.getSelectedAnchor(
-                    motionTouchEventX,
-                    motionTouchEventY
-                ) != null
-            ) {
-                SelectionService.setSelectedAnchor(motionTouchEventX, motionTouchEventY)
-                break
-            }
             if (inBounds(motionTouchEventX, motionTouchEventY, drawable.bounds)) {
 //                selectionCommand?.execute()
                 if (SelectionService.selectedDrawable == drawable) break
@@ -118,23 +105,26 @@ class SelectionView(context: Context?): CanvasView(context) {
                 SelectionService.selectedShapeIndex = -1
             }
         }
-        currentX = motionTouchEventX
-        currentY = motionTouchEventY
     }
 
     override fun onTouchMove() {
         // Translation: touching inside bounding box
+
         // Resizing: touching one of 8 points on bounding box
-        if(SelectionService.selectedAnchorIndex != AnchorIndexes.NONE) {
-            if (SelectionService.selectedDrawable != null) {
-                if (ResizeSelectionService.resizeCommand == null) {
-                    ResizeSelectionService.resizeCommand =
-                        ResizeSelectionService.createResizeCommand(SelectionService.selectedDrawable!!)
+        if (SelectionService.getSelectedAnchor(
+                motionTouchEventX,
+                motionTouchEventY
+            ) != null
+        ) {
+            SelectionService.setSelectedAnchor(motionTouchEventX, motionTouchEventY)
+            if(SelectionService.selectedAnchorIndex != AnchorIndexes.NONE) {
+                if (SelectionService.selectedDrawable != null) {
+                   ResizeSelectionService.onTouchMove(motionTouchEventX, motionTouchEventY)
                 }
-                var offSet = SelectionService.getBoundsSelection()
-                ResizeSelectionService.resize(motionTouchEventX, motionTouchEventY, offSet)
+                return
             }
         }
+
         // Translate only if touched inside of shape
         // TODO: Refactor
         translationCommand = TranslateCommand()

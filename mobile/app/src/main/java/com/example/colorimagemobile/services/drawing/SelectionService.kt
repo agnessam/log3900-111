@@ -1,9 +1,6 @@
 package com.example.colorimagemobile.services.drawing
 
-import android.graphics.Color
-import android.graphics.DashPathEffect
-import android.graphics.Paint
-import android.graphics.Rect
+import android.graphics.*
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.LayerDrawable
 import android.graphics.drawable.ShapeDrawable
@@ -189,6 +186,23 @@ object SelectionService {
         var right = (bottomRightCtrl.bounds.left + bottomRightCtrl.bounds.right) / 2
         var bottom = (bottomRightCtrl.bounds.top + bottomRightCtrl.bounds.bottom) / 2
         return Rect(left, top, right, bottom)
+    }
+
+    fun getPathBoundingBox(path: Path): Region {
+        val rectF = RectF()
+        path.computeBounds(rectF, true)
+        var region = Region()
+        region.setPath(
+            path,
+            Region(
+                rectF.left.toInt(),
+                rectF.top.toInt(),
+                rectF.right.toInt(),
+                rectF.bottom.toInt()
+            )
+        )
+
+        return region
     }
 
 }
