@@ -47,6 +47,8 @@ class EllipseData(
     var height: Int
 ): ToolData
 
+data class SelectionData(val id: String)
+
 data class SocketTool(val type: String, val roomName: String, val drawingCommand: Any)
 
 data class InProgressPencil(val id: String, var point: Point)
@@ -55,4 +57,7 @@ data class InProgressPencil(val id: String, var point: Point)
 data class SyncCreateDrawing(val type: String, val roomName: String, val drawingCommand: ToolData)
 
 data class SyncUpdate(var point: Point)
+data class RectangleUpdate(var x:Int, var y:Int, var width: Int, var height: Int)
+data class EllipseUpdate(var x:Int, var y:Int, var width: Int, var height: Int)
+
 data class SyncUpdateDrawing(val type: String, val roomName: String, val drawingCommand: SyncUpdate)

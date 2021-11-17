@@ -1,4 +1,4 @@
-package com.example.colorimagemobile.ui.home.fragments.chat.chatBox
+package com.example.colorimagemobile.ui.home.fragments.chat
 
 import android.annotation.SuppressLint
 import android.os.Bundle
@@ -9,13 +9,15 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.colorimagemobile.R
+import com.example.colorimagemobile.bottomsheets.DeleteChannelConfirmationBottomSheet
 import com.example.colorimagemobile.classes.JSONConvertor
-import com.example.colorimagemobile.classes.MyFragmentManager
 import com.example.colorimagemobile.models.ChatSocketModel
 import com.example.colorimagemobile.models.TextChannelModel
+import com.example.colorimagemobile.repositories.TextChannelRepository
 import com.example.colorimagemobile.services.UserService
 import com.example.colorimagemobile.services.chat.ChatAdapterService
 import com.example.colorimagemobile.services.chat.ChatService
@@ -73,6 +75,17 @@ class ChatMessageBoxFragment : Fragment(R.layout.fragment_chat_message_box) {
         // remove leaveRoom button for General
         if (channel.name == GENERAL_CHANNEL_NAME) {
             myView.findViewById<Button>(R.id.channel_leave_btn).visibility = View.GONE
+            hideLoadPreviousBtn()
+        }
+
+        // hide Load Previous Messages button if we have already loaded old messages
+        if (ChatService.shouldHideLoadPreviousBtn(channel.name)) {
+            hideLoadPreviousBtn()
+        }
+
+        // show delete button if I created the channel
+        if (channel.ownerId == UserService.getUserInfo()._id) {
+            myView.findViewById<Button>(R.id.channel_delete_btn).visibility = View.VISIBLE
         }
 
         // set up Recycler View
@@ -90,6 +103,12 @@ class ChatMessageBoxFragment : Fragment(R.layout.fragment_chat_message_box) {
         myView.findViewById<Button>(R.id.chat_sent_btn).setOnClickListener { sendChat() }
         myView.findViewById<LinearLayout>(R.id.chat_message_main).setOnTouchListener { _, _ -> closeKeyboard(requireActivity()) }
         myView.findViewById<Button>(R.id.channel_leave_btn).setOnClickListener { leaveRoom() }
+        myView.findViewById<Button>(R.id.channel_load_more_btn).setOnClickListener { loadPreviousMessages() }
+
+        myView.findViewById<Button>(R.id.channel_delete_btn).setOnClickListener {
+            val deleteConfirmation = DeleteChannelConfirmationBottomSheet()
+            deleteConfirmation.show(parentFragmentManager, "DeleteChannelConfirmationBottomSheet")
+        }
 
         // close keyboard when clicked on screen but allow scroll
         recyclerView.setOnTouchListener { v, event ->
@@ -125,17 +144,31 @@ class ChatMessageBoxFragment : Fragment(R.layout.fragment_chat_message_box) {
         recyclerView.scrollToPosition(ChatService.getChannelMessages(channel.name)!!.size - 1);
     }
 
+    private fun loadPreviousMessages() {
+        TextChannelRepository().getTextChannelMessages(channel._id!!).observe(context as LifecycleOwner, {
+            if (it.isError as Boolean) {
+                printToast(requireActivity(), it.message!!)
+                return@observe
+            }
+
+            ChatService.setHasFetchedMessages(channel.name)
+            hideLoadPreviousBtn()
+
+            val oldChannels = it.data as ArrayList<ChatSocketModel>
+            ChatService.addToStartOfChannel(channel.name, oldChannels)
+            ChatService.refreshChatBox(requireActivity())
+        })
+    }
+
+    private fun hideLoadPreviousBtn() {
+        myView.findViewById<Button>(R.id.channel_load_more_btn).visibility = View.GONE
+    }
+
     private fun leaveRoom() {
         TextChannelService.removeFromConnectedChannels(channel)
-        ChatSocketService.leaveRoom(channel.name)
-
-        // set current channel: 0 if only General exists, else last connected channels' position
-        val connectedChannelSize = TextChannelService.getConnectedChannels().size
-        val newPosition =  if (connectedChannelSize == 1) 0 else connectedChannelSize - 1
-        TextChannelService.setCurrentChannelByPosition(newPosition, false)
 
         // update UI
-        MyFragmentManager(requireActivity()).open(R.id.chat_channel_framelayout, ChatMessageBoxFragment())
-        ChatAdapterService.getChannelListAdapter().notifyDataSetChanged()
+        ChatService.refreshChatBox(requireActivity())
+        TextChannelService.refreshChannelList()
     }
 }

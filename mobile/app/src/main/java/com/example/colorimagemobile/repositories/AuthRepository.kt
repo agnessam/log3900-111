@@ -65,7 +65,6 @@ class AuthRepository {
                 }
 
                 authLiveData.value = DataWrapper(null, "Logging you out ${user.username}!", false)
-
             }
 
             override fun onFailure(call: Call<Boolean>, t: Throwable) {

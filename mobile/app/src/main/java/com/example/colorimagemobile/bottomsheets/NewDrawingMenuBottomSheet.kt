@@ -21,6 +21,7 @@ import com.example.colorimagemobile.services.SharedPreferencesService
 import com.example.colorimagemobile.services.UserService
 import com.example.colorimagemobile.services.drawing.CanvasService
 import com.example.colorimagemobile.services.drawing.CanvasUpdateService
+import com.example.colorimagemobile.services.drawing.DrawingService
 import com.example.colorimagemobile.services.drawing.toolsAttribute.ColorService
 import com.example.colorimagemobile.ui.home.fragments.gallery.GalleryDrawingFragment
 import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
@@ -43,9 +44,6 @@ class NewDrawingMenuBottomSheet: BottomSheetDialogFragment() {
     private lateinit var heightLayout: TextInputLayout
     private lateinit var dialog: BottomSheetDialog
 
-    private lateinit var sharedPrefService: SharedPreferencesService
-    private lateinit var token: String
-
     private var widthValue = 0
     private var heightValue = 0
 
@@ -67,16 +65,13 @@ class NewDrawingMenuBottomSheet: BottomSheetDialogFragment() {
         widthLayout = view.findViewById(R.id.newDrawingWidthInputLayout)
         heightLayout = view.findViewById(R.id.newDrawingHeightInputLayout)
 
-        sharedPrefService = SharedPreferencesService(requireContext())
-        token = sharedPrefService.getItem(Constants.STORAGE_KEY.TOKEN)
-
         toggleButton(createDrawingBtn, false)
         fetchTeams()
         setListeners(view)
     }
 
     private fun fetchTeams() {
-        UserRepository().getUserTeams(token, UserService.getUserInfo()._id).observe(context as LifecycleOwner, {
+        UserRepository().getUserTeams(UserService.getToken(), UserService.getUserInfo()._id).observe(context as LifecycleOwner, {
             if (it.isError as Boolean) {
                 return@observe
             }
@@ -122,7 +117,7 @@ class NewDrawingMenuBottomSheet: BottomSheetDialogFragment() {
             // to change dynamically once lourd has completed the UI
             val newDrawing = DrawingModel.CreateDrawing(_id = null, dataUri = base64, ownerModel = "User", ownerId = "", name = "MyDrawing2")
 
-            DrawingRepository().createNewDrawing(token, newDrawing).observe(context as LifecycleOwner, {
+            DrawingRepository().createNewDrawing(newDrawing).observe(context as LifecycleOwner, {
                 if (it.isError as Boolean) {
                     return@observe
                 }
@@ -132,7 +127,7 @@ class NewDrawingMenuBottomSheet: BottomSheetDialogFragment() {
                 if (drawing._id != null) {
                     closeSheet()
 
-                    sharedPrefService.setItem(Constants.STORAGE_KEY.DRAWING_ROOM_ID, drawing._id)
+                    DrawingService.setCurrentDrawingID(drawing._id)
                     MyFragmentManager(context as FragmentActivity).open(R.id.main_gallery_fragment, GalleryDrawingFragment())
 
                     CanvasService.createNewBitmap()

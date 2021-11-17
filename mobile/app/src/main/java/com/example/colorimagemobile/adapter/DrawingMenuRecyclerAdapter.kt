@@ -14,10 +14,11 @@ import com.example.colorimagemobile.models.recyclerAdapters.DrawingMenuViewHolde
 import com.example.colorimagemobile.services.SharedPreferencesService
 import com.example.colorimagemobile.services.drawing.CanvasService
 import com.example.colorimagemobile.services.drawing.CanvasUpdateService
+import com.example.colorimagemobile.services.drawing.DrawingService
 import com.example.colorimagemobile.ui.home.fragments.gallery.GalleryDrawingFragment
 import com.example.colorimagemobile.utils.Constants
 
-class DrawingMenuRecyclerAdapter(drawings: ArrayList<DrawingMenuData>): RecyclerView.Adapter<DrawingMenuRecyclerAdapter.ViewHolder>() {
+class DrawingMenuRecyclerAdapter(drawings: ArrayList<DrawingMenuData>, val destination: Int): RecyclerView.Adapter<DrawingMenuRecyclerAdapter.ViewHolder>() {
 
     val drawingMenus: ArrayList<DrawingMenuData> = drawings
 
@@ -51,9 +52,8 @@ class DrawingMenuRecyclerAdapter(drawings: ArrayList<DrawingMenuData>): Recycler
             itemView.setOnClickListener {
                 val position: Int = bindingAdapterPosition
 
-                val sharedPrefService = SharedPreferencesService(itemView.context)
-                sharedPrefService.setItem(Constants.STORAGE_KEY.DRAWING_ROOM_ID, drawingMenus[position].id)
-                MyFragmentManager(itemView.context as FragmentActivity).open(R.id.main_gallery_fragment, GalleryDrawingFragment())
+                DrawingService.setCurrentDrawingID(drawingMenus[position].id)
+                MyFragmentManager(itemView.context as FragmentActivity).open(destination, GalleryDrawingFragment())
 
                 // set clicked bitmap to canvas
                 CanvasService.createExistingBitmap(drawingMenus[position].imageBitmap)

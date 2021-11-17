@@ -12,6 +12,7 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.colorimagemobile.ui.login.LoginActivity
 import com.example.colorimagemobile.R
+import com.example.colorimagemobile.classes.MyFragmentManager
 import com.example.colorimagemobile.httpresponsehandler.GlobalHandler
 import com.example.colorimagemobile.services.UserService
 import com.example.colorimagemobile.models.UserModel
@@ -19,6 +20,8 @@ import com.example.colorimagemobile.models.DataWrapper
 import com.example.colorimagemobile.models.HTTPResponseModel
 import com.example.colorimagemobile.services.SharedPreferencesService
 import com.example.colorimagemobile.services.socket.SocketManagerService
+import com.example.colorimagemobile.ui.home.fragments.gallery.GalleryMenuFragment
+import com.example.colorimagemobile.ui.home.fragments.teams.TeamsMenuFragment
 import com.example.colorimagemobile.utils.CommonFun.Companion.printToast
 import com.example.colorimagemobile.utils.CommonFun.Companion.redirectTo
 import com.example.colorimagemobile.utils.Constants
@@ -48,7 +51,7 @@ class HomeActivity : AppCompatActivity() {
 
         val navController = findNavController(R.id.fragment)
         val appBarConfiguration = AppBarConfiguration(setOf(
-            R.id.galleryFragment, R.id.chatFragment, R.id.notificationFragment, R.id.userProfileFragment))
+            R.id.galleryFragment, R.id.chatFragment, R.id.teamsFragment, R.id.userProfileFragment))
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
     }
@@ -79,8 +82,26 @@ class HomeActivity : AppCompatActivity() {
         }
     }
 
+    override fun onSupportNavigateUp(): Boolean {
+        val navController = this.findNavController(R.id.fragment)
+
+        return when(navController.currentDestination?.id) {
+            // back button clicked on Gallery Drawing
+            R.id.galleryFragment -> {
+                SocketManagerService.leaveDrawingRoom()
+                MyFragmentManager(this).open(R.id.main_gallery_fragment, GalleryMenuFragment())
+                true
+            }
+            R.id.teamsFragment -> {
+                MyFragmentManager(this).open(R.id.teamsMenuFrameLayout, TeamsMenuFragment())
+                true
+            }
+            else -> navController.navigateUp()
+        }
+    }
+
     // check if User exists! If not, make HTTP request to init the User and All text channel
-    fun checkCurrentUser() {
+    private fun checkCurrentUser() {
         // user is null -> GET user
         if (UserService.isNull()) {
             val token = sharedPreferencesService.getItem(Constants.STORAGE_KEY.TOKEN)
@@ -114,10 +135,11 @@ class HomeActivity : AppCompatActivity() {
         }
 
         val token = sharedPreferencesService.getItem(Constants.STORAGE_KEY.TOKEN)
+        UserService.setToken(token)
+
         // remove items from "local storage"
         sharedPreferencesService.removeItem(Constants.STORAGE_KEY.TOKEN)
 
         redirectTo(this, LoginActivity::class.java)
     }
-
 }

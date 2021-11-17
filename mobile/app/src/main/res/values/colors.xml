@@ -21,4 +21,9 @@
     <color name="container">#FEF9F7</color>
     <color name="primary">#DA7E70</color>
     <color name="red">#FF4040</color>
+
+    <color name="danger">#ffc1ce</color>
+    <color name="dangerText">#762a3b</color>
+
+    <color name="delete">#de000d</color>
 </resources>

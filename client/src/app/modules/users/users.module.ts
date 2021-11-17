@@ -20,6 +20,8 @@ import { AvatarDialogComponent } from "./avatar/avatar-dialog/avatar-dialog.comp
 import { MatDialogModule } from "@angular/material/dialog";
 import { AvatarModule } from "ngx-avatar";
 import { FlexLayoutModule } from "@angular/flex-layout";
+import { MatTabsModule } from "@angular/material/tabs";
+import { CardsModule } from "../cards/cards.module";
 
 @NgModule({
   declarations: [
@@ -44,6 +46,8 @@ import { FlexLayoutModule } from "@angular/flex-layout";
     UsersRoutingModule,
     AvatarModule,
     FlexLayoutModule,
+    MatTabsModule,
+    CardsModule,
   ],
   providers: [
     {

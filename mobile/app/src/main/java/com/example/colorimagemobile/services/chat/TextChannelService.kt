@@ -1,6 +1,7 @@
 package com.example.colorimagemobile.services.chat
 
 import com.example.colorimagemobile.models.TextChannelModel
+import com.example.colorimagemobile.services.socket.ChatSocketService
 
 object TextChannelService {
     private var hasConnectedToGeneral = false
@@ -19,6 +20,11 @@ object TextChannelService {
 
     fun isConnectedToGeneral(): Boolean {
         return this.hasConnectedToGeneral
+    }
+
+    fun createNewChannel(newChannel: TextChannelModel.AllInfo) {
+        this.allChannels.add(newChannel)
+        this.setCurrentChannel(newChannel)
     }
 
     fun getChannels(): List<TextChannelModel.AllInfo> {
@@ -49,6 +55,30 @@ object TextChannelService {
 
     fun removeFromConnectedChannels(channelToRemove: TextChannelModel.AllInfo) {
         connectedChannels.remove(channelToRemove)
+        ChatSocketService.leaveRoom(channelToRemove.name)
+        updateCurrentChannel()
+    }
+
+    fun deleteChannel(channelToDelete: TextChannelModel.AllInfo) {
+        ChatSocketService.leaveRoom(channelToDelete.name)
+        allChannels.remove(channelToDelete)
+        removeFromConnectedChannels(channelToDelete)
+        updateCurrentChannel()
+    }
+
+    fun doesChannelExists(channelName: String): Boolean {
+        val filteredChannel = allChannels.filter { channel -> channel.name == channelName }
+        return filteredChannel.isNotEmpty()
+    }
+
+    fun refreshChannelList() {
+        ChatAdapterService.getChannelListAdapter().notifyDataSetChanged()
+    }
+
+    private fun updateCurrentChannel() {
+        // set current channel: 0 if only General exists, else last connected channels' position
+        val newPosition =  if (connectedChannels.size == 1) 0 else connectedChannels.size - 1
+        setCurrentChannelByPosition(newPosition, false)
     }
 
     private fun addToConnectedChannels() {

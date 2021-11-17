@@ -4,6 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import com.example.colorimagemobile.models.DataWrapper
 import com.example.colorimagemobile.models.DrawingModel
 import com.example.colorimagemobile.services.RetrofitInstance
+import com.example.colorimagemobile.services.UserService
 import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
 import retrofit2.Call
 import retrofit2.Callback
@@ -13,10 +14,10 @@ class DrawingRepository {
 
     private val httpClient = RetrofitInstance.HTTP
 
-    fun createNewDrawing(token: String, drawing: DrawingModel.CreateDrawing): MutableLiveData<DataWrapper<DrawingModel.CreateDrawing>> {
+    fun createNewDrawing(drawing: DrawingModel.CreateDrawing): MutableLiveData<DataWrapper<DrawingModel.CreateDrawing>> {
         val drawingLiveData: MutableLiveData<DataWrapper<DrawingModel.CreateDrawing>> = MutableLiveData()
 
-        httpClient.createNewDrawing(token = "Bearer $token", drawing).enqueue(object : Callback<DrawingModel.CreateDrawing>{
+        httpClient.createNewDrawing(token = "Bearer ${UserService.getToken()}", drawing).enqueue(object : Callback<DrawingModel.CreateDrawing>{
             override fun onResponse(call: Call<DrawingModel.CreateDrawing>, response: Response<DrawingModel.CreateDrawing>) {
                 if (!response.isSuccessful) {
                     drawingLiveData.value = DataWrapper(null, "An error occurred!", true)

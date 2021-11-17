@@ -12,18 +12,16 @@ export interface UserInterface extends Document {
   firstName: string;
   lastName: string;
   teams: string[] | TeamInterface[];
+
   drawings: string[];
-  lastLoginDate : string;
-  lastLogoutDate : string;
-  publishedDrawings: string[];
+  posts: string[];
+
   isValidPassword(password: string): Promise<boolean>;
 }
 
 const UserSchema = new mongoose.Schema({
   username: { type: String, required: true, index: { unique: true } },
   description: String,
-  lastLoginDate:  String ,
-  lastLogoutDate: String,
   avatar: {
     type: AvatarSchema,
     default: {
@@ -36,11 +34,10 @@ const UserSchema = new mongoose.Schema({
   firstName: { type: String, required: true },
   lastName: { type: String, required: true },
 
-
   teams: [{ type: Schema.Types.ObjectId, ref: 'Team' }],
 
   drawings: [{ type: Schema.Types.ObjectId, ref: 'Drawing' }],
-  publishedDrawings: [{ type: Schema.Types.ObjectId, ref: 'PublishedDrawing' }],
+  posts: [{ type: Schema.Types.ObjectId, ref: 'PublishedDrawing' }],
 });
 
 UserSchema.pre('save', async function (next) {

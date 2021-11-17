@@ -10,13 +10,13 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.colorimagemobile.R
 import com.example.colorimagemobile.adapter.ChannelsRecyclerAdapter
-import com.example.colorimagemobile.classes.MyFragmentManager
+import com.example.colorimagemobile.bottomsheets.NewChannelBottomSheet
 import com.example.colorimagemobile.models.TextChannelModel
 import com.example.colorimagemobile.repositories.TextChannelRepository
 import com.example.colorimagemobile.services.UserService
 import com.example.colorimagemobile.services.chat.ChatAdapterService
+import com.example.colorimagemobile.services.chat.ChatService
 import com.example.colorimagemobile.services.chat.TextChannelService
-import com.example.colorimagemobile.ui.home.fragments.chat.chatBox.ChatMessageBoxFragment
 import com.example.colorimagemobile.utils.Constants.Companion.GENERAL_CHANNEL_NAME
 
 class ChatFragment : Fragment(R.layout.fragment_chat) {
@@ -34,7 +34,7 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
 
         // means its not the first time we are opening the chat
         if (TextChannelService.getChannels().isNotEmpty()) {
-            MyFragmentManager(requireActivity()).open(R.id.chat_channel_framelayout, ChatMessageBoxFragment())
+            ChatService.refreshChatBox(requireActivity())
         }
     }
 
@@ -61,6 +61,7 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
     private fun setButtonListeners() {
         val connectedBtn = myView.findViewById<Button>(R.id.chat_connected_channels_btn)
         val allBtn = myView.findViewById<Button>(R.id.chat_all_channels_btn)
+        val createChannelBtn = myView.findViewById<Button>(R.id.channel_add_btn)
 
         showAllChannels()
         changeBtnColor(allBtn, connectedBtn)
@@ -73,6 +74,11 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
         connectedBtn.setOnClickListener {
             showConnectedChannels()
             changeBtnColor(connectedBtn, allBtn)
+        }
+
+        createChannelBtn.setOnClickListener {
+            val newChannelMenu = NewChannelBottomSheet()
+            newChannelMenu.show(parentFragmentManager, "NewChannelBottomSheet")
         }
     }
 
@@ -99,7 +105,7 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
             if (it.name == GENERAL_CHANNEL_NAME) {
                 TextChannelService.setCurrentChannel(it)
                 TextChannelService.connectToGeneral()
-                MyFragmentManager(requireActivity()).open(R.id.chat_channel_framelayout, ChatMessageBoxFragment())
+                ChatService.refreshChatBox(requireActivity())
                 return
             }
         }

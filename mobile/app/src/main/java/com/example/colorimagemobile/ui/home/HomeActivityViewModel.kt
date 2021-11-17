@@ -25,5 +25,4 @@ class HomeActivityViewModel : ViewModel() {
     fun logoutUser(user: UserModel.Logout): LiveData<DataWrapper<HTTPResponseModel>> {
         return authRepository.logoutUser(user)
     }
-
 }

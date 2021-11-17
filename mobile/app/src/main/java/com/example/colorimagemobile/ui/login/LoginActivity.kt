@@ -93,23 +93,12 @@ class LoginActivity : AppCompatActivity() {
         if (HTTPResponse.isError as Boolean) {
             return
         }
-
         val response = HTTPResponse.data as HTTPResponseModel.LoginResponse
 
         // save users info and token and redirect to /Home
         UserService.setUserInfo(response.user)
-
         sharedPreferencesService.setItem(Constants.STORAGE_KEY.TOKEN, response.token)
 
-
         redirectTo(this@LoginActivity, HomeActivity::class.java)
-
     }
-
-
-
-
-
-
-
 }

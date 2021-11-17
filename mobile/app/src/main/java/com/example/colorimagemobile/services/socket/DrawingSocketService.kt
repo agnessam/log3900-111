@@ -2,7 +2,6 @@ package com.example.colorimagemobile.services.socket
 
 import androidx.fragment.app.FragmentActivity
 import com.example.colorimagemobile.classes.AbsSocket
-import com.example.colorimagemobile.classes.CommandFactory
 import com.example.colorimagemobile.classes.JSONConvertor
 import com.example.colorimagemobile.models.*
 import com.example.colorimagemobile.services.drawing.SynchronisationService
@@ -12,7 +11,6 @@ import com.example.colorimagemobile.utils.Constants.SOCKETS.Companion.CONFIRM_DR
 import com.example.colorimagemobile.utils.Constants.SOCKETS.Companion.IN_PROGRESS_DRAWING_EVENT
 import io.socket.emitter.Emitter
 import org.json.JSONException
-import org.json.JSONObject
 
 object DrawingSocketService: AbsSocket(SOCKETS.COLLABORATIVE_DRAWING_NAMESPACE) {
     private var roomName: String? = null
@@ -36,6 +34,7 @@ object DrawingSocketService: AbsSocket(SOCKETS.COLLABORATIVE_DRAWING_NAMESPACE) 
 
     override fun setSocketListeners() {
         this.listenInProgressDrawingCommand()
+        this.listenConfirmDrawingCommand()
     }
 
     fun sendInProgressDrawingCommand(drawingCommand: Any, type: String) {
@@ -58,6 +57,24 @@ object DrawingSocketService: AbsSocket(SOCKETS.COLLABORATIVE_DRAWING_NAMESPACE) 
         val jsonSocket = JSONConvertor.convertToJSON(socketToolCommand)
         super.emit(CONFIRM_DRAWING_EVENT, jsonSocket)
 
+    }
+
+    private fun listenConfirmDrawingCommand(){
+        mSocket.on(CONFIRM_DRAWING_EVENT, onConfirmDrawing)
+    }
+
+
+    private val onConfirmDrawing = Emitter.Listener { args ->
+        fragmentActivity!!.runOnUiThread(Runnable {
+            try {
+                val toolCommandString = args[0].toString()
+                SynchronisationService.removeFromPreview(toolCommandString)
+
+            } catch (e: JSONException) {
+                printMsg("listenInProgressDrawingCommand error: ${e.message}")
+                return@Runnable
+            }
+        })
     }
 
     private fun listenInProgressDrawingCommand() {

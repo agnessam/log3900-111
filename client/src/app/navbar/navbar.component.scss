@@ -18,6 +18,26 @@
 #nav-bar span div a {
   font-size: 24px;
 }
+#search-bar {
+  height: 90%;
+  width: 30%;
+  border-radius: 25px;
+  background-color: #fef9f7;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#searchbar-input {
+  border: none;
+  background-color: transparent;
+  width: 100%;
+  margin-right: 20px;
+}
+
+#searchbar-input:focus {
+  outline: none;
+}
 
 #main-logo {
   color: #924642;
@@ -28,4 +48,8 @@
 #logout-button {
   color: #924642;
   font-size: 24px;
+}
+
+#avatar {
+  cursor: pointer;
 }

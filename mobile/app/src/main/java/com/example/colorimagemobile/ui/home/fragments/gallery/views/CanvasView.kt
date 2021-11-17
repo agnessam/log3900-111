@@ -42,7 +42,8 @@ abstract class CanvasView(context: Context?): View(context) {
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
         canvas.drawBitmap(CanvasService.extraBitmap, 0f, 0f, null)
-        CanvasService.layerDrawable.draw(canvas)
+        DrawingObjectManager.draw(canvas)
+        SelectionService.selectionBox.draw(canvas)
     }
 
     // when taking an action on canvas

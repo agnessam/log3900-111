@@ -13,6 +13,9 @@ import { MatDialogModule } from "@angular/material/dialog";
 import { ReactiveFormsModule } from "@angular/forms";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatInputModule } from "@angular/material/input";
+import { MatTabsModule } from "@angular/material/tabs";
+import { CardsModule } from "../cards/cards.module";
+import { AvatarModule } from "ngx-avatar";
 
 @NgModule({
   declarations: [TeamMainPageComponent, TeamProfileComponent, NewTeamComponent],
@@ -27,6 +30,9 @@ import { MatInputModule } from "@angular/material/input";
     ReactiveFormsModule,
     MatFormFieldModule,
     MatInputModule,
+    MatTabsModule,
+    CardsModule,
+    AvatarModule,
   ],
 })
 export class TeamModule {}

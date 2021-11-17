@@ -16,6 +16,7 @@ class Constants {
         const val CAMERA_REQUEST_CODE = 1
         const val PNG =".png"
 
+        const val NB_DATA_ROWS = 3
     }
 
     class SOCKETS {
@@ -52,6 +53,9 @@ class Constants {
 
             // drawings
             const val ALL_DRAWINGS = "api/drawings/"
+
+            // teams
+            const val TEAMS = "api/teams/"
         }
     }
 
@@ -65,25 +69,17 @@ class Constants {
         }
     }
 
+    class TEAMS {
+        companion object {
+            const val CURRENT_TEAM_ID_KEY = "CurrentTeam"
+        }
+    }
+
     // sharedPreferences keys
     class STORAGE_KEY {
         companion object {
             const val MAIN = "localStorage"
             const val TOKEN = "token"
-            const val DRAWING_ROOM_ID = "drawingRoomName"
         }
     }
-
-    class SOCKET_KEY{
-        companion object{
-             const val CHAT_NAMESPACE_NAME = "chat";
-             const val ROOM_EVENT_NAME = "room";
-             const val TEXT_MESSAGE_EVENT_NAME = "text";
-             const val CONNECTION_EVENT_NAME = "connection";
-             const val DISCONNECTION_EVENT_NAME = "disconnect";
-             const val LEAVE_ROOM_EVENT_NAME = "leaveRoom";
-        }
-    }
-
-
 }

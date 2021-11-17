@@ -52,15 +52,20 @@ interface API {
 
     //  TextChannel region
     @Headers("Content-Type: application/json")
+    @GET(Constants.ENDPOINTS.TEXT_CHANNEL_PATH + "{channelId}" + "/messages")
+    fun getAllTextChannelMessages(@Header("Authorization") token: String, @Path ("channelId") channelId: String): Call<ArrayList<ChatSocketModel>>
+
+    //  TextChannel region
+    @Headers("Content-Type: application/json")
     @GET(Constants.ENDPOINTS.TEXT_CHANNEL_PATH)
     fun getAllTextChannel(@Header("Authorization")token: String): Call<ArrayList<TextChannelModel.AllInfo>>
 
     @Headers("Content-Type: application/json")
     @POST(Constants.ENDPOINTS.TEXT_CHANNEL_PATH)
-    fun addChannel(@Header("Authorization")token: String,@Body newUser: TextChannelModel.CreateChannel): Call<TextChannelModel.AllInfo>
+    fun addChannel(@Header("Authorization")token: String,@Body newUser: TextChannelModel.AllInfo): Call<TextChannelModel.AllInfo>
 
     @Headers("Content-Type: application/json")
-    @DELETE(Constants.ENDPOINTS.TEXT_CHANNEL_PATH+"{channelId}")
+    @DELETE(Constants.ENDPOINTS.TEXT_CHANNEL_PATH + "{channelId}")
     fun deleteChannelById(@Header("Authorization")token: String,@Path ("channelId") channelId: String): Call<TextChannelModel.AllInfo>
 
     // region message
@@ -102,4 +107,23 @@ interface API {
     @Headers("Content-Type: application/json")
     @POST(Constants.ENDPOINTS.AVATAR_PATH)
     fun postAvatar(@Header("Authorization") token: String, @Body newAvatar: AvatarModel.AllInfo): Call<AvatarModel.AllInfo>
+    // teams
+    @GET("${Constants.ENDPOINTS.TEAMS}{id}/drawings")
+    fun getTeamDrawings(@Header("Authorization") token: String, @Path ("id") id: String): Call<ArrayList<DrawingModel.CreateDrawing>>
+
+    @GET(Constants.ENDPOINTS.TEAMS)
+    fun getAllTeams(@Header("Authorization") token: String): Call<ArrayList<TeamModel>>
+
+    @Headers("Content-Type: application/json")
+    @POST("${Constants.ENDPOINTS.TEAMS}{id}/join")
+    fun joinTeam(@Header("Authorization") token: String, @Path ("id") id: String): Call<TeamModel>
+
+    @Headers("Content-Type: application/json")
+    @POST("${Constants.ENDPOINTS.TEAMS}{id}/leave")
+    fun leaveTeam(@Header("Authorization") token: String, @Path ("id") id: String): Call<TeamModel>
+
+
+    @Headers("Content-Type: application/json")
+    @POST(Constants.ENDPOINTS.TEAMS)
+    fun createNewTeam(@Header("Authorization") token: String, @Body team: CreateTeamModel): Call<TeamModel>
 }

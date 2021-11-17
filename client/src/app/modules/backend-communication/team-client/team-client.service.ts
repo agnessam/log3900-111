@@ -2,6 +2,7 @@ import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 import { map } from "rxjs/operators";
+import { Drawing } from "src/app/shared";
 import { Team } from "src/app/shared/models/team.model";
 import { environment } from "src/environments/environment";
 
@@ -47,5 +48,13 @@ export class TeamClientService {
           return team;
         })
       );
+  }
+
+  getTeamDrawings(teamId: string): Observable<Drawing[]> {
+    return this.httpClient
+      .get<Drawing[]>(`${this.TEAM_ENDPOINT}${teamId}/drawings`)
+      .pipe((drawings) => {
+        return drawings;
+      });
   }
 }
