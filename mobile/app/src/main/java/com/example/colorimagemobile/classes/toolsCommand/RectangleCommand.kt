@@ -49,7 +49,7 @@ class RectangleCommand(rectangleData: RectangleData): ICommand {
     private fun initializePaint(color: String, defaultColor: Int): Paint{
         var paint = Paint()
         paint.color = if(color != "none") ColorService.rgbaToInt(color)
-        else Color.BLACK
+        else defaultColor
         paint.isAntiAlias = true
         paint.style = Paint.Style.FILL
         paint.isDither = true
