@@ -131,7 +131,7 @@ class RectangleCommand(rectangleData: RectangleData): ICommand {
             this.getRectangleDrawable().setDrawable(this.fillRectangleIndex, fillRectDrawable)
             this.getFillRectangle().paint.set(this.fillPaint)
         }
-
+        this.getRectangleDrawable().bounds = this.boundingRectangle
         DrawingObjectManager.setDrawable(layerIndex, rectangleShape)
         CanvasUpdateService.invalidate()
     }
