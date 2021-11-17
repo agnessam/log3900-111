@@ -4,18 +4,15 @@ import android.graphics.*
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.LayerDrawable
 import android.graphics.drawable.ShapeDrawable
-import android.graphics.drawable.shapes.OvalShape
 import android.graphics.drawable.shapes.PathShape
 import com.example.colorimagemobile.interfaces.ICommand
 import com.example.colorimagemobile.models.EllipseData
 import com.example.colorimagemobile.models.EllipseUpdate
-import com.example.colorimagemobile.models.SyncUpdate
 import com.example.colorimagemobile.services.drawing.CanvasService
 import com.example.colorimagemobile.services.drawing.CanvasUpdateService
+import com.example.colorimagemobile.services.drawing.DrawingObjectManager
 import com.example.colorimagemobile.services.drawing.Point
 import com.example.colorimagemobile.services.drawing.toolsAttribute.ColorService
-import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
-import java.lang.Math.abs
 
 class EllipseCommand(ellipseData: EllipseData): ICommand {
     private var boundingRectangle = Rect(0,0, CanvasService.extraCanvas.width, CanvasService.extraCanvas.height)
@@ -63,7 +60,7 @@ class EllipseCommand(ellipseData: EllipseData): ICommand {
 
         fillEllipseIndex = ellipseShape.addLayer(fillRectangle)
         borderEllipseIndex = ellipseShape.addLayer(borderRectangle)
-        layerIndex = CanvasService.layerDrawable.addLayer(ellipseShape)
+        layerIndex = DrawingObjectManager.addLayer(ellipseShape, ellipse.id)
     }
 
     private fun createNewEllipse(): ShapeDrawable{
@@ -96,7 +93,7 @@ class EllipseCommand(ellipseData: EllipseData): ICommand {
     }
 
     private fun getEllipseDrawable(): LayerDrawable {
-        return CanvasService.layerDrawable.getDrawable(this.layerIndex) as LayerDrawable
+        return DrawingObjectManager.getDrawable(this.layerIndex) as LayerDrawable
     }
 
     override fun update(drawingCommand: Any) {
@@ -132,7 +129,7 @@ class EllipseCommand(ellipseData: EllipseData): ICommand {
             this.getFillEllipse().paint.set(this.fillPaint)
         }
 
-        CanvasService.layerDrawable.setDrawable(layerIndex, ellipseShape)
+        DrawingObjectManager.setDrawable(layerIndex, ellipseShape)
         CanvasUpdateService.invalidate()
     }
 

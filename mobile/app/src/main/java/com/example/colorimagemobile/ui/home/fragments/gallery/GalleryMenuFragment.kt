@@ -25,8 +25,6 @@ import com.example.colorimagemobile.services.drawing.DrawingService
 import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
 import kotlin.collections.ArrayList
 
-private const val NB_ROWS = 3
-
 class GalleryMenuFragment : Fragment(R.layout.fragment_gallery_menu) {
     private lateinit var drawingRepo: DrawingRepository
     private lateinit var sharedPreferencesService: SharedPreferencesService
@@ -85,7 +83,7 @@ class GalleryMenuFragment : Fragment(R.layout.fragment_gallery_menu) {
             }
         }
 
-        recyclerView.layoutManager = GridLayoutManager(requireContext(), NB_ROWS)
-        recyclerView.adapter = DrawingMenuRecyclerAdapter(drawingsMenu)
+        recyclerView.layoutManager = GridLayoutManager(requireContext(), Constants.NB_DATA_ROWS)
+        recyclerView.adapter = DrawingMenuRecyclerAdapter(drawingsMenu, R.id.main_gallery_fragment)
     }
 }

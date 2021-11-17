@@ -92,4 +92,24 @@ interface API {
     @Headers("Content-Type: application/json")
     @POST(Constants.ENDPOINTS.ALL_DRAWINGS)
     fun createNewDrawing(@Header("Authorization") token: String, @Body drawing: DrawingModel.CreateDrawing): Call<DrawingModel.CreateDrawing>
+
+    // teams
+    @GET("${Constants.ENDPOINTS.TEAMS}{id}/drawings")
+    fun getTeamDrawings(@Header("Authorization") token: String, @Path ("id") id: String): Call<ArrayList<DrawingModel.CreateDrawing>>
+
+    @GET(Constants.ENDPOINTS.TEAMS)
+    fun getAllTeams(@Header("Authorization") token: String): Call<ArrayList<TeamModel>>
+
+    @Headers("Content-Type: application/json")
+    @POST("${Constants.ENDPOINTS.TEAMS}{id}/join")
+    fun joinTeam(@Header("Authorization") token: String, @Path ("id") id: String): Call<TeamModel>
+
+    @Headers("Content-Type: application/json")
+    @POST("${Constants.ENDPOINTS.TEAMS}{id}/leave")
+    fun leaveTeam(@Header("Authorization") token: String, @Path ("id") id: String): Call<TeamModel>
+
+
+    @Headers("Content-Type: application/json")
+    @POST(Constants.ENDPOINTS.TEAMS)
+    fun createNewTeam(@Header("Authorization") token: String, @Body team: CreateTeamModel): Call<TeamModel>
 }

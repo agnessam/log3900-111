@@ -59,7 +59,7 @@ export class TeamController {
   public async removeMemberFromTeam(@request() req: Request) {
     return await this.teamRepository.removeMemberFromTeam(
       req.params.teamId,
-      req.body.userId,
+      req.user!.id,
     );
   }
 

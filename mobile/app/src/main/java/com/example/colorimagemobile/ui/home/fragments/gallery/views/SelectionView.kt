@@ -11,6 +11,7 @@ import com.example.colorimagemobile.classes.toolsCommand.TranslateCommand
 import com.example.colorimagemobile.models.SelectionData
 import com.example.colorimagemobile.services.UUIDService
 import com.example.colorimagemobile.services.drawing.CanvasService
+import com.example.colorimagemobile.services.drawing.DrawingObjectManager
 import com.example.colorimagemobile.services.drawing.SelectionService
 import com.example.colorimagemobile.services.drawing.SelectionService.selectedShape
 import com.example.colorimagemobile.services.drawing.SelectionService.selectedShapeIndex
@@ -61,9 +62,9 @@ class SelectionView(context: Context?): CanvasView(context) {
         CanvasService.extraCanvas.save()
         createPathObject()
         SelectionService.clearSelection()
-        val numberOfLayers = CanvasService.layerDrawable.numberOfLayers
+        val numberOfLayers = DrawingObjectManager.numberOfLayers
         for (index in numberOfLayers - 1 downTo 0) {
-            val drawable = CanvasService.layerDrawable.getDrawable(index)
+            val drawable = DrawingObjectManager.getDrawable(index)
 
             // if is inside bounding box
             if (SelectionService.touchedInside(motionTouchEventX, motionTouchEventY, drawable.bounds)) {

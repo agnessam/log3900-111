@@ -10,6 +10,7 @@ import com.example.colorimagemobile.models.RectangleData
 import com.example.colorimagemobile.models.RectangleUpdate
 import com.example.colorimagemobile.services.drawing.CanvasService
 import com.example.colorimagemobile.services.drawing.CanvasUpdateService
+import com.example.colorimagemobile.services.drawing.DrawingObjectManager
 import com.example.colorimagemobile.services.drawing.Point
 import com.example.colorimagemobile.services.drawing.toolsAttribute.ColorService
 import java.lang.Integer.min
@@ -61,7 +62,7 @@ class RectangleCommand(rectangleData: RectangleData): ICommand {
 
         fillRectangleIndex = rectangleShape.addLayer(fillRectangle)
         borderRectangleIndex = rectangleShape.addLayer(borderRectangle)
-        layerIndex = CanvasService.layerDrawable.addLayer(rectangleShape)
+        layerIndex = DrawingObjectManager.addLayer(rectangleShape, rectangle.id)
     }
 
     private fun createNewRectangle(): ShapeDrawable{
@@ -81,6 +82,9 @@ class RectangleCommand(rectangleData: RectangleData): ICommand {
         rectangle.x = min(endingPoint!!.x.toInt(), startingPoint!!.x.toInt())
         rectangle.height = kotlin.math.abs(endingPoint!!.y - startingPoint!!.y).toInt()
         rectangle.y = min(endingPoint!!.y.toInt(), startingPoint!!.y.toInt())
+
+        this.generateBorderPath()
+        this.generateFillPath()
     }
 
     private fun getFillRectangle(): ShapeDrawable{
@@ -92,7 +96,7 @@ class RectangleCommand(rectangleData: RectangleData): ICommand {
     }
 
     private fun getRectangleDrawable(): LayerDrawable{
-        return CanvasService.layerDrawable.getDrawable(this.layerIndex) as LayerDrawable
+        return DrawingObjectManager.getDrawable(this.layerIndex) as LayerDrawable
     }
 
     override fun update(drawingCommand: Any) {
@@ -106,7 +110,6 @@ class RectangleCommand(rectangleData: RectangleData): ICommand {
 
     override fun execute() {
         if(rectangle.stroke != "none"){
-            this.generateBorderPath()
             val borderRectPathShape = PathShape(borderPath,
                 CanvasService.extraCanvas.width.toFloat(), CanvasService.extraCanvas.height.toFloat()
             )
@@ -118,7 +121,6 @@ class RectangleCommand(rectangleData: RectangleData): ICommand {
         }
 
         if(rectangle.fill != "none"){
-            this.generateFillPath()
             val fillRectPathShape = PathShape(fillPath,
                 CanvasService.extraCanvas.width.toFloat(), CanvasService.extraCanvas.height.toFloat()
             )
@@ -130,7 +132,7 @@ class RectangleCommand(rectangleData: RectangleData): ICommand {
             this.getFillRectangle().paint.set(this.fillPaint)
         }
 
-        CanvasService.layerDrawable.setDrawable(layerIndex, rectangleShape)
+        DrawingObjectManager.setDrawable(layerIndex, rectangleShape)
         CanvasUpdateService.invalidate()
     }
 
