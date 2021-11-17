@@ -14,6 +14,7 @@ import com.example.colorimagemobile.services.drawing.CanvasService
 import com.example.colorimagemobile.services.drawing.toolsAttribute.SelectionService.selectedShape
 import com.example.colorimagemobile.services.drawing.toolsAttribute.SelectionService.selectedShapeIndex
 import com.example.colorimagemobile.services.drawing.toolsAttribute.SelectionService
+import com.example.colorimagemobile.services.drawing.DrawingObjectManager
 import com.example.colorimagemobile.services.drawing.toolsAttribute.PencilService
 import kotlin.math.abs
 
@@ -61,11 +62,9 @@ class SelectionView(context: Context?): CanvasView(context) {
         CanvasService.extraCanvas.save()
         createPathObject()
         SelectionService.clearSelection()
-        val numberOfLayers = CanvasService.layerDrawable.numberOfLayers
+        val numberOfLayers = DrawingObjectManager.numberOfLayers
         for (index in numberOfLayers - 1 downTo 0) {
-            val drawable = CanvasService.layerDrawable.getDrawable(index)
-            // PathDrawables have bounds equal to the dimensions of the canvas and
-            // click will always be inside of them
+            val drawable = DrawingObjectManager.getDrawable(index)
 
             // if is inside bounding box
             if (SelectionService.touchedInside(motionTouchEventX, motionTouchEventY, drawable.bounds)) {

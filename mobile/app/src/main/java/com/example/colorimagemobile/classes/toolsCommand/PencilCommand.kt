@@ -1,16 +1,14 @@
 package com.example.colorimagemobile.classes.toolsCommand
 
-import android.graphics.Paint
-import android.graphics.Path
-import android.graphics.Rect
+import android.graphics.*
 import android.graphics.drawable.ShapeDrawable
 import android.graphics.drawable.shapes.PathShape
 import com.example.colorimagemobile.interfaces.ICommand
 import com.example.colorimagemobile.models.PencilData
 import com.example.colorimagemobile.models.SyncUpdate
 import com.example.colorimagemobile.services.drawing.*
+import com.example.colorimagemobile.services.drawing.Point
 import com.example.colorimagemobile.services.drawing.toolsAttribute.ColorService
-import android.graphics.RectF
 import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
 
 import com.example.colorimagemobile.services.drawing.toolsAttribute.PencilService
@@ -27,7 +25,7 @@ class PencilCommand(pencilData: PencilData): ICommand {
             CanvasService.extraCanvas.width.toFloat(), CanvasService.extraCanvas.height.toFloat())
 
         var shapeDrawable = ShapeDrawable(pathShape)
-        layerIndex = CanvasService.layerDrawable.addLayer(shapeDrawable)
+        layerIndex = DrawingObjectManager.addLayer(shapeDrawable, pencil.id)
         PencilService.paths.putIfAbsent(layerIndex, path)
 
         paint.color = ColorService.rgbaToInt(this.pencil.stroke)
@@ -55,20 +53,21 @@ class PencilCommand(pencilData: PencilData): ICommand {
     }
 
     private fun getPathDrawable(): ShapeDrawable {
-        return CanvasService.layerDrawable.getDrawable(this.layerIndex) as ShapeDrawable
+        return DrawingObjectManager.getDrawable(this.layerIndex) as ShapeDrawable
+//        return DrawingObjectManager.layerDrawable.getDrawable(this.layerIndex) as ShapeDrawable
     }
 
     // update canvas
     override fun execute() {
-//        CanvasService.extraCanvas.drawPath(pencilPaintPath.path, pencilPaintPath.brush.getPaint())
         val pathShape = PathShape(path,
             CanvasService.extraCanvas.width.toFloat(), CanvasService.extraCanvas.height.toFloat()
         )
 
         var shapeDrawable = ShapeDrawable(pathShape)
         this.getPathDrawable().bounds = this.boundingRectangle
-        CanvasService.layerDrawable.setDrawable(layerIndex, shapeDrawable)
-        PencilService.paths[layerIndex] = path
+        DrawingObjectManager.setDrawable(layerIndex, shapeDrawable)
+        PencilService.paths[layerIndex] = path // TODO Try to replace this line for the drawingObjectManager.addCOmmand
+        DrawingObjectManager.addCommand(pencil.id, this)
 
         this.getPathDrawable().paint.set(this.paint)
         CanvasUpdateService.invalidate()
