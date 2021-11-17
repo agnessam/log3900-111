@@ -29,6 +29,7 @@ class UserRepository {
                 }
                 // account successfully created
                 userLiveData.value = DataWrapper(response.body(), null, false)
+                UserService.setUserInfo(response.body()!!.user)
             }
             // duplicate username is coming through here
             override fun onFailure(call: Call<HTTPResponseModel.UserResponse>, t: Throwable) {

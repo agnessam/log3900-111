@@ -17,10 +17,11 @@ import com.example.colorimagemobile.utils.CommonFun.Companion.loadUrl
 class ShowUserProfileFragment : Fragment() {
 
     // get current user
-    val user : UserModel.AllInfo = UserService.getUserInfo()
+    private lateinit var user : UserModel.AllInfo
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        user = UserService.getUserInfo()
     }
 
 

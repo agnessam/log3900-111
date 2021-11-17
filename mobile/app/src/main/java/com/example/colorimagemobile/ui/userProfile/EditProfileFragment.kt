@@ -94,9 +94,10 @@ class EditProfileFragment : Fragment() {
             defaultAvatarList.show(parentFragmentManager, "DefaultAvatarListBottomSheetDialog")
         }
 
+
        // keyboard
-        CommonFun.onEnterKeyPressed_(inf.findViewById<View>(R.id.edtusername) as TextView) { update() }
-        CommonFun.onEnterKeyPressed_(inf.findViewById<View>(R.id.edtdescription) as TextView) { update() }
+        CommonFun.onEnterKeyPressed_(inf.findViewById<View>(R.id.edtusername) as TextView) { areFieldEmpty()}
+        CommonFun.onEnterKeyPressed_(inf.findViewById<View>(R.id.edtdescription) as TextView) {areFieldEmpty()}
         imageView = (inf.findViewById<View>(R.id.current_avatar) as ImageView)
         loadUrl(user.avatar.imageUrl, imageView )
         infview = inf
@@ -121,6 +122,19 @@ class EditProfileFragment : Fragment() {
         })
     }
 
+    private fun areFieldEmpty(){
+        infName = (infview!!.findViewById<View>(R.id.edtusername) as TextView)
+        infDescription = (infview!!.findViewById<View>(R.id.edtdescription) as TextView)
+        edtUsername = infName.text.toString()
+        edtDescription = infDescription.text.toString()
+        if (edtUsername.length != 0 || edtDescription.length != 0){
+            CommonFun.toggleButton(updateprofile, true)
+            newUserData.username = edtUsername
+            newUserData.description = edtDescription
+        }
+
+    }
+
     // set the data to be update
     private fun setDataToUpdate(){
         infName = (infview!!.findViewById<View>(R.id.edtusername) as TextView)
@@ -132,12 +146,12 @@ class EditProfileFragment : Fragment() {
             currentAvatar = AvatarService.getCurrentAvatar()
             newUserData.avatar = currentAvatar
         }
-        if (edtUsername.length != 0) {
-            newUserData.username = edtUsername
-        }
-        if (edtDescription.length != 0){
-            newUserData.description = edtDescription
-        }
+//        if (edtUsername.length != 0) {
+//            newUserData.username = edtUsername
+//        }
+//        if (edtDescription.length != 0){
+//            newUserData.description = edtDescription
+//        }
 
     }
 
@@ -160,6 +174,7 @@ class EditProfileFragment : Fragment() {
         setDataToUpdate()
         UserService.setNewProfileData(newUserData)
         updateUserInfo().observe(viewLifecycleOwner, { context?.let { it1 ->globalHandler.response(it1,it) } })
+        UserRepository().getUserByToken(token)
     }
 
     //call retrofit request to database to update user info

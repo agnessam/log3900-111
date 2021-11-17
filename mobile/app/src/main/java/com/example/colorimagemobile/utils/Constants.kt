@@ -15,6 +15,7 @@ class Constants {
         const val GENERAL_CHANNEL_NAME = "General"
         const val CAMERA_REQUEST_CODE = 1
         const val PNG =".png"
+        const val AVATAR_ALL_INFO_DEFAULT = true
 
         const val NB_DATA_ROWS = 3
     }
