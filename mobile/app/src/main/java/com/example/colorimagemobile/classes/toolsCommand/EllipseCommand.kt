@@ -128,7 +128,7 @@ class EllipseCommand(ellipseData: EllipseData): ICommand {
             this.getEllipseDrawable().setDrawable(this.fillEllipseIndex, fillRectDrawable)
             this.getFillEllipse().paint.set(this.fillPaint)
         }
-
+        this.getEllipseDrawable().bounds = this.boundingRectangle
         DrawingObjectManager.setDrawable(layerIndex, ellipseShape)
         CanvasUpdateService.invalidate()
     }
