@@ -19,9 +19,13 @@ import com.example.colorimagemobile.services.UserService
 import com.example.colorimagemobile.models.UserModel
 import com.example.colorimagemobile.models.DataWrapper
 import com.example.colorimagemobile.models.HTTPResponseModel
+import com.example.colorimagemobile.models.SearchModel
+import com.example.colorimagemobile.repositories.SearchRepository
+import com.example.colorimagemobile.services.SearchService
 import com.example.colorimagemobile.services.SharedPreferencesService
 import com.example.colorimagemobile.services.socket.SocketManagerService
 import com.example.colorimagemobile.ui.home.fragments.gallery.GalleryMenuFragment
+import com.example.colorimagemobile.ui.home.fragments.search.SearchFragment
 import com.example.colorimagemobile.ui.home.fragments.teams.TeamsMenuFragment
 import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
 import com.example.colorimagemobile.utils.CommonFun.Companion.printToast
@@ -81,10 +85,17 @@ class HomeActivity : AppCompatActivity() {
         searchView.queryHint = "Quick Search"
 
         searchView.setOnQueryTextListener(object: SearchView.OnQueryTextListener {
-            override fun onQueryTextChange(newText: String): Boolean { return false }
+            override fun onQueryTextChange(newText: String): Boolean {
+                if (newText.isNullOrEmpty()) {
+                    SearchService.clear()
+                    printMsg("FETCHIN SEARCH")
+                }
+                return false
+            }
             override fun onQueryTextSubmit(query: String): Boolean {
-                printMsg(query.toString())
+                SearchService.setQuery(query)
                 searchView.clearFocus()
+                getFilteredData()
                 return true
             }
         })
@@ -159,5 +170,17 @@ class HomeActivity : AppCompatActivity() {
         sharedPreferencesService.removeItem(Constants.STORAGE_KEY.TOKEN)
 
         redirectTo(this, LoginActivity::class.java)
+    }
+
+    private fun getFilteredData() {
+        val query = SearchService.getQuery()
+        if (query.isNullOrEmpty()) return
+
+        SearchRepository().getSearchQuery(query).observe(this, {
+            if (it.isError as Boolean) { return@observe }
+
+            val filteredData = it.data as SearchModel
+            MyFragmentManager(this).openWithData(R.id.fragment, SearchFragment(), Constants.SEARCH.CURRENT_QUERY, filteredData)
+        })
     }
 }
