@@ -32,8 +32,8 @@ class RectangleCommand(rectangleData: RectangleData): ICommand {
     private var borderPaint: Paint = Paint()
     private var fillPaint: Paint = Paint()
 
-    private var borderPath = Path()
-    private var fillPath = Path()
+    var borderPath = Path()
+    var fillPath = Path()
     init{
         var fillRectangle = createNewRectangle()
         var borderRectangle = createNewRectangle()
@@ -49,7 +49,7 @@ class RectangleCommand(rectangleData: RectangleData): ICommand {
     private fun initializePaint(color: String, defaultColor: Int): Paint{
         var paint = Paint()
         paint.color = if(color != "none") ColorService.rgbaToInt(color)
-        else Color.BLACK
+        else defaultColor
         paint.isAntiAlias = true
         paint.style = Paint.Style.FILL
         paint.isDither = true
@@ -132,6 +132,8 @@ class RectangleCommand(rectangleData: RectangleData): ICommand {
             this.getFillRectangle().paint.set(this.fillPaint)
         }
 
+        this.getRectangleDrawable().bounds = this.boundingRectangle
+        DrawingObjectManager.addCommand(rectangle.id, this)
         DrawingObjectManager.setDrawable(layerIndex, rectangleShape)
         CanvasUpdateService.invalidate()
     }
