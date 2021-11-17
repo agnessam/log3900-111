@@ -65,6 +65,7 @@ class SelectionView(context: Context?): CanvasView(context) {
         createPathObject()
         SelectionService.clearSelection()
         val numberOfLayers = DrawingObjectManager.numberOfLayers
+        // TODO: Put anchor check before for loop
         for (index in numberOfLayers - 1 downTo 0) {
             val drawable = DrawingObjectManager.getDrawable(index)
 
