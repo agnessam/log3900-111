@@ -23,6 +23,7 @@ import com.example.colorimagemobile.models.SearchModel
 import com.example.colorimagemobile.repositories.SearchRepository
 import com.example.colorimagemobile.services.SearchService
 import com.example.colorimagemobile.services.SharedPreferencesService
+import com.example.colorimagemobile.services.drawing.DrawingService
 import com.example.colorimagemobile.services.socket.SocketManagerService
 import com.example.colorimagemobile.ui.home.fragments.gallery.GalleryMenuFragment
 import com.example.colorimagemobile.ui.home.fragments.search.SearchFragment
@@ -120,7 +121,8 @@ class HomeActivity : AppCompatActivity() {
             // back button clicked on Gallery Drawing
             R.id.galleryFragment -> {
                 SocketManagerService.leaveDrawingRoom()
-                bottomNav.selectedItemId = R.id.main_gallery_fragment
+                DrawingService.setCurrentDrawingID(null)
+                bottomNav.selectedItemId = R.id.galleryFragment
                 true
             }
             R.id.teamsFragment -> {
