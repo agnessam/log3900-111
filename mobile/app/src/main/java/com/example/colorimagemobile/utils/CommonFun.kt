@@ -96,6 +96,5 @@ class CommonFun {
             button.isClickable = shouldEnable
             button.isEnabled = shouldEnable
         }
-
     }
 }

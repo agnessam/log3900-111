@@ -52,7 +52,7 @@ class PasswordFragment : Fragment() {
         val inf = inflater.inflate(R.layout.fragment_password, container, false)
 
         // listeners  to be uncomment when update implement serverside
-//        inf.findViewById<View>(R.id.updatepassword).setOnClickListener { updatePassword() }
+        inf.findViewById<View>(R.id.updatepassword).setOnClickListener { areFieldEmpty()}
         inf.findViewById<View>(R.id.editpasswordview).setOnTouchListener { v, event -> CommonFun.closeKeyboard_(this.requireActivity()) }
 
         // keyboard   don't delete we need it when update implement

@@ -4,7 +4,7 @@ import android.annotation.SuppressLint
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
+import android.view.animation.AnimationUtils
 import androidx.annotation.RequiresApi
 import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.ViewModelProvider
@@ -13,7 +13,6 @@ import com.example.colorimagemobile.classes.FormValidator
 import com.example.colorimagemobile.services.UserService
 import com.example.colorimagemobile.models.UserModel
 import com.example.colorimagemobile.databinding.ActivityRegisterBinding
-import com.example.colorimagemobile.httpresponsehandler.GlobalHandler
 import com.example.colorimagemobile.models.DataWrapper
 import com.example.colorimagemobile.models.HTTPResponseModel
 import com.example.colorimagemobile.services.SharedPreferencesService
@@ -26,6 +25,7 @@ import com.example.colorimagemobile.utils.CommonFun.Companion.toggleButton
 import com.example.colorimagemobile.utils.Constants
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
+import kotlinx.android.synthetic.main.activity_register.*
 import java.time.LocalDateTime
 
 enum class FormIndexes(val index: Int) {
@@ -45,7 +45,6 @@ class RegisterActivity : AppCompatActivity() {
     private var canSubmit: Boolean = false
     private lateinit var registerLayouts: ArrayList<TextInputLayout>
     private lateinit var registerInputs: ArrayList<TextInputEditText>
-
 
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -90,6 +89,8 @@ class RegisterActivity : AppCompatActivity() {
         // activate/deactivate login button if form contains error or one of the inputs is empty
         canSubmit = !containsError && !invalidInputLength
         toggleButton(binding.registerBtn, canSubmit)
+        val shake = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.shake)
+        if (containsError || invalidInputLength){registerForm.startAnimation(shake) }
     }
 
     private fun doPasswordsMatch(): Boolean {
@@ -146,7 +147,4 @@ class RegisterActivity : AppCompatActivity() {
         sharedPreferencesService.setItem(Constants.STORAGE_KEY.TOKEN, response.token)
         redirectTo(this@RegisterActivity, HomeActivity::class.java)
     }
-
-
-
 }

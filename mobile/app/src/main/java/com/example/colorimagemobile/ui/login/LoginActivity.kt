@@ -2,6 +2,9 @@ package com.example.colorimagemobile.ui.login
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
+import android.view.animation.AnimationUtils
+import android.widget.TextView
 import androidx.core.widget.doOnTextChanged
 import com.example.colorimagemobile.R
 import com.example.colorimagemobile.classes.FormValidator
@@ -22,6 +25,7 @@ import com.example.colorimagemobile.utils.CommonFun.Companion.toggleButton
 import com.example.colorimagemobile.utils.Constants
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
+import kotlinx.android.synthetic.main.activity_login.*
 
 class LoginActivity : AppCompatActivity() {
 
@@ -33,20 +37,15 @@ class LoginActivity : AppCompatActivity() {
     private var canSubmit: Boolean = true
 
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         globalHandler = GlobalHandler()
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
         sharedPreferencesService = SharedPreferencesService(this)
-
-
         val loginLayouts = arrayListOf<TextInputLayout>(binding.usernameInputLayout, binding.passwordInputLayout)
         val loginInputs = arrayListOf<TextInputEditText>(binding.usernameInputText, binding.passwordInputText)
         formValidator = FormValidator(loginLayouts, loginInputs)
-
         toggleButton(binding.loginBtn, false) // deactivate login button by default
         setListeners()
     }
@@ -74,6 +73,8 @@ class LoginActivity : AppCompatActivity() {
         // activate/deactivate login button if form contains error or isEmpty canSubmit = !containsError && !invalidInputLength
         canSubmit = !containsError && !invalidInputLength
         toggleButton(binding.loginBtn, canSubmit)
+        val shake = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.shake)
+        if (containsError || invalidInputLength){ loginForm.startAnimation(shake)}
     }
 
     private fun executeLogin() {
