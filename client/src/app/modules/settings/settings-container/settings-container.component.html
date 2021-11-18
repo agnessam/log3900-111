@@ -1,4 +1,15 @@
 <mat-drawer-container id="settings-container">
-  <mat-drawer mode="side" opened id="setting-drawer">Drawer content</mat-drawer>
-  <mat-drawer-content id="settings">Main content</mat-drawer-content>
+  <mat-drawer mode="side" opened id="settings-drawer">
+    <h4>User Settings</h4>
+    <button
+      mat-raised-button
+      color="primary"
+      [routerLink]="['/settings/users']"
+    >
+      User Profile
+    </button>
+  </mat-drawer>
+  <mat-drawer-content id="settings">
+    <router-outlet></router-outlet>
+  </mat-drawer-content>
 </mat-drawer-container>
