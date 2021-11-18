@@ -133,17 +133,17 @@ object SelectionService {
         return pointShape
     }
 
-    fun getSelectedAnchor(motionTouchEventX: Float, motionTouchEventY: Float): AnchorIndexes? {
+    fun getSelectedAnchor(motionTouchEventX: Float, motionTouchEventY: Float): AnchorIndexes {
         for (anchor in anchors.keys) {
             // PathDrawables have bounds equal to the dimensions of the canvas and
             // click will always be inside of them
 
             // if is inside bounding box
             if (inBounds(motionTouchEventX, motionTouchEventY, anchor.bounds)) {
-                return anchors[anchor]
+                return anchors[anchor]!!
             }
         }
-        return null
+        return AnchorIndexes.NONE
     }
 
     fun setSelectedAnchor(motionTouchEventX: Float, motionTouchEventY: Float) {
@@ -204,6 +204,7 @@ object SelectionService {
 
         return region
     }
+
 
 }
 
