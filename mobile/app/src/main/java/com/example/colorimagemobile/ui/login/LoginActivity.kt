@@ -2,12 +2,11 @@ package com.example.colorimagemobile.ui.login
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.View
 import android.view.animation.AnimationUtils
-import android.widget.TextView
 import androidx.core.widget.doOnTextChanged
 import com.example.colorimagemobile.R
 import com.example.colorimagemobile.classes.FormValidator
+import com.example.colorimagemobile.classes.NotificationSound.NotificationSound
 import com.example.colorimagemobile.services.UserService
 import com.example.colorimagemobile.models.UserModel
 import com.example.colorimagemobile.databinding.ActivityLoginBinding
@@ -60,7 +59,7 @@ class LoginActivity : AppCompatActivity() {
 
         // inputs error handling
         binding.usernameInputText.doOnTextChanged { text, start, before, count ->  handleInputError(text, binding.usernameInputLayout) }
-        binding.passwordInputText.doOnTextChanged { text, start, before, count ->  handleInputError(text, binding.passwordInputLayout) }
+        binding.passwordInputText.doOnTextChanged { text, start, before, count ->  handleInputError(text, binding.passwordInputLayout)}
     }
 
     // handles UI error messages depending on form errors

@@ -10,6 +10,7 @@ import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.ViewModelProvider
 import com.example.colorimagemobile.R
 import com.example.colorimagemobile.classes.FormValidator
+import com.example.colorimagemobile.classes.NotificationSound.NotificationSound
 import com.example.colorimagemobile.services.UserService
 import com.example.colorimagemobile.models.UserModel
 import com.example.colorimagemobile.databinding.ActivityRegisterBinding
@@ -90,7 +91,7 @@ class RegisterActivity : AppCompatActivity() {
         canSubmit = !containsError && !invalidInputLength
         toggleButton(binding.registerBtn, canSubmit)
         val shake = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.shake)
-        if (containsError || invalidInputLength){registerForm.startAnimation(shake) }
+        if (containsError || invalidInputLength){registerForm.startAnimation(shake);NotificationSound().play(this) }
     }
 
     private fun doPasswordsMatch(): Boolean {
