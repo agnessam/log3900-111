@@ -6,11 +6,13 @@ import android.graphics.drawable.Drawable
 import android.graphics.drawable.LayerDrawable
 import android.graphics.drawable.ShapeDrawable
 import android.graphics.drawable.shapes.PathShape
-import com.example.colorimagemobile.classes.toolsCommand.SelectionCommand
-import com.example.colorimagemobile.classes.toolsCommand.TranslateCommand
+import com.example.colorimagemobile.classes.toolsCommand.*
+import com.example.colorimagemobile.models.RectangleData
 import com.example.colorimagemobile.models.SelectionData
+import com.example.colorimagemobile.models.ToolData
 import com.example.colorimagemobile.services.UUIDService
 import com.example.colorimagemobile.services.drawing.CanvasService
+import com.example.colorimagemobile.services.drawing.DrawingObjectManager
 import com.example.colorimagemobile.services.drawing.SelectionService
 import com.example.colorimagemobile.services.drawing.SelectionService.selectedShape
 import com.example.colorimagemobile.services.drawing.SelectionService.selectedShapeIndex
@@ -31,72 +33,94 @@ class SelectionView(context: Context?): CanvasView(context) {
         )
     }
 
-    private fun getPathBoundingBox(path: Path): Region {
+    private fun getPathBoundingBox(path: Path): RectF {
         val rectF = RectF()
         path.computeBounds(rectF, true)
-        var region = Region()
-        region.setPath(
-            path,
-            Region(
-                rectF.left.toInt(),
-                rectF.top.toInt(),
-                rectF.right.toInt(),
-                rectF.bottom.toInt()
-            )
-        )
-
-        return region
+        return rectF
     }
 
-    private fun setSelectionBounds(bounds: Rect, strokeWidth: Int) {
-        SelectionService.setSelectionBounds(
-            (bounds.left - strokeWidth / 2),
-            (bounds.top - strokeWidth / 2),
-            (bounds.right + strokeWidth / 2),
-            (bounds.bottom + strokeWidth / 2)
-        )
+    private fun setSelectionBounds(left: Int, top: Int, right: Int, bottom: Int, strokeWidth: Int?) {
+        if (strokeWidth != null) {
+            SelectionService.setSelectionBounds(
+                (left - strokeWidth / 2),
+                (top - strokeWidth / 2),
+                (right + strokeWidth / 2),
+                (bottom + strokeWidth / 2)
+            )
+        } else {
+            SelectionService.setSelectionBounds(left, top, right, bottom)
+        }
+    }
+
+    private fun drawBoundingBox(path: Path, strokeWidth: Int?): Boolean {
+        var isInsidePath: Boolean
+        var boundingBox: RectF
+        boundingBox = getPathBoundingBox(path)
+        isInsidePath = boundingBox.contains(motionTouchEventX,motionTouchEventY)
+        if (isInsidePath) {
+            setSelectionBounds(
+                boundingBox.left.toInt(),
+                boundingBox.top.toInt(),
+                boundingBox.right.toInt(),
+                boundingBox.bottom.toInt(),
+                strokeWidth
+            )
+            selectionCommand!!.execute()
+        }
+        return isInsidePath
     }
 
     override fun onTouchDown() {
         CanvasService.extraCanvas.save()
         createPathObject()
         SelectionService.clearSelection()
-        val numberOfLayers = CanvasService.layerDrawable.numberOfLayers
+        val numberOfLayers = DrawingObjectManager.numberOfLayers
         for (index in numberOfLayers - 1 downTo 0) {
-            val drawable = CanvasService.layerDrawable.getDrawable(index)
-
-            // if is inside bounding box
-            if (SelectionService.touchedInside(motionTouchEventX, motionTouchEventY, drawable.bounds)) {
-                when(drawable) {
-                    // PathShape
-                    is ShapeDrawable -> {
-                        var boundingBox = getPathBoundingBox(PencilService.paths[index]!!)
-                        var isInsidePath = boundingBox.contains(motionTouchEventX.toInt(),motionTouchEventY.toInt())
-                        if (isInsidePath) {
-                            selectedShape = drawable
-                            selectedShapeIndex = index
-                            setSelectionBounds(boundingBox.bounds, drawable.paint.strokeWidth.toInt())
-                            selectionCommand!!.execute()
-                            break
-                        }
-                    }
-                    // Ellipse and Rectangle
-                    is LayerDrawable -> {
-                        selectedShape = drawable
-                        selectedShapeIndex = index
-                        val strokeWidth = (drawable.getDrawable(1) as ShapeDrawable).paint.strokeWidth.toInt()
-                        setSelectionBounds(drawable.bounds, strokeWidth)
-                        selectionCommand!!.execute()
-                        break
-                    }
+            val drawable = DrawingObjectManager.getDrawable(index)
+            val command = DrawingObjectManager.getCommand(index)
+            var isInsidePath = false
+            when(command) {
+                is PencilCommand -> {
+                    isInsidePath = drawBoundingBox(command.path, command.pencil.strokeWidth)
                 }
+                is RectangleCommand -> {
+                    isInsidePath = drawBoundingBox(command.borderPath, null)
+                }
+                is EllipseCommand -> {
+                    isInsidePath = drawBoundingBox(command.borderPath, null)
+                }
+            }
+
+            if (isInsidePath) {
+                selectedShape = drawable
+                selectedShapeIndex = index
+                break
             } else {
+                selectedShapeIndex = -1
                 selectionCommand!!.execute()
-                SelectionService.selectedShapeIndex = -1
             }
         }
         currentX = motionTouchEventX
         currentY = motionTouchEventY
+    }
+
+    private fun translate(path1: Path, path2: Path?, dx: Float, dy: Float, strokeWidth: Int?) {
+        // Use translation matrix to change path
+        val translationMatrix = Matrix()
+        translationMatrix.setTranslate(dx, dy)
+        path1.transform(translationMatrix)
+        path2?.transform(translationMatrix)
+
+        // Draw selection box
+        var boundingBox = getPathBoundingBox(path1)
+        setSelectionBounds(
+            boundingBox.left.toInt(),
+            boundingBox.top.toInt(),
+            boundingBox.right.toInt(),
+            boundingBox.bottom.toInt(),
+            strokeWidth
+        )
+        translationCommand!!.execute()
     }
 
     override fun onTouchMove() {
@@ -114,47 +138,16 @@ class SelectionView(context: Context?): CanvasView(context) {
             translationCommand!!.setTransformation(dx.toInt(), dy.toInt())
             SelectionService.clearSelection()
             if (selectedShapeIndex == -1) { return }
-            when (selectedShape) {
-                is ShapeDrawable -> {
-                    val savedBounds = selectedShape.bounds
-                    val savedPaint = (selectedShape as ShapeDrawable).paint
-
-                    // Use translation matrix to change path
-                    val translationMatrix = Matrix()
-                    translationMatrix.setTranslate(dx, dy)
-                    val path = PencilService.paths[selectedShapeIndex]!!
-                    path.transform(translationMatrix)
-                    PencilService.paths[selectedShapeIndex] = path
-
-                    // Reinstantiate shape using new path
-                    selectedShape = ShapeDrawable(
-                        PathShape(
-                            path,
-                            abs(savedBounds.bottom - savedBounds.top).toFloat(),
-                            abs( savedBounds.right - savedBounds.left).toFloat()
-                        )
-                    )
-                    (selectedShape as ShapeDrawable).paint.set(savedPaint)
-                    selectedShape.setBounds(savedBounds)
-
-                    // Draw selection box
-                    var boundingBox = getPathBoundingBox(path)
-                    val strokeWidth = savedPaint.strokeWidth.toInt()
-                    setSelectionBounds(boundingBox.bounds, strokeWidth)
-                    translationCommand!!.execute()
+            val command = DrawingObjectManager.getCommand(selectedShapeIndex)
+            when (command) {
+                is PencilCommand -> {
+                    translate(command.path, null, dx, dy, command.pencil.strokeWidth)
                 }
-                is LayerDrawable -> {
-                    val left = selectedShape.bounds.left + dx.toInt()
-                    val top = selectedShape.bounds.top + dy.toInt()
-                    val right = selectedShape.bounds.right + dx.toInt()
-                    val bottom = selectedShape.bounds.bottom + dy.toInt()
-                    selectedShape.setBounds(left, top, right, bottom)
-
-                    val bounds = Rect()
-                    bounds.set(left, top, right, bottom)
-                    val strokeWidth = ((selectedShape as LayerDrawable).getDrawable(1) as ShapeDrawable).paint.strokeWidth.toInt()
-                    setSelectionBounds(bounds, strokeWidth)
-                    translationCommand!!.execute()
+                is RectangleCommand -> {
+                    translate(command.borderPath, command.fillPath, dx, dy, null)
+                }
+                is EllipseCommand -> {
+                    translate(command.borderPath, command.fillPath, dx, dy, null)
                 }
             }
         }

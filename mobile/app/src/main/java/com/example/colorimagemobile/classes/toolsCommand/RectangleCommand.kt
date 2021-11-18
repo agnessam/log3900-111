@@ -10,6 +10,7 @@ import com.example.colorimagemobile.models.RectangleData
 import com.example.colorimagemobile.models.RectangleUpdate
 import com.example.colorimagemobile.services.drawing.CanvasService
 import com.example.colorimagemobile.services.drawing.CanvasUpdateService
+import com.example.colorimagemobile.services.drawing.DrawingObjectManager
 import com.example.colorimagemobile.services.drawing.Point
 import com.example.colorimagemobile.services.drawing.toolsAttribute.ColorService
 import java.lang.Integer.min
@@ -31,8 +32,8 @@ class RectangleCommand(rectangleData: RectangleData): ICommand {
     private var borderPaint: Paint = Paint()
     private var fillPaint: Paint = Paint()
 
-    private var borderPath = Path()
-    private var fillPath = Path()
+    var borderPath = Path()
+    var fillPath = Path()
     init{
         var fillRectangle = createNewRectangle()
         var borderRectangle = createNewRectangle()
@@ -48,7 +49,7 @@ class RectangleCommand(rectangleData: RectangleData): ICommand {
     private fun initializePaint(color: String, defaultColor: Int): Paint{
         var paint = Paint()
         paint.color = if(color != "none") ColorService.rgbaToInt(color)
-        else Color.BLACK
+        else defaultColor
         paint.isAntiAlias = true
         paint.style = Paint.Style.FILL
         paint.isDither = true
@@ -61,7 +62,7 @@ class RectangleCommand(rectangleData: RectangleData): ICommand {
 
         fillRectangleIndex = rectangleShape.addLayer(fillRectangle)
         borderRectangleIndex = rectangleShape.addLayer(borderRectangle)
-        layerIndex = CanvasService.layerDrawable.addLayer(rectangleShape)
+        layerIndex = DrawingObjectManager.addLayer(rectangleShape, rectangle.id)
     }
 
     private fun createNewRectangle(): ShapeDrawable{
@@ -95,7 +96,7 @@ class RectangleCommand(rectangleData: RectangleData): ICommand {
     }
 
     private fun getRectangleDrawable(): LayerDrawable{
-        return CanvasService.layerDrawable.getDrawable(this.layerIndex) as LayerDrawable
+        return DrawingObjectManager.getDrawable(this.layerIndex) as LayerDrawable
     }
 
     override fun update(drawingCommand: Any) {
@@ -131,7 +132,9 @@ class RectangleCommand(rectangleData: RectangleData): ICommand {
             this.getFillRectangle().paint.set(this.fillPaint)
         }
 
-        CanvasService.layerDrawable.setDrawable(layerIndex, rectangleShape)
+        this.getRectangleDrawable().bounds = this.boundingRectangle
+        DrawingObjectManager.addCommand(rectangle.id, this)
+        DrawingObjectManager.setDrawable(layerIndex, rectangleShape)
         CanvasUpdateService.invalidate()
     }
 

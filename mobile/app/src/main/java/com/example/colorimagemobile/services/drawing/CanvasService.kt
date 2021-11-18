@@ -9,8 +9,6 @@ import com.example.colorimagemobile.utils.Constants
 object CanvasService {
     lateinit var extraBitmap: Bitmap
     lateinit var extraCanvas: Canvas
-    var drawableList: Array<Drawable> = arrayOf<Drawable>()
-    var layerDrawable: LayerDrawable = LayerDrawable(drawableList)
 
     private var width = Constants.DRAWING.MAX_WIDTH
     private var height = Constants.DRAWING.MAX_HEIGHT
