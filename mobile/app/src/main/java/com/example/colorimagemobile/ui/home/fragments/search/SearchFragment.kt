@@ -3,6 +3,7 @@ package com.example.colorimagemobile.ui.home.fragments.search
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.View
+import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.colorimagemobile.R
@@ -19,6 +20,7 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
     private lateinit var queryObject: SearchModel
     private lateinit var myView: View
     private lateinit var recyclerView: RecyclerView
+    private lateinit var noResultText: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,13 +33,17 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
         super.onViewCreated(view, savedInstanceState)
         myView = view
         recyclerView = myView.findViewById(R.id.searchRecycler)
+        noResultText = myView.findViewById(R.id.searchNoResult)
 
         setListeners()
+        setDrawings()
     }
 
     private fun setListeners() {
         myView.findViewById<TabLayout>(R.id.searchTabLayout).addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab?) {
+                noResultText.visibility = View.GONE
+
                 when (tab!!.position) {
                     0 -> setDrawings()
                     1 -> setUsers()
@@ -51,25 +57,47 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
 
     // add DrawingRecyclerAdapter
     private fun setDrawings() {
-        printMsg("Drawings")
-        recyclerView.adapter = null
+        if (validateSearchUI(queryObject.drawings.size, "drawings")) { return }
     }
 
     private fun setUsers() {
-        recyclerView.layoutManager = LinearLayoutManager(requireContext())
+        if (validateSearchUI(queryObject.users.size, "users")) { return }
 
+        recyclerView.layoutManager = LinearLayoutManager(requireContext())
         UserService.setAllUserInfo(queryObject.users)
+
         val adapter = UserAdapterService.createAdapter(requireContext(), requireActivity(), R.layout.recycler_search_user_menu, R.id.searchMainFragment)
         recyclerView.adapter = adapter
         UserAdapterService.setAdapter(adapter)
     }
 
     private fun setTeams() {
-        recyclerView.layoutManager = LinearLayoutManager(requireContext())
+        if (validateSearchUI(queryObject.teams.size, "teams")) { return }
 
+        recyclerView.layoutManager = LinearLayoutManager(requireContext())
         TeamService.setAllTeams(queryObject.teams)
+
         val adapter = TeamAdapterService.createAdapter(requireContext(), requireActivity(), R.layout.recycler_search_team_menu, R.id.searchMainFragment)
         recyclerView.adapter = adapter
         TeamAdapterService.setAdapter(adapter)
+    }
+
+    // if result is empty, hide recycler view and show no results msg
+    private fun validateSearchUI(size: Int, categoryName: String): Boolean {
+        recyclerView.adapter = null
+
+        if (size == 0) {
+            noResultText.text = "Couldn't find any $categoryName corresponding to that search."
+            showEmptyResult()
+            return true
+        }
+
+        recyclerView.visibility = View.VISIBLE
+        return false
+    }
+
+    private fun showEmptyResult() {
+        noResultText.visibility = View.VISIBLE
+        recyclerView.visibility = View.GONE
     }
 }

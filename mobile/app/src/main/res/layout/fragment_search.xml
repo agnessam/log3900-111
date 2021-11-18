@@ -32,13 +32,29 @@
                 android:text="Teams" />
         </com.google.android.material.tabs.TabLayout>
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/searchRecycler"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/searchTabLayout"
-            android:padding="4dp">
-        </androidx.recyclerview.widget.RecyclerView>
+            android:layout_height="match_parent"
+            android:layout_below="@id/searchTabLayout">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/searchRecycler"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="4dp">
+            </androidx.recyclerview.widget.RecyclerView>
+
+            <TextView
+                android:visibility="gone"
+                android:id="@+id/searchNoResult"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:textAlignment="center"
+                android:textSize="20sp"
+                android:textStyle="bold|italic" />
+
+        </RelativeLayout>
 
     </RelativeLayout>
 
