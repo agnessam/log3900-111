@@ -3,11 +3,13 @@ package com.example.colorimagemobile.ui.home.fragments.search
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.View
+import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.colorimagemobile.R
 import com.example.colorimagemobile.models.SearchModel
+import com.example.colorimagemobile.services.SearchService
 import com.example.colorimagemobile.services.teams.TeamAdapterService
 import com.example.colorimagemobile.services.teams.TeamService
 import com.example.colorimagemobile.services.users.UserAdapterService
@@ -20,7 +22,7 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
     private lateinit var queryObject: SearchModel
     private lateinit var myView: View
     private lateinit var recyclerView: RecyclerView
-    private lateinit var noResultText: TextView
+    private lateinit var noResultParent: RelativeLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,7 +35,7 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
         super.onViewCreated(view, savedInstanceState)
         myView = view
         recyclerView = myView.findViewById(R.id.searchRecycler)
-        noResultText = myView.findViewById(R.id.searchNoResult)
+        noResultParent = myView.findViewById(R.id.searchResultMain)
 
         setListeners()
         setDrawings()
@@ -42,7 +44,7 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
     private fun setListeners() {
         myView.findViewById<TabLayout>(R.id.searchTabLayout).addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab?) {
-                noResultText.visibility = View.GONE
+                noResultParent.visibility = View.GONE
 
                 when (tab!!.position) {
                     0 -> setDrawings()
@@ -87,7 +89,8 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
         recyclerView.adapter = null
 
         if (size == 0) {
-            noResultText.text = "Couldn't find any $categoryName corresponding to that search."
+            noResultParent.findViewById<TextView>(R.id.searchNoResult).text = "Couldn't find any $categoryName corresponding to following search:"
+            noResultParent.findViewById<TextView>(R.id.searchNoResultQuery).text = SearchService.getQuery()
             showEmptyResult()
             return true
         }
@@ -97,7 +100,7 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
     }
 
     private fun showEmptyResult() {
-        noResultText.visibility = View.VISIBLE
+        noResultParent.visibility = View.VISIBLE
         recyclerView.visibility = View.GONE
     }
 }

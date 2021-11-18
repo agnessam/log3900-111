@@ -89,7 +89,6 @@ class HomeActivity : AppCompatActivity() {
             override fun onQueryTextChange(newText: String): Boolean {
                 if (newText.isNullOrEmpty()) {
                     SearchService.clear()
-                    printMsg("FETCHIN SEARCH")
                 }
                 return false
             }
@@ -127,6 +126,10 @@ class HomeActivity : AppCompatActivity() {
             }
             R.id.teamsFragment -> {
                 bottomNav.selectedItemId = R.id.teamsFragment
+                true
+            }
+            R.id.searchMainFragment -> {
+                printMsg("WDWDWDW")
                 true
             }
             else -> navController.navigateUp()
