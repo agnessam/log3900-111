@@ -21,6 +21,8 @@ class SelectionFragment : Fragment(R.layout.fragment_selection) {
         super.onViewCreated(view, savedInstanceState)
         deleteShapeBtn = view.findViewById(R.id.deleteShapeBtn)
         widthPicker = view.findViewById(R.id.width_picker)
+        setWidthListener()
+        setDeleteListener()
     }
 
     private fun setWidthListener() {
@@ -35,7 +37,7 @@ class SelectionFragment : Fragment(R.layout.fragment_selection) {
 
     private fun setDeleteListener() {
         deleteShapeBtn.setOnClickListener {
-//            DeleteService.deleteCommand
+            DeleteService.deleteSelectedLayer()
         }
     }
 }
