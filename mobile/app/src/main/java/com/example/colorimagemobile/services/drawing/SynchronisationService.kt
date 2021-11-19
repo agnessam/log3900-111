@@ -3,6 +3,7 @@ package com.example.colorimagemobile.services.drawing
 import android.graphics.Path
 import com.example.colorimagemobile.classes.CommandFactory
 import com.example.colorimagemobile.classes.JSONConvertor
+import com.example.colorimagemobile.classes.toolsCommand.SelectionCommand
 import com.example.colorimagemobile.interfaces.ICommand
 import com.example.colorimagemobile.models.*
 import com.example.colorimagemobile.services.drawing.toolsAttribute.ColorService
@@ -91,14 +92,24 @@ object SynchronisationService {
         }
     }
 
-    private fun getToolData(toolType: String, drawingCommandJSON: JSONObject): ToolData{
+    private fun getToolData(toolType: String, drawingCommandJSON: JSONObject): Any{
         val derivedToolClass = when (toolType) {
             "Pencil" -> PencilData::class.java
             "Rectangle" -> RectangleData::class.java
             "Ellipse" -> EllipseData::class.java
+            "SelectionStart" -> SelectionData::class.java
             else -> throw Exception("Unrecognized tool type received in socket")
         }
         var toolDataString = drawingCommandJSON["drawingCommand"].toString()
         return JSONConvertor.getJSONObject(toolDataString, derivedToolClass)
+    }
+
+    fun startSelection(selectionCommandData: SocketTool) {
+        val selectionCommand = CommandFactory.createCommand(
+            selectionCommandData.type,
+            selectionCommandData.drawingCommand
+        )
+        this.previewShapes[(selectionCommandData.drawingCommand as SelectionData).id] =
+            selectionCommand!!
     }
 }

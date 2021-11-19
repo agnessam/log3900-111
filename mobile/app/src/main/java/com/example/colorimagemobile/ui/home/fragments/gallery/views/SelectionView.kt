@@ -17,6 +17,7 @@ import com.example.colorimagemobile.services.drawing.SelectionService
 import com.example.colorimagemobile.services.drawing.SelectionService.selectedShape
 import com.example.colorimagemobile.services.drawing.SelectionService.selectedShapeIndex
 import com.example.colorimagemobile.services.drawing.toolsAttribute.PencilService
+import com.example.colorimagemobile.services.socket.DrawingSocketService
 import kotlin.math.abs
 
 class SelectionView(context: Context?): CanvasView(context) {
@@ -24,13 +25,12 @@ class SelectionView(context: Context?): CanvasView(context) {
     private var translationCommand: TranslateCommand? = null
 
     override fun createPathObject() {
-        selectionCommand = SelectionCommand()
-
         // for sync
         val id = UUIDService.generateUUID()
         var selectionData = SelectionData(
             id = id,
         )
+        selectionCommand = SelectionCommand(selectionData)
     }
 
     private fun getPathBoundingBox(path: Path): RectF {
@@ -58,6 +58,7 @@ class SelectionView(context: Context?): CanvasView(context) {
         boundingBox = getPathBoundingBox(path)
         isInsidePath = boundingBox.contains(motionTouchEventX,motionTouchEventY)
         if (isInsidePath) {
+            createPathObject()
             setSelectionBounds(
                 boundingBox.left.toInt(),
                 boundingBox.top.toInt(),
@@ -72,7 +73,7 @@ class SelectionView(context: Context?): CanvasView(context) {
 
     override fun onTouchDown() {
         CanvasService.extraCanvas.save()
-        createPathObject()
+
         SelectionService.clearSelection()
         val numberOfLayers = DrawingObjectManager.numberOfLayers
         for (index in numberOfLayers - 1 downTo 0) {
@@ -94,6 +95,7 @@ class SelectionView(context: Context?): CanvasView(context) {
             if (isInsidePath) {
                 selectedShape = drawable
                 selectedShapeIndex = index
+                DrawingSocketService.sendStartSelectionCommand(selectionCommand!!.selectionData, "SelectionStart")
                 break
             } else {
                 selectedShapeIndex = -1

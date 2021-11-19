@@ -33,6 +33,10 @@ object DrawingObjectManager {
         return layerDrawable.getDrawable(layerIndex)
     }
 
+    fun getLayerIndex(uuid: String): Int {
+        return layerIdUuidMap.filterValues { it == uuid }.keys.first()
+    }
+
     fun addCommand(uuid:String, command: ICommand){
         commandList[uuid] =  command
     }

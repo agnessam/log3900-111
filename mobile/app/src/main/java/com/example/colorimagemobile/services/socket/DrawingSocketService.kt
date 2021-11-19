@@ -9,8 +9,10 @@ import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
 import com.example.colorimagemobile.utils.Constants.SOCKETS
 import com.example.colorimagemobile.utils.Constants.SOCKETS.Companion.CONFIRM_DRAWING_EVENT
 import com.example.colorimagemobile.utils.Constants.SOCKETS.Companion.IN_PROGRESS_DRAWING_EVENT
+import com.example.colorimagemobile.utils.Constants.SOCKETS.Companion.START_SELECTION_EVENT
 import io.socket.emitter.Emitter
 import org.json.JSONException
+import org.json.JSONObject
 
 object DrawingSocketService: AbsSocket(SOCKETS.COLLABORATIVE_DRAWING_NAMESPACE) {
     private var roomName: String? = null
@@ -35,6 +37,7 @@ object DrawingSocketService: AbsSocket(SOCKETS.COLLABORATIVE_DRAWING_NAMESPACE) 
     override fun setSocketListeners() {
         this.listenInProgressDrawingCommand()
         this.listenConfirmDrawingCommand()
+        this.listenStartSelectionCommand()
     }
 
     fun sendInProgressDrawingCommand(drawingCommand: Any, type: String) {
@@ -57,6 +60,16 @@ object DrawingSocketService: AbsSocket(SOCKETS.COLLABORATIVE_DRAWING_NAMESPACE) 
         val jsonSocket = JSONConvertor.convertToJSON(socketToolCommand)
         super.emit(CONFIRM_DRAWING_EVENT, jsonSocket)
 
+    }
+
+    fun sendStartSelectionCommand(selectionStartCommand: SelectionData, type: String) {
+        val selectionCommand = SocketTool(
+            type = type,
+            roomName = this.roomName as String,
+            drawingCommand = selectionStartCommand,
+        )
+        val jsonSocket = JSONConvertor.convertToJSON(selectionCommand)
+        super.emit(START_SELECTION_EVENT, jsonSocket)
     }
 
     private fun listenConfirmDrawingCommand(){
@@ -92,6 +105,32 @@ object DrawingSocketService: AbsSocket(SOCKETS.COLLABORATIVE_DRAWING_NAMESPACE) 
 
                 } catch (e: JSONException) {
                     printMsg("listenInProgressDrawingCommand error: ${e.message}")
+                    return@Runnable
+                }
+            })
+        }
+
+    private fun listenStartSelectionCommand() {
+            mSocket.on(START_SELECTION_EVENT, startSelection)
+    }
+
+    private val startSelection =
+        Emitter.Listener { args ->
+            fragmentActivity!!.runOnUiThread(Runnable {
+                try {
+                    val currentArg = args[0].toString()
+                    val drawingCommandJSON = JSONObject(currentArg)
+
+                    val drawingCommand = JSONObject(drawingCommandJSON["drawingCommand"].toString())
+                    val selectionCommandData = SocketTool(
+                        type = drawingCommandJSON["type"] as String,
+                        roomName = drawingCommandJSON["roomName"] as String,
+                        drawingCommand = SelectionData(id = drawingCommand["id"].toString())
+                    )
+                    SynchronisationService.startSelection(selectionCommandData)
+
+                } catch (e: JSONException) {
+                    printMsg("startSelectionCommand error: ${e.message}")
                     return@Runnable
                 }
             })
