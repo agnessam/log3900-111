@@ -143,7 +143,6 @@ object SelectionService: Attributes {
         for (anchor in anchors.keys) {
             // PathDrawables have bounds equal to the dimensions of the canvas and
             // click will always be inside of them
-
             // if is inside bounding box
             if (inBounds(motionTouchEventX, motionTouchEventY, anchor.bounds)) {
                 return anchors[anchor]!!

@@ -30,7 +30,6 @@ class ResizeCommand(objectId: String) : ICommand {
     }
 
     override fun execute() {
-//        TODO("Not yet implemented")
         if(commandToResize == null) return
         when(commandToResize){
             is PencilCommand -> (commandToResize as PencilCommand).resize(this.xScale, this.yScale, this.xTranslate, this.yTranslate)
