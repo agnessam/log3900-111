@@ -15,6 +15,8 @@ object ResizeSelectionService {
 
     var resizeCommand: ResizeCommand? = null
     var anchorPoint: PointF? = null
+    private var lastXScale: Float = 1f
+    private var lastYScale: Float = 1f
 
     fun onTouchMove(motionTouchEventX: Float, motionTouchEventY: Float) {
         var command: ICommand = DrawingObjectManager.getCommand(SelectionService.selectedShapeIndex)
@@ -37,6 +39,8 @@ object ResizeSelectionService {
 
     fun onTouchUp(){
         SelectionService.selectedAnchorIndex = AnchorIndexes.NONE
+        lastXScale = 1f
+        lastYScale = 1f
         resizeCommand = null
     }
 
@@ -75,13 +79,39 @@ object ResizeSelectionService {
                 AnchorIndexes.BOTTOM -> bottomResize(motionTouchEventX, motionTouchEventY,oldRect)
                 AnchorIndexes.BOTTOM_RIGHT -> bottomRightResize(motionTouchEventX, motionTouchEventY,oldRect)
             }
-
             resizeCommand!!.setScales(resizeData.scale.xScale, resizeData.scale.yScale, resizeData.anchorPoint.x, resizeData.anchorPoint.y)
             resizeCommand!!.execute()
+            lastXScale = resizeData.scale.xScale
+            lastYScale = resizeData.scale.yScale
         }
     }
 
     private fun getScales(oldRect: RectF, newRect: RectF): IScale{
+        if(lastXScale < 0){
+            if( SelectionService.selectedAnchorIndex == AnchorIndexes.TOP_LEFT ||
+                SelectionService.selectedAnchorIndex == AnchorIndexes.LEFT ||
+                SelectionService.selectedAnchorIndex == AnchorIndexes.BOTTOM_LEFT){
+                newRect.right = oldRect.left
+            }
+            if(SelectionService.selectedAnchorIndex == AnchorIndexes.TOP_RIGHT ||
+                SelectionService.selectedAnchorIndex == AnchorIndexes.RIGHT ||
+                SelectionService.selectedAnchorIndex == AnchorIndexes.BOTTOM_RIGHT){
+                newRect.left = oldRect.right
+            }
+        }
+        if(lastYScale < 0){
+            if( SelectionService.selectedAnchorIndex == AnchorIndexes.TOP_LEFT ||
+                SelectionService.selectedAnchorIndex == AnchorIndexes.TOP ||
+                SelectionService.selectedAnchorIndex == AnchorIndexes.TOP_RIGHT){
+                newRect.bottom = oldRect.top
+            }
+            if(SelectionService.selectedAnchorIndex == AnchorIndexes.BOTTOM_LEFT ||
+                SelectionService.selectedAnchorIndex == AnchorIndexes.BOTTOM ||
+                SelectionService.selectedAnchorIndex == AnchorIndexes.BOTTOM_RIGHT){
+                newRect.top = oldRect.bottom
+            }
+        }
+
         var newWidth = newRect.width()
         var newHeight = newRect.height()
         var originalWidth = oldRect.width()

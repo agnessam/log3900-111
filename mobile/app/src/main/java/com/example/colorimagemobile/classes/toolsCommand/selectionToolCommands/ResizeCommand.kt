@@ -46,9 +46,14 @@ class ResizeCommand(objectId: String) : ICommand {
 
     private fun scaleAroundPoint(xScale: Float, yScale: Float, xAnchor: Float, yAnchor: Float, path: Path, isFill: Boolean){
         // math is fun!
-//        printMsg()
         var bounds = RectF()
         path.computeBounds(bounds, true)
+
+        var isWidthTooSmall = (bounds.left < 5f && bounds.left > -5f) || (bounds.right < 5f && bounds.right > -5f)
+        var isHeightTooSmall = (bounds.top < 5f && bounds.top > -5f) || (bounds.bottom < 5f && bounds.bottom > -5f)
+        if(isWidthTooSmall || isHeightTooSmall || xScale == 0f || yScale == 0f) {
+            return
+        }
 
         var matrix = Matrix()
         matrix.preTranslate(-xAnchor, -yAnchor)
@@ -86,9 +91,6 @@ class ResizeCommand(objectId: String) : ICommand {
             lastXScale = xScale
             lastYScale = yScale
         }
-//        var matrix = Matrix()
-//        matrix.postScale(xScale, yScale, xAnchor, yAnchor)
-//        path.transform(matrix)
     }
 
     private fun PencilCommand.resize(xScale: Float, yScale: Float, xTranslate: Float, yTranslate: Float) {
@@ -99,15 +101,15 @@ class ResizeCommand(objectId: String) : ICommand {
 
     private fun EllipseCommand.resize(xScale: Float, yScale: Float, xTranslate: Float, yTranslate: Float) {
         // Fill scaling must always be before fill due to the inverse scale condition
+        scaleAroundPoint(xScale, yScale, xTranslate, yTranslate, fillPath, false)
         scaleAroundPoint(xScale, yScale, xTranslate, yTranslate, borderPath, true)
-//        scaleAroundPoint(xScale, yScale, xTranslate, yTranslate, fillPath, true)
         execute()
     }
 
     private fun RectangleCommand.resize(xScale: Float, yScale: Float, xTranslate: Float, yTranslate: Float){
         // Fill scaling must always be before fill due to the inverse scale condition
-        scaleAroundPoint(xScale, yScale, xTranslate, yTranslate, fillPath, true)
-        scaleAroundPoint(xScale, yScale, xTranslate, yTranslate, borderPath, false)
+        scaleAroundPoint(xScale, yScale, xTranslate, yTranslate, fillPath, false)
+        scaleAroundPoint(xScale, yScale, xTranslate, yTranslate, borderPath, true)
         execute()
     }
 
