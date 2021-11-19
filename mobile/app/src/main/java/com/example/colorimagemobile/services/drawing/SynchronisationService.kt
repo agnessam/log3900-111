@@ -112,4 +112,8 @@ object SynchronisationService {
         this.previewShapes[(selectionCommandData.drawingCommand as SelectionData).id] =
             selectionCommand!!
     }
+
+    fun confirmSelection(confirmSelectionData: SocketTool) {
+        this.previewShapes.remove((confirmSelectionData.drawingCommand as SelectionData).id)
+    }
 }

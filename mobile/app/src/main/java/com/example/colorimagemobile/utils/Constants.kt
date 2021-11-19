@@ -28,6 +28,7 @@ class Constants {
             const val IN_PROGRESS_DRAWING_EVENT = "draw-in-progress"
             const val CONFIRM_DRAWING_EVENT = "draw-confirm"
             const val START_SELECTION_EVENT = "selection-start"
+            const val CONFIRM_SELECTION_EVENT = "selection-confirm"
         }
     }
 

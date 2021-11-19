@@ -37,6 +37,10 @@ object DrawingObjectManager {
         return layerIdUuidMap.filterValues { it == uuid }.keys.first()
     }
 
+    fun getUuid(layerIndex: Int): String? {
+        return layerIdUuidMap[layerIndex]
+    }
+
     fun addCommand(uuid:String, command: ICommand){
         commandList[uuid] =  command
     }

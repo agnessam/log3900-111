@@ -7,6 +7,7 @@ import android.graphics.drawable.LayerDrawable
 import android.graphics.drawable.ShapeDrawable
 import android.graphics.drawable.shapes.PathShape
 import com.example.colorimagemobile.classes.toolsCommand.*
+import com.example.colorimagemobile.models.DrawingModel
 import com.example.colorimagemobile.models.RectangleData
 import com.example.colorimagemobile.models.SelectionData
 import com.example.colorimagemobile.models.ToolData
@@ -26,9 +27,9 @@ class SelectionView(context: Context?): CanvasView(context) {
 
     override fun createPathObject() {
         // for sync
-        val id = UUIDService.generateUUID()
+        val id = DrawingObjectManager.getUuid(selectedShapeIndex) ?: return
         var selectionData = SelectionData(
-            id = id,
+            id = id
         )
         selectionCommand = SelectionCommand(selectionData)
     }
@@ -52,12 +53,13 @@ class SelectionView(context: Context?): CanvasView(context) {
         }
     }
 
-    private fun drawBoundingBox(path: Path, strokeWidth: Int?): Boolean {
+    private fun drawBoundingBox(drawable: Drawable, index: Int, path: Path, strokeWidth: Int?): Boolean {
         var isInsidePath: Boolean
-        var boundingBox: RectF
-        boundingBox = getPathBoundingBox(path)
+        var boundingBox = getPathBoundingBox(path)
         isInsidePath = boundingBox.contains(motionTouchEventX,motionTouchEventY)
         if (isInsidePath) {
+            selectedShape = drawable
+            selectedShapeIndex = index
             createPathObject()
             setSelectionBounds(
                 boundingBox.left.toInt(),
@@ -66,6 +68,10 @@ class SelectionView(context: Context?): CanvasView(context) {
                 boundingBox.bottom.toInt(),
                 strokeWidth
             )
+            DrawingSocketService.sendStartSelectionCommand(selectionCommand!!.selectionData, "SelectionStart")
+            selectionCommand!!.execute()
+        } else {
+            selectedShapeIndex = -1
             selectionCommand!!.execute()
         }
         return isInsidePath
@@ -82,25 +88,17 @@ class SelectionView(context: Context?): CanvasView(context) {
             var isInsidePath = false
             when(command) {
                 is PencilCommand -> {
-                    isInsidePath = drawBoundingBox(command.path, command.pencil.strokeWidth)
+                    isInsidePath = drawBoundingBox(drawable, index, command.path, command.pencil.strokeWidth)
                 }
                 is RectangleCommand -> {
-                    isInsidePath = drawBoundingBox(command.borderPath, null)
+                    isInsidePath = drawBoundingBox(drawable, index, command.borderPath, null)
                 }
                 is EllipseCommand -> {
-                    isInsidePath = drawBoundingBox(command.borderPath, null)
+                    isInsidePath = drawBoundingBox(drawable, index, command.borderPath, null)
                 }
             }
+            if(isInsidePath) break
 
-            if (isInsidePath) {
-                selectedShape = drawable
-                selectedShapeIndex = index
-                DrawingSocketService.sendStartSelectionCommand(selectionCommand!!.selectionData, "SelectionStart")
-                break
-            } else {
-                selectedShapeIndex = -1
-                selectionCommand!!.execute()
-            }
         }
         currentX = motionTouchEventX
         currentY = motionTouchEventY
@@ -156,6 +154,8 @@ class SelectionView(context: Context?): CanvasView(context) {
     }
 
     override fun onTouchUp() {
-//        TODO("Not yet implemented")
+        if (selectedShapeIndex != -1) {
+            DrawingSocketService.sendConfirmSelectionCommand(selectionCommand!!.selectionData, "SelectionStart")
+        }
     }
 }
