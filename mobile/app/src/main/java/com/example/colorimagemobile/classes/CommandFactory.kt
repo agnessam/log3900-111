@@ -3,10 +3,9 @@ package com.example.colorimagemobile.classes
 import com.example.colorimagemobile.classes.toolsCommand.EllipseCommand
 import com.example.colorimagemobile.classes.toolsCommand.PencilCommand
 import com.example.colorimagemobile.classes.toolsCommand.RectangleCommand
-import com.example.colorimagemobile.classes.toolsCommand.SelectionCommand
+import com.example.colorimagemobile.classes.toolsCommand.selectionToolCommands.SelectionCommand
 import com.example.colorimagemobile.interfaces.ICommand
 import com.example.colorimagemobile.models.*
-import com.example.colorimagemobile.services.drawing.PaintPath
 
 class CommandFactory {
 

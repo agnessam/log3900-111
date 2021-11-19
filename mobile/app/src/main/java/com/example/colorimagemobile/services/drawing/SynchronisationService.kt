@@ -1,13 +1,9 @@
 package com.example.colorimagemobile.services.drawing
 
-import android.graphics.Path
 import com.example.colorimagemobile.classes.CommandFactory
 import com.example.colorimagemobile.classes.JSONConvertor
-import com.example.colorimagemobile.classes.toolsCommand.SelectionCommand
 import com.example.colorimagemobile.interfaces.ICommand
 import com.example.colorimagemobile.models.*
-import com.example.colorimagemobile.services.drawing.toolsAttribute.ColorService
-import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
 import org.json.JSONObject
 
 object SynchronisationService {
@@ -78,7 +74,7 @@ object SynchronisationService {
                 }
                 else -> null
             }
-//            var toolData =
+
             if(updateData != null){
                 command?.update(updateData)
             }

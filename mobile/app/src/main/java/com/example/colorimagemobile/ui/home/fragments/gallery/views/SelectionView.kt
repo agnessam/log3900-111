@@ -3,22 +3,15 @@ package com.example.colorimagemobile.ui.home.fragments.gallery.views
 import android.content.Context
 import android.graphics.*
 import android.graphics.drawable.Drawable
-import android.graphics.drawable.LayerDrawable
-import android.graphics.drawable.ShapeDrawable
-import android.graphics.drawable.shapes.PathShape
 import com.example.colorimagemobile.classes.toolsCommand.*
-import com.example.colorimagemobile.models.DrawingModel
-import com.example.colorimagemobile.models.RectangleData
+import com.example.colorimagemobile.classes.toolsCommand.selectionToolCommands.SelectionCommand
 import com.example.colorimagemobile.models.SelectionData
-import com.example.colorimagemobile.models.ToolData
-import com.example.colorimagemobile.services.UUIDService
 import com.example.colorimagemobile.services.drawing.CanvasService
 import com.example.colorimagemobile.services.drawing.CanvasUpdateService
 import com.example.colorimagemobile.services.drawing.DrawingObjectManager
 import com.example.colorimagemobile.services.drawing.SelectionService
 import com.example.colorimagemobile.services.drawing.SelectionService.selectedShape
 import com.example.colorimagemobile.services.drawing.SelectionService.selectedShapeIndex
-import com.example.colorimagemobile.services.drawing.toolsAttribute.PencilService
 import com.example.colorimagemobile.services.socket.DrawingSocketService
 import kotlin.math.abs
 
