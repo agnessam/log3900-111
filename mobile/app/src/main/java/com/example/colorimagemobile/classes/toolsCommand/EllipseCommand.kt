@@ -102,6 +102,8 @@ class EllipseCommand(ellipseData: EllipseData): ICommand {
             ellipse.y = drawingCommand.y
             ellipse.width = drawingCommand.width
             ellipse.height = drawingCommand.height
+            generateFillPath()
+            generateBorderPath()
         }
     }
 

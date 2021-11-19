@@ -105,6 +105,8 @@ class RectangleCommand(rectangleData: RectangleData): ICommand {
             rectangle.y = drawingCommand.y
             rectangle.width = drawingCommand.width
             rectangle.height = drawingCommand.height
+            generateFillPath()
+            generateBorderPath()
         }
     }
 
