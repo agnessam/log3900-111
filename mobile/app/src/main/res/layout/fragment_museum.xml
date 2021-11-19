@@ -7,10 +7,10 @@
     android:background="@color/mainTheme"
     tools:context=".ui.home.fragments.museum.MuseumFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/museumPostsRecyclerView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="dwdwwdwd" />
+        android:layout_height="match_parent" >
+    </androidx.recyclerview.widget.RecyclerView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
