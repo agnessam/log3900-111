@@ -115,4 +115,8 @@ interface API {
     // Search
     @GET(Constants.ENDPOINTS.SEARCH)
     fun getSearchQuery(@Header("Authorization") token: String, @Query ("q") query: String): Call<SearchModel>
+
+    // Museum Posts
+    @GET(Constants.ENDPOINTS.MUSEUM_POST)
+    fun getAllPosts(@Header("Authorization") token: String): Call<ArrayList<MuseumPostModel>>
 }
