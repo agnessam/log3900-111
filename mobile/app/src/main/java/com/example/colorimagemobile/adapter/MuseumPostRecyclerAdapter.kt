@@ -46,7 +46,7 @@ class MuseumPostRecyclerAdapter(context: Context, val postComment: (Int, String)
         init {
             postCommentButton.setOnClickListener {
                 postComment(bindingAdapterPosition, commentEditText.text.toString())
-                commentEditText.text = null
+//                commentEditText.text = null
             }
         }
     }
