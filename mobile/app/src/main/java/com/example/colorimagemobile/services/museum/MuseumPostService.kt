@@ -16,6 +16,10 @@ object MuseumPostService {
         return posts
     }
 
+    fun hasLiked(currentPost: MuseumPostModel): Boolean {
+        return currentPost.likes.contains(UserService.getUserInfo()._id)
+    }
+
     fun createComment(postId: String, comment: String): CommentInterface {
         return CommentInterface(
             content = comment,

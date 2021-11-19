@@ -12,34 +12,39 @@ import com.example.colorimagemobile.adapter.MuseumPostRecyclerAdapter
 import com.example.colorimagemobile.models.MuseumPostModel
 import com.example.colorimagemobile.repositories.MuseumRepository
 import com.example.colorimagemobile.services.museum.MuseumPostService
+import com.example.colorimagemobile.services.users.UserService
 import com.example.colorimagemobile.utils.CommonFun.Companion.closeKeyboard
 import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
 import com.example.colorimagemobile.utils.CommonFun.Companion.printToast
-import kotlinx.android.synthetic.main.fragment_user_profile_history.*
 
 class MuseumFragment : Fragment(R.layout.fragment_museum) {
 
     private lateinit var myView: View
     private lateinit var posts: ArrayList<MuseumPostModel>
+    private lateinit var recyclerView: RecyclerView
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         myView = view
-        getAllDrawings()
+        recyclerView = myView.findViewById<RecyclerView>(R.id.museumPostsRecyclerView)
+
+        getAllPosts()
     }
 
-    private fun getAllDrawings() {
+    private fun getAllPosts() {
         MuseumRepository().getAllPosts().observe(viewLifecycleOwner, { it ->
             if (it.isError as Boolean) { return@observe }
 
             posts = it.data as ArrayList<MuseumPostModel>
             MuseumPostService.setPosts(posts)
-            printMsg(posts[2].comments.toString())
 
-            val recyclerView = myView.findViewById<RecyclerView>(R.id.museumPostsRecyclerView)
-            recyclerView.layoutManager = LinearLayoutManager(requireContext())
-            recyclerView.adapter = MuseumPostRecyclerAdapter(requireContext()) { pos, comment -> postComment(pos, comment) }
+            recyclerView.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+            recyclerView.adapter = MuseumPostRecyclerAdapter(
+                requireContext(),
+                { pos, comment -> postComment(pos, comment)},
+                { pos -> likePost(pos) },
+                { pos -> unlikePost(pos) })
 
             val snapHelper: SnapHelper = LinearSnapHelper()
             snapHelper.attachToRecyclerView(recyclerView)
@@ -61,6 +66,36 @@ class MuseumFragment : Fragment(R.layout.fragment_museum) {
             if (it.isError as Boolean) { return@observe }
 
             printMsg(it.data.toString())
+        })
+    }
+
+    private fun likePost(position: Int) {
+        val postId = posts[position]._id
+
+        MuseumRepository().likePost(postId).observe(viewLifecycleOwner, { it ->
+            if (it.isError as Boolean) {
+                printToast(requireContext(), it.message!!)
+                return@observe
+            }
+
+            printMsg(it.data.toString())
+            recyclerView.adapter?.notifyItemChanged(position)
+        })
+    }
+
+    private fun unlikePost(position: Int) {
+        val postId = posts[position]._id
+
+        printMsg((postId.toString()))
+
+        MuseumRepository().unlikePost(postId).observe(viewLifecycleOwner, { it ->
+            if (it.isError as Boolean) {
+                printToast(requireContext(), it.message!!)
+                return@observe
+            }
+
+            printMsg(it.data.toString())
+            recyclerView.adapter?.notifyItemChanged(position)
         })
     }
 }

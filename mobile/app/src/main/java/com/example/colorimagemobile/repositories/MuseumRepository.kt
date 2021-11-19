@@ -50,4 +50,42 @@ class MuseumRepository {
 
         return postCommentLiveData
     }
+
+    fun likePost(postId: String): MutableLiveData<DataWrapper<Any>> {
+        val likePostData: MutableLiveData<DataWrapper<Any>> = MutableLiveData()
+
+        httpClient.likePost(token = "Bearer ${UserService.getToken()}", postId).enqueue(object : Callback<Any> {
+            override fun onResponse(call: Call<Any>, response: Response<Any>) {
+                if (!response.isSuccessful) {
+                    likePostData.value = DataWrapper(null, "Could not like Post", true)
+                    return
+                }
+                likePostData.value = DataWrapper(response.body(), "", false)
+            }
+            override fun onFailure(call: Call<Any>, t: Throwable) {
+                likePostData.value = DataWrapper(null, "Could not like Post", true)
+            }
+        })
+
+        return likePostData
+    }
+
+    fun unlikePost(postId: String): MutableLiveData<DataWrapper<Any>> {
+        val unlikePostData: MutableLiveData<DataWrapper<Any>> = MutableLiveData()
+
+        httpClient.unlikePost(token = "Bearer ${UserService.getToken()}", postId).enqueue(object : Callback<Any> {
+            override fun onResponse(call: Call<Any>, response: Response<Any>) {
+                if (!response.isSuccessful) {
+                    unlikePostData.value = DataWrapper(null, "Could not unlike Post", true)
+                    return
+                }
+                unlikePostData.value = DataWrapper(response.body(), "", false)
+            }
+            override fun onFailure(call: Call<Any>, t: Throwable) {
+                unlikePostData.value = DataWrapper(null, "Could not unlike Post", true)
+            }
+        })
+
+        return unlikePostData
+    }
 }

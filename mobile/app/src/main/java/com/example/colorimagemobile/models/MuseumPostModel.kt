@@ -14,5 +14,6 @@ data class MuseumPostModel(
     val ownerId: String,
     val ownerModel: String,
     val name: String,
-    val comments: ArrayList<CommentInterface>
+    val comments: ArrayList<CommentInterface>,
+    val likes: ArrayList<String>
 )

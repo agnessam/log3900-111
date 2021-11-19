@@ -41,8 +41,8 @@
             android:layout_height="wrap_content"
             android:layout_toLeftOf="@id/post_comment_date"
             android:layout_toRightOf="@id/post_comment_author_image_main"
-            android:textSize="12sp"
-            android:textColor="#6d6d6d" />
+            android:textColor="#6d6d6d"
+            android:textSize="12sp" />
 
         <TextView
             android:id="@+id/post_comment_date"
