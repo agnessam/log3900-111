@@ -128,7 +128,6 @@ class SelectionView(context: Context?): CanvasView(context) {
     }
 
     override fun onTouchMove() {
-
         // Resizing: touching one of 8 points on bounding box
         if (SelectionService.selectedAnchorIndex != AnchorIndexes.NONE
         ) {
@@ -196,7 +195,6 @@ class SelectionView(context: Context?): CanvasView(context) {
     }
 
     override fun onTouchUp() {
-//        TODO("Not yet implemented")
         ResizeSelectionService.onTouchUp()
     }
 }
