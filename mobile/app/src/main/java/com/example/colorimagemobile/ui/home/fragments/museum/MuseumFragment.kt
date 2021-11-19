@@ -35,6 +35,7 @@ class MuseumFragment : Fragment(R.layout.fragment_museum) {
 
             posts = it.data as ArrayList<MuseumPostModel>
             MuseumPostService.setPosts(posts)
+            printMsg(posts[2].comments.toString())
 
             val recyclerView = myView.findViewById<RecyclerView>(R.id.museumPostsRecyclerView)
             recyclerView.layoutManager = LinearLayoutManager(requireContext())

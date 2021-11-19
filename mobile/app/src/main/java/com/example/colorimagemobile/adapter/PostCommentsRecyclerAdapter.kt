@@ -3,9 +3,11 @@ package com.example.colorimagemobile.adapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.colorimagemobile.R
+import com.example.colorimagemobile.classes.MyPicasso
 import com.example.colorimagemobile.models.MuseumPostModel
 import java.text.DateFormat
 import java.text.SimpleDateFormat
@@ -20,9 +22,13 @@ class PostCommentsRecyclerAdapter(currentPost: MuseumPostModel): RecyclerView.Ad
         return ViewHolder(view)
     }
     override fun onBindViewHolder(holder: PostCommentsRecyclerAdapter.ViewHolder, position: Int) {
-        holder.authorName.text = currentPost.comments[position].authorId
-        holder.content.text = currentPost.comments[position].content
-        holder.date.text = getDate(currentPost.comments[position].createdAt!!)
+        val comment = currentPost.comments[position]
+
+        holder.authorName.text = comment.authorId.username
+        holder.content.text = comment.content
+        holder.date.text = getDate(comment.createdAt!!)
+
+        MyPicasso().loadImage(comment.authorId.avatar.imageUrl, holder.authorImage)
     }
 
     private fun getDate(commentDate: String): String {
@@ -39,6 +45,7 @@ class PostCommentsRecyclerAdapter(currentPost: MuseumPostModel): RecyclerView.Ad
         var authorName : TextView = itemView.findViewById(R.id.post_comment_author);
         var content : TextView = itemView.findViewById(R.id.post_comment_content);
         var date : TextView = itemView.findViewById(R.id.post_comment_date);
+        val authorImage: ImageView = itemView.findViewById(R.id.post_comment_author_image)
 
         init {
         }

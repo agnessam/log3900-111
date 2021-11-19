@@ -2,10 +2,10 @@ package com.example.colorimagemobile.models
 
 data class CommentInterface(
     val content: String,
-    val authorId: String,
+    val authorId: UserModel.AllInfo,
     val postId: String,
-    val createdAt: String,
-    val updatedAt: String,
+    val createdAt: String?,
+    val updatedAt: String?,
 )
 
 data class MuseumPostModel(
