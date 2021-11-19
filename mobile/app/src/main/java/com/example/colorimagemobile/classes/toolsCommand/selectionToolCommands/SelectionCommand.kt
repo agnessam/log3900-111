@@ -25,6 +25,5 @@ class SelectionCommand(var selectionData: SelectionData): ICommand {
     }
 
     override fun execute() {
-        CanvasUpdateService.invalidate()
     }
 }

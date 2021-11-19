@@ -13,6 +13,7 @@ import com.example.colorimagemobile.models.SelectionData
 import com.example.colorimagemobile.models.ToolData
 import com.example.colorimagemobile.services.UUIDService
 import com.example.colorimagemobile.services.drawing.CanvasService
+import com.example.colorimagemobile.services.drawing.CanvasUpdateService
 import com.example.colorimagemobile.services.drawing.DrawingObjectManager
 import com.example.colorimagemobile.services.drawing.SelectionService
 import com.example.colorimagemobile.services.drawing.SelectionService.selectedShape
@@ -69,11 +70,13 @@ class SelectionView(context: Context?): CanvasView(context) {
                 strokeWidth
             )
             DrawingSocketService.sendStartSelectionCommand(selectionCommand!!.selectionData, "SelectionStart")
-            selectionCommand!!.execute()
         } else {
             selectedShapeIndex = -1
-            selectionCommand!!.execute()
+            if(selectionCommand != null){
+                DrawingSocketService.sendConfirmSelectionCommand(selectionCommand!!.selectionData, "SelectionStart")
+            }
         }
+        CanvasUpdateService.invalidate()
         return isInsidePath
     }
 
@@ -154,8 +157,5 @@ class SelectionView(context: Context?): CanvasView(context) {
     }
 
     override fun onTouchUp() {
-        if (selectedShapeIndex != -1) {
-            DrawingSocketService.sendConfirmSelectionCommand(selectionCommand!!.selectionData, "SelectionStart")
-        }
     }
 }
