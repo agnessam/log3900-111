@@ -49,9 +49,7 @@ class ResizeCommand(objectId: String) : ICommand {
         var bounds = RectF()
         path.computeBounds(bounds, true)
 
-        var isWidthTooSmall = (bounds.left < 5f && bounds.left > -5f) || (bounds.right < 5f && bounds.right > -5f)
-        var isHeightTooSmall = (bounds.top < 5f && bounds.top > -5f) || (bounds.bottom < 5f && bounds.bottom > -5f)
-        if(isWidthTooSmall || isHeightTooSmall || xScale == 0f || yScale == 0f) {
+        if(xScale == 0f || yScale == 0f) {
             return
         }
 
@@ -71,15 +69,7 @@ class ResizeCommand(objectId: String) : ICommand {
         }
 
         matrix = Matrix()
-        if(xScale == 0f){
-            matrix.setScale(0.001f, abs(yScale))
-        }
-        if(yScale == 0f){
-            matrix.setScale(abs(xScale), 0.001f)
-        }
-        if(xScale != 0f && yScale != 0f){
-            matrix.setScale(abs(xScale), abs(yScale))
-        }
+        matrix.setScale(abs(xScale), abs(yScale))
         path.transform(matrix)
 
         matrix = Matrix()
@@ -94,23 +84,32 @@ class ResizeCommand(objectId: String) : ICommand {
     }
 
     private fun PencilCommand.resize(xScale: Float, yScale: Float, xTranslate: Float, yTranslate: Float) {
+        var tempPath = path
         scaleAroundPoint(xScale, yScale, xTranslate, yTranslate, path, true)
-        pencil.strokeWidth = max(xScale, yScale).toInt()
         execute()
+        path = tempPath
     }
 
     private fun EllipseCommand.resize(xScale: Float, yScale: Float, xTranslate: Float, yTranslate: Float) {
+        var tempBorderPath = borderPath
+        var tempFillPath = fillPath
         // Fill scaling must always be before fill due to the inverse scale condition
         scaleAroundPoint(xScale, yScale, xTranslate, yTranslate, fillPath, false)
         scaleAroundPoint(xScale, yScale, xTranslate, yTranslate, borderPath, true)
         execute()
+        borderPath = tempBorderPath
+        fillPath = tempFillPath
     }
 
     private fun RectangleCommand.resize(xScale: Float, yScale: Float, xTranslate: Float, yTranslate: Float){
+        var tempBorderPath = borderPath
+        var tempFillPath = fillPath
         // Fill scaling must always be before fill due to the inverse scale condition
         scaleAroundPoint(xScale, yScale, xTranslate, yTranslate, fillPath, false)
         scaleAroundPoint(xScale, yScale, xTranslate, yTranslate, borderPath, true)
         execute()
+        borderPath = tempBorderPath
+        fillPath = tempFillPath
     }
 
 

@@ -19,7 +19,13 @@ object ResizeSelectionService {
         var command: ICommand = DrawingObjectManager.getCommand(SelectionService.selectedShapeIndex)
             ?: return
 
-        var pathRect = SelectionService.getBoundsSelection()
+//        var pathRect = SelectionService.getBoundsSelection()
+        var pathRect = RectF()
+        when(command){
+            is PencilCommand -> command.path.computeBounds(pathRect, true)
+            is EllipseCommand -> command.borderPath.computeBounds(pathRect, true)
+            is RectangleCommand -> command.borderPath.computeBounds(pathRect, true)
+        }
 
         if (resizeCommand == null) {
             var objectId = when(command) {

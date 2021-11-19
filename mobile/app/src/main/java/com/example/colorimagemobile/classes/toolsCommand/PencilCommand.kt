@@ -53,7 +53,6 @@ class PencilCommand(pencilData: PencilData): ICommand {
 
     private fun getPathDrawable(): ShapeDrawable {
         return DrawingObjectManager.getDrawable(this.layerIndex) as ShapeDrawable
-//        return DrawingObjectManager.layerDrawable.getDrawable(this.layerIndex) as ShapeDrawable
     }
 
     // update canvas
