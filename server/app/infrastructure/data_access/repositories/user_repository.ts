@@ -114,6 +114,7 @@ export class UserRepository extends GenericRepository<UserInterface> {
       User.findByIdAndUpdate(
         { _id: unfollowedId },
         { $pull: { followers: unfollowedById } },
+        { new: true },
         (err: Error, unfollowedUser: UserInterface) => {
           if (err || !unfollowedUser) {
             reject(err);
