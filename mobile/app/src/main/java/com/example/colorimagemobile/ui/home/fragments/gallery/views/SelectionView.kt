@@ -34,7 +34,7 @@ class SelectionView(context: Context?): CanvasView(context) {
         return rectF
     }
 
-    fun setSelectionBounds(left: Int, top: Int, right: Int, bottom: Int, strokeWidth: Int?) {
+    private fun setSelectionBounds(left: Int, top: Int, right: Int, bottom: Int, strokeWidth: Int?) {
         if (strokeWidth != null) {
             SelectionService.setSelectionBounds(
                 (left - strokeWidth / 2),
