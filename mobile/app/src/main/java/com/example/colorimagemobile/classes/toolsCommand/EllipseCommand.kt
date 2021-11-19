@@ -1,5 +1,9 @@
 package com.example.colorimagemobile.classes.toolsCommand
 
+import android.graphics.Color
+import android.graphics.Paint
+import android.graphics.Rect
+import android.graphics.RectF
 import android.graphics.*
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.LayerDrawable
