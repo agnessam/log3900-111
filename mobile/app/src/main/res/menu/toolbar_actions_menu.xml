@@ -2,6 +2,12 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
+        android:title="Search"
+        android:id="@+id/searchIcon"
+        app:showAsAction="ifRoom|withText"
+        app:actionViewClass="android.widget.SearchView" />
+
+    <item
         android:id="@+id/username_menu_item"
         android:icon="@drawable/ic_person"
         app:showAsAction="always|withText"
@@ -12,11 +18,5 @@
         android:icon="@drawable/ic_power_off"
         android:title="Log Out"
         app:showAsAction="never"/>
-    <item
-        android:id="@+id/chatchannel"
-        android:enabled="true"
-        android:icon="@drawable/ic_chatchannel"
-        android:title=""
-        android:visible="true"
-        app:showAsAction="always|withText" />
+
 </menu>

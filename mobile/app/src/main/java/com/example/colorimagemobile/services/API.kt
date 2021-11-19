@@ -108,8 +108,11 @@ interface API {
     @POST("${Constants.ENDPOINTS.TEAMS}{id}/leave")
     fun leaveTeam(@Header("Authorization") token: String, @Path ("id") id: String): Call<TeamModel>
 
-
     @Headers("Content-Type: application/json")
     @POST(Constants.ENDPOINTS.TEAMS)
     fun createNewTeam(@Header("Authorization") token: String, @Body team: CreateTeamModel): Call<TeamModel>
+
+    // Search
+    @GET(Constants.ENDPOINTS.SEARCH)
+    fun getSearchQuery(@Header("Authorization") token: String, @Query ("q") query: String): Call<SearchModel>
 }

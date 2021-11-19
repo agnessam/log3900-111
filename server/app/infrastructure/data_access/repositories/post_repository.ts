@@ -12,7 +12,7 @@ export class PostRepository extends GenericRepository<PostInterface> {
   public async getAllPopulatedPosts() {
     return new Promise((resolve, reject) => {
       Post.find({})
-        .populate('comments')
+        .populate({ path: 'comments', populate: { path: 'authorId' } })
         .exec((err, posts) => {
           if (err || !posts) {
             reject(err);
@@ -39,8 +39,8 @@ export class PostRepository extends GenericRepository<PostInterface> {
     userId: string,
     postId: string,
     comment: CommentInterface,
-  ): Promise<CommentInterface> {
-    return new Promise<CommentInterface>((resolve, reject) => {
+  ): Promise<PostInterface> {
+    return new Promise<PostInterface>((resolve, reject) => {
       const newComment = new Comment({
         content: comment.content,
         authorId: userId,
@@ -53,9 +53,41 @@ export class PostRepository extends GenericRepository<PostInterface> {
           }
           post.comments.push(savedComment._id);
           post.save();
+          resolve(post);
         });
       });
-      resolve(newComment);
+    });
+  }
+
+  public async addLike(userId: string, postId: string) {
+    return new Promise<PostInterface>((resolve, reject) => {
+      Post.findByIdAndUpdate(
+        { _id: postId },
+        { $push: { likes: userId } },
+        { new: true },
+        (err: Error, post: PostInterface) => {
+          if (err || !post) {
+            reject(err);
+          }
+          resolve(post);
+        },
+      );
+    });
+  }
+
+  public async removeLike(userId: string, postId: string) {
+    return new Promise<PostInterface>((resolve, reject) => {
+      Post.findByIdAndUpdate(
+        { _id: postId },
+        { $pull: { likes: userId } },
+        { new: true },
+        (err: Error, post: PostInterface) => {
+          if (err || !post) {
+            reject(err);
+          }
+          resolve(post);
+        },
+      );
     });
   }
 }

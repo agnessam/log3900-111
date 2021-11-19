@@ -78,7 +78,6 @@ class RectangleView(context: Context?): CanvasView(context) {
 
     override fun onTouchUp() {
         DrawingSocketService.sendConfirmDrawingCommand(rectangleCommand!!.rectangle, rectangleType)
-
         // clean up
         rectangleCommand = null
     }
