@@ -12,6 +12,9 @@ import com.example.colorimagemobile.adapter.MuseumPostRecyclerAdapter
 import com.example.colorimagemobile.models.MuseumPostModel
 import com.example.colorimagemobile.repositories.MuseumRepository
 import com.example.colorimagemobile.services.museum.MuseumPostService
+import com.example.colorimagemobile.utils.CommonFun.Companion.closeKeyboard
+import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
+import com.example.colorimagemobile.utils.CommonFun.Companion.printToast
 import kotlinx.android.synthetic.main.fragment_user_profile_history.*
 
 class MuseumFragment : Fragment(R.layout.fragment_museum) {
@@ -27,23 +30,36 @@ class MuseumFragment : Fragment(R.layout.fragment_museum) {
     }
 
     private fun getAllDrawings() {
-        MuseumRepository().getAllPosts().observe(viewLifecycleOwner, {
+        MuseumRepository().getAllPosts().observe(viewLifecycleOwner, { it ->
             if (it.isError as Boolean) { return@observe }
 
             posts = it.data as ArrayList<MuseumPostModel>
-
-            for (i in 1..5) {
-                posts.add(posts[0])
-            }
-
             MuseumPostService.setPosts(posts)
 
             val recyclerView = myView.findViewById<RecyclerView>(R.id.museumPostsRecyclerView)
             recyclerView.layoutManager = LinearLayoutManager(requireContext())
-            recyclerView.adapter = MuseumPostRecyclerAdapter(requireContext())
+            recyclerView.adapter = MuseumPostRecyclerAdapter(requireContext()) { pos, comment -> postComment(pos, comment) }
 
             val snapHelper: SnapHelper = LinearSnapHelper()
             snapHelper.attachToRecyclerView(recyclerView)
+        })
+    }
+
+    private fun postComment(position: Int, newComment: String) {
+        closeKeyboard(requireActivity())
+
+        if (newComment.isEmpty()) {
+            printToast(requireContext(), "Please enter a valid comment!")
+            return
+        }
+
+        val postId = posts[position]._id
+        val comment = MuseumPostService.createComment(postId, newComment)
+
+        MuseumRepository().postComment(postId, comment).observe(viewLifecycleOwner, { it ->
+            if (it.isError as Boolean) { return@observe }
+
+            printMsg(it.data.toString())
         })
     }
 }

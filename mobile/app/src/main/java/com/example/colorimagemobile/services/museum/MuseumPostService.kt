@@ -1,6 +1,8 @@
 package com.example.colorimagemobile.services.museum
 
+import com.example.colorimagemobile.models.CommentInterface
 import com.example.colorimagemobile.models.MuseumPostModel
+import com.example.colorimagemobile.services.users.UserService
 
 object MuseumPostService {
 
@@ -12,5 +14,15 @@ object MuseumPostService {
 
     fun getPosts(): ArrayList<MuseumPostModel> {
         return posts
+    }
+
+    fun createComment(postId: String, comment: String): CommentInterface {
+        return CommentInterface(
+            content = comment,
+            authorId = UserService.getUserInfo()._id,
+            postId = postId,
+            createdAt = null,
+            updatedAt = null
+        )
     }
 }

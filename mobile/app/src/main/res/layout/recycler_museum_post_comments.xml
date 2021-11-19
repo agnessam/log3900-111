@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app = "http://schemas.android.com/apk/res-auto"
+    android:id="@+id/post_comment_main"
+    android:layout_marginLeft="4dp"
+    android:layout_marginRight="4dp"
+    app:cardElevation="1dp"
+    android:background="@color/black"
+    app:contentPadding="4dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="5dp"
+        android:layout_marginTop="5dp">
+
+        <TextView
+            android:id="@+id/post_comment_author"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@id/post_comment_date"
+            android:textSize="12sp"
+            android:textColor="#6d6d6d" />
+
+        <TextView
+            android:id="@+id/post_comment_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:textSize="12sp"
+            android:textColor="#6d6d6d" />
+
+        <TextView
+            android:id="@+id/post_comment_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/post_comment_author"
+            android:textSize="16sp"
+            android:textColor="#000" />
+
+    </RelativeLayout>
+
+</androidx.cardview.widget.CardView>
