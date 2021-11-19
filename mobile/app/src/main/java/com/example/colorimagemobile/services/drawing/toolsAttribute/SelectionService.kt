@@ -1,4 +1,4 @@
-package com.example.colorimagemobile.services.drawing
+package com.example.colorimagemobile.services.drawing.toolsAttribute
 
 import android.graphics.Color
 import android.graphics.DashPathEffect
@@ -9,9 +9,14 @@ import android.graphics.drawable.LayerDrawable
 import android.graphics.drawable.ShapeDrawable
 import android.graphics.drawable.shapes.OvalShape
 import android.graphics.drawable.shapes.RectShape
+import android.graphics.drawable.shapes.Shape
 
 // Helper to draw selection box to canvas
-object SelectionService {
+object SelectionService: Attributes {
+    override val minWidth = 1
+    override val maxWidth = 50
+    override var currentWidth: Int = 0
+
     lateinit var selectedShape: Drawable
     var selectedShapeIndex: Int = -1
 
@@ -33,6 +38,10 @@ object SelectionService {
 
     private var borderPaint = Paint()
     private var fillPaint = Paint()
+
+    fun isShapeInitialized(): Boolean {
+        return ::selectedShape.isInitialized
+    }
 
     fun initSelectionRectangle() {
         var paint = Paint()
@@ -81,6 +90,7 @@ object SelectionService {
         bottomLeftCtrl = setResizingPoint(left, bottom)
         bottomRightCtrl = setResizingPoint(right, bottom)
 
+
         selectionBox.addLayer(topCtrl)
         selectionBox.addLayer(leftCtrl)
         selectionBox.addLayer(rightCtrl)
@@ -120,7 +130,6 @@ object SelectionService {
 
     fun clearSelection() {
         selectionBox = LayerDrawable(arrayOf<Drawable>())
-
     }
 
     fun touchedInside(x: Float, y: Float, bounds: Rect): Boolean {

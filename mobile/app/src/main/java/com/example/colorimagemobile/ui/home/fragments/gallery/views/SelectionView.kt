@@ -12,10 +12,10 @@ import com.example.colorimagemobile.models.SelectionData
 import com.example.colorimagemobile.models.ToolData
 import com.example.colorimagemobile.services.UUIDService
 import com.example.colorimagemobile.services.drawing.CanvasService
+import com.example.colorimagemobile.services.drawing.toolsAttribute.SelectionService.selectedShape
+import com.example.colorimagemobile.services.drawing.toolsAttribute.SelectionService.selectedShapeIndex
+import com.example.colorimagemobile.services.drawing.toolsAttribute.SelectionService
 import com.example.colorimagemobile.services.drawing.DrawingObjectManager
-import com.example.colorimagemobile.services.drawing.SelectionService
-import com.example.colorimagemobile.services.drawing.SelectionService.selectedShape
-import com.example.colorimagemobile.services.drawing.SelectionService.selectedShapeIndex
 import com.example.colorimagemobile.services.drawing.toolsAttribute.PencilService
 import kotlin.math.abs
 
