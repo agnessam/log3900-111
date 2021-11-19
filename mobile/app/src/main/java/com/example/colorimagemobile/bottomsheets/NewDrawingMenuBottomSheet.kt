@@ -17,8 +17,7 @@ import com.example.colorimagemobile.models.DrawingModel
 import com.example.colorimagemobile.models.TeamModel
 import com.example.colorimagemobile.repositories.DrawingRepository
 import com.example.colorimagemobile.repositories.UserRepository
-import com.example.colorimagemobile.services.SharedPreferencesService
-import com.example.colorimagemobile.services.UserService
+import com.example.colorimagemobile.services.users.UserService
 import com.example.colorimagemobile.services.drawing.CanvasService
 import com.example.colorimagemobile.services.drawing.CanvasUpdateService
 import com.example.colorimagemobile.services.drawing.DrawingService
@@ -26,7 +25,6 @@ import com.example.colorimagemobile.services.drawing.toolsAttribute.ColorService
 import com.example.colorimagemobile.ui.home.fragments.gallery.GalleryDrawingFragment
 import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
 import com.example.colorimagemobile.utils.CommonFun.Companion.toggleButton
-import com.example.colorimagemobile.utils.Constants
 import com.example.colorimagemobile.utils.Constants.DRAWING.Companion.MAX_HEIGHT
 import com.example.colorimagemobile.utils.Constants.DRAWING.Companion.MAX_WIDTH
 import com.example.colorimagemobile.utils.Constants.DRAWING.Companion.MIN_HEIGHT

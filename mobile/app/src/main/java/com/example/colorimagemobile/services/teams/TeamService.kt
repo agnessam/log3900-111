@@ -4,7 +4,7 @@ import android.content.Context
 import androidx.lifecycle.LifecycleOwner
 import com.example.colorimagemobile.models.TeamModel
 import com.example.colorimagemobile.repositories.TeamRepository
-import com.example.colorimagemobile.services.UserService
+import com.example.colorimagemobile.services.users.UserService
 import com.example.colorimagemobile.utils.CommonFun.Companion.printToast
 
 object TeamService {

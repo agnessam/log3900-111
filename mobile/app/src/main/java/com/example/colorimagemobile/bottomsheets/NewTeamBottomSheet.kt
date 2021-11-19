@@ -12,7 +12,7 @@ import com.example.colorimagemobile.R
 import com.example.colorimagemobile.models.CreateTeamModel
 import com.example.colorimagemobile.models.TeamModel
 import com.example.colorimagemobile.repositories.TeamRepository
-import com.example.colorimagemobile.services.UserService
+import com.example.colorimagemobile.services.users.UserService
 import com.example.colorimagemobile.services.teams.TeamAdapterService
 import com.example.colorimagemobile.services.teams.TeamService
 import com.example.colorimagemobile.utils.CommonFun.Companion.toggleButton

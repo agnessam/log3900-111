@@ -6,10 +6,7 @@ import com.example.colorimagemobile.classes.toolsCommand.PencilCommand
 import com.example.colorimagemobile.classes.toolsCommand.RectangleCommand
 import com.example.colorimagemobile.classes.toolsCommand.ResizeCommand
 import com.example.colorimagemobile.interfaces.ICommand
-import com.example.colorimagemobile.services.drawing.AnchorIndexes
 import com.example.colorimagemobile.services.drawing.DrawingObjectManager
-import com.example.colorimagemobile.services.drawing.SelectionService
-import com.example.colorimagemobile.services.drawing.SelectionService.getPathBoundingBox
 
 object ResizeSelectionService {
 

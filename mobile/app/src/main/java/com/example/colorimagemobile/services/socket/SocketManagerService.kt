@@ -11,6 +11,8 @@ object SocketManagerService {
     }
 
     fun leaveDrawingRoom() {
+        if (DrawingService.getCurrentDrawingID() == null) return
+
         DrawingSocketService.leaveRoom(DrawingService.getCurrentDrawingID()!!)
         DrawingSocketService.disconnect()
     }

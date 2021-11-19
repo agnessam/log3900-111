@@ -49,6 +49,10 @@ object DrawingObjectManager {
         return commandList[layerIdUuidMap[layerIndex]]
     }
 
+    fun removeCommand(layerIndex: Int) {
+        commandList.remove(layerIdUuidMap[layerIndex])
+    }
+
     fun clearLayers() {
         layerDrawable = LayerDrawable(arrayOf<Drawable>())
         commandList.clear()

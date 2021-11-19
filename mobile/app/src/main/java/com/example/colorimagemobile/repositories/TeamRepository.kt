@@ -6,7 +6,7 @@ import com.example.colorimagemobile.models.DataWrapper
 import com.example.colorimagemobile.models.DrawingModel
 import com.example.colorimagemobile.models.TeamModel
 import com.example.colorimagemobile.services.RetrofitInstance
-import com.example.colorimagemobile.services.UserService
+import com.example.colorimagemobile.services.users.UserService
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

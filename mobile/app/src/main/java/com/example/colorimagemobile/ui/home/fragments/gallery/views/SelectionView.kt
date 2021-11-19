@@ -5,12 +5,12 @@ import android.graphics.*
 import com.example.colorimagemobile.classes.toolsCommand.*
 import com.example.colorimagemobile.models.SelectionData
 import com.example.colorimagemobile.services.UUIDService
-import com.example.colorimagemobile.services.drawing.AnchorIndexes
 import com.example.colorimagemobile.services.drawing.CanvasService
+import com.example.colorimagemobile.services.drawing.toolsAttribute.SelectionService.selectedShape
+import com.example.colorimagemobile.services.drawing.toolsAttribute.SelectionService.selectedShapeIndex
+import com.example.colorimagemobile.services.drawing.toolsAttribute.SelectionService
 import com.example.colorimagemobile.services.drawing.DrawingObjectManager
-import com.example.colorimagemobile.services.drawing.SelectionService
-import com.example.colorimagemobile.services.drawing.SelectionService.selectedShape
-import com.example.colorimagemobile.services.drawing.SelectionService.selectedShapeIndex
+import com.example.colorimagemobile.services.drawing.toolsAttribute.AnchorIndexes
 import com.example.colorimagemobile.services.drawing.toolsAttribute.ResizeSelectionService
 import kotlin.math.abs
 
