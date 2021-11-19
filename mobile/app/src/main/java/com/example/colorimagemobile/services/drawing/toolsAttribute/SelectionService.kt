@@ -12,11 +12,7 @@ import android.graphics.drawable.shapes.RectShape
 import android.graphics.drawable.shapes.Shape
 
 // Helper to draw selection box to canvas
-object SelectionService: Attributes {
-    override val minWidth = 1
-    override val maxWidth = 50
-    override var currentWidth: Int = 0
-
+object SelectionService {
     lateinit var selectedShape: Drawable
     var selectedShapeIndex: Int = -1
 

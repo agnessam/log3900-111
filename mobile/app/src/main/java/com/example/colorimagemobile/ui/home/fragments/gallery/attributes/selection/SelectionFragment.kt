@@ -8,10 +8,12 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.NumberPicker
 import com.example.colorimagemobile.R
-import com.example.colorimagemobile.services.drawing.toolsAttribute.DeleteService
-import com.example.colorimagemobile.services.drawing.toolsAttribute.PencilService
-import com.example.colorimagemobile.services.drawing.toolsAttribute.RectangleService
-import com.example.colorimagemobile.services.drawing.toolsAttribute.SelectionService
+import com.example.colorimagemobile.classes.toolsCommand.EllipseCommand
+import com.example.colorimagemobile.classes.toolsCommand.PencilCommand
+import com.example.colorimagemobile.classes.toolsCommand.RectangleCommand
+import com.example.colorimagemobile.models.DrawingModel
+import com.example.colorimagemobile.services.drawing.DrawingObjectManager
+import com.example.colorimagemobile.services.drawing.toolsAttribute.*
 
 class SelectionFragment : Fragment(R.layout.fragment_selection) {
     private lateinit var  deleteShapeBtn: Button
@@ -26,12 +28,29 @@ class SelectionFragment : Fragment(R.layout.fragment_selection) {
     }
 
     private fun setWidthListener() {
-        widthPicker.minValue = SelectionService.minWidth
-        widthPicker.maxValue = SelectionService.maxWidth
-        widthPicker.value = SelectionService.currentWidth
+        widthPicker.minValue = LineWidthService.minWidth
+        widthPicker.maxValue = LineWidthService.maxWidth
+
+        // TODO: make the width picker value update automatically on select
+        if (SelectionService.selectedShapeIndex != -1) {
+            val command = DrawingObjectManager.getCommand(SelectionService.selectedShapeIndex)
+            when(command) {
+                is PencilCommand -> {
+                    widthPicker.value = command.pencil.strokeWidth
+                }
+                is RectangleCommand -> {
+                    widthPicker.value = command.rectangle.strokeWidth
+                }
+                is EllipseCommand -> {
+                    widthPicker.value = command.ellipse.strokeWidth
+                }
+            }
+        } else {
+            widthPicker.value = 0
+        }
 
         widthPicker.setOnValueChangedListener { _, _, newValue ->
-            SelectionService.currentWidth = newValue
+            LineWidthService.changeLineWidth(newValue)
         }
     }
 

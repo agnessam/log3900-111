@@ -16,6 +16,7 @@ import com.example.colorimagemobile.services.drawing.toolsAttribute.SelectionSer
 import com.example.colorimagemobile.services.drawing.toolsAttribute.SelectionService.selectedShapeIndex
 import com.example.colorimagemobile.services.drawing.toolsAttribute.SelectionService
 import com.example.colorimagemobile.services.drawing.DrawingObjectManager
+import com.example.colorimagemobile.services.drawing.Point
 import com.example.colorimagemobile.services.drawing.toolsAttribute.PencilService
 import kotlin.math.abs
 
@@ -94,6 +95,7 @@ class SelectionView(context: Context?): CanvasView(context) {
             if (isInsidePath) {
                 selectedShape = drawable
                 selectedShapeIndex = index
+
                 break
             } else {
                 selectedShapeIndex = -1
@@ -104,7 +106,7 @@ class SelectionView(context: Context?): CanvasView(context) {
         currentY = motionTouchEventY
     }
 
-    private fun translate(path1: Path, path2: Path?, dx: Float, dy: Float, strokeWidth: Int?) {
+    private fun translate(path1: Path, path2: Path?, dx: Float, dy: Float, strokeWidth: Int?): RectF {
         // Use translation matrix to change path
         val translationMatrix = Matrix()
         translationMatrix.setTranslate(dx, dy)
@@ -121,6 +123,7 @@ class SelectionView(context: Context?): CanvasView(context) {
             strokeWidth
         )
         translationCommand!!.execute()
+        return boundingBox
     }
 
     override fun onTouchMove() {
@@ -144,10 +147,16 @@ class SelectionView(context: Context?): CanvasView(context) {
                     translate(command.path, null, dx, dy, command.pencil.strokeWidth)
                 }
                 is RectangleCommand -> {
-                    translate(command.borderPath, command.fillPath, dx, dy, null)
+                    val boundingBox = translate(command.borderPath, command.fillPath, dx, dy, null)
+                    command.setStartPoint(Point(boundingBox.left, boundingBox.top))
+                    command.setEndPoint(Point(boundingBox.right, boundingBox.bottom))
+                    command.execute()
                 }
                 is EllipseCommand -> {
-                    translate(command.borderPath, command.fillPath, dx, dy, null)
+                    val boundingBox = translate(command.borderPath, command.fillPath, dx, dy, null)
+                    command.setStartPoint(Point(boundingBox.left, boundingBox.top))
+                    command.setEndPoint(Point(boundingBox.right, boundingBox.bottom))
+                    command.execute()
                 }
             }
         }

@@ -19,11 +19,11 @@ class RectangleCommand(rectangleData: RectangleData): ICommand {
     private var boundingRectangle = Rect(0,0, CanvasService.extraCanvas.width, CanvasService.extraCanvas.height)
 
     private var startingPoint: Point? = null
-    private var endingPoint: Point? = null
+    var endingPoint: Point? = null
 
     private var layerIndex: Int = -1
     private var fillRectangleIndex: Int = -1
-    private var borderRectangleIndex: Int = -1
+    var borderRectangleIndex: Int = -1
 
     var rectangle: RectangleData = rectangleData
 
@@ -71,7 +71,7 @@ class RectangleCommand(rectangleData: RectangleData): ICommand {
         return ShapeDrawable(pathShape)
     }
 
-    private fun setStartPoint(startPoint: Point) {
+    fun setStartPoint(startPoint: Point) {
         startingPoint = startPoint
     }
 
