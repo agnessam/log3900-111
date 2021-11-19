@@ -18,7 +18,7 @@ import com.example.colorimagemobile.classes.JSONConvertor
 import com.example.colorimagemobile.models.ChatSocketModel
 import com.example.colorimagemobile.models.TextChannelModel
 import com.example.colorimagemobile.repositories.TextChannelRepository
-import com.example.colorimagemobile.services.UserService
+import com.example.colorimagemobile.services.users.UserService
 import com.example.colorimagemobile.services.chat.ChatAdapterService
 import com.example.colorimagemobile.services.chat.ChatService
 import com.example.colorimagemobile.services.chat.TextChannelService

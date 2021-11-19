@@ -5,7 +5,7 @@ import com.example.colorimagemobile.models.ChatSocketModel
 import com.example.colorimagemobile.models.DataWrapper
 import com.example.colorimagemobile.models.TextChannelModel
 import com.example.colorimagemobile.services.RetrofitInstance
-import com.example.colorimagemobile.services.UserService
+import com.example.colorimagemobile.services.users.UserService
 import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
 import retrofit2.Call
 import retrofit2.Callback

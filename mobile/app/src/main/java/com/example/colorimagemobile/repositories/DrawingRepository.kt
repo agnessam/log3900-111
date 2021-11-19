@@ -4,7 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import com.example.colorimagemobile.models.DataWrapper
 import com.example.colorimagemobile.models.DrawingModel
 import com.example.colorimagemobile.services.RetrofitInstance
-import com.example.colorimagemobile.services.UserService
+import com.example.colorimagemobile.services.users.UserService
 import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
 import retrofit2.Call
 import retrofit2.Callback

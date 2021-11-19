@@ -53,6 +53,9 @@ class Constants {
 
             // teams
             const val TEAMS = "api/teams/"
+
+            // search
+            const val SEARCH = "api/search"
         }
     }
 
@@ -69,6 +72,12 @@ class Constants {
     class TEAMS {
         companion object {
             const val CURRENT_TEAM_ID_KEY = "CurrentTeam"
+        }
+    }
+
+    class SEARCH {
+        companion object {
+            const val CURRENT_QUERY = "CurrentQueryObject"
         }
     }
 

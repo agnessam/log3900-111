@@ -1,8 +1,7 @@
-package com.example.colorimagemobile.services
+package com.example.colorimagemobile.services.users
 
 import com.example.colorimagemobile.models.UserModel
 import com.example.colorimagemobile.utils.Constants
-import java.time.LocalDateTime
 
 // Singleton User object which is accessible globally
 
@@ -17,39 +16,40 @@ object UserService {
     private lateinit var logHistory : UserModel.UpdateLogHistory
 
     fun setAllUserInfo(allInfo:List<UserModel.AllInfo>){
-        this.AllUserInfo = allInfo
+        AllUserInfo = allInfo
     }
+
     fun getAllUserInfo() : List<UserModel.AllInfo> {
-        return this.AllUserInfo
+        return AllUserInfo
     }
 
     fun setNewProfileData (newValues: UserModel.UpdateUser){
-        this.updateProfileData = newValues
+        updateProfileData = newValues
     }
 
     fun getNewProfileData(): UserModel.UpdateUser{
-        return this.updateProfileData
+        return updateProfileData
     }
 
     fun setUserInfo(newUserInfo: UserModel.AllInfo) {
-        this.info = newUserInfo
+        info = newUserInfo
     }
 
     fun getUserInfo(): UserModel.AllInfo {
-        return this.info
+        return info
     }
 
     fun isNull(): Boolean {
-        return !::info.isInitialized
+        return !UserService::info.isInitialized
     }
 
     fun setToken(token:String){
-        this.token = token
+        UserService.token = token
     }
 
     fun getToken(): String{
 
-        return this.token
+        return token
     }
 
 }

@@ -27,9 +27,10 @@ class MyFragmentManager(activity: FragmentActivity) {
             .commitAllowingStateLoss()
     }
 
-    fun openWithData(oldFragmentID: Int, newFragmentClass: Fragment, key: String, data: String) {
+    // pass objects
+    fun openWithData(oldFragmentID: Int, newFragmentClass: Fragment, key: String, data: Serializable) {
         val args = Bundle()
-        args.putString(key, data)
+        args.putSerializable(key, data)
         newFragmentClass.arguments = args
 
         open(oldFragmentID, newFragmentClass)
