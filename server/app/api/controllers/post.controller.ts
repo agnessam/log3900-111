@@ -20,7 +20,7 @@ export class PostController {
 
   @httpGet('/featured')
   public async getPostsByFollowedUsers(@request() req: Request) {
-    return this.postRepository.getFeaturedPosts(req.body.id);
+    return this.postRepository.getFeaturedPosts(req.user!.id);
   }
 
   @httpGet('/:id')
