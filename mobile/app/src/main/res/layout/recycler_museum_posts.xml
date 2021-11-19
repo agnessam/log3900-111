@@ -1,51 +1,126 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/card_museum_post"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_margin="5dp"
-    app:cardElevation="3dp"
-    app:cardCornerRadius="10dp"
-    app:cardBackgroundColor="@color/mainTheme"
-    app:contentPadding="4dp">
+    android:background="@color/mainTheme"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <LinearLayout
-        android:background="@color/mainTheme"
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <androidx.cardview.widget.CardView
-            android:id="@+id/postImageCardView"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight=".70"
-            app:cardBackgroundColor="@color/white"
+    <androidx.cardview.widget.CardView
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintWidth_percent="0.92"
+        app:layout_constraintHeight_percent="0.85"
+        app:cardElevation="3dp"
+        app:cardCornerRadius="10dp"
+        app:cardBackgroundColor="@color/mainTheme"
+        app:contentPadding="2dp">
+        <LinearLayout
             android:background="@color/mainTheme"
-            android:elevation="12dp"
-            app:cardCornerRadius="10dp">
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-            <ImageView
-                android:id="@+id/postImage"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+            <androidx.cardview.widget.CardView
+                android:id="@+id/postImageCardView"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight=".70"
+                app:cardBackgroundColor="@color/white"
+                android:background="@color/mainTheme"
+                android:elevation="12dp"
+                app:cardCornerRadius="10dp">
 
-        </androidx.cardview.widget.CardView>
+                <ImageView
+                    android:id="@+id/postImage"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
+            </androidx.cardview.widget.CardView>
 
 
-        <androidx.cardview.widget.CardView
-            android:layout_weight=".30"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            app:cardBackgroundColor="@color/primary"
-            android:layout_marginLeft="10dp"
-            app:cardElevation="3dp"
-            app:cardCornerRadius="10dp"
-            android:background="@color/mainTheme" >
+            <androidx.cardview.widget.CardView
+                android:layout_weight=".30"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                app:cardBackgroundColor="@color/primary"
+                android:layout_marginLeft="15dp"
+                app:cardElevation="3dp"
+                app:cardCornerRadius="10dp"
+                android:background="@color/mainTheme" >
 
-        </androidx.cardview.widget.CardView>
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
 
-    </LinearLayout>
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="0.1"
+                        android:background="@drawable/border_bottom">
 
-</androidx.cardview.widget.CardView>
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_marginLeft="5dp"
+                            android:text="MEE"
+                            android:textSize="18sp"
+                            android:textStyle="bold" />
+
+                    </RelativeLayout>
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/museum_comments_recycler_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="0.8"
+                        android:background="@color/white" />
+
+                    <RelativeLayout
+                        android:gravity="bottom"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="0.1"
+                        android:background="@color/white"
+                        android:paddingBottom="5dp">
+
+                        <EditText
+                            android:id="@+id/chat_text_input"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentLeft="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginLeft="5dp"
+                            android:layout_marginRight="5dp"
+                            android:layout_toLeftOf="@id/post_comment_btn"
+                            android:background="@drawable/chat_edit_text"
+                            android:hint="Leave a comment"
+                            android:inputType="text"
+                            android:maxLines="1"
+                            android:padding="10px"
+                            android:textSize="13dp" />
+
+                        <Button
+                            android:id="@+id/post_comment_btn"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:background="@drawable/ic_send" />
+
+                    </RelativeLayout>
+
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

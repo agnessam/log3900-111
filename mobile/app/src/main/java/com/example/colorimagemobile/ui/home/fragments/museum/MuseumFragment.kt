@@ -4,7 +4,9 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.SnapHelper
 import com.example.colorimagemobile.R
 import com.example.colorimagemobile.adapter.MuseumPostRecyclerAdapter
 import com.example.colorimagemobile.models.MuseumPostModel
@@ -38,7 +40,10 @@ class MuseumFragment : Fragment(R.layout.fragment_museum) {
 
             val recyclerView = myView.findViewById<RecyclerView>(R.id.museumPostsRecyclerView)
             recyclerView.layoutManager = LinearLayoutManager(requireContext())
-            recyclerView.adapter = MuseumPostRecyclerAdapter()
+            recyclerView.adapter = MuseumPostRecyclerAdapter(requireContext())
+
+            val snapHelper: SnapHelper = LinearSnapHelper()
+            snapHelper.attachToRecyclerView(recyclerView)
         })
     }
 }
