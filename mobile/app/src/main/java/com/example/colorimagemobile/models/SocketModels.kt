@@ -49,6 +49,8 @@ class EllipseData(
 
 data class SelectionData(val id: String)
 
+data class ResizeData(val id: String, val xScaled: Float, val yScaled: Float, val xTranslate: Float, val yTranslate: Float, val previousTransform: String)
+
 data class SocketTool(val type: String, val roomName: String, val drawingCommand: Any)
 
 data class InProgressPencil(val id: String, var point: Point)

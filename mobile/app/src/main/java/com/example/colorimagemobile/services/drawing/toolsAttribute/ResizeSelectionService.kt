@@ -6,7 +6,9 @@ import com.example.colorimagemobile.classes.toolsCommand.PencilCommand
 import com.example.colorimagemobile.classes.toolsCommand.RectangleCommand
 import com.example.colorimagemobile.classes.toolsCommand.ResizeCommand
 import com.example.colorimagemobile.interfaces.ICommand
+import com.example.colorimagemobile.models.ResizeData
 import com.example.colorimagemobile.services.drawing.DrawingObjectManager
+import com.example.colorimagemobile.services.socket.DrawingSocketService
 
 object ResizeSelectionService {
 
@@ -84,6 +86,17 @@ object ResizeSelectionService {
             }
             resizeCommand!!.setScales(resizeData.scale.xScale, resizeData.scale.yScale, resizeData.anchorPoint.x, resizeData.anchorPoint.y)
             resizeCommand!!.execute()
+
+            var resizeSocketData = com.example.colorimagemobile.models.ResizeData(
+                resizeCommand!!.id,
+                resizeData.scale.xScale,
+                resizeData.scale.yScale,
+                resizeData.anchorPoint.x,
+                resizeData.anchorPoint.y,
+                ""
+            )
+
+            DrawingSocketService.sendTransformSelectionCommand(resizeSocketData, "SelectionResize")
             lastXScale = resizeData.scale.xScale
             lastYScale = resizeData.scale.yScale
         }

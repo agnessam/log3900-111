@@ -4,6 +4,7 @@ import android.graphics.Matrix
 import android.graphics.Path
 import android.graphics.RectF
 import com.example.colorimagemobile.interfaces.ICommand
+import com.example.colorimagemobile.models.ResizeData
 import com.example.colorimagemobile.services.drawing.DrawingObjectManager
 import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
 import kotlin.math.abs
@@ -17,6 +18,14 @@ class ResizeCommand(objectId: String) : ICommand {
     private var xTranslate: Float = 0f
     private var yTranslate: Float = 0f
     private var commandToResize: ICommand? = null
+
+    var id: String = ""
+        get() = when(commandToResize){
+            is PencilCommand -> (commandToResize!! as PencilCommand).pencil.id
+            is RectangleCommand -> (commandToResize!! as RectangleCommand).rectangle.id
+            is EllipseCommand -> (commandToResize as EllipseCommand).ellipse.id
+            else -> ""
+        }
 
     init{
         commandToResize = DrawingObjectManager.getCommand(objectId)
@@ -40,7 +49,8 @@ class ResizeCommand(objectId: String) : ICommand {
     }
 
     override fun update(drawingCommand: Any) {
-//        TODO("Not yet implemented")
+        setScales((drawingCommand as ResizeData).xScaled, drawingCommand.yScaled, drawingCommand.xTranslate, drawingCommand.yTranslate)
+        // do something with previous transformations?
     }
 
     private fun scaleAroundPoint(xScale: Float, yScale: Float, xAnchor: Float, yAnchor: Float, path: Path, isFill: Boolean){
