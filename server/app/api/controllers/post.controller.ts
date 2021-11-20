@@ -3,6 +3,7 @@ import { PostRepository } from '../../infrastructure/data_access/repositories/po
 import { inject } from 'inversify';
 import {
   controller,
+  httpDelete,
   httpGet,
   httpPost,
   request,
@@ -18,6 +19,11 @@ export class PostController {
     return this.postRepository.getAllPopulatedPosts();
   }
 
+  @httpGet('/featured')
+  public async getPostsByFollowedUsers(@request() req: Request) {
+    return this.postRepository.getFeaturedPosts(req.user!.id);
+  }
+
   @httpGet('/:id')
   public async getPostById(@request() req: Request) {
     return this.postRepository.getPopulatedPostById(req.params.id);
@@ -30,5 +36,15 @@ export class PostController {
       req.params.id,
       req.body,
     );
+  }
+
+  @httpPost('/:id/likes')
+  public async addLike(@request() req: Request) {
+    return this.postRepository.addLike(req.user!.id, req.params.id);
+  }
+
+  @httpDelete('/:id/likes')
+  public async removeLIke(@request() req: Request) {
+    return this.postRepository.removeLike(req.user!.id, req.params.id);
   }
 }

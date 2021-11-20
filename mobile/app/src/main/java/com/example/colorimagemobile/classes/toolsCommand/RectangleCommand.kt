@@ -1,5 +1,9 @@
 package com.example.colorimagemobile.classes.toolsCommand
 
+import android.graphics.Color
+import android.graphics.Paint
+import android.graphics.Rect
+import android.graphics.RectF
 import android.graphics.*
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.LayerDrawable
@@ -39,7 +43,6 @@ class RectangleCommand(rectangleData: RectangleData): ICommand {
         var borderRectangle = createNewRectangle()
 
         initializeRectangleLayers(fillRectangle, borderRectangle)
-
         borderPaint = initializePaint(rectangleData.stroke, Color.WHITE)
         fillPaint = initializePaint(rectangleData.fill, Color.BLACK)
 
@@ -105,6 +108,8 @@ class RectangleCommand(rectangleData: RectangleData): ICommand {
             rectangle.y = drawingCommand.y
             rectangle.width = drawingCommand.width
             rectangle.height = drawingCommand.height
+            generateFillPath()
+            generateBorderPath()
         }
     }
 

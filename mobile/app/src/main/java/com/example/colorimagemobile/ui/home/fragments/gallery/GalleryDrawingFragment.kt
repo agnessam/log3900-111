@@ -62,18 +62,17 @@ class GalleryDrawingFragment : Fragment(R.layout.fragment_gallery_drawing) {
 
     private fun leaveDrawingRoom() {
         if (roomName == null) return
-        roomName = null
         SocketManagerService.leaveDrawingRoom()
     }
 
     override fun onPause() {
         super.onPause()
-//        this.leaveDrawingRoom()
+        this.leaveDrawingRoom()
     }
 
     override fun onStop(){
         super.onStop()
-//        this.leaveDrawingRoom()
+        this.leaveDrawingRoom()
     }
 
     override fun onDestroy() {
