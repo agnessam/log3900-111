@@ -2,14 +2,18 @@ package com.example.colorimagemobile.ui.home.fragments.gallery.views
 
 import android.content.Context
 import android.graphics.*
+import android.graphics.drawable.Drawable
 import com.example.colorimagemobile.classes.toolsCommand.*
+import com.example.colorimagemobile.classes.toolsCommand.selectionToolCommands.SelectionCommand
 import com.example.colorimagemobile.models.SelectionData
-import com.example.colorimagemobile.services.UUIDService
 import com.example.colorimagemobile.services.drawing.CanvasService
+import com.example.colorimagemobile.services.drawing.CanvasUpdateService
+import com.example.colorimagemobile.services.drawing.DrawingObjectManager
+import com.example.colorimagemobile.services.drawing.SynchronisationService
+import com.example.colorimagemobile.services.socket.DrawingSocketService
 import com.example.colorimagemobile.services.drawing.toolsAttribute.SelectionService.selectedShape
 import com.example.colorimagemobile.services.drawing.toolsAttribute.SelectionService.selectedShapeIndex
 import com.example.colorimagemobile.services.drawing.toolsAttribute.SelectionService
-import com.example.colorimagemobile.services.drawing.DrawingObjectManager
 import com.example.colorimagemobile.services.drawing.toolsAttribute.AnchorIndexes
 import com.example.colorimagemobile.services.drawing.toolsAttribute.ResizeSelectionService
 import kotlin.math.abs
@@ -19,13 +23,12 @@ class SelectionView(context: Context?): CanvasView(context) {
     private var translationCommand: TranslateCommand? = null
 
     override fun createPathObject() {
-        selectionCommand = SelectionCommand()
-
         // for sync
-        val id = UUIDService.generateUUID()
+        val id = DrawingObjectManager.getUuid(selectedShapeIndex) ?: return
         var selectionData = SelectionData(
-            id = id,
+            id = id
         )
+        selectionCommand = SelectionCommand(selectionData)
     }
 
     private fun getPathBoundingBox(path: Path): RectF {
@@ -47,11 +50,18 @@ class SelectionView(context: Context?): CanvasView(context) {
         }
     }
 
-    private fun drawBoundingBox(path: Path, strokeWidth: Int?): Boolean {
+    private fun drawBoundingBox(drawable: Drawable, index: Int, path: Path, strokeWidth: Int?): Boolean {
         var isInsidePath: Boolean
-        var boundingBox: RectF = getPathBoundingBox(path)
+        var boundingBox = getPathBoundingBox(path)
         isInsidePath = boundingBox.contains(motionTouchEventX,motionTouchEventY)
-        if (isInsidePath) {
+
+        // Check if shape is in preview shapes. If it is
+        var uuid = DrawingObjectManager.getUuid(index)
+        var isInPreviewShapes = SynchronisationService.isShapeInPreview(uuid)
+        if (isInsidePath && !isInPreviewShapes) {
+            selectedShape = drawable
+            selectedShapeIndex = index
+            createPathObject()
             setSelectionBounds(
                 boundingBox.left.toInt(),
                 boundingBox.top.toInt(),
@@ -59,8 +69,14 @@ class SelectionView(context: Context?): CanvasView(context) {
                 boundingBox.bottom.toInt(),
                 strokeWidth
             )
-            selectionCommand!!.execute()
+            DrawingSocketService.sendStartSelectionCommand(selectionCommand!!.selectionData, "SelectionStart")
+        } else {
+            selectedShapeIndex = -1
+            if(selectionCommand != null){
+                DrawingSocketService.sendConfirmSelectionCommand(selectionCommand!!.selectionData, "SelectionStart")
+            }
         }
+        CanvasUpdateService.invalidate()
         return isInsidePath
     }
 
@@ -85,24 +101,16 @@ class SelectionView(context: Context?): CanvasView(context) {
             var isInsidePath = false
             when(command) {
                 is PencilCommand -> {
-                    isInsidePath = drawBoundingBox(command.path, command.pencil.strokeWidth)
+                    isInsidePath = drawBoundingBox(drawable, index, command.path, command.pencil.strokeWidth)
                 }
                 is RectangleCommand -> {
-                    isInsidePath = drawBoundingBox(command.borderPath, null)
+                    isInsidePath = drawBoundingBox(drawable, index, command.borderPath, null)
                 }
                 is EllipseCommand -> {
-                    isInsidePath = drawBoundingBox(command.borderPath, null)
+                    isInsidePath = drawBoundingBox(drawable, index, command.borderPath, null)
                 }
             }
-
-            if (isInsidePath) {
-                selectedShape = drawable
-                selectedShapeIndex = index
-                break
-            } else {
-                selectedShapeIndex = -1
-                selectionCommand!!.execute()
-            }
+            if(isInsidePath) break
         }
         currentX = motionTouchEventX
         currentY = motionTouchEventY
