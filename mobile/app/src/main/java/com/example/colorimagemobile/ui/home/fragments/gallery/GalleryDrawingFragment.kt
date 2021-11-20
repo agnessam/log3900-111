@@ -1,24 +1,28 @@
 package com.example.colorimagemobile.ui.home.fragments.gallery
 
 import android.graphics.Color
+import android.graphics.drawable.ShapeDrawable
 import android.os.Bundle
 import android.text.Spannable
 import android.text.SpannableString
 import android.text.style.ImageSpan
 import android.transition.AutoTransition
 import android.transition.TransitionManager
-import androidx.fragment.app.Fragment
 import android.view.View
-import android.widget.*
-import androidx.appcompat.app.AppCompatActivity
+import android.widget.Button
+import android.widget.LinearLayout
+import android.widget.RelativeLayout
+import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.fragment.app.Fragment
 import com.example.colorimagemobile.R
 import com.example.colorimagemobile.classes.MyFragmentManager
 import com.example.colorimagemobile.classes.tools.ToolsFactory
 import com.example.colorimagemobile.enumerators.ToolType
 import com.example.colorimagemobile.services.drawing.DrawingService
 import com.example.colorimagemobile.services.drawing.ToolTypeService
+import com.example.colorimagemobile.services.drawing.toolsAttribute.SelectionService
 import com.example.colorimagemobile.services.socket.DrawingSocketService
 import com.example.colorimagemobile.services.socket.SocketManagerService
 
@@ -113,11 +117,21 @@ class GalleryDrawingFragment : Fragment(R.layout.fragment_gallery_drawing) {
             val toolView = toolsFactory.getTool(toolType).getView(requireContext())
 
             if (toolView != null) {
+                deselectOnToolChange(toolType)
                 val canvasLayout = galleryDrawingFragment.findViewById<RelativeLayout>(R.id.canvas_view)
                 canvasLayout.removeAllViews()
                 canvasLayout.addView(toolView)
             }
         })
+    }
+
+    // if has selection and changes tools, deselect
+    private fun deselectOnToolChange(toolType: ToolType) {
+        if (SelectionService.selectedShapeIndex != -1 && toolType != ToolType.SELECTION) {
+            SelectionService.clearSelection()
+            SelectionService.selectedShapeIndex = -1
+            SelectionService.selectedShape = ShapeDrawable()
+        }
     }
 
     // open/close side attributes panel

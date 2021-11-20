@@ -1,19 +1,14 @@
 package com.example.colorimagemobile.ui.home.fragments.gallery.attributes.selection
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.Button
 import android.widget.NumberPicker
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.LifecycleOwner
 import com.example.colorimagemobile.R
-import com.example.colorimagemobile.classes.toolsCommand.EllipseCommand
-import com.example.colorimagemobile.classes.toolsCommand.PencilCommand
-import com.example.colorimagemobile.classes.toolsCommand.RectangleCommand
-import com.example.colorimagemobile.models.DrawingModel
-import com.example.colorimagemobile.services.drawing.DrawingObjectManager
-import com.example.colorimagemobile.services.drawing.toolsAttribute.*
+import com.example.colorimagemobile.services.drawing.toolsAttribute.DeleteService
+import com.example.colorimagemobile.services.drawing.toolsAttribute.LineWidthService
 
 class SelectionFragment : Fragment(R.layout.fragment_selection) {
     private lateinit var  deleteShapeBtn: Button
@@ -31,23 +26,9 @@ class SelectionFragment : Fragment(R.layout.fragment_selection) {
         widthPicker.minValue = LineWidthService.minWidth
         widthPicker.maxValue = LineWidthService.maxWidth
 
-        // TODO: make the width picker value update automatically on select
-        if (SelectionService.selectedShapeIndex != -1) {
-            val command = DrawingObjectManager.getCommand(SelectionService.selectedShapeIndex)
-            when(command) {
-                is PencilCommand -> {
-                    widthPicker.value = command.pencil.strokeWidth
-                }
-                is RectangleCommand -> {
-                    widthPicker.value = command.rectangle.strokeWidth
-                }
-                is EllipseCommand -> {
-                    widthPicker.value = command.ellipse.strokeWidth
-                }
-            }
-        } else {
-            widthPicker.value = 0
-        }
+        LineWidthService.getCurrentWidth().observe(context as LifecycleOwner, {
+            widthPicker.value = it
+        })
 
         widthPicker.setOnValueChangedListener { _, _, newValue ->
             LineWidthService.changeLineWidth(newValue)
