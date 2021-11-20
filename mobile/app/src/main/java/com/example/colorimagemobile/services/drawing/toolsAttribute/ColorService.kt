@@ -1,10 +1,11 @@
 package com.example.colorimagemobile.services.drawing.toolsAttribute
 
 import android.graphics.Color
+import com.example.colorimagemobile.utils.Constants
 
 object ColorService {
-    private var primaryColor: String = "rgba(0, 0, 0, 1)"
-    private var secondaryColor: String = "rgba(255, 255, 255, 255)"
+    private var primaryColor: String = Constants.DRAWING.PRIMARY_COLOR
+    private var secondaryColor: String = Constants.DRAWING.SECONDARY_COLOR
 
     fun setPrimaryColor(newColor: String) {
         primaryColor = newColor
@@ -39,7 +40,7 @@ object ColorService {
         return Color.argb(alpha, splitRGB[0].toInt(), splitRGB[1].toInt(), splitRGB[2].toInt())
     }
 
-    fun intToRGB(color: Int): String {
+    fun intToRGBA(color: Int): String {
         val red = Color.red(color)
         val green = Color.green(color)
         val blue = Color.blue(color)
