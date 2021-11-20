@@ -1,7 +1,6 @@
 package com.example.colorimagemobile.services.drawing.toolsAttribute
 
 import android.graphics.Color
-import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
 import com.example.colorimagemobile.utils.Constants
 import java.lang.StringBuilder
 
@@ -31,6 +30,12 @@ object ColorService {
 
     fun getSecondaryColorAsInt(): Int{
         return rgbaToInt(secondaryColor)
+    }
+
+    fun swapColors() {
+        val tempPrimary = primaryColor
+        primaryColor = secondaryColor
+        secondaryColor = tempPrimary
     }
 
     // convert rgb() to Android Color in Integer

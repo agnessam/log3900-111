@@ -57,10 +57,7 @@ class ColorPaletteFragment : Fragment(R.layout.fragment_color_palette) {
         }
 
         swapBtn.setOnClickListener {
-            val primaryColor = ColorService.getPrimaryColorAsString()
-            val secondaryColor = ColorService.getSecondaryColorAsString()
-            ColorService.setPrimaryColor(secondaryColor)
-            ColorService.setSecondaryColor(primaryColor)
+            ColorService.swapColors()
             updatePreview()
         }
     }
