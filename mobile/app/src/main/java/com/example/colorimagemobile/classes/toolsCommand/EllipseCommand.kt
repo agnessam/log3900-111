@@ -1,5 +1,9 @@
 package com.example.colorimagemobile.classes.toolsCommand
 
+import android.graphics.Color
+import android.graphics.Paint
+import android.graphics.Rect
+import android.graphics.RectF
 import android.graphics.*
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.LayerDrawable
@@ -102,6 +106,8 @@ class EllipseCommand(ellipseData: EllipseData): ICommand {
             ellipse.y = drawingCommand.y
             ellipse.width = drawingCommand.width
             ellipse.height = drawingCommand.height
+            generateFillPath()
+            generateBorderPath()
         }
     }
 
