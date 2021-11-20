@@ -6,6 +6,7 @@ import android.graphics.drawable.Drawable
 import com.example.colorimagemobile.classes.toolsCommand.*
 import com.example.colorimagemobile.classes.toolsCommand.selectionToolCommands.SelectionCommand
 import com.example.colorimagemobile.models.SelectionData
+import com.example.colorimagemobile.models.TranslateData
 import com.example.colorimagemobile.services.drawing.CanvasService
 import com.example.colorimagemobile.services.drawing.CanvasUpdateService
 import com.example.colorimagemobile.services.drawing.DrawingObjectManager
@@ -166,11 +167,19 @@ class SelectionView(context: Context?): CanvasView(context) {
             currentX = motionTouchEventX
             currentY = motionTouchEventY
 
+            // TODO: for sync, create new translate command when translating for the first time
+            // increment deltax and deltay to save previous translation?
             if (selectedShapeIndex == -1) { return }
-            translationCommand = TranslateCommand(selectedShapeIndex)
-            translationCommand!!.setTransformation(dx, dy)
+            val id = DrawingObjectManager.getUuid(selectedShapeIndex) ?: return
+            var translateData = TranslateData(
+                id = id,
+                deltaX = dx.toInt(),
+                deltaY = dy.toInt()
+            )
+            DrawingSocketService.sendTransformSelectionCommand(translateData, "Translation")
+            translationCommand = TranslateCommand(translateData)
+            translationCommand!!.setTransformation(dx.toInt(), dy.toInt())
             translationCommand!!.execute()
-
             resetBoundingBox()
         }
     }
