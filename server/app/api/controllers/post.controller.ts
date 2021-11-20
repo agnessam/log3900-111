@@ -19,6 +19,11 @@ export class PostController {
     return this.postRepository.getAllPopulatedPosts();
   }
 
+  @httpGet('/featured')
+  public async getPostsByFollowedUsers(@request() req: Request) {
+    return this.postRepository.getFeaturedPosts(req.user!.id);
+  }
+
   @httpGet('/:id')
   public async getPostById(@request() req: Request) {
     return this.postRepository.getPopulatedPostById(req.params.id);

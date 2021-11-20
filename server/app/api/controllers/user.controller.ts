@@ -48,6 +48,16 @@ export class UserController {
     return await this.userRepository.deleteById(req.params.id);
   }
 
+  @httpPost('/:id/followers/follow')
+  public async followUser(@request() req: Request) {
+    return await this.userRepository.followUser(req.params.id, req.user!.id);
+  }
+
+  @httpPost('/:id/followers/unfollow')
+  public async unfolloweUser(@request() req: Request) {
+    return await this.userRepository.unfollowUser(req.params.id, req.user!.id);
+  }
+
   @httpGet('/:id/drawings')
   public async getDrawings(@request() req: Request) {
     return await this.userRepository.getUserDrawings(req.params.id);
