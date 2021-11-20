@@ -10,6 +10,9 @@ object SynchronisationService {
 
     private val previewShapes: HashMap<String, ICommand> = HashMap()
 
+    fun isShapeInPreview(uuid: String?): Boolean{
+        return previewShapes[uuid] != null
+    }
 
     fun removeFromPreview( toolCommandString: String): Boolean{
         val toolCommand = JSONObject(toolCommandString)

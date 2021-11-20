@@ -9,6 +9,7 @@ import com.example.colorimagemobile.models.SelectionData
 import com.example.colorimagemobile.services.drawing.CanvasService
 import com.example.colorimagemobile.services.drawing.CanvasUpdateService
 import com.example.colorimagemobile.services.drawing.DrawingObjectManager
+import com.example.colorimagemobile.services.drawing.SynchronisationService
 import com.example.colorimagemobile.services.socket.DrawingSocketService
 import com.example.colorimagemobile.services.drawing.toolsAttribute.SelectionService.selectedShape
 import com.example.colorimagemobile.services.drawing.toolsAttribute.SelectionService.selectedShapeIndex
@@ -53,7 +54,11 @@ class SelectionView(context: Context?): CanvasView(context) {
         var isInsidePath: Boolean
         var boundingBox = getPathBoundingBox(path)
         isInsidePath = boundingBox.contains(motionTouchEventX,motionTouchEventY)
-        if (isInsidePath) {
+
+        // Check if shape is in preview shapes. If it is
+        var uuid = DrawingObjectManager.getUuid(index)
+        var isInPreviewShapes = SynchronisationService.isShapeInPreview(uuid)
+        if (isInsidePath && !isInPreviewShapes) {
             selectedShape = drawable
             selectedShapeIndex = index
             createPathObject()
@@ -106,7 +111,6 @@ class SelectionView(context: Context?): CanvasView(context) {
                 }
             }
             if(isInsidePath) break
-
         }
         currentX = motionTouchEventX
         currentY = motionTouchEventY
