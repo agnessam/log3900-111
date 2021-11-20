@@ -29,6 +29,7 @@ class Constants {
             const val CONFIRM_DRAWING_EVENT = "draw-confirm"
             const val START_SELECTION_EVENT = "selection-start"
             const val CONFIRM_SELECTION_EVENT = "selection-confirm"
+            const val TRANSFORM_SELECTION_EVENT = "selection-transform"
         }
     }
 

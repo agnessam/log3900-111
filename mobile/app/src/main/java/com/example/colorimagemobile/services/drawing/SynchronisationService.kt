@@ -115,4 +115,23 @@ object SynchronisationService {
     fun confirmSelection(confirmSelectionData: SocketTool) {
         this.previewShapes.remove((confirmSelectionData.drawingCommand as SelectionData).id)
     }
+
+    fun transformSelection(transformSelectionData: SocketTool) {
+        val commandId = (transformSelectionData.drawingCommand as ResizeData).id
+        if(this.isShapeInPreview(commandId)){
+            var command = previewShapes[commandId]
+            var transformCommand = CommandFactory.createCommand(transformSelectionData.type, transformSelectionData.drawingCommand)
+
+            if(transformCommand == null || command == null) return
+
+            if(transformCommand.javaClass == command.javaClass){
+                command.update(transformSelectionData.drawingCommand)
+            }
+            else{
+                previewShapes[commandId] = transformCommand
+            }
+        }
+
+        previewShapes[commandId]?.execute()
+    }
 }
