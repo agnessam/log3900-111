@@ -116,67 +116,49 @@ class SelectionView(context: Context?): CanvasView(context) {
         currentY = motionTouchEventY
     }
 
-    private fun translate(path1: Path, path2: Path?, dx: Float, dy: Float, strokeWidth: Int?) {
-        // Use translation matrix to change path
-        val translationMatrix = Matrix()
-        translationMatrix.setTranslate(dx, dy)
-        path1.transform(translationMatrix)
-        path2?.transform(translationMatrix)
-
-        // Draw selection box
-        var boundingBox = getPathBoundingBox(path1)
-        setSelectionBounds(
-            boundingBox.left.toInt(),
-            boundingBox.top.toInt(),
-            boundingBox.right.toInt(),
-            boundingBox.bottom.toInt(),
-            strokeWidth
-        )
-        translationCommand!!.execute()
+    private fun resetBoundingBox() {
+        SelectionService.clearSelection()
+        val command = DrawingObjectManager.getCommand(selectedShapeIndex)
+        var path: Path? = null
+        var strokeWidth: Int? = null
+        when(command) {
+            is PencilCommand -> {
+                path = command.path
+                strokeWidth = command.pencil.strokeWidth
+            }
+            is RectangleCommand -> {
+                path = command.borderPath
+                strokeWidth = null
+            }
+            is EllipseCommand -> {
+                path = command.borderPath
+                strokeWidth = null
+            }
+        }
+        if(path != null){
+            var boundingBox = getPathBoundingBox(path)
+            setSelectionBounds(
+                boundingBox.left.toInt(),
+                boundingBox.top.toInt(),
+                boundingBox.right.toInt(),
+                boundingBox.bottom.toInt(),
+                strokeWidth
+            )
+        }
     }
 
     override fun onTouchMove() {
         // Resizing: touching one of 8 points on bounding box
         if (SelectionService.selectedAnchorIndex != AnchorIndexes.NONE
         ) {
-            if (selectedShapeIndex != null) {
+            if (selectedShapeIndex != -1) {
                 ResizeSelectionService.onTouchMove(motionTouchEventX, motionTouchEventY)
-                SelectionService.clearSelection()
-                val command = DrawingObjectManager.getCommand(selectedShapeIndex)
-                var path: Path? = null
-                var strokeWidth: Int? = null
-                when(command) {
-                    is PencilCommand -> {
-                        path = command.path
-                        strokeWidth = command.pencil.strokeWidth
-                    }
-                    is RectangleCommand -> {
-                        path = command.borderPath
-                        strokeWidth = null
-                    }
-                    is EllipseCommand -> {
-                        path = command.borderPath
-                        strokeWidth = null
-                    }
-                }
-                if(path != null){
-                    var boundingBox = getPathBoundingBox(path)
-                    setSelectionBounds(
-                        boundingBox.left.toInt(),
-                        boundingBox.top.toInt(),
-                        boundingBox.right.toInt(),
-                        boundingBox.bottom.toInt(),
-                        strokeWidth
-                    )
-                }
+                resetBoundingBox()
                 return
             }
         }
 
         // Translate only if touched inside of shape
-        // TODO: Refactor
-        translationCommand = TranslateCommand()
-
         val dx = motionTouchEventX - currentX
         val dy = motionTouchEventY - currentY
 
@@ -184,21 +166,12 @@ class SelectionView(context: Context?): CanvasView(context) {
             currentX = motionTouchEventX
             currentY = motionTouchEventY
 
-            translationCommand!!.setTransformation(dx.toInt(), dy.toInt())
-            SelectionService.clearSelection()
             if (selectedShapeIndex == -1) { return }
-            val command = DrawingObjectManager.getCommand(selectedShapeIndex)
-            when (command) {
-                is PencilCommand -> {
-                    translate(command.path, null, dx, dy, command.pencil.strokeWidth)
-                }
-                is RectangleCommand -> {
-                    translate(command.borderPath, command.fillPath, dx, dy, null)
-                }
-                is EllipseCommand -> {
-                    translate(command.borderPath, command.fillPath, dx, dy, null)
-                }
-            }
+            translationCommand = TranslateCommand(selectedShapeIndex)
+            translationCommand!!.setTransformation(dx, dy)
+            translationCommand!!.execute()
+
+            resetBoundingBox()
         }
     }
 
