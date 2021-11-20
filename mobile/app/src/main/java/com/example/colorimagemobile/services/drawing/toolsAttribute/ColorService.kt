@@ -48,4 +48,14 @@ object ColorService {
 
         return "rgba($red, $green, $blue, $alpha)"
     }
+
+    // convert alpha from 0-255 (leger) to 0-1 (lourd)
+    fun getAlphaForDesktop(color: String): String {
+        val rgbaValues = color.substring(color.indexOf('(') + 1, color.indexOf(')'))
+        val splitRGBA = rgbaValues.replace("\\s".toRegex(),"").split(",")
+        val currentAlpha = if (splitRGBA.size == 4) splitRGBA[3].toInt() else 255
+
+        val alpha = currentAlpha.toDouble() / 255
+        return alpha.toString()
+    }
 }

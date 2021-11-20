@@ -31,7 +31,7 @@ class PencilView(context: Context?): CanvasView(context) {
             fill = "none",
             stroke = ColorService.getPrimaryColorAsString(),
             fillOpacity = "1",
-            strokeOpacity = "1",
+            strokeOpacity = ColorService.getAlphaForDesktop(ColorService.getPrimaryColorAsString()),
             strokeWidth = PencilService.currentWidth,
             pointsList = arrayListOf(point),
         )
