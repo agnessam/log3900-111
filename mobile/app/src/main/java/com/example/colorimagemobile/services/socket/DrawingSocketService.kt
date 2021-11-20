@@ -94,7 +94,8 @@ object DrawingSocketService: AbsSocket(SOCKETS.COLLABORATIVE_DRAWING_NAMESPACE) 
             roomName = this.roomName as String,
             drawingCommand = transformSelectionCommand,
         )
-        super.emit(TRANSFORM_SELECTION_EVENT, transformCommand)
+        val jsonSocket = JSONConvertor.convertToJSON(transformCommand)
+        super.emit(TRANSFORM_SELECTION_EVENT, jsonSocket)
     }
 
     private fun listenConfirmDrawingCommand(){
@@ -203,7 +204,7 @@ object DrawingSocketService: AbsSocket(SOCKETS.COLLABORATIVE_DRAWING_NAMESPACE) 
                     roomName = transformCommandJSON["roomName"] as String,
                     drawingCommand = when(transformCommandJSON["type"] as String){
                         "SelectionResize" -> JSONConvertor.getJSONObject(transformCommandJSON["drawingCommand"].toString(), ResizeData::class.java)
-                        "Translate" -> TODO("translate not yet implemented")
+                        "Translation" -> TODO("translate not yet implemented")
                         else -> throw Exception("drawingCommand for transform selection is invalid")
                     }
                 )

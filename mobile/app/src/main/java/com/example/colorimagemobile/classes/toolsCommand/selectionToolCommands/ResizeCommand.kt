@@ -19,6 +19,14 @@ class ResizeCommand(objectId: String) : ICommand {
     private var yTranslate: Float = 0f
     private var commandToResize: ICommand? = null
 
+    var id: String = ""
+        get() = when(commandToResize){
+            is PencilCommand -> (commandToResize!! as PencilCommand).pencil.id
+            is RectangleCommand -> (commandToResize!! as RectangleCommand).rectangle.id
+            is EllipseCommand -> (commandToResize as EllipseCommand).ellipse.id
+            else -> ""
+        }
+
     init{
         commandToResize = DrawingObjectManager.getCommand(objectId)
     }
