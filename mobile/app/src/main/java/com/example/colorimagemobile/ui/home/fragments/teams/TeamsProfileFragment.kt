@@ -114,10 +114,10 @@ class TeamsProfileFragment : Fragment(R.layout.fragment_teams_profile) {
              */
             val drawings = it.data as ArrayList<DrawingModel.CreateDrawing>
             drawings.forEach { drawing ->
-                val bitmap: Bitmap? = ImageConvertor(requireContext()).base64ToBitmap(drawing.dataUri)
+                val bitmap: Bitmap? = ImageConvertor(requireContext()).renderBase64ToBitmap(drawing.dataUri)
 
                 if (bitmap != null) {
-                    drawingsMenu.add(DrawingMenuData(drawing._id!!, bitmap))
+                    drawingsMenu.add(DrawingMenuData(drawing._id!!, bitmap, drawing.dataUri))
                 }
             }
             setAllDrawings()

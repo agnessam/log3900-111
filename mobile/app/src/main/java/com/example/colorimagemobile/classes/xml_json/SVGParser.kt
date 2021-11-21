@@ -1,16 +1,15 @@
 package com.example.colorimagemobile.classes.xml_json
 
 import com.example.colorimagemobile.classes.JSONConvertor
-import com.example.colorimagemobile.models.CustomSVG
 import com.github.underscore.lodash.U
 import org.json.JSONObject
 
-class SVGParser(svgAsString: String) {
-    private val svgAsString = svgAsString
-    private lateinit var customSVG: CustomSVG
+class SVGParser<T>(svgAsString: String, classType: Class<T>) {
+    private var svgAsString = svgAsString
+    private var svgClass: T? = null
+    private val classType = classType
 
     init {
-        modifyExtras()
         parseIntoCustomSVG()
     }
 
@@ -38,14 +37,14 @@ class SVGParser(svgAsString: String) {
         val wholeSVGJson = JSONObject(svgString).getString("svg")
         val svgJSON = JSONObject(wholeSVGJson)
 
-        customSVG = JSONConvertor.getJSONObject(svgJSON.toString(), CustomSVG::class.java)
+        svgClass = JSONConvertor.getJSONObject(svgJSON.toString(), classType) as T
     }
 
-    fun getCustomSVG(): CustomSVG {
-        return customSVG
+    fun getCustomSVG(): T {
+        return svgClass as T
     }
 
-    fun getBackgroundColor(): String {
-        return customSVG.style.replace("background-color: ", "")
+    fun getBackgroundColor(style: String): String {
+        return style.replace("background-color: ", "")
     }
 }
