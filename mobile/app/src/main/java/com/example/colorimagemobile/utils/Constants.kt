@@ -69,6 +69,10 @@ class Constants {
 
             const val MIN_HEIGHT = 10
             const val MAX_HEIGHT = 1215
+
+            const val MAX_OPACITY = 255
+            const val PRIMARY_COLOR = "rgba(67, 118, 169, 255)" // blue-ish
+            const val SECONDARY_COLOR = "rgba(237, 73, 86, 255)" // red-ish
         }
     }
 
