@@ -8,9 +8,9 @@ class StringParser {
     companion object {
 
         // convert "8px" to 8 but surely there is more solid way
-        private fun removePX(value: String): Int {
+        fun removePX(value: String): Int {
             val pxValue = value.replace("\\s".toRegex(),"")
-            return pxValue.dropLast(2).toInt()
+            return pxValue.dropLast(2).toFloat().toInt()
         }
 
         // parse "style":"stroke-width: 8px; fill: none; .." into SvgStyle object
@@ -26,6 +26,7 @@ class StringParser {
                     when (style[0]) {
                         "stroke-width" -> svgStyle.strokeWidth = removePX(value)
                         "fill" -> svgStyle.fill = value
+                        "fill-opacity" -> svgStyle.fillOpacity = value
                         "stroke" -> svgStyle.stroke = value
                         "stroke-opacity" -> svgStyle.strokeOpacity = value
                     }

@@ -2,7 +2,7 @@ package com.example.colorimagemobile.models
 
 data class SvgStyle (
     var fill: String = "",
-    val fillOpacity: Int = 255,
+    var fillOpacity: String = "",
     val fillWidth: Int = 0,
     var stroke: String = "",
     var strokeOpacity: String = "",

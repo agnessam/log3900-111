@@ -3,6 +3,7 @@ package com.example.colorimagemobile.services.drawing
 import android.graphics.Canvas
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.LayerDrawable
+import com.example.colorimagemobile.classes.openDrawingCommand.CreateEllipseCommand
 import com.example.colorimagemobile.classes.openDrawingCommand.CreatePolylineCommand
 import com.example.colorimagemobile.classes.xml_json.SVGParser
 import com.example.colorimagemobile.interfaces.ICommand
@@ -82,7 +83,10 @@ object DrawingObjectManager {
         CanvasService.updateCanvasColor(ColorService.rgbaToInt(backgroundColor))
 
         // 3. Create layerObjects
-        val polylineCommand = CreatePolylineCommand(svgObject.polyline)
-        polylineCommand.execute()
+        val createPolylineCommand = CreatePolylineCommand(svgObject.polyline)
+        createPolylineCommand.execute()
+
+        val createEllipseCommand = CreateEllipseCommand(svgObject.ellipse)
+        createEllipseCommand.execute()
     }
 }
