@@ -1,5 +1,6 @@
 package com.example.colorimagemobile.services
 
+import com.example.colorimagemobile.models.AvatarModel
 import com.example.colorimagemobile.models.UserModel
 import com.example.colorimagemobile.utils.Constants
 
@@ -47,9 +48,11 @@ object UserService {
     }
 
     fun getToken(): String{
-
         return this.token
     }
 
+    fun setUserAvatar(avatar: AvatarModel.AllInfo){
+    this.info.avatar = avatar
+    }
 
 }

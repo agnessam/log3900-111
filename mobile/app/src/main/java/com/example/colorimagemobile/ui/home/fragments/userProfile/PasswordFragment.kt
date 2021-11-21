@@ -1,5 +1,6 @@
-package com.example.colorimagemobile.ui.userProfile
+package com.example.colorimagemobile.ui.home.fragments.userProfile
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -14,6 +15,7 @@ import com.example.colorimagemobile.services.SharedPreferencesService
 import com.example.colorimagemobile.services.UserService
 import com.example.colorimagemobile.utils.CommonFun
 import com.example.colorimagemobile.utils.Constants
+import kotlinx.android.synthetic.main.fragment_password.*
 
 class PasswordFragment : Fragment() {
 
@@ -44,6 +46,7 @@ class PasswordFragment : Fragment() {
         userProfileFragment = UserProfileFragment()
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -53,7 +56,8 @@ class PasswordFragment : Fragment() {
 
         // listeners  to be uncomment when update implement serverside
         inf.findViewById<View>(R.id.updatepassword).setOnClickListener { areFieldEmpty()}
-        inf.findViewById<View>(R.id.editpasswordview).setOnTouchListener { v, event -> CommonFun.closeKeyboard_(this.requireActivity()) }
+
+        inf.findViewById<View>(R.id.editpasswordview).setOnTouchListener { v, event -> CommonFun.hideKeyboard(requireContext(), editpasswordview)}
 
         // keyboard   don't delete we need it when update implement
 //        CommonFun.onEnterKeyPressed_(inf.findViewById<View>(R.id.oldpassword) as TextView) { updatePassword() }

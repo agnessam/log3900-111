@@ -22,7 +22,7 @@
         tools:layout="@layout/fragment_teams" />
     <fragment
         android:id="@+id/userProfileFragment"
-        android:name="com.example.colorimagemobile.ui.userProfile.UserProfileFragment"
+        android:name="com.example.colorimagemobile.ui.home.fragments.userProfile.UserProfileFragment"
         android:label="User Profile"
         tools:layout="@layout/fragment_user_profile" />
 

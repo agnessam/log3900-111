@@ -48,7 +48,7 @@ class UserModel {
         val drawings: Array<String>,
 
         @SerializedName("avatar")
-        val avatar : AvatarModel.AllInfo
+        var avatar : AvatarModel.AllInfo
     ) {
         override fun equals(other: Any?): Boolean {
             if (this === other) return true

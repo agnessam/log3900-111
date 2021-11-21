@@ -10,7 +10,6 @@ import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.ViewModelProvider
 import com.example.colorimagemobile.R
 import com.example.colorimagemobile.classes.FormValidator
-import com.example.colorimagemobile.classes.NotificationSound.NotificationSound
 import com.example.colorimagemobile.services.UserService
 import com.example.colorimagemobile.models.UserModel
 import com.example.colorimagemobile.databinding.ActivityRegisterBinding
@@ -19,10 +18,9 @@ import com.example.colorimagemobile.models.HTTPResponseModel
 import com.example.colorimagemobile.services.SharedPreferencesService
 import com.example.colorimagemobile.ui.home.HomeActivity
 import com.example.colorimagemobile.ui.login.LoginActivity
-import com.example.colorimagemobile.utils.CommonFun.Companion.closeKeyboard
+import com.example.colorimagemobile.utils.CommonFun.Companion.hideKeyboard
 import com.example.colorimagemobile.utils.CommonFun.Companion.printToast
 import com.example.colorimagemobile.utils.CommonFun.Companion.redirectTo
-import com.example.colorimagemobile.utils.CommonFun.Companion.toggleButton
 import com.example.colorimagemobile.utils.Constants
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
@@ -61,7 +59,6 @@ class RegisterActivity : AppCompatActivity() {
         registerInputs = arrayListOf<TextInputEditText>(binding.firstNameInputText, binding.lastNameInputText, binding.usernameInputText, binding.emailInputText, binding.passwordInputText, binding.confirmPasswordInputText)
         formValidator = FormValidator(registerLayouts, registerInputs)
 
-        toggleButton(binding.registerBtn, false) // deactivate login button by default
         setListeners()
     }
 
@@ -69,7 +66,7 @@ class RegisterActivity : AppCompatActivity() {
     @SuppressLint("ClickableViewAccessibility")
     private fun setListeners() {
         binding.loginText.setOnClickListener { redirectTo(this, LoginActivity::class.java) }
-        binding.registerMain.setOnTouchListener { v, event -> closeKeyboard(this) }
+        binding.registerMain.setOnTouchListener { v, event -> hideKeyboard(this,binding.registerMain) }
         binding.registerBtn.setOnClickListener { executeRegister() }
 
         // add text listener to each input
@@ -89,9 +86,7 @@ class RegisterActivity : AppCompatActivity() {
 
         // activate/deactivate login button if form contains error or one of the inputs is empty
         canSubmit = !containsError && !invalidInputLength
-        toggleButton(binding.registerBtn, canSubmit)
-        val shake = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.shake)
-        if (containsError || invalidInputLength){registerForm.startAnimation(shake);NotificationSound().play(this) }
+
     }
 
     private fun doPasswordsMatch(): Boolean {
@@ -102,7 +97,6 @@ class RegisterActivity : AppCompatActivity() {
         if (password != passwordConfirmation) {
             registerLayouts[FormIndexes.PASSWORD.index].error = unmatchedPasswordsText
             registerLayouts[FormIndexes.PASSWORD_CONFIRMATION.index].error = unmatchedPasswordsText
-            toggleButton(binding.registerBtn, false)
             return false
         }
 
@@ -111,7 +105,11 @@ class RegisterActivity : AppCompatActivity() {
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun executeRegister() {
-        if (!canSubmit || !doPasswordsMatch()) return
+        if (!canSubmit || !doPasswordsMatch()) {
+            val shake = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.shake)
+            registerForm.startAnimation(shake);
+            return
+        }
 
         // get input texts
         val firstName = getInputText(FormIndexes.FIRST_NAME.index)

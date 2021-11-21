@@ -45,23 +45,10 @@ class CommonFun {
         }
 
         // close/hide Android keyboard
-        fun closeKeyboard(currentActivity: Activity): Boolean {
+        fun hideKeyboard(context: Context, view: View): Boolean {
             return try {
-                val inputMethodManager =
-                    currentActivity.getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
-                inputMethodManager.hideSoftInputFromWindow(currentActivity.currentFocus!!.windowToken, 0)
-                true
-            } catch (e: Exception) {
-                false
-            }
-        }
-
-        // close/hide Android keyboard
-        fun closeKeyboard_(currentActivity: FragmentActivity): Boolean {
-            return try {
-                val inputMethodManager =
-                    currentActivity.getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
-                inputMethodManager.hideSoftInputFromWindow(currentActivity.currentFocus!!.windowToken, 0)
+                val inputMethodManager = context.getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+                inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
                 true
             } catch (e: Exception) {
                 false

@@ -1,5 +1,6 @@
-package com.example.colorimagemobile.ui.userProfile
+package com.example.colorimagemobile.ui.home.fragments.userProfile
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.graphics.Bitmap
 import android.os.Bundle
@@ -15,7 +16,6 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import com.example.colorimagemobile.R
 import com.example.colorimagemobile.bottomsheets.DefaultAvatarListBottomSheet
-import com.example.colorimagemobile.classes.MyFragmentManager
 import com.example.colorimagemobile.models.DataWrapper
 import com.example.colorimagemobile.models.HTTPResponseModel
 import com.example.colorimagemobile.models.UserModel
@@ -26,8 +26,8 @@ import com.example.colorimagemobile.services.UserService
 import com.example.colorimagemobile.repositories.UserRepository
 import com.example.colorimagemobile.services.SharedPreferencesService
 import com.example.colorimagemobile.services.avatar.AvatarService
-import com.example.colorimagemobile.ui.home.HomeActivity
 import com.example.colorimagemobile.utils.CommonFun
+import com.example.colorimagemobile.utils.CommonFun.Companion.hideKeyboard
 import com.example.colorimagemobile.utils.CommonFun.Companion.imageView
 import com.example.colorimagemobile.utils.CommonFun.Companion.loadUrl
 import com.example.colorimagemobile.utils.Constants
@@ -75,11 +75,11 @@ class EditProfileFragment : Fragment() {
 
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
         // inflate layout
         val inf = inflater.inflate(R.layout.fragment_edit_profile, container, false)
 
@@ -87,7 +87,7 @@ class EditProfileFragment : Fragment() {
         inf.findViewById<View>(R.id.updateprofile).setOnClickListener { update() }
         inf.findViewById<View>(R.id.upload_avatar_from_camera).setOnClickListener {
             cameraCheckPermission() }
-        inf.findViewById<View>(R.id.editprofileview).setOnTouchListener { v, event -> CommonFun.closeKeyboard_(this.requireActivity()) }
+        inf.findViewById<View>(R.id.editprofileview).setOnTouchListener { v, event -> hideKeyboard(requireContext(),editprofileview)}
         inf.findViewById<View>(R.id.choosedefaultavatar).setOnClickListener {
             activateBtn();
             val defaultAvatarList = DefaultAvatarListBottomSheet()
@@ -162,7 +162,7 @@ class EditProfileFragment : Fragment() {
         setDataToUpdate()
         UserService.setNewProfileData(newUserData)
         updateUserInfo().observe(viewLifecycleOwner, { context?.let { it1 ->globalHandler.response(it1,it) } })
-        UserRepository().getUserByToken(token)
+        UserService.setUserAvatar(currentAvatar)
     }
 
     //call retrofit request to database to update user info
