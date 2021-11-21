@@ -27,7 +27,7 @@ class StringParser {
                         "stroke-width" -> svgStyle.strokeWidth = removePX(value)
                         "fill" -> svgStyle.fill = value
                         "stroke" -> svgStyle.stroke = value
-                        "stroke-opacity" -> svgStyle.strokeOpacity = 255 // to change
+                        "stroke-opacity" -> svgStyle.strokeOpacity = value
                     }
                 }
             }

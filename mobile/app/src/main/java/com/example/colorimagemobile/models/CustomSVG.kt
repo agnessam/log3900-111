@@ -5,7 +5,7 @@ data class SvgStyle (
     val fillOpacity: Int = 255,
     val fillWidth: Int = 0,
     var stroke: String = "",
-    var strokeOpacity: Int = 255,
+    var strokeOpacity: String = "",
     var strokeWidth: Int = 0,
 )
 
