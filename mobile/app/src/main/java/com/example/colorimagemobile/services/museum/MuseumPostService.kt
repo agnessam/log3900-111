@@ -16,17 +16,20 @@ object MuseumPostService {
         return posts
     }
 
+    fun likePost(position: Int) {
+        posts[position].likes.add(UserService.getUserInfo()._id)
+    }
+
+    fun unlikePost(position: Int) {
+        posts[position].likes.remove(UserService.getUserInfo()._id)
+    }
+
     fun hasLiked(currentPost: MuseumPostModel): Boolean {
         return currentPost.likes.contains(UserService.getUserInfo()._id)
     }
 
-    fun addCommentToPost(postId: String, commentInterface: CommentInterface) {
-        posts.forEach { post ->
-            if (post._id == postId) {
-                post.comments.add(commentInterface)
-                return@forEach
-            }
-        }
+    fun addCommentToPost(position: Int, commentInterface: CommentInterface) {
+        posts[position].comments.add(commentInterface)
     }
 
     fun createComment(postId: String, comment: String): CommentInterface {

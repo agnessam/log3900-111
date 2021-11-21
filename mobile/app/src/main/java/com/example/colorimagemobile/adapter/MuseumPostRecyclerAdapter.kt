@@ -1,7 +1,6 @@
 package com.example.colorimagemobile.adapter
 
 import android.content.Context
-import android.opengl.Visibility
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -38,11 +37,12 @@ class MuseumPostRecyclerAdapter(
             holder.image.setImageBitmap(bitmap)
         }
 
+        val adapter = PostCommentsRecyclerAdapter(MuseumPostService.getPosts()[position])
+        MuseumAdapters.setCommentRecycler(position, adapter)
+
         // set up comments section on the right
         holder.commentRecyclerView.layoutManager = LinearLayoutManager(context)
-        val adapter = PostCommentsRecyclerAdapter(currentPost)
-        holder.commentRecyclerView.adapter = adapter
-        MuseumAdapters.addCommentRecycler(adapter) // each each comment section in a list
+        holder.commentRecyclerView.adapter = MuseumAdapters.getCommentAdapter(position)
 
         // set like heart
         if (MuseumPostService.hasLiked(currentPost)) showFilledLike(holder) else hideFilledLike(holder)

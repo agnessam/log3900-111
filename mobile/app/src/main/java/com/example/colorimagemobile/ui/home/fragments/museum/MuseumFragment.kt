@@ -13,9 +13,7 @@ import com.example.colorimagemobile.models.MuseumPostModel
 import com.example.colorimagemobile.repositories.MuseumRepository
 import com.example.colorimagemobile.services.museum.MuseumAdapters
 import com.example.colorimagemobile.services.museum.MuseumPostService
-import com.example.colorimagemobile.services.users.UserService
 import com.example.colorimagemobile.utils.CommonFun.Companion.closeKeyboard
-import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
 import com.example.colorimagemobile.utils.CommonFun.Companion.printToast
 
 class MuseumFragment : Fragment(R.layout.fragment_museum) {
@@ -47,7 +45,7 @@ class MuseumFragment : Fragment(R.layout.fragment_museum) {
                 { pos -> likePost(pos) },
                 { pos -> unlikePost(pos) })
             recyclerView.adapter = adapter
-            MuseumAdapters.addPostsAdapter(adapter)
+            MuseumAdapters.setPostsAdapter(adapter)
 
             val snapHelper: SnapHelper = LinearSnapHelper()
             snapHelper.attachToRecyclerView(recyclerView)
@@ -69,7 +67,7 @@ class MuseumFragment : Fragment(R.layout.fragment_museum) {
             if (it.isError as Boolean) { return@observe }
 
             comment.createdAt = it.data?.createdAt
-            MuseumPostService.addCommentToPost(postId, comment)
+            MuseumPostService.addCommentToPost(position, comment)
             MuseumAdapters.refreshCommentAdapter(position)
         })
     }
@@ -77,21 +75,19 @@ class MuseumFragment : Fragment(R.layout.fragment_museum) {
     private fun likePost(position: Int) {
         val postId = posts[position]._id
 
-        MuseumRepository().likePost(postId).observe(viewLifecycleOwner, { it ->
+        MuseumRepository().likePost(postId).observe(viewLifecycleOwner, {
             if (it.isError as Boolean) {
                 printToast(requireContext(), it.message!!)
                 return@observe
             }
 
-            printMsg(it.data.toString())
-            recyclerView.adapter?.notifyItemChanged(position)
+            MuseumPostService.likePost(position)
+            MuseumAdapters.refreshPostAdapter(position)
         })
     }
 
     private fun unlikePost(position: Int) {
         val postId = posts[position]._id
-
-        printMsg((postId.toString()))
 
         MuseumRepository().unlikePost(postId).observe(viewLifecycleOwner, { it ->
             if (it.isError as Boolean) {
@@ -99,8 +95,8 @@ class MuseumFragment : Fragment(R.layout.fragment_museum) {
                 return@observe
             }
 
-            printMsg(it.data.toString())
-            recyclerView.adapter?.notifyItemChanged(position)
+            MuseumPostService.unlikePost(position)
+            MuseumAdapters.refreshPostAdapter(position)
         })
     }
 }

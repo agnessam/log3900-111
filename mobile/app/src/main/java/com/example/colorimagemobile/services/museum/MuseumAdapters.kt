@@ -4,18 +4,26 @@ import com.example.colorimagemobile.adapter.MuseumPostRecyclerAdapter
 import com.example.colorimagemobile.adapter.PostCommentsRecyclerAdapter
 
 object MuseumAdapters {
-    private var postsAdapter: ArrayList<MuseumPostRecyclerAdapter> = arrayListOf()
-    private val commentsAdapter: ArrayList<PostCommentsRecyclerAdapter> = arrayListOf()
+    private lateinit var postsAdapter: MuseumPostRecyclerAdapter
+    private val commentsAdapter: HashMap<Int, PostCommentsRecyclerAdapter> = hashMapOf()
 
-    fun addPostsAdapter(newPostRecyclerAdapter: MuseumPostRecyclerAdapter) {
-        postsAdapter.add(newPostRecyclerAdapter)
+    fun setPostsAdapter(newPostRecyclerAdapter: MuseumPostRecyclerAdapter) {
+        postsAdapter = newPostRecyclerAdapter
     }
 
-    fun addCommentRecycler(commentsRecyclerAdapter: PostCommentsRecyclerAdapter) {
-        commentsAdapter.add(commentsRecyclerAdapter)
+    fun setCommentRecycler(position: Int, commentsRecyclerAdapter: PostCommentsRecyclerAdapter) {
+        commentsAdapter[position] = commentsRecyclerAdapter
+    }
+
+    fun refreshPostAdapter(position: Int) {
+        postsAdapter.notifyItemChanged(position)
+    }
+
+    fun getCommentAdapter(position: Int): PostCommentsRecyclerAdapter {
+        return commentsAdapter[position]!!
     }
 
     fun refreshCommentAdapter(position: Int) {
-        commentsAdapter[position].notifyDataSetChanged()
+        commentsAdapter[position]?.notifyDataSetChanged()
     }
 }
