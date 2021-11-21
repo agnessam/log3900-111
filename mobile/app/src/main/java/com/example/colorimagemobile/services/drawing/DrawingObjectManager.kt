@@ -85,19 +85,21 @@ object DrawingObjectManager {
         val backgroundColor = svgParser.getBackgroundColor(svgObject.style)
         CanvasService.updateCanvasColor(ColorService.rgbaToInt(backgroundColor))
 
-        printMsg(svgObject.toString())
+        printMsg(svgObject.polyline.toString())
 
         // create pencil data for example
         svgObject.polyline?.forEach { pencil ->
+            if (pencil.id.isNullOrEmpty()) return@forEach
+
             val style = StringParser.getStyles(pencil.style)
 
             // 3. get style
             val pencilData = PencilData(
                 id = pencil.id,
                 fill = "none",
-                stroke = ColorService.getPrimaryColorAsString(),
+                stroke = style.stroke,
                 fillOpacity = "none",
-                strokeOpacity = "255",
+                strokeOpacity = ColorService.convertOpacityToAndroid(style.strokeOpacity.toString()).toString(),
                 strokeWidth = style.strokeWidth,
                 pointsList = arrayListOf(),
             )

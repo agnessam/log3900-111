@@ -1,6 +1,7 @@
 package com.example.colorimagemobile.services.drawing.toolsAttribute
 
 import android.graphics.Color
+import com.example.colorimagemobile.utils.CommonFun.Companion.removeWhitespace
 import com.example.colorimagemobile.utils.Constants
 import java.lang.StringBuilder
 
@@ -41,7 +42,7 @@ object ColorService {
     // convert rgb() to Android Color in Integer
     fun rgbaToInt(color: String): Int {
         val rgbValues = color.substring(color.indexOf('(') + 1, color.indexOf(')'))
-        val splitRGB = rgbValues.replace("\\s".toRegex(),"").split(",")
+        val splitRGB = removeWhitespace(rgbValues).split(",")
         var alpha = if (splitRGB.size == 4) splitRGB[3].toInt() else Constants.DRAWING.MAX_OPACITY
 
         return Color.argb(alpha, splitRGB[0].toInt(), splitRGB[1].toInt(), splitRGB[2].toInt())
