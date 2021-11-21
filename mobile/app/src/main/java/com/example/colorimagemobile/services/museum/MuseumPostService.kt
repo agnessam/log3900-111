@@ -20,6 +20,15 @@ object MuseumPostService {
         return currentPost.likes.contains(UserService.getUserInfo()._id)
     }
 
+    fun addCommentToPost(postId: String, commentInterface: CommentInterface) {
+        posts.forEach { post ->
+            if (post._id == postId) {
+                post.comments.add(commentInterface)
+                return@forEach
+            }
+        }
+    }
+
     fun createComment(postId: String, comment: String): CommentInterface {
         return CommentInterface(
             content = comment,

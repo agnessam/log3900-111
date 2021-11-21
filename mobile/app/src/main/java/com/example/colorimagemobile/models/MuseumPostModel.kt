@@ -4,7 +4,7 @@ data class CommentInterface(
     val content: String,
     val authorId: UserModel.AllInfo,
     val postId: String,
-    val createdAt: String?,
+    var createdAt: String?,
     val updatedAt: String?,
 )
 

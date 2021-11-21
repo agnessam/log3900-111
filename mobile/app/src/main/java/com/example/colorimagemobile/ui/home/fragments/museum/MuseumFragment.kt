@@ -11,6 +11,7 @@ import com.example.colorimagemobile.R
 import com.example.colorimagemobile.adapter.MuseumPostRecyclerAdapter
 import com.example.colorimagemobile.models.MuseumPostModel
 import com.example.colorimagemobile.repositories.MuseumRepository
+import com.example.colorimagemobile.services.museum.MuseumAdapters
 import com.example.colorimagemobile.services.museum.MuseumPostService
 import com.example.colorimagemobile.services.users.UserService
 import com.example.colorimagemobile.utils.CommonFun.Companion.closeKeyboard
@@ -40,11 +41,13 @@ class MuseumFragment : Fragment(R.layout.fragment_museum) {
             MuseumPostService.setPosts(posts)
 
             recyclerView.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-            recyclerView.adapter = MuseumPostRecyclerAdapter(
+            val adapter = MuseumPostRecyclerAdapter(
                 requireContext(),
                 { pos, comment -> postComment(pos, comment)},
                 { pos -> likePost(pos) },
                 { pos -> unlikePost(pos) })
+            recyclerView.adapter = adapter
+            MuseumAdapters.addPostsAdapter(adapter)
 
             val snapHelper: SnapHelper = LinearSnapHelper()
             snapHelper.attachToRecyclerView(recyclerView)
@@ -62,10 +65,12 @@ class MuseumFragment : Fragment(R.layout.fragment_museum) {
         val postId = posts[position]._id
         val comment = MuseumPostService.createComment(postId, newComment)
 
-        MuseumRepository().postComment(postId, comment).observe(viewLifecycleOwner, { it ->
+        MuseumRepository().postComment(postId, comment).observe(viewLifecycleOwner, {
             if (it.isError as Boolean) { return@observe }
 
-            printMsg(it.data.toString())
+            comment.createdAt = it.data?.createdAt
+            MuseumPostService.addCommentToPost(postId, comment)
+            MuseumAdapters.refreshCommentAdapter(position)
         })
     }
 
