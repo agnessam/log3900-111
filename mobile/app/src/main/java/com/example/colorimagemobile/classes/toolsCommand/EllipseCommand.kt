@@ -42,16 +42,18 @@ class EllipseCommand(ellipseData: EllipseData): ICommand {
         var fillEllipse = createNewEllipse()
         initializeEllipseLayers(fillEllipse, borderEllipse)
 
-        borderPaint = initializePaint(this.ellipse.stroke, Color.WHITE)
-        fillPaint = initializePaint(this.ellipse.fill, Color.BLACK)
+        borderPaint = initializePaint(this.ellipse.stroke, ellipseData.strokeOpacity, Color.WHITE)
+        fillPaint = initializePaint(this.ellipse.fill, ellipseData.fillOpacity, Color.BLACK)
 
         setStartPoint(Point(ellipse.x.toFloat(), ellipse.y.toFloat()))
     }
 
-    private fun initializePaint(color: String, defaultColor: Int): Paint{
+    private fun initializePaint(color: String, opacity: String, defaultColor: Int): Paint{
         var paint = Paint()
-        paint.color = if(color != "none") ColorService.rgbaToInt(color)
-        else defaultColor
+
+        val transformedColor = ColorService.addAlphaToRGBA(color, opacity)
+        paint.color = if(color != "none") ColorService.rgbaToInt(transformedColor) else defaultColor
+        paint.alpha = ColorService.convertOpacityToAndroid(opacity)
         paint.isAntiAlias = true
         paint.style = Paint.Style.FILL
         paint.isDither = true
