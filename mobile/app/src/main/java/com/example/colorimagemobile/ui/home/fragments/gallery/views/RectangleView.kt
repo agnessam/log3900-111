@@ -27,6 +27,7 @@ class RectangleView(context: Context?): CanvasView(context) {
         var stroke = "none"
         var color = ColorService.getPrimaryColorAsString()
         var secondaryColor = ColorService.getSecondaryColorAsString()
+
         when(rectangleStyle){
             RectangleStyle.WITH_BORDER_FILL -> {
                 fill = color // TODO IMPLEMENT PRIMARY AND SECONDARY COLORS
@@ -44,8 +45,8 @@ class RectangleView(context: Context?): CanvasView(context) {
             id = id,
             fill = fill,
             stroke = stroke,
-            fillOpacity = "1",
-            strokeOpacity = "1",
+            fillOpacity = ColorService.getAlphaForDesktop(fill),
+            strokeOpacity = ColorService.getAlphaForDesktop(stroke),
             strokeWidth = RectangleService.currentWidth,
             x = currentX.toInt(),
             y = currentY.toInt(),
@@ -78,7 +79,6 @@ class RectangleView(context: Context?): CanvasView(context) {
 
     override fun onTouchUp() {
         DrawingSocketService.sendConfirmDrawingCommand(rectangleCommand!!.rectangle, rectangleType)
-
         // clean up
         rectangleCommand = null
     }

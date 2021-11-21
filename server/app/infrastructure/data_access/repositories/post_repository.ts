@@ -2,6 +2,7 @@ import { Post, PostInterface } from '../../../domain/models/Post';
 import { injectable } from 'inversify';
 import { GenericRepository } from './generic_repository';
 import { Comment, CommentInterface } from '../../../domain/models/Comment';
+import { User, UserInterface } from '../../../domain/models/user';
 
 @injectable()
 export class PostRepository extends GenericRepository<PostInterface> {
@@ -18,6 +19,31 @@ export class PostRepository extends GenericRepository<PostInterface> {
             reject(err);
           }
           resolve(posts);
+        });
+    });
+  }
+
+  public async getFeaturedPosts(currentUserId: string) {
+    return new Promise((resolve, reject) => {
+      User.findById({ _id: currentUserId })
+        .populate({
+          path: 'following',
+          populate: { path: 'posts', populate: { path: 'comments' } },
+        })
+        .exec((err, user) => {
+          if (err || !user) {
+            reject(err);
+          }
+          const allPosts = [];
+
+          for (let i = 0; i < user!.following.length; ++i) {
+            let currentFollowing = user!.following[i] as UserInterface;
+            for (let j = 0; j < currentFollowing.posts.length; ++j) {
+              allPosts.push(currentFollowing.posts[j]);
+            }
+          }
+
+          resolve(allPosts);
         });
     });
   }
