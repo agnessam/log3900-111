@@ -9,8 +9,9 @@ import {
   request,
 } from 'inversify-express-utils';
 import { Request } from 'express';
+import passport from 'passport';
 
-@controller('/posts')
+@controller('/posts', passport.authenticate('jwt', { session: false }))
 export class PostController {
   @inject(TYPES.PostRepository) public postRepository: PostRepository;
 
