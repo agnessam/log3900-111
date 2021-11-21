@@ -9,14 +9,20 @@ import {
   request,
 } from 'inversify-express-utils';
 import { Request } from 'express';
+import passport from 'passport';
 
-@controller('/posts')
+@controller('/posts', passport.authenticate('jwt', { session: false }))
 export class PostController {
   @inject(TYPES.PostRepository) public postRepository: PostRepository;
 
   @httpGet('/')
   public async getPosts() {
     return this.postRepository.getAllPopulatedPosts();
+  }
+
+  @httpGet('/featured')
+  public async getPostsByFollowedUsers(@request() req: Request) {
+    return this.postRepository.getFeaturedPosts(req.user!.id);
   }
 
   @httpGet('/:id')

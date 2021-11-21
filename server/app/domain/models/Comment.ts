@@ -3,7 +3,7 @@ import { UserInterface } from './user';
 
 export interface CommentInterface extends Document {
   content: string;
-  authorId: string | UserInterface;
+  author: string | UserInterface;
   postId: string;
 
   createdAt: string;

@@ -1,5 +1,9 @@
 package com.example.colorimagemobile.classes.toolsCommand
 
+import android.graphics.Color
+import android.graphics.Paint
+import android.graphics.Rect
+import android.graphics.RectF
 import android.graphics.*
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.LayerDrawable
@@ -13,6 +17,7 @@ import com.example.colorimagemobile.services.drawing.CanvasUpdateService
 import com.example.colorimagemobile.services.drawing.DrawingObjectManager
 import com.example.colorimagemobile.services.drawing.Point
 import com.example.colorimagemobile.services.drawing.toolsAttribute.ColorService
+import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
 import java.lang.Integer.min
 
 class RectangleCommand(rectangleData: RectangleData): ICommand {
@@ -40,16 +45,18 @@ class RectangleCommand(rectangleData: RectangleData): ICommand {
 
         initializeRectangleLayers(fillRectangle, borderRectangle)
 
-        borderPaint = initializePaint(rectangleData.stroke, Color.WHITE)
-        fillPaint = initializePaint(rectangleData.fill, Color.BLACK)
+        borderPaint = initializePaint(rectangleData.stroke, rectangleData.strokeOpacity, Color.WHITE)
+        fillPaint = initializePaint(rectangleData.fill,  rectangleData.fillOpacity, Color.BLACK)
 
         setStartPoint(Point(rectangle.x.toFloat(), rectangle.y.toFloat()))
     }
 
-    private fun initializePaint(color: String, defaultColor: Int): Paint{
+    private fun initializePaint(color: String, opacity: String, defaultColor: Int): Paint{
         var paint = Paint()
-        paint.color = if(color != "none") ColorService.rgbaToInt(color)
-        else defaultColor
+
+        val transformedColor = ColorService.addAlphaToRGBA(color, opacity)
+        paint.color = if(color != "none") ColorService.rgbaToInt(transformedColor) else defaultColor
+        paint.alpha = ColorService.convertOpacityToAndroid(opacity)
         paint.isAntiAlias = true
         paint.style = Paint.Style.FILL
         paint.isDither = true
@@ -105,6 +112,8 @@ class RectangleCommand(rectangleData: RectangleData): ICommand {
             rectangle.y = drawingCommand.y
             rectangle.width = drawingCommand.width
             rectangle.height = drawingCommand.height
+            generateFillPath()
+            generateBorderPath()
         }
     }
 
