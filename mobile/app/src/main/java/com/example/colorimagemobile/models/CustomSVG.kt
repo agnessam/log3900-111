@@ -28,6 +28,16 @@ data class Ellipse (
     val style: String,
 )
 
+data class Rectangle (
+    val id: String,
+    val name: String,
+    val x: String,
+    val y: String,
+    val width: String,
+    val height: String,
+    val style: String
+)
+
 data class BaseSVG(
     val width: String,
     val height: String,
@@ -39,7 +49,8 @@ data class CustomSVG(
     val height: String,
     val style: String,
     val ellipse: ArrayList<Ellipse>?,
-    val polyline: ArrayList<Polyline>?
+    val polyline: ArrayList<Polyline>?,
+    val rect: ArrayList<Rectangle>?
 )
 
 

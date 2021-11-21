@@ -5,6 +5,7 @@ import android.graphics.drawable.Drawable
 import android.graphics.drawable.LayerDrawable
 import com.example.colorimagemobile.classes.openDrawingCommand.CreateEllipseCommand
 import com.example.colorimagemobile.classes.openDrawingCommand.CreatePolylineCommand
+import com.example.colorimagemobile.classes.openDrawingCommand.CreateRectangleCommand
 import com.example.colorimagemobile.classes.xml_json.SVGParser
 import com.example.colorimagemobile.interfaces.ICommand
 import com.example.colorimagemobile.models.CustomSVG
@@ -85,6 +86,9 @@ object DrawingObjectManager {
         // 3. Create layerObjects
         val createPolylineCommand = CreatePolylineCommand(svgObject.polyline)
         createPolylineCommand.execute()
+
+        val createRectangleCommand = CreateRectangleCommand(svgObject.rect)
+        createRectangleCommand.execute()
 
         val createEllipseCommand = CreateEllipseCommand(svgObject.ellipse)
         createEllipseCommand.execute()
