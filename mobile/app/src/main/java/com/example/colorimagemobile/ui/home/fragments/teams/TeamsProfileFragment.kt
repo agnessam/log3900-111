@@ -16,6 +16,7 @@ import com.example.colorimagemobile.models.DrawingModel
 import com.example.colorimagemobile.models.TeamModel
 import com.example.colorimagemobile.models.recyclerAdapters.DrawingMenuData
 import com.example.colorimagemobile.repositories.TeamRepository
+import com.example.colorimagemobile.services.drawing.DrawingService
 import com.example.colorimagemobile.services.teams.TeamService
 import com.example.colorimagemobile.utils.Constants
 import com.google.android.material.tabs.TabLayout
@@ -25,7 +26,7 @@ class TeamsProfileFragment : Fragment(R.layout.fragment_teams_profile) {
     private lateinit var currentTeam: TeamModel
     private lateinit var myView: View
     private lateinit var recyclerView: RecyclerView
-    private val drawingsMenu: ArrayList<DrawingMenuData> = arrayListOf()
+    private var drawingsMenu: ArrayList<DrawingMenuData> = arrayListOf()
     private lateinit var joinBtn: Button
     private lateinit var leaveBtn: Button
 
@@ -109,24 +110,12 @@ class TeamsProfileFragment : Fragment(R.layout.fragment_teams_profile) {
                 return@observe
             }
 
-            /**
-             * CREATE OBJECT TO HANDLE DUPLICATE LOGIC (IN GALLERY MENU FRAGMENT)
-             */
-            val drawings = it.data as ArrayList<DrawingModel.CreateDrawing>
-            drawings.forEach { drawing ->
-                val bitmap: Bitmap? = ImageConvertor(requireContext()).renderBase64ToBitmap(drawing.dataUri)
-
-                if (bitmap != null) {
-                    drawingsMenu.add(DrawingMenuData(drawing._id!!, bitmap, drawing.dataUri))
-                }
-            }
+            val drawings = it.data as List<DrawingModel.Drawing>
+            drawingsMenu = DrawingService.getDrawingsBitmap(requireContext(), drawings)
             setAllDrawings()
         })
     }
 
-    /**
-     * TO CHANGE LOGIC OF OPENING DRAWING
-     */
     private fun setAllDrawings() {
         recyclerView.adapter = DrawingMenuRecyclerAdapter(drawingsMenu, R.id.teamsMenuFrameLayout)
     }
