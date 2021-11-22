@@ -42,32 +42,14 @@ class UserModel {
         var description: String,
 
         @SerializedName("teams")
-        val teams: Array<String>,
+        val teams: ArrayList<String>,
 
         @SerializedName("drawings")
-        val drawings: Array<String>,
+        val drawings: ArrayList<String>,
 
         @SerializedName("avatar")
         var avatar : AvatarModel.AllInfo
-    ) {
-        override fun equals(other: Any?): Boolean {
-            if (this === other) return true
-            if (javaClass != other?.javaClass) return false
-
-            other as AllInfo
-
-            if (!teams.contentEquals(other.teams)) return false
-            if (!drawings.contentEquals(other.drawings)) return false
-
-            return true
-        }
-
-        override fun hashCode(): Int {
-            var result = teams.contentHashCode()
-            result = 31 * result + drawings.contentHashCode()
-            return result
-        }
-    }
+    )
 }
 
 

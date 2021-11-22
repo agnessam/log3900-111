@@ -58,5 +58,6 @@
     <string name="following">Following</string>
     <string name="follow">Follow</string>
     <string name="unfollow">Unfollow</string>
+    <string name="display_name">Display name</string>
 
 </resources>

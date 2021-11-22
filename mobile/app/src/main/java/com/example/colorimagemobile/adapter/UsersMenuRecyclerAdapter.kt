@@ -12,9 +12,7 @@ import com.example.colorimagemobile.utils.CommonFun.Companion.loadUrl
 
 class UsersMenuRecyclerAdapter(
         val layoutID: Int,
-        val openUser: (Int) -> Unit,
-        private val listener: OnItemClickListener
-):
+        val openUser: (Int) -> Unit):
     RecyclerView.Adapter<UsersMenuRecyclerAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UsersMenuRecyclerAdapter.ViewHolder {
@@ -24,27 +22,17 @@ class UsersMenuRecyclerAdapter(
     override fun onBindViewHolder(holder: UsersMenuRecyclerAdapter.ViewHolder, position: Int) {
         holder.username.text = UserService.getAllUserInfo()[position].username
         loadUrl(UserService.getAllUserInfo()[position].avatar.imageUrl, holder.image)
+
     }
 
     override fun getItemCount(): Int { return UserService.getAllUserInfo().size }
 
-    inner class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView),
-        View.OnClickListener {
+    inner class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
         var image : ImageView = itemView.findViewById(R.id.card_user_imageview);
         var username : TextView = itemView.findViewById(R.id.card_user_username);
 
         init {
             itemView.setOnClickListener { openUser(bindingAdapterPosition) }
         }
-
-        override fun onClick(v: View?) {
-            val position = bindingAdapterPosition
-            if (position!=RecyclerView.NO_POSITION){
-                listener.onItemClick(position)
-            }
-        }
-    }
-    interface OnItemClickListener{
-        fun onItemClick(position: Int)
     }
 }

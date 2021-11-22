@@ -1,60 +1,63 @@
 package com.example.colorimagemobile.ui.PublicProfile
 
-import android.os.Bundle
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import com.example.colorimagemobile.R
+//import android.os.Bundle
+//import androidx.fragment.app.Fragment
+//import android.view.LayoutInflater
+//import android.view.View
+//import android.view.ViewGroup
+//import android.widget.ImageView
+//import android.widget.TextView
+//import com.example.colorimagemobile.R
+//import com.example.colorimagemobile.adapter.UsersMenuRecyclerAdapter
+//import com.example.colorimagemobile.models.UserModel
+//import com.example.colorimagemobile.services.users.UserService
+//import com.example.colorimagemobile.utils.CommonFun
+//import com.example.colorimagemobile.utils.Constants
+//
+//class PublicProfileFragment : Fragment(), UsersMenuRecyclerAdapter.OnItemClickListener {
+//    private lateinit var posts : TextView
+//    private lateinit var followers : TextView
+//    private lateinit var following : TextView
+//    private lateinit var description : TextView
+//    private lateinit var username : TextView
+//    private lateinit var avatar : ImageView
+//
+//    override fun onCreate(savedInstanceState: Bundle?) {
+//        super.onCreate(savedInstanceState)
+//    }
+//
+//    override fun onCreateView(
+//        inflater: LayoutInflater, container: ViewGroup?,
+//        savedInstanceState: Bundle?
+//    ): View? {
+//        // Inflate the layout for this fragment
+//        val inf =inflater.inflate(R.layout.fragment_public_profile, container, false)
+//
+//        posts = inf.findViewById<View>(R.id.editTextNumberPosts) as TextView
+//        followers = inf.findViewById<View>(R.id.editTextNumberFollowers) as TextView
+//        following = inf.findViewById<View>(R.id.editTextNumberFollowing) as TextView
+//        description = inf.findViewById<View>(R.id.publicDescription) as TextView
+//        username = inf.findViewById<View>(R.id.userdisplayNameText) as TextView
+//        avatar = inf.findViewById<View>(R.id.publicProfile) as ImageView
+//
+//
+//
+//        return inf
+//    }
+//
+//    // on item select set user/team profile
+//    override fun onItemClick(position: Int) {
+//        val clickedItem: UserModel.AllInfo = UserService.getAllUserInfo()[position]
+//        UserService.setSelectUser(clickedItem)
+//        val currentInfo = UserService.getSelectUser()
+//
+//        // sets the derived data
+//        posts.text = Constants.EMPTY_STRING
+//        followers.text = Constants.EMPTY_STRING
+//        following.text = Constants.EMPTY_STRING
+//        description.text = currentInfo.description
+//        username.text = currentInfo.username
+//        CommonFun.loadUrl(currentInfo.avatar.imageUrl, avatar)
+//    }
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [PublicProfileFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
-class PublicProfileFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_public_profile, container, false)
-    }
-
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment PublicProfileFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            PublicProfileFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
-    }
-}
+//}

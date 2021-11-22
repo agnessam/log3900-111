@@ -36,7 +36,7 @@ interface API {
 
     @Headers("Content-Type: application/json")
     @GET(Constants.ENDPOINTS.USER_PATH)
-    fun getAllUser(@Header("Authorization") token: String): Call<List<UserModel.AllInfo>>
+    fun getAllUser(@Header("Authorization") token: String): Call<ArrayList<UserModel.AllInfo>>
 
     @Headers("Content-Type: application/json")
     @GET(Constants.ENDPOINTS.USER_PATH+"{id}")
@@ -49,6 +49,9 @@ interface API {
     @Headers("Content-Type: application/json")
     @DELETE(Constants.ENDPOINTS.USER_PATH+"{id}")
     fun deleteUserById(@Header("Authorization")token: String, @Path ("id") id : String) : Call<HTTPResponseModel.UserResponse>
+
+    @GET("${Constants.ENDPOINTS.USER_PATH}{id}/drawings")
+    fun getUserDrawings(@Header("Authorization") token: String, @Path ("id") id: String): Call<ArrayList<DrawingModel.CreateDrawing>>
 
     //  TextChannel region
     @Headers("Content-Type: application/json")
@@ -89,7 +92,7 @@ interface API {
     fun getAllDrawings(@Header("Authorization") token: String): Call<List<DrawingModel.Drawing>>
 
     @GET("${Constants.ENDPOINTS.USER_PATH}{id}/teams")
-    fun getUserTeams(@Header("Authorization") token: String, @Path ("id") id: String): Call<List<TeamModel>>
+    fun getUserTeams(@Header("Authorization") token: String, @Path ("id") id: String): Call<ArrayList<TeamModel>>
 
     @Headers("Content-Type: application/json")
     @POST(Constants.ENDPOINTS.ALL_DRAWINGS)

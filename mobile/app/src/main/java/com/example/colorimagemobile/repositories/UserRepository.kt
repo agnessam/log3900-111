@@ -111,18 +111,18 @@ class UserRepository {
     }
 
     // get all user
-    fun getAllUser(token: String): MutableLiveData<DataWrapper<List<UserModel.AllInfo>>> {
-        val AllUserData: MutableLiveData<DataWrapper<List<UserModel.AllInfo>>> = MutableLiveData()
+    fun getAllUser(token: String): MutableLiveData<DataWrapper<ArrayList<UserModel.AllInfo>>> {
+        val AllUserData: MutableLiveData<DataWrapper<ArrayList<UserModel.AllInfo>>> = MutableLiveData()
 
-        httpClient.getAllUser(token = "Bearer $token").enqueue(object : Callback<List<UserModel.AllInfo>> {
-            override fun onResponse(call: Call<List<UserModel.AllInfo>>, response: Response<List<UserModel.AllInfo>>) {
+        httpClient.getAllUser(token = "Bearer $token").enqueue(object : Callback<ArrayList<UserModel.AllInfo>> {
+            override fun onResponse(call: Call<ArrayList<UserModel.AllInfo>>, response: Response<ArrayList<UserModel.AllInfo>>) {
                 if (!response.isSuccessful) {
                     AllUserData.value = DataWrapper(null, "An error occurred!", true)
                     return
                 }
                 AllUserData.value = DataWrapper(response.body(), null, false)
             }
-            override fun onFailure(call: Call<List<UserModel.AllInfo>>, t: Throwable) {
+            override fun onFailure(call: Call<ArrayList<UserModel.AllInfo>>, t: Throwable) {
                 AllUserData.value = DataWrapper(null, "Failed to get User!", true)
             }
         })
@@ -130,11 +130,12 @@ class UserRepository {
         return AllUserData
     }
 
-    fun getUserTeams(token: String, userId: String): MutableLiveData<DataWrapper<List<TeamModel>>> {
-        val teamsLiveData: MutableLiveData<DataWrapper<List<TeamModel>>> = MutableLiveData()
+  // get user team
+    fun getUserTeams(token: String, userId: String): MutableLiveData<DataWrapper<ArrayList<TeamModel>>> {
+        val teamsLiveData: MutableLiveData<DataWrapper<ArrayList<TeamModel>>> = MutableLiveData()
 
-        httpClient.getUserTeams(token = "Bearer $token", userId).enqueue(object: Callback<List<TeamModel>> {
-            override fun onResponse(call: Call<List<TeamModel>>, response: Response<List<TeamModel>>) {
+        httpClient.getUserTeams(token = "Bearer $token", userId).enqueue(object: Callback<ArrayList<TeamModel>> {
+            override fun onResponse(call: Call<ArrayList<TeamModel>>, response: Response<ArrayList<TeamModel>>) {
                 if (!response.isSuccessful) {
                     teamsLiveData.value = DataWrapper(null, "An error occurred!", true)
                     return
@@ -144,11 +145,31 @@ class UserRepository {
                 teamsLiveData.value = DataWrapper(response.body(), "", false)
             }
 
-            override fun onFailure(call: Call<List<TeamModel>>, t: Throwable) {
+            override fun onFailure(call: Call<ArrayList<TeamModel>>, t: Throwable) {
                 teamsLiveData.value = DataWrapper(null, "Failed to fetch teams!", true)
             }
         })
 
         return teamsLiveData
+    }
+
+    // get user drawings
+    fun getUserDrawings(id: String): MutableLiveData<DataWrapper<ArrayList<DrawingModel.CreateDrawing>>> {
+        val userDrawingsLiveData: MutableLiveData<DataWrapper<ArrayList<DrawingModel.CreateDrawing>>> = MutableLiveData()
+
+        httpClient.getUserDrawings(token = "Bearer ${UserService.getToken()}", id).enqueue(object : Callback<ArrayList<DrawingModel.CreateDrawing>> {
+            override fun onResponse(call: Call<ArrayList<DrawingModel.CreateDrawing>>, response: Response<ArrayList<DrawingModel.CreateDrawing>>) {
+                if (!response.isSuccessful) {
+                    userDrawingsLiveData.value = DataWrapper(null, "An error occurred while fetching user's drawings!", true)
+                    return
+                }
+                userDrawingsLiveData.value = DataWrapper(response.body(), "", false)
+            }
+            override fun onFailure(call: Call<ArrayList<DrawingModel.CreateDrawing>>, t: Throwable) {
+                userDrawingsLiveData.value = DataWrapper(null, "Sorry, failed to get fetch user's drawings!", true)
+            }
+        })
+
+        return userDrawingsLiveData
     }
 }

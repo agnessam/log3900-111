@@ -1,7 +1,9 @@
 package com.example.colorimagemobile.services.users
 
 import com.example.colorimagemobile.models.AvatarModel
+import com.example.colorimagemobile.models.TeamModel
 import com.example.colorimagemobile.models.UserModel
+import com.example.colorimagemobile.services.teams.TeamService
 import com.example.colorimagemobile.utils.Constants
 
 // Singleton User object which is accessible globally
@@ -10,17 +12,18 @@ object UserService {
     private lateinit var info: UserModel.AllInfo
     private var token : String =Constants.EMPTY_STRING
     private var updateProfileData : UserModel.UpdateUser
-    private lateinit var allUserInfo : List<UserModel.AllInfo>
+    private lateinit var allUserInfo : ArrayList<UserModel.AllInfo>
+    private lateinit var selectUserInfo : UserModel.AllInfo
 
     init {
         updateProfileData =UserModel.UpdateUser(null,null,null)
     }
 
-    fun setAllUserInfo(allInfo:List<UserModel.AllInfo>){
+    fun setAllUserInfo(allInfo:ArrayList<UserModel.AllInfo>){
         allUserInfo = allInfo
     }
 
-    fun getAllUserInfo() : List<UserModel.AllInfo> {
+    fun getAllUserInfo() : ArrayList<UserModel.AllInfo> {
         return allUserInfo
     }
 
@@ -56,5 +59,10 @@ object UserService {
     fun setUserAvatar(avatar: AvatarModel.AllInfo){
     this.info.avatar = avatar
     }
+
+    fun getUser(position: Int): UserModel.AllInfo {
+        return allUserInfo[position]
+    }
+
 
 }

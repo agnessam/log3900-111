@@ -85,6 +85,12 @@ class Constants {
             const val CURRENT_TEAM_ID_KEY = "CurrentTeam"
         }
     }
+    class USERS {
+        companion object {
+            const val CURRENT_USER_ID_KEY = "CurrentUser"
+        }
+    }
+
 
     class SEARCH {
         companion object {
