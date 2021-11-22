@@ -23,12 +23,12 @@
             android:id="@+id/loadingDrawingsText"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:gravity="center"
-            android:textSize="27sp"
-            android:text="LOADING DRAWINGS .."
-            android:textStyle="bold|italic"
             android:layout_below="@id/newDrawingBtn"
-            android:textAlignment="center" />
+            android:gravity="center"
+            android:text="LOADING DRAWINGS .."
+            android:textAlignment="center"
+            android:textSize="27sp"
+            android:textStyle="bold|italic" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/drawingMenuRecyclerView"

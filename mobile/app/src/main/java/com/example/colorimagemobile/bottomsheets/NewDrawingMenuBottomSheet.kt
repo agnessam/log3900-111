@@ -102,7 +102,7 @@ class NewDrawingMenuBottomSheet: BottomSheetDialogFragment() {
         }
 
         view.findViewById<ColorPickerView>(R.id.colorPickerNewDrawing).subscribe { newColor, _, _ ->
-            color = ColorService.intToRGB(newColor)
+            color = ColorService.intToRGBA(newColor)
         }
 
         view.findViewById<Button>(R.id.createDrawingBtn).setOnClickListener {

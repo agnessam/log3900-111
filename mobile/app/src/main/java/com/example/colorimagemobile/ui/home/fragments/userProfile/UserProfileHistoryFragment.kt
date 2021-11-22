@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import com.example.colorimagemobile.R
+import com.example.colorimagemobile.services.users.UserService
 
 
 class UserProfileHistoryFragment : Fragment() {

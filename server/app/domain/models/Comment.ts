@@ -1,8 +1,9 @@
 import mongoose, { Document, Model, Schema } from 'mongoose';
+import { UserInterface } from './user';
 
 export interface CommentInterface extends Document {
   content: string;
-  authorId: string;
+  author: string | UserInterface;
   postId: string;
 
   createdAt: string;

@@ -9,7 +9,6 @@ import com.example.colorimagemobile.models.SyncUpdate
 import com.example.colorimagemobile.services.drawing.*
 import com.example.colorimagemobile.services.drawing.Point
 import com.example.colorimagemobile.services.drawing.toolsAttribute.ColorService
-import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
 
 import com.example.colorimagemobile.services.drawing.toolsAttribute.PencilService
 
@@ -54,7 +53,6 @@ class PencilCommand(pencilData: PencilData): ICommand {
 
     private fun getPathDrawable(): ShapeDrawable {
         return DrawingObjectManager.getDrawable(this.layerIndex) as ShapeDrawable
-//        return DrawingObjectManager.layerDrawable.getDrawable(this.layerIndex) as ShapeDrawable
     }
 
     // update canvas

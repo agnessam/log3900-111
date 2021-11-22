@@ -2,20 +2,20 @@ package com.example.colorimagemobile.ui.home.fragments.gallery.views
 
 import android.content.Context
 import android.graphics.*
-import android.graphics.drawable.Drawable
-import android.graphics.drawable.ShapeDrawable
-import android.graphics.drawable.shapes.RectShape
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewConfiguration
 import androidx.lifecycle.LifecycleOwner
 import com.example.colorimagemobile.services.drawing.*
+import com.example.colorimagemobile.services.drawing.toolsAttribute.SelectionService
 
 abstract class CanvasView(context: Context?): View(context) {
     protected var motionTouchEventX = 0f
     protected var motionTouchEventY = 0f
     protected var currentX = 0f
     protected var currentY = 0f
+    protected var offSetX = 0f
+    protected var offSetY = 0f
     protected val touchTolerance = ViewConfiguration.get(context).scaledTouchSlop
 
     protected var counter = 0

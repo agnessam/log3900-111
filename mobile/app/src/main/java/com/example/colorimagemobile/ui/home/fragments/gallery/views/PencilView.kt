@@ -1,7 +1,9 @@
 package com.example.colorimagemobile.ui.home.fragments.gallery.views
 
 import android.content.Context
+import android.graphics.RectF
 import com.example.colorimagemobile.classes.toolsCommand.PencilCommand
+import com.example.colorimagemobile.classes.toolsCommand.ResizeCommand
 import com.example.colorimagemobile.models.InProgressPencil
 import com.example.colorimagemobile.models.PencilData
 import com.example.colorimagemobile.services.UUIDService
@@ -31,7 +33,7 @@ class PencilView(context: Context?): CanvasView(context) {
             fill = "none",
             stroke = ColorService.getPrimaryColorAsString(),
             fillOpacity = "1",
-            strokeOpacity = "1",
+            strokeOpacity = ColorService.getAlphaForDesktop(ColorService.getPrimaryColorAsString()),
             strokeWidth = PencilService.currentWidth,
             pointsList = arrayListOf(point),
         )
@@ -73,7 +75,6 @@ class PencilView(context: Context?): CanvasView(context) {
     override fun onTouchUp() {
         updateCanvas()
         DrawingSocketService.sendConfirmDrawingCommand(this.pencil!!, this.pencilType)
-
         // Clean up properties
         this.pencilCommand = null
         this.inProgressPencil = null
