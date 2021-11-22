@@ -31,14 +31,13 @@ class MuseumPostRecyclerAdapter(
 
     override fun onBindViewHolder(holder: MuseumPostRecyclerAdapter.ViewHolder, position: Int) {
         val currentPost = MuseumPostService.getPosts()[position]
-        val bitmap = ImageConvertor(context).base64ToBitmap(currentPost.dataUri)
 
-        if (bitmap != null) {
-            holder.image.setImageBitmap(bitmap)
-        }
+        val bitmap = ImageConvertor(context).base64ToBitmap(currentPost.dataUri)
+        if (bitmap != null) { holder.image.setImageBitmap(bitmap) }
 
         val adapter = PostCommentsRecyclerAdapter(MuseumPostService.getPosts()[position])
         MuseumAdapters.setCommentRecycler(position, adapter)
+        MuseumAdapters.setPostsLikes(position, holder)
 
         // set up comments section on the right
         holder.commentRecyclerView.layoutManager = LinearLayoutManager(context)
@@ -48,12 +47,12 @@ class MuseumPostRecyclerAdapter(
         if (MuseumPostService.hasLiked(currentPost)) showFilledLike(holder) else hideFilledLike(holder)
     }
 
-    private fun showFilledLike(holder: ViewHolder) {
+    fun showFilledLike(holder: ViewHolder) {
         holder.unlikeBtn.visibility = View.GONE
         holder.likeBtn.visibility = View.VISIBLE
     }
 
-    private fun hideFilledLike(holder: ViewHolder) {
+    fun hideFilledLike(holder: ViewHolder) {
         holder.unlikeBtn.visibility = View.VISIBLE
         holder.likeBtn.visibility = View.GONE
     }

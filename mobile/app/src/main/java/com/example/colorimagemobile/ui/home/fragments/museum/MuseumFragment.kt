@@ -82,7 +82,7 @@ class MuseumFragment : Fragment(R.layout.fragment_museum) {
             }
 
             MuseumPostService.likePost(position)
-            MuseumAdapters.refreshPostAdapter(position)
+            MuseumAdapters.refreshLikeSection(position)
         })
     }
 
@@ -96,7 +96,7 @@ class MuseumFragment : Fragment(R.layout.fragment_museum) {
             }
 
             MuseumPostService.unlikePost(position)
-            MuseumAdapters.refreshPostAdapter(position)
+            MuseumAdapters.refreshUnlikeSection(position)
         })
     }
 }
