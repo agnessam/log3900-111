@@ -41,7 +41,7 @@ object TeamService {
     fun joinTeam(position: Int, context: Context) {
         val team = getTeam(position)
 
-        TeamRepository().joinTeam(team._id!!).observe(context as LifecycleOwner, {
+        TeamRepository().joinTeam(team._id).observe(context as LifecycleOwner, {
             if (it.isError as Boolean) {
                 printToast(context, it.message!!)
                 return@observe
@@ -56,7 +56,7 @@ object TeamService {
     fun leaveTeam(position: Int, context: Context) {
         val team = getTeam(position)
 
-        TeamRepository().leaveTeam(team._id!!).observe(context as LifecycleOwner, {
+        TeamRepository().leaveTeam(team._id).observe(context as LifecycleOwner, {
             if (it.isError as Boolean) {
                 printToast(context, it.message!!)
                 return@observe
