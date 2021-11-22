@@ -4,8 +4,8 @@ import androidx.lifecycle.MutableLiveData
 import com.example.colorimagemobile.models.AvatarModel
 import com.example.colorimagemobile.models.DataWrapper
 import com.example.colorimagemobile.services.RetrofitInstance
-import com.example.colorimagemobile.services.UserService
 import com.example.colorimagemobile.services.avatar.AvatarService
+import com.example.colorimagemobile.services.users.UserService
 import okhttp3.MediaType
 import retrofit2.Call
 import retrofit2.Callback

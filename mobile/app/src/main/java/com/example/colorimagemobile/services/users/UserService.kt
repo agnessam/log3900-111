@@ -17,11 +17,11 @@ object UserService {
     }
 
     fun setAllUserInfo(allInfo:List<UserModel.AllInfo>){
-        AllUserInfo = allInfo
+        allUserInfo = allInfo
     }
 
     fun getAllUserInfo() : List<UserModel.AllInfo> {
-        return AllUserInfo
+        return allUserInfo
     }
 
     fun setNewProfileData (newValues: UserModel.UpdateUser){

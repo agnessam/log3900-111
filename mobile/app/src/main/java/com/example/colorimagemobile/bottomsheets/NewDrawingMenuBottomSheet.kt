@@ -19,11 +19,11 @@ import com.example.colorimagemobile.models.DrawingModel
 import com.example.colorimagemobile.models.TeamModel
 import com.example.colorimagemobile.repositories.DrawingRepository
 import com.example.colorimagemobile.repositories.UserRepository
-import com.example.colorimagemobile.services.UserService
 import com.example.colorimagemobile.services.drawing.CanvasService
 import com.example.colorimagemobile.services.drawing.CanvasUpdateService
 import com.example.colorimagemobile.services.drawing.DrawingService
 import com.example.colorimagemobile.services.drawing.toolsAttribute.ColorService
+import com.example.colorimagemobile.services.users.UserService
 import com.example.colorimagemobile.ui.home.fragments.gallery.GalleryDrawingFragment
 import com.example.colorimagemobile.utils.CommonFun.Companion.hideKeyboard
 import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg

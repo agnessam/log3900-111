@@ -31,15 +31,11 @@ import com.example.colorimagemobile.services.socket.SocketManagerService
 import com.example.colorimagemobile.ui.home.fragments.chat.ChatFragment
 import com.example.colorimagemobile.ui.home.fragments.chat.ChatFragmentDirections
 import com.example.colorimagemobile.ui.home.fragments.gallery.GalleryFragmentDirections
-import com.example.colorimagemobile.ui.home.fragments.gallery.GalleryMenuFragment
 import com.example.colorimagemobile.ui.home.fragments.teams.TeamsFragmentDirections
-import com.example.colorimagemobile.ui.home.fragments.teams.TeamsMenuFragment
 import com.example.colorimagemobile.ui.home.fragments.userProfile.ShowUserProfileFragmentDirections
 import com.example.colorimagemobile.ui.home.fragments.userProfile.UserProfileFragmentDirections
 import com.example.colorimagemobile.utils.CommonFun
 import com.example.colorimagemobile.ui.home.fragments.search.SearchFragment
-import com.example.colorimagemobile.ui.home.fragments.teams.TeamsMenuFragment
-import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
 import com.example.colorimagemobile.utils.CommonFun.Companion.printToast
 import com.example.colorimagemobile.utils.CommonFun.Companion.redirectTo
 import com.example.colorimagemobile.utils.Constants

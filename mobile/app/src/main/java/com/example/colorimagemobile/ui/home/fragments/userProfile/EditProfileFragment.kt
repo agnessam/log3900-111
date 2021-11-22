@@ -22,10 +22,10 @@ import com.example.colorimagemobile.models.UserModel
 import com.example.colorimagemobile.httpresponsehandler.GlobalHandler
 import com.example.colorimagemobile.models.AvatarModel
 import com.example.colorimagemobile.repositories.AvatarRepository
-import com.example.colorimagemobile.services.UserService
 import com.example.colorimagemobile.repositories.UserRepository
 import com.example.colorimagemobile.services.SharedPreferencesService
 import com.example.colorimagemobile.services.avatar.AvatarService
+import com.example.colorimagemobile.services.users.UserService
 import com.example.colorimagemobile.utils.CommonFun
 import com.example.colorimagemobile.utils.CommonFun.Companion.hideKeyboard
 import com.example.colorimagemobile.utils.CommonFun.Companion.imageView
