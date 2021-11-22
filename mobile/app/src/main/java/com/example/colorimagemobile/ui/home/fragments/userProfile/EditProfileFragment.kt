@@ -129,8 +129,6 @@ class EditProfileFragment : Fragment() {
         if (edtUsername.length != 0 || edtDescription.length != 0){
             newUserData.username = edtUsername
             newUserData.description = edtDescription
-
-
         }
 
     }
@@ -160,7 +158,7 @@ class EditProfileFragment : Fragment() {
         setDataToUpdate()
         UserService.setNewProfileData(newUserData)
         updateUserInfo().observe(viewLifecycleOwner, { context?.let { it1 ->globalHandler.response(it1,it) } })
-
+        UserService.updateUserAfterUpdate(newUserData)
     }
 
     //call retrofit request to database to update user info
@@ -178,7 +176,7 @@ class EditProfileFragment : Fragment() {
         return AvatarRepository().postAvatar(avatar)
     }
 
-    // handler for response
+    // handler for response postAvatar  and uploadAvatar
     private fun handleResponse(HTTPResponse: DataWrapper<AvatarModel.AllInfo>) {
         if (HTTPResponse.isError as Boolean) {
             CommonFun.printToast(requireContext(), HTTPResponse.message as String)

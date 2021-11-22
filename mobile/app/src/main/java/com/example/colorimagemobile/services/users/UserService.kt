@@ -49,16 +49,25 @@ object UserService {
     }
 
     fun getToken(): String{
-
         return token
     }
 
     fun setUserAvatar(avatar: AvatarModel.AllInfo){
-    this.info.avatar = avatar
+     this.info.avatar = avatar
     }
 
     fun getUser(position: Int): UserModel.AllInfo {
         return allUserInfo[position]
+    }
+
+    fun updateUserAfterUpdate(currentdata: UserModel.UpdateUser){
+        if (!currentdata.username.isNullOrEmpty()){
+            info.username = currentdata.username!!
+        }
+        if (!currentdata.description.isNullOrEmpty()){
+            info.description = currentdata.description!!
+        }
+
     }
 
 
