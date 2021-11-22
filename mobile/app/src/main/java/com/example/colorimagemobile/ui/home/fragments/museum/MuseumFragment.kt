@@ -33,7 +33,10 @@ class MuseumFragment : Fragment(R.layout.fragment_museum) {
 
     private fun getAllPosts() {
         MuseumRepository().getAllPosts().observe(viewLifecycleOwner, { it ->
-            if (it.isError as Boolean) { return@observe }
+            if (it.isError as Boolean) {
+                printToast(requireContext(), it.message!!)
+                return@observe
+            }
 
             posts = it.data as ArrayList<MuseumPostModel>
             MuseumPostService.setPosts(posts)
@@ -60,7 +63,7 @@ class MuseumFragment : Fragment(R.layout.fragment_museum) {
             return
         }
 
-        val postId = posts[position]._id
+        val postId = posts[position]._id!!
         val comment = MuseumPostService.createComment(postId, newComment)
 
         MuseumRepository().postComment(postId, comment).observe(viewLifecycleOwner, {
@@ -73,7 +76,7 @@ class MuseumFragment : Fragment(R.layout.fragment_museum) {
     }
 
     private fun likePost(position: Int) {
-        val postId = posts[position]._id
+        val postId = posts[position]._id!!
 
         MuseumRepository().likePost(postId).observe(viewLifecycleOwner, {
             if (it.isError as Boolean) {
@@ -87,7 +90,7 @@ class MuseumFragment : Fragment(R.layout.fragment_museum) {
     }
 
     private fun unlikePost(position: Int) {
-        val postId = posts[position]._id
+        val postId = posts[position]._id!!
 
         MuseumRepository().unlikePost(postId).observe(viewLifecycleOwner, { it ->
             if (it.isError as Boolean) {

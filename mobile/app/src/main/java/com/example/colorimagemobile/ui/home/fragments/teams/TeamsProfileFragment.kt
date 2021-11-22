@@ -105,7 +105,7 @@ class TeamsProfileFragment : Fragment(R.layout.fragment_teams_profile) {
     }
 
     private fun getTeamDrawings() {
-        TeamRepository().getTeamDrawings(currentTeam._id).observe(viewLifecycleOwner, {
+        TeamRepository().getTeamDrawings(currentTeam._id!!).observe(viewLifecycleOwner, {
             if (it.isError as Boolean) {
                 return@observe
             }
