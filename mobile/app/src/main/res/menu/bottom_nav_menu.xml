@@ -16,9 +16,9 @@
         android:icon="@drawable/ic_teams"
         android:title="@string/title_teams" />
 
-    <item
-        android:id="@+id/userProfileFragment"
-        android:icon="@drawable/ic_person"
-        android:title="@string/title_user_profile" />
+<!--    <item-->
+<!--        android:id="@+id/userProfileFragment"-->
+<!--        android:icon="@drawable/ic_person"-->
+<!--        android:title="@string/title_user_profile" />-->
 
 </menu>

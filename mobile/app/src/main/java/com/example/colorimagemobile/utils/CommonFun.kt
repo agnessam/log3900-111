@@ -2,6 +2,7 @@ package com.example.colorimagemobile.utils
 
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.content.ClipData
 import android.content.Context
 import android.content.Context.INPUT_METHOD_SERVICE
 import android.content.Intent

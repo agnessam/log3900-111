@@ -1,7 +1,6 @@
 package com.example.colorimagemobile.repositories
 
 import android.util.Log
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.colorimagemobile.models.UserModel
 import com.example.colorimagemobile.services.RetrofitInstance

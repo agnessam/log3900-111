@@ -96,8 +96,8 @@ class EditProfileFragment : Fragment() {
 
 
        // keyboard
-        CommonFun.onEnterKeyPressed_(inf.findViewById<View>(R.id.edtusername) as TextView) { areFieldEmpty()}
-        CommonFun.onEnterKeyPressed_(inf.findViewById<View>(R.id.edtdescription) as TextView) {areFieldEmpty()}
+        CommonFun.onEnterKeyPressed_(inf.findViewById<View>(R.id.edtusername) as TextView) { activateBtn(); areFieldEmpty()}
+        CommonFun.onEnterKeyPressed_(inf.findViewById<View>(R.id.edtdescription) as TextView) {activateBtn(); areFieldEmpty()}
         imageView = (inf.findViewById<View>(R.id.current_avatar) as ImageView)
         loadUrl(user.avatar.imageUrl, imageView )
         infview = inf
@@ -123,6 +123,7 @@ class EditProfileFragment : Fragment() {
     }
 
     private fun areFieldEmpty(){
+        CommonFun.toggleButton(updateprofile, true)
         infName = (infview!!.findViewById<View>(R.id.edtusername) as TextView)
         infDescription = (infview!!.findViewById<View>(R.id.edtdescription) as TextView)
         edtUsername = infName.text.toString()
