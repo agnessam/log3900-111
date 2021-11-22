@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.example.colorimagemobile.R
+import com.example.colorimagemobile.ui.userProfile.EditProfileFragment
 
 
 class UserProfileFragment : Fragment() {

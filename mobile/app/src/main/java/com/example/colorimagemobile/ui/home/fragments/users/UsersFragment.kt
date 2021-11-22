@@ -6,10 +6,11 @@ import android.view.View
 import com.example.colorimagemobile.R
 import com.example.colorimagemobile.classes.MyFragmentManager
 
-class UsersFragment : Fragment() {
+class UsersFragment : Fragment(R.layout.fragment_users) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         MyFragmentManager(requireActivity()).open(R.id.usersMenuFrameLayout, UsersMenuFragment())
     }
 

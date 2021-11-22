@@ -23,7 +23,7 @@
                 android:layout_centerInParent="true">
 
                 <TextView
-                    android:id="@+id/userIdNameCard"
+                    android:id="@+id/teamIdNameCard"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
@@ -35,7 +35,7 @@
                     android:id="@+id/teamIdImageViewCard"
                     android:layout_width="80dp"
                     android:layout_height="80dp"
-                    android:layout_below="@id/userIdNameCard"
+                    android:layout_below="@id/teamIdNameCard"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="30dp"
                     android:layout_marginBottom="10dp"

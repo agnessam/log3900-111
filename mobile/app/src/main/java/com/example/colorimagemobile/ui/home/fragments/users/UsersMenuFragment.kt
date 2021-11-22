@@ -14,6 +14,7 @@ import com.example.colorimagemobile.services.users.UserAdapterService
 import com.example.colorimagemobile.services.users.UserService
 import com.example.colorimagemobile.utils.CommonFun
 
+
 class UsersMenuFragment : Fragment(R.layout.fragment_users_menu) {
 
     private lateinit var myView: View
@@ -26,7 +27,7 @@ class UsersMenuFragment : Fragment(R.layout.fragment_users_menu) {
     }
 
     private fun getAllUsers() {
-        myView.findViewById<TextView>(R.id.loadingTeamsText).visibility = View.VISIBLE
+        myView.findViewById<TextView>(R.id.loadingUsersText).visibility = View.VISIBLE
 
         UserRepository().getAllUser(UserService.getToken()).observe(viewLifecycleOwner, { it ->
             // some error occurred during HTTP request
@@ -39,7 +40,6 @@ class UsersMenuFragment : Fragment(R.layout.fragment_users_menu) {
 
             val users = it.data as ArrayList<UserModel.AllInfo>
             UserService.setAllUserInfo(users)
-
             val recyclerView = myView.findViewById<RecyclerView>(R.id.usersMenuRecyclerView)
             recyclerView.layoutManager = LinearLayoutManager(requireContext())
 

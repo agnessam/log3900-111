@@ -17,6 +17,8 @@ import com.example.colorimagemobile.models.TeamModel
 import com.example.colorimagemobile.models.recyclerAdapters.DrawingMenuData
 import com.example.colorimagemobile.repositories.TeamRepository
 import com.example.colorimagemobile.services.teams.TeamService
+import com.example.colorimagemobile.services.users.UserService
+import com.example.colorimagemobile.utils.CommonFun
 import com.example.colorimagemobile.utils.Constants
 import com.google.android.material.tabs.TabLayout
 
@@ -51,7 +53,8 @@ class TeamsProfileFragment : Fragment(R.layout.fragment_teams_profile) {
     private fun updateUI() {
         MyFragmentManager(requireActivity()).showBackButton()
         
-        myView.findViewById<TextView>(R.id.userIdNameCard).text = currentTeam.name
+        myView.findViewById<TextView>(R.id.teamIdNameCard).text = currentTeam.name
+
 //        myView.findViewById<ImageView>(R.id.teamIdImageView).
         myView.findViewById<TextView>(R.id.teamIdNbOfMembers).text = "${currentTeam.members.size} members"
         myView.findViewById<TextView>(R.id.teamIdDescription).text = currentTeam.description

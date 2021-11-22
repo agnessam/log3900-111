@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".ui.home.fragments.users.UsersProfileFragmentFragment">
+    tools:context=".ui.home.fragments.users.UsersProfileFragment">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -49,8 +49,7 @@
                     <de.hdodenhof.circleimageview.CircleImageView
                         android:id="@+id/userIdImageView"
                         android:layout_width="match_parent"
-                        android:layout_height="80dp"
-                        tools:ignore="ImageContrastCheck" />
+                        android:layout_height="80dp"/>
 
                 </androidx.cardview.widget.CardView>
 
@@ -152,12 +151,18 @@
                     android:text="Published Drawings" />
             </com.google.android.material.tabs.TabLayout>
 
+<!--            <androidx.recyclerview.widget.RecyclerView-->
+<!--                android:id="@+id/userProfileDrawingsRecycler"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="match_parent"-->
+<!--                android:layout_below="@id/userProfileDrawingsTabLayout"-->
+<!--                android:padding="4dp" />-->
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/userProfileDrawingsRecycler"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_below="@id/userProfileDrawingsTabLayout"
-                android:padding="4dp" />
+                android:padding="4dp"></androidx.recyclerview.widget.RecyclerView>
 
         </RelativeLayout>
 

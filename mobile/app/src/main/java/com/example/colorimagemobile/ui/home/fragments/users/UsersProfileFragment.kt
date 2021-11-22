@@ -4,6 +4,7 @@ import android.graphics.Bitmap
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.View
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -16,10 +17,14 @@ import com.example.colorimagemobile.models.UserModel
 import com.example.colorimagemobile.models.recyclerAdapters.DrawingMenuData
 import com.example.colorimagemobile.repositories.UserRepository
 import com.example.colorimagemobile.services.users.UserService
+import com.example.colorimagemobile.utils.CommonFun
+import com.example.colorimagemobile.utils.CommonFun.Companion.loadUrl
+import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
 import com.example.colorimagemobile.utils.Constants
 import com.google.android.material.tabs.TabLayout
+import kotlinx.android.synthetic.main.fragment_teams_profile.*
 
-class UsersProfileFragmentFragment : Fragment() {
+class UsersProfileFragment : Fragment(R.layout.fragment_users_profile) {
     private var userPosition: Int? = null
     private lateinit var currentUser: UserModel.AllInfo
     private lateinit var myView: View
@@ -39,7 +44,7 @@ class UsersProfileFragmentFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         myView = view
         recyclerView = myView.findViewById(R.id.userProfileDrawingsRecycler)
-        recyclerView.layoutManager = GridLayoutManager(requireContext(), Constants.NB_DATA_ROWS)
+        recyclerView.layoutManager = GridLayoutManager(requireContext(), Constants.NB_DATA_ROWS_USER)
 
         updateUI()
         setListeners()
@@ -48,8 +53,9 @@ class UsersProfileFragmentFragment : Fragment() {
 
     private fun updateUI() {
         MyFragmentManager(requireActivity()).showBackButton()
-
+        var userIdImageView : ImageView = myView.findViewById(R.id.userIdImageView);
         myView.findViewById<TextView>(R.id.userIdNameCard).text = currentUser.username
+        loadUrl(currentUser.avatar.imageUrl,userIdImageView)
         myView.findViewById<TextView>(R.id.userIdDescription).text = currentUser.description
 
     }
@@ -74,6 +80,7 @@ class UsersProfileFragmentFragment : Fragment() {
 
         UserRepository().getUserDrawings(currentUser._id).observe(viewLifecycleOwner, {
             if (it.isError as Boolean) {
+                printMsg("in get user drawing error in userProfilefragment")
                 return@observe
             }
 
@@ -96,12 +103,12 @@ class UsersProfileFragmentFragment : Fragment() {
      * TO CHANGE LOGIC OF OPENING DRAWING
      */
     private fun setAllDrawings() {
-        recyclerView.adapter = DrawingMenuRecyclerAdapter(drawingsMenu, R.id.teamsMenuFrameLayout)
+        recyclerView.adapter = DrawingMenuRecyclerAdapter(drawingsMenu, R.id.usersMenuFrameLayout)
     }
 
     private fun setPublishedDrawings() {
         val drawings = arrayListOf<DrawingMenuData>()
-        recyclerView.adapter = DrawingMenuRecyclerAdapter(drawings, R.id.teamsMenuFrameLayout)
+        recyclerView.adapter = DrawingMenuRecyclerAdapter(drawings, R.id.usersMenuFrameLayout)
     }
 
 }

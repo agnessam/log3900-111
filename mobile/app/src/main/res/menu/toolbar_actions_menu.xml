@@ -13,12 +13,7 @@
         android:id="@+id/useravatar_menu_item"
         app:showAsAction="ifRoom"
         android:scaleType ="centerCrop"
-        app:actionLayout="@layout/profile_menu_layout"/>
-
-    <item
-        android:id="@+id/username_menu_item"
-        android:icon="@drawable/ic_person"
-        app:showAsAction="always|withText"
+        app:actionLayout="@layout/profile_menu_layout"
         android:title="" />
     <item
         android:id="@+id/username_menu_item"

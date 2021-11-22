@@ -49,7 +49,7 @@
         android:id="@+id/teamsFragment"
         android:name="com.example.colorimagemobile.ui.home.fragments.teams.TeamsFragment"
         android:label="Teams"
-        tools:layout="@layout/fragment_teams" >
+        tools:layout="@layout/fragment_teams">
         <action
             android:id="@+id/action_teamsFragment_to_showUserProfileFragment"
             app:destination="@id/showUserProfileFragment"
@@ -91,5 +91,10 @@
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right" />
     </fragment>
+    <fragment
+        android:id="@+id/usersFragment"
+        android:name="com.example.colorimagemobile.ui.home.fragments.users.UsersFragment"
+        android:label="Users"
+        tools:layout="@layout/fragment_users" />
 
 </navigation>

@@ -5,7 +5,7 @@
     <string name="title_teams">Teams</string>
     <string name="title_gallery">Gallery</string>
     <string name="title_chat">Chat</string>
-    <string name="title_user_profile">User Profile</string>
+    <string name="title_user">Users</string>
     <string name="title_activity_home">HomeActivity</string>
 
     <string name="new_message">New to ColorImage?</string>

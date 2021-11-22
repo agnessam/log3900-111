@@ -1,78 +1,73 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="200dp"
+    android:layout_width="300dp"
+    android:layout_height="300dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/card_user_menu"
     android:layout_margin="5dp"
     app:cardElevation="3dp"
     app:cardCornerRadius="10dp"
-    android:background="@color/black"
+    android:orientation="vertical"
     app:contentPadding="4dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/card_user_menu_parent"
-        android:layout_width="match_parent"
+        android:layout_width="283dp"
         android:layout_height="match_parent"
         android:layout_marginStart="12dp"
         android:layout_marginTop="16dp"
-        android:layout_marginEnd="12dp">
-
-        <androidx.cardview.widget.CardView
-            android:id="@+id/UserCardView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:cardCornerRadius="29dp"
-            app:cardPreventCornerOverlap="false"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
-
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/avatar_view"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                tools:ignore="ImageContrastCheck" />
-
-        </androidx.cardview.widget.CardView>
-
+        android:layout_marginEnd="12dp"
+        android:orientation="vertical">
 
         <TextView
-            android:id="@+id/displayNameText"
-            android:layout_width="175dp"
-            android:layout_height="30dp"
-            android:layout_marginTop="40dp"
+            android:id="@+id/card_user_username"
+            android:layout_width="125dp"
+            android:layout_height="33dp"
+            android:layout_marginTop="52dp"
+            android:layout_marginEnd="24dp"
+            android:layout_marginBottom="117dp"
             android:singleLine="true"
             android:text="@string/display_name"
             android:textSize="18sp"
             android:textStyle="bold"
-            app:layout_constraintHorizontal_bias="0.51"
-            app:layout_constraintLeft_toRightOf="@id/UserCardView"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="@id/UserCardView" />
+            app:layout_constraintBottom_toTopOf="@+id/unfollowButton"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <Button
             android:id="@+id/followButton"
-            android:layout_width="wrap_content"
-            android:layout_height="48dp"
+            android:layout_width="102dp"
+            android:layout_height="43dp"
+            android:layout_marginStart="21dp"
+            android:layout_marginEnd="39dp"
+            android:layout_marginBottom="32dp"
             android:text="@string/follow"
-            tools:ignore="MissingConstraints"
-            tools:layout_editor_absoluteX="81dp"
-            tools:layout_editor_absoluteY="115dp" />
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/unfollowButton"
+            app:layout_constraintStart_toStartOf="parent" />
 
         <Button
             android:id="@+id/unfollowButton"
-            android:layout_width="wrap_content"
-            android:layout_height="48dp"
-            android:layout_marginEnd="16dp"
+            android:layout_width="115dp"
+            android:layout_height="40dp"
+            android:layout_marginEnd="4dp"
+            android:layout_marginBottom="40dp"
             android:backgroundTint="@color/red"
             android:text="@string/unfollow"
             android:textColor="#ffff"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintLeft_toRightOf="@id/followButton"
-            app:layout_constraintTop_toTopOf="@id/followButton"
-            tools:ignore="TextContrastCheck" />
+            app:layout_constraintStart_toEndOf="@+id/followButton"
+            app:layout_constraintTop_toBottomOf="@+id/card_user_username" />
 
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/card_user_imageview"
+            android:layout_width="99dp"
+            android:layout_height="84dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

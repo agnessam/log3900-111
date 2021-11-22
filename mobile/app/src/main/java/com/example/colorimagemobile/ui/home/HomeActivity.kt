@@ -28,7 +28,6 @@ import com.example.colorimagemobile.services.SearchService
 import com.example.colorimagemobile.services.SharedPreferencesService
 import com.example.colorimagemobile.services.drawing.DrawingService
 import com.example.colorimagemobile.services.socket.SocketManagerService
-import com.example.colorimagemobile.ui.home.fragments.chat.ChatFragment
 import com.example.colorimagemobile.ui.home.fragments.chat.ChatFragmentDirections
 import com.example.colorimagemobile.ui.home.fragments.gallery.GalleryFragmentDirections
 import com.example.colorimagemobile.ui.home.fragments.teams.TeamsFragmentDirections
@@ -71,7 +70,7 @@ class HomeActivity : AppCompatActivity() {
         }
 
         val appBarConfiguration = AppBarConfiguration(setOf(
-            R.id.galleryFragment, R.id.chatFragment, R.id.teamsFragment))
+            R.id.galleryFragment, R.id.chatFragment, R.id.teamsFragment, R.id.usersFragment))
         setupActionBarWithNavController(navController, appBarConfiguration)
         bottomNav.setupWithNavController(navController)
     }
@@ -160,7 +159,11 @@ class HomeActivity : AppCompatActivity() {
                 true
             }
             R.id.chatFragment -> {
-                MyFragmentManager(this).open(R.id.chatChannelFragment, ChatFragment())
+                bottomNav.selectedItemId = R.id.chatChannelFragment
+                true
+            }
+            R.id.usersFragment -> {
+                bottomNav.selectedItemId = R.id.usersFragment
                 true
             }
 

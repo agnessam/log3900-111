@@ -1,4 +1,4 @@
-package com.example.colorimagemobile.ui.home.fragments.userProfile
+package com.example.colorimagemobile.ui.userProfile
 
 import android.annotation.SuppressLint
 import android.content.Intent
@@ -27,7 +27,6 @@ import com.example.colorimagemobile.services.SharedPreferencesService
 import com.example.colorimagemobile.services.avatar.AvatarService
 import com.example.colorimagemobile.services.users.UserService
 import com.example.colorimagemobile.utils.CommonFun
-import com.example.colorimagemobile.utils.CommonFun.Companion.hideKeyboard
 import com.example.colorimagemobile.utils.CommonFun.Companion.imageView
 import com.example.colorimagemobile.utils.CommonFun.Companion.loadUrl
 import com.example.colorimagemobile.utils.Constants
@@ -38,6 +37,7 @@ import com.karumi.dexter.PermissionToken
 import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener
 import kotlinx.android.synthetic.main.fragment_edit_profile.*
+import kotlinx.android.synthetic.main.fragment_password.*
 import kotlinx.android.synthetic.main.fragment_show_user_profile.*
 import java.io.File
 import java.io.ByteArrayOutputStream
@@ -80,6 +80,7 @@ class EditProfileFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
         // inflate layout
         val inf = inflater.inflate(R.layout.fragment_edit_profile, container, false)
 
@@ -87,7 +88,7 @@ class EditProfileFragment : Fragment() {
         inf.findViewById<View>(R.id.updateprofile).setOnClickListener { update() }
         inf.findViewById<View>(R.id.upload_avatar_from_camera).setOnClickListener {
             cameraCheckPermission() }
-        inf.findViewById<View>(R.id.editprofileview).setOnTouchListener { v, event -> hideKeyboard(requireContext(),editprofileview)}
+        inf.findViewById<View>(R.id.editprofileview).setOnTouchListener { v, event -> CommonFun.hideKeyboard(requireContext(), editprofileview)}
         inf.findViewById<View>(R.id.choosedefaultavatar).setOnClickListener {
             activateBtn();
             val defaultAvatarList = DefaultAvatarListBottomSheet()
@@ -95,9 +96,9 @@ class EditProfileFragment : Fragment() {
         }
 
 
-       // keyboard
-        CommonFun.onEnterKeyPressed_(inf.findViewById<View>(R.id.edtusername) as TextView) { activateBtn(); areFieldEmpty()}
-        CommonFun.onEnterKeyPressed_(inf.findViewById<View>(R.id.edtdescription) as TextView) {activateBtn(); areFieldEmpty()}
+        // keyboard
+        CommonFun.onEnterKeyPressed_(inf.findViewById<View>(R.id.edtusername) as TextView) { areFieldEmpty()}
+        CommonFun.onEnterKeyPressed_(inf.findViewById<View>(R.id.edtdescription) as TextView) {areFieldEmpty()}
         imageView = (inf.findViewById<View>(R.id.current_avatar) as ImageView)
         loadUrl(user.avatar.imageUrl, imageView )
         infview = inf
@@ -123,7 +124,6 @@ class EditProfileFragment : Fragment() {
     }
 
     private fun areFieldEmpty(){
-        CommonFun.toggleButton(updateprofile, true)
         infName = (infview!!.findViewById<View>(R.id.edtusername) as TextView)
         infDescription = (infview!!.findViewById<View>(R.id.edtdescription) as TextView)
         edtUsername = infName.text.toString()
@@ -141,7 +141,9 @@ class EditProfileFragment : Fragment() {
         if(AvatarService.getCurrentAvatar().imageUrl!= Constants.EMPTY_STRING){
             currentAvatar = AvatarService.getCurrentAvatar()
             newUserData.avatar = currentAvatar
+            UserService.setUserAvatar(currentAvatar)
         }
+
     }
 
     private fun activateBtn(){
@@ -163,7 +165,7 @@ class EditProfileFragment : Fragment() {
         setDataToUpdate()
         UserService.setNewProfileData(newUserData)
         updateUserInfo().observe(viewLifecycleOwner, { context?.let { it1 ->globalHandler.response(it1,it) } })
-        UserService.setUserAvatar(currentAvatar)
+
     }
 
     //call retrofit request to database to update user info
@@ -188,6 +190,7 @@ class EditProfileFragment : Fragment() {
             return
         }
         CommonFun.printToast(requireContext(), HTTPResponse.message!!)
+
     }
 
     // function to convert bitmap to file
