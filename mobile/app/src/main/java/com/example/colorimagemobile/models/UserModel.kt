@@ -37,6 +37,9 @@ class UserModel {
         @SerializedName("email")
         val email: String,
 
+        @SerializedName("avatar")
+        val avatar: AvatarModel,
+
         @SerializedName("description")
         var description: String,
 

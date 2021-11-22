@@ -115,4 +115,18 @@ interface API {
     // Search
     @GET(Constants.ENDPOINTS.SEARCH)
     fun getSearchQuery(@Header("Authorization") token: String, @Query ("q") query: String): Call<SearchModel>
+
+    // Museum Posts
+    @GET(Constants.ENDPOINTS.MUSEUM_POST)
+    fun getAllPosts(@Header("Authorization") token: String): Call<ArrayList<MuseumPostModel>>
+
+    @Headers("Content-Type: application/json")
+    @POST("${Constants.ENDPOINTS.MUSEUM_POST}/{id}/comments")
+    fun postComment(@Header("Authorization") token: String, @Path ("id") postId: String, @Body comment: CommentInterface): Call<CommentInterface>
+
+    @POST("${Constants.ENDPOINTS.MUSEUM_POST}/{id}/likes")
+    fun likePost(@Header("Authorization") token: String, @Path ("id") id: String): Call<Any>
+
+    @DELETE("${Constants.ENDPOINTS.MUSEUM_POST}/{id}/likes")
+    fun unlikePost(@Header("Authorization") token: String, @Path ("id") id: String): Call<Any>
 }
