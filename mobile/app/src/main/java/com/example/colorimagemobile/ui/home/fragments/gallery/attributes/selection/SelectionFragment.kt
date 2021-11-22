@@ -1,17 +1,14 @@
 package com.example.colorimagemobile.ui.home.fragments.gallery.attributes.selection
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.Button
 import android.widget.NumberPicker
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.LifecycleOwner
 import com.example.colorimagemobile.R
 import com.example.colorimagemobile.services.drawing.toolsAttribute.DeleteService
-import com.example.colorimagemobile.services.drawing.toolsAttribute.PencilService
-import com.example.colorimagemobile.services.drawing.toolsAttribute.RectangleService
-import com.example.colorimagemobile.services.drawing.toolsAttribute.SelectionService
+import com.example.colorimagemobile.services.drawing.toolsAttribute.LineWidthService
 
 class SelectionFragment : Fragment(R.layout.fragment_selection) {
     private lateinit var  deleteShapeBtn: Button
@@ -26,12 +23,15 @@ class SelectionFragment : Fragment(R.layout.fragment_selection) {
     }
 
     private fun setWidthListener() {
-        widthPicker.minValue = SelectionService.minWidth
-        widthPicker.maxValue = SelectionService.maxWidth
-        widthPicker.value = SelectionService.currentWidth
+        widthPicker.minValue = LineWidthService.minWidth
+        widthPicker.maxValue = LineWidthService.maxWidth
+
+        LineWidthService.getCurrentWidth().observe(context as LifecycleOwner, {
+            widthPicker.value = it
+        })
 
         widthPicker.setOnValueChangedListener { _, _, newValue ->
-            SelectionService.currentWidth = newValue
+            LineWidthService.changeLineWidth(newValue)
         }
     }
 

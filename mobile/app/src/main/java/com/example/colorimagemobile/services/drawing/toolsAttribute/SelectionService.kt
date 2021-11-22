@@ -5,13 +5,14 @@ import android.graphics.drawable.Drawable
 import android.graphics.drawable.LayerDrawable
 import android.graphics.drawable.ShapeDrawable
 import android.graphics.drawable.shapes.RectShape
+import com.example.colorimagemobile.classes.toolsCommand.EllipseCommand
+import com.example.colorimagemobile.classes.toolsCommand.PencilCommand
+import com.example.colorimagemobile.classes.toolsCommand.RectangleCommand
+import com.example.colorimagemobile.services.drawing.DrawingObjectManager
+import com.example.colorimagemobile.services.drawing.Point
 
 // Helper to draw selection box to canvas
-object SelectionService: Attributes {
-    override val minWidth = 1
-    override val maxWidth = 50
-    override var currentWidth: Int = 0
-
+object SelectionService {
     lateinit var selectedShape: Drawable
     var selectedShapeIndex: Int = -1
 
@@ -65,17 +66,30 @@ object SelectionService: Attributes {
         fillPaint.alpha = 255
     }
 
-    fun setSelectionBounds(left: Int, top: Int, right: Int, bottom: Int) {
-        var selectionBounds = Rect()
+    fun setSelectionBounds(left: Int, top: Int, right: Int, bottom: Int, strokeWidth: Int?) {
+        if (strokeWidth != null) {
+            this.setSelectionBounds(
+                (left - strokeWidth / 2),
+                (top - strokeWidth / 2),
+                (right + strokeWidth / 2),
+                (bottom + strokeWidth / 2)
+            )
+        } else {
+            this.setSelectionBounds(left, top, right, bottom)
+        }
+    }
+
+    private fun setSelectionBounds(left: Int, top: Int, right: Int, bottom: Int) {
+        val selectionBounds = Rect()
         selectionBounds.set(left, top, right, bottom)
 
         selectionRectangle.bounds = selectionBounds
         selectionBox.addLayer(selectionRectangle)
 
-        var width = right - left
-        var height = bottom - top
-        var horizontalCenter = left + width / 2
-        var verticalCenter = top + height / 2
+        val width = right - left
+        val height = bottom - top
+        val horizontalCenter = left + width / 2
+        val verticalCenter = top + height / 2
 
         topCtrl = setResizingPoint(horizontalCenter, top)
         leftCtrl = setResizingPoint(left, verticalCenter)
@@ -108,8 +122,8 @@ object SelectionService: Attributes {
     }
 
     private fun setResizingPoint(x: Int, y: Int): LayerDrawable {
-        var borderShape = ShapeDrawable(RectShape())
-        var fillShape = ShapeDrawable(RectShape())
+        val borderShape = ShapeDrawable(RectShape())
+        val fillShape = ShapeDrawable(RectShape())
 
         borderShape.paint.set(borderPaint)
         fillShape.paint.set(fillPaint)
@@ -127,7 +141,7 @@ object SelectionService: Attributes {
             y + pointWidth
         )
 
-        var pointShape = LayerDrawable(arrayOf<Drawable>())
+        val pointShape = LayerDrawable(arrayOf<Drawable>())
         pointShape.addLayer(fillShape)
         pointShape.addLayer(borderShape)
         pointShape.setBounds(
@@ -174,6 +188,47 @@ object SelectionService: Attributes {
         selectedDrawable = null
     }
 
+    fun resetBoundingBox() {
+        this.clearSelection()
+        val command = DrawingObjectManager.getCommand(selectedShapeIndex)
+        var path: Path? = null
+        var strokeWidth: Int? = null
+        when(command) {
+            is PencilCommand -> {
+                path = command.path
+                strokeWidth = command.pencil.strokeWidth
+            }
+            is RectangleCommand -> {
+                path = command.borderPath
+                strokeWidth = null
+            }
+            is EllipseCommand -> {
+                path = command.borderPath
+                strokeWidth = null
+            }
+        }
+        if(path != null){
+            val boundingBox = getPathBoundingBox(path)
+            setSelectionBounds(
+                boundingBox.left.toInt(),
+                boundingBox.top.toInt(),
+                boundingBox.right.toInt(),
+                boundingBox.bottom.toInt(),
+                strokeWidth
+            )
+            when(command) {
+                is RectangleCommand -> {
+                    command.setStartPoint(Point(boundingBox.left, boundingBox.top))
+                    command.setEndPoint(Point(boundingBox.right, boundingBox.bottom))
+                }
+                is EllipseCommand -> {
+                    command.setStartPoint(Point(boundingBox.left, boundingBox.top))
+                    command.setEndPoint(Point(boundingBox.right, boundingBox.bottom))
+                }
+            }
+        }
+    }
+
     fun inBounds(motionTouchEventX: Float, motionTouchEventY: Float, bounds: Rect): Boolean{
         return motionTouchEventX <= bounds.right &&
                 motionTouchEventX >= bounds.left &&
@@ -186,31 +241,18 @@ object SelectionService: Attributes {
     }
 
     fun getBoundsSelection(): Rect{
-        var left = (topLeftCtrl.bounds.left + topLeftCtrl.bounds.right) / 2
-        var top = (topLeftCtrl.bounds.top + topLeftCtrl.bounds.bottom) / 2
-        var right = (bottomRightCtrl.bounds.left + bottomRightCtrl.bounds.right) / 2
-        var bottom = (bottomRightCtrl.bounds.top + bottomRightCtrl.bounds.bottom) / 2
+        val left = (topLeftCtrl.bounds.left + topLeftCtrl.bounds.right) / 2
+        val top = (topLeftCtrl.bounds.top + topLeftCtrl.bounds.bottom) / 2
+        val right = (bottomRightCtrl.bounds.left + bottomRightCtrl.bounds.right) / 2
+        val bottom = (bottomRightCtrl.bounds.top + bottomRightCtrl.bounds.bottom) / 2
         return Rect(left, top, right, bottom)
     }
 
-    fun getPathBoundingBox(path: Path): Region {
+    fun getPathBoundingBox(path: Path): RectF {
         val rectF = RectF()
         path.computeBounds(rectF, true)
-        var region = Region()
-        region.setPath(
-            path,
-            Region(
-                rectF.left.toInt(),
-                rectF.top.toInt(),
-                rectF.right.toInt(),
-                rectF.bottom.toInt()
-            )
-        )
-
-        return region
+        return rectF
     }
-
-
 }
 
 enum class AnchorIndexes {
