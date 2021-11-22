@@ -17,9 +17,7 @@ import com.example.colorimagemobile.models.UserModel
 import com.example.colorimagemobile.models.recyclerAdapters.DrawingMenuData
 import com.example.colorimagemobile.repositories.UserRepository
 import com.example.colorimagemobile.services.users.UserService
-import com.example.colorimagemobile.utils.CommonFun
 import com.example.colorimagemobile.utils.CommonFun.Companion.loadUrl
-import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
 import com.example.colorimagemobile.utils.Constants
 import com.google.android.material.tabs.TabLayout
 import kotlinx.android.synthetic.main.fragment_teams_profile.*
@@ -80,7 +78,6 @@ class UsersProfileFragment : Fragment(R.layout.fragment_users_profile) {
 
         UserRepository().getUserDrawings(currentUser._id).observe(viewLifecycleOwner, {
             if (it.isError as Boolean) {
-                printMsg("in get user drawing error in userProfilefragment")
                 return@observe
             }
 
