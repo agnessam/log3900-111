@@ -26,6 +26,8 @@ import { DrawingsModule } from "./modules/drawings/drawings.module";
 import { BackendCommunicationModule } from "./modules/backend-communication/backend-communication.module";
 import { TeamModule } from "./modules/team/team.module";
 import { MuseumModule } from "./modules/museum/museum.module";
+import { SearchModule } from "./modules/search/search.module";
+import { CardsModule } from "./modules/cards/cards.module";
 
 @NgModule({
   declarations: [AppComponent],
@@ -52,11 +54,13 @@ import { MuseumModule } from "./modules/museum/museum.module";
     ParameterMenuModule,
     UsersModule,
     SidenavModule,
+    SearchModule,
     ErrorModule,
     DrawingsModule,
     TeamModule,
     BackendCommunicationModule,
     MuseumModule,
+    CardsModule,
   ],
   exports: [],
   providers: [],

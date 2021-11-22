@@ -57,4 +57,11 @@ class NotificationFragment : Fragment() {
                 }
             }
     }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        val showAllNotification = FollowNotificationFragment()
+        parentFragmentManager.beginTransaction().replace(R.id.notificationFragment, showAllNotification)
+            .commit()
+    }
 }

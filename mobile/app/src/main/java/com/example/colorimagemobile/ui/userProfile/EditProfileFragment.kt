@@ -12,7 +12,7 @@ import com.example.colorimagemobile.classes.MyFragmentManager
 import com.example.colorimagemobile.models.DataWrapper
 import com.example.colorimagemobile.models.HTTPResponseModel
 import com.example.colorimagemobile.models.UserModel
-import com.example.colorimagemobile.services.HandleHTTP
+import com.example.colorimagemobile.httpresponsehandler.GlobalHandler
 import com.example.colorimagemobile.services.UserService
 import com.example.colorimagemobile.repositories.UserRepository
 import com.example.colorimagemobile.services.SharedPreferencesService
@@ -26,7 +26,7 @@ class EditProfileFragment : Fragment() {
     private lateinit var edtDescription: String
     private lateinit var infDescription: TextView
     private lateinit var edtUsername: String
-    private lateinit var handleHTTP: HandleHTTP
+    private lateinit var globalHandler: GlobalHandler
     private lateinit var infName: TextView
     private var infview : View ? = null
     private lateinit var token : String
@@ -37,7 +37,7 @@ class EditProfileFragment : Fragment() {
         super.onCreate(savedInstanceState)
         user = UserService.getUserInfo()
         userRepository = UserRepository()
-        handleHTTP = HandleHTTP()
+        globalHandler = GlobalHandler()
         sharedPreferencesService = context?.let { SharedPreferencesService(it) }!!
         token = sharedPreferencesService.getItem(Constants.STORAGE_KEY.TOKEN)
 
@@ -94,14 +94,16 @@ class EditProfileFragment : Fragment() {
 
         // form body to make HTTP request
         val newUserData = UserModel.UpdateUser(edtUsername, edtDescription, user.password)
-        val updateObserver = updateUserInfo(newUserData)
+        UserService.setNewProfileData(newUserData)
+        val updateObserver = updateUserInfo()
 
-        updateObserver.observe(viewLifecycleOwner, { context?.let { it1 -> handleHTTP.Response(it1,it) } })
+        updateObserver.observe(viewLifecycleOwner, { context?.let { it1 ->globalHandler.response(it1,it) } })
         MyFragmentManager(requireActivity()).open(R.id.fragment, UserProfileFragment())
     }
 
-    private fun updateUserInfo(newUserData: UserModel.UpdateUser): LiveData<DataWrapper<HTTPResponseModel.UpdateUser>> {
-        return userRepository.updateUserData(token, user._id,newUserData)
+    private fun updateUserInfo(): LiveData<DataWrapper<HTTPResponseModel.UserResponse>> {
+        return userRepository.updateUserData(token, user._id)
     }
+
 
 }

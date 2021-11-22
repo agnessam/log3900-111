@@ -2,6 +2,9 @@ package com.example.colorimagemobile.ui.home.fragments.gallery.views
 
 import android.content.Context
 import android.graphics.*
+import android.graphics.drawable.Drawable
+import android.graphics.drawable.ShapeDrawable
+import android.graphics.drawable.shapes.RectShape
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewConfiguration
@@ -15,11 +18,13 @@ abstract class CanvasView(context: Context?): View(context) {
     protected var currentY = 0f
     protected val touchTolerance = ViewConfiguration.get(context).scaledTouchSlop
 
+    protected var counter = 0
+
     override fun onSizeChanged(width: Int, height: Int, oldWidth: Int, oldHeight: Int) {
         super.onSizeChanged(width, height, oldWidth, oldHeight)
         CanvasService.setWidth(width)
         CanvasService.setHeight(height)
-        CanvasService.drawPreviousCanvas()
+//        CanvasService.drawPreviousCanvas()
 
         invalidateCanvasListener()
     }
@@ -37,6 +42,8 @@ abstract class CanvasView(context: Context?): View(context) {
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
         canvas.drawBitmap(CanvasService.extraBitmap, 0f, 0f, null)
+        CanvasService.layerDrawable.draw(canvas)
+        SelectionService.selectionBox.draw(canvas)
     }
 
     // when taking an action on canvas

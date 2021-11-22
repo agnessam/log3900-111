@@ -1,6 +1,7 @@
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
+import { Drawing } from "src/app/shared";
 import { Team } from "src/app/shared/models/team.model";
 import { environment } from "src/environments/environment";
 import { EditableUserParameters } from "../models/editable-user-parameters";
@@ -20,7 +21,7 @@ export class UsersService {
 
   getUser(userId: string): Observable<User> {
     return this.httpClient
-      .get(`${this.endpointUrl}/${userId}`)
+      .get<User>(`${this.endpointUrl}/${userId}`)
       .pipe((response) => {
         return response;
       });
@@ -28,7 +29,7 @@ export class UsersService {
 
   updateUser(userId: string, user: EditableUserParameters): Observable<User> {
     return this.httpClient
-      .patch(`${this.endpointUrl}/${userId}`, user, {
+      .patch<User>(`${this.endpointUrl}/${userId}`, user, {
         headers: this.httpHeaders,
       })
       .pipe((response) => {
@@ -39,6 +40,14 @@ export class UsersService {
   getUserTeams(userId: string): Observable<Team[]> {
     return this.httpClient
       .get<Team[]>(`${this.endpointUrl}/${userId}/teams`)
+      .pipe((response) => {
+        return response;
+      });
+  }
+
+  getUserDrawings(userId: string): Observable<Drawing[]> {
+    return this.httpClient
+      .get<Drawing[]>(`${this.endpointUrl}/${userId}/drawings`)
       .pipe((response) => {
         return response;
       });

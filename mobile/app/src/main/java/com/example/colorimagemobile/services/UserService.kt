@@ -8,9 +8,28 @@ import java.time.LocalDateTime
 
 object UserService {
     private lateinit var info: UserModel.AllInfo
-    private  var lastLogin: String = "Has never login"
-    private  var lastLogout: String = "Has never logout"
-    private  var date : ArrayList<String> = arrayListOf("","")
+    private lateinit var lastLogin: String
+    private lateinit var lastLogout: String
+    private  var date : ArrayList<String> = arrayListOf(Constants.EMPTY_STRING,Constants.EMPTY_STRING)
+    private var token : String =Constants.EMPTY_STRING
+    private var updateProfileData : UserModel.UpdateUser = UserModel.UpdateUser(Constants.EMPTY_STRING,Constants.EMPTY_STRING,Constants.EMPTY_STRING)
+    private lateinit var AllUserInfo : List<UserModel.AllInfo>
+    private lateinit var logHistory : UserModel.UpdateLogHistory
+
+    fun setAllUserInfo(allInfo:List<UserModel.AllInfo>){
+        this.AllUserInfo = allInfo
+    }
+    fun getAllUserInfo() : List<UserModel.AllInfo> {
+        return this.AllUserInfo
+    }
+
+    fun setNewProfileData (newValues: UserModel.UpdateUser){
+        this.updateProfileData = newValues
+    }
+
+    fun getNewProfileData(): UserModel.UpdateUser{
+        return this.updateProfileData
+    }
 
     fun setUserInfo(newUserInfo: UserModel.AllInfo) {
         this.info = newUserInfo
@@ -24,23 +43,13 @@ object UserService {
         return !::info.isInitialized
     }
 
-    // set login and logout history
-    fun setLogHistory(logType : String){
-
-        if (logType == Constants.LAST_LOGIN_DATE){
-            this.lastLogin = (LocalDateTime.now()).toString()
-        }
-        else if (logType == Constants.LAST_LOGOUT_DATE){
-            this.lastLogout = (LocalDateTime.now()).toString();
-        }
-
-        this.date = arrayListOf(this.lastLogin, this.lastLogout)
-
+    fun setToken(token:String){
+        this.token = token
     }
 
-    // get login and logout history
-    fun getLogHistory(): ArrayList<String>{
-        return this.date
+    fun getToken(): String{
+
+        return this.token
     }
 
 }

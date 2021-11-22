@@ -6,22 +6,26 @@ class Constants {
     companion object {
         const val DEBUG_KEY = "PRIVATE"  // debug log key
 
-        // chat
-        const val DEFAULT_ROOM_NAME = "default"
-        const val CHAT_NAMESPACE_NAME = "chat"
-        const val TEXT_MESSAGE_EVENT_NAME = "text"
-
         // profile user log history
         const val LAST_LOGIN_DATE = "lastLogin"
         const val LAST_LOGOUT_DATE ="lastLogout"
+
+        const val EMPTY_STRING =""
+        const val GENERAL_CHANNEL_NAME = "General"
+
     }
 
     class SOCKETS {
         companion object {
             const val ROOM_EVENT_NAME = "room"
             const val LEAVE_ROOM_EVENT_NAME = "leaveRoom"
+
+            const val CHAT_NAMESPACE_NAME = "chat"
+            const val TEXT_MESSAGE_EVENT_NAME = "text"
+
             const val COLLABORATIVE_DRAWING_NAMESPACE = "drawing"
             const val IN_PROGRESS_DRAWING_EVENT = "draw-in-progress"
+            const val CONFIRM_DRAWING_EVENT = "draw-confirm"
         }
     }
 
@@ -37,12 +41,11 @@ class Constants {
             const val LOGIN_USER = "api/auth/login"
             const val LOGOUT_USER = "api/auth/logout"
             const val REGISTER_USER = "api/auth/register"
-
             const val GET_USER_BY_TOKEN = "api/users/me"
+            const val USER_PATH ="api/users/"
+            const val TEXT_CHANNEL_PATH ="api/channels/"
+            const val MESSAGES_PATH = "api/messages"
             const val USER = "api/users/"
-            const val GET_USER_BY_ID = "api/users/"
-            const val UPDATE_USER = "api/users/"
-            const val DELETE_USER = "api/users/:id"
 
             // drawings
             const val ALL_DRAWINGS = "api/drawings/"
@@ -64,7 +67,6 @@ class Constants {
         companion object {
             const val MAIN = "localStorage"
             const val TOKEN = "token"
-            const val DRAWING_ROOM_ID = "drawingRoomName"
         }
     }
 }

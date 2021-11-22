@@ -19,6 +19,17 @@
             android:layout_alignParentRight="true"
             android:backgroundTint="@color/primary"/>
 
+        <TextView
+            android:id="@+id/loadingDrawingsText"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:textSize="27sp"
+            android:text="LOADING DRAWINGS .."
+            android:textStyle="bold|italic"
+            android:layout_below="@id/newDrawingBtn"
+            android:textAlignment="center" />
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/drawingMenuRecyclerView"
             android:layout_below="@id/newDrawingBtn"

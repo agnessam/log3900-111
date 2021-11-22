@@ -37,6 +37,12 @@ const routes: Routes = [
     canActivate: [AuthGuard],
   },
   {
+    path: "search",
+    loadChildren: () =>
+      import("./modules/search/search.module").then((m) => m.SearchModule),
+    canActivate: [AuthGuard],
+  },
+  {
     path: "",
     redirectTo: "/gallery",
     pathMatch: "full",

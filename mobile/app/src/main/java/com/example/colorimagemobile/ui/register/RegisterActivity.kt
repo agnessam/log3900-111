@@ -13,6 +13,7 @@ import com.example.colorimagemobile.classes.FormValidator
 import com.example.colorimagemobile.services.UserService
 import com.example.colorimagemobile.models.UserModel
 import com.example.colorimagemobile.databinding.ActivityRegisterBinding
+import com.example.colorimagemobile.httpresponsehandler.GlobalHandler
 import com.example.colorimagemobile.models.DataWrapper
 import com.example.colorimagemobile.models.HTTPResponseModel
 import com.example.colorimagemobile.services.SharedPreferencesService
@@ -44,6 +45,8 @@ class RegisterActivity : AppCompatActivity() {
     private var canSubmit: Boolean = false
     private lateinit var registerLayouts: ArrayList<TextInputLayout>
     private lateinit var registerInputs: ArrayList<TextInputEditText>
+
+
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -143,4 +146,7 @@ class RegisterActivity : AppCompatActivity() {
         sharedPreferencesService.setItem(Constants.STORAGE_KEY.TOKEN, response.token)
         redirectTo(this@RegisterActivity, HomeActivity::class.java)
     }
+
+
+
 }
