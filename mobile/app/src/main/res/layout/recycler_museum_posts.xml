@@ -6,6 +6,17 @@
     android:background="@color/mainTheme"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <TextView
+        android:id="@+id/museumCurrentNb"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginBottom="12dp"
+        android:textStyle="bold"
+        android:textSize="16sp"
+        android:textAlignment="center" />
+
     <androidx.cardview.widget.CardView
         android:id="@+id/museumMainCard"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -13,7 +24,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         android:layout_width="0dp"
-        android:layout_height="400dp"
+        android:layout_height="450dp"
         app:layout_constraintWidth_percent="0.92"
         app:cardElevation="3dp"
         app:cardCornerRadius="10dp"
@@ -65,13 +76,13 @@
                         android:background="@drawable/border_bottom">
 
                         <TextView
+                            android:id="@+id/museum_post_name"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_alignParentLeft="true"
                             android:layout_centerVertical="true"
                             android:layout_marginLeft="5dp"
                             android:layout_toLeftOf="@id/museum_post_like"
-                            android:text="MEE"
                             android:textSize="18sp"
                             android:textStyle="bold" />
 

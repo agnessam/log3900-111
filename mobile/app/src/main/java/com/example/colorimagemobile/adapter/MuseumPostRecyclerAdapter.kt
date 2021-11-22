@@ -4,10 +4,7 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ImageButton
-import android.widget.ImageView
+import android.widget.*
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.colorimagemobile.R
@@ -43,6 +40,9 @@ class MuseumPostRecyclerAdapter(
         holder.commentRecyclerView.layoutManager = LinearLayoutManager(context)
         holder.commentRecyclerView.adapter = MuseumAdapters.getCommentAdapter(position)
 
+        holder.museumCurrentNb.text = "#${position + 1}"
+        holder.museumName.text = currentPost.name
+
         // set like heart
         if (MuseumPostService.hasLiked(currentPost)) showFilledLike(holder) else hideFilledLike(holder)
     }
@@ -60,6 +60,8 @@ class MuseumPostRecyclerAdapter(
     override fun getItemCount(): Int { return MuseumPostService.getPosts().size }
 
     inner class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
+        val museumCurrentNb: TextView = itemView.findViewById(R.id.museumCurrentNb)
+        val museumName: TextView = itemView.findViewById(R.id.museum_post_name)
         val image : ImageView = itemView.findViewById(R.id.postImage)
         val commentRecyclerView: RecyclerView = itemView.findViewById(R.id.museum_comments_recycler_view)
         private val commentEditText: EditText = itemView.findViewById(R.id.post_comment_input)
