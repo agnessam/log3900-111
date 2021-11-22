@@ -90,7 +90,6 @@ class EditProfileFragment : Fragment() {
             cameraCheckPermission() }
         inf.findViewById<View>(R.id.editprofileview).setOnTouchListener { v, event -> CommonFun.hideKeyboard(requireContext(), editprofileview)}
         inf.findViewById<View>(R.id.choosedefaultavatar).setOnClickListener {
-            activateBtn();
             val defaultAvatarList = DefaultAvatarListBottomSheet()
             defaultAvatarList.show(parentFragmentManager, "DefaultAvatarListBottomSheetDialog")
         }
@@ -108,7 +107,6 @@ class EditProfileFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         getAllAvatar()
-        CommonFun.toggleButton(updateprofile, false)
 
     }
 
@@ -129,9 +127,10 @@ class EditProfileFragment : Fragment() {
         edtUsername = infName.text.toString()
         edtDescription = infDescription.text.toString()
         if (edtUsername.length != 0 || edtDescription.length != 0){
-            CommonFun.toggleButton(updateprofile, true)
             newUserData.username = edtUsername
             newUserData.description = edtDescription
+
+
         }
 
     }
@@ -144,10 +143,6 @@ class EditProfileFragment : Fragment() {
             UserService.setUserAvatar(currentAvatar)
         }
 
-    }
-
-    private fun activateBtn(){
-        CommonFun.toggleButton(updateprofile, true)
     }
 
     // update profile with the data enter
@@ -244,7 +239,6 @@ class EditProfileFragment : Fragment() {
 
     // call whenever we try to take a picture
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        CommonFun.toggleButton(updateprofile, true)
         if (requestCode == 1 && data != null) {
             bitmap = data.extras?.get("data") as Bitmap
             imageView.setImageBitmap(bitmap)

@@ -3,7 +3,9 @@ package com.example.colorimagemobile.httpresponsehandler
 import android.content.Context
 import com.example.colorimagemobile.models.DataWrapper
 import com.example.colorimagemobile.models.HTTPResponseModel
+import com.example.colorimagemobile.models.UserModel
 import com.example.colorimagemobile.utils.CommonFun
+import com.example.colorimagemobile.services.users.UserService
 
 class GlobalHandler{
 
