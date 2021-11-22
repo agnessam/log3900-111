@@ -2,9 +2,10 @@
     <string name="app_name">ColorImage</string>
 
     <!--    Fragments-->
-    <string name="title_notifications">Notifications</string>
+    <string name="title_teams">Teams</string>
     <string name="title_gallery">Gallery</string>
     <string name="title_chat">Chat</string>
+    <string name="title_museum">Museum</string>
     <string name="title_user_profile">User Profile</string>
     <string name="title_activity_home">HomeActivity</string>
 

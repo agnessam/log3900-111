@@ -27,6 +27,23 @@ class MyFragmentManager(activity: FragmentActivity) {
             .commitAllowingStateLoss()
     }
 
+    // pass objects
+    fun openWithData(oldFragmentID: Int, newFragmentClass: Fragment, key: String, data: Serializable) {
+        val args = Bundle()
+        args.putSerializable(key, data)
+        newFragmentClass.arguments = args
+
+        open(oldFragmentID, newFragmentClass)
+    }
+
+    fun openWithData(oldFragmentID: Int, newFragmentClass: Fragment, key: String, data: Int) {
+        val args = Bundle()
+        args.putInt(key, data)
+        newFragmentClass.arguments = args
+
+        open(oldFragmentID, newFragmentClass)
+    }
+
     fun showBackButton() {
         (activity as AppCompatActivity?)?.supportActionBar?.setDisplayHomeAsUpEnabled(true)
     }

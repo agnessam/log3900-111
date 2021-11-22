@@ -5,7 +5,7 @@ import android.os.Bundle
 import androidx.core.widget.doOnTextChanged
 import com.example.colorimagemobile.R
 import com.example.colorimagemobile.classes.FormValidator
-import com.example.colorimagemobile.services.UserService
+import com.example.colorimagemobile.services.users.UserService
 import com.example.colorimagemobile.models.UserModel
 import com.example.colorimagemobile.databinding.ActivityLoginBinding
 import com.example.colorimagemobile.httpresponsehandler.GlobalHandler

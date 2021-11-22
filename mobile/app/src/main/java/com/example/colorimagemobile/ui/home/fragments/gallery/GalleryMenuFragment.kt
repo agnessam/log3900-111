@@ -25,8 +25,6 @@ import com.example.colorimagemobile.services.drawing.DrawingService
 import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
 import kotlin.collections.ArrayList
 
-private const val NB_ROWS = 3
-
 class GalleryMenuFragment : Fragment(R.layout.fragment_gallery_menu) {
     private lateinit var drawingRepo: DrawingRepository
     private lateinit var sharedPreferencesService: SharedPreferencesService
@@ -74,18 +72,8 @@ class GalleryMenuFragment : Fragment(R.layout.fragment_gallery_menu) {
     // display all existing drawings in menu
     private fun renderDrawings() {
         val recyclerView = galleryView.findViewById<RecyclerView>(R.id.drawingMenuRecyclerView)
-        val drawingsMenu: ArrayList<DrawingMenuData> = arrayListOf()
-
-        // convert src to bitmap for each drawing
-        drawings.forEach { drawing ->
-            val bitmap: Bitmap? = ImageConvertor(requireContext()).base64ToBitmap(drawing.dataUri)
-
-            if (bitmap != null) {
-                drawingsMenu.add(DrawingMenuData(drawing._id, bitmap))
-            }
-        }
-
-        recyclerView.layoutManager = GridLayoutManager(requireContext(), NB_ROWS)
-        recyclerView.adapter = DrawingMenuRecyclerAdapter(drawingsMenu)
+        val drawingsMenu: ArrayList<DrawingMenuData> = DrawingService.getDrawingsBitmap(requireContext(), drawings)
+        recyclerView.layoutManager = GridLayoutManager(requireContext(), Constants.NB_DATA_ROWS)
+        recyclerView.adapter = DrawingMenuRecyclerAdapter(drawingsMenu, R.id.main_gallery_fragment)
     }
 }

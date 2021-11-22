@@ -4,8 +4,10 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.SearchView
 import androidx.appcompat.view.menu.ActionMenuItemView
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
@@ -14,13 +16,21 @@ import com.example.colorimagemobile.ui.login.LoginActivity
 import com.example.colorimagemobile.R
 import com.example.colorimagemobile.classes.MyFragmentManager
 import com.example.colorimagemobile.httpresponsehandler.GlobalHandler
-import com.example.colorimagemobile.services.UserService
+import com.example.colorimagemobile.services.users.UserService
 import com.example.colorimagemobile.models.UserModel
 import com.example.colorimagemobile.models.DataWrapper
 import com.example.colorimagemobile.models.HTTPResponseModel
+import com.example.colorimagemobile.models.SearchModel
+import com.example.colorimagemobile.repositories.SearchRepository
+import com.example.colorimagemobile.services.SearchService
 import com.example.colorimagemobile.services.SharedPreferencesService
+import com.example.colorimagemobile.services.drawing.DrawingObjectManager
+import com.example.colorimagemobile.services.drawing.DrawingService
 import com.example.colorimagemobile.services.socket.SocketManagerService
 import com.example.colorimagemobile.ui.home.fragments.gallery.GalleryMenuFragment
+import com.example.colorimagemobile.ui.home.fragments.search.SearchFragment
+import com.example.colorimagemobile.ui.home.fragments.teams.TeamsMenuFragment
+import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
 import com.example.colorimagemobile.utils.CommonFun.Companion.printToast
 import com.example.colorimagemobile.utils.CommonFun.Companion.redirectTo
 import com.example.colorimagemobile.utils.Constants
@@ -30,31 +40,34 @@ class HomeActivity : AppCompatActivity() {
     private lateinit var homeViewModel: HomeActivityViewModel
     private lateinit var sharedPreferencesService: SharedPreferencesService
     private lateinit var globalHandler: GlobalHandler
+    private lateinit var navController: NavController
+    private lateinit var bottomNav: BottomNavigationView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
+
         globalHandler = GlobalHandler()
         homeViewModel = ViewModelProvider(this).get(HomeActivityViewModel::class.java)
         sharedPreferencesService = SharedPreferencesService(this)
+
+        navController = findNavController(R.id.fragment)
+        bottomNav = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
 
         setBottomNavigationView()
     }
     // side navigation navbar: upon click, change to new fragment
     private fun setBottomNavigationView() {
-        val navView: BottomNavigationView = findViewById(R.id.bottomNavigationView)
-
         // remove every socket events
-        navView.setOnItemSelectedListener {
+        bottomNav.setOnItemSelectedListener {
             SocketManagerService.disconnectFromAll()
             return@setOnItemSelectedListener true
         }
 
-        val navController = findNavController(R.id.fragment)
         val appBarConfiguration = AppBarConfiguration(setOf(
-            R.id.galleryFragment, R.id.chatFragment, R.id.notificationFragment, R.id.userProfileFragment))
+            R.id.galleryFragment, R.id.chatFragment, R.id.teamsFragment, R.id.museumFragment, R.id.userProfileFragment))
         setupActionBarWithNavController(navController, appBarConfiguration)
-        navView.setupWithNavController(navController)
+        bottomNav.setupWithNavController(navController)
     }
 
     // add options to Home Navbar
@@ -69,7 +82,33 @@ class HomeActivity : AppCompatActivity() {
             checkCurrentUser()
         }
 
+        setSearchIcon(menu)
         return true
+    }
+
+    private fun setSearchIcon(menu: Menu?) {
+        val searchView = menu?.findItem(R.id.searchIcon)?.actionView as SearchView
+        searchView.queryHint = "Quick Search"
+
+        searchView.setOnCloseListener(object: SearchView.OnCloseListener {
+            override fun onClose(): Boolean {
+                bottomNav.selectedItemId = navController.currentDestination?.id!!
+                return false
+            }
+        })
+
+        searchView.setOnQueryTextListener(object: SearchView.OnQueryTextListener {
+            override fun onQueryTextChange(newText: String): Boolean {
+                if (newText.isNullOrEmpty()) { SearchService.clear() }
+                return false
+            }
+            override fun onQueryTextSubmit(query: String): Boolean {
+                SearchService.setQuery(query)
+                searchView.clearFocus()
+                getFilteredData()
+                return true
+            }
+        })
     }
 
     // when clicked on individual menu icons
@@ -84,13 +123,17 @@ class HomeActivity : AppCompatActivity() {
     }
 
     override fun onSupportNavigateUp(): Boolean {
-        val navController = this.findNavController(R.id.fragment)
-
         return when(navController.currentDestination?.id) {
             // back button clicked on Gallery Drawing
             R.id.galleryFragment -> {
+                DrawingObjectManager.clearLayers()
                 SocketManagerService.leaveDrawingRoom()
-                MyFragmentManager(this).open(R.id.main_gallery_fragment, GalleryMenuFragment())
+                DrawingService.setCurrentDrawingID(null)
+                bottomNav.selectedItemId = R.id.galleryFragment
+                true
+            }
+            R.id.teamsFragment -> {
+                bottomNav.selectedItemId = R.id.teamsFragment
                 true
             }
             else -> navController.navigateUp()
@@ -137,5 +180,17 @@ class HomeActivity : AppCompatActivity() {
         sharedPreferencesService.removeItem(Constants.STORAGE_KEY.TOKEN)
 
         redirectTo(this, LoginActivity::class.java)
+    }
+
+    private fun getFilteredData() {
+        val query = SearchService.getQuery()
+        if (query.isNullOrEmpty()) return
+
+        SearchRepository().getSearchQuery(query).observe(this, {
+            if (it.isError as Boolean) { return@observe }
+
+            val filteredData = it.data as SearchModel
+            MyFragmentManager(this).openWithData(R.id.fragment, SearchFragment(), Constants.SEARCH.CURRENT_QUERY, filteredData)
+        })
     }
 }

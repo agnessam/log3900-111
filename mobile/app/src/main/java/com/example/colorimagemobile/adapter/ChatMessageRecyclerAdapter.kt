@@ -7,7 +7,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.colorimagemobile.R
 import com.example.colorimagemobile.models.ChatSocketModel
-import com.example.colorimagemobile.services.UserService
+import com.example.colorimagemobile.services.users.UserService
 
 class ChatMessageRecyclerAdapter(): RecyclerView.Adapter<ChatMessageRecyclerAdapter.ViewHolder>() {
     private val PUBLIC_MESSAGE = 0

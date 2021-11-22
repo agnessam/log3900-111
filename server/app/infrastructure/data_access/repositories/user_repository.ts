@@ -36,7 +36,6 @@ export class UserRepository extends GenericRepository<UserInterface> {
     }
   }
 
-
   public async getUserTeams(userId: string) {
     return new Promise((resolve, reject) => {
       Team.find({ members: userId }).exec((err, teams) => {
@@ -62,16 +61,67 @@ export class UserRepository extends GenericRepository<UserInterface> {
     });
   }
 
-  public async getPublishedDrawings(userId: string) {
+  public async getPosts(userId: string) {
     return new Promise((resolve, reject) => {
       User.findById({ _id: userId })
-        .populate('publishedDrawings')
+        .populate('posts')
         .exec((err, user) => {
           if (err || !user) {
             reject(err);
           }
-          resolve(user!.publishedDrawings);
+          resolve(user!.posts);
         });
+    });
+  }
+
+  public async followUser(followed: string, followedBy: string) {
+    return new Promise((resolve, reject) => {
+      User.findById(
+        { _id: followed },
+        (err: Error, followedUser: UserInterface) => {
+          if (err || !followedUser) {
+            reject(err);
+          }
+          (followedUser.followers as string[]).push(followedBy);
+          followedUser.save();
+          User.findById(
+            { _id: followedBy },
+            (err: Error, followedByUser: UserInterface) => {
+              if (err || !followedByUser) {
+                reject(err);
+              }
+              (followedByUser.following as string[]).push(followed);
+              followedByUser.save();
+            },
+          );
+          resolve(followedUser);
+        },
+      );
+    });
+  }
+
+  public async unfollowUser(unfollowedId: string, unfollowedById: string) {
+    return new Promise((resolve, reject) => {
+      User.findByIdAndUpdate(
+        { _id: unfollowedById },
+        { $pull: { following: unfollowedId } },
+        (err: Error, unfollowedByUser: UserInterface) => {
+          if (err || !unfollowedByUser) {
+            reject(err);
+          }
+        },
+      );
+      User.findByIdAndUpdate(
+        { _id: unfollowedId },
+        { $pull: { followers: unfollowedById } },
+        { new: true },
+        (err: Error, unfollowedUser: UserInterface) => {
+          if (err || !unfollowedUser) {
+            reject(err);
+          }
+          resolve(unfollowedUser);
+        },
+      );
     });
   }
 }

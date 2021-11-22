@@ -6,6 +6,9 @@ export interface DrawingInterface extends Document {
   ownerModel: string;
   name: string;
 
+  privacyLevel: string;
+  password: string;
+
   createdAt: string;
   updatedAt: string;
 }
@@ -26,6 +29,14 @@ const DrawingSchema = new mongoose.Schema(
     name: {
       type: String,
       required: true,
+    },
+    privacyLevel: {
+      type: String,
+      enum: ['public', 'protected', 'private'],
+      default: 'public',
+    },
+    password: {
+      type: String,
     },
   },
   { timestamps: true },

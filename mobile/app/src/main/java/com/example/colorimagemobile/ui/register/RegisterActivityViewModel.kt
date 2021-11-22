@@ -7,8 +7,6 @@ import com.example.colorimagemobile.models.UserModel
 import com.example.colorimagemobile.models.DataWrapper
 import com.example.colorimagemobile.models.HTTPResponseModel
 import com.example.colorimagemobile.repositories.AuthRepository
-import com.example.colorimagemobile.repositories.UserRepository
-import com.example.colorimagemobile.services.UserService
 
 class RegisterActivityViewModel: ViewModel() {
     private val HTTPResponseLiveData: MutableLiveData<DataWrapper<HTTPResponseModel>>
