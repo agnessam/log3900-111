@@ -8,6 +8,7 @@ import android.os.Environment
 import android.provider.MediaStore
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
+import android.view.Menu
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -26,6 +27,7 @@ import com.example.colorimagemobile.repositories.UserRepository
 import com.example.colorimagemobile.services.SharedPreferencesService
 import com.example.colorimagemobile.services.avatar.AvatarService
 import com.example.colorimagemobile.services.users.UserService
+import com.example.colorimagemobile.ui.home.HomeActivity
 import com.example.colorimagemobile.utils.CommonFun
 import com.example.colorimagemobile.utils.CommonFun.Companion.imageView
 import com.example.colorimagemobile.utils.CommonFun.Companion.loadUrl
@@ -118,6 +120,7 @@ class EditProfileFragment : Fragment() {
         })
     }
 
+    //Verify if field are empty and set username and description on change
     private fun areFieldEmpty(){
         infName = (infview!!.findViewById<View>(R.id.edtusername) as TextView)
         infDescription = (infview!!.findViewById<View>(R.id.edtdescription) as TextView)
@@ -153,14 +156,25 @@ class EditProfileFragment : Fragment() {
         if (countExistingAvatar == 0){
             postAvatar(AvatarService.getCurrentAvatar()).observe(viewLifecycleOwner, { handleResponse(it) })
         }
+
         setDataToUpdate()
         areFieldEmpty()
         UserService.setNewProfileData(newUserData)
+
+        // update user
         updateUserInfo().observe(viewLifecycleOwner, { context?.let { it1 ->globalHandler.response(it1,it) } })
+
+        //clear all field
         clearTextField()
+
+        // update local user data
         UserService.updateUserAfterUpdate(UserService.getNewProfileData())
 
+        // update menu item
+        requireActivity().invalidateOptionsMenu()
     }
+
+
 
     //call retrofit request to database to update user info
     private fun updateUserInfo(): LiveData<DataWrapper<HTTPResponseModel.UserResponse>> {
