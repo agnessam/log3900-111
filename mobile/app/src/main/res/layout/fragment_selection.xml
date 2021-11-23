@@ -11,7 +11,15 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-<!--        TODO: ADD BUTTON TO DELETE SELECTION-->
+        <Button
+            android:id="@+id/deleteShapeBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:layout_gravity="center"
+            android:text="Delete"
+            android:backgroundTint="@color/primary"
+            android:textColor="@color/white"/>
 
         <TextView
             android:layout_width="match_parent"
@@ -21,10 +29,12 @@
             android:text="Width" />
 
         <NumberPicker
-            android:id="@+id/pencil_width_picker"
+            android:id="@+id/width_picker"
             android:layout_marginTop="30dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
+
+<!--        TODO: add color picker for primary and secondary colors-->
 
     </LinearLayout>
 </FrameLayout>

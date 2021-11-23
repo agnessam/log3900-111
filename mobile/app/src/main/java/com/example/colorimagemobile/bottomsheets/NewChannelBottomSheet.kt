@@ -11,7 +11,7 @@ import androidx.fragment.app.FragmentActivity
 import com.example.colorimagemobile.R
 import com.example.colorimagemobile.models.TextChannelModel
 import com.example.colorimagemobile.repositories.TextChannelRepository
-import com.example.colorimagemobile.services.UserService
+import com.example.colorimagemobile.services.users.UserService
 import com.example.colorimagemobile.services.chat.ChatService
 import com.example.colorimagemobile.services.chat.TextChannelService
 import com.example.colorimagemobile.utils.CommonFun.Companion.printToast

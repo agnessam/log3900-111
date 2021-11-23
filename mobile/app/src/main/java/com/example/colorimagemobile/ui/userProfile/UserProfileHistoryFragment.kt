@@ -7,16 +7,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.lifecycle.LiveData
 import com.example.colorimagemobile.R
-import com.example.colorimagemobile.models.DataWrapper
-import com.example.colorimagemobile.models.HTTPResponseModel
-import com.example.colorimagemobile.models.UserModel
-import com.example.colorimagemobile.repositories.UserRepository
-import com.example.colorimagemobile.services.UserService
-import com.example.colorimagemobile.utils.CommonFun
-import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
-import com.example.colorimagemobile.utils.Constants
+import com.example.colorimagemobile.services.users.UserService
 
 
 class UserProfileHistoryFragment : Fragment() {

@@ -7,8 +7,8 @@ export interface PostInterface extends Document {
   ownerModel: string;
   name: string;
 
-  // TODO: Add comments and likes as a seperate model
   comments: string[] | CommentInterface[];
+  likes: string[];
 }
 
 const PostSchema = new Schema(
@@ -29,6 +29,7 @@ const PostSchema = new Schema(
       required: true,
     },
     comments: [{ type: Schema.Types.ObjectId, ref: 'Comment' }],
+    likes: [{ type: Schema.Types.ObjectId, ref: 'User' }],
   },
   { timestamps: true },
 );

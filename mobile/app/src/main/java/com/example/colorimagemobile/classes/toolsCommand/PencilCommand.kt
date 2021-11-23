@@ -1,16 +1,18 @@
 package com.example.colorimagemobile.classes.toolsCommand
 
-import android.graphics.*
+import android.graphics.Paint
+import android.graphics.Path
+import android.graphics.Rect
 import android.graphics.drawable.ShapeDrawable
 import android.graphics.drawable.shapes.PathShape
 import com.example.colorimagemobile.interfaces.ICommand
 import com.example.colorimagemobile.models.PencilData
 import com.example.colorimagemobile.models.SyncUpdate
-import com.example.colorimagemobile.services.drawing.*
+import com.example.colorimagemobile.services.drawing.CanvasService
+import com.example.colorimagemobile.services.drawing.CanvasUpdateService
+import com.example.colorimagemobile.services.drawing.DrawingObjectManager
 import com.example.colorimagemobile.services.drawing.Point
 import com.example.colorimagemobile.services.drawing.toolsAttribute.ColorService
-import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
-
 import com.example.colorimagemobile.services.drawing.toolsAttribute.PencilService
 
 class PencilCommand(pencilData: PencilData): ICommand {
@@ -28,13 +30,18 @@ class PencilCommand(pencilData: PencilData): ICommand {
         layerIndex = DrawingObjectManager.addLayer(shapeDrawable, pencil.id)
         PencilService.paths.putIfAbsent(layerIndex, path)
 
+        this.initializePaint()
+        this.setStartingPoint()
+    }
+
+    fun initializePaint() {
         paint.color = ColorService.rgbaToInt(this.pencil.stroke)
         paint.style = Paint.Style.STROKE
         paint.strokeJoin = Paint.Join.ROUND
         paint.strokeCap = Paint.Cap.ROUND
         paint.strokeWidth = this.pencil.strokeWidth.toFloat()
-        this.setStartingPoint()
     }
+
     private fun setStartingPoint(){
         this.path.moveTo(pencil.pointsList[0].x, pencil.pointsList[0].y)
     }
@@ -54,7 +61,6 @@ class PencilCommand(pencilData: PencilData): ICommand {
 
     private fun getPathDrawable(): ShapeDrawable {
         return DrawingObjectManager.getDrawable(this.layerIndex) as ShapeDrawable
-//        return DrawingObjectManager.layerDrawable.getDrawable(this.layerIndex) as ShapeDrawable
     }
 
     // update canvas

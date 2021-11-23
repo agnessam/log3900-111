@@ -1,22 +1,25 @@
 package com.example.colorimagemobile.ui.home.fragments.gallery.views
 
 import android.content.Context
-import android.graphics.*
+import android.graphics.Path
 import android.graphics.drawable.Drawable
-import android.graphics.drawable.LayerDrawable
-import android.graphics.drawable.ShapeDrawable
-import android.graphics.drawable.shapes.PathShape
-import com.example.colorimagemobile.classes.toolsCommand.*
-import com.example.colorimagemobile.models.RectangleData
+import com.example.colorimagemobile.classes.toolsCommand.EllipseCommand
+import com.example.colorimagemobile.classes.toolsCommand.PencilCommand
+import com.example.colorimagemobile.classes.toolsCommand.RectangleCommand
+import com.example.colorimagemobile.classes.toolsCommand.TranslateCommand
+import com.example.colorimagemobile.classes.toolsCommand.selectionToolCommands.SelectionCommand
 import com.example.colorimagemobile.models.SelectionData
-import com.example.colorimagemobile.models.ToolData
-import com.example.colorimagemobile.services.UUIDService
 import com.example.colorimagemobile.services.drawing.CanvasService
+import com.example.colorimagemobile.services.drawing.CanvasUpdateService
 import com.example.colorimagemobile.services.drawing.DrawingObjectManager
-import com.example.colorimagemobile.services.drawing.SelectionService
-import com.example.colorimagemobile.services.drawing.SelectionService.selectedShape
-import com.example.colorimagemobile.services.drawing.SelectionService.selectedShapeIndex
-import com.example.colorimagemobile.services.drawing.toolsAttribute.PencilService
+import com.example.colorimagemobile.services.drawing.SynchronisationService
+import com.example.colorimagemobile.services.drawing.toolsAttribute.AnchorIndexes
+import com.example.colorimagemobile.services.drawing.toolsAttribute.LineWidthService
+import com.example.colorimagemobile.services.drawing.toolsAttribute.ResizeSelectionService
+import com.example.colorimagemobile.services.drawing.toolsAttribute.SelectionService
+import com.example.colorimagemobile.services.drawing.toolsAttribute.SelectionService.selectedShape
+import com.example.colorimagemobile.services.drawing.toolsAttribute.SelectionService.selectedShapeIndex
+import com.example.colorimagemobile.services.socket.DrawingSocketService
 import kotlin.math.abs
 
 class SelectionView(context: Context?): CanvasView(context) {
@@ -24,54 +27,55 @@ class SelectionView(context: Context?): CanvasView(context) {
     private var translationCommand: TranslateCommand? = null
 
     override fun createPathObject() {
-        selectionCommand = SelectionCommand()
-
         // for sync
-        val id = UUIDService.generateUUID()
+        val id = DrawingObjectManager.getUuid(selectedShapeIndex) ?: return
         var selectionData = SelectionData(
-            id = id,
+            id = id
         )
+        selectionCommand = SelectionCommand(selectionData)
     }
 
-    private fun getPathBoundingBox(path: Path): RectF {
-        val rectF = RectF()
-        path.computeBounds(rectF, true)
-        return rectF
-    }
+    private fun drawBoundingBox(drawable: Drawable, index: Int, path: Path, strokeWidth: Int?): Boolean {
+        val boundingBox = SelectionService.getPathBoundingBox(path)
+        val isInsidePath = boundingBox.contains(motionTouchEventX,motionTouchEventY)
 
-    private fun setSelectionBounds(left: Int, top: Int, right: Int, bottom: Int, strokeWidth: Int?) {
-        if (strokeWidth != null) {
+        // Check if shape is in preview shapes. If it is
+        val uuid = DrawingObjectManager.getUuid(index)
+        val isInPreviewShapes = SynchronisationService.isShapeInPreview(uuid)
+        if (isInsidePath && !isInPreviewShapes) {
+            selectedShape = drawable
+            selectedShapeIndex = index
+            createPathObject()
             SelectionService.setSelectionBounds(
-                (left - strokeWidth / 2),
-                (top - strokeWidth / 2),
-                (right + strokeWidth / 2),
-                (bottom + strokeWidth / 2)
-            )
-        } else {
-            SelectionService.setSelectionBounds(left, top, right, bottom)
-        }
-    }
-
-    private fun drawBoundingBox(path: Path, strokeWidth: Int?): Boolean {
-        var isInsidePath: Boolean
-        var boundingBox: RectF
-        boundingBox = getPathBoundingBox(path)
-        isInsidePath = boundingBox.contains(motionTouchEventX,motionTouchEventY)
-        if (isInsidePath) {
-            setSelectionBounds(
                 boundingBox.left.toInt(),
                 boundingBox.top.toInt(),
                 boundingBox.right.toInt(),
                 boundingBox.bottom.toInt(),
                 strokeWidth
             )
-            selectionCommand!!.execute()
+            DrawingSocketService.sendStartSelectionCommand(selectionCommand!!.selectionData, "SelectionStart")
+        } else {
+            selectedShapeIndex = -1
+            if(selectionCommand != null){
+                DrawingSocketService.sendConfirmSelectionCommand(selectionCommand!!.selectionData, "SelectionStart")
+            }
         }
+        CanvasUpdateService.invalidate()
         return isInsidePath
     }
 
     override fun onTouchDown() {
         CanvasService.extraCanvas.save()
+
+        if (SelectionService.getSelectedAnchor(
+                motionTouchEventX,
+                motionTouchEventY
+            ) != AnchorIndexes.NONE
+        ) {
+            SelectionService.setSelectedAnchor(motionTouchEventX, motionTouchEventY)
+            return
+        }
+
         createPathObject()
         SelectionService.clearSelection()
         val numberOfLayers = DrawingObjectManager.numberOfLayers
@@ -79,55 +83,42 @@ class SelectionView(context: Context?): CanvasView(context) {
             val drawable = DrawingObjectManager.getDrawable(index)
             val command = DrawingObjectManager.getCommand(index)
             var isInsidePath = false
+            var strokeWidth = 0
             when(command) {
                 is PencilCommand -> {
-                    isInsidePath = drawBoundingBox(command.path, command.pencil.strokeWidth)
+                    strokeWidth = command.pencil.strokeWidth
+                    isInsidePath = drawBoundingBox(drawable, index, command.path, strokeWidth)
                 }
                 is RectangleCommand -> {
-                    isInsidePath = drawBoundingBox(command.borderPath, null)
+                    strokeWidth = command.rectangle.strokeWidth
+                    isInsidePath = drawBoundingBox(drawable, index, command.borderPath, null)
                 }
                 is EllipseCommand -> {
-                    isInsidePath = drawBoundingBox(command.borderPath, null)
+                    strokeWidth = command.ellipse.strokeWidth
+                    isInsidePath = drawBoundingBox(drawable, index, command.borderPath, null)
                 }
             }
-
-            if (isInsidePath) {
-                selectedShape = drawable
-                selectedShapeIndex = index
+            if(isInsidePath) {
+                LineWidthService.updateCurrentWidth(strokeWidth)
                 break
-            } else {
-                selectedShapeIndex = -1
-                selectionCommand!!.execute()
             }
         }
         currentX = motionTouchEventX
         currentY = motionTouchEventY
     }
 
-    private fun translate(path1: Path, path2: Path?, dx: Float, dy: Float, strokeWidth: Int?) {
-        // Use translation matrix to change path
-        val translationMatrix = Matrix()
-        translationMatrix.setTranslate(dx, dy)
-        path1.transform(translationMatrix)
-        path2?.transform(translationMatrix)
-
-        // Draw selection box
-        var boundingBox = getPathBoundingBox(path1)
-        setSelectionBounds(
-            boundingBox.left.toInt(),
-            boundingBox.top.toInt(),
-            boundingBox.right.toInt(),
-            boundingBox.bottom.toInt(),
-            strokeWidth
-        )
-        translationCommand!!.execute()
-    }
-
     override fun onTouchMove() {
-        // Translate only if touched inside of shape
-        // TODO: Refactor
-        translationCommand = TranslateCommand()
+        // Resizing: touching one of 8 points on bounding box
+        if (SelectionService.selectedAnchorIndex != AnchorIndexes.NONE
+        ) {
+            if (selectedShapeIndex != -1) {
+                ResizeSelectionService.onTouchMove(motionTouchEventX, motionTouchEventY)
+                SelectionService.resetBoundingBox()
+                return
+            }
+        }
 
+        // Translate only if touched inside of shape
         val dx = motionTouchEventX - currentX
         val dy = motionTouchEventY - currentY
 
@@ -135,25 +126,16 @@ class SelectionView(context: Context?): CanvasView(context) {
             currentX = motionTouchEventX
             currentY = motionTouchEventY
 
-            translationCommand!!.setTransformation(dx.toInt(), dy.toInt())
-            SelectionService.clearSelection()
             if (selectedShapeIndex == -1) { return }
-            val command = DrawingObjectManager.getCommand(selectedShapeIndex)
-            when (command) {
-                is PencilCommand -> {
-                    translate(command.path, null, dx, dy, command.pencil.strokeWidth)
-                }
-                is RectangleCommand -> {
-                    translate(command.borderPath, command.fillPath, dx, dy, null)
-                }
-                is EllipseCommand -> {
-                    translate(command.borderPath, command.fillPath, dx, dy, null)
-                }
-            }
+            translationCommand = TranslateCommand(selectedShapeIndex)
+            translationCommand!!.setTransformation(dx, dy)
+            translationCommand!!.execute()
+
+            SelectionService.resetBoundingBox()
         }
     }
 
     override fun onTouchUp() {
-//        TODO("Not yet implemented")
+        ResizeSelectionService.onTouchUp()
     }
 }

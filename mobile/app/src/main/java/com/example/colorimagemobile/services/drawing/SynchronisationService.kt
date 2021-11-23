@@ -1,18 +1,18 @@
 package com.example.colorimagemobile.services.drawing
 
-import android.graphics.Path
 import com.example.colorimagemobile.classes.CommandFactory
 import com.example.colorimagemobile.classes.JSONConvertor
 import com.example.colorimagemobile.interfaces.ICommand
 import com.example.colorimagemobile.models.*
-import com.example.colorimagemobile.services.drawing.toolsAttribute.ColorService
-import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
 import org.json.JSONObject
 
 object SynchronisationService {
 
     private val previewShapes: HashMap<String, ICommand> = HashMap()
 
+    fun isShapeInPreview(uuid: String?): Boolean{
+        return previewShapes[uuid] != null
+    }
 
     fun removeFromPreview( toolCommandString: String): Boolean{
         val toolCommand = JSONObject(toolCommandString)
@@ -77,7 +77,7 @@ object SynchronisationService {
                 }
                 else -> null
             }
-//            var toolData =
+
             if(updateData != null){
                 command?.update(updateData)
             }
@@ -91,14 +91,47 @@ object SynchronisationService {
         }
     }
 
-    private fun getToolData(toolType: String, drawingCommandJSON: JSONObject): ToolData{
+    private fun getToolData(toolType: String, drawingCommandJSON: JSONObject): Any{
         val derivedToolClass = when (toolType) {
             "Pencil" -> PencilData::class.java
             "Rectangle" -> RectangleData::class.java
             "Ellipse" -> EllipseData::class.java
+            "SelectionStart" -> SelectionData::class.java
             else -> throw Exception("Unrecognized tool type received in socket")
         }
         var toolDataString = drawingCommandJSON["drawingCommand"].toString()
         return JSONConvertor.getJSONObject(toolDataString, derivedToolClass)
+    }
+
+    fun startSelection(selectionCommandData: SocketTool) {
+        val selectionCommand = CommandFactory.createCommand(
+            selectionCommandData.type,
+            selectionCommandData.drawingCommand
+        )
+        this.previewShapes[(selectionCommandData.drawingCommand as SelectionData).id] =
+            selectionCommand!!
+    }
+
+    fun confirmSelection(confirmSelectionData: SocketTool) {
+        this.previewShapes.remove((confirmSelectionData.drawingCommand as SelectionData).id)
+    }
+
+    fun transformSelection(transformSelectionData: SocketTool) {
+        val commandId = (transformSelectionData.drawingCommand as ResizeData).id
+        if(this.isShapeInPreview(commandId)){
+            var command = previewShapes[commandId]
+            var transformCommand = CommandFactory.createCommand(transformSelectionData.type, transformSelectionData.drawingCommand)
+
+            if(transformCommand == null || command == null) return
+
+            if(transformCommand.javaClass == command.javaClass){
+                command.update(transformSelectionData.drawingCommand)
+            }
+            else{
+                previewShapes[commandId] = transformCommand
+            }
+        }
+
+        previewShapes[commandId]?.execute()
     }
 }
