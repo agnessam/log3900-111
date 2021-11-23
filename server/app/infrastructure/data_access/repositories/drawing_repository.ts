@@ -72,14 +72,14 @@ export class DrawingRepository extends GenericRepository<DrawingInterface> {
       const post = new Post({
         _id: new Types.ObjectId(),
         dataUri: drawing.dataUri,
-        ownerId: drawing.ownerId,
+        owner: drawing.ownerId,
         ownerModel: drawing.ownerModel,
         name: drawing.name,
       });
       post.save().then((createdPost) => {
         if (createdPost.ownerModel == 'Team') {
           Team.findById(
-            { _id: createdPost.ownerId },
+            { _id: createdPost.owner },
             (err: Error, team: TeamInterface) => {
               if (err || !team) {
                 reject(err);
@@ -90,7 +90,7 @@ export class DrawingRepository extends GenericRepository<DrawingInterface> {
           );
         } else {
           User.findById(
-            { _id: createdPost.ownerId },
+            { _id: createdPost.owner },
             (err: Error, user: UserInterface) => {
               if (err || !user) {
                 reject(err);
