@@ -4,6 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import com.example.colorimagemobile.models.*
 import com.example.colorimagemobile.services.RetrofitInstance
 import com.example.colorimagemobile.services.users.UserService
+import com.example.colorimagemobile.utils.CommonFun
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -42,6 +43,7 @@ class UserRepository {
     // update user profile data
     fun updateUserData(token: String, id: String): MutableLiveData<DataWrapper<HTTPResponseModel.UserResponse>> {
         newProfileDate = UserService.getNewProfileData()
+        CommonFun.printMsg("In userrepository value of data to use for update = " + newProfileDate)
 
         val updateLiveData: MutableLiveData<DataWrapper<HTTPResponseModel.UserResponse>> = MutableLiveData()
 
@@ -49,14 +51,17 @@ class UserRepository {
             Callback<HTTPResponseModel.UserResponse> {
             override fun onResponse(call: Call<HTTPResponseModel.UserResponse>, response: Response<HTTPResponseModel.UserResponse>) {
                 if (!response.isSuccessful) {
+                    CommonFun.printMsg("Response not succesfull")
                     updateLiveData.value = DataWrapper(null, "An error occurred!", true)
                     return
                 }
                 // account successfully update
                 updateLiveData.value = DataWrapper(response.body(), "", false)
+                CommonFun.printMsg("Response is succesfull")
             }
 
             override fun onFailure(call: Call<HTTPResponseModel.UserResponse>, t: Throwable) {
+                CommonFun.printMsg("Response faillure")
                 updateLiveData.value = DataWrapper(null, "Failed to create account!", true)
             }
 
