@@ -4,6 +4,7 @@ import android.graphics.Bitmap
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.View
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.GridLayoutManager
@@ -28,6 +29,8 @@ class UsersProfileFragment : Fragment(R.layout.fragment_users_profile) {
     private lateinit var myView: View
     private lateinit var recyclerView: RecyclerView
     private val drawingsMenu: ArrayList<DrawingMenuData> = arrayListOf()
+    private lateinit var followBtn: Button
+    private lateinit var unfollewBtn: Button
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,7 +45,7 @@ class UsersProfileFragment : Fragment(R.layout.fragment_users_profile) {
         super.onViewCreated(view, savedInstanceState)
         myView = view
         recyclerView = myView.findViewById(R.id.userProfileDrawingsRecycler)
-        recyclerView.layoutManager = GridLayoutManager(requireContext(), Constants.NB_DATA_ROWS_USER)
+        recyclerView.layoutManager = GridLayoutManager(requireContext(), Constants.NB_DATA_ROWS)
 
         updateUI()
         setListeners()
@@ -56,8 +59,24 @@ class UsersProfileFragment : Fragment(R.layout.fragment_users_profile) {
         loadUrl(currentUser.avatar.imageUrl,userIdImageView)
         myView.findViewById<TextView>(R.id.userIdDescription).text = currentUser.description
 
+        followBtn = myView.findViewById<Button>(R.id.FollowBtn)
+        unfollewBtn = myView.findViewById<Button>(R.id.UnfollowBtn)
+        updateUserButtons()
+
+    }
+    private fun updateUserButtons() {
+     // to be implement on branch Follow unfollow
     }
 
+    private fun hideFollowBtn() {
+        followBtn.visibility = View.GONE
+        unfollewBtn.visibility = View.VISIBLE
+    }
+
+    private fun showFollowBtn() {
+        followBtn.visibility = View.VISIBLE
+        unfollewBtn.visibility = View.GONE
+    }
 
     private fun setListeners() {
         myView.findViewById<TabLayout>(R.id.userProfileDrawingsTabLayout).addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
@@ -71,7 +90,14 @@ class UsersProfileFragment : Fragment(R.layout.fragment_users_profile) {
             override fun onTabReselected(tab: TabLayout.Tab?) { }
             override fun onTabUnselected(tab: TabLayout.Tab?) { }
         })
-
+        followBtn.setOnClickListener {
+            // to be implement on branch follow unfollow
+            hideFollowBtn()
+        }
+        unfollewBtn.setOnClickListener {
+            // to be implement on branch follow unfollow
+            showFollowBtn()
+        }
     }
 
     private fun getUserDrawings() {

@@ -69,15 +69,6 @@
                     android:layout_below="@id/userIdNbOfMembers"
                     android:layout_marginTop="30dp">
 
-                    <Button
-                        android:id="@+id/userIdFollowBtn"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_toLeftOf="@id/userId_action_empty_space"
-                        android:backgroundTint="@color/primary"
-                        android:text="Follow"
-                        android:textColor="@color/white" />
-
                     <View
                         android:id="@+id/userId_action_empty_space"
                         android:layout_width="40dp"
@@ -87,17 +78,25 @@
                     <RelativeLayout
                         android:layout_toRightOf="@id/userId_action_empty_space"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content">
-
-                        <Button
-                            android:id="@+id/userIdJoinBtn"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:backgroundTint="@color/primary"
-                            android:text="UNFOLLOW"
-                            android:textColor="@color/white" />
-
-                    </RelativeLayout>
+                        android:layout_height="wrap_content"/>
+                    <Button
+                        android:id="@+id/FollowBtn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:backgroundTint="@color/primary"
+                        android:text="Follow"
+                        android:textColor="@color/white" />
+                    <com.google.android.material.button.MaterialButton
+                        android:visibility="gone"
+                        android:id="@+id/UnfollowBtn"
+                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Unfollow"
+                        android:textColor="@color/primary"
+                        app:cornerRadius="4dp"
+                        app:strokeColor="@color/primary"
+                        app:strokeWidth="1dp" />
 
                 </RelativeLayout>
 
@@ -151,18 +150,13 @@
                     android:text="Published Drawings" />
             </com.google.android.material.tabs.TabLayout>
 
-<!--            <androidx.recyclerview.widget.RecyclerView-->
-<!--                android:id="@+id/userProfileDrawingsRecycler"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="match_parent"-->
-<!--                android:layout_below="@id/userProfileDrawingsTabLayout"-->
-<!--                android:padding="4dp" />-->
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/userProfileDrawingsRecycler"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:gravity="center_vertical"
                 android:layout_below="@id/userProfileDrawingsTabLayout"
-                android:padding="4dp"></androidx.recyclerview.widget.RecyclerView>
+                android:padding="4dp" />
 
         </RelativeLayout>
 

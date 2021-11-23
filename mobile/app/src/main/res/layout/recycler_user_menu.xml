@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="300dp"
-    android:layout_height="300dp"
+    android:layout_width="283dp"
+    android:layout_height="145dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/card_user_menu"
     android:layout_margin="5dp"
@@ -12,8 +12,8 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/card_user_menu_parent"
-        android:layout_width="283dp"
-        android:layout_height="match_parent"
+        android:layout_width="260dp"
+        android:layout_height="105dp"
         android:layout_marginStart="12dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="12dp"
@@ -23,42 +23,14 @@
             android:id="@+id/card_user_username"
             android:layout_width="125dp"
             android:layout_height="33dp"
-            android:layout_marginTop="52dp"
-            android:layout_marginEnd="24dp"
-            android:layout_marginBottom="117dp"
+            android:layout_marginTop="36dp"
+            android:layout_marginEnd="4dp"
             android:singleLine="true"
             android:text="@string/display_name"
             android:textSize="18sp"
             android:textStyle="bold"
-            app:layout_constraintBottom_toTopOf="@+id/unfollowButton"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
-
-        <Button
-            android:id="@+id/followButton"
-            android:layout_width="102dp"
-            android:layout_height="43dp"
-            android:layout_marginStart="21dp"
-            android:layout_marginEnd="39dp"
-            android:layout_marginBottom="32dp"
-            android:text="@string/follow"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/unfollowButton"
-            app:layout_constraintStart_toStartOf="parent" />
-
-        <Button
-            android:id="@+id/unfollowButton"
-            android:layout_width="115dp"
-            android:layout_height="40dp"
-            android:layout_marginEnd="4dp"
-            android:layout_marginBottom="40dp"
-            android:backgroundTint="@color/red"
-            android:text="@string/unfollow"
-            android:textColor="#ffff"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/followButton"
-            app:layout_constraintTop_toBottomOf="@+id/card_user_username" />
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/card_user_imageview"
