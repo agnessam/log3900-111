@@ -2,11 +2,17 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:overScrollMode="always"
+    android:scrollbarStyle="insideInset"
+    android:scrollbars="vertical"
     android:orientation="horizontal"
     android:background="@color/container"
     android:layout_height="match_parent">
 
     <LinearLayout
+        android:overScrollMode="always"
+        android:scrollbarStyle="insideInset"
+        android:scrollbars="vertical"
         android:id="@+id/editprofileview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -41,15 +47,6 @@
                 android:layout_weight="2"
                 android:orientation="horizontal">
 
-                <Button
-                    android:id="@+id/choosedefaultavatar"
-                    android:layout_width="217dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="40dp"
-                    android:layout_marginTop="60dp"
-                    android:layout_marginEnd="40dp"
-                    android:backgroundTint="@color/primary"
-                    android:text="@string/choose_an_avatar" />
                 <View
                     android:layout_width="0dp"
                     android:layout_height="0dp"
@@ -57,10 +54,21 @@
                     tools:ignore="NestedWeights" />
 
                 <Button
-                    android:id="@+id/upload_avatar_from_camera"
-                    android:layout_width="213dp"
+                    android:id="@+id/choosedefaultavatar"
+                    android:layout_width="207dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="30dp"
+                    android:layout_marginStart="40dp"
+                    android:layout_marginTop="60dp"
+                    android:layout_marginEnd="40dp"
+                    android:backgroundTint="@color/primary"
+                    android:text="@string/choose_an_avatar" />
+
+
+                <Button
+                    android:id="@+id/upload_avatar_from_camera"
+                    android:layout_width="210dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
                     android:layout_marginTop="60dp"
                     android:layout_marginEnd="40dp"
                     android:backgroundTint="@color/primary"
@@ -86,6 +94,9 @@
 
             <EditText
                 android:id="@+id/edtusername"
+                android:overScrollMode="always"
+                android:scrollbarStyle="insideInset"
+                android:scrollbars="vertical"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
@@ -110,6 +121,9 @@
 
             <EditText
                 android:id="@+id/edtdescription"
+                android:overScrollMode="always"
+                android:scrollbarStyle="insideInset"
+                android:scrollbars="vertical"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"

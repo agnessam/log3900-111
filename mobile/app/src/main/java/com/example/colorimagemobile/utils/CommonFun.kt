@@ -8,6 +8,7 @@ import android.content.Context.INPUT_METHOD_SERVICE
 import android.content.Intent
 import android.util.Log
 import android.view.KeyEvent
+import android.view.MenuItem
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.*

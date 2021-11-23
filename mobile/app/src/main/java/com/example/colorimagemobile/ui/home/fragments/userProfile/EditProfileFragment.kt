@@ -123,11 +123,11 @@ class EditProfileFragment : Fragment() {
         infDescription = (infview!!.findViewById<View>(R.id.edtdescription) as TextView)
         edtUsername = infName.text.toString()
         edtDescription = infDescription.text.toString()
-        if (edtUsername.length != 0 || edtDescription.length != 0){
-            printMsg("inside are field empty and one of them is not null value : ")
+        if (edtUsername.length != 0 ){
             newUserData.username = edtUsername
+        }
+        if (edtDescription.length != 0){
             newUserData.description = edtDescription
-            printMsg("values : "+newUserData)
         }
 
     }
@@ -135,19 +135,15 @@ class EditProfileFragment : Fragment() {
     // set the data to be update
     private fun setDataToUpdate(){
         if(AvatarService.getCurrentAvatar().imageUrl!= Constants.EMPTY_STRING){
-            printMsg("inside setDatatoUpdate current avatar not null : ")
             currentAvatar = AvatarService.getCurrentAvatar()
             newUserData.avatar = currentAvatar
             UserService.setUserAvatar(currentAvatar)
-            printMsg("value of currentAvatar: "+currentAvatar)
-            printMsg("value of newuserdata.avatar: "+ newUserData.avatar)
         }
 
     }
 
     // update profile with the data enter
     private fun update(){
-        printMsg("Inside update check if currentavatar already in avatar database ")
         var countExistingAvatar : Int = 0
         for(indices in AvatarService.getAvatars().indices){
             if (AvatarService.getCurrentAvatar() != AvatarService.getAvatars()[indices]){
@@ -155,21 +151,14 @@ class EditProfileFragment : Fragment() {
             }
         }
         if (countExistingAvatar == 0){
-            printMsg("avatar doesn't exist so post now ")
             postAvatar(AvatarService.getCurrentAvatar()).observe(viewLifecycleOwner, { handleResponse(it) })
         }
-        printMsg("call setdatatoUpdate")
         setDataToUpdate()
-        printMsg("call setdatatoUpdate")
         areFieldEmpty()
-        printMsg("update newprofile data value = "+newUserData )
         UserService.setNewProfileData(newUserData)
-        printMsg("value of datasend for the patch = "+UserService.getNewProfileData() )
         updateUserInfo().observe(viewLifecycleOwner, { context?.let { it1 ->globalHandler.response(it1,it) } })
-        printMsg("update userdata in local with= "+UserService.getNewProfileData() )
+        clearTextField()
         UserService.updateUserAfterUpdate(UserService.getNewProfileData())
-        printMsg("new user info in local= "+UserService.getUserInfo())
-
 
     }
 
@@ -196,6 +185,10 @@ class EditProfileFragment : Fragment() {
         }
         CommonFun.printToast(requireContext(), HTTPResponse.message!!)
 
+    }
+    private fun clearTextField(){
+        infName.setText("");
+        infDescription.setText("");
     }
 
     // function to convert bitmap to file
