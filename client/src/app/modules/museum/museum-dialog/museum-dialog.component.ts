@@ -1,7 +1,8 @@
+//import { PostInterface } from './../../../../../../server/app/domain/models/Post';
 import {Component, OnInit, Inject, ViewChild, ElementRef} from '@angular/core';
 import {MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { PostService } from '../services/post.service';
+//import { PostService } from '../services/post.service';
 
 @Component({
   selector: 'app-museum-dialog',
@@ -15,7 +16,8 @@ export class MuseumDialog implements OnInit {
   constructor(public dialogRef: MatDialogRef<MuseumDialog>,
     @Inject(MAT_DIALOG_DATA) public name: string,
     private snackBar: MatSnackBar,
-    private postService: PostService,) { }
+    //private postService: PostService,
+    ) { }
 
   ngOnInit(): void {
   }
@@ -30,8 +32,13 @@ export class MuseumDialog implements OnInit {
       return;
     }
     else{
-      this.postService.postCanvas();
+      //this.postService.postCanvas(name);
+      this.postCanvas();
       this.dialogRef.close(name);
     }
+  }
+
+  postCanvas():void {
+
   }
 }

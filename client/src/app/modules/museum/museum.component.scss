@@ -59,6 +59,9 @@
   align-self: center;
   margin-right: 10px;
 }
+.bottom-group:hover{
+  cursor: pointer;
+}
 
 .comment{
   color: rgba(0, 0, 0, 0.6);
@@ -76,23 +79,23 @@
   align-self: center;
 }
 
-#comment-input{
+.comment-input{
   border: none;
   background-color: transparent;
   width: 80%;
   padding: 3px;
 }
 
-#comment-input:focus{
+.comment-input:focus{
   outline:none
 }
 
-.postbtn{
+#postbtn{
   background-color: transparent;
   color: #DA7E70;
   border:none
 }
 
-.postbtn:hover{
+#postbtn:hover{
   cursor: pointer;
 }

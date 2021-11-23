@@ -2,20 +2,25 @@
   <div *ngFor="let post of posts">
     <div class="post">
       <div class="post-header">
-        <div class="author-picture"></div>
+        <div class="author-picture">{{post.author?.avatar}}</div>
         <div>
-          <div class="author-text">{{post.author}}</div>
-          <div class="time-text">{{post.timestamp}}</div>
+          <div class="author-text">{{post.ownerId}}</div>
+          <!--<div class="time-text">{{post.timestamp}}</div>-->
         </div>
       </div>
 
       <div class="post-image">
-        <img src={{post.image}} class="image">
+        <img [src]="this.transformUri(post.dataUri)" class="image">
 
         <div class="bottom-image" >
-          <div class="bottom-group">
-            <mat-icon>favorite</mat-icon>
-            {{post.like}}
+          <div class= "bottom-group" (click)="toggleLike(post)">
+            <div *ngIf="hasBeenLike(post.likes); else notLikeBlock">
+              <mat-icon>favorite</mat-icon>
+            </div>
+            <ng-template #notLikeBlock>
+              <mat-icon>favorite_border</mat-icon>
+            </ng-template>
+            {{post.likes.length}}
           </div>
           <div class="bottom-group">
             <mat-icon>chat_bubble</mat-icon>
@@ -26,20 +31,21 @@
 
       <div *ngFor="let comment of post.comments">
         <div class="comment">
-          {{comment.author}} : {{comment.message}}
+          {{comment.authorId.username}} : {{comment.content}}
         </div>
       </div>
     </div>
 
     <div class="bottom-comment">
-      <input type="search"
+      <input type="comment"
                   #commentInput
-                  id="comment-input"
+                  [id]="post._id"
+                  class="comment-input"
                   autocomplete="off"
                   spellcheck="false"
                   placeholder="Add comment"
                   >
-      <button mat-icon-button class="postbtn">
+      <button mat-icon-button id="postbtn" (click)="addComment(post._id)">
         POST
       </button>
     </div>
