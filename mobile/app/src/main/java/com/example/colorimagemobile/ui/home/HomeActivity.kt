@@ -170,6 +170,10 @@ class HomeActivity : AppCompatActivity() {
                 bottomNav.selectedItemId = R.id.usersFragment
                 true
             }
+            R.id.museumFragment -> {
+                bottomNav.selectedItemId = R.id.museumFragment
+                true
+            }
 
             else -> navController.navigateUp()
         }
@@ -249,7 +253,7 @@ class HomeActivity : AppCompatActivity() {
         val showSettingsFromChat = ChatFragmentDirections.actionChatFragmentToUserProfileFragment()
         val showSettingsFromProfileView = ShowUserProfileFragmentDirections.actionShowUserProfileFragmentToUserProfileFragment()
         val showSettingsFromPublicView = UsersFragmentDirections.actionUsersFragmentToUserProfileFragment()
-        val showSettingsFromFromMuseum = MuseumFragmentDirections.actionMuseumFragmentToUserProfileFragment()
+        val showSettingsFromMuseum = MuseumFragmentDirections.actionMuseumFragmentToUserProfileFragment()
 
         // redirect from actual page to settings
         when (this.findNavController(R.id.fragment).currentDestination?.id) {
@@ -258,7 +262,7 @@ class HomeActivity : AppCompatActivity() {
             R.id.chatFragment ->this.findNavController(R.id.fragment).navigate(showSettingsFromChat)
             R.id.showUserProfileFragment -> this.findNavController(R.id.fragment).navigate(showSettingsFromProfileView)
             R.id.usersFragment -> this.findNavController(R.id.fragment).navigate(showSettingsFromPublicView)
-            R.id.museumFragment -> this.findNavController(R.id.fragment).navigate(showSettingsFromFromMuseum)
+            R.id.museumFragment -> this.findNavController(R.id.fragment).navigate(showSettingsFromMuseum)
         }
     }
 
