@@ -6,10 +6,6 @@ class Constants {
     companion object {
         const val DEBUG_KEY = "PRIVATE"  // debug log key
 
-        // chat
-        const val DEFAULT_ROOM_NAME = "default"
-        const val TEXT_MESSAGE_EVENT_NAME = "text"
-
         //global
         const val EMPTY_STRING =""
         const val GENERAL_CHANNEL_NAME = "General"
