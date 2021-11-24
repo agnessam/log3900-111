@@ -22,6 +22,7 @@ import kotlin.math.abs
 class SelectionView(context: Context?): CanvasView(context) {
     private var selectionCommand: SelectionCommand? = null
     private var translationCommand: TranslateCommand? = null
+    private var translateData: TranslateData? = null
 
     override fun createPathObject() {
         // for sync
@@ -111,7 +112,16 @@ class SelectionView(context: Context?): CanvasView(context) {
                     isInsidePath = drawBoundingBox(drawable, index, command.borderPath, null)
                 }
             }
-            if(isInsidePath) break
+            if(isInsidePath) {
+                val id = DrawingObjectManager.getUuid(selectedShapeIndex) ?: return
+                this.translateData = TranslateData(
+                    id = id,
+                    deltaX = 0,
+                    deltaY = 0
+                )
+                DrawingSocketService.sendTransformSelectionCommand(translateData!!, "Translation")
+                break
+            }
         }
         currentX = motionTouchEventX
         currentY = motionTouchEventY
@@ -167,17 +177,15 @@ class SelectionView(context: Context?): CanvasView(context) {
             currentX = motionTouchEventX
             currentY = motionTouchEventY
 
-            // TODO: for sync, create new translate command when translating for the first time
-            // increment deltax and deltay to save previous translation?
             if (selectedShapeIndex == -1) { return }
             val id = DrawingObjectManager.getUuid(selectedShapeIndex) ?: return
-            var translateData = TranslateData(
+            this.translateData = TranslateData(
                 id = id,
-                deltaX = dx.toInt(),
-                deltaY = dy.toInt()
+                deltaX = (translateData?.deltaX ?: 0) + dx.toInt(),
+                deltaY = (translateData?.deltaY ?: 0) + dy.toInt()
             )
-            DrawingSocketService.sendTransformSelectionCommand(translateData, "Translation")
-            translationCommand = TranslateCommand(translateData)
+            DrawingSocketService.sendTransformSelectionCommand(translateData!!, "Translation")
+            translationCommand = TranslateCommand(translateData!!)
             translationCommand!!.setTransformation(dx.toInt(), dy.toInt())
             translationCommand!!.execute()
             resetBoundingBox()
