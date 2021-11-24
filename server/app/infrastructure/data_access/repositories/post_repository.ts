@@ -13,7 +13,8 @@ export class PostRepository extends GenericRepository<PostInterface> {
   public async getAllPopulatedPosts() {
     return new Promise((resolve, reject) => {
       Post.find({})
-        .populate({ path: 'comments', populate: { path: 'authorId' } })
+        .populate('owner')
+        .populate({ path: 'comments', populate: { path: 'author' } })
         .exec((err, posts) => {
           if (err || !posts) {
             reject(err);

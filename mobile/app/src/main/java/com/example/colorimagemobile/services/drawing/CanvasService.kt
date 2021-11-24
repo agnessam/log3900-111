@@ -37,6 +37,7 @@ object CanvasService {
     fun createNewBitmap() {
         extraBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
         extraCanvas = Canvas(extraBitmap)
+        extraCanvas.drawBitmap(extraBitmap, 0f, 0f, null)
     }
 
     // pass bitmap retrieved/calculated from Server data

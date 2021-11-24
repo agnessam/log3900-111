@@ -15,18 +15,18 @@ class TeamRepository {
 
     private val httpClient = RetrofitInstance.HTTP
 
-    fun getTeamDrawings(id: String): MutableLiveData<DataWrapper<ArrayList<DrawingModel.CreateDrawing>>> {
-        val teamDrawingsLiveData: MutableLiveData<DataWrapper<ArrayList<DrawingModel.CreateDrawing>>> = MutableLiveData()
+    fun getTeamDrawings(id: String): MutableLiveData<DataWrapper<List<DrawingModel.Drawing>>> {
+        val teamDrawingsLiveData: MutableLiveData<DataWrapper<List<DrawingModel.Drawing>>> = MutableLiveData()
 
-        httpClient.getTeamDrawings(token = "Bearer ${UserService.getToken()}", id).enqueue(object : Callback<ArrayList<DrawingModel.CreateDrawing>> {
-            override fun onResponse(call: Call<ArrayList<DrawingModel.CreateDrawing>>, response: Response<ArrayList<DrawingModel.CreateDrawing>>) {
+        httpClient.getTeamDrawings(token = "Bearer ${UserService.getToken()}", id).enqueue(object : Callback<List<DrawingModel.Drawing>> {
+            override fun onResponse(call: Call<List<DrawingModel.Drawing>>, response: Response<List<DrawingModel.Drawing>>) {
                 if (!response.isSuccessful) {
                     teamDrawingsLiveData.value = DataWrapper(null, "An error occurred while fetching teams' drawings!", true)
                     return
                 }
                 teamDrawingsLiveData.value = DataWrapper(response.body(), "", false)
             }
-            override fun onFailure(call: Call<ArrayList<DrawingModel.CreateDrawing>>, t: Throwable) {
+            override fun onFailure(call: Call<List<DrawingModel.Drawing>>, t: Throwable) {
                 teamDrawingsLiveData.value = DataWrapper(null, "Sorry, failed to get fetch team's drawings!", true)
             }
         })

@@ -39,6 +39,10 @@ class CommonFun {
             Toast.makeText(applicationContext, message, Toast.LENGTH_LONG).show()
         }
 
+        fun removeWhitespace(value: String): String {
+            return value.replace("\\s".toRegex(), "")
+        }
+
         // close Activity and start another one
         fun redirectTo(currentActivity: Activity, destinationClass: Class<*>?) {
             val intent: Intent = Intent(currentActivity, destinationClass)

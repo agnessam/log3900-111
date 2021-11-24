@@ -3,8 +3,13 @@ package com.example.colorimagemobile.services.drawing
 import android.graphics.Canvas
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.LayerDrawable
-import com.example.colorimagemobile.classes.toolsCommand.PencilCommand
+import com.example.colorimagemobile.classes.openDrawingCommand.CreateEllipseCommand
+import com.example.colorimagemobile.classes.openDrawingCommand.CreatePolylineCommand
+import com.example.colorimagemobile.classes.openDrawingCommand.CreateRectangleCommand
+import com.example.colorimagemobile.classes.xml_json.SVGParser
 import com.example.colorimagemobile.interfaces.ICommand
+import com.example.colorimagemobile.models.CustomSVG
+import com.example.colorimagemobile.services.drawing.toolsAttribute.ColorService
 
 object DrawingObjectManager {
     private var layerDrawable: LayerDrawable = LayerDrawable(arrayOf<Drawable>())
@@ -61,5 +66,31 @@ object DrawingObjectManager {
         layerDrawable = LayerDrawable(arrayOf<Drawable>())
         commandList.clear()
         layerIdUuidMap.clear()
+    }
+
+    fun createDrawableObjects(base64: String) {
+        CanvasService.createNewBitmap()
+
+        // 1. init svg
+        val svgParser = SVGParser(base64, CustomSVG::class.java)
+        val svgObject = svgParser.getCustomSVG()
+
+        // 2. init canvas properties and create it
+        CanvasService.setWidth(svgObject.width.toInt())
+        CanvasService.setHeight(svgObject.height.toInt())
+
+        CanvasService.createNewBitmap()
+        val backgroundColor = svgParser.getBackgroundColor(svgObject.style)
+        CanvasService.updateCanvasColor(ColorService.rgbaToInt(backgroundColor))
+
+        // 3. Create layerObjects
+        val createPolylineCommand = CreatePolylineCommand(svgObject.polyline)
+        createPolylineCommand.execute()
+
+        val createRectangleCommand = CreateRectangleCommand(svgObject.rect)
+        createRectangleCommand.execute()
+
+        val createEllipseCommand = CreateEllipseCommand(svgObject.ellipse)
+        createEllipseCommand.execute()
     }
 }

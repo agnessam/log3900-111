@@ -26,6 +26,7 @@ import com.example.colorimagemobile.models.SearchModel
 import com.example.colorimagemobile.repositories.SearchRepository
 import com.example.colorimagemobile.services.SearchService
 import com.example.colorimagemobile.services.SharedPreferencesService
+import com.example.colorimagemobile.services.drawing.DrawingObjectManager
 import com.example.colorimagemobile.services.drawing.DrawingService
 import com.example.colorimagemobile.services.socket.SocketManagerService
 import com.example.colorimagemobile.ui.home.fragments.chat.ChatFragmentDirections
@@ -71,7 +72,7 @@ class HomeActivity : AppCompatActivity() {
         }
 
         val appBarConfiguration = AppBarConfiguration(setOf(
-            R.id.galleryFragment, R.id.chatFragment, R.id.teamsFragment, R.id.usersFragment))
+            R.id.galleryFragment, R.id.chatFragment, R.id.teamsFragment, R.id.usersFragment, R.id.museumFragment))
         setupActionBarWithNavController(navController, appBarConfiguration)
         bottomNav.setupWithNavController(navController)
     }
@@ -150,6 +151,7 @@ class HomeActivity : AppCompatActivity() {
         return when(navController.currentDestination?.id) {
             // back button clicked on Gallery Drawing
             R.id.galleryFragment -> {
+                DrawingObjectManager.clearLayers()
                 SocketManagerService.leaveDrawingRoom()
                 DrawingService.setCurrentDrawingID(null)
                 bottomNav.selectedItemId = R.id.galleryFragment

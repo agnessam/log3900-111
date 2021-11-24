@@ -1,21 +1,25 @@
 package com.example.colorimagemobile.ui.home.fragments.gallery.views
 
 import android.content.Context
-import android.graphics.*
+import android.graphics.Path
 import android.graphics.drawable.Drawable
-import com.example.colorimagemobile.classes.toolsCommand.*
+import com.example.colorimagemobile.classes.toolsCommand.EllipseCommand
+import com.example.colorimagemobile.classes.toolsCommand.PencilCommand
+import com.example.colorimagemobile.classes.toolsCommand.RectangleCommand
+import com.example.colorimagemobile.classes.toolsCommand.TranslateCommand
 import com.example.colorimagemobile.classes.toolsCommand.selectionToolCommands.SelectionCommand
 import com.example.colorimagemobile.models.SelectionData
 import com.example.colorimagemobile.services.drawing.CanvasService
 import com.example.colorimagemobile.services.drawing.CanvasUpdateService
 import com.example.colorimagemobile.services.drawing.DrawingObjectManager
 import com.example.colorimagemobile.services.drawing.SynchronisationService
-import com.example.colorimagemobile.services.socket.DrawingSocketService
+import com.example.colorimagemobile.services.drawing.toolsAttribute.AnchorIndexes
+import com.example.colorimagemobile.services.drawing.toolsAttribute.LineWidthService
+import com.example.colorimagemobile.services.drawing.toolsAttribute.ResizeSelectionService
+import com.example.colorimagemobile.services.drawing.toolsAttribute.SelectionService
 import com.example.colorimagemobile.services.drawing.toolsAttribute.SelectionService.selectedShape
 import com.example.colorimagemobile.services.drawing.toolsAttribute.SelectionService.selectedShapeIndex
-import com.example.colorimagemobile.services.drawing.toolsAttribute.SelectionService
-import com.example.colorimagemobile.services.drawing.toolsAttribute.AnchorIndexes
-import com.example.colorimagemobile.services.drawing.toolsAttribute.ResizeSelectionService
+import com.example.colorimagemobile.services.socket.DrawingSocketService
 import kotlin.math.abs
 
 class SelectionView(context: Context?): CanvasView(context) {
@@ -31,38 +35,18 @@ class SelectionView(context: Context?): CanvasView(context) {
         selectionCommand = SelectionCommand(selectionData)
     }
 
-    private fun getPathBoundingBox(path: Path): RectF {
-        val rectF = RectF()
-        path.computeBounds(rectF, true)
-        return rectF
-    }
-
-    private fun setSelectionBounds(left: Int, top: Int, right: Int, bottom: Int, strokeWidth: Int?) {
-        if (strokeWidth != null) {
-            SelectionService.setSelectionBounds(
-                (left - strokeWidth / 2),
-                (top - strokeWidth / 2),
-                (right + strokeWidth / 2),
-                (bottom + strokeWidth / 2)
-            )
-        } else {
-            SelectionService.setSelectionBounds(left, top, right, bottom)
-        }
-    }
-
     private fun drawBoundingBox(drawable: Drawable, index: Int, path: Path, strokeWidth: Int?): Boolean {
-        var isInsidePath: Boolean
-        var boundingBox = getPathBoundingBox(path)
-        isInsidePath = boundingBox.contains(motionTouchEventX,motionTouchEventY)
+        val boundingBox = SelectionService.getPathBoundingBox(path)
+        val isInsidePath = boundingBox.contains(motionTouchEventX,motionTouchEventY)
 
         // Check if shape is in preview shapes. If it is
-        var uuid = DrawingObjectManager.getUuid(index)
-        var isInPreviewShapes = SynchronisationService.isShapeInPreview(uuid)
+        val uuid = DrawingObjectManager.getUuid(index)
+        val isInPreviewShapes = SynchronisationService.isShapeInPreview(uuid)
         if (isInsidePath && !isInPreviewShapes) {
             selectedShape = drawable
             selectedShapeIndex = index
             createPathObject()
-            setSelectionBounds(
+            SelectionService.setSelectionBounds(
                 boundingBox.left.toInt(),
                 boundingBox.top.toInt(),
                 boundingBox.right.toInt(),
@@ -99,52 +83,28 @@ class SelectionView(context: Context?): CanvasView(context) {
             val drawable = DrawingObjectManager.getDrawable(index)
             val command = DrawingObjectManager.getCommand(index)
             var isInsidePath = false
+            var strokeWidth = 0
             when(command) {
                 is PencilCommand -> {
-                    isInsidePath = drawBoundingBox(drawable, index, command.path, command.pencil.strokeWidth)
+                    strokeWidth = command.pencil.strokeWidth
+                    isInsidePath = drawBoundingBox(drawable, index, command.path, strokeWidth)
                 }
                 is RectangleCommand -> {
+                    strokeWidth = command.rectangle.strokeWidth
                     isInsidePath = drawBoundingBox(drawable, index, command.borderPath, null)
                 }
                 is EllipseCommand -> {
+                    strokeWidth = command.ellipse.strokeWidth
                     isInsidePath = drawBoundingBox(drawable, index, command.borderPath, null)
                 }
             }
-            if(isInsidePath) break
+            if(isInsidePath) {
+                LineWidthService.updateCurrentWidth(strokeWidth)
+                break
+            }
         }
         currentX = motionTouchEventX
         currentY = motionTouchEventY
-    }
-
-    private fun resetBoundingBox() {
-        SelectionService.clearSelection()
-        val command = DrawingObjectManager.getCommand(selectedShapeIndex)
-        var path: Path? = null
-        var strokeWidth: Int? = null
-        when(command) {
-            is PencilCommand -> {
-                path = command.path
-                strokeWidth = command.pencil.strokeWidth
-            }
-            is RectangleCommand -> {
-                path = command.borderPath
-                strokeWidth = null
-            }
-            is EllipseCommand -> {
-                path = command.borderPath
-                strokeWidth = null
-            }
-        }
-        if(path != null){
-            var boundingBox = getPathBoundingBox(path)
-            setSelectionBounds(
-                boundingBox.left.toInt(),
-                boundingBox.top.toInt(),
-                boundingBox.right.toInt(),
-                boundingBox.bottom.toInt(),
-                strokeWidth
-            )
-        }
     }
 
     override fun onTouchMove() {
@@ -153,7 +113,7 @@ class SelectionView(context: Context?): CanvasView(context) {
         ) {
             if (selectedShapeIndex != -1) {
                 ResizeSelectionService.onTouchMove(motionTouchEventX, motionTouchEventY)
-                resetBoundingBox()
+                SelectionService.resetBoundingBox()
                 return
             }
         }
@@ -171,7 +131,7 @@ class SelectionView(context: Context?): CanvasView(context) {
             translationCommand!!.setTransformation(dx, dy)
             translationCommand!!.execute()
 
-            resetBoundingBox()
+            SelectionService.resetBoundingBox()
         }
     }
 

@@ -22,11 +22,11 @@ class EllipseCommand(ellipseData: EllipseData): ICommand {
     private var boundingRectangle = Rect(0,0, CanvasService.extraCanvas.width, CanvasService.extraCanvas.height)
 
     private var startingPoint: Point? = null
-    private var endingPoint: Point? = null
+    var endingPoint: Point? = null
 
     private var layerIndex: Int = -1
     private var fillEllipseIndex: Int = -1
-    private var borderEllipseIndex: Int = -1
+    var borderEllipseIndex: Int = -1
 
     var ellipse: EllipseData = ellipseData
 
@@ -75,7 +75,7 @@ class EllipseCommand(ellipseData: EllipseData): ICommand {
         return ShapeDrawable(pathShape)
     }
 
-    private fun setStartPoint(startPoint: Point) {
+    fun setStartPoint(startPoint: Point) {
         startingPoint = startPoint
     }
 

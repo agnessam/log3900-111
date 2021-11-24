@@ -63,6 +63,9 @@ class Constants {
 
             // search
             const val SEARCH = "api/search"
+
+            // post
+            const val MUSEUM_POST = "api/posts"
         }
     }
 
