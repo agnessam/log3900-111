@@ -21,14 +21,6 @@ object ResizeSelectionService {
         var command: ICommand = DrawingObjectManager.getCommand(SelectionService.selectedShapeIndex)
             ?: return
 
-//        var pathRect = SelectionService.getBoundsSelection()
-        var pathRect = RectF()
-        when(command){
-            is PencilCommand -> command.path.computeBounds(pathRect, true)
-            is EllipseCommand -> command.borderPath.computeBounds(pathRect, true)
-            is RectangleCommand -> command.borderPath.computeBounds(pathRect, true)
-        }
-
         if (resizeCommand == null) {
             var objectId = when(command) {
                 is PencilCommand -> command.pencil.id
@@ -36,10 +28,10 @@ object ResizeSelectionService {
                 is RectangleCommand -> command.rectangle.id
                 else -> return
             }
-            resizeCommand = createResizeCommand(objectId, RectF(pathRect))
-            return
+            resizeCommand = ResizeCommand(objectId)
+            setAnchorPoint(resizeCommand!!.getPathBounds())
         }
-        resize(motionTouchEventX, motionTouchEventY, RectF(pathRect))
+        resize(motionTouchEventX, motionTouchEventY, resizeCommand!!.getOriginalPathBounds())
     }
 
     fun onTouchUp(){
@@ -47,11 +39,6 @@ object ResizeSelectionService {
         lastXScale = 1f
         lastYScale = 1f
         resizeCommand = null
-    }
-
-    private fun createResizeCommand(objectId:String, pathRect: RectF): ResizeCommand?{
-        setAnchorPoint(pathRect)
-        return ResizeCommand(objectId)
     }
 
     private fun setAnchorPoint(pathRect: RectF){
@@ -103,30 +90,6 @@ object ResizeSelectionService {
     }
 
     private fun getScales(oldRect: RectF, newRect: RectF): IScale{
-        if(lastXScale < 0){
-            if( SelectionService.selectedAnchorIndex == AnchorIndexes.TOP_LEFT ||
-                SelectionService.selectedAnchorIndex == AnchorIndexes.LEFT ||
-                SelectionService.selectedAnchorIndex == AnchorIndexes.BOTTOM_LEFT){
-                newRect.right = oldRect.left
-            }
-            if(SelectionService.selectedAnchorIndex == AnchorIndexes.TOP_RIGHT ||
-                SelectionService.selectedAnchorIndex == AnchorIndexes.RIGHT ||
-                SelectionService.selectedAnchorIndex == AnchorIndexes.BOTTOM_RIGHT){
-                newRect.left = oldRect.right
-            }
-        }
-        if(lastYScale < 0){
-            if( SelectionService.selectedAnchorIndex == AnchorIndexes.TOP_LEFT ||
-                SelectionService.selectedAnchorIndex == AnchorIndexes.TOP ||
-                SelectionService.selectedAnchorIndex == AnchorIndexes.TOP_RIGHT){
-                newRect.bottom = oldRect.top
-            }
-            if(SelectionService.selectedAnchorIndex == AnchorIndexes.BOTTOM_LEFT ||
-                SelectionService.selectedAnchorIndex == AnchorIndexes.BOTTOM ||
-                SelectionService.selectedAnchorIndex == AnchorIndexes.BOTTOM_RIGHT){
-                newRect.top = oldRect.bottom
-            }
-        }
 
         var newWidth = newRect.width()
         var newHeight = newRect.height()

@@ -19,6 +19,9 @@ class ResizeCommand(objectId: String) : ICommand {
     private var yTranslate: Float = 0f
     private var commandToResize: ICommand? = null
 
+    private var resizeFillPath: Path? = null
+    private var resizeBorderPath: Path? = null
+
     var id: String = ""
         get() = when(commandToResize){
             is PencilCommand -> (commandToResize!! as PencilCommand).pencil.id
@@ -29,6 +32,12 @@ class ResizeCommand(objectId: String) : ICommand {
 
     init{
         commandToResize = DrawingObjectManager.getCommand(objectId)
+        when(commandToResize) {
+            is PencilCommand -> (commandToResize as PencilCommand).getPath()
+            is EllipseCommand -> (commandToResize as EllipseCommand).getPaths()
+            is RectangleCommand -> (commandToResize as RectangleCommand).getPaths()
+            else -> null
+        }
     }
 
     fun setScales(xScale: Float, yScale: Float, xTranslate: Float, yTranslate: Float){
@@ -46,6 +55,7 @@ class ResizeCommand(objectId: String) : ICommand {
             is EllipseCommand -> (commandToResize as EllipseCommand).resize(this.xScale, this.yScale, this.xTranslate, this.yTranslate)
             else -> {}
         }
+        printMsg("xScale: $xScale yScale: $yScale xTranslate: $xTranslate yTranslate: $yTranslate")
     }
 
     override fun update(drawingCommand: Any) {
@@ -58,27 +68,12 @@ class ResizeCommand(objectId: String) : ICommand {
         var bounds = RectF()
         path.computeBounds(bounds, true)
 
-        if(xScale == 0f || yScale == 0f) {
-            return
-        }
-
         var matrix = Matrix()
         matrix.preTranslate(-xAnchor, -yAnchor)
         path.transform(matrix)
 
-        if((xScale > 0 && lastXScale < 0) || (xScale < 0 && lastXScale > 0)){
-            var xFlipMatrix = Matrix()
-            xFlipMatrix.setScale(-1f, 1f)
-            path.transform(xFlipMatrix)
-        }
-        if((yScale > 0 && lastYScale < 0) || (yScale < 0 && lastYScale > 0)){
-            var yFlipMatrix = Matrix()
-            yFlipMatrix.setScale(1f, -1f)
-            path.transform(yFlipMatrix)
-        }
-
         matrix = Matrix()
-        matrix.setScale(abs(xScale), abs(yScale))
+        matrix.setScale(xScale, yScale)
         path.transform(matrix)
 
         matrix = Matrix()
@@ -92,33 +87,75 @@ class ResizeCommand(objectId: String) : ICommand {
         }
     }
 
+    fun getPathBounds(): RectF {
+        return when(commandToResize){
+            is PencilCommand -> (commandToResize as PencilCommand).getPathBounds()
+            is PencilCommand -> (commandToResize as EllipseCommand).getPathBounds()
+            is PencilCommand -> (commandToResize as RectangleCommand).getPathBounds()
+            else -> RectF()
+        }
+    }
+
+    fun getOriginalPathBounds(): RectF{
+        var bounds = RectF()
+        resizeBorderPath?.computeBounds(bounds, true)
+        return bounds
+    }
+
+    private fun PencilCommand.getPathBounds(): RectF{
+        var bounds = RectF()
+        path.computeBounds(bounds, true)
+        return bounds
+    }
+
+    private fun EllipseCommand.getPathBounds(): RectF{
+        var bounds = RectF()
+        borderPath.computeBounds(bounds, true)
+        return bounds
+    }
+
+    private fun RectangleCommand.getPathBounds(): RectF{
+        var bounds = RectF()
+        borderPath.computeBounds(bounds, true)
+        return bounds
+    }
+
+    private fun PencilCommand.getPath(){
+        resizeBorderPath = path
+    }
+
+    private fun EllipseCommand.getPaths(){
+        resizeFillPath = fillPath
+        resizeBorderPath = borderPath
+    }
+
+    private fun RectangleCommand.getPaths(){
+        resizeFillPath = fillPath
+        resizeBorderPath = borderPath
+    }
+
     private fun PencilCommand.resize(xScale: Float, yScale: Float, xTranslate: Float, yTranslate: Float) {
-        var tempPath = path
+        path = Path(resizeBorderPath!!)
         scaleAroundPoint(xScale, yScale, xTranslate, yTranslate, path, true)
         execute()
-        path = tempPath
     }
 
     private fun EllipseCommand.resize(xScale: Float, yScale: Float, xTranslate: Float, yTranslate: Float) {
-        var tempBorderPath = borderPath
-        var tempFillPath = fillPath
+        fillPath = resizeFillPath!!
+        borderPath = resizeBorderPath!!
         // Fill scaling must always be before fill due to the inverse scale condition
         scaleAroundPoint(xScale, yScale, xTranslate, yTranslate, fillPath, false)
         scaleAroundPoint(xScale, yScale, xTranslate, yTranslate, borderPath, true)
         execute()
-        borderPath = tempBorderPath
-        fillPath = tempFillPath
     }
 
     private fun RectangleCommand.resize(xScale: Float, yScale: Float, xTranslate: Float, yTranslate: Float){
-        var tempBorderPath = borderPath
-        var tempFillPath = fillPath
+        fillPath = resizeFillPath!!
+        borderPath = resizeBorderPath!!
         // Fill scaling must always be before fill due to the inverse scale condition
         scaleAroundPoint(xScale, yScale, xTranslate, yTranslate, fillPath, false)
         scaleAroundPoint(xScale, yScale, xTranslate, yTranslate, borderPath, true)
         execute()
-        borderPath = tempBorderPath
-        fillPath = tempFillPath
     }
 
 
