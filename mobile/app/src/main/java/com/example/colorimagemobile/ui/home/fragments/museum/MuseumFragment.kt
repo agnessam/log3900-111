@@ -33,7 +33,10 @@ class MuseumFragment : Fragment(R.layout.fragment_museum) {
 
     private fun getAllPosts() {
         MuseumRepository().getAllPosts().observe(viewLifecycleOwner, { it ->
-            if (it.isError as Boolean) { return@observe }
+            if (it.isError as Boolean) {
+                printToast(requireContext(), it.message!!)
+                return@observe
+            }
 
             posts = it.data as ArrayList<MuseumPostModel>
             MuseumPostService.setPosts(posts)
