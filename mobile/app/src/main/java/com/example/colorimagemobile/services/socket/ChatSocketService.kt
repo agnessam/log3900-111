@@ -3,8 +3,8 @@ package com.example.colorimagemobile.services.socket
 import androidx.fragment.app.FragmentActivity
 import com.example.colorimagemobile.classes.AbsSocket
 import com.example.colorimagemobile.classes.JSONConvertor
-import com.example.colorimagemobile.classes.Notification.Notification
 import com.example.colorimagemobile.models.ChatSocketModel
+import com.example.colorimagemobile.services.NotificationService
 import com.example.colorimagemobile.services.chat.ChatAdapterService
 import com.example.colorimagemobile.services.chat.ChatService
 import com.example.colorimagemobile.services.chat.TextChannelService
@@ -17,6 +17,7 @@ import org.json.JSONObject
 object ChatSocketService: AbsSocket(SOCKETS.CHAT_NAMESPACE_NAME) {
 
     private var fragmentActivity: FragmentActivity? = null
+    private var count : Int = 0
 
 
     override fun disconnect() {
@@ -58,6 +59,7 @@ object ChatSocketService: AbsSocket(SOCKETS.CHAT_NAMESPACE_NAME) {
                     val currentRoom = TextChannelService.getCurrentChannel().name
                     if (message.roomName == currentRoom) {
                         ChatAdapterService.getChatMsgAdapter().addChatItem(message)
+
                         notifyUser()
                     }
                 } catch (e: JSONException) {
@@ -68,9 +70,19 @@ object ChatSocketService: AbsSocket(SOCKETS.CHAT_NAMESPACE_NAME) {
         }
 
     private fun notifyUser(){
-        Notification().setCounter()
-        Notification().playSound(fragmentActivity!!.applicationContext)
+        count = count + 1
+        printMsg("in notifyuser before setcounter value= "+count)
+        NotificationService.setCounter(count)
+        printMsg("in notifyuser after setcounter value= "+NotificationService.getCounter())
+        NotificationService.playSound(fragmentActivity!!.applicationContext)
+        printMsg("in notifyuser after song play= "+NotificationService.getCounter())
+        fragmentActivity!!.invalidateOptionsMenu()
 
+//        printMsg("in notifyuser before setcounter value= "+Notification().pendingNotifications)
+//        Notification().pendingNotifications = 1
+//        printMsg("in notifyuser after setcounter value= "+Notification().pendingNotifications)
+//        Notification().playSound(fragmentActivity!!.applicationContext)
+//        printMsg("in notifyuser after song play= "+Notification().pendingNotifications)
     }
 
 }

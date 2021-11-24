@@ -19,7 +19,6 @@ import com.example.colorimagemobile.ui.login.LoginActivity
 import com.example.colorimagemobile.R
 import com.example.colorimagemobile.classes.MyFragmentManager
 import com.example.colorimagemobile.classes.MyPicasso
-import com.example.colorimagemobile.classes.Notification.Notification
 import com.example.colorimagemobile.httpresponsehandler.GlobalHandler
 import com.example.colorimagemobile.services.users.UserService
 import com.example.colorimagemobile.models.UserModel
@@ -27,6 +26,7 @@ import com.example.colorimagemobile.models.DataWrapper
 import com.example.colorimagemobile.models.HTTPResponseModel
 import com.example.colorimagemobile.models.SearchModel
 import com.example.colorimagemobile.repositories.SearchRepository
+import com.example.colorimagemobile.services.NotificationService
 import com.example.colorimagemobile.services.SearchService
 import com.example.colorimagemobile.services.SharedPreferencesService
 import com.example.colorimagemobile.services.drawing.DrawingObjectManager
@@ -40,6 +40,7 @@ import com.example.colorimagemobile.ui.home.fragments.userProfile.ShowUserProfil
 import com.example.colorimagemobile.ui.home.fragments.userProfile.UserProfileFragmentDirections
 import com.example.colorimagemobile.ui.home.fragments.search.SearchFragment
 import com.example.colorimagemobile.ui.home.fragments.users.UsersFragmentDirections
+import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
 import com.example.colorimagemobile.utils.CommonFun.Companion.printToast
 import com.example.colorimagemobile.utils.CommonFun.Companion.redirectTo
 import com.example.colorimagemobile.utils.Constants
@@ -55,7 +56,7 @@ class HomeActivity : AppCompatActivity() {
     private lateinit var globalHandler: GlobalHandler
     private lateinit var navController: NavController
     private lateinit var bottomNav: BottomNavigationView
-    private var messageCounter: TextView? = null
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -67,7 +68,6 @@ class HomeActivity : AppCompatActivity() {
 
         navController = findNavController(R.id.fragment)
         bottomNav = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
-
         setBottomNavigationView()
     }
     // side navigation navbar: upon click, change to new fragment
@@ -102,16 +102,22 @@ class HomeActivity : AppCompatActivity() {
             // chat notification badge
             val notificationMenuItem : MenuItem = menu.findItem(R.id.chat_notification)
 
-            if (Notification().getCounter()==0) {
+            notificationMenuItem.setActionView(R.layout.notification_indicator)
+            val viewCount: View = notificationMenuItem.getActionView()
+            val messageCounter: TextView = viewCount.findViewById(R.id.badge_counter)
+
+            if (NotificationService.pendingNotifications == 0) {
                 // if no pending notification remove badge
                 notificationMenuItem.setActionView(null)
+                printMsg("inside Notification get count null")
             } else {
-
+                printMsg("inside Notification get count not null")
                 // if notification than set the notification view count
-                notificationMenuItem.setActionView(R.layout.notification_indicator)
-                val viewCount: View = notificationMenuItem.getActionView()
-                messageCounter = viewCount.findViewById(R.id.badge_counter)
-                messageCounter?.setText(Notification().getCounter().toString())
+//                notificationMenuItem.setActionView(R.layout.notification_indicator)
+//                val viewCount: View = notificationMenuItem.getActionView()
+//                val messageCounter: TextView = viewCount.findViewById(R.id.badge_counter)
+                messageCounter.text = NotificationService.getCounter().toString()
+                printMsg("print messagecounter.tex = "+messageCounter.text)
             }
 
         } else {
