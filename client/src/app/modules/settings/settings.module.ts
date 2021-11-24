@@ -13,14 +13,12 @@ import { UsersModule } from "../users/users.module";
 import { SettingsContainerComponent } from "./settings-container/settings-container.component";
 import { EditParameterDialogComponent } from "./settings-container/user-overview/edit-parameter-dialog/edit-parameter-dialog.component";
 import { UserOverviewComponent } from "./settings-container/user-overview/user-overview.component";
-import { UserSettingsComponent } from "./settings-container/user-settings/user-settings.component";
 import { SettingsRoutingModule } from "./settings-routing.module";
-import { ChangePasswordDialogComponent } from './settings-container/user-overview/change-password-dialog/change-password-dialog.component';
+import { ChangePasswordDialogComponent } from "./settings-container/user-overview/change-password-dialog/change-password-dialog.component";
 
 @NgModule({
   declarations: [
     SettingsContainerComponent,
-    UserSettingsComponent,
     UserOverviewComponent,
     EditParameterDialogComponent,
     ChangePasswordDialogComponent,

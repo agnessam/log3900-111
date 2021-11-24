@@ -1,21 +1,18 @@
 <mat-drawer-container id="settings-container">
   <mat-drawer mode="side" opened id="settings-drawer">
-    <div id="settings-options" fxLayout="column" fxLayoutAlign="center">
-      <div fxFlex="30%">
-        <p>User Settings</p>
+    <div
+      id="settings-options"
+      fxLayout="column wrap"
+      fxLayoutAlign="center"
+      fxLayoutGap="20px"
+      style="padding-top: 50px"
+    >
+      <div fxFlex="30%" style="padding-bottom: 2%">
+        <mat-card-title>User settings</mat-card-title>
       </div>
-      <div fxFlex="30%">
-        <button
-          mat-button
-          color="primary"
-          [routerLink]="['/settings/overview']"
-        >
+      <div fxFlex="40%">
+        <button mat-button [routerLink]="['/settings/overview']">
           My profile
-        </button>
-      </div>
-      <div fxFlex="30%">
-        <button mat-button [routerLink]="['/settings/edit']">
-          Edit profile
         </button>
       </div>
     </div>
@@ -24,4 +21,3 @@
     <router-outlet></router-outlet>
   </mat-drawer-content>
 </mat-drawer-container>
-x
