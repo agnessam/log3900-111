@@ -6,12 +6,12 @@ class Constants {
     companion object {
         const val DEBUG_KEY = "PRIVATE"  // debug log key
 
-        // profile user log history
-        const val LAST_LOGIN_DATE = "lastLogin"
-        const val LAST_LOGOUT_DATE ="lastLogout"
-
+        //global
         const val EMPTY_STRING =""
         const val GENERAL_CHANNEL_NAME = "General"
+        const val CAMERA_REQUEST_CODE = 1
+        const val PNG =".png"
+        const val AVATAR_ALL_INFO_DEFAULT = true
 
         const val NB_DATA_ROWS = 3
     }
@@ -49,7 +49,7 @@ class Constants {
             const val USER_PATH ="api/users/"
             const val TEXT_CHANNEL_PATH ="api/channels/"
             const val MESSAGES_PATH = "api/messages"
-            const val USER = "api/users/"
+            const val AVATAR_PATH ="api/avatars"
 
             // drawings
             const val ALL_DRAWINGS = "api/drawings/"
@@ -84,6 +84,12 @@ class Constants {
             const val CURRENT_TEAM_ID_KEY = "CurrentTeam"
         }
     }
+    class USERS {
+        companion object {
+            const val CURRENT_USER_ID_KEY = "CurrentUser"
+        }
+    }
+
 
     class SEARCH {
         companion object {
