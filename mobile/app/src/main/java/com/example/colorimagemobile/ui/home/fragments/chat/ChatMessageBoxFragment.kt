@@ -23,10 +23,11 @@ import com.example.colorimagemobile.services.chat.ChatAdapterService
 import com.example.colorimagemobile.services.chat.ChatService
 import com.example.colorimagemobile.services.chat.TextChannelService
 import com.example.colorimagemobile.services.socket.ChatSocketService
-import com.example.colorimagemobile.utils.CommonFun.Companion.closeKeyboard
+import com.example.colorimagemobile.utils.CommonFun.Companion.hideKeyboard
 import com.example.colorimagemobile.utils.CommonFun.Companion.onEnterKeyPressed
 import com.example.colorimagemobile.utils.CommonFun.Companion.printToast
 import com.example.colorimagemobile.utils.Constants.Companion.GENERAL_CHANNEL_NAME
+import kotlinx.android.synthetic.main.fragment_chat_message_box.*
 
 class ChatMessageBoxFragment : Fragment(R.layout.fragment_chat_message_box) {
 
@@ -100,8 +101,8 @@ class ChatMessageBoxFragment : Fragment(R.layout.fragment_chat_message_box) {
     @SuppressLint("ClickableViewAccessibility")
     private fun setListeners() {
         onEnterKeyPressed(chatMsgEditText) { sendChat() }
-        myView.findViewById<Button>(R.id.chat_sent_btn).setOnClickListener { sendChat() }
-        myView.findViewById<LinearLayout>(R.id.chat_message_main).setOnTouchListener { _, _ -> closeKeyboard(requireActivity()) }
+        myView.findViewById<Button>(R.id.chat_sent_btn).setOnClickListener { hideKeyboard(requireContext(),chat_message_main); sendChat() }
+        myView.findViewById<LinearLayout>(R.id.chat_message_main).setOnTouchListener { _, _ -> hideKeyboard(requireContext(),chat_message_main) }
         myView.findViewById<Button>(R.id.channel_leave_btn).setOnClickListener { leaveRoom() }
         myView.findViewById<Button>(R.id.channel_load_more_btn).setOnClickListener { loadPreviousMessages() }
 
@@ -113,7 +114,7 @@ class ChatMessageBoxFragment : Fragment(R.layout.fragment_chat_message_box) {
         // close keyboard when clicked on screen but allow scroll
         recyclerView.setOnTouchListener { v, event ->
             when (event?.action) {
-                MotionEvent.ACTION_DOWN -> closeKeyboard(requireActivity())
+                MotionEvent.ACTION_DOWN -> hideKeyboard(requireContext(),recyclerView)
             }
             v?.onTouchEvent(event) ?: true
         }
@@ -121,7 +122,7 @@ class ChatMessageBoxFragment : Fragment(R.layout.fragment_chat_message_box) {
 
     private fun sendChat() {
         val msg = chatMsgEditText.text.toString()
-        closeKeyboard(requireActivity())
+//        closeKeyboard(requireActivity())
 
         if (msg.isEmpty()) {
             printToast(requireContext(), "Please enter a valid message")

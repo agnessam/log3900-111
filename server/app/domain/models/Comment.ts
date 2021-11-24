@@ -3,7 +3,7 @@ import { UserInterface } from './user';
 
 export interface CommentInterface extends Document {
   content: string;
-  authorId: string | UserInterface;
+  author: string | UserInterface;
   postId: string;
 
   createdAt: string;
@@ -13,7 +13,7 @@ export interface CommentInterface extends Document {
 const CommentSchema = new mongoose.Schema(
   {
     content: { type: String, required: true },
-    authorId: {
+    author: {
       type: Schema.Types.ObjectId,
       required: true,
       ref: 'User',

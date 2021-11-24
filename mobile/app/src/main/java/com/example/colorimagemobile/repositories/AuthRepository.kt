@@ -16,7 +16,6 @@ class AuthRepository {
 
     private val httpClient = RetrofitInstance.HTTP
 
-
     fun loginUser(user: UserModel.Login): MutableLiveData<DataWrapper<HTTPResponseModel.LoginResponse>> {
         val authLiveData: MutableLiveData<DataWrapper<HTTPResponseModel.LoginResponse>> = MutableLiveData()
 
@@ -99,8 +98,4 @@ class AuthRepository {
 
         return authLiveData
     }
-
-
-
-
 }

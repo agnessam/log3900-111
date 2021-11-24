@@ -8,6 +8,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:id="@+id/teamMenu"
         android:padding="8dp">
 
         <Button
@@ -31,8 +32,9 @@
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/teamsMenuRecyclerView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
             android:layout_below="@id/newTeamBtn"
             android:layout_marginTop="20px">
 

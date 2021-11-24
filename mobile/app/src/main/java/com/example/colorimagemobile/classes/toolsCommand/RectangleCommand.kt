@@ -17,17 +17,18 @@ import com.example.colorimagemobile.services.drawing.CanvasUpdateService
 import com.example.colorimagemobile.services.drawing.DrawingObjectManager
 import com.example.colorimagemobile.services.drawing.Point
 import com.example.colorimagemobile.services.drawing.toolsAttribute.ColorService
+import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
 import java.lang.Integer.min
 
 class RectangleCommand(rectangleData: RectangleData): ICommand {
     private var boundingRectangle = Rect(0,0, CanvasService.extraCanvas.width, CanvasService.extraCanvas.height)
 
     private var startingPoint: Point? = null
-    private var endingPoint: Point? = null
+    var endingPoint: Point? = null
 
     private var layerIndex: Int = -1
     private var fillRectangleIndex: Int = -1
-    private var borderRectangleIndex: Int = -1
+    var borderRectangleIndex: Int = -1
 
     var rectangle: RectangleData = rectangleData
 
@@ -43,16 +44,19 @@ class RectangleCommand(rectangleData: RectangleData): ICommand {
         var borderRectangle = createNewRectangle()
 
         initializeRectangleLayers(fillRectangle, borderRectangle)
-        borderPaint = initializePaint(rectangleData.stroke, Color.WHITE)
-        fillPaint = initializePaint(rectangleData.fill, Color.BLACK)
+
+        borderPaint = initializePaint(rectangleData.stroke, rectangleData.strokeOpacity, Color.WHITE)
+        fillPaint = initializePaint(rectangleData.fill,  rectangleData.fillOpacity, Color.BLACK)
 
         setStartPoint(Point(rectangle.x.toFloat(), rectangle.y.toFloat()))
     }
 
-    private fun initializePaint(color: String, defaultColor: Int): Paint{
+    private fun initializePaint(color: String, opacity: String, defaultColor: Int): Paint{
         var paint = Paint()
-        paint.color = if(color != "none") ColorService.rgbaToInt(color)
-        else defaultColor
+
+        val transformedColor = ColorService.addAlphaToRGBA(color, opacity)
+        paint.color = if(color != "none") ColorService.rgbaToInt(transformedColor) else defaultColor
+        paint.alpha = ColorService.convertOpacityToAndroid(opacity)
         paint.isAntiAlias = true
         paint.style = Paint.Style.FILL
         paint.isDither = true
@@ -74,7 +78,7 @@ class RectangleCommand(rectangleData: RectangleData): ICommand {
         return ShapeDrawable(pathShape)
     }
 
-    private fun setStartPoint(startPoint: Point) {
+    fun setStartPoint(startPoint: Point) {
         startingPoint = startPoint
     }
 

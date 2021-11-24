@@ -1,15 +1,13 @@
-package com.example.colorimagemobile.ui.userProfile
+package com.example.colorimagemobile.ui.home.fragments.userProfile
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.lifecycle.LiveData
 import com.example.colorimagemobile.R
-import com.example.colorimagemobile.models.DataWrapper
-import com.example.colorimagemobile.models.HTTPResponseModel
 import com.example.colorimagemobile.models.UserModel
 import com.example.colorimagemobile.repositories.UserRepository
 import com.example.colorimagemobile.httpresponsehandler.GlobalHandler
@@ -17,7 +15,7 @@ import com.example.colorimagemobile.services.SharedPreferencesService
 import com.example.colorimagemobile.services.users.UserService
 import com.example.colorimagemobile.utils.CommonFun
 import com.example.colorimagemobile.utils.Constants
-import com.example.colorimagemobile.classes.MyFragmentManager
+import kotlinx.android.synthetic.main.fragment_password.*
 
 class PasswordFragment : Fragment() {
 
@@ -48,6 +46,7 @@ class PasswordFragment : Fragment() {
         userProfileFragment = UserProfileFragment()
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -55,14 +54,15 @@ class PasswordFragment : Fragment() {
         // inflate layout
         val inf = inflater.inflate(R.layout.fragment_password, container, false)
 
-        // listeners
-        inf.findViewById<View>(R.id.updatepassword).setOnClickListener { updatePassword() }
-        inf.findViewById<View>(R.id.editpasswordview).setOnTouchListener { v, event -> CommonFun.closeKeyboard_(this.requireActivity()) }
+        // listeners  to be uncomment when update implement serverside
+        inf.findViewById<View>(R.id.updatepassword).setOnClickListener { areFieldEmpty()}
 
-        // keyboard
-        CommonFun.onEnterKeyPressed_(inf.findViewById<View>(R.id.oldpassword) as TextView) { updatePassword() }
-        CommonFun.onEnterKeyPressed_(inf.findViewById<View>(R.id.newpassword) as TextView) { updatePassword() }
-        CommonFun.onEnterKeyPressed_(inf.findViewById<View>(R.id.vnewpassword) as TextView) { updatePassword() }
+        inf.findViewById<View>(R.id.editpasswordview).setOnTouchListener { v, event -> CommonFun.hideKeyboard(requireContext(), editpasswordview)}
+
+        // keyboard   don't delete we need it when update implement
+//        CommonFun.onEnterKeyPressed_(inf.findViewById<View>(R.id.oldpassword) as TextView) { updatePassword() }
+//        CommonFun.onEnterKeyPressed_(inf.findViewById<View>(R.id.newpassword) as TextView) { updatePassword() }
+//        CommonFun.onEnterKeyPressed_(inf.findViewById<View>(R.id.vnewpassword) as TextView) { updatePassword() }
         infview = inf
 
         // Inflate the layout for this fragment
@@ -101,17 +101,6 @@ class PasswordFragment : Fragment() {
             } else false
 
     }
-// always false beacuse user.password from database is encrypt
-    private fun isOldPassword(): Boolean{
-        edtOldPassword = (infview!!.findViewById<View>(R.id.oldpassword) as TextView).text.toString()
-        if (edtOldPassword != user.password){
-            context?.let { CommonFun.printToast(it, "OldPassword doesn't match") }
-            return false
-        }
-        else{
-            return true
-        }
-    }
 
     private fun isNewPasswordMatch(): Boolean{
         edtPassword = (infview!!.findViewById<View>(R.id.newpassword) as TextView).text.toString()
@@ -125,18 +114,4 @@ class PasswordFragment : Fragment() {
         }
     }
 
-
-    private fun updatePassword(){
-        if (areFieldEmpty() || !isOldPassword() || !isNewPasswordMatch()) return
-        // form body to make HTTP request
-        val newUserData = UserModel.UpdateUser(user.username, user.password, edtPassword)
-        UserService.setNewProfileData(newUserData)
-        val updateObserver = updateUserInfo(token,user._id)
-
-        updateObserver.observe(viewLifecycleOwner, { context?.let { it1 -> GlobalHandler().response(it1,it) } })
-        MyFragmentManager(requireActivity()).open(R.id.fragment, UserProfileFragment())
-    }
-    fun updateUserInfo(token : String, id: String): LiveData<DataWrapper<HTTPResponseModel.UserResponse>> {
-        return userRepository.updateUserData(token, id)
-    }
 }

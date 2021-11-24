@@ -1,10 +1,12 @@
 package com.example.colorimagemobile.bottomsheets
 
+import android.annotation.SuppressLint
 import android.app.Dialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AnimationUtils
 import android.widget.Button
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.FragmentActivity
@@ -14,13 +16,15 @@ import com.example.colorimagemobile.repositories.TextChannelRepository
 import com.example.colorimagemobile.services.users.UserService
 import com.example.colorimagemobile.services.chat.ChatService
 import com.example.colorimagemobile.services.chat.TextChannelService
+import com.example.colorimagemobile.utils.CommonFun.Companion.hideKeyboard
 import com.example.colorimagemobile.utils.CommonFun.Companion.printToast
-import com.example.colorimagemobile.utils.CommonFun.Companion.toggleButton
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
+import kotlinx.android.synthetic.main.activity_register.*
+import kotlinx.android.synthetic.main.bottomsheet_create_channel.*
 
 class NewChannelBottomSheet: BottomSheetDialogFragment() {
     private lateinit var createChannelBtn: Button
@@ -46,39 +50,34 @@ class NewChannelBottomSheet: BottomSheetDialogFragment() {
         channelLayout = view.findViewById(R.id.newChannelInputLayout)
         channelInputName = view.findViewById(R.id.newChannelInputText)
 
-        toggleButton(createChannelBtn, false)
         setListeners(view)
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     private fun setListeners(view: View) {
         channelInputName.doOnTextChanged { text, _, _, _ ->
             channelLayout.error = ""
-
             if (text.isNullOrEmpty()) {
                 channelLayout.error = "The name can not be empty"
-                updateCreateBtn()
                 return@doOnTextChanged
             }
-
             if (TextChannelService.doesChannelExists(text.toString())) {
                 channelLayout.error = "This channel already exists"
-                updateCreateBtn()
                 return@doOnTextChanged
             }
-
-            updateCreateBtn()
         }
+        createChannelForm.setOnTouchListener{v, event -> hideKeyboard(requireContext(),  createChannelForm)}
 
         createChannelBtn.setOnClickListener {
+            if(channelLayout.error.isNullOrBlank() || channelInputName.text.isNullOrEmpty()){
+                val shake = AnimationUtils.loadAnimation(requireActivity().getApplicationContext(), R.anim.shake)
+                newChannelInputText.startAnimation(shake);
+                return@setOnClickListener
+            }
+
             val newChannel = TextChannelModel.AllInfo(_id = null, name = channelInputName.text.toString(), ownerId = UserService.getUserInfo()._id)
             createChannel(newChannel)
         }
-    }
-
-    // activate/deactivate button depending on input fields
-    private fun updateCreateBtn() {
-        val isValid = channelLayout.error.isNullOrBlank() && !channelInputName.text.isNullOrEmpty()
-        toggleButton(createChannelBtn, isValid)
     }
 
     private fun createChannel(newChannelModel: TextChannelModel.AllInfo) {

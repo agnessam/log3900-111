@@ -1,4 +1,4 @@
-package com.example.colorimagemobile.ui.userProfile
+package com.example.colorimagemobile.ui.home.fragments.userProfile
 
 
 import android.os.Bundle
@@ -15,11 +15,8 @@ class UserProfileHistoryFragment : Fragment() {
     private lateinit var lastLogin : TextView
     private lateinit var lastLogout : TextView
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-
     }
 
     override fun onCreateView(
@@ -34,19 +31,7 @@ class UserProfileHistoryFragment : Fragment() {
         lastLogin= inf.findViewById<View>(R.id.lastLogin) as TextView
         lastLogout = inf.findViewById<View>(R.id.lastLogout) as TextView
 
-
-
         return inf
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        val user = UserService.getUserInfo()
-
-        // sets the derived data in the textView
-        lastLogin.text = user.lastLoginDate
-        lastLogout.text =user.lastLogoutDate
     }
 
 

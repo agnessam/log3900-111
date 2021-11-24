@@ -1,16 +1,16 @@
 package com.example.colorimagemobile.classes.xml_json
 
 import com.example.colorimagemobile.classes.JSONConvertor
-import com.example.colorimagemobile.models.CustomSVG
 import com.github.underscore.lodash.U
+import org.json.JSONArray
 import org.json.JSONObject
 
-class SVGParser(svgAsString: String) {
-    private val svgAsString = svgAsString
-    private lateinit var customSVG: CustomSVG
+class SVGParser<T>(svgAsString: String, classType: Class<T>) {
+    private var svgAsString = svgAsString
+    private var svgClass: T? = null
+    private val classType = classType
 
     init {
-        modifyExtras()
         parseIntoCustomSVG()
     }
 
@@ -36,16 +36,45 @@ class SVGParser(svgAsString: String) {
     private fun parseIntoCustomSVG() {
         val svgString = modifyExtras()
         val wholeSVGJson = JSONObject(svgString).getString("svg")
-        val svgJSON = JSONObject(wholeSVGJson)
+        var svgJSON = JSONObject(wholeSVGJson)
+        val svgListJSON = convertObjectsToList(svgJSON.toString())
 
-        customSVG = JSONConvertor.getJSONObject(svgJSON.toString(), CustomSVG::class.java)
+        svgClass = JSONConvertor.getJSONObject(svgListJSON, classType) as T
     }
 
-    fun getCustomSVG(): CustomSVG {
-        return customSVG
+    fun String.insert(index: Int, string: String): String {
+        return this.substring(0, index) + string + this.substring(index, this.length)
     }
 
-    fun getBackgroundColor(): String {
-        return customSVG.style.replace("background-color: ", "")
+    private fun convertObjectsToList(svgJson: String): String {
+        var currentSVG = svgJson
+        currentSVG = checkObjectList(currentSVG, "rect")
+        currentSVG = checkObjectList(currentSVG, "ellipse")
+        currentSVG = checkObjectList(currentSVG, "polyline")
+
+        return currentSVG
+    }
+
+    // if shape has {} format, change to [{}]
+    private fun checkObjectList(svgJson: String, shape: String): String {
+        if (!JSONObject(svgJson).has(shape)) return svgJson
+
+        var shapeJson = JSONObject(svgJson).getString(shape)
+
+        if (shapeJson.startsWith("{")) {
+            var arrayJSON = JSONObject(svgJson).remove(shape)
+            arrayJSON = JSONObject(svgJson).put(shape, JSONArray().put(JSONObject(shapeJson)))
+            return arrayJSON.toString()
+        }
+
+        return svgJson
+    }
+
+    fun getCustomSVG(): T {
+        return svgClass as T
+    }
+
+    fun getBackgroundColor(style: String): String {
+        return style.replace("background-color: ", "")
     }
 }
