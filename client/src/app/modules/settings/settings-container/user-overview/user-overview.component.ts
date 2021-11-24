@@ -28,7 +28,6 @@ export class UserOverviewComponent implements OnInit {
     this.usersService
       .getUser(localStorage.getItem("userId")!)
       .subscribe((user) => {
-        console.log(user);
         this.currentUser = user;
         this.userLoaded = Promise.resolve(true);
       });

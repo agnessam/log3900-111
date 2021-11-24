@@ -10,6 +10,11 @@ const routes: Routes = [
     component: SettingsContainerComponent,
     children: [
       {
+        path: "",
+        redirectTo: "overview",
+        pathMatch: "full",
+      },
+      {
         path: "overview",
         component: UserOverviewComponent,
       },
