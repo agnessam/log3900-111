@@ -41,8 +41,8 @@ export class DrawingHttpClientService {
   ): Observable<Drawing> {
     let newDrawing = {
       dataUri: drawingDataUri,
-      owner: ownerId, // TODO: remove ownerID from all requests
-      ownerModel: ownerModel, // TODO: Add option to toggle between
+      owner: ownerId,
+      ownerModel: ownerModel,
       name: name,
     };
     return this.httpClient
