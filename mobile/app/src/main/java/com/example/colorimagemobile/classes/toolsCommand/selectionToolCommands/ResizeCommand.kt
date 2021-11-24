@@ -90,8 +90,8 @@ class ResizeCommand(objectId: String) : ICommand {
     fun getPathBounds(): RectF {
         return when(commandToResize){
             is PencilCommand -> (commandToResize as PencilCommand).getPathBounds()
-            is PencilCommand -> (commandToResize as EllipseCommand).getPathBounds()
-            is PencilCommand -> (commandToResize as RectangleCommand).getPathBounds()
+            is EllipseCommand -> (commandToResize as EllipseCommand).getPathBounds()
+            is RectangleCommand -> (commandToResize as RectangleCommand).getPathBounds()
             else -> RectF()
         }
     }
@@ -141,8 +141,8 @@ class ResizeCommand(objectId: String) : ICommand {
     }
 
     private fun EllipseCommand.resize(xScale: Float, yScale: Float, xTranslate: Float, yTranslate: Float) {
-        fillPath = resizeFillPath!!
-        borderPath = resizeBorderPath!!
+        fillPath = Path(resizeFillPath!!)
+        borderPath = Path(resizeBorderPath!!)
         // Fill scaling must always be before fill due to the inverse scale condition
         scaleAroundPoint(xScale, yScale, xTranslate, yTranslate, fillPath, false)
         scaleAroundPoint(xScale, yScale, xTranslate, yTranslate, borderPath, true)
@@ -150,8 +150,8 @@ class ResizeCommand(objectId: String) : ICommand {
     }
 
     private fun RectangleCommand.resize(xScale: Float, yScale: Float, xTranslate: Float, yTranslate: Float){
-        fillPath = resizeFillPath!!
-        borderPath = resizeBorderPath!!
+        fillPath = Path(resizeFillPath!!)
+        borderPath = Path(resizeBorderPath!!)
         // Fill scaling must always be before fill due to the inverse scale condition
         scaleAroundPoint(xScale, yScale, xTranslate, yTranslate, fillPath, false)
         scaleAroundPoint(xScale, yScale, xTranslate, yTranslate, borderPath, true)
