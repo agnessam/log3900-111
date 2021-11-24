@@ -16,9 +16,10 @@ import { MatInputModule } from "@angular/material/input";
 import { MatTabsModule } from "@angular/material/tabs";
 import { CardsModule } from "../cards/cards.module";
 import { AvatarModule } from "ngx-avatar";
+import { ConfirmDeleteDialogComponent } from './team-profile/confirm-delete-dialog/confirm-delete-dialog.component';
 
 @NgModule({
-  declarations: [TeamMainPageComponent, TeamProfileComponent, NewTeamComponent],
+  declarations: [TeamMainPageComponent, TeamProfileComponent, NewTeamComponent, ConfirmDeleteDialogComponent],
   imports: [
     CommonModule,
     TeamRoutingModule,

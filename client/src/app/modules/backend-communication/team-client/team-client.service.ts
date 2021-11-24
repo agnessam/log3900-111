@@ -22,15 +22,10 @@ export class TeamClientService {
     return this.httpClient.get<Team>(`${this.TEAM_ENDPOINT}${teamId}`);
   }
 
-  createTeam(
-    teamName: string,
-    description: string,
-    ownerId: string = "617832e99a8c22d106b37528"
-  ): Observable<Team> {
+  createTeam(teamName: string, description: string): Observable<Team> {
     let newTeam = {
       name: teamName,
       description: description,
-      ownerId: ownerId,
     };
 
     return this.httpClient.post<Team>(`${this.TEAM_ENDPOINT}`, newTeam).pipe(
@@ -39,6 +34,10 @@ export class TeamClientService {
       })
     );
   }
+
+  // deleteTeam(teamId: string): Observable<Team> {
+  //   return this.httpClient.
+  // }
 
   joinTeam(teamId: string): Observable<Team> {
     return this.httpClient

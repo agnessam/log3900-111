@@ -20,6 +20,15 @@
     </div>
     <div fxFlex="11%" style="text-align: center">
       <div fxLayout="column" fxLayoutGap="12px" fxLayoutAlign="center center">
+        <button
+          mat-raised-button
+          color="warn"
+          *ngIf="isOwner()"
+          (click)="openConfirmDeleteDialog()"
+        >
+          Delete team
+        </button>
+
         <button mat-raised-button color="primary">Follow</button>
 
         <button

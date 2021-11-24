@@ -1,6 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { FormControl, FormGroup } from "@angular/forms";
 import { MatDialogRef } from "@angular/material/dialog";
+import { MatSnackBar } from "@angular/material/snack-bar";
 import { TeamClientService } from "../../backend-communication/team-client/team-client.service";
 
 @Component({
@@ -13,11 +14,11 @@ export class NewTeamComponent implements OnInit {
 
   constructor(
     private teamClient: TeamClientService,
-    private dialogRef: MatDialogRef<NewTeamComponent>
+    private dialogRef: MatDialogRef<NewTeamComponent>,
+    private snackBar: MatSnackBar
   ) {}
 
   ngOnInit(): void {
-    this.dialogRef.updateSize("15%", "30%");
     this.newTeamForm = new FormGroup({
       teamName: new FormControl(""),
       description: new FormControl(""),
@@ -30,10 +31,17 @@ export class NewTeamComponent implements OnInit {
         this.newTeamForm.value.teamName,
         this.newTeamForm.value.description
       )
-      .subscribe((response) => {
-        this.dialogRef.close(response);
-        this.newTeamForm.reset();
-      });
+      .subscribe(
+        (response) => {
+          this.dialogRef.close(response);
+          this.newTeamForm.reset();
+        },
+        (error) => {
+          this.snackBar.open("Team name is already in use", "Close", {
+            duration: 3000,
+          });
+        }
+      );
   }
 
   onCancel(): void {
