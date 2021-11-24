@@ -4,9 +4,8 @@ import android.graphics.*
 import com.example.colorimagemobile.classes.toolsCommand.EllipseCommand
 import com.example.colorimagemobile.classes.toolsCommand.PencilCommand
 import com.example.colorimagemobile.classes.toolsCommand.RectangleCommand
-import com.example.colorimagemobile.classes.toolsCommand.ResizeCommand
+import com.example.colorimagemobile.classes.toolsCommand.selectionToolCommands.ResizeCommand
 import com.example.colorimagemobile.interfaces.ICommand
-import com.example.colorimagemobile.models.ResizeData
 import com.example.colorimagemobile.services.drawing.DrawingObjectManager
 import com.example.colorimagemobile.services.socket.DrawingSocketService
 

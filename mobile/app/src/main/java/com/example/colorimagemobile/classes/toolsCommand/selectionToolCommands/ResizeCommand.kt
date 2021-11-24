@@ -1,20 +1,19 @@
-package com.example.colorimagemobile.classes.toolsCommand
+package com.example.colorimagemobile.classes.toolsCommand.selectionToolCommands
 
 import android.graphics.Matrix
 import android.graphics.Path
 import android.graphics.RectF
+import com.example.colorimagemobile.classes.toolsCommand.EllipseCommand
+import com.example.colorimagemobile.classes.toolsCommand.PencilCommand
+import com.example.colorimagemobile.classes.toolsCommand.RectangleCommand
 import com.example.colorimagemobile.interfaces.ICommand
 import com.example.colorimagemobile.models.ResizeData
 import com.example.colorimagemobile.services.drawing.DrawingObjectManager
 import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
-import kotlin.math.abs
-import kotlin.math.max
 
 class ResizeCommand(objectId: String) : ICommand {
     private var xScale: Float = 1f
     private var yScale: Float = 1f
-    private var lastXScale: Float = 1f
-    private var lastYScale: Float = 1f
     private var xTranslate: Float = 0f
     private var yTranslate: Float = 0f
     private var commandToResize: ICommand? = null
@@ -80,11 +79,6 @@ class ResizeCommand(objectId: String) : ICommand {
         matrix.postTranslate(xAnchor, yAnchor)
 
         path.transform(matrix)
-
-        if(isFill){
-            lastXScale = xScale
-            lastYScale = yScale
-        }
     }
 
     fun getPathBounds(): RectF {
