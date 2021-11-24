@@ -61,5 +61,6 @@
     <string name="follow">Follow</string>
     <string name="unfollow">Unfollow</string>
     <string name="display_name">Display name</string>
+    <string name="search">Search</string>
 
 </resources>

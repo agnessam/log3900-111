@@ -4,7 +4,7 @@
     android:layout_alignParentBottom="true">
 
      <item   
-        android:title="Search"
+        android:title="@string/search"
         android:id="@+id/searchIcon"
         app:showAsAction="ifRoom|withText"
         app:actionViewClass="android.widget.SearchView" />
@@ -17,6 +17,12 @@
         android:title="" />
     <item
         android:id="@+id/username_menu_item"
+        app:showAsAction="always"
+        android:title="" />
+    <item
+        android:id="@+id/chat_notification"
+        app:actionLayout="@layout/notification_indicator"
+        android:icon="@drawable/ic_notification"
         app:showAsAction="always"
         android:title="" />
     <item
