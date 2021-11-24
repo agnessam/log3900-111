@@ -4,6 +4,7 @@ import { MatSnackBar } from "@angular/material/snack-bar";
 import { EditableUserParameters } from "src/app/modules/users/models/editable-user-parameters";
 import { UsersService } from "src/app/modules/users/services/users.service";
 import { Avatar } from "src/app/shared/models/avatar.model";
+import { ChangePasswordDialogComponent } from "./change-password-dialog/change-password-dialog.component";
 import { EditParameterDialogComponent } from "./edit-parameter-dialog/edit-parameter-dialog.component";
 
 @Component({
@@ -16,6 +17,7 @@ export class UserOverviewComponent implements OnInit {
   currentUser: any;
 
   editParameterDialogRef: MatDialogRef<EditParameterDialogComponent>;
+  changePasswordDialogRef: MatDialogRef<ChangePasswordDialogComponent>;
 
   constructor(
     private usersService: UsersService,
@@ -72,7 +74,22 @@ export class UserOverviewComponent implements OnInit {
     this.changeDetectorRef.detectChanges();
   }
 
-  openChangePasswordDialog() {}
+  openChangePasswordDialog() {
+    this.changePasswordDialogRef = this.dialog.open(
+      ChangePasswordDialogComponent,
+      {
+        width: "500px",
+        height: "600px",
+      }
+    );
+    this.changePasswordDialogRef.afterClosed().subscribe((response) => {
+      if (response) {
+        this.snackBar.open("Succesfully updated password!", "Close", {
+          duration: 3000,
+        });
+      }
+    });
+  }
 
   openSnackBar(avatar: Avatar) {
     let snackBarRef = this.snackBar.open(
