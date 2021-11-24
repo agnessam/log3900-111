@@ -32,6 +32,7 @@ import com.example.colorimagemobile.services.drawing.DrawingService
 import com.example.colorimagemobile.services.socket.SocketManagerService
 import com.example.colorimagemobile.ui.home.fragments.chat.ChatFragmentDirections
 import com.example.colorimagemobile.ui.home.fragments.gallery.GalleryFragmentDirections
+import com.example.colorimagemobile.ui.home.fragments.museum.MuseumFragmentDirections
 import com.example.colorimagemobile.ui.home.fragments.teams.TeamsFragmentDirections
 import com.example.colorimagemobile.ui.home.fragments.userProfile.ShowUserProfileFragmentDirections
 import com.example.colorimagemobile.ui.home.fragments.userProfile.UserProfileFragmentDirections
@@ -227,6 +228,7 @@ class HomeActivity : AppCompatActivity() {
         val showUserProfileFromChat = ChatFragmentDirections.actionChatFragmentToShowUserProfileFragment()
         val showUserProfileFromSettings = UserProfileFragmentDirections.actionUserProfileFragmentToShowUserProfileFragment()
         val showUserProfileFromPublicView = UsersFragmentDirections.actionUsersFragmentToShowUserProfileFragment()
+        val showUserProfileFromMuseum = MuseumFragmentDirections.actionMuseumFragmentToShowUserProfileFragment()
 
         // redirect from actual page to userProfile
         when (this.findNavController(R.id.fragment).currentDestination?.id) {
@@ -235,6 +237,7 @@ class HomeActivity : AppCompatActivity() {
             R.id.chatFragment ->this.findNavController(R.id.fragment).navigate(showUserProfileFromChat)
             R.id.userProfileFragment ->this.findNavController(R.id.fragment).navigate(showUserProfileFromSettings)
             R.id.usersFragment ->this.findNavController(R.id.fragment).navigate(showUserProfileFromPublicView)
+            R.id.museumFragment -> this.findNavController(R.id.fragment).navigate(showUserProfileFromMuseum)
         }
     }
 
@@ -246,6 +249,7 @@ class HomeActivity : AppCompatActivity() {
         val showSettingsFromChat = ChatFragmentDirections.actionChatFragmentToUserProfileFragment()
         val showSettingsFromProfileView = ShowUserProfileFragmentDirections.actionShowUserProfileFragmentToUserProfileFragment()
         val showSettingsFromPublicView = UsersFragmentDirections.actionUsersFragmentToUserProfileFragment()
+        val showSettingsFromFromMuseum = MuseumFragmentDirections.actionMuseumFragmentToUserProfileFragment()
 
         // redirect from actual page to settings
         when (this.findNavController(R.id.fragment).currentDestination?.id) {
@@ -254,6 +258,7 @@ class HomeActivity : AppCompatActivity() {
             R.id.chatFragment ->this.findNavController(R.id.fragment).navigate(showSettingsFromChat)
             R.id.showUserProfileFragment -> this.findNavController(R.id.fragment).navigate(showSettingsFromProfileView)
             R.id.usersFragment -> this.findNavController(R.id.fragment).navigate(showSettingsFromPublicView)
+            R.id.museumFragment -> this.findNavController(R.id.fragment).navigate(showSettingsFromFromMuseum)
         }
     }
 
