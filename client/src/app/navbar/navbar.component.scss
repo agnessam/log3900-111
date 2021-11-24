@@ -11,8 +11,12 @@
   padding-top: 1%;
   padding-left: 1%;
   padding-right: 1%;
-  position: relative;
-  background-color: transparent;
+  padding-bottom: 1%;
+  background-color: #fcedea;
+  position: sticky;
+  position: -webkit-sticky; /* For macOS/iOS Safari */
+  top: 0; /* Sets the sticky toolbar to be on top */
+  z-index: 1000; /* Ensure that your app's content doesn't overlap the toolbar */
 }
 
 #nav-bar span div a {
