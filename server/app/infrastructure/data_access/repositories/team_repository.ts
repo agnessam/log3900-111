@@ -54,9 +54,16 @@ export class TeamRepository extends GenericRepository<TeamInterface> {
           if (err || !deletedTeam) {
             reject(err);
           }
-          console.log(deletedTeam);
-          Drawing.deleteMany({ _id: { $in: deletedTeam.drawings } });
-          Post.deleteMany({ _id: { $in: deletedTeam.posts } });
+          Drawing.deleteMany({ _id: { $in: deletedTeam.drawings } }, (err) => {
+            if (err) {
+              reject(err);
+            }
+          });
+          Post.deleteMany({ _id: { $in: deletedTeam.posts } }, (err) => {
+            if (err) {
+              reject(err);
+            }
+          });
           resolve(deletedTeam);
         },
       );

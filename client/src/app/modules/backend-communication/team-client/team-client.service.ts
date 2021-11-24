@@ -35,9 +35,15 @@ export class TeamClientService {
     );
   }
 
-  // deleteTeam(teamId: string): Observable<Team> {
-  //   return this.httpClient.
-  // }
+  deleteTeam(teamId: string): Observable<Team> {
+    return this.httpClient
+      .delete<Team>(`${this.TEAM_ENDPOINT}${teamId}`, {})
+      .pipe(
+        map((team) => {
+          return team;
+        })
+      );
+  }
 
   joinTeam(teamId: string): Observable<Team> {
     return this.httpClient
