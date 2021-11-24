@@ -8,6 +8,7 @@ import com.example.colorimagemobile.services.NotificationService
 import com.example.colorimagemobile.services.chat.ChatAdapterService
 import com.example.colorimagemobile.services.chat.ChatService
 import com.example.colorimagemobile.services.chat.TextChannelService
+import com.example.colorimagemobile.services.users.UserService
 import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
 import com.example.colorimagemobile.utils.Constants.SOCKETS
 import io.socket.emitter.Emitter
@@ -59,8 +60,10 @@ object ChatSocketService: AbsSocket(SOCKETS.CHAT_NAMESPACE_NAME) {
                     val currentRoom = TextChannelService.getCurrentChannel().name
                     if (message.roomName == currentRoom) {
                         ChatAdapterService.getChatMsgAdapter().addChatItem(message)
+                        if (message.author != UserService.getUserInfo().username){
+                            notifyUser()
+                        }
 
-                        notifyUser()
                     }
                 } catch (e: JSONException) {
                     printMsg("listenMessage error: ${e.message}")
@@ -77,12 +80,8 @@ object ChatSocketService: AbsSocket(SOCKETS.CHAT_NAMESPACE_NAME) {
         NotificationService.playSound(fragmentActivity!!.applicationContext)
         printMsg("in notifyuser after song play= "+NotificationService.getCounter())
         fragmentActivity!!.invalidateOptionsMenu()
-
-//        printMsg("in notifyuser before setcounter value= "+Notification().pendingNotifications)
-//        Notification().pendingNotifications = 1
-//        printMsg("in notifyuser after setcounter value= "+Notification().pendingNotifications)
-//        Notification().playSound(fragmentActivity!!.applicationContext)
-//        printMsg("in notifyuser after song play= "+Notification().pendingNotifications)
+        NotificationService.createNotificationChannel(fragmentActivity!!.applicationContext)
+        NotificationService.sendNotification(fragmentActivity!!.applicationContext)
     }
 
 }

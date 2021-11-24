@@ -61,7 +61,7 @@ class HomeActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
-
+        NotificationService.createNotificationChannel(this)
         globalHandler = GlobalHandler()
         homeViewModel = ViewModelProvider(this).get(HomeActivityViewModel::class.java)
         sharedPreferencesService = SharedPreferencesService(this)
@@ -107,17 +107,17 @@ class HomeActivity : AppCompatActivity() {
             val messageCounter: TextView = viewCount.findViewById(R.id.badge_counter)
 
             if (NotificationService.pendingNotifications == 0) {
-                // if no pending notification remove badge
+
                 notificationMenuItem.setActionView(null)
                 printMsg("inside Notification get count null")
+
             } else {
+
                 printMsg("inside Notification get count not null")
-                // if notification than set the notification view count
-//                notificationMenuItem.setActionView(R.layout.notification_indicator)
-//                val viewCount: View = notificationMenuItem.getActionView()
-//                val messageCounter: TextView = viewCount.findViewById(R.id.badge_counter)
-                messageCounter.text = NotificationService.getCounter().toString()
+                val number = NotificationService.getCounter()/2
+                messageCounter.text = number.toString()
                 printMsg("print messagecounter.tex = "+messageCounter.text)
+
             }
 
         } else {

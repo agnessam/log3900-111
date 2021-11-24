@@ -12,10 +12,50 @@
 
     <TextView
         android:id="@+id/channel_name"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="298dp"
+        android:layout_height="48dp"
         android:padding="8dp"
-        android:textSize="17sp"
-        android:textColor="#6d6d6d" />
+        android:textColor="#6d6d6d"
+        android:textSize="17sp" />
+
+<!--    <ImageView-->
+<!--        android:layout_alignParentLeft="true"-->
+<!--        android:layout_marginStart="330dp"-->
+<!--        android:layout_width="45dp"-->
+<!--        android:layout_height="41dp"-->
+<!--        android:src="@drawable/ic_notification"-->
+<!--        android:visibility="visible"-->
+<!--        app:actionLayout="@layout/notification_indicator"/>-->
+
+<!--    <FrameLayout-->
+<!--        android:layout_width="?attr/actionBarSize"-->
+<!--        android:layout_height="?attr/actionBarSize"-->
+<!--        android:layout_marginStart="330dp">-->
+
+        <ImageView
+            android:layout_width="@dimen/notification_icon_size"
+            android:layout_height="@dimen/notification_icon_size"
+            android:layout_marginStart="330dp"
+            android:src="@drawable/ic_notifications_chat" />
+
+        <TextView
+            android:id="@+id/badge_counter"
+            android:layout_width="@dimen/badge_size"
+            android:layout_height="@dimen/badge_size"
+            android:layout_marginBottom="10dp"
+            android:layout_marginStart="330dp"
+            android:background="@drawable/badge"
+            android:gravity="center"
+            android:text=""
+            android:textAlignment="center"
+            android:textColor="@android:color/white"
+            android:textColorLink="@color/black"
+            android:textSize="10sp" />
+
+<!--    </FrameLayout>-->
+
+
+    <!--        />-->
+
 
 </androidx.cardview.widget.CardView>
