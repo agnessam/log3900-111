@@ -3,6 +3,7 @@ package com.example.colorimagemobile.services.socket
 import androidx.fragment.app.FragmentActivity
 import com.example.colorimagemobile.classes.AbsSocket
 import com.example.colorimagemobile.classes.JSONConvertor
+import com.example.colorimagemobile.classes.Notification.Notification
 import com.example.colorimagemobile.models.ChatSocketModel
 import com.example.colorimagemobile.services.chat.ChatAdapterService
 import com.example.colorimagemobile.services.chat.ChatService
@@ -14,7 +15,9 @@ import org.json.JSONException
 import org.json.JSONObject
 
 object ChatSocketService: AbsSocket(SOCKETS.CHAT_NAMESPACE_NAME) {
+
     private var fragmentActivity: FragmentActivity? = null
+
 
     override fun disconnect() {
         mSocket.off(SOCKETS.TEXT_MESSAGE_EVENT_NAME, listenMessage)
@@ -55,6 +58,7 @@ object ChatSocketService: AbsSocket(SOCKETS.CHAT_NAMESPACE_NAME) {
                     val currentRoom = TextChannelService.getCurrentChannel().name
                     if (message.roomName == currentRoom) {
                         ChatAdapterService.getChatMsgAdapter().addChatItem(message)
+                        notifyUser()
                     }
                 } catch (e: JSONException) {
                     printMsg("listenMessage error: ${e.message}")
@@ -62,4 +66,11 @@ object ChatSocketService: AbsSocket(SOCKETS.CHAT_NAMESPACE_NAME) {
                 }
             })
         }
+
+    private fun notifyUser(){
+        Notification().setCounter()
+        Notification().playSound(fragmentActivity!!.applicationContext)
+
+    }
+
 }

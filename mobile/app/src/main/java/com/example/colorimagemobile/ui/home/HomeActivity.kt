@@ -7,6 +7,7 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.ImageView
 import android.widget.SearchView
+import android.widget.TextView
 import androidx.appcompat.view.menu.ActionMenuItemView
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
@@ -18,6 +19,7 @@ import com.example.colorimagemobile.ui.login.LoginActivity
 import com.example.colorimagemobile.R
 import com.example.colorimagemobile.classes.MyFragmentManager
 import com.example.colorimagemobile.classes.MyPicasso
+import com.example.colorimagemobile.classes.Notification.Notification
 import com.example.colorimagemobile.httpresponsehandler.GlobalHandler
 import com.example.colorimagemobile.services.users.UserService
 import com.example.colorimagemobile.models.UserModel
@@ -44,12 +46,16 @@ import com.example.colorimagemobile.utils.Constants
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.android.synthetic.main.fragment_show_user_profile.*
 
+
+
+
 class HomeActivity : AppCompatActivity() {
     private lateinit var homeViewModel: HomeActivityViewModel
     private lateinit var sharedPreferencesService: SharedPreferencesService
     private lateinit var globalHandler: GlobalHandler
     private lateinit var navController: NavController
     private lateinit var bottomNav: BottomNavigationView
+    private var messageCounter: TextView? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -88,10 +94,25 @@ class HomeActivity : AppCompatActivity() {
             usernameMenuItem.title = UserService.getUserInfo().username
 
             //avatar
-            val avatarmenuItem : MenuItem = (menu as Menu).findItem(R.id.useravatar_menu_item)
+            val avatarmenuItem : MenuItem = menu.findItem(R.id.useravatar_menu_item)
             val view: View = avatarmenuItem.getActionView()
             val profileImage : ImageView = view.findViewById(R.id.toolbar_profile_avatar)
             MyPicasso().loadImage( UserService.getUserInfo().avatar.imageUrl, profileImage)
+
+            // chat notification badge
+            val notificationMenuItem : MenuItem = menu.findItem(R.id.chat_notification)
+
+            if (Notification().getCounter()==0) {
+                // if no pending notification remove badge
+                notificationMenuItem.setActionView(null)
+            } else {
+
+                // if notification than set the notification view count
+                notificationMenuItem.setActionView(R.layout.notification_indicator)
+                val viewCount: View = notificationMenuItem.getActionView()
+                messageCounter = viewCount.findViewById(R.id.badge_counter)
+                messageCounter?.setText(Notification().getCounter().toString())
+            }
 
         } else {
             checkCurrentUser()
