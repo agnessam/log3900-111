@@ -105,6 +105,9 @@ class RegisterActivity : AppCompatActivity() {
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun executeRegister() {
+        registerInputs.forEachIndexed {
+                index,input -> handleInputError( input.text, registerLayouts[index])
+        }
         if (!canSubmit || !doPasswordsMatch()) {
             val shake = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.shake)
             registerForm.startAnimation(shake);

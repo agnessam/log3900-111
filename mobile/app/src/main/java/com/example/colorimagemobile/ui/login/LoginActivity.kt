@@ -72,6 +72,8 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun executeLogin() {
+        handleInputError(binding.usernameInputText.text, binding.usernameInputLayout)
+        handleInputError(binding.passwordInputText.text, binding.passwordInputLayout)
         if (!canSubmit) {
             val shake = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.shake)
             loginForm.startAnimation(shake);
