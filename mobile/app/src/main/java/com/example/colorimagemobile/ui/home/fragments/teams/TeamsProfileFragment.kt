@@ -1,6 +1,5 @@
 package com.example.colorimagemobile.ui.home.fragments.teams
 
-import android.graphics.Bitmap
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.View
@@ -10,7 +9,6 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.colorimagemobile.R
 import com.example.colorimagemobile.adapter.DrawingMenuRecyclerAdapter
-import com.example.colorimagemobile.classes.ImageConvertor
 import com.example.colorimagemobile.classes.MyFragmentManager
 import com.example.colorimagemobile.models.DrawingModel
 import com.example.colorimagemobile.models.TeamModel
@@ -18,8 +16,6 @@ import com.example.colorimagemobile.models.recyclerAdapters.DrawingMenuData
 import com.example.colorimagemobile.repositories.TeamRepository
 import com.example.colorimagemobile.services.drawing.DrawingService
 import com.example.colorimagemobile.services.teams.TeamService
-import com.example.colorimagemobile.services.users.UserService
-import com.example.colorimagemobile.utils.CommonFun
 import com.example.colorimagemobile.utils.Constants
 import com.google.android.material.tabs.TabLayout
 

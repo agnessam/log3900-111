@@ -7,8 +7,8 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.colorimagemobile.R
+import com.example.colorimagemobile.classes.MyPicasso
 import com.example.colorimagemobile.services.users.UserService
-import com.example.colorimagemobile.utils.CommonFun.Companion.loadUrl
 
 class UsersMenuRecyclerAdapter(
         val layoutID: Int,
@@ -21,7 +21,7 @@ class UsersMenuRecyclerAdapter(
     }
     override fun onBindViewHolder(holder: UsersMenuRecyclerAdapter.ViewHolder, position: Int) {
         holder.username.text = UserService.getAllUserInfo()[position].username
-        loadUrl(UserService.getAllUserInfo()[position].avatar.imageUrl, holder.image)
+        MyPicasso().loadImage(UserService.getAllUserInfo()[position].avatar.imageUrl, holder.image)
 
     }
 

@@ -9,10 +9,10 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.colorimagemobile.R
 import com.example.colorimagemobile.adapter.AvatarRecyclerAdapter
+import com.example.colorimagemobile.classes.MyPicasso
 import com.example.colorimagemobile.models.AvatarModel
 import com.example.colorimagemobile.services.avatar.AvatarService
 import com.example.colorimagemobile.utils.CommonFun
-import com.example.colorimagemobile.utils.CommonFun.Companion.loadUrl
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -60,7 +60,7 @@ class DefaultAvatarListBottomSheet : BottomSheetDialogFragment() , AvatarRecycle
     // Change avatar in view
     fun applyAvatarChoose(){
         val currentAvatar = AvatarService.getCurrentAvatar()
-        loadUrl(currentAvatar.imageUrl, CommonFun.imageView)
+        MyPicasso().loadImage(currentAvatar.imageUrl, CommonFun.imageView)
         closeSheet()
     }
 

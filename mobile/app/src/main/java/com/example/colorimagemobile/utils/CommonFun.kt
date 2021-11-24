@@ -22,13 +22,6 @@ class CommonFun {
 
         lateinit var imageView: ImageView
 
-        //load image into imageview
-        fun loadUrl(url: String, imageView: ImageView){
-            Picasso.get()
-                .load(url)
-                .into(imageView)
-        }
-
         // print in the terminal with the tag: DEBUG
         fun printMsg(msg: String) {
             Log.d(DEBUG_KEY, msg)

@@ -100,7 +100,7 @@
         android:id="@+id/usersFragment"
         android:name="com.example.colorimagemobile.ui.home.fragments.users.UsersFragment"
         android:label="Users"
-        tools:layout="@layout/fragment_users" >
+        tools:layout="@layout/fragment_users">
         <action
             android:id="@+id/action_usersFragment_to_showUserProfileFragment"
             app:destination="@id/showUserProfileFragment"

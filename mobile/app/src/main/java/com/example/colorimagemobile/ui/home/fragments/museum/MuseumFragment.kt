@@ -13,7 +13,7 @@ import com.example.colorimagemobile.models.MuseumPostModel
 import com.example.colorimagemobile.repositories.MuseumRepository
 import com.example.colorimagemobile.services.museum.MuseumAdapters
 import com.example.colorimagemobile.services.museum.MuseumPostService
-import com.example.colorimagemobile.utils.CommonFun.Companion.closeKeyboard
+import com.example.colorimagemobile.utils.CommonFun.Companion.hideKeyboard
 import com.example.colorimagemobile.utils.CommonFun.Companion.printToast
 
 class MuseumFragment : Fragment(R.layout.fragment_museum) {
@@ -53,7 +53,7 @@ class MuseumFragment : Fragment(R.layout.fragment_museum) {
     }
 
     private fun postComment(position: Int, newComment: String) {
-        closeKeyboard(requireActivity())
+       hideKeyboard(requireContext(),myView)
 
         if (newComment.isEmpty()) {
             printToast(requireContext(), "Please enter a valid comment!")

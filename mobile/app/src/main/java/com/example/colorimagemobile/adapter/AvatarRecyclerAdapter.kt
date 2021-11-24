@@ -6,9 +6,9 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.colorimagemobile.R
+import com.example.colorimagemobile.classes.MyPicasso
 import com.example.colorimagemobile.models.AvatarModel
 import com.example.colorimagemobile.services.avatar.AvatarService
-import com.example.colorimagemobile.utils.CommonFun.Companion.loadUrl
 
 class AvatarRecyclerAdapter(private val listener: OnItemClickListener ):
     RecyclerView.Adapter<AvatarRecyclerAdapter.ViewHolder>() {
@@ -25,7 +25,7 @@ class AvatarRecyclerAdapter(private val listener: OnItemClickListener ):
 
     override fun onBindViewHolder(holder: AvatarRecyclerAdapter.ViewHolder, position: Int) {
         avatars = AvatarService.getAvatars()
-        loadUrl(avatars[position].imageUrl, holder.cardAvatarview)
+        MyPicasso().loadImage(avatars[position].imageUrl, holder.cardAvatarview)
     }
 
     override fun getItemCount(): Int {

@@ -155,18 +155,18 @@ class UserRepository {
     }
 
     // get user drawings
-    fun getUserDrawings(id: String): MutableLiveData<DataWrapper<ArrayList<DrawingModel.CreateDrawing>>> {
-        val userDrawingsLiveData: MutableLiveData<DataWrapper<ArrayList<DrawingModel.CreateDrawing>>> = MutableLiveData()
+    fun getUserDrawings(id: String): MutableLiveData<DataWrapper<List<DrawingModel.Drawing>>> {
+        val userDrawingsLiveData: MutableLiveData<DataWrapper<List<DrawingModel.Drawing>>> = MutableLiveData()
 
-        httpClient.getUserDrawings(token = "Bearer ${UserService.getToken()}", id).enqueue(object : Callback<ArrayList<DrawingModel.CreateDrawing>> {
-            override fun onResponse(call: Call<ArrayList<DrawingModel.CreateDrawing>>, response: Response<ArrayList<DrawingModel.CreateDrawing>>) {
+        httpClient.getUserDrawings(token = "Bearer ${UserService.getToken()}", id).enqueue(object : Callback<List<DrawingModel.Drawing>> {
+            override fun onResponse(call: Call<List<DrawingModel.Drawing>>, response: Response<List<DrawingModel.Drawing>>) {
                 if (!response.isSuccessful) {
                     userDrawingsLiveData.value = DataWrapper(null, "An error occurred while fetching user's drawings!", true)
                     return
                 }
                 userDrawingsLiveData.value = DataWrapper(response.body(), "", false)
             }
-            override fun onFailure(call: Call<ArrayList<DrawingModel.CreateDrawing>>, t: Throwable) {
+            override fun onFailure(call: Call<List<DrawingModel.Drawing>>, t: Throwable) {
                 userDrawingsLiveData.value = DataWrapper(null, "Sorry, failed to get fetch user's drawings!", true)
             }
         })

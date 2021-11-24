@@ -17,6 +17,7 @@ import androidx.navigation.ui.setupWithNavController
 import com.example.colorimagemobile.ui.login.LoginActivity
 import com.example.colorimagemobile.R
 import com.example.colorimagemobile.classes.MyFragmentManager
+import com.example.colorimagemobile.classes.MyPicasso
 import com.example.colorimagemobile.httpresponsehandler.GlobalHandler
 import com.example.colorimagemobile.services.users.UserService
 import com.example.colorimagemobile.models.UserModel
@@ -34,7 +35,6 @@ import com.example.colorimagemobile.ui.home.fragments.gallery.GalleryFragmentDir
 import com.example.colorimagemobile.ui.home.fragments.teams.TeamsFragmentDirections
 import com.example.colorimagemobile.ui.home.fragments.userProfile.ShowUserProfileFragmentDirections
 import com.example.colorimagemobile.ui.home.fragments.userProfile.UserProfileFragmentDirections
-import com.example.colorimagemobile.utils.CommonFun
 import com.example.colorimagemobile.ui.home.fragments.search.SearchFragment
 import com.example.colorimagemobile.ui.home.fragments.users.UsersFragmentDirections
 import com.example.colorimagemobile.utils.CommonFun.Companion.printToast
@@ -90,7 +90,7 @@ class HomeActivity : AppCompatActivity() {
             val avatarmenuItem : MenuItem = (menu as Menu).findItem(R.id.useravatar_menu_item)
             val view: View = avatarmenuItem.getActionView()
             val profileImage : ImageView = view.findViewById(R.id.toolbar_profile_avatar)
-            CommonFun.loadUrl( UserService.getUserInfo().avatar.imageUrl, profileImage)
+            MyPicasso().loadImage( UserService.getUserInfo().avatar.imageUrl, profileImage)
 
         } else {
             checkCurrentUser()

@@ -10,8 +10,8 @@ import com.example.colorimagemobile.R
 import com.example.colorimagemobile.services.users.UserService
 import com.example.colorimagemobile.models.UserModel
 import android.widget.TextView
+import com.example.colorimagemobile.classes.MyPicasso
 import com.example.colorimagemobile.utils.CommonFun.Companion.imageView
-import com.example.colorimagemobile.utils.CommonFun.Companion.loadUrl
 
 
 class ShowUserProfileFragment : Fragment() {
@@ -47,7 +47,7 @@ class ShowUserProfileFragment : Fragment() {
         firstname.text = user.firstName
         lastname.text = user.lastName
         email.text = user.email
-        loadUrl(user.avatar.imageUrl,imageView)
+        MyPicasso().loadImage(user.avatar.imageUrl,imageView)
         return inf
     }
 

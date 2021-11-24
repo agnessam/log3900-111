@@ -51,7 +51,7 @@ interface API {
     fun deleteUserById(@Header("Authorization")token: String, @Path ("id") id : String) : Call<HTTPResponseModel.UserResponse>
 
     @GET("${Constants.ENDPOINTS.USER_PATH}{id}/drawings")
-    fun getUserDrawings(@Header("Authorization") token: String, @Path ("id") id: String): Call<ArrayList<DrawingModel.CreateDrawing>>
+    fun getUserDrawings(@Header("Authorization") token: String, @Path ("id") id: String): Call<List<DrawingModel.Drawing>>
 
     //  TextChannel region
     @Headers("Content-Type: application/json")
