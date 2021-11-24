@@ -101,7 +101,7 @@
     <fragment
         android:id="@+id/showUserProfileFragment"
         android:name="com.example.colorimagemobile.ui.home.fragments.userProfile.ShowUserProfileFragment"
-        android:label="fragment_show_user_profile"
+        android:label="My Profile"
         tools:layout="@layout/fragment_show_user_profile" >
         <action
             android:id="@+id/action_showUserProfileFragment_to_userProfileFragment"
