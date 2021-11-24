@@ -29,7 +29,7 @@ class MuseumPostRecyclerAdapter(
     override fun onBindViewHolder(holder: MuseumPostRecyclerAdapter.ViewHolder, position: Int) {
         val currentPost = MuseumPostService.getPosts()[position]
 
-        val bitmap = ImageConvertor(context).base64ToBitmap(currentPost.dataUri)
+        val bitmap = ImageConvertor(context).renderBase64ToBitmap(currentPost.dataUri)
         if (bitmap != null) { holder.image.setImageBitmap(bitmap) }
 
         val adapter = PostCommentsRecyclerAdapter(MuseumPostService.getPosts()[position])
