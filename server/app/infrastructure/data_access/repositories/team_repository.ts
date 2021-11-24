@@ -1,3 +1,5 @@
+import { Drawing } from '../../../domain/models/Drawing';
+import { Post } from '../../../domain/models/Post';
 import { injectable } from 'inversify';
 import { Team, TeamInterface } from '../../../domain/models/teams';
 import { User, UserInterface } from '../../../domain/models/user';
@@ -43,6 +45,23 @@ export class TeamRepository extends GenericRepository<TeamInterface> {
   }
 
   // For custom request
+
+  public async deleteTeam(teamId: string) {
+    return new Promise((resolve, reject) => {
+      Team.findOneAndDelete(
+        { _id: teamId },
+        (err: Error, deletedTeam: TeamInterface) => {
+          if (err || !deletedTeam) {
+            reject(err);
+          }
+          console.log(deletedTeam);
+          Drawing.deleteMany({ _id: { $in: deletedTeam.drawings } });
+          Post.deleteMany({ _id: { $in: deletedTeam.posts } });
+          resolve(deletedTeam);
+        },
+      );
+    });
+  }
 
   public async getTeamMembers(teamId: string) {
     return new Promise((resolve, reject) => {

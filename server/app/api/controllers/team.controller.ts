@@ -39,7 +39,7 @@ export class TeamController {
 
   @httpDelete('/:teamId')
   public async deleteTeam(@request() req: Request) {
-    return await this.teamRepository.deleteById(req.params.teamId);
+    return await this.teamRepository.deleteTeam(req.params.teamId);
   }
 
   @httpGet('/:teamId/members')

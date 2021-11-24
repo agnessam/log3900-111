@@ -2,7 +2,7 @@ import mongoose, { Document, Model, Schema } from 'mongoose';
 
 export interface DrawingInterface extends Document {
   dataUri: string;
-  ownerId: string;
+  owner: string;
   ownerModel: string;
   name: string;
 
@@ -16,7 +16,7 @@ export interface DrawingInterface extends Document {
 const DrawingSchema = new mongoose.Schema(
   {
     dataUri: { type: String, required: true },
-    ownerId: {
+    owner: {
       type: Schema.Types.ObjectId,
       required: true,
       refPath: 'ownerModel',
