@@ -8,6 +8,7 @@ import com.example.colorimagemobile.models.recyclerAdapters.DrawingMenuData
 
 object DrawingService {
 
+    private var allDrawings: List<DrawingModel.Drawing> = arrayListOf()
     private var currentDrawingID: String? = null
 
     fun setCurrentDrawingID(drawingId: String?) {
@@ -16,6 +17,14 @@ object DrawingService {
 
     fun getCurrentDrawingID(): String? {
         return currentDrawingID
+    }
+
+    fun setAllDrawings(newDrawings: List<DrawingModel.Drawing>) {
+        allDrawings = newDrawings
+    }
+
+    fun getDrawingById(): DrawingModel.Drawing {
+        return allDrawings.find { drawing -> drawing._id == currentDrawingID!! }!!
     }
 
     // convert src to bitmap for each drawing
@@ -28,7 +37,7 @@ object DrawingService {
             val svgString = imageConvertor.getSvgAsString(drawing.dataUri)
 
             if (bitmap != null) {
-                drawingsMenu.add(DrawingMenuData(drawing._id, bitmap, svgString))
+                drawingsMenu.add(DrawingMenuData(drawing._id!!, bitmap, svgString))
             }
         }
 

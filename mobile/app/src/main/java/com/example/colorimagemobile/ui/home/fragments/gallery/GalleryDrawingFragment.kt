@@ -20,11 +20,15 @@ import com.example.colorimagemobile.R
 import com.example.colorimagemobile.classes.MyFragmentManager
 import com.example.colorimagemobile.classes.tools.ToolsFactory
 import com.example.colorimagemobile.enumerators.ToolType
+import com.example.colorimagemobile.models.DrawingModel
+import com.example.colorimagemobile.repositories.DrawingRepository
 import com.example.colorimagemobile.services.drawing.DrawingService
 import com.example.colorimagemobile.services.drawing.ToolTypeService
 import com.example.colorimagemobile.services.drawing.toolsAttribute.SelectionService
 import com.example.colorimagemobile.services.socket.DrawingSocketService
 import com.example.colorimagemobile.services.socket.SocketManagerService
+import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
+import com.example.colorimagemobile.utils.CommonFun.Companion.printToast
 
 class GalleryDrawingFragment : Fragment(R.layout.fragment_gallery_drawing) {
     private lateinit var galleryDrawingFragment: ConstraintLayout;
@@ -43,6 +47,7 @@ class GalleryDrawingFragment : Fragment(R.layout.fragment_gallery_drawing) {
         setCurrentRoomName()
         addToolsOnSidebar()
         setToolsListener()
+        setListeners(view)
         connectToSocket()
     }
 
@@ -84,20 +89,40 @@ class GalleryDrawingFragment : Fragment(R.layout.fragment_gallery_drawing) {
         this.leaveDrawingRoom()
     }
 
+    private fun setListeners(view: View) {
+        val museumButton = createSideButton(R.drawable.ic_museum)
+        museumButton.setOnClickListener {
+            val drawing = DrawingService.getDrawingById()
+
+            DrawingRepository().publishDrawing(drawing).observe(viewLifecycleOwner, {
+                printToast(requireContext(), it.message!!)
+            })
+        }
+    }
+
+    private fun createSideButton(icon: Int): Button {
+        val toolBtn = Button(context)
+        toolBtn.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+        toolBtn.setBackgroundColor(Color.rgb(245, 245, 245))
+
+        // center button
+        toolBtn.text = SpannableString(" ").apply {
+            setSpan(ImageSpan(requireContext(), icon),0,1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+        }
+
+        val toolSidebar = galleryDrawingFragment.findViewById<LinearLayout>(R.id.canvas_tools)
+        toolSidebar.addView(toolBtn)
+
+        return toolBtn
+    }
+
     // dynamically add tools on sidebar
     private fun addToolsOnSidebar() {
         ToolTypeService.getAllToolTypes().forEach { toolType ->
             val tool = toolsFactory.getTool(toolType)
 
             // create dynamic button for each tool
-            val toolBtn = Button(context)
-            toolBtn.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
-            toolBtn.setBackgroundColor(Color.rgb(245, 245, 245))
-
-            // center button
-            toolBtn.text = SpannableString(" ").apply {
-                setSpan(ImageSpan(requireContext(), tool.getIcon()),0,1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-            }
+            val toolBtn = createSideButton(tool.getIcon())
 
             // handle attribute panel when clicked on tool
             toolBtn.setOnClickListener {
@@ -105,9 +130,6 @@ class GalleryDrawingFragment : Fragment(R.layout.fragment_gallery_drawing) {
                 MyFragmentManager(requireActivity()).open(R.id.tool_attribute_fragment, tool.getFragment())
                 panelView.findViewById<TextView>(R.id.tool_name).text = tool.getTitle()
             }
-
-            val toolSidebar = galleryDrawingFragment.findViewById<LinearLayout>(R.id.canvas_tools)
-            toolSidebar.addView(toolBtn)
         }
     }
 

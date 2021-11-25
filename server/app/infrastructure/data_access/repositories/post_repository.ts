@@ -70,7 +70,7 @@ export class PostRepository extends GenericRepository<PostInterface> {
     return new Promise<PostInterface>((resolve, reject) => {
       const newComment = new Comment({
         content: comment.content,
-        authorId: userId,
+        author: userId,
         postId: postId,
       });
       newComment.save().then((savedComment) => {

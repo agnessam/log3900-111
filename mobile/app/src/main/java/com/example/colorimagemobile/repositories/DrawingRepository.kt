@@ -3,7 +3,9 @@ package com.example.colorimagemobile.repositories
 import androidx.lifecycle.MutableLiveData
 import com.example.colorimagemobile.models.DataWrapper
 import com.example.colorimagemobile.models.DrawingModel
+import com.example.colorimagemobile.models.MuseumPostModel
 import com.example.colorimagemobile.services.RetrofitInstance
+import com.example.colorimagemobile.services.drawing.DrawingService
 import com.example.colorimagemobile.services.users.UserService
 import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
 import retrofit2.Call
@@ -54,5 +56,25 @@ class DrawingRepository {
         })
 
         return liveData
+    }
+
+    fun publishDrawing(drawing: DrawingModel.Drawing): MutableLiveData<DataWrapper<MuseumPostModel>> {
+        val drawingLiveData: MutableLiveData<DataWrapper<MuseumPostModel>> = MutableLiveData()
+
+        httpClient.publishDrawing(token = "Bearer ${UserService.getToken()}", DrawingService.getCurrentDrawingID()!!, drawing).enqueue(object : Callback<MuseumPostModel>{
+            override fun onResponse(call: Call<MuseumPostModel>, response: Response<MuseumPostModel>) {
+                if (!response.isSuccessful) {
+                    drawingLiveData.value = DataWrapper(null, "An error occurred!", true)
+                    return
+                }
+                drawingLiveData.value = DataWrapper(response.body(), "Drawing published to museum!", false)
+            }
+
+            override fun onFailure(call: Call<MuseumPostModel>, t: Throwable) {
+                drawingLiveData.value = DataWrapper(null, "Failed to create new drawing!", true)
+            }
+        })
+
+        return drawingLiveData
     }
 }

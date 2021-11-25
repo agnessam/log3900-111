@@ -98,6 +98,10 @@ interface API {
     @POST(Constants.ENDPOINTS.ALL_DRAWINGS)
     fun createNewDrawing(@Header("Authorization") token: String, @Body drawing: DrawingModel.CreateDrawing): Call<DrawingModel.CreateDrawing>
 
+    @Headers("Content-Type: application/json")
+    @POST("${Constants.ENDPOINTS.ALL_DRAWINGS}{id}/publish")
+    fun publishDrawing(@Header("Authorization") token: String, @Path ("id") id: String, @Body drawing: DrawingModel.Drawing): Call<MuseumPostModel>
+
     // region avatar
     @Headers("Content-Type: application/json")
     @GET(Constants.ENDPOINTS.AVATAR_PATH+"/default")
