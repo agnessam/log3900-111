@@ -22,9 +22,9 @@ object DrawingJsonService {
 
     fun createPolyline(pencilData: PencilData) {
         val style = StringParser.buildStyle(pencilData as ToolData) + "stroke-linecap: round; stroke-linejoin: round;"
-        val points = getStringPoints(pencilData.pointsList)
+        val initialPoints = "${pencilData.pointsList[0].x} ${pencilData.pointsList[0].y}"
 
-        val polyline = Polyline(id=pencilData.id, name="pencil", points=points, style=style)
+        val polyline = Polyline(id=pencilData.id, name="pencil", points=initialPoints, style=style)
         currentSVGObject?.polyline?.add(polyline)
     }
 
@@ -83,17 +83,5 @@ object DrawingJsonService {
         ellipse.ry = "${(ellipseData.height / 2)}px"
         ellipse.cx = "${ellipseData.x}px"
         ellipse.cy = "${ellipseData.y}px"
-    }
-
-    // TO REMOVE CUZ ONLY ONE POINT
-    private fun getStringPoints(points: ArrayList<Point>): String {
-        var pointsString = ""
-        points.forEach { point ->
-            pointsString += "${point.x} ${point.y}"
-        }
-
-        pointsString.dropLast(1)
-
-        return pointsString
     }
 }
