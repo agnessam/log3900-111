@@ -1,9 +1,7 @@
 package com.example.colorimagemobile.ui.home.fragments.gallery.views
 
 import android.content.Context
-import android.graphics.RectF
 import com.example.colorimagemobile.classes.toolsCommand.PencilCommand
-import com.example.colorimagemobile.classes.toolsCommand.ResizeCommand
 import com.example.colorimagemobile.models.InProgressPencil
 import com.example.colorimagemobile.models.PencilData
 import com.example.colorimagemobile.services.UUIDService
@@ -19,7 +17,6 @@ class PencilView(context: Context?): CanvasView(context) {
     private var inProgressPencil: InProgressPencil? = null
     private val pencilType = "Pencil"
     private var pencil: PencilData? = null
-
 
     override fun createPathObject() {
         currentX = motionTouchEventX

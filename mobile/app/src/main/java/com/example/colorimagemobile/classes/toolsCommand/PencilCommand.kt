@@ -8,10 +8,7 @@ import android.graphics.drawable.shapes.PathShape
 import com.example.colorimagemobile.interfaces.ICommand
 import com.example.colorimagemobile.models.PencilData
 import com.example.colorimagemobile.models.SyncUpdate
-import com.example.colorimagemobile.services.drawing.CanvasService
-import com.example.colorimagemobile.services.drawing.CanvasUpdateService
-import com.example.colorimagemobile.services.drawing.DrawingObjectManager
-import com.example.colorimagemobile.services.drawing.Point
+import com.example.colorimagemobile.services.drawing.*
 import com.example.colorimagemobile.services.drawing.toolsAttribute.ColorService
 import com.example.colorimagemobile.services.drawing.toolsAttribute.PencilService
 
@@ -32,6 +29,7 @@ class PencilCommand(pencilData: PencilData): ICommand {
 
         this.initializePaint()
         this.setStartingPoint()
+        DrawingJsonService.createPolyline(pencil)
     }
 
     fun initializePaint() {
@@ -50,6 +48,7 @@ class PencilCommand(pencilData: PencilData): ICommand {
         val point = Point(x, y)
         pencil.pointsList.add(point)
         this.path.lineTo(point.x, point.y)
+        DrawingJsonService.addPointToPolyline(pencil.id, point)
     }
 
     // for synchro
