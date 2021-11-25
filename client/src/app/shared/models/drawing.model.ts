@@ -4,4 +4,10 @@ export interface Drawing {
   ownerId: string;
   ownerModel: string;
   name: string;
+
+  privacyLevel: string;
+  password: string;
+
+  createdAt: string;
+  updatedAt: string;
 }
