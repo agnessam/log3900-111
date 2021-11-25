@@ -23,7 +23,6 @@ class DeleteCommand(deletedShape: Drawable): ICommand {
             is RectangleCommand -> DrawingJsonService.removeRectangle(id!!)
             is EllipseCommand -> DrawingJsonService.removeEllipse(id!!)
         }
-
     }
 
     override fun execute() {

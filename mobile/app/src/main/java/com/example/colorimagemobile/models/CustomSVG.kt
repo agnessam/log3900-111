@@ -13,7 +13,7 @@ data class Polyline (
     val id: String,
     val name: String,
     var points: String,
-    val style: String
+    var style: String
 )
 
 data class Ellipse (
@@ -25,7 +25,7 @@ data class Ellipse (
     var height: String,
     var rx: String,
     var ry: String,
-    val style: String,
+    var style: String,
 )
 
 data class Rectangle (
@@ -35,7 +35,7 @@ data class Rectangle (
     var y: String,
     var width: String,
     var height: String,
-    val style: String
+    var style: String
 )
 
 data class BaseSVG(

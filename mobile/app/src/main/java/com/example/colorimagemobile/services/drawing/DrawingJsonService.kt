@@ -2,7 +2,7 @@ package com.example.colorimagemobile.services.drawing
 
 import com.example.colorimagemobile.classes.xml_json.StringParser
 import com.example.colorimagemobile.models.*
-import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
+import com.example.colorimagemobile.services.drawing.toolsAttribute.SelectionService
 
 object DrawingJsonService {
 
@@ -20,8 +20,10 @@ object DrawingJsonService {
         return currentSVGObject
     }
 
+    private fun getPolylineExtraStyle(): String = " stroke-linecap: round; stroke-linejoin: round;"
+
     fun createPolyline(pencilData: PencilData) {
-        val style = StringParser.buildStyle(pencilData as ToolData) + "stroke-linecap: round; stroke-linejoin: round;"
+        val style = StringParser.buildStyle(pencilData as ToolData) + getPolylineExtraStyle()
         val initialPoints = "${pencilData.pointsList[0].x} ${pencilData.pointsList[0].y}"
 
         val polyline = Polyline(id=pencilData.id, name="pencil", points=initialPoints, style=style)
@@ -95,5 +97,26 @@ object DrawingJsonService {
 
     fun removeEllipse(id: String) {
         currentSVGObject?.ellipse = currentSVGObject?.ellipse?.filter { ellipse -> ellipse.id != id } as ArrayList<Ellipse>?
+    }
+
+    fun updatePolylineWidth(pencilData: PencilData) {
+        val id = DrawingObjectManager.getUuid(SelectionService.selectedShapeIndex)
+
+        val polyline = currentSVGObject?.polyline?.find { polyline -> polyline.id == id }
+        polyline?.style = StringParser.buildStyle(pencilData as ToolData) + getPolylineExtraStyle()
+    }
+
+    fun updateRectangleWidth(rectangleData: RectangleData) {
+        val id = DrawingObjectManager.getUuid(SelectionService.selectedShapeIndex)
+
+        val rect = currentSVGObject?.rect?.find { rect -> rect.id == id }
+        rect?.style = StringParser.buildStyle(rectangleData as ToolData)
+    }
+
+    fun updateEllipseWidth(ellipseData: EllipseData) {
+        val id = DrawingObjectManager.getUuid(SelectionService.selectedShapeIndex)
+
+        val ellipse = currentSVGObject?.ellipse?.find { ellipse -> ellipse.id == id }
+        ellipse?.style = StringParser.buildStyle(ellipseData as ToolData)
     }
 }
