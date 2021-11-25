@@ -86,6 +86,7 @@ export class TeamProfileComponent implements OnInit {
         return;
       }
       this.team = team;
+      this.changeDetectorRef.detectChanges();
     });
   }
 

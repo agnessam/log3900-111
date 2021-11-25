@@ -131,6 +131,7 @@ export class TeamRepository extends GenericRepository<TeamInterface> {
       Team.findByIdAndUpdate(
         { _id: teamId },
         { $pull: { members: { $in: userId } } },
+        { new: true },
         (err: Error, team: TeamInterface) => {
           if (err) {
             reject(err);
@@ -144,7 +145,12 @@ export class TeamRepository extends GenericRepository<TeamInterface> {
               }
             },
           );
-          resolve(team);
+          Team.populate(team, { path: 'members' }, (err, team) => {
+            if (err || !team) {
+              reject(team);
+            }
+            resolve(team);
+          });
         },
       );
     });
