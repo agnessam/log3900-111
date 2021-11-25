@@ -1,6 +1,5 @@
 package com.example.colorimagemobile.ui.home.fragments.teams
 
-import android.graphics.Bitmap
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.View
@@ -10,7 +9,6 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.colorimagemobile.R
 import com.example.colorimagemobile.adapter.DrawingMenuRecyclerAdapter
-import com.example.colorimagemobile.classes.ImageConvertor
 import com.example.colorimagemobile.classes.MyFragmentManager
 import com.example.colorimagemobile.models.DrawingModel
 import com.example.colorimagemobile.models.TeamModel
@@ -53,6 +51,7 @@ class TeamsProfileFragment : Fragment(R.layout.fragment_teams_profile) {
         MyFragmentManager(requireActivity()).showBackButton()
         
         myView.findViewById<TextView>(R.id.teamIdNameCard).text = currentTeam.name
+
 //        myView.findViewById<ImageView>(R.id.teamIdImageView).
         myView.findViewById<TextView>(R.id.teamIdNbOfMembers).text = "${currentTeam.members.size} members"
         myView.findViewById<TextView>(R.id.teamIdDescription).text = currentTeam.description

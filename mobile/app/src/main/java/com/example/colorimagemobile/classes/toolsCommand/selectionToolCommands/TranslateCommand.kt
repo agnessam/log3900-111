@@ -4,33 +4,34 @@ import android.graphics.Matrix
 import android.graphics.Path
 import com.example.colorimagemobile.interfaces.ICommand
 import com.example.colorimagemobile.models.SyncUpdate
+import com.example.colorimagemobile.models.TranslateData
 import com.example.colorimagemobile.services.drawing.CanvasUpdateService
 import com.example.colorimagemobile.services.drawing.DrawingObjectManager
 
-class TranslateCommand(objectId: Int): ICommand {
-    private var deltaX : Float = 0f
-    private var deltaY: Float = 0f
+class TranslateCommand(translateData: TranslateData): ICommand {
+    private var deltaX : Int = 0
+    private var deltaY: Int = 0
 
     private var commandToTranslate: ICommand? = null
 
     override fun update(drawingCommand: Any) {
-//        setTransformation(drawingCommand.deltaX, drawingCommand.deltaY)
+        setTransformation((drawingCommand as TranslateData).deltaX, drawingCommand.deltaY)
     }
 
     init{
-        commandToTranslate = DrawingObjectManager.getCommand(objectId)
+        commandToTranslate = DrawingObjectManager.getCommand(translateData.id)
     }
 
     private fun PencilCommand.translate() {
         val translationMatrix = Matrix()
-        translationMatrix.setTranslate(deltaX, deltaY)
+        translationMatrix.setTranslate(deltaX.toFloat(), deltaY.toFloat())
         path.transform(translationMatrix)
         execute()
     }
 
     private fun RectangleCommand.translate() {
         val translationMatrix = Matrix()
-        translationMatrix.setTranslate(deltaX, deltaY)
+        translationMatrix.setTranslate(deltaX.toFloat(), deltaY.toFloat())
         borderPath.transform(translationMatrix)
         fillPath.transform(translationMatrix)
         execute()
@@ -38,13 +39,13 @@ class TranslateCommand(objectId: Int): ICommand {
 
     private fun EllipseCommand.translate() {
         val translationMatrix = Matrix()
-        translationMatrix.setTranslate(deltaX, deltaY)
+        translationMatrix.setTranslate(deltaX.toFloat(), deltaY.toFloat())
         borderPath.transform(translationMatrix)
         fillPath.transform(translationMatrix)
         execute()
     }
 
-    fun setTransformation(x: Float, y: Float) {
+    fun setTransformation(x: Int, y: Int) {
         this.deltaX = x
         this.deltaY = y
     }

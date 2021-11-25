@@ -25,6 +25,7 @@ import { SidenavModule } from "./modules/sidenav/sidenav.module";
 import { DrawingsModule } from "./modules/drawings/drawings.module";
 import { BackendCommunicationModule } from "./modules/backend-communication/backend-communication.module";
 import { TeamModule } from "./modules/team/team.module";
+import { MuseumModule } from "./modules/museum/museum.module";
 import { SearchModule } from "./modules/search/search.module";
 import { CardsModule } from "./modules/cards/cards.module";
 
@@ -58,6 +59,7 @@ import { CardsModule } from "./modules/cards/cards.module";
     DrawingsModule,
     TeamModule,
     BackendCommunicationModule,
+    MuseumModule,
     CardsModule,
   ],
   exports: [],

@@ -7,7 +7,7 @@
   <span class="menu-spacer"></span>
   <div>
     <a mat-button routerLink="/gallery" class="page-link">Gallery</a>
-    <a mat-button routerLink="/teams" class="page-link">Teams</a>
+    <a mat-button routerLink="/museum" class="page-link">Museum</a>
   </div>
   <span class="menu-spacer"></span>
 
@@ -28,8 +28,12 @@
   </form>
   <span class="user-properties"></span>
 
+  <button mat-icon-button routerLink="/teams">
+    <img src="../../../../assets/svg-icon/group-icon.svg">
+  </button>
+
   <button mat-icon-button (click)="onChatClick()">
-    <mat-icon>message</mat-icon>
+    <img src="../../../../assets/svg-icon/chat-icon.svg">
   </button>
   <button mat-button [matMenuTriggerFor]="menu">
     <ngx-avatar [src]="this.user.avatar.imageUrl"></ngx-avatar>

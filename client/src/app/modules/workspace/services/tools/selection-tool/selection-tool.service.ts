@@ -255,8 +255,13 @@ export class SelectionToolService implements Tools {
               this.translation.deltaY
             );
 
+            const translationSync = {
+              id: this.objects[0].id,
+              deltaX: event.movementX,
+              deltaY: event.movementY,
+            };
             this.drawingSocketService.sendTransformSelectionCommand(
-              this.translation,
+              translationSync,
               "Translation"
             );
           }

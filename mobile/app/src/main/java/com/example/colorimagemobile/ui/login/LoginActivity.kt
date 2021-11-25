@@ -1,7 +1,9 @@
 package com.example.colorimagemobile.ui.login
 
+import android.annotation.SuppressLint
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.animation.AnimationUtils
 import androidx.core.widget.doOnTextChanged
 import com.example.colorimagemobile.R
 import com.example.colorimagemobile.classes.FormValidator
@@ -14,14 +16,14 @@ import com.example.colorimagemobile.models.HTTPResponseModel
 import com.example.colorimagemobile.services.SharedPreferencesService
 import com.example.colorimagemobile.ui.home.HomeActivity
 import com.example.colorimagemobile.ui.register.RegisterActivity
-import com.example.colorimagemobile.utils.CommonFun.Companion.closeKeyboard
+import com.example.colorimagemobile.utils.CommonFun.Companion.hideKeyboard
 import com.example.colorimagemobile.utils.CommonFun.Companion.onEnterKeyPressed
 import com.example.colorimagemobile.utils.CommonFun.Companion.printToast
 import com.example.colorimagemobile.utils.CommonFun.Companion.redirectTo
-import com.example.colorimagemobile.utils.CommonFun.Companion.toggleButton
 import com.example.colorimagemobile.utils.Constants
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
+import kotlinx.android.synthetic.main.activity_login.*
 
 class LoginActivity : AppCompatActivity() {
 
@@ -33,35 +35,30 @@ class LoginActivity : AppCompatActivity() {
     private var canSubmit: Boolean = true
 
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         globalHandler = GlobalHandler()
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
         sharedPreferencesService = SharedPreferencesService(this)
-
-
         val loginLayouts = arrayListOf<TextInputLayout>(binding.usernameInputLayout, binding.passwordInputLayout)
         val loginInputs = arrayListOf<TextInputEditText>(binding.usernameInputText, binding.passwordInputText)
         formValidator = FormValidator(loginLayouts, loginInputs)
-
-        toggleButton(binding.loginBtn, false) // deactivate login button by default
         setListeners()
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     private fun setListeners() {
         binding.loginBtn.setOnClickListener { executeLogin() }
         binding.registerBtn.setOnClickListener { redirectTo(this, RegisterActivity::class.java) }
-        binding.loginMain.setOnTouchListener { v, event -> closeKeyboard(this) }
+        binding.loginMain.setOnTouchListener { v, event -> hideKeyboard(this,binding.loginMain) }
 
         onEnterKeyPressed(binding.usernameInputText) { executeLogin() }
         onEnterKeyPressed(binding.passwordInputText) { executeLogin() }
 
         // inputs error handling
         binding.usernameInputText.doOnTextChanged { text, start, before, count ->  handleInputError(text, binding.usernameInputLayout) }
-        binding.passwordInputText.doOnTextChanged { text, start, before, count ->  handleInputError(text, binding.passwordInputLayout) }
+        binding.passwordInputText.doOnTextChanged { text, start, before, count ->  handleInputError(text, binding.passwordInputLayout)}
     }
 
     // handles UI error messages depending on form errors
@@ -71,13 +68,17 @@ class LoginActivity : AppCompatActivity() {
         val containsError = formValidator.containsError()
         val invalidInputLength = formValidator.isInputEmpty(resources.getString(R.string.required))
 
-        // activate/deactivate login button if form contains error or isEmpty canSubmit = !containsError && !invalidInputLength
         canSubmit = !containsError && !invalidInputLength
-        toggleButton(binding.loginBtn, canSubmit)
     }
 
     private fun executeLogin() {
-        if (!canSubmit) return
+        handleInputError(binding.usernameInputText.text, binding.usernameInputLayout)
+        handleInputError(binding.passwordInputText.text, binding.passwordInputLayout)
+        if (!canSubmit) {
+            val shake = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.shake)
+            loginForm.startAnimation(shake);
+            return
+        }
         val user = UserModel.Login(binding.usernameInputText.text.toString(), binding.passwordInputText.text.toString())
         
         // username ok -> make HTTP POST request
