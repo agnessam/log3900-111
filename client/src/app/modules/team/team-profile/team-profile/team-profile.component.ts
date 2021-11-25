@@ -59,6 +59,16 @@ export class TeamProfileComponent implements OnInit {
     return userId == this.team.owner;
   }
 
+  isTeamFull(): boolean {
+    if (!this.team.memberLimit) {
+      return false;
+    }
+    if (this.team.members.length >= this.team.memberLimit) {
+      return true;
+    }
+    return false;
+  }
+
   openConfirmDeleteDialog() {
     this.openConfirmDeleteDialogRef = this.dialog.open(
       ConfirmDeleteDialogComponent,

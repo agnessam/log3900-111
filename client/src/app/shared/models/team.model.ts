@@ -10,6 +10,7 @@ export interface Team {
   owner: string;
 
   members: string[] | User[];
+  memberLimit: number;
 
   drawings: string[] | Drawing[];
 }
