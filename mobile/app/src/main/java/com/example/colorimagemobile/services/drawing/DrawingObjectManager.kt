@@ -111,31 +111,35 @@ object DrawingObjectManager {
         rootSVG.addAttr("style", svgObject.style)
 
         // create svg-xml objects based on shapes and attributes
-        val polylineArrayBuilder = U.arrayBuilder()
-        svgObject.polyline?.forEach { pencil ->
-            if (pencil.id == null || pencil.id == "") return@forEach
-            polylineArrayBuilder.add(U.objectBuilder()
-                .add("-id", pencil.id)
-                .add("-name", pencil.name)
-                .add("-points", pencil.points)
-                .add("-style", pencil.style))
+        if (!svgObject.polyline.isNullOrEmpty()) {
+            val polylineArrayBuilder = U.arrayBuilder()
+            svgObject.polyline?.forEach { pencil ->
+                if (pencil.id == null || pencil.id == "") return@forEach
+                polylineArrayBuilder.add(U.objectBuilder()
+                    .add("-id", pencil.id)
+                    .add("-name", pencil.name)
+                    .add("-points", pencil.points)
+                    .add("-style", pencil.style))
+            }
+
+            rootSVG.addArrayAttr("polyline", polylineArrayBuilder)
         }
 
-        rootSVG.addArrayAttr("polyline", polylineArrayBuilder)
-
-        val rectArrayBuilder = U.arrayBuilder()
-        svgObject.rect?.forEach { rect ->
-            if (rect.id == null || rect.id == "") return@forEach
-            rectArrayBuilder.add(U.objectBuilder()
-                .add("-id", rect.id)
-                .add("-name", rect.name)
-                .add("-x", rect.x)
-                .add("-y", rect.y)
-                .add("-width", rect.width)
-                .add("-height", rect.height)
-                .add("-style", rect.style))
+        if (!svgObject.rect.isNullOrEmpty()) {
+            val rectArrayBuilder = U.arrayBuilder()
+            svgObject.rect?.forEach { rect ->
+                if (rect.id == null || rect.id == "") return@forEach
+                rectArrayBuilder.add(U.objectBuilder()
+                    .add("-id", rect.id)
+                    .add("-name", rect.name)
+                    .add("-x", rect.x)
+                    .add("-y", rect.y)
+                    .add("-width", rect.width)
+                    .add("-height", rect.height)
+                    .add("-style", rect.style))
+            }
+            rootSVG.addArrayAttr("rect", rectArrayBuilder)
         }
-        rootSVG.addArrayAttr("rect", rectArrayBuilder)
 
         return ImageConvertor.XMLToBase64(rootSVG.getXML())
     }
