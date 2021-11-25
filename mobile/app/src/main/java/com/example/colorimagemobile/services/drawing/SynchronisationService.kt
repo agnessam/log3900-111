@@ -117,7 +117,11 @@ object SynchronisationService {
     }
 
     fun transformSelection(transformSelectionData: SocketTool) {
-        val commandId = (transformSelectionData.drawingCommand as ResizeData).id
+        val commandId = when(transformSelectionData.type) {
+            "SelectionResize" -> (transformSelectionData.drawingCommand as ResizeData).id
+                "Translation" -> (transformSelectionData.drawingCommand as TranslateData).id
+            else -> {""}
+        }
         if(this.isShapeInPreview(commandId)){
             var command = previewShapes[commandId]
             var transformCommand = CommandFactory.createCommand(transformSelectionData.type, transformSelectionData.drawingCommand)
