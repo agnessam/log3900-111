@@ -1,10 +1,8 @@
 package com.example.colorimagemobile.services.drawing
 
 import com.example.colorimagemobile.classes.xml_json.StringParser
-import com.example.colorimagemobile.models.CustomSVG
-import com.example.colorimagemobile.models.PencilData
-import com.example.colorimagemobile.models.Polyline
-import com.example.colorimagemobile.models.ToolData
+import com.example.colorimagemobile.models.*
+import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
 
 object DrawingJsonService {
 
@@ -31,6 +29,32 @@ object DrawingJsonService {
         polyline?.points += ", ${point.x} ${point.y}"
     }
 
+    fun createRect(rectangleData: RectangleData) {
+        val style = StringParser.buildStyle(rectangleData as ToolData)
+
+        val rect = Rectangle(
+            id=rectangleData.id,
+            name="rectangle",
+            x="${rectangleData.x}px",
+            y="${rectangleData.y}px",
+            width="${rectangleData.width}px",
+            height="${rectangleData.height}px",
+            style=style
+        )
+        currentSVGObject?.rect?.add(rect)
+    }
+
+    fun updateRect(rectangleData: RectangleData) {
+        val rectangle = currentSVGObject?.rect?.find { rect -> rect.id == rectangleData.id } ?: return
+        val index = currentSVGObject?.rect?.indexOf(rectangle)
+
+        currentSVGObject?.rect!![index!!].width = "${rectangleData.width}px"
+        currentSVGObject?.rect!![index].height = "${rectangleData.height}px"
+        currentSVGObject?.rect!![index].x = "${rectangleData.x}px"
+        currentSVGObject?.rect!![index].y = "${rectangleData.y}px"
+    }
+
+    // TO REMOVE CUZ ONLY ONE POINT
     private fun getStringPoints(points: ArrayList<Point>): String {
         var pointsString = ""
         points.forEach { point ->

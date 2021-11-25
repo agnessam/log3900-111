@@ -42,8 +42,7 @@ class StringParser {
                    "stroke-width: ${toolData.strokeWidth}px; " +
                    "stroke-opacity: ${toolData.strokeOpacity}; " +
                    "fill: ${toolData.fill}; " +
-                   "fill-opacity: ${toolData.fillOpacity}; " +
-                   "stroke-linecap: round; stroke-linejoin: round; "
+                   "fill-opacity: ${toolData.fillOpacity}; "
         }
     }
 }

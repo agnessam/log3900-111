@@ -31,10 +31,10 @@ data class Ellipse (
 data class Rectangle (
     val id: String,
     val name: String,
-    val x: String,
-    val y: String,
-    val width: String,
-    val height: String,
+    var x: String,
+    var y: String,
+    var width: String,
+    var height: String,
     val style: String
 )
 
