@@ -55,7 +55,7 @@ object DrawingSocketService: AbsSocket(SOCKETS.COLLABORATIVE_DRAWING_NAMESPACE) 
         super.emit(IN_PROGRESS_DRAWING_EVENT, jsonSocket)
     }
 
-    fun sendConfirmDrawingCommand(drawingCommand: Any, type: String){
+    fun sendConfirmDrawingCommand(drawingCommand: Any, type: String) {
         val socketToolCommand = SocketTool(
             type = type,
             roomName = this.roomName as String,
@@ -88,7 +88,7 @@ object DrawingSocketService: AbsSocket(SOCKETS.COLLABORATIVE_DRAWING_NAMESPACE) 
 
     }
 
-    fun sendTransformSelectionCommand( transformSelectionCommand: Any, type: String){
+    fun sendTransformSelectionCommand(transformSelectionCommand: Any, type: String) {
         val transformCommand = SocketTool(
             type = type,
             roomName = this.roomName as String,
@@ -98,7 +98,7 @@ object DrawingSocketService: AbsSocket(SOCKETS.COLLABORATIVE_DRAWING_NAMESPACE) 
         super.emit(TRANSFORM_SELECTION_EVENT, jsonSocket)
     }
 
-    private fun listenConfirmDrawingCommand(){
+    private fun listenConfirmDrawingCommand() {
         mSocket.on(CONFIRM_DRAWING_EVENT, onConfirmDrawing)
     }
 
@@ -137,7 +137,7 @@ object DrawingSocketService: AbsSocket(SOCKETS.COLLABORATIVE_DRAWING_NAMESPACE) 
         }
 
     private fun listenStartSelectionCommand() {
-            mSocket.on(START_SELECTION_EVENT, startSelection)
+        mSocket.on(START_SELECTION_EVENT, startSelection)
     }
 
     private val startSelection =
@@ -147,7 +147,8 @@ object DrawingSocketService: AbsSocket(SOCKETS.COLLABORATIVE_DRAWING_NAMESPACE) 
                     val currentArg = args[0].toString()
                     val selectionCommandJSON = JSONObject(currentArg)
 
-                    val selectionCommand = JSONObject(selectionCommandJSON["drawingCommand"].toString())
+                    val selectionCommand =
+                        JSONObject(selectionCommandJSON["drawingCommand"].toString())
                     val selectionCommandData = SocketTool(
                         type = selectionCommandJSON["type"] as String,
                         roomName = selectionCommandJSON["roomName"] as String,
@@ -173,7 +174,8 @@ object DrawingSocketService: AbsSocket(SOCKETS.COLLABORATIVE_DRAWING_NAMESPACE) 
                     val currentArg = args[0].toString()
                     val selectionCommandJSON = JSONObject(currentArg)
 
-                    val selectionCommand = JSONObject(selectionCommandJSON["drawingCommand"].toString())
+                    val selectionCommand =
+                        JSONObject(selectionCommandJSON["drawingCommand"].toString())
                     val selectionCommandData = SocketTool(
                         type = selectionCommandJSON["type"] as String,
                         roomName = selectionCommandJSON["roomName"] as String,
@@ -202,16 +204,22 @@ object DrawingSocketService: AbsSocket(SOCKETS.COLLABORATIVE_DRAWING_NAMESPACE) 
                 val transformCommandData = SocketTool(
                     type = transformCommandJSON["type"] as String,
                     roomName = transformCommandJSON["roomName"] as String,
-                    drawingCommand = when(transformCommandJSON["type"] as String){
-                        "SelectionResize" -> JSONConvertor.getJSONObject(transformCommandJSON["drawingCommand"].toString(), ResizeData::class.java)
-                        "Translation" -> TODO("translate not yet implemented")
+                    drawingCommand = when (transformCommandJSON["type"] as String) {
+                        "SelectionResize" -> JSONConvertor.getJSONObject(
+                            transformCommandJSON["drawingCommand"].toString(),
+                            ResizeData::class.java
+                        )
+                        "Translation" -> JSONConvertor.getJSONObject(
+                            transformCommandJSON["drawingCommand"].toString(),
+                            TranslateData::class.java
+                        )
                         else -> throw Exception("drawingCommand for transform selection is invalid")
                     }
                 )
                 SynchronisationService.transformSelection(transformCommandData)
 
             } catch (e: JSONException) {
-                printMsg("confirmSelectionCommand error: ${e.message}")
+                printMsg("transformSelectionCommand error: ${e.message}")
                 return@Runnable
             }
         })

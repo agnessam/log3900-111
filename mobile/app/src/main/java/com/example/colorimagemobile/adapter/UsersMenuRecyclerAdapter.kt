@@ -7,6 +7,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.colorimagemobile.R
+import com.example.colorimagemobile.classes.MyPicasso
 import com.example.colorimagemobile.services.users.UserService
 
 class UsersMenuRecyclerAdapter(
@@ -20,6 +21,8 @@ class UsersMenuRecyclerAdapter(
     }
     override fun onBindViewHolder(holder: UsersMenuRecyclerAdapter.ViewHolder, position: Int) {
         holder.username.text = UserService.getAllUserInfo()[position].username
+        MyPicasso().loadImage(UserService.getAllUserInfo()[position].avatar.imageUrl, holder.image)
+
     }
 
     override fun getItemCount(): Int { return UserService.getAllUserInfo().size }

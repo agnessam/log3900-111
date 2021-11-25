@@ -2,8 +2,15 @@ package com.example.colorimagemobile.services
 
 import com.example.colorimagemobile.models.*
 import com.example.colorimagemobile.utils.Constants
+import okhttp3.MultipartBody
 import retrofit2.Call
 import retrofit2.http.*
+import retrofit2.http.POST
+
+import retrofit2.http.Multipart
+
+
+
 
 interface API {
 
@@ -29,7 +36,7 @@ interface API {
 
     @Headers("Content-Type: application/json")
     @GET(Constants.ENDPOINTS.USER_PATH)
-    fun getAllUser(@Header("Authorization") token: String): Call<List<UserModel.AllInfo>>
+    fun getAllUser(@Header("Authorization") token: String): Call<ArrayList<UserModel.AllInfo>>
 
     @Headers("Content-Type: application/json")
     @GET(Constants.ENDPOINTS.USER_PATH+"{id}")
@@ -39,14 +46,12 @@ interface API {
     @PATCH(Constants.ENDPOINTS.USER_PATH+"{id}")
     fun updateUser(@Header("Authorization")token: String, @Path ("id") id : String, @Body  newUser: UserModel.UpdateUser) : Call<HTTPResponseModel.UserResponse>
 
-
-    @Headers("Content-Type: application/json")
-    @PATCH(Constants.ENDPOINTS.USER_PATH+"{id}")
-    fun updateLogHistory(@Header("Authorization")token: String, @Path ("id") id : String, @Body  newLogHistory:  UserModel.UpdateLogHistory) : Call<HTTPResponseModel.UserResponse>
-
     @Headers("Content-Type: application/json")
     @DELETE(Constants.ENDPOINTS.USER_PATH+"{id}")
     fun deleteUserById(@Header("Authorization")token: String, @Path ("id") id : String) : Call<HTTPResponseModel.UserResponse>
+
+    @GET("${Constants.ENDPOINTS.USER_PATH}{id}/drawings")
+    fun getUserDrawings(@Header("Authorization") token: String, @Path ("id") id: String): Call<List<DrawingModel.Drawing>>
 
     //  TextChannel region
     @Headers("Content-Type: application/json")
@@ -86,13 +91,25 @@ interface API {
     @GET(Constants.ENDPOINTS.ALL_DRAWINGS)
     fun getAllDrawings(@Header("Authorization") token: String): Call<List<DrawingModel.Drawing>>
 
-    @GET("${Constants.ENDPOINTS.USER}{id}/teams")
-    fun getUserTeams(@Header("Authorization") token: String, @Path ("id") id: String): Call<List<TeamModel>>
+    @GET("${Constants.ENDPOINTS.USER_PATH}{id}/teams")
+    fun getUserTeams(@Header("Authorization") token: String, @Path ("id") id: String): Call<ArrayList<TeamModel>>
 
     @Headers("Content-Type: application/json")
     @POST(Constants.ENDPOINTS.ALL_DRAWINGS)
     fun createNewDrawing(@Header("Authorization") token: String, @Body drawing: DrawingModel.CreateDrawing): Call<DrawingModel.CreateDrawing>
 
+    // region avatar
+    @Headers("Content-Type: application/json")
+    @GET(Constants.ENDPOINTS.AVATAR_PATH+"/default")
+    fun getAllAvatar(@Header("Authorization") token: String): Call<ArrayList<AvatarModel.AllInfo>>
+
+    @Multipart
+    @POST(Constants.ENDPOINTS.AVATAR_PATH+"/upload")
+    fun uploadAvatar(@Header("Authorization") token: String, @Part filePart: MultipartBody.Part?): Call<AvatarModel.AllInfo>
+
+    @Headers("Content-Type: application/json")
+    @POST(Constants.ENDPOINTS.AVATAR_PATH)
+    fun postAvatar(@Header("Authorization") token: String, @Body newAvatar: AvatarModel.AllInfo): Call<AvatarModel.AllInfo>
     // teams
     @GET("${Constants.ENDPOINTS.TEAMS}{id}/drawings")
     fun getTeamDrawings(@Header("Authorization") token: String, @Path ("id") id: String): Call<List<DrawingModel.Drawing>>

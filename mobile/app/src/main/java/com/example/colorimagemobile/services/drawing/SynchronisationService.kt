@@ -120,7 +120,11 @@ object SynchronisationService {
     }
 
     fun transformSelection(transformSelectionData: SocketTool) {
-        val commandId = (transformSelectionData.drawingCommand as ResizeData).id
+        val commandId = when(transformSelectionData.type) {
+            "SelectionResize" -> (transformSelectionData.drawingCommand as ResizeData).id
+                "Translation" -> (transformSelectionData.drawingCommand as TranslateData).id
+            else -> {""}
+        }
         if(this.isShapeInPreview(commandId)){
             var command = previewShapes[commandId]
             var transformCommand = CommandFactory.createCommand(transformSelectionData.type, transformSelectionData.drawingCommand)
@@ -129,7 +133,7 @@ object SynchronisationService {
 
             if(transformCommand.javaClass == command.javaClass){
                 if(command is ResizeCommand){
-                    if(transformSelectionData.drawingCommand.xTranslate != lastXTranslate || transformSelectionData.drawingCommand.yTranslate != lastYTranslate){
+                    if((transformSelectionData.drawingCommand as ResizeData).xTranslate != lastXTranslate || transformSelectionData.drawingCommand.yTranslate != lastYTranslate){
                         command.resetPathWithShapePath()
                     }
 
