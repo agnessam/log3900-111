@@ -145,10 +145,10 @@ class EllipseCommand(ellipseData: EllipseData): ICommand {
     }
 
     private fun generateFillPath(){
-        var left = ellipse.x - ellipse.width / 2
-        var top = ellipse.y - ellipse.height / 2
-        var right = ellipse.x + ellipse.width / 2
-        var bottom = ellipse.y + ellipse.height / 2
+        var left = ellipse.x - ellipse.width / 2 + ellipse.strokeWidth
+        var top = ellipse.y - ellipse.height / 2 + ellipse.strokeWidth
+        var right = ellipse.x + ellipse.width / 2 - ellipse.strokeWidth
+        var bottom = ellipse.y + ellipse.height / 2 - ellipse.strokeWidth
         var rect = RectF(left.toFloat(), top.toFloat(), right.toFloat(), bottom.toFloat())
 
         fillPath = Path()
