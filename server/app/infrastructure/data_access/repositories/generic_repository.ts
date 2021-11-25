@@ -51,13 +51,19 @@ export abstract class GenericRepository<TModel extends Document>
 
   // https://masteringjs.io/tutorials/mongoose/update
   updateById(id: string, item: {}): Promise<TModel> {
+    console.log(item);
     return new Promise<TModel>((resolve, reject) => {
-      this.model.findByIdAndUpdate(id, item, (err: any, data: TModel) => {
-        if (err) {
-          reject(err);
-        }
-        resolve(data);
-      });
+      this.model.findByIdAndUpdate(
+        id,
+        item,
+        { new: true },
+        (err: any, data: TModel) => {
+          if (err) {
+            reject(err);
+          }
+          resolve(data);
+        },
+      );
     });
   }
 
