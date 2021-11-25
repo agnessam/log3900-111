@@ -21,6 +21,12 @@ class ResizeCommand(objectId: String) : ICommand {
     private var resizeFillPath: Path? = null
     private var resizeBorderPath: Path? = null
 
+    private var transformationLog: String
+
+    companion object{
+        var previousTransformation: HashMap<String, String> = HashMap()
+    }
+
     var id: String = ""
         get() = when(commandToResize){
             is PencilCommand -> (commandToResize!! as PencilCommand).pencil.id
@@ -31,12 +37,25 @@ class ResizeCommand(objectId: String) : ICommand {
 
     init{
         commandToResize = DrawingObjectManager.getCommand(objectId)
+        resetPathWithShapePath()
+
+        if(!previousTransformation.containsKey(id)){
+            previousTransformation[id] = ""
+        }
+        transformationLog = previousTransformation[id]!!
+    }
+
+    fun resetPathWithShapePath() {
         when(commandToResize) {
             is PencilCommand -> (commandToResize as PencilCommand).getPath()
             is EllipseCommand -> (commandToResize as EllipseCommand).getPaths()
             is RectangleCommand -> (commandToResize as RectangleCommand).getPaths()
             else -> null
         }
+    }
+
+    fun getPreviousTransformation(): String{
+        return transformationLog
     }
 
     fun setScales(xScale: Float, yScale: Float, xTranslate: Float, yTranslate: Float){
@@ -54,12 +73,12 @@ class ResizeCommand(objectId: String) : ICommand {
             is EllipseCommand -> (commandToResize as EllipseCommand).resize(this.xScale, this.yScale, this.xTranslate, this.yTranslate)
             else -> {}
         }
-        printMsg("xScale: $xScale yScale: $yScale xTranslate: $xTranslate yTranslate: $yTranslate")
+        val currentTransformation = " translate($xTranslate $yTranslate) scale($xScale $yScale) translate(-$xTranslate -$yTranslate)"
+        previousTransformation[id] = currentTransformation + transformationLog
     }
 
     override fun update(drawingCommand: Any) {
         setScales((drawingCommand as ResizeData).xScaled, drawingCommand.yScaled, drawingCommand.xTranslate, drawingCommand.yTranslate)
-        // do something with previous transformations?
     }
 
     private fun scaleAroundPoint(xScale: Float, yScale: Float, xAnchor: Float, yAnchor: Float, path: Path, isFill: Boolean){
@@ -151,6 +170,4 @@ class ResizeCommand(objectId: String) : ICommand {
         scaleAroundPoint(xScale, yScale, xTranslate, yTranslate, borderPath, true)
         execute()
     }
-
-
 }

@@ -79,7 +79,7 @@ object ResizeSelectionService {
                 resizeData.scale.yScale,
                 resizeData.anchorPoint.x,
                 resizeData.anchorPoint.y,
-                ""
+                resizeCommand!!.getPreviousTransformation()
             )
 
             DrawingSocketService.sendTransformSelectionCommand(resizeSocketData, "SelectionResize")
