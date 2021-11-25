@@ -52,7 +52,6 @@ export class UserRepository extends GenericRepository<UserInterface> {
       const hashedPassword = await bcrypt.hash(newPassword, 10);
 
       currentUser!.password = hashedPassword;
-      console.log(currentUser);
       currentUser!.save();
       resolve(currentUser);
     });

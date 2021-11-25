@@ -42,7 +42,6 @@ export class DrawingRepository extends GenericRepository<DrawingInterface> {
   public async createTeamDrawing(
     item: DrawingInterface,
   ): Promise<DrawingInterface> {
-    console.log(item.owner);
     return new Promise<DrawingInterface>((resolve, reject) => {
       const drawing = new Drawing({
         dataUri: item.dataUri,
@@ -57,7 +56,6 @@ export class DrawingRepository extends GenericRepository<DrawingInterface> {
             if (err) {
               reject(err);
             }
-            console.log(team);
             team.drawings.push(drawing._id);
             team.save();
           },
