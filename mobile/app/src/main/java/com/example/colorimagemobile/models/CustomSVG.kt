@@ -12,7 +12,7 @@ data class SvgStyle (
 data class Polyline (
     val id: String,
     val name: String,
-    val points: String,
+    var points: String,
     val style: String
 )
 

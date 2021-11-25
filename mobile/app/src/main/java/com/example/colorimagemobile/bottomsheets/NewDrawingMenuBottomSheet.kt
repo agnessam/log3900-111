@@ -105,12 +105,12 @@ class NewDrawingMenuBottomSheet: BottomSheetDialogFragment() {
             CanvasService.setHeight(heightValue)
 
             // create SVG object
-            val svgBuilder = SVGBuilder()
+            val svgBuilder = SVGBuilder("svg")
             svgBuilder.addAttr("width", CanvasService.getWidth())
             svgBuilder.addAttr("height", CanvasService.getHeight())
             svgBuilder.addAttr("style", "background-color: $color")
 
-            val base64 = ImageConvertor(requireContext()).XMLToBase64(svgBuilder.getXML())
+            val base64 = ImageConvertor.XMLToBase64(svgBuilder.getXML())
 
             // to change dynamically once lourd has completed the UI
             val newDrawing = DrawingModel.CreateDrawing(_id = null, dataUri = base64, ownerModel = "User", ownerId = "", name = "MyDrawing2")

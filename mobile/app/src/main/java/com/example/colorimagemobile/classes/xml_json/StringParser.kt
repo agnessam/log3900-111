@@ -1,6 +1,7 @@
 package com.example.colorimagemobile.classes.xml_json
 
 import com.example.colorimagemobile.models.SvgStyle
+import com.example.colorimagemobile.models.ToolData
 import com.example.colorimagemobile.utils.CommonFun.Companion.removeWhitespace
 
 class StringParser {
@@ -34,6 +35,15 @@ class StringParser {
             }
 
             return svgStyle
+        }
+
+        fun buildStyle(toolData: ToolData): String {
+            return "stroke: ${toolData.stroke}; " +
+                   "stroke-width: ${toolData.strokeWidth}px; " +
+                   "stroke-opacity: ${toolData.strokeOpacity}; " +
+                   "fill: ${toolData.fill}; " +
+                   "fill-opacity: ${toolData.fillOpacity}; " +
+                   "stroke-linecap: round; stroke-linejoin: round; "
         }
     }
 }

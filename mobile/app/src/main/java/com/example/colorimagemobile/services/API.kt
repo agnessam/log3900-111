@@ -93,6 +93,10 @@ interface API {
     @POST(Constants.ENDPOINTS.ALL_DRAWINGS)
     fun createNewDrawing(@Header("Authorization") token: String, @Body drawing: DrawingModel.CreateDrawing): Call<DrawingModel.CreateDrawing>
 
+    @Headers("Content-Type: application/json")
+    @PATCH("${Constants.ENDPOINTS.ALL_DRAWINGS}{id}")
+    fun saveDrawing(@Header("Authorization") token: String, @Path ("id") id: String, @Body drawing: DrawingModel.SaveDrawing): Call<DrawingModel.CreateDrawing>
+
     // teams
     @GET("${Constants.ENDPOINTS.TEAMS}{id}/drawings")
     fun getTeamDrawings(@Header("Authorization") token: String, @Path ("id") id: String): Call<List<DrawingModel.Drawing>>

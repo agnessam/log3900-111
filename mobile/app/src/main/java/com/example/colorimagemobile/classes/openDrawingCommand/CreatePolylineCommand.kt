@@ -51,7 +51,7 @@ class CreatePolylineCommand(polyLines: ArrayList<Polyline>?): ICreateDrawingComm
 
             // draw remaining points
             points.forEach { point ->
-                val splicedPoint = point.split(" ")
+                val splicedPoint = point.trimStart().split(" ")
                 command.addPoint(splicedPoint[0].toFloat(), splicedPoint[1].toFloat())
                 command.execute()
             }
