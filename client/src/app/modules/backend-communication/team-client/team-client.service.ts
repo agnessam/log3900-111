@@ -5,6 +5,7 @@ import { map } from "rxjs/operators";
 import { Drawing } from "src/app/shared";
 import { Team } from "src/app/shared/models/team.model";
 import { environment } from "src/environments/environment";
+import { EditableTeamParameters } from "../../team/EditableTeam";
 
 @Injectable({
   providedIn: "root",
@@ -22,13 +23,8 @@ export class TeamClientService {
     return this.httpClient.get<Team>(`${this.TEAM_ENDPOINT}${teamId}`);
   }
 
-  createTeam(teamName: string, description: string): Observable<Team> {
-    let newTeam = {
-      name: teamName,
-      description: description,
-    };
-
-    return this.httpClient.post<Team>(`${this.TEAM_ENDPOINT}`, newTeam).pipe(
+  createTeam(team: EditableTeamParameters): Observable<Team> {
+    return this.httpClient.post<Team>(`${this.TEAM_ENDPOINT}`, team).pipe(
       map((team) => {
         return team;
       })

@@ -17,6 +17,7 @@ export class TeamRepository extends GenericRepository<TeamInterface> {
         name: team.name,
         description: team.description,
         owner: team.owner,
+        memberLimit: team.memberLimit,
       });
       newTeam
         .save()
