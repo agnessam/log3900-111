@@ -19,12 +19,12 @@ data class Polyline (
 data class Ellipse (
     val id: String,
     val name: String,
-    val cx: String,
-    val cy: String,
-    val width: String,
-    val height: String,
-    val rx: String,
-    val ry: String,
+    var cx: String,
+    var cy: String,
+    var width: String,
+    var height: String,
+    var rx: String,
+    var ry: String,
     val style: String,
 )
 

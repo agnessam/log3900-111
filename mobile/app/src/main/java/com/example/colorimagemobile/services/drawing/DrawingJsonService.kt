@@ -57,6 +57,34 @@ object DrawingJsonService {
         rectangle.y = "${rectangleData.y}px"
     }
 
+    fun createEllipse(ellipseData: EllipseData) {
+        val style = StringParser.buildStyle(ellipseData as ToolData)
+
+        val ellipse = Ellipse(
+            id=ellipseData.id,
+            name="ellipse",
+            rx="${ellipseData.width/2}px",
+            ry="${ellipseData.height/2}px",
+            width="${ellipseData.width}px",
+            height="${ellipseData.height}px",
+            cx="0px",
+            cy="0px",
+            style=style
+        )
+        currentSVGObject?.ellipse?.add(ellipse)
+    }
+
+    fun updateEllipse(ellipseData: EllipseData) {
+        val ellipse = currentSVGObject?.ellipse?.find { ellipse -> ellipse.id == ellipseData.id } ?: return
+
+        ellipse.width = "${ellipseData.width}px"
+        ellipse.height = "${ellipseData.height}px"
+        ellipse.rx = "${(ellipseData.width / 2)}px"
+        ellipse.ry = "${(ellipseData.height / 2)}px"
+        ellipse.cx = "${ellipseData.x}px"
+        ellipse.cy = "${ellipseData.y}px"
+    }
+
     // TO REMOVE CUZ ONLY ONE POINT
     private fun getStringPoints(points: ArrayList<Point>): String {
         var pointsString = ""

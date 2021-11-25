@@ -141,6 +141,24 @@ object DrawingObjectManager {
             rootSVG.addArrayAttr("rect", rectArrayBuilder)
         }
 
+        if (!svgObject.ellipse.isNullOrEmpty()) {
+            val ellipseArrayBuilder = U.arrayBuilder()
+            svgObject.ellipse?.forEach { ellipse ->
+                if (ellipse.id == null || ellipse.id == "") return@forEach
+                ellipseArrayBuilder.add(U.objectBuilder()
+                    .add("-id", ellipse.id)
+                    .add("-name", ellipse.name)
+                    .add("-cx", ellipse.cx)
+                    .add("-cy", ellipse.cy)
+                    .add("-rx", ellipse.rx)
+                    .add("-ry", ellipse.ry)
+                    .add("-width", ellipse.width)
+                    .add("-height", ellipse.height)
+                    .add("-style", ellipse.style))
+            }
+            rootSVG.addArrayAttr("ellipse", ellipseArrayBuilder)
+        }
+
         return ImageConvertor.XMLToBase64(rootSVG.getXML())
     }
 }
