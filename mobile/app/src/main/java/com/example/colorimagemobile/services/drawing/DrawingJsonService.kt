@@ -46,12 +46,11 @@ object DrawingJsonService {
 
     fun updateRect(rectangleData: RectangleData) {
         val rectangle = currentSVGObject?.rect?.find { rect -> rect.id == rectangleData.id } ?: return
-        val index = currentSVGObject?.rect?.indexOf(rectangle)
 
-        currentSVGObject?.rect!![index!!].width = "${rectangleData.width}px"
-        currentSVGObject?.rect!![index].height = "${rectangleData.height}px"
-        currentSVGObject?.rect!![index].x = "${rectangleData.x}px"
-        currentSVGObject?.rect!![index].y = "${rectangleData.y}px"
+        rectangle.width = "${rectangleData.width}px"
+        rectangle.height = "${rectangleData.height}px"
+        rectangle.x = "${rectangleData.x}px"
+        rectangle.y = "${rectangleData.y}px"
     }
 
     // TO REMOVE CUZ ONLY ONE POINT
