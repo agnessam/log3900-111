@@ -1,5 +1,6 @@
 package com.example.colorimagemobile.ui.home.fragments.search
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.View
@@ -14,9 +15,10 @@ import com.example.colorimagemobile.services.teams.TeamAdapterService
 import com.example.colorimagemobile.services.teams.TeamService
 import com.example.colorimagemobile.services.users.UserAdapterService
 import com.example.colorimagemobile.services.users.UserService
-import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
+import com.example.colorimagemobile.utils.CommonFun
 import com.example.colorimagemobile.utils.Constants
 import com.google.android.material.tabs.TabLayout
+import kotlinx.android.synthetic.main.fragment_search.*
 
 class SearchFragment : Fragment(R.layout.fragment_search) {
     private lateinit var queryObject: SearchModel
@@ -41,6 +43,7 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
         setDrawings()
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     private fun setListeners() {
         myView.findViewById<TabLayout>(R.id.searchTabLayout).addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab?) {
@@ -55,6 +58,7 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
             override fun onTabReselected(tab: TabLayout.Tab?) { }
             override fun onTabUnselected(tab: TabLayout.Tab?) { }
         })
+        myView.findViewById<View>(R.id.searchMainFragment).setOnTouchListener { v, event -> CommonFun.hideKeyboard(requireContext(), searchMainFragment)}
     }
 
     // add DrawingRecyclerAdapter

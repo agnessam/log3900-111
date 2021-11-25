@@ -1,5 +1,6 @@
 package com.example.colorimagemobile.services.users
 
+import com.example.colorimagemobile.models.AvatarModel
 import com.example.colorimagemobile.models.UserModel
 import com.example.colorimagemobile.utils.Constants
 
@@ -7,20 +8,20 @@ import com.example.colorimagemobile.utils.Constants
 
 object UserService {
     private lateinit var info: UserModel.AllInfo
-    private lateinit var lastLogin: String
-    private lateinit var lastLogout: String
-    private  var date : ArrayList<String> = arrayListOf(Constants.EMPTY_STRING,Constants.EMPTY_STRING)
     private var token : String =Constants.EMPTY_STRING
-    private var updateProfileData : UserModel.UpdateUser = UserModel.UpdateUser(Constants.EMPTY_STRING,Constants.EMPTY_STRING,Constants.EMPTY_STRING)
-    private lateinit var AllUserInfo : List<UserModel.AllInfo>
-    private lateinit var logHistory : UserModel.UpdateLogHistory
+    private var updateProfileData : UserModel.UpdateUser
+    private lateinit var allUserInfo : ArrayList<UserModel.AllInfo>
 
-    fun setAllUserInfo(allInfo:List<UserModel.AllInfo>){
-        AllUserInfo = allInfo
+    init {
+        updateProfileData =UserModel.UpdateUser(null,null,null)
     }
 
-    fun getAllUserInfo() : List<UserModel.AllInfo> {
-        return AllUserInfo
+    fun setAllUserInfo(allInfo:ArrayList<UserModel.AllInfo>){
+        allUserInfo = allInfo
+    }
+
+    fun getAllUserInfo() : ArrayList<UserModel.AllInfo> {
+        return allUserInfo
     }
 
     fun setNewProfileData (newValues: UserModel.UpdateUser){
@@ -48,8 +49,26 @@ object UserService {
     }
 
     fun getToken(): String{
-
         return token
     }
+
+    fun setUserAvatar(avatar: AvatarModel.AllInfo){
+     this.info.avatar = avatar
+    }
+
+    fun getUser(position: Int): UserModel.AllInfo {
+        return allUserInfo[position]
+    }
+
+    fun updateUserAfterUpdate(currentdata: UserModel.UpdateUser){
+        if (!currentdata.username.isNullOrEmpty()){
+            info.username = currentdata.username!!
+        }
+        if (!currentdata.description.isNullOrEmpty()){
+            info.description = currentdata.description!!
+        }
+
+    }
+
 
 }

@@ -1,12 +1,10 @@
 package com.example.colorimagemobile.repositories
 
 import androidx.lifecycle.MutableLiveData
-import com.example.colorimagemobile.models.DataWrapper
-import com.example.colorimagemobile.models.HTTPResponseModel
-import com.example.colorimagemobile.models.TeamModel
-import com.example.colorimagemobile.models.UserModel
+import com.example.colorimagemobile.models.*
 import com.example.colorimagemobile.services.RetrofitInstance
 import com.example.colorimagemobile.services.users.UserService
+import com.example.colorimagemobile.utils.CommonFun
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -15,7 +13,6 @@ import retrofit2.Response
 class UserRepository {
     private val httpClient = RetrofitInstance.HTTP
     private lateinit var newProfileDate : UserModel.UpdateUser
-    private lateinit var logHistory : UserModel.UpdateLogHistory
 
     fun getUserByToken(token: String): MutableLiveData<DataWrapper<HTTPResponseModel.UserResponse>> {
         val userLiveData: MutableLiveData<DataWrapper<HTTPResponseModel.UserResponse>> = MutableLiveData()
@@ -115,18 +112,18 @@ class UserRepository {
     }
 
     // get all user
-    fun getAllUser(token: String): MutableLiveData<DataWrapper<List<UserModel.AllInfo>>> {
-        val AllUserData: MutableLiveData<DataWrapper<List<UserModel.AllInfo>>> = MutableLiveData()
+    fun getAllUser(token: String): MutableLiveData<DataWrapper<ArrayList<UserModel.AllInfo>>> {
+        val AllUserData: MutableLiveData<DataWrapper<ArrayList<UserModel.AllInfo>>> = MutableLiveData()
 
-        httpClient.getAllUser(token = "Bearer $token").enqueue(object : Callback<List<UserModel.AllInfo>> {
-            override fun onResponse(call: Call<List<UserModel.AllInfo>>, response: Response<List<UserModel.AllInfo>>) {
+        httpClient.getAllUser(token = "Bearer $token").enqueue(object : Callback<ArrayList<UserModel.AllInfo>> {
+            override fun onResponse(call: Call<ArrayList<UserModel.AllInfo>>, response: Response<ArrayList<UserModel.AllInfo>>) {
                 if (!response.isSuccessful) {
                     AllUserData.value = DataWrapper(null, "An error occurred!", true)
                     return
                 }
                 AllUserData.value = DataWrapper(response.body(), null, false)
             }
-            override fun onFailure(call: Call<List<UserModel.AllInfo>>, t: Throwable) {
+            override fun onFailure(call: Call<ArrayList<UserModel.AllInfo>>, t: Throwable) {
                 AllUserData.value = DataWrapper(null, "Failed to get User!", true)
             }
         })
@@ -134,11 +131,12 @@ class UserRepository {
         return AllUserData
     }
 
-    fun getUserTeams(token: String, userId: String): MutableLiveData<DataWrapper<List<TeamModel>>> {
-        val teamsLiveData: MutableLiveData<DataWrapper<List<TeamModel>>> = MutableLiveData()
+  // get user team
+    fun getUserTeams(token: String, userId: String): MutableLiveData<DataWrapper<ArrayList<TeamModel>>> {
+        val teamsLiveData: MutableLiveData<DataWrapper<ArrayList<TeamModel>>> = MutableLiveData()
 
-        httpClient.getUserTeams(token = "Bearer $token", userId).enqueue(object: Callback<List<TeamModel>> {
-            override fun onResponse(call: Call<List<TeamModel>>, response: Response<List<TeamModel>>) {
+        httpClient.getUserTeams(token = "Bearer $token", userId).enqueue(object: Callback<ArrayList<TeamModel>> {
+            override fun onResponse(call: Call<ArrayList<TeamModel>>, response: Response<ArrayList<TeamModel>>) {
                 if (!response.isSuccessful) {
                     teamsLiveData.value = DataWrapper(null, "An error occurred!", true)
                     return
@@ -148,11 +146,31 @@ class UserRepository {
                 teamsLiveData.value = DataWrapper(response.body(), "", false)
             }
 
-            override fun onFailure(call: Call<List<TeamModel>>, t: Throwable) {
+            override fun onFailure(call: Call<ArrayList<TeamModel>>, t: Throwable) {
                 teamsLiveData.value = DataWrapper(null, "Failed to fetch teams!", true)
             }
         })
 
         return teamsLiveData
+    }
+
+    // get user drawings
+    fun getUserDrawings(id: String): MutableLiveData<DataWrapper<List<DrawingModel.Drawing>>> {
+        val userDrawingsLiveData: MutableLiveData<DataWrapper<List<DrawingModel.Drawing>>> = MutableLiveData()
+
+        httpClient.getUserDrawings(token = "Bearer ${UserService.getToken()}", id).enqueue(object : Callback<List<DrawingModel.Drawing>> {
+            override fun onResponse(call: Call<List<DrawingModel.Drawing>>, response: Response<List<DrawingModel.Drawing>>) {
+                if (!response.isSuccessful) {
+                    userDrawingsLiveData.value = DataWrapper(null, "An error occurred while fetching user's drawings!", true)
+                    return
+                }
+                userDrawingsLiveData.value = DataWrapper(response.body(), "", false)
+            }
+            override fun onFailure(call: Call<List<DrawingModel.Drawing>>, t: Throwable) {
+                userDrawingsLiveData.value = DataWrapper(null, "Sorry, failed to get fetch user's drawings!", true)
+            }
+        })
+
+        return userDrawingsLiveData
     }
 }

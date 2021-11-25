@@ -8,12 +8,10 @@ export interface UserInterface extends Document {
   username: string;
   description: string;
   avatar: AvatarInterface;
-
   email: string;
   password: string;
   firstName: string;
   lastName: string;
-
   teams: string[] | TeamInterface[];
 
   drawings: string[];

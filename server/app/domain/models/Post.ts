@@ -1,20 +1,24 @@
 import mongoose, { Document, Model, Schema } from 'mongoose';
 import { CommentInterface } from './Comment';
+import { UserInterface } from './user';
 
 export interface PostInterface extends Document {
   dataUri: string;
-  ownerId: string;
+  owner: string | UserInterface;
   ownerModel: string;
   name: string;
 
   comments: string[] | CommentInterface[];
   likes: string[];
+
+  createdAt: string;
+  updatedAt: string;
 }
 
 const PostSchema = new Schema(
   {
     dataUri: { type: String, required: true },
-    ownerId: {
+    owner: {
       type: Schema.Types.ObjectId,
       required: true,
       refPath: 'ownerModel',

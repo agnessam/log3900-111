@@ -7,9 +7,8 @@ import com.example.colorimagemobile.utils.CommonFun
 
 class GlobalHandler{
 
-    // for all update and delete request
+    // for all update and delete request for user
     fun response(context : Context, HTTPResponse: DataWrapper<HTTPResponseModel.UserResponse>) {
-
         // some error occurred during HTTP request
         if (HTTPResponse.isError as Boolean) {
             context?.let { CommonFun.printToast(it, HTTPResponse.message as String) }
@@ -18,5 +17,4 @@ class GlobalHandler{
         // request successfully
         context?.let { CommonFun.printToast(it, "Request succeed") }
     }
-
 }
