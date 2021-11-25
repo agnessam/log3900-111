@@ -46,6 +46,19 @@ export class TeamRepository extends GenericRepository<TeamInterface> {
 
   // For custom request
 
+  public async getTeam(teamId: string) {
+    return new Promise((resolve, reject) => {
+      Team.findById({ _id: teamId })
+        .populate(['members'])
+        .exec((err, team) => {
+          if (err || !team) {
+            reject(err);
+          }
+          resolve(team);
+        });
+    });
+  }
+
   public async deleteTeam(teamId: string) {
     return new Promise((resolve, reject) => {
       Team.findOneAndDelete(

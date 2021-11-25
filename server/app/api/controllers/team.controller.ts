@@ -23,7 +23,7 @@ export class TeamController {
 
   @httpGet('/:teamId')
   public async getTeamById(@request() req: Request) {
-    return await this.teamRepository.findById(req.params.teamId);
+    return await this.teamRepository.getTeam(req.params.teamId);
   }
 
   @httpPost('/')

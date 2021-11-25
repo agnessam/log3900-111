@@ -10,7 +10,9 @@
         </div>
         <div fxLayout="row grid" fxLayoutAlign="center center">
           <div>
-            <p>{{ this.team.members.length }} members</p>
+            <button mat-button (click)="openMemberList()">
+              {{ this.team.members.length }} members
+            </button>
           </div>
         </div>
         <div fxFlex="100%" style="text-align: center">

@@ -1,0 +1,12 @@
+<div *ngFor="let member of this.data.members">
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>
+        <ngx-avatar [src]="member.avatar?.imageUrl"></ngx-avatar>
+      </mat-card-title>
+      <mat-card-content>
+        <p>{{ member.username }}</p>
+      </mat-card-content>
+    </mat-card-header>
+  </mat-card>
+</div>

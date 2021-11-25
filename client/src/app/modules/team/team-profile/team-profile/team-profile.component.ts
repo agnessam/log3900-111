@@ -4,6 +4,7 @@ import { ActivatedRoute } from "@angular/router";
 import { TeamClientService } from "src/app/modules/backend-communication/team-client/team-client.service";
 import { Team } from "src/app/shared/models/team.model";
 import { ConfirmDeleteDialogComponent } from "../confirm-delete-dialog/confirm-delete-dialog.component";
+import { MemberListDialogComponent } from "../member-list-dialog/member-list-dialog.component";
 
 @Component({
   selector: "app-team-profile",
@@ -15,6 +16,7 @@ export class TeamProfileComponent implements OnInit {
   team: Team;
 
   openConfirmDeleteDialogRef: MatDialogRef<ConfirmDeleteDialogComponent>;
+  openMemberListDialogRef: MatDialogRef<MemberListDialogComponent>;
 
   constructor(
     private route: ActivatedRoute,
@@ -57,5 +59,11 @@ export class TeamProfileComponent implements OnInit {
       ConfirmDeleteDialogComponent,
       { data: { team: this.team } }
     );
+  }
+
+  openMemberList() {
+    this.openMemberListDialogRef = this.dialog.open(MemberListDialogComponent, {
+      data: { members: this.team.members },
+    });
   }
 }
