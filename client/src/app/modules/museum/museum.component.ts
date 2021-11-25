@@ -56,7 +56,7 @@ export class MuseumComponent implements OnInit {
     }
 
     const comment = { content: content, authorId: this.user, postId: postId} as CommentInterface;
-    this.postService.addComment(this.user?._id, "", comment).subscribe((comment) => {
+    this.postService.addComment(postId, comment).subscribe((comment) => {
 
     });
   }
@@ -76,7 +76,6 @@ export class MuseumComponent implements OnInit {
 
   hasBeenLike(likes: string[]): boolean{
     if(this.user?._id == null) return false;
-
     return likes.includes(this.user?._id);
   }
 }

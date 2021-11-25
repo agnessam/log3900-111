@@ -15,7 +15,7 @@ export class PostService{
   private endpointUrl: string = environment.serverURL + "/posts";
   private httpHeaders: HttpHeaders = new HttpHeaders().set(
     "ContentType",
-    "application/x-www-form-urlencoded",
+    "application/json",
   );
 
   constructor(private httpClient: HttpClient) {}
@@ -32,11 +32,9 @@ export class PostService{
       });
   }
 
-  addComment(userId: string, postId: string, comment: CommentInterface): Observable<PostInterface> {
+  addComment(postId: string, comment: CommentInterface): Observable<CommentInterface> {
     return this.httpClient
-      .post<PostInterface>(`${this.endpointUrl}/${postId}/comments`, {
-        userId: userId,
-        postId: postId,
+      .post<CommentInterface>(`${this.endpointUrl}/${postId}/comments`, {
         comment: comment
       }, {
         headers: this.httpHeaders,
