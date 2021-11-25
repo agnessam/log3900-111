@@ -18,9 +18,10 @@ import { CardsModule } from "../cards/cards.module";
 import { AvatarModule } from "ngx-avatar";
 import { ConfirmDeleteDialogComponent } from './team-profile/confirm-delete-dialog/confirm-delete-dialog.component';
 import { MemberListDialogComponent } from './team-profile/member-list-dialog/member-list-dialog.component';
+import { ConfirmLeaveDialogComponent } from './team-profile/confirm-leave-dialog/confirm-leave-dialog.component';
 
 @NgModule({
-  declarations: [TeamMainPageComponent, TeamProfileComponent, NewTeamComponent, ConfirmDeleteDialogComponent, MemberListDialogComponent],
+  declarations: [TeamMainPageComponent, TeamProfileComponent, NewTeamComponent, ConfirmDeleteDialogComponent, MemberListDialogComponent, ConfirmLeaveDialogComponent],
   imports: [
     CommonModule,
     TeamRoutingModule,

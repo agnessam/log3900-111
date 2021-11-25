@@ -5,6 +5,7 @@ import { TeamClientService } from "src/app/modules/backend-communication/team-cl
 import { User } from "src/app/modules/users/models/user";
 import { Team } from "src/app/shared/models/team.model";
 import { ConfirmDeleteDialogComponent } from "../confirm-delete-dialog/confirm-delete-dialog.component";
+import { ConfirmLeaveDialogComponent } from "../confirm-leave-dialog/confirm-leave-dialog.component";
 import { MemberListDialogComponent } from "../member-list-dialog/member-list-dialog.component";
 
 @Component({
@@ -17,6 +18,7 @@ export class TeamProfileComponent implements OnInit {
   team: Team;
 
   openConfirmDeleteDialogRef: MatDialogRef<ConfirmDeleteDialogComponent>;
+  openConfirmLeaveDialogRef: MatDialogRef<ConfirmLeaveDialogComponent>;
   openMemberListDialogRef: MatDialogRef<MemberListDialogComponent>;
 
   constructor(
@@ -62,6 +64,19 @@ export class TeamProfileComponent implements OnInit {
       ConfirmDeleteDialogComponent,
       { data: { team: this.team } }
     );
+  }
+
+  openConfirmLeaveDialog() {
+    this.openConfirmLeaveDialogRef = this.dialog.open(
+      ConfirmLeaveDialogComponent,
+      { data: { team: this.team } }
+    );
+    this.openConfirmLeaveDialogRef.afterClosed().subscribe((team) => {
+      if (!team) {
+        return;
+      }
+      this.team = team;
+    });
   }
 
   openMemberList() {

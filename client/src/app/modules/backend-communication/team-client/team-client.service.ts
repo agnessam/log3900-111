@@ -55,6 +55,16 @@ export class TeamClientService {
       );
   }
 
+  leaveTeam(teamId: string): Observable<Team> {
+    return this.httpClient
+      .post<Team>(`${this.TEAM_ENDPOINT}${teamId}/leave`, {})
+      .pipe(
+        map((team) => {
+          return team;
+        })
+      );
+  }
+
   getTeamDrawings(teamId: string): Observable<Drawing[]> {
     return this.httpClient
       .get<Drawing[]>(`${this.TEAM_ENDPOINT}${teamId}/drawings`)

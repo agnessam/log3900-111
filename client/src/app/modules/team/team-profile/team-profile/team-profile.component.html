@@ -44,11 +44,11 @@
 
         <button
           mat-raised-button
-          color="primary"
-          disabled
-          *ngIf="isAlreadyJoined()"
+          color="warn"
+          *ngIf="isAlreadyJoined() && !isOwner()"
+          (click)="openConfirmLeaveDialog()"
         >
-          Joined
+          Leave
         </button>
       </div>
     </div>
