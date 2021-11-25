@@ -7,20 +7,21 @@ class UserModel {
     data class Login(val username: String, val password: String)
     data class Register(val firstName: String, val lastName: String, val username: String, val email: String, val password: String,val createdAt : String)
     data class Logout(val username: String)
-    data class UpdateUser (var username: String,var description: String,var password: String)
-    data class UpdateLogHistory (var lastLoginDate: String , var lastLogoutDate: String)
+    data class UpdateUser (
+        @SerializedName("username")
+        var username: String?,
 
+        @SerializedName("description")
+        var description: String?,
+
+        @SerializedName("avatar")
+        var avatar : AvatarModel.AllInfo?
+        )
 
     // holds all the data of User
     data class AllInfo(
         @SerializedName("_id")
         val _id: String,
-
-        @SerializedName("lastLoginDate")
-        val lastLoginDate : String,
-
-        @SerializedName("lastLogoutDate")
-        val lastLogoutDate: String,
 
         @SerializedName("username")
         var username: String,
@@ -37,36 +38,18 @@ class UserModel {
         @SerializedName("email")
         val email: String,
 
-        @SerializedName("avatar")
-        val avatar: AvatarModel,
-
         @SerializedName("description")
         var description: String,
 
         @SerializedName("teams")
-        val teams: Array<String>,
+        val teams: ArrayList<String>,
 
         @SerializedName("drawings")
-        val drawings: Array<String>
-    ) {
-        override fun equals(other: Any?): Boolean {
-            if (this === other) return true
-            if (javaClass != other?.javaClass) return false
+        val drawings: ArrayList<String>,
 
-            other as AllInfo
-
-            if (!teams.contentEquals(other.teams)) return false
-            if (!drawings.contentEquals(other.drawings)) return false
-
-            return true
-        }
-
-        override fun hashCode(): Int {
-            var result = teams.contentHashCode()
-            result = 31 * result + drawings.contentHashCode()
-            return result
-        }
-    }
+        @SerializedName("avatar")
+        var avatar : AvatarModel.AllInfo
+    )
 }
 
 

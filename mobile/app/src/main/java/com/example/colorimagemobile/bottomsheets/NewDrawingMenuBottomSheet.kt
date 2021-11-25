@@ -1,10 +1,12 @@
 package com.example.colorimagemobile.bottomsheets
 
+import android.annotation.SuppressLint
 import android.app.Dialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AnimationUtils
 import android.widget.Button
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.FragmentActivity
@@ -17,14 +19,14 @@ import com.example.colorimagemobile.models.DrawingModel
 import com.example.colorimagemobile.models.TeamModel
 import com.example.colorimagemobile.repositories.DrawingRepository
 import com.example.colorimagemobile.repositories.UserRepository
-import com.example.colorimagemobile.services.users.UserService
 import com.example.colorimagemobile.services.drawing.CanvasService
 import com.example.colorimagemobile.services.drawing.CanvasUpdateService
 import com.example.colorimagemobile.services.drawing.DrawingService
 import com.example.colorimagemobile.services.drawing.toolsAttribute.ColorService
+import com.example.colorimagemobile.services.users.UserService
 import com.example.colorimagemobile.ui.home.fragments.gallery.GalleryDrawingFragment
+import com.example.colorimagemobile.utils.CommonFun.Companion.hideKeyboard
 import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
-import com.example.colorimagemobile.utils.CommonFun.Companion.toggleButton
 import com.example.colorimagemobile.utils.Constants.DRAWING.Companion.MAX_HEIGHT
 import com.example.colorimagemobile.utils.Constants.DRAWING.Companion.MAX_WIDTH
 import com.example.colorimagemobile.utils.Constants.DRAWING.Companion.MIN_HEIGHT
@@ -34,6 +36,8 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
+import kotlinx.android.synthetic.main.bottomsheet_create_channel.*
+import kotlinx.android.synthetic.main.bottomsheet_drawing_menu.*
 import top.defaults.colorpicker.ColorPickerView
 
 class NewDrawingMenuBottomSheet: BottomSheetDialogFragment() {
@@ -63,7 +67,6 @@ class NewDrawingMenuBottomSheet: BottomSheetDialogFragment() {
         widthLayout = view.findViewById(R.id.newDrawingWidthInputLayout)
         heightLayout = view.findViewById(R.id.newDrawingHeightInputLayout)
 
-        toggleButton(createDrawingBtn, false)
         fetchTeams()
         setListeners(view)
     }
@@ -79,21 +82,23 @@ class NewDrawingMenuBottomSheet: BottomSheetDialogFragment() {
         })
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     private fun setListeners(view: View) {
         var color = "rgba(255, 255, 255, 1)"
+
+        createNewDrawingForm.setOnTouchListener{v, event -> hideKeyboard(requireContext(), createNewDrawingForm)}
 
         // width input validation
         view.findViewById<TextInputEditText>(R.id.newDrawingWidthInputText).doOnTextChanged { text, _, _, _ ->
             widthValue = getCurrentValue(text)
             widthLayout.error = getErrorMessage(widthValue, MIN_WIDTH, MAX_WIDTH)
-            updateCreateBtn()
+
         }
 
         // height input validation
         view.findViewById<TextInputEditText>(R.id.newDrawingHeightInputText).doOnTextChanged { text, _, _, _ ->
             heightValue = getCurrentValue(text)
             heightLayout.error = getErrorMessage(heightValue, MIN_HEIGHT, MAX_HEIGHT)
-            updateCreateBtn()
         }
 
         view.findViewById<ColorPickerView>(R.id.colorPickerNewDrawing).subscribe { newColor, _, _ ->
@@ -101,6 +106,11 @@ class NewDrawingMenuBottomSheet: BottomSheetDialogFragment() {
         }
 
         view.findViewById<Button>(R.id.createDrawingBtn).setOnClickListener {
+            if (widthValue==0 || heightValue==0){
+            val shake = AnimationUtils.loadAnimation(requireActivity().getApplicationContext(), R.anim.shake)
+            createNewDrawingForm.startAnimation(shake);
+                return@setOnClickListener
+        }
             CanvasService.setWidth(widthValue)
             CanvasService.setHeight(heightValue)
 
@@ -152,10 +162,4 @@ class NewDrawingMenuBottomSheet: BottomSheetDialogFragment() {
         return "Value must be between ${min}px and ${max}px"
     }
 
-    // activate/deactivate button depending on input fields
-    private fun updateCreateBtn() {
-        val areLayoutsValid = widthLayout.error == null && heightLayout.error == null
-        val areInputsValid = widthValue > 0 && heightValue > 0
-        toggleButton(createDrawingBtn, areLayoutsValid && areInputsValid)
-    }
 }
