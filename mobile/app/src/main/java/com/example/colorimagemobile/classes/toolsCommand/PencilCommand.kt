@@ -29,8 +29,7 @@ class PencilCommand(pencilData: PencilData): ICommand {
 
         this.initializePaint()
         this.setStartingPoint()
-
-        // create json obj
+        DrawingJsonService.createPolyline(pencil)
     }
 
     fun initializePaint() {

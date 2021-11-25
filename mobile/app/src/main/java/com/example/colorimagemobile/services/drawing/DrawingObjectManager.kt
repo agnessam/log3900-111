@@ -77,7 +77,6 @@ object DrawingObjectManager {
         // 1. init svg
         val svgParser = SVGParser(base64, CustomSVG::class.java)
         val svgObject = svgParser.getCustomSVG()
-        DrawingJsonService.setSVGObject(svgObject)
 
         // 2. init canvas properties and create it
         CanvasService.setWidth(svgObject.width.toInt())
@@ -96,6 +95,9 @@ object DrawingObjectManager {
 
         val createEllipseCommand = CreateEllipseCommand(svgObject.ellipse)
         createEllipseCommand.execute()
+
+        // 4. store our "json" object containing every shapes
+        DrawingJsonService.setSVGObject(svgObject)
     }
 
     // converts drawables to svg/xml and then converts to base64

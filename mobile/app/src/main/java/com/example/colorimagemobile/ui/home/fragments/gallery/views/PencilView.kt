@@ -1,13 +1,9 @@
 package com.example.colorimagemobile.ui.home.fragments.gallery.views
 
 import android.content.Context
-import android.graphics.RectF
 import com.example.colorimagemobile.classes.toolsCommand.PencilCommand
-import com.example.colorimagemobile.classes.toolsCommand.ResizeCommand
-import com.example.colorimagemobile.classes.xml_json.StringParser
 import com.example.colorimagemobile.models.InProgressPencil
 import com.example.colorimagemobile.models.PencilData
-import com.example.colorimagemobile.models.ToolData
 import com.example.colorimagemobile.services.UUIDService
 import com.example.colorimagemobile.services.drawing.*
 import com.example.colorimagemobile.services.drawing.toolsAttribute.ColorService
@@ -41,7 +37,6 @@ class PencilView(context: Context?): CanvasView(context) {
         // supposed to put the exact width and height of the path drawn...... but wtf how
 
         pencilCommand = PencilCommand(pencil!!)
-        DrawingJsonService.createPolyline(pencil as PencilData)
     }
 
     private fun updateCanvas() {
