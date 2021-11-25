@@ -2,7 +2,9 @@
   <div *ngFor="let post of posts">
     <div class="post">
       <div class="post-header">
-        <div class="author-picture">{{post.author?.avatar}}</div>
+        <div class="author-picture">
+          <!--<img [src]= "this.transformUri(post.author.?avatar.imageUrl)">-->
+        </div>
         <div>
           <div class="author-text">{{post.ownerId}}</div>
           <!--<div class="time-text">{{post.timestamp}}</div>-->

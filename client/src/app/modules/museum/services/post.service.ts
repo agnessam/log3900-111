@@ -34,9 +34,9 @@ export class PostService{
 
   addComment(postId: string, comment: CommentInterface): Observable<CommentInterface> {
     return this.httpClient
-      .post<CommentInterface>(`${this.endpointUrl}/${postId}/comments`, {
-        comment: comment
-      }, {
+      .post<CommentInterface>(`${this.endpointUrl}/${postId}/comments`,
+        comment,
+        {
         headers: this.httpHeaders,
       })
       .pipe((response) => {
@@ -59,12 +59,7 @@ export class PostService{
 
   removeLike(userId: string, postId: string, ):Observable<PostInterface>{
     return this.httpClient
-      .post<PostInterface>(`${this.endpointUrl}/${postId}/likes`, {
-        userId: userId,
-        postId: postId
-      }, {
-        headers: this.httpHeaders,
-      })
+      .delete<PostInterface>(`${this.endpointUrl}/${postId}/likes`)
       .pipe((response) => {
         return response;
       });

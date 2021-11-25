@@ -56,21 +56,28 @@ export class MuseumComponent implements OnInit {
     }
 
     const comment = { content: content, authorId: this.user, postId: postId} as CommentInterface;
-    this.postService.addComment(postId, comment).subscribe((comment) => {
+    this.postService.addComment(postId, comment).subscribe((commentReceive) => {
+      comment.createdAt = "";
+      this.posts.find(post => post._id === postId)?.comments.push(comment)
 
     });
   }
 
   toggleLike(post: PostInterface){
-    if(this.user?._id == null) return;
+    const userid = (this.user as User)._id;
 
-    if (post.likes.includes(this.user?._id)){
+    if (post.likes.includes(userid)){
       console.log("unlike");
-      this.postService.removeLike(this.user._id, post._id).subscribe((like) => {});
+      this.postService.removeLike(userid, post._id).subscribe((like) => {
+        const index = this.posts.find(postItem => postItem._id === post._id)?.likes.findIndex(like => like === userid) as number;
+        this.posts.find(postItem => postItem._id === post._id)?.likes.splice(index, 1);
+      });
     }
     else{
-      console.log("like");
-      this.postService.addLike(this.user._id, post._id).subscribe((like) => {});
+      this.postService.addLike(userid, post._id).subscribe((like) => {
+        this.posts.find(postItem => postItem._id === post._id)?.likes.push(userid);
+      });
+
     }
   }
 
