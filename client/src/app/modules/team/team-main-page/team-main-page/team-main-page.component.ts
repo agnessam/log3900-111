@@ -56,6 +56,15 @@ export class TeamMainPageComponent implements OnInit {
     return team.members.includes(userId!);
   }
 
+  isTeamFull(team: Team): boolean {
+    console.log(team);
+    if (!team.memberLimit) return false;
+    if (team.members.length >= team.memberLimit) {
+      return true;
+    }
+    return false;
+  }
+
   joinTeam(teamId: string) {
     return this.teamClient.joinTeam(teamId).subscribe((team) => {
       for (let i = 0; i < this.teams.length; ++i) {
