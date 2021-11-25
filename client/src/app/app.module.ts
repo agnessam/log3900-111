@@ -28,6 +28,7 @@ import { TeamModule } from "./modules/team/team.module";
 import { MuseumModule } from "./modules/museum/museum.module";
 import { SearchModule } from "./modules/search/search.module";
 import { CardsModule } from "./modules/cards/cards.module";
+import { SettingsModule } from "./modules/settings/settings.module";
 
 @NgModule({
   declarations: [AppComponent],
@@ -61,6 +62,7 @@ import { CardsModule } from "./modules/cards/cards.module";
     BackendCommunicationModule,
     MuseumModule,
     CardsModule,
+    SettingsModule,
   ],
   exports: [],
   providers: [],
