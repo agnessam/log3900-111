@@ -10,6 +10,10 @@ object DrawingJsonService {
 
     fun setSVGObject(svg: CustomSVG) {
         currentSVGObject = svg
+
+        if (currentSVGObject?.polyline.isNullOrEmpty()) currentSVGObject?.polyline = arrayListOf()
+        if (currentSVGObject?.rect.isNullOrEmpty()) currentSVGObject?.rect = arrayListOf()
+        if (currentSVGObject?.ellipse.isNullOrEmpty()) currentSVGObject?.ellipse = arrayListOf()
     }
 
     fun getSvgObject(): CustomSVG? {
@@ -17,7 +21,7 @@ object DrawingJsonService {
     }
 
     fun createPolyline(pencilData: PencilData) {
-        val style = StringParser.buildStyle(pencilData as ToolData)
+        val style = StringParser.buildStyle(pencilData as ToolData) + "stroke-linecap: round; stroke-linejoin: round;"
         val points = getStringPoints(pencilData.pointsList)
 
         val polyline = Polyline(id=pencilData.id, name="pencil", points=points, style=style)

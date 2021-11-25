@@ -48,9 +48,9 @@ data class CustomSVG(
     val width: String,
     val height: String,
     val style: String,
-    val ellipse: ArrayList<Ellipse>?,
-    val polyline: ArrayList<Polyline>?,
-    val rect: ArrayList<Rectangle>?
+    var ellipse: ArrayList<Ellipse>?,
+    var polyline: ArrayList<Polyline>?,
+    var rect: ArrayList<Rectangle>?
 )
 
 
