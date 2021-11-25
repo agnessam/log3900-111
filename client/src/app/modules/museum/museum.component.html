@@ -6,7 +6,7 @@
           <!--<img [src]= "this.transformUri(post.author.?avatar.imageUrl)">-->
         </div>
         <div>
-          <div class="author-text">{{post.ownerId}}</div>
+          <div class="author-text">{{post.owner}}</div>
           <!--<div class="time-text">{{post.timestamp}}</div>-->
         </div>
       </div>
@@ -33,7 +33,7 @@
 
       <div *ngFor="let comment of post.comments">
         <div class="comment">
-          {{comment.authorId.username}} : {{comment.content}}
+          {{comment.author?.username}} : {{comment.content}}
         </div>
       </div>
     </div>

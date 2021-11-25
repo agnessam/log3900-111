@@ -55,7 +55,7 @@ export class MuseumComponent implements OnInit {
       return;
     }
 
-    const comment = { content: content, authorId: this.user, postId: postId} as CommentInterface;
+    const comment = { content: content, author: this.user, postId: postId} as CommentInterface;
     this.postService.addComment(postId, comment).subscribe((commentReceive) => {
       comment.createdAt = "";
       this.posts.find(post => post._id === postId)?.comments.push(comment)
@@ -67,7 +67,6 @@ export class MuseumComponent implements OnInit {
     const userid = (this.user as User)._id;
 
     if (post.likes.includes(userid)){
-      console.log("unlike");
       this.postService.removeLike(userid, post._id).subscribe((like) => {
         const index = this.posts.find(postItem => postItem._id === post._id)?.likes.findIndex(like => like === userid) as number;
         this.posts.find(postItem => postItem._id === post._id)?.likes.splice(index, 1);

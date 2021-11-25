@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { PostInterface } from '../models/post.model';
 import { CommentInterface } from '../models/comment.model';
+import { Drawing } from 'src/app/shared';
 
 
 @Injectable({
@@ -18,10 +19,19 @@ export class PostService{
     "application/json",
   );
 
-  constructor(private httpClient: HttpClient) {}
+  constructor(private httpClient: HttpClient,
 
-  postCanvas(name:string):void {
-    console.log("drawing name " + name + " has been post");
+    ) {}
+
+  publishDrawing(drawingId: string, drawing: Drawing):Observable<PostInterface> { return this.httpClient
+    .post<PostInterface>(`${environment.serverURL}/drawings/${drawingId}/publish`,
+    drawing,
+      {
+      headers: this.httpHeaders,
+    })
+    .pipe((response) => {
+      return response;
+    });
   }
 
   getPosts(): Observable<PostInterface[]> {
