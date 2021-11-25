@@ -84,4 +84,16 @@ object DrawingJsonService {
         ellipse.cx = "${ellipseData.x}px"
         ellipse.cy = "${ellipseData.y}px"
     }
+
+    fun removePolyline(id: String) {
+        currentSVGObject?.polyline = currentSVGObject?.polyline?.filter { polyline -> polyline.id != id } as ArrayList<Polyline>?
+    }
+
+    fun removeRectangle(id: String) {
+        currentSVGObject?.rect = currentSVGObject?.rect?.filter { rect -> rect.id != id } as ArrayList<Rectangle>?
+    }
+
+    fun removeEllipse(id: String) {
+        currentSVGObject?.ellipse = currentSVGObject?.ellipse?.filter { ellipse -> ellipse.id != id } as ArrayList<Ellipse>?
+    }
 }
