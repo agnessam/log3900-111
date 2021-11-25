@@ -2,6 +2,7 @@ import { ChangeDetectorRef, Component, OnInit } from "@angular/core";
 import { MatDialog, MatDialogRef } from "@angular/material/dialog";
 import { ActivatedRoute } from "@angular/router";
 import { TeamClientService } from "src/app/modules/backend-communication/team-client/team-client.service";
+import { User } from "src/app/modules/users/models/user";
 import { Team } from "src/app/shared/models/team.model";
 import { ConfirmDeleteDialogComponent } from "../confirm-delete-dialog/confirm-delete-dialog.component";
 import { MemberListDialogComponent } from "../member-list-dialog/member-list-dialog.component";
@@ -46,7 +47,9 @@ export class TeamProfileComponent implements OnInit {
 
   isAlreadyJoined(): boolean {
     const userId = localStorage.getItem("userId");
-    return this.team.members.includes(userId!);
+    return (this.team.members as User[])
+      .map((user) => user._id)
+      .includes(userId!);
   }
 
   isOwner(): boolean {

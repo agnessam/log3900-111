@@ -1,12 +1,13 @@
 <div *ngFor="let member of this.data.members">
-  <mat-card>
-    <mat-card-header>
-      <mat-card-title>
-        <ngx-avatar [src]="member.avatar?.imageUrl"></ngx-avatar>
-      </mat-card-title>
-      <mat-card-content>
-        <p>{{ member.username }}</p>
-      </mat-card-content>
-    </mat-card-header>
+  <mat-card (click)="goToProfile(member._id)" class="member-card">
+    <div style="text-align: center">
+      <mat-card-header>
+        <mat-icon mat-card-avatar style="padding-right: 30px">
+          <ngx-avatar [src]="member.avatar?.imageUrl"></ngx-avatar>
+        </mat-icon>
+        <mat-card-title>{{ member.username }}</mat-card-title>
+        <mat-card-subtitle>Online status</mat-card-subtitle>
+      </mat-card-header>
+    </div>
   </mat-card>
 </div>

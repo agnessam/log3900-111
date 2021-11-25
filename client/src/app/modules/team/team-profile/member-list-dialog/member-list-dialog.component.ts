@@ -1,5 +1,6 @@
 import { Component, Inject, OnInit } from "@angular/core";
 import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material/dialog";
+import { Router } from "@angular/router";
 import { User } from "src/app/modules/users/models/user";
 
 @Component({
@@ -10,11 +11,16 @@ import { User } from "src/app/modules/users/models/user";
 export class MemberListDialogComponent implements OnInit {
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: { members: User[] },
-    private dialogRef: MatDialogRef<MemberListDialogComponent>
+    private dialogRef: MatDialogRef<MemberListDialogComponent>,
+    private router: Router
   ) {}
 
   ngOnInit(): void {}
 
+  goToProfile(userId: string): void {
+    this.dialogRef.close();
+    this.router.navigate([`/users/${userId}`]);
+  }
   onCancel(): void {
     this.dialogRef.close();
   }

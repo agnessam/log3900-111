@@ -114,7 +114,12 @@ export class TeamRepository extends GenericRepository<TeamInterface> {
             user.teams.push(team._id);
             user.save();
           });
-          resolve(team);
+          Team.populate(team, { path: 'members' }, (err, team) => {
+            if (err || !team) {
+              reject(team);
+            }
+            resolve(team);
+          });
         });
       });
     });
