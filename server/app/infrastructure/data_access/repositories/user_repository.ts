@@ -4,6 +4,7 @@ import { request, response } from 'inversify-express-utils';
 import { User, UserInterface } from '../../../domain/models/user';
 import { GenericRepository } from './generic_repository';
 import { Team } from '../../../domain/models/teams';
+import bcrypt from 'bcrypt';
 
 declare global {
   namespace Express {
@@ -34,6 +35,26 @@ export class UserRepository extends GenericRepository<UserInterface> {
         err,
       });
     }
+  }
+
+  public async changePassword(
+    userId: string,
+    currentPassword: string,
+    newPassword: string,
+  ) {
+    return new Promise(async (resolve, reject) => {
+      const currentUser = await User.findOne({ _id: userId });
+      const validate = await currentUser!.isValidPassword(currentPassword);
+      if (!validate) {
+        resolve({ err: 'Incorrect password' });
+      }
+
+      const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+      currentUser!.password = hashedPassword;
+      currentUser!.save();
+      resolve(currentUser);
+    });
   }
 
   public async getUserTeams(userId: string) {

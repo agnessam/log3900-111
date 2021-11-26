@@ -9,9 +9,6 @@ import retrofit2.http.POST
 
 import retrofit2.http.Multipart
 
-
-
-
 interface API {
 
     // login logout region
@@ -101,6 +98,9 @@ interface API {
     @Headers("Content-Type: application/json")
     @POST("${Constants.ENDPOINTS.ALL_DRAWINGS}{id}/publish")
     fun publishDrawing(@Header("Authorization") token: String, @Path ("id") id: String, @Body drawing: DrawingModel.Drawing): Call<MuseumPostModel>
+    
+    @PATCH("${Constants.ENDPOINTS.ALL_DRAWINGS}{id}")
+    fun saveDrawing(@Header("Authorization") token: String, @Path ("id") id: String, @Body drawing: DrawingModel.SaveDrawing): Call<DrawingModel.CreateDrawing>
 
     // region avatar
     @Headers("Content-Type: application/json")
@@ -132,6 +132,9 @@ interface API {
     @Headers("Content-Type: application/json")
     @POST(Constants.ENDPOINTS.TEAMS)
     fun createNewTeam(@Header("Authorization") token: String, @Body team: CreateTeamModel): Call<TeamModel>
+
+    @DELETE("${Constants.ENDPOINTS.TEAMS}{id}")
+    fun deleteTeam(@Header("Authorization") token: String, @Path ("id") id: String): Call<Any>
 
     // Search
     @GET(Constants.ENDPOINTS.SEARCH)

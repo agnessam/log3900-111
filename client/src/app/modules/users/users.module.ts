@@ -57,5 +57,6 @@ import { CardsModule } from "../cards/cards.module";
     },
     AuthGuard,
   ],
+  exports: [AvatarComponent],
 })
 export class UsersModule {}

@@ -45,7 +45,7 @@ export class NewDrawingComponent implements OnInit {
     this.dialogRef.afterOpened().subscribe(() => this.onResize());
     this.colorPickerService.setFormColor(DEFAULT_RGB_COLOR, DEFAULT_ALPHA);
     const userId = localStorage.getItem("userId");
-    if(!userId) return;
+    if (!userId) return;
     this.usersService.getUserTeams(userId).subscribe((teams) => {
       this.teams = teams;
     });
@@ -68,7 +68,7 @@ export class NewDrawingComponent implements OnInit {
         a: this.colorPickerService.a.value,
       }
     );
-    let ownerModel: string = this.form.value.ownerId == "" ? "User": "Team";
+    let ownerModel: string = this.form.value.ownerId == "" ? "User" : "Team";
     let ownerId: string = this.form.value.ownerId;
     let drawingName: string = this.form.value.name;
     this.drawingHttpClient

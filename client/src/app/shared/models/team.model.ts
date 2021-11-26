@@ -1,3 +1,4 @@
+import { User } from "src/app/modules/users/models/user";
 import { Drawing } from "..";
 
 export interface Team {
@@ -8,7 +9,8 @@ export interface Team {
 
   owner: string;
 
-  members: string[];
+  members: string[] | User[];
+  memberLimit: number;
 
   drawings: string[] | Drawing[];
 }

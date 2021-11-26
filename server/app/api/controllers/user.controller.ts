@@ -43,6 +43,15 @@ export class UserController {
     return await this.userRepository.updateById(req.params.id, req.body);
   }
 
+  @httpPatch('/:id/changePassword')
+  public async changePassword(@request() req: Request) {
+    return await this.userRepository.changePassword(
+      req.params.id,
+      req.body.currentPassword,
+      req.body.newPassword,
+    );
+  }
+
   @httpDelete('/:id')
   public async deleteUser(@request() req: Request) {
     return await this.userRepository.deleteById(req.params.id);

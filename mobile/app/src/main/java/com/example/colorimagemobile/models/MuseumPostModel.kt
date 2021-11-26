@@ -11,11 +11,11 @@ data class CommentInterface(
 data class MuseumPostModel(
     val _id: String,
     val dataUri: String,
-    val owner: String,
+    val owner: UserModel.AllInfo,
     val ownerModel: String,
     val name: String,
     val comments: ArrayList<CommentInterface>,
     val likes: ArrayList<String>,
-    val createdAt: String?,
+    var createdAt: String?,
     val updatedAt: String?,
 )

@@ -1,10 +1,14 @@
 package com.example.colorimagemobile.services.teams
 
 import android.content.Context
+import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.LifecycleOwner
+import com.example.colorimagemobile.R
+import com.example.colorimagemobile.classes.MyFragmentManager
 import com.example.colorimagemobile.models.TeamModel
 import com.example.colorimagemobile.repositories.TeamRepository
 import com.example.colorimagemobile.services.users.UserService
+import com.example.colorimagemobile.ui.home.fragments.teams.TeamsMenuFragment
 import com.example.colorimagemobile.utils.CommonFun.Companion.printToast
 
 object TeamService {
@@ -64,6 +68,17 @@ object TeamService {
 
             removeMemberFromTeam(position)
             TeamAdapterService.getTeamMenuAdapter().notifyItemChanged(position)
+        })
+    }
+
+    fun deleteTeam(position: Int, context: Context) {
+        val team = getTeam(position)
+
+        TeamRepository().deleteTeam(team._id).observe(context as LifecycleOwner, {
+            printToast(context, it.message!!)
+
+            if (it.isError as Boolean) { return@observe }
+            MyFragmentManager(context as FragmentActivity).open(R.id.teamsMenuFrameLayout, TeamsMenuFragment())
         })
     }
 }

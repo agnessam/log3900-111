@@ -19,13 +19,13 @@ export class DrawingRepository extends GenericRepository<DrawingInterface> {
     return new Promise<DrawingInterface>((resolve, reject) => {
       const drawing = new Drawing({
         dataUri: item.dataUri,
-        ownerId: ownerId,
+        owner: ownerId,
         ownerModel: 'User',
         name: item.name,
       });
       drawing.save().then((drawing) => {
         User.findById(
-          { _id: drawing.ownerId },
+          { _id: drawing.owner },
           (err: Error, user: UserInterface) => {
             if (err) {
               reject(err);
@@ -45,13 +45,13 @@ export class DrawingRepository extends GenericRepository<DrawingInterface> {
     return new Promise<DrawingInterface>((resolve, reject) => {
       const drawing = new Drawing({
         dataUri: item.dataUri,
-        ownerId: item.ownerId,
-        ownerModel: 'Team',
+        owner: item.owner,
+        ownerModel: item.ownerModel,
         name: item.name,
       });
       drawing.save().then((drawing) => {
         Team.findById(
-          { _id: drawing.ownerId },
+          { _id: drawing.owner },
           (err: Error, team: TeamInterface) => {
             if (err) {
               reject(err);
@@ -72,7 +72,7 @@ export class DrawingRepository extends GenericRepository<DrawingInterface> {
       const post = new Post({
         _id: new Types.ObjectId(),
         dataUri: drawing.dataUri,
-        owner: drawing.ownerId,
+        owner: drawing.owner,
         ownerModel: drawing.ownerModel,
         name: drawing.name,
       });

@@ -8,8 +8,11 @@
         type="text"
         matInput
         placeholder="Team Name"
-        formControlName="teamName"
+        formControlName="name"
       />
+      <mat-error *ngIf="this.newTeamForm.hasError('required', 'teamName')"
+        >Team name required
+      </mat-error>
     </mat-form-field>
   </p>
   <p>
@@ -21,6 +24,24 @@
         placeholder="Description"
         formControlName="description"
       />
+    </mat-form-field>
+  </p>
+  <p>
+    <mat-checkbox (change)="toggleMemberLimit()" class="limit-checkbox"
+      >Limit the number of members that can join?</mat-checkbox
+    >
+    <mat-form-field appearance="outline">
+      <mat-label>Member limit</mat-label>
+      <input
+        type="number"
+        [min]="1"
+        matInput
+        placeholder="Member limit"
+        formControlName="memberLimit"
+      />
+      <mat-error *ngIf="this.newTeamForm.hasError('min', 'memberLimit')"
+        >Your team must have a minimum of 1 member!</mat-error
+      >
     </mat-form-field>
   </p>
   <div>
