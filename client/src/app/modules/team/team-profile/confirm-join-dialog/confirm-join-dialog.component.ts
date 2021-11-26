@@ -33,7 +33,7 @@ export class ConfirmJoinDialogComponent implements OnInit {
       this.teamClient.joinTeam(this.data.team._id).subscribe((team) => {
         this.dialogRef.close(team);
         this.snackbar.open("Succesfully joined the team", "Close", {
-          duration: 3000,
+          duration: 1000,
         });
       });
     }
@@ -42,12 +42,12 @@ export class ConfirmJoinDialogComponent implements OnInit {
       this.teamClient.joinTeam(this.data.team._id).subscribe((team) => {
         this.dialogRef.close(team);
         this.snackbar.open("Succesfully joined the team", "Close", {
-          duration: 3000,
+          duration: 1000,
         });
       });
     } else {
       this.snackbar.open("Wrong password, try again!", "Close", {
-        duration: 3000,
+        duration: 1000,
       });
       return;
     }
