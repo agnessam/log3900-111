@@ -31,6 +31,10 @@ export class NavbarComponent implements OnInit {
     this.router.navigate(["/users/" + this.user?._id]);
   }
 
+  goToSettings(): void {
+    this.router.navigate(["/settings"]);
+  }
+
   logout(): void {
     this.authenticationService.logout().subscribe((response) => {
       console.log(response);

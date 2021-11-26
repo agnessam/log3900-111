@@ -4,7 +4,9 @@ import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.View
 import android.widget.Button
+import android.widget.RelativeLayout
 import android.widget.TextView
+import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.colorimagemobile.R
@@ -16,6 +18,9 @@ import com.example.colorimagemobile.models.recyclerAdapters.DrawingMenuData
 import com.example.colorimagemobile.repositories.TeamRepository
 import com.example.colorimagemobile.services.drawing.DrawingService
 import com.example.colorimagemobile.services.teams.TeamService
+import com.example.colorimagemobile.services.users.UserService
+import com.example.colorimagemobile.utils.CommonFun
+import com.example.colorimagemobile.utils.CommonFun.Companion.toggleButton
 import com.example.colorimagemobile.utils.Constants
 import com.google.android.material.tabs.TabLayout
 
@@ -27,6 +32,7 @@ class TeamsProfileFragment : Fragment(R.layout.fragment_teams_profile) {
     private var drawingsMenu: ArrayList<DrawingMenuData> = arrayListOf()
     private lateinit var joinBtn: Button
     private lateinit var leaveBtn: Button
+    private lateinit var deleteBtn: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,8 +64,16 @@ class TeamsProfileFragment : Fragment(R.layout.fragment_teams_profile) {
 
         joinBtn = myView.findViewById<Button>(R.id.teamIdJoinBtn)
         leaveBtn = myView.findViewById<Button>(R.id.leaveTeamIdBtn)
+        deleteBtn = myView.findViewById<Button>(R.id.deleteTeamIdBtn)
 
-        updateTeamButtons()
+        if (currentTeam.owner == UserService.getUserInfo()._id) {
+            myView.findViewById<RelativeLayout>(R.id.teamIdJoinBtnMain).visibility = View.GONE
+            myView.findViewById<RelativeLayout>(R.id.deleteTeamIdBtnMain).visibility = View.VISIBLE
+        } else {
+            myView.findViewById<RelativeLayout>(R.id.teamIdJoinBtnMain).visibility = View.VISIBLE
+            myView.findViewById<RelativeLayout>(R.id.deleteTeamIdBtnMain).visibility = View.GONE
+            updateTeamButtons()
+        }
     }
 
     private fun updateTeamButtons() {
@@ -67,6 +81,7 @@ class TeamsProfileFragment : Fragment(R.layout.fragment_teams_profile) {
             hideJoinBtn()
         } else {
             showJoinBtn()
+            checkIsTeamFull(joinBtn)
         }
     }
 
@@ -80,9 +95,16 @@ class TeamsProfileFragment : Fragment(R.layout.fragment_teams_profile) {
         leaveBtn.visibility = View.GONE
     }
 
+    private fun checkIsTeamFull(button: Button) {
+        currentTeam.memberLimit?.let {
+            if (currentTeam.members.size >= currentTeam.memberLimit!!) {
+                toggleButton(button, false)
+            }
+        }
+    }
+
     private fun setListeners() {
         myView.findViewById<TabLayout>(R.id.teamProfileDrawingsTabLayout).addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
-
             override fun onTabSelected(tab: TabLayout.Tab?) {
                 when (tab!!.position) {
                     0 -> setAllDrawings()
@@ -100,6 +122,9 @@ class TeamsProfileFragment : Fragment(R.layout.fragment_teams_profile) {
         leaveBtn.setOnClickListener {
             TeamService.leaveTeam(teamPosition!!, requireContext())
             showJoinBtn()
+        }
+        deleteBtn.setOnClickListener {
+            TeamService.deleteTeam(teamPosition!!, requireContext())
         }
     }
 

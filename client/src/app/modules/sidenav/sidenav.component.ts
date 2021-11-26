@@ -2,6 +2,8 @@ import { Component } from "@angular/core";
 import { MatButtonToggleChange } from "@angular/material/button-toggle";
 import { SidenavService } from "./services/sidenav/sidenav.service";
 import { Tools, ToolsService } from "src/app/modules/workspace";
+import { MatDialog } from '@angular/material/dialog';
+import { MuseumDialog } from "../museum/museum-dialog/museum-dialog.component";
 
 @Component({
   selector: "app-sidenav",
@@ -11,7 +13,8 @@ import { Tools, ToolsService } from "src/app/modules/workspace";
 export class SidenavComponent {
   constructor(
     private sideNavService: SidenavService,
-    private toolService: ToolsService
+    private toolService: ToolsService,
+    public dialog: MatDialog,
   ) {}
 
   get currentToolId(): number {
@@ -49,5 +52,11 @@ export class SidenavComponent {
   /// Ouvre le menu control
   openControlMenu(): void {
     this.sideNavService.openControlMenu();
+  }
+
+  openMuseumDialog(): void {
+    this.dialog.open(MuseumDialog, {
+      width: '500px'
+    });
   }
 }

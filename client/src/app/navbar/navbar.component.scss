@@ -11,8 +11,12 @@
   padding-top: 1%;
   padding-left: 1%;
   padding-right: 1%;
-  position: relative;
-  background-color: transparent;
+  padding-bottom: 1%;
+  background-color: #fcedea;
+  position: sticky;
+  position: -webkit-sticky; /* For macOS/iOS Safari */
+  top: 0; /* Sets the sticky toolbar to be on top */
+  z-index: 1000; /* Ensure that your app's content doesn't overlap the toolbar */
 }
 
 #nav-bar span div a {
@@ -50,6 +54,37 @@
   font-size: 24px;
 }
 
+#userButton {
+  border-radius: 50%;
+  height: 30px;
+  width: 30px;
+  background-color: aqua;
+}
+
+#searchBar {
+  height: 90%;
+  width: 40%;
+  border-radius: 25px;
+  background-color: #FEF9F7;
+  display:flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#searchbar-input {
+  border: none;
+  background-color: transparent;
+  width: 90%;
+  margin-right: 20px;
+}
+
+#searchbar-input:focus{
+  outline:none
+}
+
+.icon{
+  color: black;
+}
 #avatar {
   cursor: pointer;
 }

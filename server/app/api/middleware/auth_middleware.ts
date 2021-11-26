@@ -145,6 +145,12 @@ const authLoginMiddlewareFactory = () => {
 
           const token = jwt.sign({ user: body }, 'SIMPSRISE');
 
+          User.updateOne(
+            { _id: user._id },
+            { lastLogin: new Date() },
+            (err: Error, user: any) => {},
+          );
+
           return res.json({
             user: user,
             token: token,

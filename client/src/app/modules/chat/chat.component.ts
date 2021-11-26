@@ -71,7 +71,10 @@ export class ChatComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.connectedMessageHistory.forEach((_messages, roomName) => {
-      this.chatSocketService.leaveRoom(roomName);
+      this.chatSocketService.leaveRoom({
+        userId: this.user!._id,
+        roomName: roomName,
+      });
     });
     this.chatSocketService.disconnect();
     this.chatSubscription.unsubscribe();
@@ -97,7 +100,10 @@ export class ChatComponent implements OnInit, OnDestroy {
   joinRoom(channelName: string) {
     if (!this.connectedMessageHistory.has(channelName)) {
       this.connectedMessageHistory.set(channelName, new Set());
-      this.chatSocketService.joinRoom(channelName);
+      this.chatSocketService.joinRoom({
+        userId: this.user!._id,
+        roomName: channelName,
+      });
       this.loadedDbMessages = false;
       this.chatSocketService.messageHistory.subscribe({
         next: (history) => {
@@ -113,7 +119,10 @@ export class ChatComponent implements OnInit, OnDestroy {
   leaveRoom() {
     this.chatService.leaveRoomEventEmitter.subscribe((channel) => {
       this.connectedMessageHistory.delete(channel.name);
-      this.chatSocketService.leaveRoom(channel.name);
+      this.chatSocketService.leaveRoom({
+        userId: this.user!._id,
+        roomName: channel.name,
+      });
       this.closeChat();
       this.closeChatPopout();
     });

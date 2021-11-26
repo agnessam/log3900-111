@@ -47,7 +47,10 @@ export class ChannelComponent implements OnInit, OnDestroy {
       this.searchedChannels = channels;
       const general = channels.find((channel) => channel.name === "General");
       if (general) {
-        this.chatSocketService.joinRoom(general.name);
+        this.chatSocketService.joinRoom({
+          userId: this.user!._id,
+          roomName: general.name,
+        });
         this.connectedChannels.unshift(general);
       }
     });

@@ -1,7 +1,9 @@
 import { Component, OnInit } from "@angular/core";
-import { FormControl, FormGroup } from "@angular/forms";
+import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { MatDialogRef } from "@angular/material/dialog";
+import { MatSnackBar } from "@angular/material/snack-bar";
 import { TeamClientService } from "../../backend-communication/team-client/team-client.service";
+import { EditableTeamParameters } from "../EditableTeam";
 
 @Component({
   selector: "app-new-team",
@@ -10,30 +12,46 @@ import { TeamClientService } from "../../backend-communication/team-client/team-
 })
 export class NewTeamComponent implements OnInit {
   newTeamForm: FormGroup;
+  isMemberLimit: boolean = false;
 
   constructor(
     private teamClient: TeamClientService,
-    private dialogRef: MatDialogRef<NewTeamComponent>
+    private dialogRef: MatDialogRef<NewTeamComponent>,
+    private snackBar: MatSnackBar
   ) {}
 
   ngOnInit(): void {
-    this.dialogRef.updateSize("15%", "30%");
     this.newTeamForm = new FormGroup({
-      teamName: new FormControl(""),
+      name: new FormControl("", [Validators.required]),
       description: new FormControl(""),
+      memberLimit: new FormControl({ value: 1, disabled: true }, [
+        Validators.min(1),
+      ]),
     });
   }
 
+  toggleMemberLimit(): void {
+    this.isMemberLimit = !this.isMemberLimit;
+    if (this.isMemberLimit) {
+      this.newTeamForm.get("memberLimit")?.enable();
+    } else {
+      this.newTeamForm.get("memberLimit")?.disable();
+    }
+  }
+
   onAccept(): void {
-    this.teamClient
-      .createTeam(
-        this.newTeamForm.value.teamName,
-        this.newTeamForm.value.description
-      )
-      .subscribe((response) => {
+    const teamParameters = new EditableTeamParameters(this.newTeamForm.value);
+    this.teamClient.createTeam(teamParameters).subscribe(
+      (response) => {
         this.dialogRef.close(response);
         this.newTeamForm.reset();
-      });
+      },
+      (error) => {
+        this.snackBar.open("Team name is already in use", "Close", {
+          duration: 3000,
+        });
+      }
+    );
   }
 
   onCancel(): void {

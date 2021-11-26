@@ -84,6 +84,7 @@
                         android:layout_centerHorizontal="true" />
 
                     <RelativeLayout
+                        android:id="@+id/teamIdJoinBtnMain"
                         android:layout_toRightOf="@id/teamId_action_empty_space"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content">
@@ -107,6 +108,24 @@
                             app:cornerRadius="4dp"
                             app:strokeColor="@color/primary"
                             app:strokeWidth="1dp" />
+
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/deleteTeamIdBtnMain"
+                        android:visibility="gone"
+                        android:layout_toRightOf="@id/teamId_action_empty_space"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+
+                        <Button
+                            android:id="@+id/deleteTeamIdBtn"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:backgroundTint="@color/delete"
+                            android:text="Delete"
+                            android:textColor="@color/white" />
+
                     </RelativeLayout>
 
                 </RelativeLayout>

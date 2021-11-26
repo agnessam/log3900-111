@@ -2,6 +2,7 @@ package com.example.colorimagemobile.classes
 
 import androidx.fragment.app.FragmentActivity
 import com.example.colorimagemobile.services.socket.SocketHandler
+import com.example.colorimagemobile.utils.Constants
 import com.example.colorimagemobile.utils.Constants.SOCKETS
 import io.socket.client.Socket
 
@@ -21,8 +22,9 @@ abstract class AbsSocket(namespace: String) {
         mSocket.disconnect()
     }
 
-    open fun joinRoom(roomName: String) {
-        emit(SOCKETS.ROOM_EVENT_NAME, roomName)
+    open fun joinRoom(roomInformation: Constants.SocketRoomInformation) {
+        val jsonSocket = JSONConvertor.convertToJSON(roomInformation)
+        emit(SOCKETS.ROOM_EVENT_NAME, jsonSocket)
     }
 
     fun leaveRoom(roomName: String) {

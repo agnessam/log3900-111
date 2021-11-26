@@ -7,7 +7,7 @@
   <span class="menu-spacer"></span>
   <div>
     <a mat-button routerLink="/gallery" class="page-link">Gallery</a>
-    <a mat-button routerLink="/teams" class="page-link">Teams</a>
+    <a mat-button routerLink="/museum" class="page-link">Museum</a>
   </div>
   <span class="menu-spacer"></span>
 
@@ -28,12 +28,16 @@
   </form>
   <span class="user-properties"></span>
 
-  <button mat-icon-button #channelToggle="matMenuTrigger" [matMenuTriggerFor]="channels">
-    <mat-icon>message</mat-icon>
+  <button mat-icon-button routerLink="/teams">
+    <img src="../../../../assets/svg-icon/group-icon.svg">
   </button>
   <mat-menu #channels="matMenu" class="customize-menu">
       <channel *ngIf="user" (closeChannelList)="channelToggle.closeMenu()" (click)="$event.stopPropagation();"></channel>
   </mat-menu>
+  
+  <button mat-icon-button #channelToggle="matMenuTrigger" [matMenuTriggerFor]="channels">
+    <img src="../../../../assets/svg-icon/chat-icon.svg">
+  </button>
 
   <button mat-button [matMenuTriggerFor]="menu">
     <ngx-avatar [src]="this.user.avatar.imageUrl"></ngx-avatar>
@@ -43,7 +47,7 @@
       <mat-icon>account_circle</mat-icon>
       <span>View Profile</span>
     </button>
-    <button mat-menu-item>
+    <button mat-menu-item (click)="goToSettings()">
       <mat-icon>settings</mat-icon>
       <span>Settings</span>
     </button>

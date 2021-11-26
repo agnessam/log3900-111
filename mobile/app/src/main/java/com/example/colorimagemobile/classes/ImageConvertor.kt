@@ -18,6 +18,10 @@ class ImageConvertor(val context: Context) {
 
     companion object {
         const val BASE_64_URI = "data:image/svg+xml;base64,"
+
+        fun XMLToBase64(xmlString: String): String {
+            return BASE_64_URI + Base64.encodeToString(xmlString.toByteArray(), Base64.NO_WRAP)
+        }
     }
 
     // remove data:image/svg+xml;base64, from URI and decode String
@@ -59,9 +63,5 @@ class ImageConvertor(val context: Context) {
             printMsg("Error converting Base64 into Bitmap: $error")
             null
         }
-    }
-
-    fun XMLToBase64(xmlString: String): String {
-        return BASE_64_URI + Base64.encodeToString(xmlString.toByteArray(), Base64.NO_WRAP)
     }
 }

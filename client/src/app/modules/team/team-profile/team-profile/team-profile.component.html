@@ -10,7 +10,9 @@
         </div>
         <div fxLayout="row grid" fxLayoutAlign="center center">
           <div>
-            <p>{{ this.team.members.length }} members</p>
+            <button mat-button (click)="openMemberList()">
+              {{ this.team.members.length }} members
+            </button>
           </div>
         </div>
         <div fxFlex="100%" style="text-align: center">
@@ -20,24 +22,42 @@
     </div>
     <div fxFlex="11%" style="text-align: center">
       <div fxLayout="column" fxLayoutGap="12px" fxLayoutAlign="center center">
+        <button
+          mat-raised-button
+          color="warn"
+          *ngIf="isOwner()"
+          (click)="openConfirmDeleteDialog()"
+        >
+          Delete team
+        </button>
+
         <button mat-raised-button color="primary">Follow</button>
 
         <button
           mat-raised-button
           color="primary"
           (click)="joinTeam(teamId)"
-          *ngIf="!isAlreadyJoined()"
+          *ngIf="!isAlreadyJoined() && !isTeamFull()"
         >
           Join team
         </button>
 
         <button
           mat-raised-button
+          color="warn"
+          *ngIf="isAlreadyJoined() && !isOwner()"
+          (click)="openConfirmLeaveDialog()"
+        >
+          Leave
+        </button>
+
+        <button
+          mat-raised-button
           color="primary"
           disabled
-          *ngIf="isAlreadyJoined()"
+          *ngIf="isTeamFull() && !isAlreadyJoined()"
         >
-          Joined
+          Team full
         </button>
       </div>
     </div>

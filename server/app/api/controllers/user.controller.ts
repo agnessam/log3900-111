@@ -29,8 +29,7 @@ export class UserController {
 
   @httpGet('/:id')
   public async getUserById(@request() req: Request) {
-    const user = await this.userRepository.findById(req.params.id);
-    return user;
+    return await this.userRepository.getPopulatedUser(req.params.id);
   }
 
   @httpPost('/')
@@ -41,6 +40,15 @@ export class UserController {
   @httpPatch('/:id')
   public async updateUser(@request() req: Request) {
     return await this.userRepository.updateById(req.params.id, req.body);
+  }
+
+  @httpPatch('/:id/changePassword')
+  public async changePassword(@request() req: Request) {
+    return await this.userRepository.changePassword(
+      req.params.id,
+      req.body.currentPassword,
+      req.body.newPassword,
+    );
   }
 
   @httpDelete('/:id')

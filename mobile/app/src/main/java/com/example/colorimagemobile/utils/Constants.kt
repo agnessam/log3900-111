@@ -104,4 +104,6 @@ class Constants {
             const val TOKEN = "token"
         }
     }
+
+    data class SocketRoomInformation( val userId: String, val roomName: String)
 }

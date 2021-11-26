@@ -37,6 +37,21 @@ export class UsersService {
       });
   }
 
+  changePassword(
+    userId: string,
+    currentPassword: string,
+    newPassword: string
+  ): Observable<any> {
+    return this.httpClient
+      .patch(`${this.endpointUrl}/${userId}/changePassword`, {
+        currentPassword: currentPassword,
+        newPassword: newPassword,
+      })
+      .pipe((response) => {
+        return response;
+      });
+  }
+
   getUserTeams(userId: string): Observable<Team[]> {
     return this.httpClient
       .get<Team[]>(`${this.endpointUrl}/${userId}/teams`)

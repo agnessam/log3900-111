@@ -12,9 +12,7 @@ import android.graphics.drawable.shapes.PathShape
 import com.example.colorimagemobile.interfaces.ICommand
 import com.example.colorimagemobile.models.RectangleData
 import com.example.colorimagemobile.models.RectangleUpdate
-import com.example.colorimagemobile.services.drawing.CanvasService
-import com.example.colorimagemobile.services.drawing.CanvasUpdateService
-import com.example.colorimagemobile.services.drawing.DrawingObjectManager
+import com.example.colorimagemobile.services.drawing.*
 import com.example.colorimagemobile.services.drawing.Point
 import com.example.colorimagemobile.services.drawing.toolsAttribute.ColorService
 import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
@@ -49,6 +47,7 @@ class RectangleCommand(rectangleData: RectangleData): ICommand {
         fillPaint = initializePaint(rectangleData.fill,  rectangleData.fillOpacity, Color.BLACK)
 
         setStartPoint(Point(rectangle.x.toFloat(), rectangle.y.toFloat()))
+        DrawingJsonService.createRect(rectangle)
     }
 
     private fun initializePaint(color: String, opacity: String, defaultColor: Int): Paint{
@@ -89,6 +88,8 @@ class RectangleCommand(rectangleData: RectangleData): ICommand {
         rectangle.x = min(endingPoint!!.x.toInt(), startingPoint!!.x.toInt())
         rectangle.height = kotlin.math.abs(endingPoint!!.y - startingPoint!!.y).toInt()
         rectangle.y = min(endingPoint!!.y.toInt(), startingPoint!!.y.toInt())
+
+        DrawingJsonService.updateRect(rectangle)
 
         this.generateBorderPath()
         this.generateFillPath()
@@ -148,10 +149,10 @@ class RectangleCommand(rectangleData: RectangleData): ICommand {
     }
 
     private fun generateFillPath(){
-        var left = rectangle.x
-        var top = rectangle.y
-        var right = rectangle.x + rectangle.width
-        var bottom = rectangle.y + rectangle.height
+        var left = rectangle.x + rectangle.strokeWidth
+        var top = rectangle.y + rectangle.strokeWidth
+        var right = rectangle.x + rectangle.width - rectangle.strokeWidth
+        var bottom = rectangle.y + rectangle.height - rectangle.strokeWidth
         var rect = RectF(left.toFloat(), top.toFloat(), right.toFloat(), bottom.toFloat())
 
         fillPath = Path()

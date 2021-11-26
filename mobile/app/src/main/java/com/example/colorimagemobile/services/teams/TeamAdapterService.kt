@@ -1,6 +1,5 @@
 package com.example.colorimagemobile.services.teams
 
-import android.content.Context
 import androidx.fragment.app.FragmentActivity
 import com.example.colorimagemobile.adapter.TeamsMenuRecyclerAdapter
 import com.example.colorimagemobile.classes.MyFragmentManager
@@ -11,12 +10,10 @@ object TeamAdapterService {
 
     private lateinit var teamMenuAdapter: TeamsMenuRecyclerAdapter
 
-    fun createAdapter(context: Context, fragmentActivity: FragmentActivity, layoutID: Int, parentFragmentID: Int): TeamsMenuRecyclerAdapter {
+    fun createAdapter(fragmentActivity: FragmentActivity, layoutID: Int, parentFragmentID: Int): TeamsMenuRecyclerAdapter {
         return TeamsMenuRecyclerAdapter(
-            layoutID,
-            { pos -> TeamService.joinTeam(pos, context)},
-            { pos -> openTeam(fragmentActivity, pos, parentFragmentID)},
-            { pos -> TeamService.leaveTeam(pos, context)})
+            layoutID
+        ) { pos -> openTeam(fragmentActivity, pos, parentFragmentID) }
     }
 
     fun getTeamMenuAdapter(): TeamsMenuRecyclerAdapter {

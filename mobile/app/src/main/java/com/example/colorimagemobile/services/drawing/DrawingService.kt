@@ -28,7 +28,7 @@ object DrawingService {
             val svgString = imageConvertor.getSvgAsString(drawing.dataUri)
 
             if (bitmap != null) {
-                drawingsMenu.add(DrawingMenuData(drawing._id, bitmap, svgString))
+                drawingsMenu.add(DrawingMenuData(drawing._id!!, bitmap, svgString))
             }
         }
 

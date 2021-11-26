@@ -1,12 +1,18 @@
 import mongoose, { Document, Model, Schema } from 'mongoose';
 
+enum PRIVACY_LEVEL {
+  public,
+  protected,
+  private,
+}
+
 export interface DrawingInterface extends Document {
   dataUri: string;
-  ownerId: string;
+  owner: string;
   ownerModel: string;
   name: string;
 
-  privacyLevel: string;
+  privacyLevel: PRIVACY_LEVEL;
   password: string;
 
   createdAt: string;
@@ -16,7 +22,7 @@ export interface DrawingInterface extends Document {
 const DrawingSchema = new mongoose.Schema(
   {
     dataUri: { type: String, required: true },
-    ownerId: {
+    owner: {
       type: Schema.Types.ObjectId,
       required: true,
       refPath: 'ownerModel',
