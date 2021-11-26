@@ -70,7 +70,6 @@ export class UserOverviewComponent implements OnInit {
     this.editDescriptionDialogRef.afterClosed().subscribe((currentUser) => {
       if (!currentUser) return;
       this.currentUser = currentUser;
-      console.log(this.currentUser);
     });
     this.changeDetectorRef.detectChanges();
   }

@@ -5,6 +5,7 @@ import { User, UserInterface } from '../../../domain/models/user';
 import { GenericRepository } from './generic_repository';
 import { Team } from '../../../domain/models/teams';
 import bcrypt from 'bcrypt';
+import { CollaborationHistory } from '@app/domain/models/CollaborationHistory';
 
 declare global {
   namespace Express {
@@ -35,6 +36,22 @@ export class UserRepository extends GenericRepository<UserInterface> {
         err,
       });
     }
+  }
+
+  public async getPopulatedUser(userId: string) {
+    return new Promise((resolve, reject) => {
+      User.findById({ _id: userId })
+        .populate({
+          path: 'collaborationHistory',
+          populate: { path: 'drawing' },
+        })
+        .exec((err, user) => {
+          if (err || !user) {
+            reject(err);
+          }
+          resolve(user);
+        });
+    });
   }
 
   public async changePassword(
@@ -156,6 +173,26 @@ export class UserRepository extends GenericRepository<UserInterface> {
             reject(err);
           }
           resolve(true);
+        },
+      );
+    });
+  }
+
+  public async updateCollaborationHistory(userId: string, drawingId: string) {
+    return new Promise((resolve, reject) => {
+      const collaborationHistory = new CollaborationHistory({
+        drawing: drawingId,
+        collaboratedAt: new Date(),
+      });
+      User.findOneAndUpdate(
+        { _id: userId },
+        { $push: { collaborationHistory: collaborationHistory } },
+        { new: true },
+        (err: Error, user: UserInterface) => {
+          if (err) {
+            reject(err);
+          }
+          resolve(user);
         },
       );
     });

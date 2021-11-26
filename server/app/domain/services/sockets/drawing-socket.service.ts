@@ -16,17 +16,23 @@ import {
   NEW_USER_RESPONSE,
   PRIMARY_COLOR_EVENT,
   SECONDARY_COLOR_EVENT,
-  LINE_WIDTH_EVENT
+  LINE_WIDTH_EVENT,
+  ROOM_EVENT_NAME,
 } from '../../constants/socket-constants';
 import { SocketServiceInterface } from '../../../domain/interfaces/socket.interface';
-import { injectable } from 'inversify';
+import { inject, injectable } from 'inversify';
 import { Server, Socket } from 'socket.io';
 import { DrawingCommand } from '../../../domain/interfaces/drawing-command.interface';
 import { Color } from '../../../domain/interfaces/color.interface';
 import { LineWidth } from '../../../domain/interfaces/line-width.interface';
+import { UserRepository } from '../../../infrastructure/data_access/repositories/user_repository';
+import { TYPES } from '../../../domain/constants/types';
+import { SocketRoomInformation } from '../../../domain/interfaces/socket-information';
 
 @injectable()
 export class DrawingSocketService extends SocketServiceInterface {
+  @inject(TYPES.UserRepository) public userRepository: UserRepository;
+
   init(io: Server) {
     super.init(io, COLLABORATIVE_DRAWING_NAMESPACE);
   }
@@ -48,36 +54,47 @@ export class DrawingSocketService extends SocketServiceInterface {
     this.listenLineWidthChange(socket);
   }
 
-  private listenLineWidthChange(socket:Socket): void {
+  protected listenRoom(socket: Socket): void {
+    socket.on(ROOM_EVENT_NAME, (socketInformation: SocketRoomInformation) => {
+      console.log(
+        `${socketInformation.userId} has joined room ${socketInformation.roomName}`,
+      );
+      this.userRepository.updateCollaborationHistory(
+        socketInformation.userId,
+        socketInformation.roomName,
+      );
+      socket.join(socketInformation.roomName);
+    });
+  }
+
+  private listenLineWidthChange(socket: Socket): void {
     socket.on(LINE_WIDTH_EVENT, (lineWidthData) => {
       this.sendLineWidthData(socket, lineWidthData);
     });
   }
 
-  private sendLineWidthData(socket:Socket, lineWidthData: LineWidth){
+  private sendLineWidthData(socket: Socket, lineWidthData: LineWidth) {
     socket.to(lineWidthData.roomName).emit(LINE_WIDTH_EVENT, lineWidthData);
   }
 
-  private listenObjectPrimaryColorChange(socket:Socket): void {
+  private listenObjectPrimaryColorChange(socket: Socket): void {
     socket.on(PRIMARY_COLOR_EVENT, (colorData) => {
       this.sendObjectPrimaryColorChange(socket, colorData);
     });
   }
 
-  private sendObjectPrimaryColorChange(socket:Socket, colorData:Color){
-    socket.to(colorData.roomName)
-      .emit(PRIMARY_COLOR_EVENT, colorData);
+  private sendObjectPrimaryColorChange(socket: Socket, colorData: Color) {
+    socket.to(colorData.roomName).emit(PRIMARY_COLOR_EVENT, colorData);
   }
 
-  private listenObjectSecondaryColorChange(socket:Socket): void {
+  private listenObjectSecondaryColorChange(socket: Socket): void {
     socket.on(SECONDARY_COLOR_EVENT, (colorData) => {
       this.sendObjectSecondaryColorChange(socket, colorData);
     });
   }
 
-  private sendObjectSecondaryColorChange(socket:Socket, colorData:Color){
-    socket.to(colorData.roomName)
-      .emit(SECONDARY_COLOR_EVENT, colorData);
+  private sendObjectSecondaryColorChange(socket: Socket, colorData: Color) {
+    socket.to(colorData.roomName).emit(SECONDARY_COLOR_EVENT, colorData);
   }
 
   private listenInProgressDrawingCommand(socket: Socket): void {
@@ -128,54 +145,60 @@ export class DrawingSocketService extends SocketServiceInterface {
   }
 
   private listenGetUpdatedDrawing(socket: Socket): void {
-    socket.on(UPDATE_DRAWING_EVENT, (roomName:string, callback) => {
-      console.log("Request update drawing room: ", roomName);
+    socket.on(UPDATE_DRAWING_EVENT, (roomName: string, callback) => {
+      console.log('Request update drawing room: ', roomName);
       const clientIdsInRoomSet = this.namespace.adapter.rooms.get(roomName);
 
-      if(!clientIdsInRoomSet) {
+      if (!clientIdsInRoomSet) {
         callback({
-          status: ROOM_NOT_FOUND_RESPONSE
+          status: ROOM_NOT_FOUND_RESPONSE,
         });
         return;
       }
 
-      if (clientIdsInRoomSet.size < 1){
+      if (clientIdsInRoomSet.size < 1) {
         console.log(`Room ${roomName} is empty`);
         callback({
-          status: ROOM_EMPTY_RESPONSE
+          status: ROOM_EMPTY_RESPONSE,
         });
         return;
       }
-      
+
       let alreadyConnectedUserId;
-      for(let clientInRoomSet of clientIdsInRoomSet){
-        if (clientInRoomSet != socket.id){
+      for (let clientInRoomSet of clientIdsInRoomSet) {
+        if (clientInRoomSet != socket.id) {
           alreadyConnectedUserId = clientInRoomSet;
           break;
         }
       }
 
-      if(!alreadyConnectedUserId){
+      if (!alreadyConnectedUserId) {
         callback({
-          status: ONE_USER_RESPONSE
-        })
-        return
+          status: ONE_USER_RESPONSE,
+        });
+        return;
       }
 
       this.sendUpdateDrawingRequest(socket, alreadyConnectedUserId, socket.id);
-      
+
       callback({
-        status: NEW_USER_RESPONSE
+        status: NEW_USER_RESPONSE,
       });
     });
   }
 
-  private sendUpdateDrawingRequest(socket:Socket, alreadyConnectedUserId: string, newClientId: string): void {
+  private sendUpdateDrawingRequest(
+    socket: Socket,
+    alreadyConnectedUserId: string,
+    newClientId: string,
+  ): void {
     let request = {
       newUserId: newClientId,
-      alreadyConnectedUserId: alreadyConnectedUserId 
-    }
-    socket.broadcast.to(alreadyConnectedUserId).emit(UPDATE_DRAWING_EVENT, request);
+      alreadyConnectedUserId: alreadyConnectedUserId,
+    };
+    socket.broadcast
+      .to(alreadyConnectedUserId)
+      .emit(UPDATE_DRAWING_EVENT, request);
   }
 
   private listenDrawingRequestBroadcastRequest(socket: Socket): void {
@@ -184,7 +207,10 @@ export class DrawingSocketService extends SocketServiceInterface {
     });
   }
 
-  private sendFetchDrawingNotification(socket:Socket, newClientId: string): void {
+  private sendFetchDrawingNotification(
+    socket: Socket,
+    newClientId: string,
+  ): void {
     socket.broadcast.to(newClientId).emit(FETCH_DRIVING_EVENT);
   }
 
