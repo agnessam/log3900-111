@@ -57,7 +57,6 @@ export class TeamMainPageComponent implements OnInit {
   }
 
   isTeamFull(team: Team): boolean {
-    console.log(team);
     if (!team.memberLimit) return false;
     if (team.members.length >= team.memberLimit) {
       return true;
