@@ -141,7 +141,6 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="10px">
 
-
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/newDrawingOwnerInputLayout"
                 android:layout_width="match_parent"
@@ -150,14 +149,45 @@
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
 
                 <AutoCompleteTextView
+                    android:id="@+id/newDrawingOwnerAutoCompleteTextView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="none"
-                    android:id="@+id/newDrawingOwnerAutoCompleteTextView" />
-
-
+                    android:inputType="none" />
             </com.google.android.material.textfield.TextInputLayout>
 
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/newDrawingPrivacyInputLayout"
+                android:layout_below="@id/newDrawingOwnerInputLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Privacy"
+                android:layout_marginTop="8dp"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
+
+                <AutoCompleteTextView
+                    android:id="@+id/newDrawingPrivacyAutoCompleteTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="none" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/newDrawingPasswordLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Drawing password"
+                android:layout_marginTop="8dp"
+                android:enabled="false"
+                android:alpha="0.5"
+                android:layout_below="@id/newDrawingPrivacyInputLayout"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/newDrawingPasswordInputText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="text" />
+            </com.google.android.material.textfield.TextInputLayout>
 
         </RelativeLayout>
 

@@ -2,7 +2,6 @@ package com.example.colorimagemobile.bottomsheets
 
 import android.annotation.SuppressLint
 import android.app.Dialog
-import android.graphics.Bitmap
 import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -23,7 +22,6 @@ import com.example.colorimagemobile.models.DrawingModel
 import com.example.colorimagemobile.models.TeamModel
 import com.example.colorimagemobile.repositories.DrawingRepository
 import com.example.colorimagemobile.repositories.UserRepository
-import com.example.colorimagemobile.services.drawing.CanvasService
 import com.example.colorimagemobile.services.drawing.CanvasUpdateService
 import com.example.colorimagemobile.services.drawing.DrawingObjectManager
 import com.example.colorimagemobile.services.drawing.DrawingService
@@ -52,12 +50,16 @@ class NewDrawingMenuBottomSheet: BottomSheetDialogFragment() {
     private lateinit var heightLayout: TextInputLayout
     private lateinit var dialog: BottomSheetDialog
     private lateinit var assignToInput: AutoCompleteTextView
+    private lateinit var privacyInput: AutoCompleteTextView
+    private lateinit var passwordLayout: TextInputLayout
 
     private val USER_ME = "Me"
     private var drawingName = ""
+    private var drawingPassword = ""
     private var widthValue = 0
     private var heightValue = 0
     private var userTeams: List<TeamModel> = arrayListOf()
+    private val privacyList = arrayListOf<String>("public", "private", "protected")
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.bottomsheet_drawing_menu, container, false)
@@ -77,12 +79,16 @@ class NewDrawingMenuBottomSheet: BottomSheetDialogFragment() {
         widthLayout = view.findViewById(R.id.newDrawingWidthInputLayout)
         heightLayout = view.findViewById(R.id.newDrawingHeightInputLayout)
         assignToInput = view.findViewById(R.id.newDrawingOwnerAutoCompleteTextView)
+        privacyInput = view.findViewById(R.id.newDrawingPrivacyAutoCompleteTextView)
+        passwordLayout = view.findViewById(R.id.newDrawingPasswordLayout)
 
-        fetchTeams(view)
+        fetchTeams()
+        setPrivacyInput()
         setListeners(view)
+        togglePasswordInput(false)
     }
 
-    private fun fetchTeams(view: View) {
+    private fun fetchTeams() {
         UserRepository().getUserTeams(UserService.getToken(), UserService.getUserInfo()._id).observe(context as LifecycleOwner, {
             if (it.isError as Boolean) { return@observe }
             userTeams = it.data as List<TeamModel>
@@ -97,6 +103,12 @@ class NewDrawingMenuBottomSheet: BottomSheetDialogFragment() {
         })
     }
 
+    private fun setPrivacyInput() {
+        val privacyArrayAdapter = ArrayAdapter(requireContext(), R.layout.dropdown_text, privacyList)
+        privacyInput.setAdapter(privacyArrayAdapter)
+        privacyInput.setText(privacyArrayAdapter.getItem(0).toString(), false);
+    }
+
     @SuppressLint("ClickableViewAccessibility")
     private fun setListeners(view: View) {
         var color = "rgba(255, 255, 255, 1)"
@@ -105,6 +117,9 @@ class NewDrawingMenuBottomSheet: BottomSheetDialogFragment() {
 
         colorPicker.subscribe { newColor, _, _ -> color = ColorService.intToRGBA(newColor) }
         createNewDrawingForm.setOnTouchListener{_, _ -> hideKeyboard(requireContext(), createNewDrawingForm)}
+        view.findViewById<TextInputEditText>(R.id.newDrawingPasswordInputText).doOnTextChanged { text, _, _, _ -> drawingPassword = text.toString() }
+        view.findViewById<TextInputEditText>(R.id.newDrawingNameInputText).doOnTextChanged { text, _, _, _ -> drawingName = text.toString() }
+        privacyInput.setOnItemClickListener { _, _, _, _ -> togglePasswordInput(isProtected()) }
 
         // width input validation
         view.findViewById<TextInputEditText>(R.id.newDrawingWidthInputText).doOnTextChanged { text, _, _, _ ->
@@ -118,13 +133,8 @@ class NewDrawingMenuBottomSheet: BottomSheetDialogFragment() {
             heightLayout.error = getErrorMessage(heightValue, MIN_HEIGHT, MAX_HEIGHT)
         }
 
-        view.findViewById<TextInputEditText>(R.id.newDrawingNameInputText).doOnTextChanged { text, _, _, _ ->
-            drawingName = text.toString()
-        }
-
-
         view.findViewById<Button>(R.id.createDrawingBtn).setOnClickListener {
-            if (widthValue==0 || heightValue==0 || drawingName == "") {
+            if (widthValue == 0 || heightValue == 0 || drawingName == "" || (isProtected() && drawingPassword == "")) {
                 val shake = AnimationUtils.loadAnimation(requireActivity().getApplicationContext(), R.anim.shake)
                 createNewDrawingForm.startAnimation(shake);
                     return@setOnClickListener
@@ -132,6 +142,16 @@ class NewDrawingMenuBottomSheet: BottomSheetDialogFragment() {
 
             createDrawing(color)
         }
+    }
+
+    private fun isProtected(): Boolean {
+        return privacyInput.text.toString() == privacyList[2]
+    }
+
+    private fun togglePasswordInput(shouldEnable: Boolean) {
+        passwordLayout.alpha = if (shouldEnable) 1f else .4f
+        passwordLayout.isClickable = shouldEnable
+        passwordLayout.isEnabled = shouldEnable
     }
 
     // read input field and convert to int
@@ -173,7 +193,9 @@ class NewDrawingMenuBottomSheet: BottomSheetDialogFragment() {
 
         val base64 = ImageConvertor.XMLToBase64(svgBuilder.getXML())
         val owner = getOwnerModel()
-        val newDrawing = DrawingModel.CreateDrawing(_id=null, dataUri=base64, ownerModel=owner.first, owner=owner.second, name=drawingName)
+        val privacyLevel = privacyInput.text.toString()
+        val password = if (isProtected()) drawingPassword else null
+        val newDrawing = DrawingModel.CreateDrawing(_id=null, dataUri=base64, ownerModel=owner.first, owner=owner.second, name=drawingName, privacyLevel=privacyLevel, password=password)
 
         DrawingRepository().createNewDrawing(newDrawing).observe(context as LifecycleOwner, {
             printToast(requireContext(), it.message!!)
