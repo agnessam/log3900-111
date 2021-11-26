@@ -1,14 +1,8 @@
 #channel-overlay{
-  display: none;
-  position: fixed;
-  top: 64px;
-  right: 15px;
-  z-index: 10;
+  display: block;
   width: 230px;
-  box-shadow :0 5px 5px rgba(0,0,0,0.4);
-  border-bottom-left-radius: 15px;
-  border-bottom-right-radius: 15px;
-  background-color: white;
+  border-radius: 15px;
+  background-color: #fef9f7;
 }
 
 .mat-icon{
@@ -64,6 +58,7 @@
 .channel-list{
   overflow: auto;
   max-height: 80vh;
+  overflow-x: hidden;
 }
 
 .deleteChannelBtn{

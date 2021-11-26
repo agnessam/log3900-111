@@ -2,8 +2,6 @@ import { Component, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
 import { AuthenticationService } from "src/app/modules/authentication";
 import { User } from "../modules/authentication/models/user";
-import { ChatService } from "../modules/chat/services/chat.service";
-
 @Component({
   selector: "app-navbar",
   templateUrl: "./navbar.component.html",
@@ -16,15 +14,13 @@ export class NavbarComponent implements OnInit {
   constructor(
     private router: Router,
     private authenticationService: AuthenticationService,
-    private chatService: ChatService
   ) {
     this.authenticationService.currentUserObservable.subscribe(
       (user) => (this.user = user)
     );
   }
-
+  
   ngOnInit(): void {
-    this.chatService.toggleChannelOverlay.subscribe();
   }
 
   search(): void {
@@ -40,9 +36,5 @@ export class NavbarComponent implements OnInit {
       console.log(response);
     });
     this.router.navigate(["/login"]);
-  }
-
-  onChatClick(): void {
-    this.chatService.toggleChannelOverlay.emit();
   }
 }

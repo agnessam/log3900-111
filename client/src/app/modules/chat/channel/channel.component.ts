@@ -1,18 +1,18 @@
 import {
   Component,
-  ElementRef,
+  EventEmitter,
   OnDestroy,
   OnInit,
-  ViewChild,
-  ViewEncapsulation,
+  Output,
 } from "@angular/core";
-import { MatSnackBar } from "@angular/material/snack-bar";
+import { MatDialog, MatDialogRef } from "@angular/material/dialog";
 import { AuthenticationService } from "src/app/modules/authentication";
 import { User } from "../../authentication/models/user";
 import { TextChannel } from "../models/text-channel.model";
 import { ChatSocketService } from "../services/chat-socket.service";
 import { ChatService } from "../services/chat.service";
 import { TextChannelService } from "../services/text-channel.service";
+import { NewChannelComponent } from "./new-channel/new-channel.component";
 
 @Component({
   selector: "channel",
@@ -20,27 +20,21 @@ import { TextChannelService } from "../services/text-channel.service";
   styleUrls: ["./channel.component.scss"],
 })
 export class ChannelComponent implements OnInit, OnDestroy {
-  encapsulation: ViewEncapsulation.None
+  @Output() closeChannelList = new EventEmitter<any>();
   user: User | null;
   allChannels: TextChannel[];
-  isSearchOpen: boolean;
   searchedChannels: TextChannel[];
-  newChannelName: string;
-  isChannelListOpen: boolean;
   connectedChannels: TextChannel[];
   searchQuery: string;
-
-  @ViewChild("addChannelModal", { static: false })
-  private addChannelModal: ElementRef<HTMLInputElement>;
+  newChannelDialogRef: MatDialogRef<NewChannelComponent>;
 
   constructor(
     private authenticationService: AuthenticationService,
     private chatService: ChatService,
     private chatSocketService: ChatSocketService,
     private textChannelService: TextChannelService,
-    private snackBar: MatSnackBar
+    private dialog: MatDialog,
   ) {
-    this.isSearchOpen = false;
     this.connectedChannels = [];
   }
 
@@ -48,12 +42,6 @@ export class ChannelComponent implements OnInit, OnDestroy {
     this.authenticationService.currentUserObservable.subscribe(
       (user) => (this.user = user)
     );
-
-    this.chatService.toggleChannelOverlay.subscribe(() => {
-      this.isChannelListOpen = !this.isChannelListOpen;
-      this.toggleChannelOverlay(this.isChannelListOpen);
-    });
-
     this.textChannelService.getChannels().subscribe((channels) => {
       this.allChannels = channels;
       this.searchedChannels = channels;
@@ -64,45 +52,9 @@ export class ChannelComponent implements OnInit, OnDestroy {
       }
     });
 
-    // this.keyListener();
   }
 
   ngOnDestroy(): void {}
-
-  addChannel(): void {
-    const name = this.newChannelName;
-    this.newChannelName = "";
-
-    const isWhitespace = (name || "").trim().length === 0;
-    if (isWhitespace) {
-      this.snackBar.open("The name can not be empty", "Close", {
-        duration: 3000,
-      });
-      return;
-    } else {
-      let isValid = true;
-      if (this.allChannels.find((channel) => channel.name === name)) {
-        this.snackBar.open("This channel already exists", "Close", {
-          duration: 3000,
-        });
-        isValid = false;
-      }
-
-      if (isValid) {
-        this.textChannelService
-          .createChannel(name, this.user?._id as string)
-          .subscribe((channel) => {
-            this.allChannels.push(channel);
-            // should automatically connect user to socket
-            this.connectedChannels.push(channel);
-            this.chatService.toggleChatOverlay.emit(channel);
-            this.isSearchOpen = false;
-            this.toggleChannelOverlay(false);
-            this.closeAddChannelModal();
-          });
-      }
-    }
-  }
 
   // can only delete channel if owner id corresponds to user id
   deleteChannel(channel: TextChannel): void {
@@ -160,48 +112,34 @@ export class ChannelComponent implements OnInit, OnDestroy {
   }
 
   toggleSearch(isOpen: boolean): void {
-    this.isSearchOpen = isOpen;
     if (this.searchQuery === undefined || this.searchQuery === null  || this.searchQuery?.match(/^ *$/) !== null) {
       this.searchedChannels = Object.assign([], this.allChannels);
     }
-
-    // if (this.isSearchOpen) {
-    //   setTimeout(() => {
-    //     this.searchInput.nativeElement.focus();
-    //   }, 0);
-    // }
   }
 
   openChannel(channel: TextChannel): void {
     this.chatService.toggleChatOverlay.emit(channel);
-    this.toggleChannelOverlay(false);
-    this.isChannelListOpen = false;
+    this.closeChannelList.emit();
 
     if (!this.connectedChannels.find((x) => x.name === channel.name)) {
       this.connectedChannels.push(channel);
     }
 
-    if (this.isSearchOpen) {
-      this.searchQuery = "";
-      this.isSearchOpen = false;
-    }
-  }
-
-  toggleChannelOverlay(open: boolean) {
-    const channelOverlay = document.getElementById(
-      "channel-overlay"
-    ) as HTMLInputElement;
-
-    if (open) channelOverlay.style.display = "block";
-    else channelOverlay.style.display = "none";
+    this.searchQuery = "";
   }
 
   openAddChannelModal() {
-    const modal = this.addChannelModal.nativeElement;
-    modal.style.display = "block";
-  }
-  closeAddChannelModal() {
-    const modal = this.addChannelModal.nativeElement;
-    modal.style.display = "none";
+    this.newChannelDialogRef = this.dialog.open(NewChannelComponent, {});
+    this.newChannelDialogRef.afterClosed().subscribe((channel) => {
+      if (!channel) {
+        return;
+      }
+
+      this.allChannels.push(channel);
+      this.closeChannelList.emit();
+      // should automatically connect user to socket
+      this.connectedChannels.push(channel);
+      this.chatService.toggleChatOverlay.emit(channel);
+    });
   }
 }

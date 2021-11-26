@@ -1,15 +1,8 @@
-import { Component, HostListener, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Router } from '@angular/router';
-import { DrawingHttpClientService } from 'src/app/modules/backend-communication';
-import { ColorPickerService } from 'src/app/modules/color-picker';
-import { NewDrawingComponent, NewDrawingService } from 'src/app/modules/new-drawing';
-import { UsersService } from 'src/app/modules/users/services/users.service';
-import { DrawingService } from 'src/app/modules/workspace';
-import { DEFAULT_RGB_COLOR, DEFAULT_ALPHA } from 'src/app/shared';
-import { Team } from 'src/app/shared/models/team.model';
+import { TextChannel } from '../../models/text-channel.model';
 import { TextChannelService } from '../../services/text-channel.service';
 
 @Component({
@@ -19,20 +12,36 @@ import { TextChannelService } from '../../services/text-channel.service';
 })
 export class NewChannelComponent implements OnInit {
   newDrawingForm: FormGroup;
+  existingChannels: TextChannel[];
 
   constructor(
     private textChannelService: TextChannelService,
-    private dialogRef: MatDialogRef<NewChannelComponent>
+    private dialogRef: MatDialogRef<NewChannelComponent>,
+    private snackBar: MatSnackBar,
   ) {}
 
   ngOnInit(): void {
-    this.dialogRef.updateSize("50%", "30%");
+    this.dialogRef.updateSize("20%", "40%");
     this.newDrawingForm = new FormGroup({
       name: new FormControl(""),
     });
+    this.textChannelService.getChannels().subscribe((channels) => this.existingChannels = channels);
   }
 
   onAccept(): void {
+    const isWhitespace = (this.newDrawingForm.value.name || "").trim().length === 0;
+    if (isWhitespace) {
+      this.snackBar.open("The name cannot be empty", "Close", {
+        duration: 3000,
+      });
+      return;
+    } else if (this.existingChannels.find((channel) => channel.name === this.newDrawingForm.value.name)) {
+      this.snackBar.open("This channel already exists", "Close", {
+        duration: 3000,
+      });
+      return;
+    }
+
     this.textChannelService
       .createChannel(this.newDrawingForm.value.name, localStorage.getItem("userId")!)
       .subscribe((response) => {
