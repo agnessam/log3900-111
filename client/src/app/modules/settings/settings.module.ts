@@ -15,6 +15,7 @@ import { EditParameterDialogComponent } from "./settings-container/user-overview
 import { UserOverviewComponent } from "./settings-container/user-overview/user-overview.component";
 import { SettingsRoutingModule } from "./settings-routing.module";
 import { ChangePasswordDialogComponent } from "./settings-container/user-overview/change-password-dialog/change-password-dialog.component";
+import { UserHistoryComponent } from './settings-container/user-history/user-history.component';
 
 @NgModule({
   declarations: [
@@ -22,6 +23,7 @@ import { ChangePasswordDialogComponent } from "./settings-container/user-overvie
     UserOverviewComponent,
     EditParameterDialogComponent,
     ChangePasswordDialogComponent,
+    UserHistoryComponent,
   ],
   imports: [
     CommonModule,
