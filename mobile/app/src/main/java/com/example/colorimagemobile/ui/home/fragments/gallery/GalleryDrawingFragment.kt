@@ -103,12 +103,14 @@ class GalleryDrawingFragment : Fragment(R.layout.fragment_gallery_drawing) {
 
         // drawing belongs to a group ==> owner is teamId
         if (currentDrawing.ownerModel == "Team") {
-            
+            val drawing = UserService.getUserInfo().teams.find { teamId -> teamId == currentDrawing.owner }
+            if (drawing != null) addMuseumButton()
         }
     }
 
     private fun addMuseumButton() {
         val museumButton = createSideButton(R.drawable.ic_museum)
+
         museumButton.setOnClickListener {
             val drawing = DrawingService.getDrawingById()
 
