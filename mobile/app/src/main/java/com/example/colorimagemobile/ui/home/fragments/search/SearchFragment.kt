@@ -83,7 +83,7 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
         TeamService.setAllTeams(queryObject.teams)
 
-        val adapter = TeamAdapterService.createAdapter(requireContext(), requireActivity(), R.layout.recycler_search_team_menu, R.id.searchMainFragment)
+        val adapter = TeamAdapterService.createAdapter(requireActivity(), R.layout.recycler_search_team_menu, R.id.searchMainFragment)
         recyclerView.adapter = adapter
         TeamAdapterService.setAdapter(adapter)
     }

@@ -12,9 +12,7 @@ import com.google.android.material.button.MaterialButton
 
 class TeamsMenuRecyclerAdapter(
         val layoutID: Int,
-        val joinTeamClicked: (Int) -> Unit,
-        val openTeam: (Int) -> Unit,
-        val leaveTeam: (Int) -> Unit):
+        val openTeam: (Int) -> Unit):
     RecyclerView.Adapter<TeamsMenuRecyclerAdapter.ViewHolder>() {
 
     // create card view and sets its contents format
@@ -27,14 +25,6 @@ class TeamsMenuRecyclerAdapter(
     override fun onBindViewHolder(holder: TeamsMenuRecyclerAdapter.ViewHolder, position: Int) {
         holder.teamName.text = TeamService.getAllTeams()[position].name
         holder.teamDescription.text = TeamService.getAllTeams()[position].description
-
-        if (TeamService.isUserAlreadyTeamMember(position)) {
-            holder.joinTeamBtn.visibility = View.GONE
-            holder.leaveTeamBtn.visibility = View.VISIBLE
-        } else {
-            holder.joinTeamBtn.visibility = View.VISIBLE
-            holder.leaveTeamBtn.visibility = View.GONE
-        }
     }
 
     // identify how many item we pass to view holder
@@ -45,13 +35,9 @@ class TeamsMenuRecyclerAdapter(
     inner class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
         var teamName : TextView = itemView.findViewById(R.id.card_team_name);
         var teamDescription : TextView = itemView.findViewById(R.id.card_team_description);
-        var joinTeamBtn : Button = itemView.findViewById(R.id.joinTeamBtn);
-        var leaveTeamBtn : MaterialButton = itemView.findViewById(R.id.leaveTeamBtn);
 
         init {
             itemView.setOnClickListener { openTeam(bindingAdapterPosition) }
-            joinTeamBtn.setOnClickListener { joinTeamClicked(bindingAdapterPosition) }
-            leaveTeamBtn.setOnClickListener { leaveTeam(bindingAdapterPosition) }
         }
     }
 }
