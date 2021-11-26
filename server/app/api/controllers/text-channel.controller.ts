@@ -8,6 +8,7 @@ import {
   httpGet,
   httpPatch,
   httpPost,
+  queryParam,
   request,
 } from 'inversify-express-utils';
 import passport from 'passport';
@@ -51,8 +52,11 @@ export class TextChannelController {
     return await this.textChannelRepository.getMessages(req.params.channelId);
   }
 
-  @httpGet('/search/:channelName')
-  public async getChannelsByName(@request() req: Request) {
-    return await this.textChannelRepository.getChannelsByName(req.params.channelName);
+  @httpGet('/all/search')
+  public async searchChannels(@queryParam('q') query: string) {
+    const channels = await this.textChannelRepository.findManyByQuery({
+      $or: [{ name: { $regex: new RegExp(query, 'ig') } }],
+    });
+    return [...channels];
   }
 }

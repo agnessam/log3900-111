@@ -1,4 +1,4 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
@@ -35,11 +35,11 @@ export class TextChannelService {
       });
   }
 
-  createChannel(newName: string, newOwnerId: string): Observable<TextChannel> {
+  createChannel(newName: string, newOwner: string): Observable<TextChannel> {
     return this.httpClient
       .post<TextChannel>(this.endpointUrl, {
         name: newName,
-        ownerId: newOwnerId,
+        owner: newOwner,
       }, {
         headers: this.httpHeaders,
       })
@@ -82,11 +82,11 @@ export class TextChannelService {
       });
   }
 
-  getChannelsByName(channelName: string): Observable<TextChannel[]> {
-    return this.httpClient
-      .get<TextChannel[]>(`${this.endpointUrl}/search/${channelName}`)
-      .pipe((response) => {
-        return response;
-      });
+  searchChannels(query: string): Observable<TextChannel[]> {
+    return this.httpClient.get<TextChannel[]>(`${this.endpointUrl}/all/search`, {
+      params: new HttpParams().set("q", query),
+    });
+
   }
+
 }

@@ -85,8 +85,8 @@ export class ChatSocketService extends SocketServiceInterface {
 
 			if (this.namespace.adapter.rooms.get(roomName)?.size === undefined && this.messageHistory.has(roomName)) {
 				const currentMessages = Array.from((this.messageHistory.get(roomName) as Set<MessageInterface>).values());
-				this.textChannelRepository.getChannelsByName(roomName).then((rooms) => {
-					this.textChannelRepository.getMessages(rooms[0]._id).then((messages) => {
+				this.textChannelRepository.getChannelByName(roomName).then((room) => {
+					this.textChannelRepository.getMessages(room._id).then((messages) => {
 						const filtered = currentMessages.filter((message) => !messages.some((dbMessage) =>
 							message.author === dbMessage.author &&
 							message.message === dbMessage.message &&

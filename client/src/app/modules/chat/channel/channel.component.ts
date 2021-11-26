@@ -4,6 +4,7 @@ import {
   OnDestroy,
   OnInit,
   ViewChild,
+  ViewEncapsulation,
 } from "@angular/core";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { AuthenticationService } from "src/app/modules/authentication";
@@ -19,6 +20,7 @@ import { TextChannelService } from "../services/text-channel.service";
   styleUrls: ["./channel.component.scss"],
 })
 export class ChannelComponent implements OnInit, OnDestroy {
+  encapsulation: ViewEncapsulation.None
   user: User | null;
   allChannels: TextChannel[];
   isSearchOpen: boolean;
@@ -26,7 +28,7 @@ export class ChannelComponent implements OnInit, OnDestroy {
   newChannelName = "";
   isChannelListOpen: boolean;
   connectedChannels: TextChannel[];
-  search: string;
+  searchQuery: string;
 
   @ViewChild("addChannelModal", { static: false })
   private addChannelModal: ElementRef<HTMLInputElement>;
@@ -144,39 +146,39 @@ export class ChannelComponent implements OnInit, OnDestroy {
 
       const deletbtn = btnDiv.children.item(1) as HTMLInputElement;
       deletbtn.style.display = "none";
-      if (channel.ownerId === this.user?._id) {
+      if (channel.owner === this.user?._id) {
         deletbtn.style.display = "inline";
       }
     }
   }
 
-  searchedInput(evt: Event): void {
-    this.search = (evt.target as HTMLInputElement).value;
-  }
-
-  searchChannels(search: string): void {
-    if (search === null || search.match(/^ *$/) !== null) {
+  searchChannels(): void {
+    if (this.searchQuery === undefined || this.searchQuery === null  || this.searchQuery?.match(/^ *$/) !== null) {
       this.searchedChannels = Object.assign([], this.allChannels);
     } else {
       this.textChannelService
-        .getChannelsByName(search)
+        .searchChannels(this.searchQuery)
         .subscribe((channels) => {
           this.searchedChannels = channels;
         });
     }
   }
 
-  toggleSearchBar(): void {
-    this.isSearchOpen = !this.isSearchOpen;
-
-    if (this.isSearchOpen) {
-      setTimeout(() => {
-        this.searchInput.nativeElement.focus();
-      }, 0);
+  toggleSearch(isOpen: boolean): void {
+    this.isSearchOpen = isOpen;
+    if (this.searchQuery === undefined || this.searchQuery === null  || this.searchQuery?.match(/^ *$/) !== null) {
+      this.searchedChannels = Object.assign([], this.allChannels);
     }
+
+    // if (this.isSearchOpen) {
+    //   setTimeout(() => {
+    //     this.searchInput.nativeElement.focus();
+    //   }, 0);
+    // }
   }
 
   openChannel(channel: TextChannel): void {
+    console.log("open channel")
     this.chatService.toggleChatOverlay.emit(channel);
     this.toggleChannelOverlay(false);
     this.isChannelListOpen = false;

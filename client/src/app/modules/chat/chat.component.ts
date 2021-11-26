@@ -10,6 +10,7 @@ import { Subscription } from "rxjs";
 import { AuthenticationService } from "src/app/modules/authentication";
 import { User } from "../authentication/models/user";
 import { Message } from "./models/message.model";
+import { TextChannel } from "./models/text-channel.model";
 import { ChatSocketService } from "./services/chat-socket.service";
 import { ChatService } from "./services/chat.service";
 import { TextChannelService } from "./services/text-channel.service";
@@ -42,7 +43,7 @@ export class ChatComponent implements OnInit, OnDestroy {
   hasDbMessages = false;
   loadedDbMessages = false;
 
-  chatRoomName = "General";
+  openChannel: TextChannel;
 
   constructor(
     private authenticationService: AuthenticationService,
@@ -53,6 +54,11 @@ export class ChatComponent implements OnInit, OnDestroy {
   ) {
     this.loadedDbMessages = false;
     this.hasDbMessages = false;
+    this.openChannel = {
+      _id: "default",
+      name: "General",
+      owner: "default"
+    }
   }
 
   ngOnInit(): void {
@@ -93,14 +99,14 @@ export class ChatComponent implements OnInit, OnDestroy {
   openChatRoom() {
     // might want to run these in parallel (fork?)
     this.chatService.toggleChatOverlay.subscribe((channel) => {
-      this.chatRoomName = channel.name;
+      this.openChannel = channel
       if (!this.isPopoutOpen) {
         const chat = document.getElementById("chat-popup") as HTMLInputElement;
         chat.style.display = "block";
         this.minimizeChat(false);
       }
       this.scrollDown();
-      this.joinRoom(this.chatRoomName);
+      this.joinRoom(this.openChannel.name);
     });
   }
 
@@ -160,14 +166,14 @@ export class ChatComponent implements OnInit, OnDestroy {
     const time = hour + ":" + minute + ":" + second;
 
     this.textChannelService
-      .getChannelsByName(this.chatRoomName)
-      .subscribe((channels) => {
+      .getChannel(this.openChannel._id)
+      .subscribe((channel) => {
         const message = {
           message: this.message,
           timestamp: time,
           author: name,
-          roomId: channels[0]._id,
-          roomName: this.chatRoomName,
+          roomId: channel._id,
+          roomName: this.openChannel.name,
         };
         this.chatSocketService.sendMessage(message);
         this.messageBody.nativeElement.value = "";
@@ -216,26 +222,25 @@ export class ChatComponent implements OnInit, OnDestroy {
   }
 
   getMessages(): Message[] {
-    if (!this.connectedMessageHistory.has(this.chatRoomName)) {
+    if (!this.connectedMessageHistory.has(this.openChannel.name)) {
       return [];
     }
     const messages = Array.from(
       (
-        this.connectedMessageHistory.get(this.chatRoomName) as Set<Message>
+        this.connectedMessageHistory.get(this.openChannel.name) as Set<Message>
       ).values()
     );
-    console.log(messages);
     return messages;
   }
 
-  getDatabaseMessages(channelName: string): void {
+  getDatabaseMessages(channel: TextChannel): void {
     this.textChannelService
-      .getChannelsByName(channelName)
-      .subscribe((channels) => {
+      .getChannel(channel._id)
+      .subscribe((channel) => {
         this.textChannelService
-          .getMessages(channels[0]._id)
+          .getMessages(channel._id)
           .subscribe((messages) => {
-            if (this.connectedMessageHistory.has(channelName)) {
+            if (this.connectedMessageHistory.has(channel.name)) {
               this.loadedDbMessages = true;
               this.hasDbMessages = messages.length !== 0;
               if (!this.hasDbMessages) {
@@ -243,7 +248,7 @@ export class ChatComponent implements OnInit, OnDestroy {
               }
               const currentMessages = Array.from(
                 (
-                  this.connectedMessageHistory.get(channelName) as Set<Message>
+                  this.connectedMessageHistory.get(channel.name) as Set<Message>
                 ).values()
               );
               // Filter out messages that match attributes from database (should be id but not generated yet for current)
@@ -258,7 +263,7 @@ export class ChatComponent implements OnInit, OnDestroy {
                   )
               );
               this.connectedMessageHistory.set(
-                channelName,
+                channel.name,
                 new Set(messages.concat(filtered))
               );
             }
