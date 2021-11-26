@@ -1,19 +1,19 @@
 <div>
-  <h1>Change your username</h1>
-  <p>Enter a new username</p>
+  <h1>Change your description</h1>
+  <p>Describe yourself!</p>
 </div>
 
-<form [formGroup]="usernameForm" (ngSubmit)="onAccept()">
+<form [formGroup]="descriptionForm" (ngSubmit)="onAccept()">
   <div mat-dialog-content>
     <div mat-dialog-content>
       <p>
         <mat-form-field appearance="outline" style="width: 100%">
-          <mat-label *ngIf="data.username">Username</mat-label>
+          <mat-label *ngIf="data.description">Description</mat-label>
           <input
             type="text"
             matInput
-            placeholder="Username"
-            formControlName="username"
+            placeholder="Enter a description"
+            formControlName="description"
           />
         </mat-form-field>
       </p>
