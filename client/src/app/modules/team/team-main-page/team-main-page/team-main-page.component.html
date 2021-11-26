@@ -32,25 +32,6 @@
         <mat-card-content>
           <p>{{ team.description }}</p>
         </mat-card-content>
-        <mat-card-actions>
-          <button
-            mat-button
-            *ngIf="!isAlreadyJoined(team) && !isTeamFull(team)"
-            (click)="joinTeam(team._id)"
-          >
-            Join team
-          </button>
-          <button mat-button disabled *ngIf="isAlreadyJoined(team)">
-            Joined
-          </button>
-          <button
-            mat-button
-            disabled
-            *ngIf="!isAlreadyJoined(team) && isTeamFull(team)"
-          >
-            Team full
-          </button>
-        </mat-card-actions>
       </mat-card>
     </div>
   </div>
