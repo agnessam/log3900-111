@@ -112,15 +112,17 @@ export class AuthenticationService {
 
   public logout() {
     const logoutEndpoint = this.endpointUrl + "logout";
-    return this.httpClient.post<any>(logoutEndpoint, {}).pipe(
-      map((response) => {
-        localStorage.removeItem("userId");
-        localStorage.removeItem("token");
+    return this.httpClient
+      .post<any>(logoutEndpoint, { userId: localStorage.getItem("userId") })
+      .pipe(
+        map((response) => {
+          localStorage.removeItem("userId");
+          localStorage.removeItem("token");
 
-        this.authTokenSubject.next(null);
-        this.currentUserSubject.next(null);
-        return response;
-      })
-    );
+          this.authTokenSubject.next(null);
+          this.currentUserSubject.next(null);
+          return response;
+        })
+      );
   }
 }

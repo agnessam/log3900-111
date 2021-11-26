@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit } from "@angular/core";
+import { Component, OnInit } from "@angular/core";
 import { MatDialog, MatDialogRef } from "@angular/material/dialog";
 import { Router } from "@angular/router";
 import { TeamClientService } from "src/app/modules/backend-communication/team-client/team-client.service";
@@ -19,8 +19,7 @@ export class TeamMainPageComponent implements OnInit {
   constructor(
     private teamClient: TeamClientService,
     private router: Router,
-    private dialog: MatDialog,
-    private changeDetectorRef: ChangeDetectorRef
+    private dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
@@ -48,31 +47,6 @@ export class TeamMainPageComponent implements OnInit {
       }
 
       this.teams.push(result);
-    });
-  }
-
-  isAlreadyJoined(team: Team): boolean {
-    const userId = localStorage.getItem("userId");
-    return team.members.includes(userId!);
-  }
-
-  isTeamFull(team: Team): boolean {
-    if (!team.memberLimit) return false;
-    if (team.members.length >= team.memberLimit) {
-      return true;
-    }
-    return false;
-  }
-
-  joinTeam(teamId: string) {
-    return this.teamClient.joinTeam(teamId).subscribe((team) => {
-      for (let i = 0; i < this.teams.length; ++i) {
-        if (this.teams[i]._id == teamId) {
-          this.teams[i] = team;
-        }
-      }
-      this.changeDetectorRef.detectChanges();
-      return team;
     });
   }
 }

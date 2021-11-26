@@ -145,4 +145,19 @@ export class UserRepository extends GenericRepository<UserInterface> {
       );
     });
   }
+
+  public async updateLogout(userId: string) {
+    return new Promise((resolve, reject) => {
+      User.findOneAndUpdate(
+        { _id: userId },
+        { lastLogout: new Date() },
+        (err: Error, user: any) => {
+          if (err) {
+            reject(err);
+          }
+          resolve(true);
+        },
+      );
+    });
+  }
 }
