@@ -5,6 +5,7 @@ import { User, UserInterface } from '../../../domain/models/user';
 import { GenericRepository } from './generic_repository';
 import { Team } from '../../../domain/models/teams';
 import bcrypt from 'bcrypt';
+import { CollaborationHistory } from '@app/domain/models/CollaborationHistory';
 
 declare global {
   namespace Express {
@@ -156,6 +157,40 @@ export class UserRepository extends GenericRepository<UserInterface> {
             reject(err);
           }
           resolve(true);
+        },
+      );
+    });
+  }
+
+  public async updateCollaborationHistory(userId: string, drawingId: string) {
+    return new Promise((resolve, reject) => {
+      User.findOneAndUpdate(
+        {
+          _id: userId,
+          collaborationHistory: { $elemMatch: { drawing: drawingId } },
+        },
+        { $set: { 'collaborationHistory.$.collaboratedAt': new Date() } },
+        { new: true, upsert: true },
+        (err: Error, user: UserInterface) => {
+          // Means we didn't find it the collaboration history. We'll create one a new entry.
+          if (err) {
+            const collaborationHistory = new CollaborationHistory({
+              drawing: drawingId,
+              collaboratedAt: new Date(),
+            });
+            User.findOneAndUpdate(
+              { _id: userId },
+              { $push: { collaborationHistory: collaborationHistory } },
+              { new: true },
+              (err: Error, user: UserInterface) => {
+                if (err) {
+                  reject(err);
+                }
+                resolve(user);
+              },
+            );
+          }
+          resolve(user);
         },
       );
     });

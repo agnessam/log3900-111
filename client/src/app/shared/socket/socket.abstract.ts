@@ -26,7 +26,6 @@ export abstract class AbstractSocketService {
   }
 
   leaveRoom(roomName: SocketRoomInformation): void {
-    console.log(roomName);
     this.emit(LEAVE_ROOM_EVENT_NAME, roomName);
   }
 
