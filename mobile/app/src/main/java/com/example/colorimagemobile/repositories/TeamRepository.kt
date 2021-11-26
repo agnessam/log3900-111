@@ -100,7 +100,7 @@ class TeamRepository {
                     createTeamLiveData.value = DataWrapper(null, "An error occurred while creating team!", true)
                     return
                 }
-                createTeamLiveData.value = DataWrapper(response.body(), "", false)
+                createTeamLiveData.value = DataWrapper(response.body(), "Team successfully created", false)
             }
             override fun onFailure(call: Call<TeamModel>, t: Throwable) {
                 createTeamLiveData.value = DataWrapper(null, "Sorry, failed to create team!", true)
