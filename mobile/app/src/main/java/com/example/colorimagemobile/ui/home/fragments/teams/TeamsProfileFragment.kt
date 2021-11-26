@@ -16,6 +16,8 @@ import com.example.colorimagemobile.models.recyclerAdapters.DrawingMenuData
 import com.example.colorimagemobile.repositories.TeamRepository
 import com.example.colorimagemobile.services.drawing.DrawingService
 import com.example.colorimagemobile.services.teams.TeamService
+import com.example.colorimagemobile.utils.CommonFun
+import com.example.colorimagemobile.utils.CommonFun.Companion.toggleButton
 import com.example.colorimagemobile.utils.Constants
 import com.google.android.material.tabs.TabLayout
 
@@ -67,6 +69,7 @@ class TeamsProfileFragment : Fragment(R.layout.fragment_teams_profile) {
             hideJoinBtn()
         } else {
             showJoinBtn()
+            checkIsTeamFull(joinBtn)
         }
     }
 
@@ -78,6 +81,14 @@ class TeamsProfileFragment : Fragment(R.layout.fragment_teams_profile) {
     private fun showJoinBtn() {
         joinBtn.visibility = View.VISIBLE
         leaveBtn.visibility = View.GONE
+    }
+
+    private fun checkIsTeamFull(button: Button) {
+        currentTeam.memberLimit?.let {
+            if (currentTeam.members.size >= currentTeam.memberLimit!!) {
+                toggleButton(button, false)
+            }
+        }
     }
 
     private fun setListeners() {
