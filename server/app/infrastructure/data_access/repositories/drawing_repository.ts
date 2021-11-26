@@ -22,6 +22,8 @@ export class DrawingRepository extends GenericRepository<DrawingInterface> {
         owner: ownerId,
         ownerModel: 'User',
         name: item.name,
+        privacyLevel: item.privacyLevel,
+        password: item.password,
       });
       drawing.save().then((drawing) => {
         User.findById(
@@ -48,6 +50,8 @@ export class DrawingRepository extends GenericRepository<DrawingInterface> {
         owner: item.owner,
         ownerModel: item.ownerModel,
         name: item.name,
+        privacyLevel: item.privacyLevel,
+        password: item.password,
       });
       drawing.save().then((drawing) => {
         Team.findById(
