@@ -180,31 +180,17 @@ export class UserRepository extends GenericRepository<UserInterface> {
 
   public async updateCollaborationHistory(userId: string, drawingId: string) {
     return new Promise((resolve, reject) => {
+      const collaborationHistory = new CollaborationHistory({
+        drawing: drawingId,
+        collaboratedAt: new Date(),
+      });
       User.findOneAndUpdate(
-        {
-          _id: userId,
-          collaborationHistory: { $elemMatch: { drawing: drawingId } },
-        },
-        { $set: { 'collaborationHistory.$.collaboratedAt': new Date() } },
-        { new: true, upsert: true },
+        { _id: userId },
+        { $push: { collaborationHistory: collaborationHistory } },
+        { new: true },
         (err: Error, user: UserInterface) => {
-          // Means we didn't find it the collaboration history. We'll create one a new entry.
           if (err) {
-            const collaborationHistory = new CollaborationHistory({
-              drawing: drawingId,
-              collaboratedAt: new Date(),
-            });
-            User.findOneAndUpdate(
-              { _id: userId },
-              { $push: { collaborationHistory: collaborationHistory } },
-              { new: true },
-              (err: Error, user: UserInterface) => {
-                if (err) {
-                  reject(err);
-                }
-                resolve(user);
-              },
-            );
+            reject(err);
           }
           resolve(user);
         },
