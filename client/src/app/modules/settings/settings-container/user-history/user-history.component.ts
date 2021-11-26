@@ -1,4 +1,5 @@
 import { Component, OnInit } from "@angular/core";
+import { Router } from "@angular/router";
 import { UsersService } from "src/app/modules/users/services/users.service";
 
 @Component({
@@ -10,7 +11,7 @@ export class UserHistoryComponent implements OnInit {
   userLoaded: Promise<boolean>;
   currentUser: any;
 
-  constructor(private usersService: UsersService) {
+  constructor(private usersService: UsersService, private router: Router) {
     this.usersService
       .getUser(localStorage.getItem("userId")!)
       .subscribe((user) => {
@@ -20,4 +21,8 @@ export class UserHistoryComponent implements OnInit {
   }
 
   ngOnInit(): void {}
+
+  goToDrawing(drawingId: string) {
+    this.router.navigate([`/drawings/${drawingId}`]);
+  }
 }

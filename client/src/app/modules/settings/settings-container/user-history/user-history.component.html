@@ -44,23 +44,22 @@
           <mat-card id="collaboration-history">
             <mat-card-content>
               <div fxLayout="column" fxLayoutAlign="center">
-                <div fxFlex="33%">
+                <div
+                  fxFlex="33%"
+                  *ngFor="
+                    let collaborationHistory of currentUser.collaborationHistory
+                  "
+                >
                   <div fxLayout="row wrap">
                     <div fxFlex="50%">
-                      <mat-card-subtitle>Last Login</mat-card-subtitle>
+                      <mat-card-subtitle
+                        (click)="goToDrawing(collaborationHistory.drawing)"
+                        style="cursor: pointer"
+                        >{{ collaborationHistory.drawing }}</mat-card-subtitle
+                      >
                     </div>
                     <div fxFlex="50%">
-                      {{ currentUser.lastLogin }}
-                    </div>
-                  </div>
-                </div>
-                <div fxFlex="33%">
-                  <div fxLayout="row wrap">
-                    <div fxFlex="50%">
-                      <mat-card-subtitle>Last Logout</mat-card-subtitle>
-                    </div>
-                    <div fxFlex="50%">
-                      {{ currentUser.lastLogout }}
+                      {{ collaborationHistory.collaboratedAt }}
                     </div>
                   </div>
                 </div>
