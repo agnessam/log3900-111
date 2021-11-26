@@ -12,9 +12,7 @@ import android.graphics.drawable.shapes.PathShape
 import com.example.colorimagemobile.interfaces.ICommand
 import com.example.colorimagemobile.models.EllipseData
 import com.example.colorimagemobile.models.EllipseUpdate
-import com.example.colorimagemobile.services.drawing.CanvasService
-import com.example.colorimagemobile.services.drawing.CanvasUpdateService
-import com.example.colorimagemobile.services.drawing.DrawingObjectManager
+import com.example.colorimagemobile.services.drawing.*
 import com.example.colorimagemobile.services.drawing.Point
 import com.example.colorimagemobile.services.drawing.toolsAttribute.ColorService
 
@@ -46,6 +44,7 @@ class EllipseCommand(ellipseData: EllipseData): ICommand {
         fillPaint = initializePaint(this.ellipse.fill, ellipseData.fillOpacity, Color.BLACK)
 
         setStartPoint(Point(ellipse.x.toFloat(), ellipse.y.toFloat()))
+        DrawingJsonService.createEllipse(ellipse)
     }
 
     private fun initializePaint(color: String, opacity: String, defaultColor: Int): Paint{
@@ -85,6 +84,8 @@ class EllipseCommand(ellipseData: EllipseData): ICommand {
         ellipse.x = ((endingPoint!!.x + startingPoint!!.x) / 2).toInt()
         ellipse.height = kotlin.math.abs(endingPoint!!.y - startingPoint!!.y).toInt()
         ellipse.y = ((endingPoint!!.y + startingPoint!!.y) / 2).toInt()
+
+        DrawingJsonService.updateEllipse(ellipse)
 
         this.generateBorderPath()
         this.generateFillPath()
@@ -144,10 +145,10 @@ class EllipseCommand(ellipseData: EllipseData): ICommand {
     }
 
     private fun generateFillPath(){
-        var left = ellipse.x - ellipse.width / 2
-        var top = ellipse.y - ellipse.height / 2
-        var right = ellipse.x + ellipse.width / 2
-        var bottom = ellipse.y + ellipse.height / 2
+        var left = ellipse.x - ellipse.width / 2 + ellipse.strokeWidth
+        var top = ellipse.y - ellipse.height / 2 + ellipse.strokeWidth
+        var right = ellipse.x + ellipse.width / 2 - ellipse.strokeWidth
+        var bottom = ellipse.y + ellipse.height / 2 - ellipse.strokeWidth
         var rect = RectF(left.toFloat(), top.toFloat(), right.toFloat(), bottom.toFloat())
 
         fillPath = Path()

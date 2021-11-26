@@ -14,10 +14,12 @@ class CreatePolylineCommand(polyLines: ArrayList<Polyline>?): ICreateDrawingComm
     private val polyLines = polyLines
 
     override fun createData(style: SvgStyle): PencilData {
+        val color = if (style.stroke.contains("rgba")) style.stroke else ColorService.addAlphaToRGBA(style.stroke, style.strokeOpacity)
+
         return PencilData(
             id = "",
             fill = "none",
-            stroke = ColorService.addAlphaToRGBA(style.stroke, style.strokeOpacity),
+            stroke = color,
             fillOpacity = "none",
             strokeOpacity = "none",
             strokeWidth = style.strokeWidth,
@@ -51,7 +53,8 @@ class CreatePolylineCommand(polyLines: ArrayList<Polyline>?): ICreateDrawingComm
 
             // draw remaining points
             points.forEach { point ->
-                val splicedPoint = point.split(" ").filter { x -> x != "" }
+                val splicedPoint = point.trimStart().split(" ")
+                //val splicedPoint = point.split(" ").filter { x -> x != "" }
                 command.addPoint(splicedPoint[0].toFloat(), splicedPoint[1].toFloat())
                 command.execute()
             }

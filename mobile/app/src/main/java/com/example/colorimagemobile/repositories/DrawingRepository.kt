@@ -4,6 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import com.example.colorimagemobile.models.DataWrapper
 import com.example.colorimagemobile.models.DrawingModel
 import com.example.colorimagemobile.services.RetrofitInstance
+import com.example.colorimagemobile.services.drawing.DrawingService
 import com.example.colorimagemobile.services.users.UserService
 import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
 import retrofit2.Call
@@ -54,5 +55,25 @@ class DrawingRepository {
         })
 
         return liveData
+    }
+
+    fun saveDrawing(saveDrawing: DrawingModel.SaveDrawing): MutableLiveData<DataWrapper<DrawingModel.CreateDrawing>> {
+        val drawingLiveData: MutableLiveData<DataWrapper<DrawingModel.CreateDrawing>> = MutableLiveData()
+
+        httpClient.saveDrawing(token = "Bearer ${UserService.getToken()}", DrawingService.getCurrentDrawingID()!!, saveDrawing).enqueue(object : Callback<DrawingModel.CreateDrawing>{
+            override fun onResponse(call: Call<DrawingModel.CreateDrawing>, response: Response<DrawingModel.CreateDrawing>) {
+                if (!response.isSuccessful) {
+                    drawingLiveData.value = DataWrapper(null, "An error occurred while saving drawing!", true)
+                    return
+                }
+                drawingLiveData.value = DataWrapper(response.body(), "", false)
+            }
+
+            override fun onFailure(call: Call<DrawingModel.CreateDrawing>, t: Throwable) {
+                drawingLiveData.value = DataWrapper(null, "Failed to save drawing!", true)
+            }
+        })
+
+        return drawingLiveData
     }
 }

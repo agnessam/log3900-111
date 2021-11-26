@@ -19,24 +19,21 @@ import com.example.colorimagemobile.R
 import com.example.colorimagemobile.classes.MyFragmentManager
 import com.example.colorimagemobile.classes.MyPicasso
 import com.example.colorimagemobile.httpresponsehandler.GlobalHandler
+import com.example.colorimagemobile.models.*
 import com.example.colorimagemobile.services.users.UserService
-import com.example.colorimagemobile.models.UserModel
-import com.example.colorimagemobile.models.DataWrapper
-import com.example.colorimagemobile.models.HTTPResponseModel
-import com.example.colorimagemobile.models.SearchModel
 import com.example.colorimagemobile.repositories.SearchRepository
 import com.example.colorimagemobile.services.SearchService
 import com.example.colorimagemobile.services.SharedPreferencesService
 import com.example.colorimagemobile.services.drawing.DrawingObjectManager
 import com.example.colorimagemobile.services.drawing.DrawingService
 import com.example.colorimagemobile.services.socket.SocketManagerService
+import com.example.colorimagemobile.ui.home.fragments.search.SearchFragment
 import com.example.colorimagemobile.ui.home.fragments.chat.ChatFragmentDirections
 import com.example.colorimagemobile.ui.home.fragments.gallery.GalleryFragmentDirections
 import com.example.colorimagemobile.ui.home.fragments.museum.MuseumFragmentDirections
 import com.example.colorimagemobile.ui.home.fragments.teams.TeamsFragmentDirections
 import com.example.colorimagemobile.ui.home.fragments.userProfile.ShowUserProfileFragmentDirections
 import com.example.colorimagemobile.ui.home.fragments.userProfile.UserProfileFragmentDirections
-import com.example.colorimagemobile.ui.home.fragments.search.SearchFragment
 import com.example.colorimagemobile.ui.home.fragments.users.UsersFragmentDirections
 import com.example.colorimagemobile.utils.CommonFun.Companion.printToast
 import com.example.colorimagemobile.utils.CommonFun.Companion.redirectTo
@@ -152,6 +149,7 @@ class HomeActivity : AppCompatActivity() {
         return when(navController.currentDestination?.id) {
             // back button clicked on Gallery Drawing
             R.id.galleryFragment -> {
+                saveDrawing()
                 DrawingObjectManager.clearLayers()
                 SocketManagerService.leaveDrawingRoom()
                 DrawingService.setCurrentDrawingID(null)
@@ -177,6 +175,18 @@ class HomeActivity : AppCompatActivity() {
 
             else -> navController.navigateUp()
         }
+    }
+
+    private fun saveDrawing() {
+        val dataUri = DrawingObjectManager.getDrawingDataURI()
+
+        val saveDrawing = DrawingModel.SaveDrawing(dataUri = dataUri, ownerId = UserService.getUserInfo()._id, ownerModel = "User")
+        homeViewModel.saveDrawing(saveDrawing).observe(this, {
+            if (it.isError!!) {
+                printToast(this, it.message!!)
+                return@observe
+            }
+        })
     }
 
     // check if User exists! If not, make HTTP request to init the User and All text channel
