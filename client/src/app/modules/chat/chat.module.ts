@@ -7,11 +7,12 @@ import { ChannelComponent } from "./channel/channel.component";
 import { TextChannelService } from "./services/text-channel.service";
 import { MatTabsModule } from "@angular/material/tabs";
 import { FormsModule } from "@angular/forms";
-import { SharedModule } from "src/app/shared/shared.module";
+import { MatButtonModule } from "@angular/material/button";
+import { NewChannelComponent } from './channel/new-channel/new-channel.component';
 
 @NgModule({
-  declarations: [ChatComponent, PopoutWindowComponent, ChannelComponent],
-  imports: [CommonModule, SharedModule, MatIconModule, MatTabsModule, FormsModule,],
+  declarations: [ChatComponent, PopoutWindowComponent, ChannelComponent, NewChannelComponent],
+  imports: [CommonModule, MatButtonModule, MatIconModule, MatTabsModule, FormsModule,],
   providers: [TextChannelService],
   exports: [ChatComponent, ChannelComponent]
 })

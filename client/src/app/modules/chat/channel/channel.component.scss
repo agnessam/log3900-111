@@ -106,22 +106,21 @@
   }
 }
 
-#search-bar {
-  // height: 90%;
-  // width: 30%;
+#search-bar, #new-channel-form{
+  background-color: #fef9f7;
   border-radius: 25px;
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
-#search-input {
+#search-input, #new-channel-input{
   border: none;
   background-color: transparent;
   width: 100%;
 }
 
-#search-input:focus {
+#search-input:focus, #new-channel-input:focus{
   outline: none;
 }
 

@@ -82,21 +82,29 @@ input[type=text]{
   border: none;
 }
 
-#usermsg{
-  height: 100%;
-  margin-right: 5px;
-
-}
-
-#ArrowUp {
-  display:none;
-}
-
 .time{
   color:grey;
   font: 10px bold ;
   align-self: flex-end;
   margin-right:10px;
+}
+
+#new-message-form{
+  background-color: #fef9f7;
+  border-radius: 25px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#new-message-input{
+  border: none;
+  background-color: transparent;
+  width: 100%;
+}
+
+#new-message-input:focus{
+  outline: none;
 }
 
 .user, .other{

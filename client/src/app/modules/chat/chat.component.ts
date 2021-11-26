@@ -23,16 +23,9 @@ import { TextChannelService } from "./services/text-channel.service";
 export class ChatComponent implements OnInit, OnDestroy {
   user: User | null;
   chatSubscription: Subscription;
-  @ViewChild("messageBody", { static: false })
-  private messageBody: ElementRef<HTMLInputElement>;
   @ViewChild("chatBox", { static: false })
   private chatBox: ElementRef<HTMLInputElement>;
-  @ViewChild("arrowDown", { static: false })
-  private iconArrowDown: ElementRef<HTMLInputElement>;
-  @ViewChild("arrowUp", { static: false })
-  private iconArrowUp: ElementRef<HTMLInputElement>;
-  @ViewChild("chatBottom", { static: false })
-  private chatBottom: ElementRef<HTMLInputElement>;
+
   message = "";
   // saves connected rooms and message history from connection
   connectedMessageHistory: Map<string, Set<Message>> = new Map();
@@ -57,7 +50,7 @@ export class ChatComponent implements OnInit, OnDestroy {
     this.openChannel = {
       _id: "default",
       name: "General",
-      owner: "default"
+      ownerId: "default"
     }
   }
 
@@ -71,7 +64,6 @@ export class ChatComponent implements OnInit, OnDestroy {
       }
     });
     this.openChatRoom();
-    this.keyListener();
     this.receiveMessage();
     this.leaveRoom();
     this.chatSocketService.connect();
@@ -87,18 +79,10 @@ export class ChatComponent implements OnInit, OnDestroy {
     this.closeChatPopout();
   }
 
-  // Note: this event listener listens throughout the whole app
-  keyListener() {
-    window.addEventListener("keydown", (event) => {
-      if (event.key === "Enter") {
-        this.sendMessage();
-      }
-    });
-  }
-
   openChatRoom() {
     // might want to run these in parallel (fork?)
     this.chatService.toggleChatOverlay.subscribe((channel) => {
+      console.log("opening chat room: " + channel.name)
       this.openChannel = channel
       if (!this.isPopoutOpen) {
         const chat = document.getElementById("chat-popup") as HTMLInputElement;
@@ -106,7 +90,7 @@ export class ChatComponent implements OnInit, OnDestroy {
         this.minimizeChat(false);
       }
       this.scrollDown();
-      this.joinRoom(this.openChannel.name);
+      this.joinRoom(channel.name);
     });
   }
 
@@ -156,9 +140,8 @@ export class ChatComponent implements OnInit, OnDestroy {
   sendMessage() {
     if (this.message === null || this.message.match(/^ *$/) !== null) return;
 
-    let name = "";
     if (this.user?.username === null) return;
-    name = (this.user as User).username;
+    const name = (this.user as User).username;
 
     const hour = new Date().getHours().toString();
     const minute = new Date().getMinutes().toString();
@@ -176,30 +159,12 @@ export class ChatComponent implements OnInit, OnDestroy {
           roomName: this.openChannel.name,
         };
         this.chatSocketService.sendMessage(message);
-        this.messageBody.nativeElement.value = "";
         this.message = "";
       });
   }
 
-  onInput(evt: Event): void {
-    this.message = (evt.target as HTMLInputElement).value;
-  }
-
   minimizeChat(isMinimized: boolean) {
     this.isMinimized = isMinimized;
-    const iconArrowDown = this.iconArrowDown.nativeElement;
-    const iconArrowUp = this.iconArrowUp.nativeElement;
-    const message = this.chatBottom.nativeElement;
-
-    if (!isMinimized) {
-      iconArrowDown.style.display = "inline";
-      iconArrowUp.style.display = "none";
-      message.style.display = "block";
-    } else {
-      iconArrowDown.style.display = "none";
-      iconArrowUp.style.display = "inline";
-      message.style.display = "none";
-    }
   }
 
   closeChat() {

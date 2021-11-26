@@ -25,17 +25,13 @@ export class ChannelComponent implements OnInit, OnDestroy {
   allChannels: TextChannel[];
   isSearchOpen: boolean;
   searchedChannels: TextChannel[];
-  newChannelName = "";
+  newChannelName: string;
   isChannelListOpen: boolean;
   connectedChannels: TextChannel[];
   searchQuery: string;
 
   @ViewChild("addChannelModal", { static: false })
   private addChannelModal: ElementRef<HTMLInputElement>;
-  @ViewChild("newChannelNameInput", { static: false })
-  private newChannelNameInput: ElementRef<HTMLInputElement>;
-  @ViewChild("searchInput", { static: true })
-  private searchInput: ElementRef<HTMLInputElement>;
 
   constructor(
     private authenticationService: AuthenticationService,
@@ -68,7 +64,7 @@ export class ChannelComponent implements OnInit, OnDestroy {
       }
     });
 
-    this.keyListener();
+    // this.keyListener();
   }
 
   ngOnDestroy(): void {}
@@ -76,7 +72,6 @@ export class ChannelComponent implements OnInit, OnDestroy {
   addChannel(): void {
     const name = this.newChannelName;
     this.newChannelName = "";
-    this.newChannelNameInput.nativeElement.value = "";
 
     const isWhitespace = (name || "").trim().length === 0;
     if (isWhitespace) {
@@ -87,7 +82,7 @@ export class ChannelComponent implements OnInit, OnDestroy {
     } else {
       let isValid = true;
       if (this.allChannels.find((channel) => channel.name === name)) {
-        this.snackBar.open("This channel already exist", "Close", {
+        this.snackBar.open("This channel already exists", "Close", {
           duration: 3000,
         });
         isValid = false;
@@ -146,7 +141,7 @@ export class ChannelComponent implements OnInit, OnDestroy {
 
       const deletbtn = btnDiv.children.item(1) as HTMLInputElement;
       deletbtn.style.display = "none";
-      if (channel.owner === this.user?._id) {
+      if (channel.ownerId === this.user?._id) {
         deletbtn.style.display = "inline";
       }
     }
@@ -178,7 +173,6 @@ export class ChannelComponent implements OnInit, OnDestroy {
   }
 
   openChannel(channel: TextChannel): void {
-    console.log("open channel")
     this.chatService.toggleChatOverlay.emit(channel);
     this.toggleChannelOverlay(false);
     this.isChannelListOpen = false;
@@ -188,7 +182,7 @@ export class ChannelComponent implements OnInit, OnDestroy {
     }
 
     if (this.isSearchOpen) {
-      this.searchInput.nativeElement.value = "";
+      this.searchQuery = "";
       this.isSearchOpen = false;
     }
   }
@@ -209,18 +203,5 @@ export class ChannelComponent implements OnInit, OnDestroy {
   closeAddChannelModal() {
     const modal = this.addChannelModal.nativeElement;
     modal.style.display = "none";
-  }
-
-  onInput(evt: Event): void {
-    this.newChannelName = (evt.target as HTMLInputElement).value;
-  }
-
-  keyListener() {
-    window.addEventListener("keydown", (event) => {
-      const modal = this.addChannelModal.nativeElement;
-      if (event.key === "Enter" && modal.style.display !== "none") {
-        this.addChannel();
-      }
-    });
   }
 }

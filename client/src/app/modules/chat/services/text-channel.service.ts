@@ -39,7 +39,7 @@ export class TextChannelService {
     return this.httpClient
       .post<TextChannel>(this.endpointUrl, {
         name: newName,
-        owner: newOwner,
+        ownerId: newOwner,
       }, {
         headers: this.httpHeaders,
       })
