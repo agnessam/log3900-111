@@ -25,6 +25,8 @@ import com.example.colorimagemobile.services.drawing.ToolTypeService
 import com.example.colorimagemobile.services.drawing.toolsAttribute.SelectionService
 import com.example.colorimagemobile.services.socket.DrawingSocketService
 import com.example.colorimagemobile.services.socket.SocketManagerService
+import com.example.colorimagemobile.services.users.UserService
+import com.example.colorimagemobile.utils.Constants
 
 class GalleryDrawingFragment : Fragment(R.layout.fragment_gallery_drawing) {
     private lateinit var galleryDrawingFragment: ConstraintLayout;
@@ -60,7 +62,10 @@ class GalleryDrawingFragment : Fragment(R.layout.fragment_gallery_drawing) {
         if (DrawingService.getCurrentDrawingID() != null) {
             DrawingSocketService.connect()
             DrawingSocketService.setFragmentActivity(requireActivity())
-            DrawingSocketService.joinRoom(roomName!!)
+
+            val socketInformation =
+                Constants.SocketRoomInformation(UserService.getUserInfo()._id, roomName!!)
+            DrawingSocketService.joinRoom(socketInformation)
         }
     }
 

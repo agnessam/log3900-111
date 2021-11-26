@@ -1,12 +1,18 @@
 import mongoose, { Document, Model, Schema } from 'mongoose';
 
+enum PRIVACY_LEVEL {
+  public,
+  protected,
+  private,
+}
+
 export interface DrawingInterface extends Document {
   dataUri: string;
   owner: string;
   ownerModel: string;
   name: string;
 
-  privacyLevel: string;
+  privacyLevel: PRIVACY_LEVEL;
   password: string;
 
   createdAt: string;

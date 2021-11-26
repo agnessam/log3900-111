@@ -19,7 +19,6 @@ export class ConfirmLeaveDialogComponent implements OnInit {
 
   leaveTeam(): void {
     this.teamsClient.leaveTeam(this.data.team._id).subscribe((team) => {
-      console.log(team);
       if (!team) {
         return;
       }
