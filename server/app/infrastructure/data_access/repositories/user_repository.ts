@@ -38,6 +38,22 @@ export class UserRepository extends GenericRepository<UserInterface> {
     }
   }
 
+  public async getPopulatedUser(userId: string) {
+    return new Promise((resolve, reject) => {
+      User.findById({ _id: userId })
+        .populate({
+          path: 'collaborationHistory',
+          populate: { path: 'drawing' },
+        })
+        .exec((err, user) => {
+          if (err || !user) {
+            reject(err);
+          }
+          resolve(user);
+        });
+    });
+  }
+
   public async changePassword(
     userId: string,
     currentPassword: string,

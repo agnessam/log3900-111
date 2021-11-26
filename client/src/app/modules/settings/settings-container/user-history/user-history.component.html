@@ -53,9 +53,11 @@
                   <div fxLayout="row wrap">
                     <div fxFlex="50%">
                       <mat-card-subtitle
-                        (click)="goToDrawing(collaborationHistory.drawing)"
+                        (click)="goToDrawing(collaborationHistory.drawing._id)"
                         style="cursor: pointer"
-                        >{{ collaborationHistory.drawing }}</mat-card-subtitle
+                        >{{
+                          collaborationHistory.drawing.name
+                        }}</mat-card-subtitle
                       >
                     </div>
                     <div fxFlex="50%">
