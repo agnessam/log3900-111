@@ -27,6 +27,7 @@ import com.example.colorimagemobile.services.drawing.ToolTypeService
 import com.example.colorimagemobile.services.drawing.toolsAttribute.SelectionService
 import com.example.colorimagemobile.services.socket.DrawingSocketService
 import com.example.colorimagemobile.services.socket.SocketManagerService
+import com.example.colorimagemobile.services.users.UserService
 import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
 import com.example.colorimagemobile.utils.CommonFun.Companion.printToast
 
@@ -47,8 +48,8 @@ class GalleryDrawingFragment : Fragment(R.layout.fragment_gallery_drawing) {
         setCurrentRoomName()
         addToolsOnSidebar()
         setToolsListener()
-        setListeners(view)
         connectToSocket()
+        checkMuseumOwner()
     }
 
     private fun setCurrentRoomName() {
@@ -89,7 +90,24 @@ class GalleryDrawingFragment : Fragment(R.layout.fragment_gallery_drawing) {
         this.leaveDrawingRoom()
     }
 
-    private fun setListeners(view: View) {
+    private fun checkMuseumOwner() {
+        val currentDrawing = DrawingService.getDrawingById()
+
+        // we are the only user/owner of drawing ==> owner is us
+        if (currentDrawing.ownerModel == "User") {
+            if (currentDrawing.owner == UserService.getUserInfo()._id) {
+                addMuseumButton()
+            }
+            return
+        }
+
+        // drawing belongs to a group ==> owner is teamId
+        if (currentDrawing.ownerModel == "Team") {
+            
+        }
+    }
+
+    private fun addMuseumButton() {
         val museumButton = createSideButton(R.drawable.ic_museum)
         museumButton.setOnClickListener {
             val drawing = DrawingService.getDrawingById()
