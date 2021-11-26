@@ -6,13 +6,29 @@ import { PopoutWindowComponent } from './popout-window/popout-window.component';
 import { ChannelComponent } from "./channel/channel.component";
 import { TextChannelService } from "./services/text-channel.service";
 import { MatTabsModule } from "@angular/material/tabs";
-import { FormsModule } from "@angular/forms";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { MatButtonModule } from "@angular/material/button";
 import { NewChannelComponent } from './channel/new-channel/new-channel.component';
+import { MatFormFieldModule } from "@angular/material/form-field";
+import { MatInputModule } from "@angular/material/input";
 
 @NgModule({
-  declarations: [ChatComponent, PopoutWindowComponent, ChannelComponent, NewChannelComponent],
-  imports: [CommonModule, MatButtonModule, MatIconModule, MatTabsModule, FormsModule,],
+  declarations: [
+    ChatComponent, 
+    PopoutWindowComponent, 
+    ChannelComponent, 
+    NewChannelComponent,
+  ],
+  imports: [
+    CommonModule, 
+    MatButtonModule, 
+    MatIconModule, 
+    MatTabsModule, 
+    FormsModule, 
+    ReactiveFormsModule,
+    MatFormFieldModule,
+    MatInputModule,
+  ],
   providers: [TextChannelService],
   exports: [ChatComponent, ChannelComponent]
 })

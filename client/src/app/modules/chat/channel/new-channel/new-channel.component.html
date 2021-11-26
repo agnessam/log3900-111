@@ -1,0 +1,17 @@
+<h1 mat-dialog-title>Create a new channel!</h1>
+
+<form [formGroup]="newDrawingForm" (ngSubmit)="onAccept()">
+  <p>
+    <mat-form-field appearance="outline">
+      <input
+        type="text"
+        matInput
+        placeholder="Enter a channel name"
+        formControlName="channelName"
+      />
+    </mat-form-field>
+  </p>
+  <div>
+    <button type="submit" mat-raised-button color="primary">Create</button>
+  </div>
+</form>
