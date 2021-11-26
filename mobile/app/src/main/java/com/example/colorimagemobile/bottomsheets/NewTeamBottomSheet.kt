@@ -98,7 +98,7 @@ class NewTeamBottomSheet: BottomSheetDialogFragment() {
             closeSheet()
 
             if (it.isError as Boolean) {
-                printToast(requireContext(), it.message!!)
+                printToast(requireContext(), "Sorry, team name is possibly already in use")
                 return@observe
             }
 
