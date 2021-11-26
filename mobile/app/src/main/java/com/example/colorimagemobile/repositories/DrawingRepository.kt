@@ -15,19 +15,19 @@ class DrawingRepository {
 
     private val httpClient = RetrofitInstance.HTTP
 
-    fun createNewDrawing(drawing: DrawingModel.CreateDrawing): MutableLiveData<DataWrapper<DrawingModel.CreateDrawing>> {
-        val drawingLiveData: MutableLiveData<DataWrapper<DrawingModel.CreateDrawing>> = MutableLiveData()
+    fun createNewDrawing(drawing: DrawingModel.CreateDrawing): MutableLiveData<DataWrapper<DrawingModel.Drawing>> {
+        val drawingLiveData: MutableLiveData<DataWrapper<DrawingModel.Drawing>> = MutableLiveData()
 
-        httpClient.createNewDrawing(token = "Bearer ${UserService.getToken()}", drawing).enqueue(object : Callback<DrawingModel.CreateDrawing>{
-            override fun onResponse(call: Call<DrawingModel.CreateDrawing>, response: Response<DrawingModel.CreateDrawing>) {
+        httpClient.createNewDrawing(token = "Bearer ${UserService.getToken()}", drawing).enqueue(object : Callback<DrawingModel.Drawing>{
+            override fun onResponse(call: Call<DrawingModel.Drawing>, response: Response<DrawingModel.Drawing>) {
                 if (!response.isSuccessful) {
-                    drawingLiveData.value = DataWrapper(null, "An error occurred!", true)
+                    drawingLiveData.value = DataWrapper(null, "An error occurred while creating drawing!", true)
                     return
                 }
-                drawingLiveData.value = DataWrapper(response.body(), "", false)
+                drawingLiveData.value = DataWrapper(response.body(), "Drawing successfully created", false)
             }
 
-            override fun onFailure(call: Call<DrawingModel.CreateDrawing>, t: Throwable) {
+            override fun onFailure(call: Call<DrawingModel.Drawing>, t: Throwable) {
                 drawingLiveData.value = DataWrapper(null, "Failed to create new drawing!", true)
             }
         })
