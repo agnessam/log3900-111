@@ -20,6 +20,7 @@ import { ConfirmDeleteDialogComponent } from "./team-profile/confirm-delete-dial
 import { MemberListDialogComponent } from "./team-profile/member-list-dialog/member-list-dialog.component";
 import { ConfirmLeaveDialogComponent } from "./team-profile/confirm-leave-dialog/confirm-leave-dialog.component";
 import { MatCheckboxModule } from "@angular/material/checkbox";
+import { ConfirmJoinDialogComponent } from './team-profile/confirm-join-dialog/confirm-join-dialog.component';
 
 @NgModule({
   declarations: [
@@ -29,6 +30,7 @@ import { MatCheckboxModule } from "@angular/material/checkbox";
     ConfirmDeleteDialogComponent,
     MemberListDialogComponent,
     ConfirmLeaveDialogComponent,
+    ConfirmJoinDialogComponent,
   ],
   imports: [
     CommonModule,
