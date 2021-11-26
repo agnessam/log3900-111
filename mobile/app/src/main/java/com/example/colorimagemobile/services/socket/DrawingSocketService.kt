@@ -5,7 +5,9 @@ import com.example.colorimagemobile.classes.AbsSocket
 import com.example.colorimagemobile.classes.JSONConvertor
 import com.example.colorimagemobile.models.*
 import com.example.colorimagemobile.services.drawing.SynchronisationService
+import com.example.colorimagemobile.services.users.UserService
 import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
+import com.example.colorimagemobile.utils.Constants
 import com.example.colorimagemobile.utils.Constants.SOCKETS
 import com.example.colorimagemobile.utils.Constants.SOCKETS.Companion.CONFIRM_DRAWING_EVENT
 import com.example.colorimagemobile.utils.Constants.SOCKETS.Companion.CONFIRM_SELECTION_EVENT
@@ -31,9 +33,10 @@ object DrawingSocketService: AbsSocket(SOCKETS.COLLABORATIVE_DRAWING_NAMESPACE) 
         setSocketListeners()
     }
 
-    override fun joinRoom(roomName: String) {
-        this.roomName = roomName
-        super.joinRoom(roomName)
+    override fun joinRoom(roomInformation: Constants.SocketRoomInformation) {
+        this.roomName = roomInformation.roomName
+        val socketInformation = Constants.SocketRoomInformation(UserService.getUserInfo()._id, this.roomName!!)
+        super.joinRoom(socketInformation)
     }
 
     override fun setSocketListeners() {
