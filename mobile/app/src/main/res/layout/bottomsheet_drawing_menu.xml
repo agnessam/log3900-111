@@ -127,7 +127,7 @@
                     android:layout_marginTop="5dp"
                     android:id="@+id/colorPickerNewDrawing"
                     android:layout_gravity="center"
-                    android:layout_height="200dp"
+                    android:layout_height="250dp"
                     android:layout_centerHorizontal="true"
                     android:layout_width="wrap_content"/>
             </RelativeLayout>
