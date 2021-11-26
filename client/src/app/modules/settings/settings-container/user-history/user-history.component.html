@@ -48,6 +48,9 @@
                   fxFlex="33%"
                   *ngFor="
                     let collaborationHistory of currentUser.collaborationHistory
+                      | slice
+                        : currentUser.collaborationHistory.length - 3
+                        : currentUser.collaborationHistory.length
                   "
                 >
                   <div fxLayout="row wrap">
