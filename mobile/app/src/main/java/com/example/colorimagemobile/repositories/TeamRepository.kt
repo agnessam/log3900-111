@@ -109,4 +109,25 @@ class TeamRepository {
 
         return createTeamLiveData
     }
+
+
+    fun deleteTeam(teamId: String): MutableLiveData<DataWrapper<Any>> {
+        val joinTeamLiveData: MutableLiveData<DataWrapper<Any>> = MutableLiveData()
+
+        httpClient.deleteTeam(token = "Bearer ${UserService.getToken()}", teamId).enqueue(object : Callback<Any> {
+            override fun onResponse(call: Call<Any>, response: Response<Any>) {
+                if (!response.isSuccessful) {
+                    joinTeamLiveData.value = DataWrapper(null, "An error occurred while deleting team!", true)
+                    return
+                }
+                joinTeamLiveData.value = DataWrapper(response.body(), "Team successfully deleted", false)
+            }
+            override fun onFailure(call: Call<Any>, t: Throwable) {
+                joinTeamLiveData.value = DataWrapper(null, "Sorry, failed to delete team!", true)
+            }
+        })
+
+        return joinTeamLiveData
+    }
+
 }
