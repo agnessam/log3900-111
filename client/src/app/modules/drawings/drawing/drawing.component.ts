@@ -1,5 +1,6 @@
 import { Component, AfterViewInit, OnInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
+import { SocketRoomInformation } from "src/app/shared/socket/socket-room-information";
 import { DrawingService } from "../../workspace";
 import { DrawingSocketService } from "../../workspace/services/synchronisation/sockets/drawing-socket/drawing-socket.service";
 @Component({
@@ -8,6 +9,7 @@ import { DrawingSocketService } from "../../workspace/services/synchronisation/s
   styleUrls: ["./drawing.component.scss"],
 })
 export class DrawingComponent implements OnInit, AfterViewInit {
+  socketInformation: SocketRoomInformation;
   drawingId: string;
   constructor(
     private route: ActivatedRoute,
@@ -19,8 +21,12 @@ export class DrawingComponent implements OnInit, AfterViewInit {
     this.route.params.subscribe((params) => {
       this.drawingId = params["id"];
       this.drawingService.drawingId = this.drawingId;
+      this.socketInformation = {
+        roomName: this.drawingId,
+        userId: localStorage.getItem("userId")!,
+      };
       this.drawingSocketService.connect();
-      this.drawingSocketService.joinRoom(params["id"]);
+      this.drawingSocketService.joinRoom(this.socketInformation);
     });
   }
 
@@ -31,6 +37,6 @@ export class DrawingComponent implements OnInit, AfterViewInit {
   ngOnDestroy(): void {
     this.drawingService.saveDrawing();
     this.drawingSocketService.disconnect();
-    this.drawingSocketService.leaveRoom(this.drawingId);
+    this.drawingSocketService.leaveRoom(this.socketInformation);
   }
 }
