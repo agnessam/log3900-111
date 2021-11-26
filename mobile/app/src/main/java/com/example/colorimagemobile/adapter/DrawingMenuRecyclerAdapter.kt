@@ -17,6 +17,7 @@ import com.example.colorimagemobile.services.drawing.CanvasUpdateService
 import com.example.colorimagemobile.services.drawing.DrawingObjectManager
 import com.example.colorimagemobile.services.drawing.DrawingService
 import com.example.colorimagemobile.ui.home.fragments.gallery.GalleryDrawingFragment
+import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
 import com.example.colorimagemobile.utils.Constants
 
 class DrawingMenuRecyclerAdapter(drawings: ArrayList<DrawingMenuData>, val destination: Int): RecyclerView.Adapter<DrawingMenuRecyclerAdapter.ViewHolder>() {
