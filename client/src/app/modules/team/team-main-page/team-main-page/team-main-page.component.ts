@@ -38,7 +38,10 @@ export class TeamMainPageComponent implements OnInit {
   }
 
   openCreateTeamDialog(): void {
-    this.newTeamDialogRef = this.dialog.open(NewTeamComponent, {});
+    this.newTeamDialogRef = this.dialog.open(NewTeamComponent, {
+      width: "400px",
+      height: "350px",
+    });
     this.newTeamDialogRef.afterClosed().subscribe((result) => {
       if (!result) {
         return;
@@ -51,6 +54,14 @@ export class TeamMainPageComponent implements OnInit {
   isAlreadyJoined(team: Team): boolean {
     const userId = localStorage.getItem("userId");
     return team.members.includes(userId!);
+  }
+
+  isTeamFull(team: Team): boolean {
+    if (!team.memberLimit) return false;
+    if (team.members.length >= team.memberLimit) {
+      return true;
+    }
+    return false;
   }
 
   joinTeam(teamId: string) {

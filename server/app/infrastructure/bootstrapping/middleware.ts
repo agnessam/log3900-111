@@ -1,30 +1,29 @@
 import { NextFunction, Request, Response } from 'express';
 
 export const reqMiddleware = (
-	req: Request,
-	res: Response,
-	next: NextFunction,
+  req: Request,
+  res: Response,
+  next: NextFunction,
 ) => {
-	console.log(
-		`Request middleware:
+  console.log(
+    `Request middleware:
     HTTP: ${req.method} ${req.url}`,
-	);
-	next();
+  );
+  next();
 };
 
 export const exceptionLoggerMiddleware = (
-	error: Error,
-	req: Request,
-	res: Response,
-	next: NextFunction,
+  error: Error,
+  req: Request,
+  res: Response,
+  next: NextFunction,
 ) => {
-	console.error(`
+  console.error(`
   Exception middleware
   Http ${req.method} ${req.url}
   ${error.message}
   ${error.stack}
   `);
 
-	const e = { error: 'Internal server error' };
-	res.status(500).json(e);
+  res.status(500).json(error);
 };

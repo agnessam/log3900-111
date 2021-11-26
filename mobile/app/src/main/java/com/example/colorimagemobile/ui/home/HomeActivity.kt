@@ -180,7 +180,7 @@ class HomeActivity : AppCompatActivity() {
     private fun saveDrawing() {
         val dataUri = DrawingObjectManager.getDrawingDataURI()
 
-        val saveDrawing = DrawingModel.SaveDrawing(dataUri = dataUri, ownerId = UserService.getUserInfo()._id, ownerModel = "User")
+        val saveDrawing = DrawingModel.SaveDrawing(dataUri = dataUri)
         homeViewModel.saveDrawing(saveDrawing).observe(this, {
             if (it.isError!!) {
                 printToast(this, it.message!!)

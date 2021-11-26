@@ -130,6 +130,9 @@ interface API {
     @POST(Constants.ENDPOINTS.TEAMS)
     fun createNewTeam(@Header("Authorization") token: String, @Body team: CreateTeamModel): Call<TeamModel>
 
+    @DELETE("${Constants.ENDPOINTS.TEAMS}{id}")
+    fun deleteTeam(@Header("Authorization") token: String, @Path ("id") id: String): Call<Any>
+
     // Search
     @GET(Constants.ENDPOINTS.SEARCH)
     fun getSearchQuery(@Header("Authorization") token: String, @Query ("q") query: String): Call<SearchModel>
