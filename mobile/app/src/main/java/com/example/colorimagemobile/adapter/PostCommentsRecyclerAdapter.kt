@@ -24,11 +24,11 @@ class PostCommentsRecyclerAdapter(currentPost: MuseumPostModel): RecyclerView.Ad
     override fun onBindViewHolder(holder: PostCommentsRecyclerAdapter.ViewHolder, position: Int) {
         val comment = currentPost.comments[position]
 
-        holder.authorName.text = comment.authorId.username
+        holder.authorName.text = comment.author.username
         holder.content.text = comment.content
         holder.date.text = getDate(comment.createdAt!!)
 
-        MyPicasso().loadImage(comment.authorId.avatar.imageUrl, holder.authorImage)
+        MyPicasso().loadImage(comment.author.avatar.imageUrl, holder.authorImage)
     }
 
     private fun getDate(commentDate: String): String {

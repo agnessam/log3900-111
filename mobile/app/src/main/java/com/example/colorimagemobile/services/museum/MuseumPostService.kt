@@ -35,7 +35,7 @@ object MuseumPostService {
     fun createComment(postId: String, comment: String): CommentInterface {
         return CommentInterface(
             content = comment,
-            authorId = UserService.getUserInfo(),
+            author = UserService.getUserInfo(),
             postId = postId,
             createdAt = null,
             updatedAt = null
