@@ -12,4 +12,6 @@ export interface User {
   description?: string;
 
   drawings?: Drawing[];
+  lastLogin: Date;
+  lastLogout: Date;
 }

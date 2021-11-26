@@ -5,6 +5,7 @@ import { EditableUserParameters } from "src/app/modules/users/models/editable-us
 import { UsersService } from "src/app/modules/users/services/users.service";
 import { Avatar } from "src/app/shared/models/avatar.model";
 import { ChangePasswordDialogComponent } from "./change-password-dialog/change-password-dialog.component";
+import { EditDescriptionDialogComponent } from "./edit-description-dialog/edit-description-dialog.component";
 import { EditParameterDialogComponent } from "./edit-parameter-dialog/edit-parameter-dialog.component";
 
 @Component({
@@ -18,6 +19,7 @@ export class UserOverviewComponent implements OnInit {
 
   editParameterDialogRef: MatDialogRef<EditParameterDialogComponent>;
   changePasswordDialogRef: MatDialogRef<ChangePasswordDialogComponent>;
+  editDescriptionDialogRef: MatDialogRef<EditDescriptionDialogComponent>;
 
   constructor(
     private usersService: UsersService,
@@ -54,8 +56,8 @@ export class UserOverviewComponent implements OnInit {
   }
 
   openEditDescriptionDialog() {
-    this.editParameterDialogRef = this.dialog.open(
-      EditParameterDialogComponent,
+    this.editDescriptionDialogRef = this.dialog.open(
+      EditDescriptionDialogComponent,
       {
         width: "500px",
         height: "400px",
@@ -65,7 +67,7 @@ export class UserOverviewComponent implements OnInit {
       }
     );
 
-    this.editParameterDialogRef.afterClosed().subscribe((currentUser) => {
+    this.editDescriptionDialogRef.afterClosed().subscribe((currentUser) => {
       if (!currentUser) return;
       this.currentUser = currentUser;
       console.log(this.currentUser);

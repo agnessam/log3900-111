@@ -20,6 +20,9 @@ export interface UserInterface extends Document {
   followers: string[] | UserInterface[];
   following: string[] | UserInterface[];
 
+  lastLogin: Date;
+  lastLogout: Date;
+
   isValidPassword(password: string): Promise<boolean>;
 }
 
@@ -45,6 +48,9 @@ const UserSchema = new mongoose.Schema({
 
   followers: [{ type: Schema.Types.ObjectId, ref: 'User' }],
   following: [{ type: Schema.Types.ObjectId, ref: 'User' }],
+
+  lastLogin: { type: Date },
+  lastLogout: { type: Date },
 });
 
 UserSchema.pre('save', async function (next) {
