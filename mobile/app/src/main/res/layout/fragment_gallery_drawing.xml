@@ -17,12 +17,12 @@
             android:layout_height="match_parent"
             app:cardElevation="4dp">
 
-            <!--        Tools-->
-            <LinearLayout
-                android:id="@+id/canvas_tools"
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/drawingToolsRecyclerView"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical" />
+                android:layout_height="match_parent">
+            </androidx.recyclerview.widget.RecyclerView>
+
         </androidx.cardview.widget.CardView>
 
         <androidx.cardview.widget.CardView
