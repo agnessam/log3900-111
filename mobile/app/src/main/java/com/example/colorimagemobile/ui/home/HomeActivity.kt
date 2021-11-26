@@ -61,7 +61,7 @@ class HomeActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
-        NotificationService.createNotificationChannel(this)
+//        NotificationService.createNotificationChannel(this)
         globalHandler = GlobalHandler()
         homeViewModel = ViewModelProvider(this).get(HomeActivityViewModel::class.java)
         sharedPreferencesService = SharedPreferencesService(this)
@@ -109,14 +109,14 @@ class HomeActivity : AppCompatActivity() {
             if (NotificationService.pendingNotifications == 0) {
 
                 notificationMenuItem.setActionView(null)
-                printMsg("inside Notification get count null")
+//                printMsg("inside Notification get count null")
 
             } else {
 
-                printMsg("inside Notification get count not null")
+//                printMsg("inside Notification get count not null")
                 val number = NotificationService.getCounter()/2
                 messageCounter.text = number.toString()
-                printMsg("print messagecounter.tex = "+messageCounter.text)
+//                printMsg("print messagecounter.text = "+messageCounter.text)
 
             }
 

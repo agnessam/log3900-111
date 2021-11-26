@@ -12,8 +12,8 @@ class Constants {
         const val CAMERA_REQUEST_CODE = 1
         const val PNG =".png"
         const val AVATAR_ALL_INFO_DEFAULT = true
-
         const val NB_DATA_ROWS = 3
+        const val LISTEN_MESSAGE_OCCURENCE = 2
     }
 
     class SOCKETS {

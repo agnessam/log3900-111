@@ -1,9 +1,11 @@
 package com.example.colorimagemobile.services.socket
 
 import androidx.fragment.app.FragmentActivity
+import com.example.colorimagemobile.adapter.ChannelsRecyclerAdapter
 import com.example.colorimagemobile.classes.AbsSocket
 import com.example.colorimagemobile.classes.JSONConvertor
 import com.example.colorimagemobile.models.ChatSocketModel
+import com.example.colorimagemobile.models.TextChannelModel
 import com.example.colorimagemobile.services.NotificationService
 import com.example.colorimagemobile.services.chat.ChatAdapterService
 import com.example.colorimagemobile.services.chat.ChatService
@@ -19,6 +21,9 @@ object ChatSocketService: AbsSocket(SOCKETS.CHAT_NAMESPACE_NAME) {
 
     private var fragmentActivity: FragmentActivity? = null
     private var count : Int = 0
+    private var pendingNotification : HashMap<String, Int> = HashMap()
+    private lateinit var messageArray : ArrayList<TextChannelModel.AllInfo>
+
 
 
     override fun disconnect() {
@@ -61,7 +66,31 @@ object ChatSocketService: AbsSocket(SOCKETS.CHAT_NAMESPACE_NAME) {
                     if (message.roomName == currentRoom) {
                         ChatAdapterService.getChatMsgAdapter().addChatItem(message)
                         if (message.author != UserService.getUserInfo().username){
-                            notifyUser()
+                            printMsg("print lka map:Message.roomname ++++++=========+++++++======++++ "+ pendingNotification[message.roomName])
+                            pendingNotification.keys.forEach { key ->
+                                if (pendingNotification[key]==null){
+                                    printMsg("le key is  = "+key)
+                                    printMsg("print value de chaque key  = "+ pendingNotification[key])
+                                    printMsg("le compte est nul")
+                                    count = 0
+                                }
+                                else{
+                                    printMsg("le room existe deja dans la map")
+                                    count = pendingNotification[key]!!
+
+                                }
+                            }
+                            count = count + 1
+                            NotificationService.setCounter(count)
+                            NotificationService.playSound(fragmentActivity!!.applicationContext)
+                            printMsg("inside author not the sender: value count $count")
+                            pendingNotification[message.roomName]= count
+                            printMsg("inside author not the sender: value hashmap============================================================="+pendingNotification[message.roomName])
+                            NotificationService.addToPendingMessage(pendingNotification)
+                            printMsg("inside author not the sender: value hash de notif service $NotificationService.getPendingNotification()")
+                            fragmentActivity!!.invalidateOptionsMenu()
+                            printMsg("inside author not the sender: before notifydatachange")
+//                            ChannelsRecyclerAdapter().notifyDataSetChanged()
                         }
 
                     }
@@ -69,19 +98,20 @@ object ChatSocketService: AbsSocket(SOCKETS.CHAT_NAMESPACE_NAME) {
                     printMsg("listenMessage error: ${e.message}")
                     return@Runnable
                 }
-            })
+                ChannelsRecyclerAdapter().notifyDataSetChanged()
+            } )
         }
 
-    private fun notifyUser(){
-        count = count + 1
-        printMsg("in notifyuser before setcounter value= "+count)
-        NotificationService.setCounter(count)
-        printMsg("in notifyuser after setcounter value= "+NotificationService.getCounter())
-        NotificationService.playSound(fragmentActivity!!.applicationContext)
-        printMsg("in notifyuser after song play= "+NotificationService.getCounter())
-        fragmentActivity!!.invalidateOptionsMenu()
-        NotificationService.createNotificationChannel(fragmentActivity!!.applicationContext)
-        NotificationService.sendNotification(fragmentActivity!!.applicationContext)
-    }
+//    private fun notifyUser(){
+//        count = count + 1
+//        printMsg("in notifyuser before setcounter value= "+count)
+//        NotificationService.setCounter(count)
+//        printMsg("in notifyuser after setcounter value= "+NotificationService.getCounter())
+//        NotificationService.playSound(fragmentActivity!!.applicationContext)
+//        printMsg("in notifyuser after song play= "+NotificationService.getCounter())
+//        fragmentActivity!!.invalidateOptionsMenu()
+//        NotificationService.createNotificationChannel(fragmentActivity!!.applicationContext)
+//        NotificationService.sendNotification(fragmentActivity!!.applicationContext)
+//    }
 
 }
