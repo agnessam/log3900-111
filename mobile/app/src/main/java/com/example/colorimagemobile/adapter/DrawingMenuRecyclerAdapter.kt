@@ -28,7 +28,7 @@ class DrawingMenuRecyclerAdapter(drawings: ArrayList<DrawingMenuData>, val desti
 
     override fun onBindViewHolder(holder: DrawingMenuRecyclerAdapter.ViewHolder, position: Int) {
         holder.drawingMenuViewHolder.name.text = drawingMenus[position].drawing.name
-        holder.drawingMenuViewHolder.authorName.text = drawingMenus[position].drawing.ownerId
+        holder.drawingMenuViewHolder.authorName.text = drawingMenus[position].drawing.owner
         holder.drawingMenuViewHolder.drawingDate.text = DateFormatter.getDate(drawingMenus[position].drawing.createdAt!!)
         holder.drawingMenuViewHolder.image.setImageBitmap(drawingMenus[position].imageBitmap)
     }
