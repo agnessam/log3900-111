@@ -60,9 +60,9 @@ class PasswordFragment : Fragment() {
         inf.findViewById<View>(R.id.editpasswordview).setOnTouchListener { v, event -> CommonFun.hideKeyboard(requireContext(), editpasswordview)}
 
         // keyboard   don't delete we need it when update implement
-//        CommonFun.onEnterKeyPressed_(inf.findViewById<View>(R.id.oldpassword) as TextView) { updatePassword() }
-//        CommonFun.onEnterKeyPressed_(inf.findViewById<View>(R.id.newpassword) as TextView) { updatePassword() }
-//        CommonFun.onEnterKeyPressed_(inf.findViewById<View>(R.id.vnewpassword) as TextView) { updatePassword() }
+        CommonFun.onEnterKeyPressed_(inf.findViewById<View>(R.id.oldpassword) as TextView) { updatePassword() }
+        CommonFun.onEnterKeyPressed_(inf.findViewById<View>(R.id.newpassword) as TextView) { updatePassword() }
+        CommonFun.onEnterKeyPressed_(inf.findViewById<View>(R.id.vnewpassword) as TextView) { updatePassword() }
         infview = inf
 
         // Inflate the layout for this fragment
@@ -102,7 +102,7 @@ class PasswordFragment : Fragment() {
 
     }
 
-    private fun isNewPasswordMatch(): Boolean{
+    private fun NewPasswordMatch(): Boolean{
         edtPassword = (infview!!.findViewById<View>(R.id.newpassword) as TextView).text.toString()
         edtMatchPassword = (infview!!.findViewById<View>(R.id.vnewpassword) as TextView).text.toString()
         if(edtPassword  != edtMatchPassword){
@@ -112,6 +112,12 @@ class PasswordFragment : Fragment() {
         else {
             return true
         }
+    }
+
+    private fun updatePassword(){
+        if (areFieldEmpty() || !NewPasswordMatch()){return}
+
+
     }
 
 }
