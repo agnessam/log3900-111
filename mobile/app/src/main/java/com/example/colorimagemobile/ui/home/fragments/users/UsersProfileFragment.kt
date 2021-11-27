@@ -19,6 +19,7 @@ import com.example.colorimagemobile.models.UserModel
 import com.example.colorimagemobile.models.recyclerAdapters.DrawingMenuData
 import com.example.colorimagemobile.repositories.UserRepository
 import com.example.colorimagemobile.services.drawing.DrawingService
+import com.example.colorimagemobile.services.teams.TeamService
 import com.example.colorimagemobile.services.users.UserService
 import com.example.colorimagemobile.utils.Constants
 import com.google.android.material.tabs.TabLayout
@@ -92,7 +93,7 @@ class UsersProfileFragment : Fragment(R.layout.fragment_users_profile) {
             override fun onTabUnselected(tab: TabLayout.Tab?) { }
         })
         followBtn.setOnClickListener {
-            // to be implement on branch follow unfollow
+            UserService.followUser(userPosition!!, requireContext())
             hideFollowBtn()
         }
         unfollewBtn.setOnClickListener {

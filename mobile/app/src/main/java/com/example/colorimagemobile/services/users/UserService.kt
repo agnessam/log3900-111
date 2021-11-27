@@ -1,7 +1,13 @@
 package com.example.colorimagemobile.services.users
 
+import android.content.Context
+import androidx.lifecycle.LifecycleOwner
 import com.example.colorimagemobile.models.AvatarModel
+import com.example.colorimagemobile.models.TeamModel
 import com.example.colorimagemobile.models.UserModel
+import com.example.colorimagemobile.repositories.UserRepository
+import com.example.colorimagemobile.services.teams.TeamService
+import com.example.colorimagemobile.utils.CommonFun
 import com.example.colorimagemobile.utils.Constants
 
 // Singleton User object which is accessible globally
@@ -60,6 +66,13 @@ object UserService {
         return allUserInfo[position]
     }
 
+    fun addUser(user: UserModel.AllInfo) {
+        allUserInfo.add(user)
+    }
+    fun updateUserByPosition(position: Int, newFollower: UserModel.AllInfo) {
+        allUserInfo[position] = newFollower
+    }
+
     fun updateUserAfterUpdate(currentdata: UserModel.UpdateUser){
         if (!currentdata.username.isNullOrEmpty()){
             info.username = currentdata.username!!
@@ -69,6 +82,21 @@ object UserService {
         }
 
     }
+    fun followUser(position: Int, context: Context) {
+        val user = getUser(position)
+
+        UserRepository().followUser(user._id).observe(context as LifecycleOwner, {
+            if (it.isError as Boolean) {
+                CommonFun.printToast(context, it.message!!)
+                return@observe
+            }
+
+            val followedUser = it.data as UserModel.AllInfo
+            updateUserByPosition(position, followedUser)
+            UserAdapterService.getUserMenuAdapter().notifyItemChanged(position)
+        })
+    }
+
 
 
 }

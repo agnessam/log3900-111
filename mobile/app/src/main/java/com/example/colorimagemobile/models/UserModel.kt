@@ -65,7 +65,7 @@ class UserModel {
         var lastLogout: Date,
 
         @SerializedName("collaborationHistory")
-        var collaborationHistory : Log.collaborationHistory
+        var collaborationHistory : ArrayList<Log.collaborationHistory>
 
     )
 }

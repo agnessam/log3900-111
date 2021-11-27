@@ -2,8 +2,10 @@ package com.example.colorimagemobile.services.users
 
 import android.content.Context
 import androidx.fragment.app.FragmentActivity
+import com.example.colorimagemobile.adapter.TeamsMenuRecyclerAdapter
 import com.example.colorimagemobile.adapter.UsersMenuRecyclerAdapter
 import com.example.colorimagemobile.classes.MyFragmentManager
+import com.example.colorimagemobile.services.teams.TeamAdapterService
 import com.example.colorimagemobile.ui.home.fragments.users.UsersProfileFragment
 import com.example.colorimagemobile.utils.Constants
 
@@ -17,6 +19,9 @@ object UserAdapterService {
 
     fun setAdapter(adapter: UsersMenuRecyclerAdapter) {
         usersMenuAdapter = adapter
+    }
+    fun getUserMenuAdapter(): UsersMenuRecyclerAdapter {
+        return usersMenuAdapter
     }
 
     private fun openUser(fragmentActivity: FragmentActivity, position: Int, parentFragmentID: Int) {
