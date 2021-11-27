@@ -15,16 +15,28 @@ import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.view.marginLeft
+import androidx.core.view.marginTop
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.colorimagemobile.R
+import com.example.colorimagemobile.adapter.ToolsButtonRecyclerAdapter
 import com.example.colorimagemobile.classes.MyFragmentManager
 import com.example.colorimagemobile.classes.tools.ToolsFactory
 import com.example.colorimagemobile.enumerators.ToolType
+import com.example.colorimagemobile.models.DrawingModel
+import com.example.colorimagemobile.models.OwnerModel
+import com.example.colorimagemobile.repositories.DrawingRepository
 import com.example.colorimagemobile.services.drawing.DrawingService
 import com.example.colorimagemobile.services.drawing.ToolTypeService
 import com.example.colorimagemobile.services.drawing.toolsAttribute.SelectionService
 import com.example.colorimagemobile.services.socket.DrawingSocketService
 import com.example.colorimagemobile.services.socket.SocketManagerService
+import com.example.colorimagemobile.services.users.UserService
+import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
+import com.example.colorimagemobile.utils.CommonFun.Companion.printToast
+import com.example.colorimagemobile.utils.Constants
 
 class GalleryDrawingFragment : Fragment(R.layout.fragment_gallery_drawing) {
     private lateinit var galleryDrawingFragment: ConstraintLayout;
@@ -44,6 +56,7 @@ class GalleryDrawingFragment : Fragment(R.layout.fragment_gallery_drawing) {
         addToolsOnSidebar()
         setToolsListener()
         connectToSocket()
+        checkMuseumOwner()
     }
 
     private fun setCurrentRoomName() {
@@ -60,7 +73,10 @@ class GalleryDrawingFragment : Fragment(R.layout.fragment_gallery_drawing) {
         if (DrawingService.getCurrentDrawingID() != null) {
             DrawingSocketService.connect()
             DrawingSocketService.setFragmentActivity(requireActivity())
-            DrawingSocketService.joinRoom(roomName!!)
+
+            val socketInformation =
+                Constants.SocketRoomInformation(UserService.getUserInfo()._id, roomName!!)
+            DrawingSocketService.joinRoom(socketInformation)
         }
     }
 
@@ -84,31 +100,65 @@ class GalleryDrawingFragment : Fragment(R.layout.fragment_gallery_drawing) {
         this.leaveDrawingRoom()
     }
 
+    private fun checkMuseumOwner() {
+        val currentDrawing = DrawingService.getDrawingById()
+
+        // we are the only user/owner of drawing ==> owner is us
+        if (currentDrawing.ownerModel == OwnerModel.USER.toString()) {
+            if (currentDrawing.owner == UserService.getUserInfo()._id) {
+                addMuseumButton()
+            }
+            return
+        }
+
+        // drawing belongs to a group ==> owner is teamId
+        if (currentDrawing.ownerModel == OwnerModel.TEAM.toString()) {
+            if (DrawingService.checkIfUserIsInTeam(currentDrawing.owner) != null) addMuseumButton()
+        }
+    }
+
+    private fun addMuseumButton() {
+        val museumButton = createSideButton(R.drawable.ic_museum)
+
+        museumButton.setOnClickListener {
+            val drawing = DrawingService.getDrawingById()
+            DrawingRepository().publishDrawing(drawing).observe(viewLifecycleOwner, { printToast(requireContext(), it.message!!) })
+        }
+    }
+
+    private fun createSideButton(icon: Int): Button {
+        val toolBtn = Button(context)
+
+        val layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+        layoutParams.setMargins(10, 8, 10, 8)
+        toolBtn.layoutParams = layoutParams
+        toolBtn.setBackgroundColor(Color.rgb(245, 245, 245))
+
+        // center button
+        toolBtn.text = SpannableString(" ").apply {
+            setSpan(ImageSpan(requireContext(), icon),0,1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+        }
+
+        val toolSidebar = galleryDrawingFragment.findViewById<LinearLayout>(R.id.canvas_tools)
+        toolSidebar.addView(toolBtn)
+
+        return toolBtn
+    }
+
     // dynamically add tools on sidebar
     private fun addToolsOnSidebar() {
-        ToolTypeService.getAllToolTypes().forEach { toolType ->
-            val tool = toolsFactory.getTool(toolType)
+        val recyclerView = galleryDrawingFragment.findViewById<RecyclerView>(R.id.drawingToolsRecyclerView)
+        recyclerView.layoutManager = LinearLayoutManager(context)
+        recyclerView.adapter = ToolsButtonRecyclerAdapter(requireContext(), ToolTypeService.getAllToolTypes()) { pos -> onToolClicked(pos)}
+    }
 
-            // create dynamic button for each tool
-            val toolBtn = Button(context)
-            toolBtn.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
-            toolBtn.setBackgroundColor(Color.rgb(245, 245, 245))
+    private fun onToolClicked(position: Int) {
+        val toolType = ToolTypeService.getAllToolTypes()[position]
+        val tool = toolsFactory.getTool(toolType)
 
-            // center button
-            toolBtn.text = SpannableString(" ").apply {
-                setSpan(ImageSpan(requireContext(), tool.getIcon()),0,1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-            }
-
-            // handle attribute panel when clicked on tool
-            toolBtn.setOnClickListener {
-                togglePanel(tool.getType())
-                MyFragmentManager(requireActivity()).open(R.id.tool_attribute_fragment, tool.getFragment())
-                panelView.findViewById<TextView>(R.id.tool_name).text = tool.getTitle()
-            }
-
-            val toolSidebar = galleryDrawingFragment.findViewById<LinearLayout>(R.id.canvas_tools)
-            toolSidebar.addView(toolBtn)
-        }
+        togglePanel(tool.getType())
+        MyFragmentManager(requireActivity()).open(R.id.tool_attribute_fragment, tool.getFragment())
+        panelView.findViewById<TextView>(R.id.tool_name).text = tool.getTitle()
     }
 
     // update tool when changed tool

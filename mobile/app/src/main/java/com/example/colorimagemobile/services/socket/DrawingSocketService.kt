@@ -1,18 +1,14 @@
 package com.example.colorimagemobile.services.socket
 
-import android.provider.Settings
 import androidx.fragment.app.FragmentActivity
 import com.example.colorimagemobile.classes.AbsSocket
 import com.example.colorimagemobile.classes.JSONConvertor
 import com.example.colorimagemobile.models.*
 import com.example.colorimagemobile.repositories.DrawingRepository
-import com.example.colorimagemobile.services.drawing.DrawingObjectManager
-import com.example.colorimagemobile.services.drawing.DrawingService
 import com.example.colorimagemobile.services.drawing.SynchronisationService
 import com.example.colorimagemobile.services.users.UserService
-import com.example.colorimagemobile.ui.home.HomeActivity
-import com.example.colorimagemobile.utils.CommonFun
 import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
+import com.example.colorimagemobile.utils.Constants
 import com.example.colorimagemobile.utils.Constants.SOCKETS
 import com.example.colorimagemobile.utils.Constants.SOCKETS.Companion.CONFIRM_DRAWING_EVENT
 import com.example.colorimagemobile.utils.Constants.SOCKETS.Companion.CONFIRM_SELECTION_EVENT
@@ -32,7 +28,6 @@ object DrawingSocketService: AbsSocket(SOCKETS.COLLABORATIVE_DRAWING_NAMESPACE) 
     private var roomName: String? = null
     private var fragmentActivity: FragmentActivity? = null
     private val drawingRepository: DrawingRepository = DrawingRepository()
-    private val homeActivity: HomeActivity = HomeActivity()
 
     override fun disconnect() {
         leaveRoom(this.roomName!!)
@@ -45,9 +40,10 @@ object DrawingSocketService: AbsSocket(SOCKETS.COLLABORATIVE_DRAWING_NAMESPACE) 
         setSocketListeners()
     }
 
-    override fun joinRoom(roomName: String) {
-        this.roomName = roomName
-        super.joinRoom(roomName)
+    override fun joinRoom(roomInformation: Constants.SocketRoomInformation) {
+        this.roomName = roomInformation.roomName
+        val socketInformation = Constants.SocketRoomInformation(UserService.getUserInfo()._id, this.roomName!!)
+        super.joinRoom(socketInformation)
     }
 
     override fun setSocketListeners() {

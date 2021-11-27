@@ -12,5 +12,8 @@ export interface Team {
   members: string[] | User[];
   memberLimit: number;
 
+  isPrivate: boolean;
+  password: string;
+
   drawings: string[] | Drawing[];
 }
