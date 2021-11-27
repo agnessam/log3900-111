@@ -96,6 +96,9 @@ interface API {
     fun createNewDrawing(@Header("Authorization") token: String, @Body drawing: DrawingModel.CreateDrawing): Call<DrawingModel.Drawing>
 
     @Headers("Content-Type: application/json")
+    @POST("${Constants.ENDPOINTS.ALL_DRAWINGS}{id}/publish")
+    fun publishDrawing(@Header("Authorization") token: String, @Path ("id") id: String, @Body drawing: DrawingModel.Drawing): Call<Any>
+    
     @PATCH("${Constants.ENDPOINTS.ALL_DRAWINGS}{id}")
     fun saveDrawing(@Header("Authorization") token: String, @Path ("id") id: String, @Body drawing: DrawingModel.SaveDrawing): Call<DrawingModel.CreateDrawing>
 

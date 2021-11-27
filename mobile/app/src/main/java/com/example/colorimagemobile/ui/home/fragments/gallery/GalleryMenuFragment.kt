@@ -60,6 +60,7 @@ class GalleryMenuFragment : Fragment(R.layout.fragment_gallery_menu) {
             }
 
             drawings = it.data as List<DrawingModel.Drawing>
+            DrawingService.setAllDrawings(drawings)
             galleryView.findViewById<TextView>(R.id.loadingDrawingsText).visibility = View.GONE
             renderDrawings()
         })

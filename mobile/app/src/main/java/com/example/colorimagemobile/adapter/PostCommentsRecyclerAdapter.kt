@@ -7,6 +7,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.colorimagemobile.R
+import com.example.colorimagemobile.classes.DateFormatter
 import com.example.colorimagemobile.classes.MyPicasso
 import com.example.colorimagemobile.models.MuseumPostModel
 import java.text.DateFormat
@@ -26,17 +27,9 @@ class PostCommentsRecyclerAdapter(currentPost: MuseumPostModel): RecyclerView.Ad
 
         holder.authorName.text = comment.author.username
         holder.content.text = comment.content
-        holder.date.text = getDate(comment.createdAt!!)
+        holder.date.text = DateFormatter.getDate(comment.createdAt!!)
 
         MyPicasso().loadImage(comment.author.avatar.imageUrl, holder.authorImage)
-    }
-
-    private fun getDate(commentDate: String): String {
-        val outputFormat: DateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.US)
-        val inputFormat: DateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSX", Locale.US)
-
-        val date: Date = inputFormat.parse(commentDate)!!
-        return outputFormat.format(date)
     }
 
     override fun getItemCount(): Int { return currentPost.comments.size }
