@@ -55,10 +55,14 @@ class UsersProfileFragment : Fragment(R.layout.fragment_users_profile) {
 
     private fun updateUI() {
         MyFragmentManager(requireActivity()).showBackButton()
+
         val userIdImageView : ImageView = myView.findViewById(R.id.userIdImageView);
         myView.findViewById<TextView>(R.id.userIdNameCard).text = currentUser.username
         MyPicasso().loadImage(currentUser.avatar.imageUrl,userIdImageView)
         myView.findViewById<TextView>(R.id.userIdDescription).text = currentUser.description
+        myView.findViewById<TextView>(R.id.userIdNbOfPosts).text = currentUser.posts.size.toString()
+        myView.findViewById<TextView>(R.id.userIdNbOfFollowers).text = currentUser.followers.size.toString()
+        myView.findViewById<TextView>(R.id.userIdNbOfFollowing).text = currentUser.following.size.toString()
 
         followBtn = myView.findViewById<Button>(R.id.FollowBtn)
         unfollewBtn = myView.findViewById<Button>(R.id.UnfollowBtn)
