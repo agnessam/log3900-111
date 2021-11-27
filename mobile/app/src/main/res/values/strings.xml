@@ -38,7 +38,7 @@
     <string name="last_login"><b>Last Login Date</b></string>
     <string name="last_logout"><b>Last Logout Date</b></string>
     <string name="last_edition_date"><b>Last Edition Date</b></string>
-    <string name="confirm_password"><b>Confirm Password</b></string>
+    <string name="confirm_password"><b>Confirm New Password</b></string>
     <string name="new_password"><b>New Password</b></string>
     <string name="current_password"><b>Current Password</b></string>
     <string name="change_password">Change Password</string>
