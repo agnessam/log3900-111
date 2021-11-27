@@ -10,9 +10,7 @@ import com.example.colorimagemobile.R
 import com.example.colorimagemobile.classes.DateFormatter
 import com.example.colorimagemobile.classes.MyPicasso
 import com.example.colorimagemobile.models.MuseumPostModel
-import java.text.DateFormat
-import java.text.SimpleDateFormat
-import java.util.*
+import com.example.colorimagemobile.utils.CommonFun.Companion.hideKeyboard
 
 class PostCommentsRecyclerAdapter(currentPost: MuseumPostModel): RecyclerView.Adapter<PostCommentsRecyclerAdapter.ViewHolder>() {
 
@@ -41,6 +39,7 @@ class PostCommentsRecyclerAdapter(currentPost: MuseumPostModel): RecyclerView.Ad
         val authorImage: ImageView = itemView.findViewById(R.id.post_comment_author_image)
 
         init {
+            itemView.setOnClickListener { hideKeyboard(itemView.context, itemView) }
         }
     }
 }
