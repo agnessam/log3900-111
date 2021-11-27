@@ -61,5 +61,9 @@
     <string name="follow">Follow</string>
     <string name="unfollow">Unfollow</string>
     <string name="display_name">Display name</string>
+    <string name="cancel">Cancel</string>
+    <string name="confirm">Confirm</string>
+    <string name="change_your_username">Change your username</string>
+    <string name="enter_a_new_username">Enter a new username</string>
 
 </resources>
