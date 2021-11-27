@@ -3,7 +3,10 @@ package com.example.colorimagemobile
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.example.colorimagemobile.databinding.ActivityMainBinding
+import com.example.colorimagemobile.models.UserModel
+import com.example.colorimagemobile.repositories.UserRepository
 import com.example.colorimagemobile.services.SharedPreferencesService
+import com.example.colorimagemobile.services.users.UserService
 import com.example.colorimagemobile.ui.home.HomeActivity
 import com.example.colorimagemobile.ui.login.LoginActivity
 import com.example.colorimagemobile.utils.CommonFun.Companion.redirectTo
@@ -24,7 +27,13 @@ class MainActivity : AppCompatActivity() {
         val token = sharedPreferencesService.getItem(Constants.STORAGE_KEY.TOKEN)
 
         // if token exists, go to Home else go to Login for auth verification
-        val destinationActivity: Class<*> = if (token.isNullOrEmpty()) LoginActivity::class.java else HomeActivity::class.java
-        redirectTo(this, destinationActivity)
+        if (token.isNullOrEmpty()) {
+            redirectTo(this, LoginActivity::class.java)
+        } else {
+            UserRepository().getUserByToken(token).observe(this, {
+                UserService.setUserInfo(it.data?.user as UserModel.AllInfo)
+                redirectTo(this, HomeActivity::class.java)
+            })
+        }
     }
 }
