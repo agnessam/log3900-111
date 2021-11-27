@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:id="@+id/updateUsername"
+    android:id="@+id/updateDescription"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:padding="15dp"
     android:orientation="vertical">
@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:text="@string/change_your_username"
+        android:text="@string/change_your_description"
         android:textSize="20sp"
         android:textStyle="bold"/>
 
@@ -19,13 +19,13 @@
         android:layout_marginTop="5dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/enter_a_new_username" />
+        android:text="@string/describe_yourself" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/newUsernameInputLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/Username"
+        android:hint="@string/enter_a_description"
         app:helperText="@string/required"
         app:errorEnabled="true"
         android:layout_marginTop="20dp"
@@ -33,7 +33,7 @@
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/newUsernameInputText"
+            android:id="@+id/newDescriptionInputText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:maxLines="1"
@@ -46,12 +46,12 @@
         android:layout_height="0dp"
         android:layout_weight="2"
         android:orientation="horizontal">
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:layout_weight="1"/>
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1"/>
         <Button
-            android:id="@+id/cancelBtn"
+            android:id="@+id/cancelDescriptionBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="100dp"
@@ -60,7 +60,7 @@
             android:textColor="@color/white" />
 
         <Button
-            android:id="@+id/confirmBtn"
+            android:id="@+id/confirmDescriptionBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="100dp"

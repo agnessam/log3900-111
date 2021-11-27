@@ -65,5 +65,8 @@
     <string name="confirm">Confirm</string>
     <string name="change_your_username">Change your username</string>
     <string name="enter_a_new_username">Enter a new username</string>
+    <string name="change_your_description">Change your description</string>
+    <string name="describe_yourself">Describe yourself!</string>
+    <string name="enter_a_description">Enter a description</string>
 
 </resources>
