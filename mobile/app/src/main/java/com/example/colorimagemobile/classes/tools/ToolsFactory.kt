@@ -14,7 +14,6 @@ class ToolsFactory {
             ToolType.PENCIL -> PencilTool()
             ToolType.RECTANGLE -> RectangleTool()
             ToolType.ELLIPSE -> EllipseTool()
-            ToolType.ERASER -> EraserTool()
             ToolType.COLOR_PALETTE -> ColorPaletteTool()
         }
     }

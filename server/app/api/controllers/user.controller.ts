@@ -29,8 +29,7 @@ export class UserController {
 
   @httpGet('/:id')
   public async getUserById(@request() req: Request) {
-    const user = await this.userRepository.findById(req.params.id);
-    return user;
+    return await this.userRepository.getPopulatedUser(req.params.id);
   }
 
   @httpPost('/')

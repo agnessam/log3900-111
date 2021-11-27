@@ -1,6 +1,10 @@
 import bcrypt from 'bcrypt';
 import mongoose, { Document, Model, Schema } from 'mongoose';
 import { AvatarInterface, AvatarSchema } from './Avatar';
+import {
+  CollaborationHistoryInterface,
+  CollaborationHistorySchema,
+} from './CollaborationHistory';
 import { PostInterface } from './Post';
 import { TeamInterface } from './teams';
 
@@ -22,6 +26,8 @@ export interface UserInterface extends Document {
 
   lastLogin: Date;
   lastLogout: Date;
+
+  collaborationHistory: CollaborationHistoryInterface[];
 
   isValidPassword(password: string): Promise<boolean>;
 }
@@ -51,6 +57,8 @@ const UserSchema = new mongoose.Schema({
 
   lastLogin: { type: Date },
   lastLogout: { type: Date },
+
+  collaborationHistory: [{ type: CollaborationHistorySchema }],
 });
 
 UserSchema.pre('save', async function (next) {
