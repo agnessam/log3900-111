@@ -80,6 +80,10 @@ object UserService {
         return allUserInfo[position]._id.contains(getUserInfo()._id)
     }
 
+    fun isDescriptionNullOrBlank(position: Int): Boolean {
+        return allUserInfo[position].description.isNullOrBlank()
+    }
+
     fun updateUserAfterUpdate(currentdata: UserModel.UpdateUser){
         if (!currentdata.username.isNullOrEmpty()){
             info.username = currentdata.username!!

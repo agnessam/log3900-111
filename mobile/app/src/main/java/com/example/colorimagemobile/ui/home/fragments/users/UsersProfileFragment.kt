@@ -6,6 +6,7 @@ import android.view.View
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.colorimagemobile.R
@@ -18,6 +19,7 @@ import com.example.colorimagemobile.models.recyclerAdapters.DrawingMenuData
 import com.example.colorimagemobile.repositories.UserRepository
 import com.example.colorimagemobile.services.drawing.DrawingService
 import com.example.colorimagemobile.services.users.UserService
+import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
 import com.example.colorimagemobile.utils.Constants
 import com.google.android.material.tabs.TabLayout
 import kotlinx.android.synthetic.main.fragment_teams_profile.*
@@ -30,6 +32,7 @@ class UsersProfileFragment : Fragment(R.layout.fragment_users_profile) {
     private var drawingsMenu: ArrayList<DrawingMenuData> = arrayListOf()
     private lateinit var followBtn: Button
     private lateinit var unfollewBtn: Button
+    private lateinit var descriptionCardView : CardView
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -62,6 +65,8 @@ class UsersProfileFragment : Fragment(R.layout.fragment_users_profile) {
         unfollewBtn = myView.findViewById<Button>(R.id.UnfollowBtn)
         updateUserButtons()
 
+        descriptionCardView = myView.findViewById(R.id.userIdDescriptionCardView)
+        hideShowDescription()
     }
     private fun updateUserButtons(){
         if (UserService.isCurrentUser(userPosition!!)) {
@@ -78,6 +83,15 @@ class UsersProfileFragment : Fragment(R.layout.fragment_users_profile) {
         } else {
             showFollowBtn()
         }
+    }
+
+    private fun hideShowDescription(){
+        if (UserService.isDescriptionNullOrBlank(userPosition!!)){
+            descriptionCardView.visibility = View.GONE
+        } else {
+            descriptionCardView.visibility = View.VISIBLE
+        }
+
     }
 
     private fun hideFollowBtn() {
