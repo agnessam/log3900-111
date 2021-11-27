@@ -55,7 +55,7 @@ class TeamsMenuFragment : Fragment(R.layout.fragment_teams_menu) {
             val recyclerView = myView.findViewById<RecyclerView>(R.id.teamsMenuRecyclerView)
             recyclerView.layoutManager = GridLayoutManager(requireContext(), Constants.NB_DATA_ROWS)
 
-            val adapter = TeamAdapterService.createAdapter(requireContext(), requireActivity(), R.layout.recycler_team_menu, R.id.teamsMenuFrameLayout)
+            val adapter = TeamAdapterService.createAdapter(requireActivity(), R.layout.recycler_team_menu, R.id.teamsMenuFrameLayout)
             recyclerView.adapter = adapter
             TeamAdapterService.setAdapter(adapter)
         })

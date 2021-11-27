@@ -11,6 +11,8 @@ import com.example.colorimagemobile.R
 import com.example.colorimagemobile.classes.ImageConvertor
 import com.example.colorimagemobile.services.museum.MuseumAdapters
 import com.example.colorimagemobile.services.museum.MuseumPostService
+import com.example.colorimagemobile.utils.CommonFun.Companion.hideKeyboard
+import com.example.colorimagemobile.utils.CommonFun.Companion.onEnterKeyPressed
 
 class MuseumPostRecyclerAdapter(
     context: Context,
@@ -74,6 +76,14 @@ class MuseumPostRecyclerAdapter(
             postCommentButton.setOnClickListener {
                 postComment(bindingAdapterPosition, commentEditText.text.toString())
                 commentEditText.text = null
+            }
+
+            itemView.setOnClickListener { hideKeyboard(itemView.context, itemView) }
+            commentRecyclerView.setOnClickListener { hideKeyboard(itemView.context, commentRecyclerView) }
+            onEnterKeyPressed(commentEditText) {
+                postComment(bindingAdapterPosition, commentEditText.text.toString())
+                commentEditText.text = null
+                hideKeyboard(itemView.context, itemView)
             }
 
             // wants to like

@@ -17,6 +17,12 @@ const routes: Routes = [
     canActivate: [AuthGuard],
   },
   {
+    path: "museum",
+    loadChildren: () =>
+      import("./modules/museum/museum.module").then((m) => m.MuseumModule),
+    canActivate: [AuthGuard],
+  },
+  {
     path: "drawings",
     loadChildren: () =>
       import("./modules/drawings/drawings.module").then(
@@ -34,6 +40,14 @@ const routes: Routes = [
     path: "search",
     loadChildren: () =>
       import("./modules/search/search.module").then((m) => m.SearchModule),
+    canActivate: [AuthGuard],
+  },
+  {
+    path: "settings",
+    loadChildren: () =>
+      import("./modules/settings/settings.module").then(
+        (m) => m.SettingsModule
+      ),
     canActivate: [AuthGuard],
   },
   {

@@ -19,13 +19,14 @@ import {
   SECONDARY_COLOR_EVENT,
   Color,
   LINE_WIDTH_EVENT,
-  LineWidth
+  LineWidth,
 } from "src/app/shared";
 import { Selection } from "../../../tools/selection-tool/selection.model";
 import { SocketTool } from "../../../tools/socket-tool";
 import { SynchronisationService } from "../../synchronisation.service";
 import { DrawingHttpClientService } from "src/app/modules/backend-communication";
 import { DrawingService } from "src/app/modules/workspace";
+import { SocketRoomInformation } from "src/app/shared/socket/socket-room-information";
 
 @Injectable({
   providedIn: "root",
@@ -37,7 +38,7 @@ export class DrawingSocketService extends AbstractSocketService {
   constructor(
     private synchronisationService: SynchronisationService,
     private drawingHttpClientService: DrawingHttpClientService,
-    private drawingService: DrawingService,
+    private drawingService: DrawingService
   ) {
     super();
     this.init();
@@ -47,9 +48,12 @@ export class DrawingSocketService extends AbstractSocketService {
     super.connect();
   }
 
-  joinRoom(roomName: string) {
-    this.roomName = roomName;
-    super.joinRoom(roomName);
+  joinRoom(socketInformation: SocketRoomInformation) {
+    this.roomName = socketInformation.roomName;
+    super.joinRoom({
+      roomName: socketInformation.roomName,
+      userId: socketInformation.userId,
+    });
   }
 
   protected init(): void {
@@ -247,50 +251,57 @@ export class DrawingSocketService extends AbstractSocketService {
   }
 
   private listenObjectPrimaryColorChange(): void {
-    this.namespaceSocket.on(PRIMARY_COLOR_EVENT, (colorData:Color) => {
+    this.namespaceSocket.on(PRIMARY_COLOR_EVENT, (colorData: Color) => {
       this.synchronisationService.setObjectPrimaryColor(colorData);
-    })
+    });
   }
 
   private listenObjectSecondaryColorChange(): void {
-    this.namespaceSocket.on(SECONDARY_COLOR_EVENT, (colorData:Color) => {
+    this.namespaceSocket.on(SECONDARY_COLOR_EVENT, (colorData: Color) => {
       this.synchronisationService.setObjectSecondaryColor(colorData);
-    })
+    });
   }
 
-  sendObjectPrimaryColorChange(objectId: string, color: RGB, opacity: number): void {
-    let colorData:Color = {
-      id: objectId,
-      color: color,
-      opacity: opacity,
-      roomName: this.roomName,
-    }
-    this.namespaceSocket.emit(PRIMARY_COLOR_EVENT, colorData);
-  }
-
-  sendObjectSecondaryColorChange(objectId: string, color: RGB, opacity: number): void {
+  sendObjectPrimaryColorChange(
+    objectId: string,
+    color: RGB,
+    opacity: number
+  ): void {
     let colorData: Color = {
       id: objectId,
       color: color,
       opacity: opacity,
       roomName: this.roomName,
-    }
+    };
+    this.namespaceSocket.emit(PRIMARY_COLOR_EVENT, colorData);
+  }
+
+  sendObjectSecondaryColorChange(
+    objectId: string,
+    color: RGB,
+    opacity: number
+  ): void {
+    let colorData: Color = {
+      id: objectId,
+      color: color,
+      opacity: opacity,
+      roomName: this.roomName,
+    };
     this.namespaceSocket.emit(SECONDARY_COLOR_EVENT, colorData);
   }
 
-  
   sendSelectionLineWidthChange(objectId: string, lineWidth: number): void {
     let lineWidthData: LineWidth = {
       id: objectId,
       lineWidth: lineWidth,
-      roomName: this.roomName
-    }
+      roomName: this.roomName,
+    };
     this.namespaceSocket.emit(LINE_WIDTH_EVENT, lineWidthData);
   }
 
   private listenLineWidthChange(): void {
     this.namespaceSocket.on(LINE_WIDTH_EVENT, (lineWidthData: LineWidth) => {
       this.synchronisationService.setSelectionLineWidth(lineWidthData);
-    })
+    });
   }
 }

@@ -5,6 +5,7 @@ import { map } from "rxjs/operators";
 import { Drawing } from "src/app/shared";
 import { Team } from "src/app/shared/models/team.model";
 import { environment } from "src/environments/environment";
+import { EditableTeamParameters } from "../../team/EditableTeam";
 
 @Injectable({
   providedIn: "root",
@@ -22,27 +23,37 @@ export class TeamClientService {
     return this.httpClient.get<Team>(`${this.TEAM_ENDPOINT}${teamId}`);
   }
 
-  createTeam(
-    teamName: string,
-    description: string,
-    ownerId: string = "617832e99a8c22d106b37528"
-  ): Observable<Team> {
-    let newTeam = {
-      name: teamName,
-      description: description,
-      ownerId: ownerId,
-    };
-
-    return this.httpClient.post<Team>(`${this.TEAM_ENDPOINT}`, newTeam).pipe(
+  createTeam(team: EditableTeamParameters): Observable<Team> {
+    return this.httpClient.post<Team>(`${this.TEAM_ENDPOINT}`, team).pipe(
       map((team) => {
         return team;
       })
     );
   }
 
+  deleteTeam(teamId: string): Observable<Team> {
+    return this.httpClient
+      .delete<Team>(`${this.TEAM_ENDPOINT}${teamId}`, {})
+      .pipe(
+        map((team) => {
+          return team;
+        })
+      );
+  }
+
   joinTeam(teamId: string): Observable<Team> {
     return this.httpClient
       .post<Team>(`${this.TEAM_ENDPOINT}${teamId}/join`, {})
+      .pipe(
+        map((team) => {
+          return team;
+        })
+      );
+  }
+
+  leaveTeam(teamId: string): Observable<Team> {
+    return this.httpClient
+      .post<Team>(`${this.TEAM_ENDPOINT}${teamId}/leave`, {})
       .pipe(
         map((team) => {
           return team;

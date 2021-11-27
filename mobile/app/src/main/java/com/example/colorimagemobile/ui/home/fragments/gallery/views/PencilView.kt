@@ -18,7 +18,6 @@ class PencilView(context: Context?): CanvasView(context) {
     private val pencilType = "Pencil"
     private var pencil: PencilData? = null
 
-
     override fun createPathObject() {
         currentX = motionTouchEventX
         currentY = motionTouchEventY

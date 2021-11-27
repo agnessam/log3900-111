@@ -7,7 +7,6 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.ImageView
 import android.widget.SearchView
-import androidx.appcompat.view.menu.ActionMenuItemView
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
@@ -19,24 +18,21 @@ import com.example.colorimagemobile.R
 import com.example.colorimagemobile.classes.MyFragmentManager
 import com.example.colorimagemobile.classes.MyPicasso
 import com.example.colorimagemobile.httpresponsehandler.GlobalHandler
+import com.example.colorimagemobile.models.*
 import com.example.colorimagemobile.services.users.UserService
-import com.example.colorimagemobile.models.UserModel
-import com.example.colorimagemobile.models.DataWrapper
-import com.example.colorimagemobile.models.HTTPResponseModel
-import com.example.colorimagemobile.models.SearchModel
 import com.example.colorimagemobile.repositories.SearchRepository
 import com.example.colorimagemobile.services.SearchService
 import com.example.colorimagemobile.services.SharedPreferencesService
 import com.example.colorimagemobile.services.drawing.DrawingObjectManager
 import com.example.colorimagemobile.services.drawing.DrawingService
 import com.example.colorimagemobile.services.socket.SocketManagerService
+import com.example.colorimagemobile.ui.home.fragments.search.SearchFragment
 import com.example.colorimagemobile.ui.home.fragments.chat.ChatFragmentDirections
 import com.example.colorimagemobile.ui.home.fragments.gallery.GalleryFragmentDirections
 import com.example.colorimagemobile.ui.home.fragments.museum.MuseumFragmentDirections
 import com.example.colorimagemobile.ui.home.fragments.teams.TeamsFragmentDirections
 import com.example.colorimagemobile.ui.home.fragments.userProfile.ShowUserProfileFragmentDirections
 import com.example.colorimagemobile.ui.home.fragments.userProfile.UserProfileFragmentDirections
-import com.example.colorimagemobile.ui.home.fragments.search.SearchFragment
 import com.example.colorimagemobile.ui.home.fragments.users.UsersFragmentDirections
 import com.example.colorimagemobile.utils.CommonFun.Companion.printToast
 import com.example.colorimagemobile.utils.CommonFun.Companion.redirectTo
@@ -64,6 +60,7 @@ class HomeActivity : AppCompatActivity() {
 
         setBottomNavigationView()
     }
+
     // side navigation navbar: upon click, change to new fragment
     private fun setBottomNavigationView() {
         // remove every socket events
@@ -82,20 +79,16 @@ class HomeActivity : AppCompatActivity() {
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         val inflater = menuInflater
         inflater.inflate(R.menu.toolbar_actions_menu, menu)
-        if (!UserService.isNull()) {
-            // username
-            val usernameMenuItem: MenuItem = (menu as Menu).findItem(R.id.username_menu_item)
-            usernameMenuItem.title = UserService.getUserInfo().username
 
-            //avatar
-            val avatarmenuItem : MenuItem = (menu as Menu).findItem(R.id.useravatar_menu_item)
-            val view: View = avatarmenuItem.getActionView()
-            val profileImage : ImageView = view.findViewById(R.id.toolbar_profile_avatar)
-            MyPicasso().loadImage( UserService.getUserInfo().avatar.imageUrl, profileImage)
+        // username
+        val usernameMenuItem: MenuItem = (menu as Menu).findItem(R.id.username_menu_item)
+        usernameMenuItem.title = UserService.getUserInfo().username
 
-        } else {
-            checkCurrentUser()
-        }
+        //avatar
+        val avatarmenuItem : MenuItem = (menu as Menu).findItem(R.id.useravatar_menu_item)
+        val view: View = avatarmenuItem.getActionView()
+        val profileImage : ImageView = view.findViewById(R.id.toolbar_profile_avatar)
+        MyPicasso().loadImage( UserService.getUserInfo().avatar.imageUrl, profileImage)
 
         setSearchIcon(menu)
         return true
@@ -152,6 +145,7 @@ class HomeActivity : AppCompatActivity() {
         return when(navController.currentDestination?.id) {
             // back button clicked on Gallery Drawing
             R.id.galleryFragment -> {
+                saveDrawing()
                 DrawingObjectManager.clearLayers()
                 SocketManagerService.leaveDrawingRoom()
                 DrawingService.setCurrentDrawingID(null)
@@ -179,29 +173,19 @@ class HomeActivity : AppCompatActivity() {
         }
     }
 
-    // check if User exists! If not, make HTTP request to init the User and All text channel
-    private fun checkCurrentUser() {
-        // user is null -> GET user
-        if (UserService.isNull()) {
-            val token = sharedPreferencesService.getItem(Constants.STORAGE_KEY.TOKEN)
-            UserService.setToken(token)
-            homeViewModel.getUserByToken(token).observe(this, { handleGetUserMe(it) })
-        }
-    }
+    private fun saveDrawing() {
+        val dataUri = DrawingObjectManager.getDrawingDataURI()
 
-    private fun handleGetUserMe(response: DataWrapper<HTTPResponseModel.UserResponse>) {
-        UserService.setUserInfo(response.data?.user as UserModel.AllInfo)
-
-        // update username in menu item
-        val usernameMenuItem: ActionMenuItemView = findViewById(R.id.username_menu_item)
-        usernameMenuItem.text = UserService.getUserInfo().username
-
-        // refresh menu Item by calling back onCreateOptionsMenu
-        invalidateOptionsMenu()
+        val saveDrawing = DrawingModel.SaveDrawing(dataUri = dataUri)
+        homeViewModel.saveDrawing(saveDrawing).observe(this, {
+            if (it.isError!!) {
+                printToast(this, it.message!!)
+                return@observe
+            }
+        })
     }
 
     private fun logUserOut() {
-
         val user = UserModel.Logout(UserService.getUserInfo().username)
         val logOutObserver = homeViewModel.logoutUser(user)
         logOutObserver.observe(this, { handleLogOutResponse(it) })
