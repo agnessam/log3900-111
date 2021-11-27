@@ -1,5 +1,5 @@
 import { Component, HostListener, OnInit } from "@angular/core";
-import { FormControl, FormGroup } from "@angular/forms";
+import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { MatDialogRef } from "@angular/material/dialog";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { Router } from "@angular/router";
@@ -10,6 +10,7 @@ import { DrawingHttpClientService } from "../backend-communication";
 import { NewDrawingService } from "./new-drawing.service";
 import { UsersService } from "../users/services/users.service";
 import { Team } from "src/app/shared/models/team.model";
+import { OptionalDrawingParameters } from "./optional-drawing-parameters";
 
 const ONE_SECOND = 1000;
 const DEFAULT_DRAWING_WIDTH = 1440;
@@ -22,6 +23,9 @@ const DEFAULT_DRAWING_HEIGHT = 900;
 export class NewDrawingComponent implements OnInit {
   form: FormGroup;
   teams: Team[] = [];
+
+  ownerModel: string = "User";
+  privacyLevel = "public";
 
   constructor(
     public dialogRef: MatDialogRef<NewDrawingComponent>,
@@ -37,9 +41,11 @@ export class NewDrawingComponent implements OnInit {
   /// Créer un nouveau form avec les dimensions et la couleur
   ngOnInit(): void {
     this.form = new FormGroup({
-      name: new FormControl(""),
-      teamName: new FormControl(""),
-      ownerId: new FormControl(""),
+      name: new FormControl("", Validators.required),
+      ownerModel: new FormControl(""),
+      ownerId: new FormControl({ value: "", disabled: true }),
+      privacyLevel: new FormControl("public"),
+      password: new FormControl({ value: "", disabled: true }),
       color: this.colorPickerService.colorForm,
     });
     this.dialogRef.disableClose = true;
@@ -63,9 +69,28 @@ export class NewDrawingComponent implements OnInit {
         a: this.colorPickerService.a.value,
       }
     );
-    let ownerModel: string = this.form.value.ownerId == "" ? "User" : "Team";
+    console.log(this.ownerModel);
+    this.form.value.ownerModel = this.ownerModel;
+
+    let ownerModel: string = this.form.value.ownerModel;
     let ownerId: string = this.form.value.ownerId;
     let drawingName: string = this.form.value.name;
+
+    this.form.value.drawingDataUri = drawingDataUri;
+
+    const drawingParameters = new OptionalDrawingParameters(this.form.value);
+
+    if (drawingParameters.ownerModel == "User") {
+      drawingParameters.ownerId = localStorage.getItem("userId")!;
+    }
+
+    if (drawingParameters.privacyLevel != "protected") {
+      drawingParameters.password = "";
+    }
+
+    console.log(drawingParameters);
+    return;
+
     this.drawingHttpClient
       .createNewDrawing(drawingDataUri, ownerModel, ownerId, drawingName)
       .subscribe((response) => {
@@ -78,6 +103,23 @@ export class NewDrawingComponent implements OnInit {
       });
     this.newDrawingService.form.reset();
     this.dialogRef.close();
+  }
+
+  toggleOwnerModel(): void {
+    this.ownerModel = this.ownerModel == "User" ? "Team" : "User";
+    if (this.ownerModel == "User") {
+      this.form.get("ownerId")?.disable();
+    } else {
+      this.form.get("ownerId")?.enable();
+    }
+  }
+
+  changePrivacyLevel() {
+    if (this.privacyLevel == "protected") {
+      this.form.get("password")?.enable();
+    } else {
+      this.form.get("password")?.disable();
+    }
   }
 
   /// Ferme le dialogue
