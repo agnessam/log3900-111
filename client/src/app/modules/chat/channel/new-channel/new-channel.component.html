@@ -1,8 +1,10 @@
-<h1 mat-dialog-title>Create a new channel!</h1>
+<mat-card-title mat-dialog-title>Create a new channel!</mat-card-title>
+<p>Anybody will be able to join this channel.</p>
 
 <form [formGroup]="newDrawingForm" (ngSubmit)="onAccept()">
   <p>
     <mat-form-field appearance="outline">
+      <mat-label>Channel name</mat-label>
       <input
         type="text"
         matInput
@@ -12,6 +14,11 @@
     </mat-form-field>
   </p>
   <div>
-    <button type="submit" mat-raised-button color="primary">Create</button>
+    <mat-dialog-actions align="end">
+      <button type="submit" mat-raised-button color="primary">Create</button>
+      <button mat-raised-button color="accent" (click)="onCancel()">
+        Cancel
+      </button>
+    </mat-dialog-actions>
   </div>
 </form>
