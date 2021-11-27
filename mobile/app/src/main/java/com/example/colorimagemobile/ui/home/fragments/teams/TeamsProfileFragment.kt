@@ -139,11 +139,11 @@ class TeamsProfileFragment : Fragment(R.layout.fragment_teams_profile) {
     }
 
     private fun setAllDrawings() {
-        recyclerView.adapter = DrawingMenuRecyclerAdapter(drawingsMenu, R.id.teamsMenuFrameLayout)
+        recyclerView.adapter = DrawingMenuRecyclerAdapter(requireActivity(), drawingsMenu, R.id.teamsMenuFrameLayout)
     }
 
     private fun setPublishedDrawings() {
         val drawings = arrayListOf<DrawingMenuData>()
-        recyclerView.adapter = DrawingMenuRecyclerAdapter(drawings, R.id.teamsMenuFrameLayout)
+        recyclerView.adapter = DrawingMenuRecyclerAdapter(requireActivity(), drawings, R.id.teamsMenuFrameLayout)
     }
 }

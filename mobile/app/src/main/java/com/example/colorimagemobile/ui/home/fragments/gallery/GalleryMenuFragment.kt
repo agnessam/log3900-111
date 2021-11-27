@@ -71,6 +71,6 @@ class GalleryMenuFragment : Fragment(R.layout.fragment_gallery_menu) {
         val recyclerView = galleryView.findViewById<RecyclerView>(R.id.drawingMenuRecyclerView)
         val drawingsMenu: ArrayList<DrawingMenuData> = DrawingService.getDrawingsBitmap(requireContext(), drawings)
         recyclerView.layoutManager = GridLayoutManager(requireContext(), Constants.NB_DATA_ROWS)
-        recyclerView.adapter = DrawingMenuRecyclerAdapter(drawingsMenu, R.id.main_gallery_fragment)
+        recyclerView.adapter = DrawingMenuRecyclerAdapter(requireActivity(), drawingsMenu, R.id.main_gallery_fragment)
     }
 }
