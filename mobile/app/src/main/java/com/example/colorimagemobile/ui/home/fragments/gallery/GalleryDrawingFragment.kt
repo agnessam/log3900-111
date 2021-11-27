@@ -26,6 +26,7 @@ import com.example.colorimagemobile.classes.MyFragmentManager
 import com.example.colorimagemobile.classes.tools.ToolsFactory
 import com.example.colorimagemobile.enumerators.ToolType
 import com.example.colorimagemobile.models.DrawingModel
+import com.example.colorimagemobile.models.OwnerModel
 import com.example.colorimagemobile.repositories.DrawingRepository
 import com.example.colorimagemobile.services.drawing.DrawingService
 import com.example.colorimagemobile.services.drawing.ToolTypeService
@@ -103,7 +104,7 @@ class GalleryDrawingFragment : Fragment(R.layout.fragment_gallery_drawing) {
         val currentDrawing = DrawingService.getDrawingById()
 
         // we are the only user/owner of drawing ==> owner is us
-        if (currentDrawing.ownerModel == "User") {
+        if (currentDrawing.ownerModel == OwnerModel.USER.toString()) {
             if (currentDrawing.owner == UserService.getUserInfo()._id) {
                 addMuseumButton()
             }
@@ -111,9 +112,8 @@ class GalleryDrawingFragment : Fragment(R.layout.fragment_gallery_drawing) {
         }
 
         // drawing belongs to a group ==> owner is teamId
-        if (currentDrawing.ownerModel == "Team") {
-            val drawing = UserService.getUserInfo().teams.find { teamId -> teamId == currentDrawing.owner }
-            if (drawing != null) addMuseumButton()
+        if (currentDrawing.ownerModel == OwnerModel.TEAM.toString()) {
+            if (DrawingService.checkIfUserIsInTeam(currentDrawing.owner) != null) addMuseumButton()
         }
     }
 

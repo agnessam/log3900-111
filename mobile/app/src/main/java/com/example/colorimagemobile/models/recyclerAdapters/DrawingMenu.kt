@@ -11,4 +11,4 @@ import com.example.colorimagemobile.models.DrawingModel
 data class DrawingMenuData(val drawing: DrawingModel.Drawing, val imageBitmap: Bitmap, val svgString: String)
 
 // the layout elements in which we assign our data
-data class DrawingMenuViewHolder(val name: TextView, val authorName: TextView, val drawingDate: TextView, val image: ImageView)
+data class DrawingMenuViewHolder(val name: TextView, val authorName: TextView, val drawingDate: TextView, val image: ImageView, val lockIconView: ImageView)

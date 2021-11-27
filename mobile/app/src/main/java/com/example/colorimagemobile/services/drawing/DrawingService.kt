@@ -4,6 +4,8 @@ import android.content.Context
 import android.graphics.Bitmap
 import com.example.colorimagemobile.classes.ImageConvertor
 import com.example.colorimagemobile.models.DrawingModel
+import com.example.colorimagemobile.models.OwnerModel
+import com.example.colorimagemobile.models.PrivacyLevel
 import com.example.colorimagemobile.models.recyclerAdapters.DrawingMenuData
 import com.example.colorimagemobile.services.users.UserService
 
@@ -32,16 +34,29 @@ object DrawingService {
         val filteredDrawings = arrayListOf<DrawingModel.Drawing>()
 
         drawings.forEach { drawing ->
-            if (drawing.privacyLevel == "public" || drawing.privacyLevel == "protected") {
+            // if drawing is public or protected -> show
+            if (drawing.privacyLevel == PrivacyLevel.PUBLIC.toString() || drawing.privacyLevel == PrivacyLevel.PROTECTED.toString() ) {
                 filteredDrawings.add(drawing)
             }
 
-            if (drawing.privacyLevel == "private" && drawing.owner == UserService.getUserInfo()._id) {
-                filteredDrawings.add(drawing)
+            if (drawing.privacyLevel == PrivacyLevel.PRIVATE.toString()) {
+                // if drawing is private and we are the owner -> show
+                if (drawing.ownerModel == OwnerModel.USER.toString() && drawing.owner == UserService.getUserInfo()._id) {
+                    filteredDrawings.add(drawing)
+                }
+
+                // if drawing is private and the ownerModel is Teams, check if user is included in teams
+                if (drawing.ownerModel == OwnerModel.TEAM.toString()) {
+                    if (checkIfUserIsInTeam(drawing.owner) != null) filteredDrawings.add(drawing)
+                }
             }
         }
 
         return filteredDrawings
+    }
+
+    fun checkIfUserIsInTeam(owner: String): String? {
+        return UserService.getUserInfo().teams.find { teamId -> teamId == owner }
     }
 
     // convert src to bitmap for each drawing

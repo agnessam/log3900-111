@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.colorimagemobile.R
 import com.example.colorimagemobile.classes.DateFormatter
 import com.example.colorimagemobile.classes.MyFragmentManager
+import com.example.colorimagemobile.models.PrivacyLevel
 import com.example.colorimagemobile.models.recyclerAdapters.DrawingMenuData
 import com.example.colorimagemobile.models.recyclerAdapters.DrawingMenuViewHolder
 import com.example.colorimagemobile.services.drawing.CanvasUpdateService
@@ -31,6 +32,8 @@ class DrawingMenuRecyclerAdapter(drawings: ArrayList<DrawingMenuData>, val desti
         holder.drawingMenuViewHolder.authorName.text = drawingMenus[position].drawing.owner
         holder.drawingMenuViewHolder.drawingDate.text = DateFormatter.getDate(drawingMenus[position].drawing.createdAt!!)
         holder.drawingMenuViewHolder.image.setImageBitmap(drawingMenus[position].imageBitmap)
+
+        if (drawingMenus[position].drawing.privacyLevel == PrivacyLevel.PROTECTED.toString()) holder.drawingMenuViewHolder.lockIconView.visibility = View.VISIBLE
     }
 
     override fun getItemCount(): Int { return drawingMenus.size }
@@ -43,8 +46,9 @@ class DrawingMenuRecyclerAdapter(drawings: ArrayList<DrawingMenuData>, val desti
             val authorName = itemView.findViewById<TextView>(R.id.card_drawing_menu_author)
             val drawingDate = itemView.findViewById<TextView>(R.id.card_drawing_menu_date)
             val imageView = itemView.findViewById<ImageView>(R.id.card_drawing_menu_image)
+            val lockIconView = itemView.findViewById<ImageView>(R.id.card_drawing_menu_privacy_icon)
 
-            drawingMenuViewHolder = DrawingMenuViewHolder(name, authorName, drawingDate, imageView)
+            drawingMenuViewHolder = DrawingMenuViewHolder(name, authorName, drawingDate, imageView, lockIconView)
 
             // click listener for clicking on specific drawing
             itemView.setOnClickListener {
