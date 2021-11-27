@@ -60,7 +60,6 @@ export class NewDrawingComponent implements OnInit {
       },
       { validators: [this.NonEmptyPassword, this.NonEmptyTeam] }
     );
-    this.dialogRef.disableClose = true;
     this.dialogRef.afterOpened().subscribe(() => this.onResize());
     this.colorPickerService.setFormColor(DEFAULT_RGB_COLOR, DEFAULT_ALPHA);
     const userId = localStorage.getItem("userId");
