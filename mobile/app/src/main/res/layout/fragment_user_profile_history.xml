@@ -12,10 +12,6 @@
         android:layout_margin="20dp"
         android:orientation="vertical">
 
-        <androidx.cardview.widget.CardView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:cardBackgroundColor="@color/container">
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -23,9 +19,6 @@
                 android:textAlignment="center"
                 android:textSize="30sp"
                 android:textStyle="bold" />
-
-        </androidx.cardview.widget.CardView>
-
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/connectionHistoryCard"
@@ -111,18 +104,30 @@
         <androidx.cardview.widget.CardView
             android:id="@+id/collaborationHistoryCard"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="50dp"
+            android:layout_height="341dp"
             android:layout_gravity="center"
+            android:layout_marginTop="50dp"
             android:orientation="vertical"
             android:singleLine="true">
 
+            <TextView
+                android:layout_width="309dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginBottom="10dp"
+                android:text="Collaboration History"
+                android:textAlignment="center"
+                android:textSize="30sp"
+                android:textStyle="bold" />
+
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/collabHistoryRecyclerView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginTop="10dp"
+                android:background="@color/container"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginStart="100dp"
+                android:layout_marginEnd="100dp"
+                android:layout_marginTop="60dp"
                 android:layout_marginBottom="10dp">
 
             </androidx.recyclerview.widget.RecyclerView>

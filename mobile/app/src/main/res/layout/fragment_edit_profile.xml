@@ -121,11 +121,12 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/UsernameOfuser"
+
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/usernameBox">
                 <TextView
+                    android:id="@+id/currentUserUsername"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="60dp"
@@ -143,7 +144,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="100dp"
-                android:layout_below="@id/UsernameOfuser">
+                android:layout_below="@id/currentUserUsername">
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -173,11 +174,12 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/DescriptionOfUser"
+
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/descriptionBox">
                 <TextView
+                    android:id="@+id/currentUserDescription"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="150dp"
@@ -195,7 +197,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="200dp"
-                android:layout_below="@id/DescriptionOfUser">
+                android:layout_below="@id/currentUserDescription">
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

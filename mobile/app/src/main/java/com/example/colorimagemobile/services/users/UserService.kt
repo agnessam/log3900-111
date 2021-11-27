@@ -1,6 +1,7 @@
 package com.example.colorimagemobile.services.users
 
 import com.example.colorimagemobile.models.AvatarModel
+import com.example.colorimagemobile.models.CollaborationHistory
 import com.example.colorimagemobile.models.UserModel
 import com.example.colorimagemobile.utils.Constants
 
@@ -11,9 +12,12 @@ object UserService {
     private var token : String =Constants.EMPTY_STRING
     private var updateProfileData : UserModel.UpdateUser
     private lateinit var allUserInfo : ArrayList<UserModel.AllInfo>
+    private lateinit var currentCollaborationHistory : CollaborationHistory.drawingHistory
+    private  var collaborationHistoryToShow : ArrayList<CollaborationHistory.drawingHistory>
 
     init {
         updateProfileData =UserModel.UpdateUser(null,null,null)
+        collaborationHistoryToShow = arrayListOf()
     }
 
     fun setAllUserInfo(allInfo:ArrayList<UserModel.AllInfo>){
@@ -34,6 +38,7 @@ object UserService {
 
     fun setUserInfo(newUserInfo: UserModel.AllInfo) {
         info = newUserInfo
+        setCollaborationHistoryToshow()
     }
 
     fun getUserInfo(): UserModel.AllInfo {
@@ -70,5 +75,22 @@ object UserService {
 
     }
 
+    fun setCollaborationHistoryToshow(){
+
+        // set collaboration data
+        val countLog = info.collaborationHistory.size
+        collaborationHistoryToShow.add(info.collaborationHistory[countLog-1])
+        collaborationHistoryToShow.add(info.collaborationHistory[countLog-2])
+        collaborationHistoryToShow.add(info.collaborationHistory[countLog-3])
+    }
+
+    fun getCollaborationToShow() : ArrayList<CollaborationHistory.drawingHistory>{
+        return collaborationHistoryToShow
+    }
+
+
+    fun setCurrentCollaborationHistory(ChosenCollaborationHistory:CollaborationHistory.drawingHistory){
+        currentCollaborationHistory = ChosenCollaborationHistory
+    }
 
 }

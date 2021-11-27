@@ -15,7 +15,11 @@ import android.widget.TextView
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import com.example.colorimagemobile.R
+import com.example.colorimagemobile.adapter.CollaborationHistoryRecyclerAdapter
 import com.example.colorimagemobile.bottomsheets.DefaultAvatarListBottomSheet
+import com.example.colorimagemobile.bottomsheets.UpdateDescriptionBottomSheet
+import com.example.colorimagemobile.bottomsheets.UpdatePasswordBottomSheet
+import com.example.colorimagemobile.bottomsheets.UpdateUsernameBottomSheet
 import com.example.colorimagemobile.classes.MyPicasso
 import com.example.colorimagemobile.models.DataWrapper
 import com.example.colorimagemobile.models.HTTPResponseModel
@@ -29,8 +33,10 @@ import com.example.colorimagemobile.services.avatar.AvatarService
 import com.example.colorimagemobile.services.users.UserService
 import com.example.colorimagemobile.utils.CommonFun
 import com.example.colorimagemobile.utils.CommonFun.Companion.imageView
+import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
 import com.example.colorimagemobile.utils.Constants
 import com.example.colorimagemobile.utils.Constants.Companion.CAMERA_REQUEST_CODE
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.karumi.dexter.Dexter
 import com.karumi.dexter.MultiplePermissionsReport
 import com.karumi.dexter.PermissionToken
@@ -50,11 +56,11 @@ class EditProfileFragment : Fragment() {
 
     private lateinit var sharedPreferencesService: SharedPreferencesService
     private lateinit var avatarRepository : AvatarRepository
-    private lateinit var edtDescription: String
-    private lateinit var infDescription: TextView
-    private lateinit var edtUsername: String
+//    private lateinit var edtDescription: String
+    private lateinit var currentUsername: TextView
+//    private lateinit var edtUsername: String
     private lateinit var globalHandler: GlobalHandler
-    private lateinit var infName: TextView
+    private lateinit var currentDescription: TextView
     private lateinit var token : String
     private lateinit var user : UserModel.AllInfo
     private lateinit var currentAvatar : AvatarModel.AllInfo
@@ -84,18 +90,51 @@ class EditProfileFragment : Fragment() {
         // inflate layout
         val inf = inflater.inflate(R.layout.fragment_edit_profile, container, false)
 
-        // listeners
-        inf.findViewById<View>(R.id.updateprofile).setOnClickListener { update() }
+        // hideKeyboard listeners
+        inf.findViewById<View>(R.id.editprofileview).setOnTouchListener { v, event -> CommonFun.hideKeyboard(requireContext(), editprofileview)}
+
+        //avatar
         inf.findViewById<View>(R.id.upload_avatar_from_camera).setOnClickListener {
             cameraCheckPermission() }
-        inf.findViewById<View>(R.id.editprofileview).setOnTouchListener { v, event -> CommonFun.hideKeyboard(requireContext(), editprofileview)}
         inf.findViewById<View>(R.id.choosedefaultavatar).setOnClickListener {
             val defaultAvatarList = DefaultAvatarListBottomSheet()
             defaultAvatarList.show(parentFragmentManager, "DefaultAvatarListBottomSheetDialog")
         }
-
         imageView = (inf.findViewById<View>(R.id.current_avatar) as ImageView)
         MyPicasso().loadImage(user.avatar.imageUrl, imageView )
+
+        //username
+        inf.findViewById<View>(R.id.editUsernameBtn)
+            .setOnClickListener{
+                val changeUsername = UpdateUsernameBottomSheet()
+                changeUsername.show(parentFragmentManager, "changeUserUsername")
+            }
+
+        //description
+        inf.findViewById<View>(R.id.editDescriptionBtn)
+            .setOnClickListener{
+                val changeDescription = UpdateDescriptionBottomSheet()
+                changeDescription.show(parentFragmentManager, "changeUserDescription")
+            }
+
+        //password
+        inf.findViewById<View>(R.id.editPasswordBtn)
+            .setOnClickListener{
+                val changeDescription = UpdatePasswordBottomSheet()
+                changeDescription.show(parentFragmentManager, "changeUserPassword")
+            }
+
+        // validate change
+        inf.findViewById<View>(R.id.valideChange).setOnClickListener { update() }
+
+        //set username and description
+        inf.findViewById<TextView>(R.id.currentUserUsername).text = UserService.getUserInfo().username
+        inf.findViewById<TextView>(R.id.currentUserDescription).text = UserService.getUserInfo().description
+
+        // setcollaborationdatatoshow
+//        UserService.setCollaborationHistoryToshow()
+//        printMsg("collab history to show in edit profile onview create "+UserService.getCollaborationToShow())
+
         infview = inf
         return inf
     }
@@ -118,19 +157,20 @@ class EditProfileFragment : Fragment() {
     }
 
     //Verify if field are empty and set username and description on change
-    private fun areFieldEmpty(){
-        infName = (infview!!.findViewById<View>(R.id.edtusername) as TextView)
-        infDescription = (infview!!.findViewById<View>(R.id.edtdescription) as TextView)
-        edtUsername = infName.text.toString()
-        edtDescription = infDescription.text.toString()
-        if (edtUsername.length != 0 ){
-            newUserData.username = edtUsername
-        }
-        if (edtDescription.length != 0){
-            newUserData.description = edtDescription
-        }
-
-    }
+//    private fun areFieldEmpty(){
+//        currentUsername = (infview!!.findViewById<View>(R.id.currentUserUsername) as TextView)
+//        currentDescription = (infview!!.findViewById<View>(R.id.currentUserDescription) as TextView)
+////
+////        edtUsername = infName.text.toString()
+////        edtDescription = infDescription.text.toString()
+//        if (currentUsername.text.length != 0 ){
+//            newUserData.username = currentUsername.text as String?
+//        }
+//        if (currentDescription.text.length != 0){
+//            newUserData.description = currentDescription.text as String?
+//        }
+//
+//    }
 
     // set the data to be update
     private fun setDataToUpdate(){
@@ -155,7 +195,7 @@ class EditProfileFragment : Fragment() {
         }
 
         setDataToUpdate()
-        areFieldEmpty()
+//        areFieldEmpty()
         UserService.setNewProfileData(newUserData)
 
         // update user
@@ -198,8 +238,8 @@ class EditProfileFragment : Fragment() {
 
     }
     private fun clearTextField(){
-        infName.setText("");
-        infDescription.setText("");
+        currentUsername.setText("");
+        currentDescription.setText("");
     }
 
     // function to convert bitmap to file
