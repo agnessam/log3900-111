@@ -1,6 +1,5 @@
 package com.example.colorimagemobile.ui.home.fragments.users
 
-import android.graphics.Bitmap
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.View
@@ -11,7 +10,6 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.colorimagemobile.R
 import com.example.colorimagemobile.adapter.DrawingMenuRecyclerAdapter
-import com.example.colorimagemobile.classes.ImageConvertor
 import com.example.colorimagemobile.classes.MyFragmentManager
 import com.example.colorimagemobile.classes.MyPicasso
 import com.example.colorimagemobile.models.DrawingModel
@@ -19,7 +17,6 @@ import com.example.colorimagemobile.models.UserModel
 import com.example.colorimagemobile.models.recyclerAdapters.DrawingMenuData
 import com.example.colorimagemobile.repositories.UserRepository
 import com.example.colorimagemobile.services.drawing.DrawingService
-import com.example.colorimagemobile.services.teams.TeamService
 import com.example.colorimagemobile.services.users.UserService
 import com.example.colorimagemobile.utils.Constants
 import com.google.android.material.tabs.TabLayout
@@ -56,7 +53,7 @@ class UsersProfileFragment : Fragment(R.layout.fragment_users_profile) {
 
     private fun updateUI() {
         MyFragmentManager(requireActivity()).showBackButton()
-        var userIdImageView : ImageView = myView.findViewById(R.id.userIdImageView);
+        val userIdImageView : ImageView = myView.findViewById(R.id.userIdImageView);
         myView.findViewById<TextView>(R.id.userIdNameCard).text = currentUser.username
         MyPicasso().loadImage(currentUser.avatar.imageUrl,userIdImageView)
         myView.findViewById<TextView>(R.id.userIdDescription).text = currentUser.description
@@ -66,8 +63,21 @@ class UsersProfileFragment : Fragment(R.layout.fragment_users_profile) {
         updateUserButtons()
 
     }
-    private fun updateUserButtons() {
-     // to be implement on branch Follow unfollow
+    private fun updateUserButtons(){
+        if (UserService.isCurrentUser(userPosition!!)) {
+            followBtn.visibility = View.GONE
+            unfollewBtn.visibility = View.GONE
+        } else{
+            updateButtons()
+        }
+    }
+
+    private fun updateButtons() {
+        if (UserService.isAlreadyFollower(userPosition!!)) {
+            hideFollowBtn()
+        } else {
+            showFollowBtn()
+        }
     }
 
     private fun hideFollowBtn() {
@@ -81,7 +91,8 @@ class UsersProfileFragment : Fragment(R.layout.fragment_users_profile) {
     }
 
     private fun setListeners() {
-        myView.findViewById<TabLayout>(R.id.userProfileDrawingsTabLayout).addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+        myView.findViewById<TabLayout>(R.id.userProfileDrawingsTabLayout).
+        addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
 
             override fun onTabSelected(tab: TabLayout.Tab?) {
                 when (tab!!.position) {
@@ -97,7 +108,7 @@ class UsersProfileFragment : Fragment(R.layout.fragment_users_profile) {
             hideFollowBtn()
         }
         unfollewBtn.setOnClickListener {
-            // to be implement on branch follow unfollow
+            UserService.unfollowUser(userPosition!!, requireContext())
             showFollowBtn()
         }
     }
