@@ -48,7 +48,7 @@
                     <ImageView
                         android:id="@+id/teamIdImageView"
                         android:layout_width="match_parent"
-                        android:layout_height="80dp"></ImageView>
+                        android:layout_height="80dp" />
 
                 </androidx.cardview.widget.CardView>
 
@@ -76,6 +76,19 @@
                         android:backgroundTint="@color/primary"
                         android:text="Follow"
                         android:textColor="@color/white" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/teamIdUnFollowBtn"
+                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                        android:layout_toLeftOf="@id/teamId_action_empty_space"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Unfollow"
+                        android:textColor="@color/primary"
+                        android:visibility="gone"
+                        app:cornerRadius="4dp"
+                        app:strokeColor="@color/primary"
+                        app:strokeWidth="1dp" />
 
                     <View
                         android:id="@+id/teamId_action_empty_space"
