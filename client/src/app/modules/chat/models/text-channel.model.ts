@@ -3,3 +3,7 @@ export interface TextChannel {
     name: string;
     ownerId: string;
 }
+
+export interface TeamChannel extends TextChannel{
+    team: string;
+}
