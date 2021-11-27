@@ -31,9 +31,6 @@ class MuseumFragment : Fragment(R.layout.fragment_museum) {
 
         myView = view
         recyclerView = myView.findViewById<RecyclerView>(R.id.museumPostsRecyclerView)
-        myView.setOnTouchListener { v, event -> hideKeyboard(requireContext(),myView) }
-        recyclerView.setOnTouchListener { v, event -> hideKeyboard(requireContext(),recyclerView) }
-
 
         getAllPosts()
     }

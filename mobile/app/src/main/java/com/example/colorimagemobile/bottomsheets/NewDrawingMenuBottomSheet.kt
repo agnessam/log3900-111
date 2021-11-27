@@ -29,7 +29,6 @@ import com.example.colorimagemobile.services.drawing.toolsAttribute.ColorService
 import com.example.colorimagemobile.services.users.UserService
 import com.example.colorimagemobile.ui.home.fragments.gallery.GalleryDrawingFragment
 import com.example.colorimagemobile.utils.CommonFun.Companion.hideKeyboard
-import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
 import com.example.colorimagemobile.utils.CommonFun.Companion.printToast
 import com.example.colorimagemobile.utils.Constants.DRAWING.Companion.MAX_HEIGHT
 import com.example.colorimagemobile.utils.Constants.DRAWING.Companion.MAX_WIDTH
@@ -203,15 +202,16 @@ class NewDrawingMenuBottomSheet: BottomSheetDialogFragment() {
 
             // open drawing
             val drawing = it.data as DrawingModel.Drawing
-            printMsg(drawing.toString())
             if (drawing._id != null) {
                 closeSheet()
+
+                DrawingService.setAllDrawings(listOf(drawing))
+                DrawingService.setCurrentDrawingID(drawing._id)
 
                 val imageConvertor = ImageConvertor(requireContext())
                 val svgString = imageConvertor.getSvgAsString(drawing.dataUri)
                 DrawingObjectManager.createDrawableObjects(svgString)
 
-                DrawingService.setCurrentDrawingID(drawing._id)
                 MyFragmentManager(context as FragmentActivity).open(R.id.main_gallery_fragment, GalleryDrawingFragment())
                 CanvasUpdateService.invalidate()
             }
