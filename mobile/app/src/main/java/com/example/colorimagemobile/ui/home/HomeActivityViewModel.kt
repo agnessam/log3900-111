@@ -23,10 +23,6 @@ class HomeActivityViewModel : ViewModel() {
         drawingRepository = DrawingRepository()
     }
 
-    fun getUserByToken(token: String): LiveData<DataWrapper<HTTPResponseModel.UserResponse>> {
-        return userRepository.getUserByToken(token)
-    }
-
     fun logoutUser(user: UserModel.Logout): Boolean {
         return authRepository.logoutUser(user)
     }
