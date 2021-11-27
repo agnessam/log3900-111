@@ -12,6 +12,8 @@ import { UsersService } from "../users/services/users.service";
 import { Team } from "src/app/shared/models/team.model";
 
 const ONE_SECOND = 1000;
+const DEFAULT_DRAWING_WIDTH = 1440;
+const DEFAULT_DRAWING_HEIGHT = 900;
 @Component({
   selector: "app-new-drawing",
   templateUrl: "./new-drawing.component.html",
@@ -38,7 +40,6 @@ export class NewDrawingComponent implements OnInit {
       name: new FormControl(""),
       teamName: new FormControl(""),
       ownerId: new FormControl(""),
-      dimension: this.newDrawingService.form,
       color: this.colorPickerService.colorForm,
     });
     this.dialogRef.disableClose = true;
@@ -51,18 +52,12 @@ export class NewDrawingComponent implements OnInit {
     });
   }
 
-  get sizeForm(): FormGroup {
-    return (this.form.get("dimension") as FormGroup).get("size") as FormGroup;
-  }
-
   /// Ouvre le dialog pour l'alerte lorsque le service est creer
   onAccept(): void {
     this.drawingService.isCreated = true;
-    const size: { width: number; height: number } =
-      this.newDrawingService.sizeGroup.value;
     let drawingDataUri = this.drawingService.newDrawing(
-      size.width,
-      size.height,
+      DEFAULT_DRAWING_WIDTH,
+      DEFAULT_DRAWING_HEIGHT,
       {
         rgb: this.colorPickerService.rgb.value,
         a: this.colorPickerService.a.value,

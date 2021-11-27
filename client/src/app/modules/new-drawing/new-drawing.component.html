@@ -3,26 +3,27 @@
 <form [formGroup]="form" (ngSubmit)="onAccept()">
   <div mat-dialog-content>
     <p>
-    <mat-form-field appearance="outline" class="formInput">
-      <mat-label>Drawing Name</mat-label>
-      <input
-        type="text"
-        matInput
-        placeholder="Drawing Name"
-        formControlName="name"
-      />
-    </mat-form-field>
+      <mat-form-field appearance="outline" class="formInput">
+        <mat-label>Drawing Name</mat-label>
+        <input
+          type="text"
+          matInput
+          placeholder="Drawing Name"
+          formControlName="name"
+        />
+      </mat-form-field>
     </p>
     <p>
       <mat-form-field appearance="fill">
         <mat-label>Assign to</mat-label>
         <mat-select formControlName="ownerId">
           <mat-option value="">Me</mat-option>
-          <mat-option value={{team._id}} *ngFor="let team of teams">{{team.name}}</mat-option>
+          <mat-option value="{{ team._id }}" *ngFor="let team of teams">{{
+            team.name
+          }}</mat-option>
         </mat-select>
       </mat-form-field>
     </p>
-    <app-new-drawing-form [sizeForm]="sizeForm"> </app-new-drawing-form>
     <h2 class="mat-h2">Couleur de fond :</h2>
     <app-color-picker style="text-align: center"> </app-color-picker>
     <mat-divider></mat-divider>
