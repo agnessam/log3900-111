@@ -36,12 +36,12 @@ class DrawingRepository {
         return drawingLiveData
     }
 
-    fun getAllDrawings(token: String): MutableLiveData<DataWrapper<List<DrawingModel.Drawing>>> {
-        val liveData: MutableLiveData<DataWrapper<List<DrawingModel.Drawing>>> = MutableLiveData()
+    fun getAllDrawings(token: String): MutableLiveData<DataWrapper<ArrayList<DrawingModel.Drawing>>> {
+        val liveData: MutableLiveData<DataWrapper<ArrayList<DrawingModel.Drawing>>> = MutableLiveData()
         printMsg("Fetching all drawings")
 
-        httpClient.getAllDrawings(token = "Bearer $token").enqueue(object : Callback<List<DrawingModel.Drawing>> {
-            override fun onResponse(call: Call<List<DrawingModel.Drawing>>, response: Response<List<DrawingModel.Drawing>>) {
+        httpClient.getAllDrawings(token = "Bearer $token").enqueue(object : Callback<ArrayList<DrawingModel.Drawing>> {
+            override fun onResponse(call: Call<ArrayList<DrawingModel.Drawing>>, response: Response<ArrayList<DrawingModel.Drawing>>) {
                 if (!response.isSuccessful) {
                     liveData.value = DataWrapper(null, "An error occurred!", true)
                     return
@@ -49,7 +49,7 @@ class DrawingRepository {
                 liveData.value = DataWrapper(response.body(), null, false)
             }
 
-            override fun onFailure(call: Call<List<DrawingModel.Drawing>>, t: Throwable) {
+            override fun onFailure(call: Call<ArrayList<DrawingModel.Drawing>>, t: Throwable) {
                 printMsg("Failed to get all drawings ${t.message!!}")
                 liveData.value = DataWrapper(null, "Failed to get all drawings!", true)
             }

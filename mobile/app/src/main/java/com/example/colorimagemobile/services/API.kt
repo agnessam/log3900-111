@@ -86,7 +86,7 @@ interface API {
     fun storeMessage(@Header("Authorization")token: String, @Body newMessage: List<MessageModel.SendMessage> ): Call<List<MessageModel.AllInfo>>
 
     @GET(Constants.ENDPOINTS.ALL_DRAWINGS)
-    fun getAllDrawings(@Header("Authorization") token: String): Call<List<DrawingModel.Drawing>>
+    fun getAllDrawings(@Header("Authorization") token: String): Call<ArrayList<DrawingModel.Drawing>>
 
     @GET("${Constants.ENDPOINTS.USER_PATH}{id}/teams")
     fun getUserTeams(@Header("Authorization") token: String, @Path ("id") id: String): Call<ArrayList<TeamModel>>

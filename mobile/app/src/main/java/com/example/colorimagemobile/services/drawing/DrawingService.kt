@@ -5,6 +5,7 @@ import android.graphics.Bitmap
 import com.example.colorimagemobile.classes.ImageConvertor
 import com.example.colorimagemobile.models.DrawingModel
 import com.example.colorimagemobile.models.recyclerAdapters.DrawingMenuData
+import com.example.colorimagemobile.services.users.UserService
 
 object DrawingService {
 
@@ -25,6 +26,22 @@ object DrawingService {
 
     fun getDrawingById(): DrawingModel.Drawing {
         return allDrawings.find { drawing -> drawing._id == currentDrawingID!! }!!
+    }
+
+    fun filterDrawingsByPrivacy(drawings: ArrayList<DrawingModel.Drawing>): ArrayList<DrawingModel.Drawing> {
+        val filteredDrawings = arrayListOf<DrawingModel.Drawing>()
+
+        drawings.forEach { drawing ->
+            if (drawing.privacyLevel == "public" || drawing.privacyLevel == "protected") {
+                filteredDrawings.add(drawing)
+            }
+
+            if (drawing.privacyLevel == "private" && drawing.owner == UserService.getUserInfo()._id) {
+                filteredDrawings.add(drawing)
+            }
+        }
+
+        return filteredDrawings
     }
 
     // convert src to bitmap for each drawing

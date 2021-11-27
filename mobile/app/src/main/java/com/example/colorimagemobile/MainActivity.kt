@@ -31,6 +31,7 @@ class MainActivity : AppCompatActivity() {
             redirectTo(this, LoginActivity::class.java)
         } else {
             UserRepository().getUserByToken(token).observe(this, {
+                UserService.setToken(token)
                 UserService.setUserInfo(it.data?.user as UserModel.AllInfo)
                 redirectTo(this, HomeActivity::class.java)
             })

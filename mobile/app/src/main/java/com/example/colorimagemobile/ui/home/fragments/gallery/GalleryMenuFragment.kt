@@ -24,7 +24,7 @@ import kotlin.collections.ArrayList
 class GalleryMenuFragment : Fragment(R.layout.fragment_gallery_menu) {
     private lateinit var drawingRepo: DrawingRepository
     private lateinit var sharedPreferencesService: SharedPreferencesService
-    private lateinit var drawings: List<DrawingModel.Drawing>
+    private lateinit var drawings: ArrayList<DrawingModel.Drawing>
     private lateinit var galleryView: ConstraintLayout
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -59,7 +59,7 @@ class GalleryMenuFragment : Fragment(R.layout.fragment_gallery_menu) {
                 return@observe
             }
 
-            drawings = it.data as List<DrawingModel.Drawing>
+            drawings = DrawingService.filterDrawingsByPrivacy(it.data as ArrayList<DrawingModel.Drawing>)
             DrawingService.setAllDrawings(drawings)
             galleryView.findViewById<TextView>(R.id.loadingDrawingsText).visibility = View.GONE
             renderDrawings()
