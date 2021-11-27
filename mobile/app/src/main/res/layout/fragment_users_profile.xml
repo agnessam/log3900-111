@@ -61,13 +61,15 @@
                     android:layout_below="@id/userIdImageViewCard"
                     android:orientation="horizontal"
                     android:singleLine="true">
+
                     <TextView
                         android:id="@+id/userIdNbOfPosts"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="20dp"
-                        android:textStyle="italic|bold"
-                        android:textSize="22sp"/>
+                        android:layout_marginStart="40dp"
+                        android:textColor="@color/black"
+                        android:textSize="22sp"
+                        android:textStyle="italic|bold" />
 
                     <TextView
                         android:id="@+id/userIdNbOfFollowers"
@@ -75,17 +77,19 @@
                         android:layout_height="wrap_content"
                         android:layout_centerInParent="true"
                         android:layout_marginStart="20dp"
-                        android:textStyle="italic|bold"
-                        android:textSize="22sp"/>
+                        android:textColor="@color/black"
+                        android:textSize="22sp"
+                        android:textStyle="italic|bold" />
 
                     <TextView
                         android:id="@+id/userIdNbOfFollowing"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginEnd="20dp"
                         android:layout_alignParentEnd="true"
-                        android:textStyle="italic|bold"
-                        android:textSize="22sp"/>
+                        android:layout_marginEnd="60dp"
+                        android:textSize="22sp"
+                        android:textColor="@color/black"
+                        android:textStyle="italic|bold" />
 
 
                 </RelativeLayout>
@@ -98,9 +102,11 @@
                     android:layout_below="@id/FollwerFollowingHeaders"
                     android:orientation="horizontal"
                     android:singleLine="true">
+
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginStart="20dp"
                         android:text="@string/posts"
                         android:textSize="22sp" />
 
@@ -115,9 +121,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
+                        android:layout_marginEnd="10dp"
                         android:text="@string/following"
                         android:textSize="22sp" />
-
 
 
                 </RelativeLayout>
