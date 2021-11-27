@@ -172,6 +172,8 @@ class UserRepository {
 
         return userDrawingsLiveData
     }
+
+    //follow user
     fun followUser(userId: String): MutableLiveData<DataWrapper<UserModel.AllInfo>> {
         val followUserLiveData: MutableLiveData<DataWrapper<UserModel.AllInfo>> = MutableLiveData()
 
@@ -189,6 +191,26 @@ class UserRepository {
         })
 
         return followUserLiveData
+    }
+
+    //unfollow user
+    fun unfollowUser(userId: String): MutableLiveData<DataWrapper<UserModel.AllInfo>> {
+        val unfollowUserLiveData: MutableLiveData<DataWrapper<UserModel.AllInfo>> = MutableLiveData()
+
+        httpClient.unfollowUser(token = "Bearer ${UserService.getToken()}", userId).enqueue(object : Callback<UserModel.AllInfo> {
+            override fun onResponse(call: Call<UserModel.AllInfo>, response: Response<UserModel.AllInfo>) {
+                if (!response.isSuccessful) {
+                    unfollowUserLiveData.value = DataWrapper(null, "An error occurred while unfollowing user!", true)
+                    return
+                }
+                unfollowUserLiveData.value = DataWrapper(response.body(), "", false)
+            }
+            override fun onFailure(call: Call<UserModel.AllInfo>, t: Throwable) {
+                unfollowUserLiveData.value = DataWrapper(null, "Sorry, failed to get unfollow user!", true)
+            }
+        })
+
+        return unfollowUserLiveData
     }
 
 
