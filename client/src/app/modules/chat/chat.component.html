@@ -1,7 +1,7 @@
 <div id="chat-popup">
 <app-popout-window #popout (isOutEvent)="closeChatPopout($event)">
   <div class=chat-top>
-    <p>{{openChannel?.name}}</p>
+    <p>{{currentChannel?.name}}</p>
     <div class="chat-menu" [hidden]="isPopoutOpen">
       <button mat-icon-button 
               class="btn" 
@@ -40,7 +40,7 @@
 
   <div id="chat-bottom" #chatBottom [ngStyle]="{'display': isMinimized ? 'none' : 'block'}">
     <div id="chatbox" #chatBox >
-      <p id="loadHistory" *ngIf="!loadedDbMessages" (click)="getDatabaseMessages(openChannel)">Load previous messages ...</p>
+      <p id="loadHistory" *ngIf="!loadedHistory" (click)="loadedHistory = true">Load previous messages ...</p>
       <div *ngFor="let m of getMessages()">
           <div [ngClass]="getMessageClass(m.author)">
             <div class="authorName">{{m.author}}</div>

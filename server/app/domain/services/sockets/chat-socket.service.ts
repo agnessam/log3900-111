@@ -20,7 +20,7 @@ export class ChatSocketService extends SocketServiceInterface {
   @inject(TYPES.TextChannelRepository)
   public textChannelRepository: TextChannelRepository;
 
-  messageHistory: Map<string, Set<MessageInterface>> = new Map();
+  // messageHistory: Map<string, Set<MessageInterface>> = new Map();
   io: Server;
 
   init(io: Server) {
@@ -50,10 +50,12 @@ export class ChatSocketService extends SocketServiceInterface {
       );
       this.emitMessage(message);
 
-      if (!this.messageHistory.has(message.roomName)) {
-        this.messageHistory.set(message.roomName, new Set());
-      }
-      this.messageHistory.get(message.roomName)?.add(message);
+      this.messageRepository.storeMessages([message]);
+
+      // if (!this.messageHistory.has(message.roomName)) {
+      //   this.messageHistory.set(message.roomName, new Set());
+      // }
+      // this.messageHistory.get(message.roomName)?.add(message);
     });
   }
 
@@ -68,18 +70,27 @@ export class ChatSocketService extends SocketServiceInterface {
       );
       socket.join(socketInformation.roomName);
 
-      if (this.messageHistory.has(socketInformation.roomName)) {
-        this.emitHistory(
-          socketInformation.roomName,
-          Array.from(
-            (
-              this.messageHistory.get(
-                socketInformation.roomName,
-              ) as Set<MessageInterface>
-            ).values(),
-          ),
-        );
-      }
+      this.textChannelRepository
+      .getChannelByName(socketInformation.roomName)
+      .then((channel) => {
+        this.textChannelRepository.getMessages(channel._id)
+        .then((messages) => {
+          this.emitHistory(socketInformation.roomName, messages);
+        })
+      })
+
+      // if (this.messageHistory.has(socketInformation.roomName)) {
+      //   this.emitHistory(
+      //     socketInformation.roomName,
+      //     Array.from(
+      //       (
+      //         this.messageHistory.get(
+      //           socketInformation.roomName,
+      //         ) as Set<MessageInterface>
+      //       ).values(),
+      //     ),
+      //   );
+      // }
 
       console.log(
         `number of users in ${socketInformation.roomName} : ${
@@ -102,38 +113,39 @@ export class ChatSocketService extends SocketServiceInterface {
         );
         socket.leave(socketInformation.roomName);
 
-        if (
-          this.namespace.adapter.rooms.get(socketInformation.roomName)?.size ===
-            undefined &&
-          this.messageHistory.has(socketInformation.roomName)
-        ) {
-          const currentMessages = Array.from(
-            (
-              this.messageHistory.get(
-                socketInformation.roomName,
-              ) as Set<MessageInterface>
-            ).values(),
-          );
-          this.textChannelRepository
-            .getChannelByName(socketInformation.roomName)
-            .then((room) => {
-              this.textChannelRepository
-                .getMessages(room._id)
-                .then((messages) => {
-                  const filtered = currentMessages.filter(
-                    (message) =>
-                      !messages.some(
-                        (dbMessage) =>
-                          message.author === dbMessage.author &&
-                          message.message === dbMessage.message &&
-                          message.timestamp === dbMessage.timestamp &&
-                          message.roomName === dbMessage.roomName,
-                      ),
-                  );
-                  this.messageRepository.storeMessages(filtered);
-                });
-            });
-        }
+        // if (
+        //   this.namespace.adapter.rooms.get(socketInformation.roomName)?.size ===
+        //     undefined &&
+        //   this.messageHistory.has(socketInformation.roomName)
+        // ) {
+        //   const currentMessages = Array.from(
+        //     (
+        //       this.messageHistory.get(
+        //         socketInformation.roomName,
+        //       ) as Set<MessageInterface>
+        //     ).values(),
+        //   );
+          // this.textChannelRepository
+          //   .getChannelByName(socketInformation.roomName)
+          //   .then((room) => {
+          //     this.textChannelRepository
+          //       .getMessages(room._id)
+          //       .then((messages) => {
+          //         // only store current messages if they don't correspond to db messages
+          //         const filtered = currentMessages.filter(
+          //           (message) =>
+          //             !messages.some(
+          //               (dbMessage) =>
+          //                 message.author === dbMessage.author &&
+          //                 message.message === dbMessage.message &&
+          //                 message.timestamp === dbMessage.timestamp &&
+          //                 message.roomName === dbMessage.roomName,
+          //             ),
+          //         );
+          //         this.messageRepository.storeMessages(filtered);
+          //       });
+          //   });
+        // }
         console.log(
           `number of users in ${socketInformation.roomName} : ${
             this.namespace.adapter.rooms.get(socketInformation.roomName)?.size
