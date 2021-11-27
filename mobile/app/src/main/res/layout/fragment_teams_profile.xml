@@ -70,7 +70,7 @@
                     android:singleLine="true">
 
                     <TextView
-                        android:id="@+id/userIdNbOfPosts"
+                        android:id="@+id/teamIdNbOfPosts"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="40dp"
@@ -79,7 +79,7 @@
                         android:textStyle="italic|bold" />
 
                     <TextView
-                        android:id="@+id/userIdNbOfFollowers"
+                        android:id="@+id/teamIdNbOfFollowers"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerInParent="true"
@@ -89,7 +89,7 @@
                         android:textStyle="italic|bold" />
 
                     <TextView
-                        android:id="@+id/userIdNbOfFollowing"
+                        android:id="@+id/teamIdNbOfFollowing"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
