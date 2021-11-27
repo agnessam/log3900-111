@@ -1,4 +1,5 @@
 import {
+  ChangeDetectorRef,
   Component,
   ElementRef,
   OnDestroy,
@@ -8,6 +9,7 @@ import {
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { AuthenticationService } from "src/app/modules/authentication";
 import { User } from "../../authentication/models/user";
+import { TeamClientService } from "../../backend-communication/team-client/team-client.service";
 import { TextChannel } from "../models/text-channel.model";
 import { ChatSocketService } from "../services/chat-socket.service";
 import { ChatService } from "../services/chat.service";
@@ -40,7 +42,9 @@ export class ChannelComponent implements OnInit, OnDestroy {
     private chatService: ChatService,
     private chatSocketService: ChatSocketService,
     private textChannelService: TextChannelService,
-    private snackBar: MatSnackBar
+    private teamClient: TeamClientService,
+    private snackBar: MatSnackBar,
+    private ref: ChangeDetectorRef,
   ) {
     this.isSearchOpen = false;
     this.connectedChannels = [];
@@ -69,10 +73,32 @@ export class ChannelComponent implements OnInit, OnDestroy {
       }
     });
 
+    this.filterTeamChannels();
+
     this.keyListener();
   }
 
   ngOnDestroy(): void {}
+
+  // only get channels that are visible to the user: teams and collaboration channels
+  // TODO: find a way to get teamChannel type from server?
+  filterTeamChannels(): void {
+    this.teamClient.getTeams().subscribe((teams) => {
+      teams.forEach((team) => {
+        // remove from list if user is not a member
+        if (!(team.members as string[]).includes(this.user!.username)) {
+          const index = this.allChannels.findIndex((channel) => channel.name === team.name );
+          if (index > -1) {
+            this.allChannels.splice(index, 1);
+          }
+        } else {
+          // join team channels automatically
+          this.chatSocketService.joinRoom({userId: this.user!._id, roomName: team.name});
+          this.ref.detectChanges();
+        }
+      });
+    });
+  }
 
   addChannel(): void {
     const name = this.newChannelName;
