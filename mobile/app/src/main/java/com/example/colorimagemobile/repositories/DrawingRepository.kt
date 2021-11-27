@@ -3,6 +3,7 @@ package com.example.colorimagemobile.repositories
 import androidx.lifecycle.MutableLiveData
 import com.example.colorimagemobile.models.DataWrapper
 import com.example.colorimagemobile.models.DrawingModel
+import com.example.colorimagemobile.models.MuseumPostModel
 import com.example.colorimagemobile.services.RetrofitInstance
 import com.example.colorimagemobile.services.drawing.DrawingService
 import com.example.colorimagemobile.services.users.UserService
@@ -15,19 +16,19 @@ class DrawingRepository {
 
     private val httpClient = RetrofitInstance.HTTP
 
-    fun createNewDrawing(drawing: DrawingModel.CreateDrawing): MutableLiveData<DataWrapper<DrawingModel.CreateDrawing>> {
-        val drawingLiveData: MutableLiveData<DataWrapper<DrawingModel.CreateDrawing>> = MutableLiveData()
+    fun createNewDrawing(drawing: DrawingModel.CreateDrawing): MutableLiveData<DataWrapper<DrawingModel.Drawing>> {
+        val drawingLiveData: MutableLiveData<DataWrapper<DrawingModel.Drawing>> = MutableLiveData()
 
-        httpClient.createNewDrawing(token = "Bearer ${UserService.getToken()}", drawing).enqueue(object : Callback<DrawingModel.CreateDrawing>{
-            override fun onResponse(call: Call<DrawingModel.CreateDrawing>, response: Response<DrawingModel.CreateDrawing>) {
+        httpClient.createNewDrawing(token = "Bearer ${UserService.getToken()}", drawing).enqueue(object : Callback<DrawingModel.Drawing>{
+            override fun onResponse(call: Call<DrawingModel.Drawing>, response: Response<DrawingModel.Drawing>) {
                 if (!response.isSuccessful) {
-                    drawingLiveData.value = DataWrapper(null, "An error occurred!", true)
+                    drawingLiveData.value = DataWrapper(null, "An error occurred while creating drawing!", true)
                     return
                 }
-                drawingLiveData.value = DataWrapper(response.body(), "", false)
+                drawingLiveData.value = DataWrapper(response.body(), "Drawing successfully created", false)
             }
 
-            override fun onFailure(call: Call<DrawingModel.CreateDrawing>, t: Throwable) {
+            override fun onFailure(call: Call<DrawingModel.Drawing>, t: Throwable) {
                 drawingLiveData.value = DataWrapper(null, "Failed to create new drawing!", true)
             }
         })
@@ -35,12 +36,12 @@ class DrawingRepository {
         return drawingLiveData
     }
 
-    fun getAllDrawings(token: String): MutableLiveData<DataWrapper<List<DrawingModel.Drawing>>> {
-        val liveData: MutableLiveData<DataWrapper<List<DrawingModel.Drawing>>> = MutableLiveData()
+    fun getAllDrawings(token: String): MutableLiveData<DataWrapper<ArrayList<DrawingModel.Drawing>>> {
+        val liveData: MutableLiveData<DataWrapper<ArrayList<DrawingModel.Drawing>>> = MutableLiveData()
         printMsg("Fetching all drawings")
 
-        httpClient.getAllDrawings(token = "Bearer $token").enqueue(object : Callback<List<DrawingModel.Drawing>> {
-            override fun onResponse(call: Call<List<DrawingModel.Drawing>>, response: Response<List<DrawingModel.Drawing>>) {
+        httpClient.getAllDrawings(token = "Bearer $token").enqueue(object : Callback<ArrayList<DrawingModel.Drawing>> {
+            override fun onResponse(call: Call<ArrayList<DrawingModel.Drawing>>, response: Response<ArrayList<DrawingModel.Drawing>>) {
                 if (!response.isSuccessful) {
                     liveData.value = DataWrapper(null, "An error occurred!", true)
                     return
@@ -48,13 +49,33 @@ class DrawingRepository {
                 liveData.value = DataWrapper(response.body(), null, false)
             }
 
-            override fun onFailure(call: Call<List<DrawingModel.Drawing>>, t: Throwable) {
+            override fun onFailure(call: Call<ArrayList<DrawingModel.Drawing>>, t: Throwable) {
                 printMsg("Failed to get all drawings ${t.message!!}")
                 liveData.value = DataWrapper(null, "Failed to get all drawings!", true)
             }
         })
 
         return liveData
+    }
+
+    fun publishDrawing(drawing: DrawingModel.Drawing): MutableLiveData<DataWrapper<Any>> {
+        val drawingLiveData: MutableLiveData<DataWrapper<Any>> = MutableLiveData()
+
+        httpClient.publishDrawing(token = "Bearer ${UserService.getToken()}", DrawingService.getCurrentDrawingID()!!, drawing).enqueue(object : Callback<Any>{
+            override fun onResponse(call: Call<Any>, response: Response<Any>) {
+                if (!response.isSuccessful) {
+                    drawingLiveData.value = DataWrapper(null, "An error occurred while publishing to museum!", true)
+                    return
+                }
+                drawingLiveData.value = DataWrapper(response.body(), "Drawing '${drawing.name}' published to museum!", false)
+            }
+
+            override fun onFailure(call: Call<Any>, t: Throwable) {
+                drawingLiveData.value = DataWrapper(null, "Failed to create new drawing!", true)
+            }
+        })
+
+        return drawingLiveData
     }
 
     fun saveDrawing(saveDrawing: DrawingModel.SaveDrawing): MutableLiveData<DataWrapper<DrawingModel.CreateDrawing>> {

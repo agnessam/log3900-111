@@ -13,6 +13,7 @@ import { EditableTeamParameters } from "../EditableTeam";
 export class NewTeamComponent implements OnInit {
   newTeamForm: FormGroup;
   isMemberLimit: boolean = false;
+  isPrivate: boolean = false;
 
   constructor(
     private teamClient: TeamClientService,
@@ -27,6 +28,8 @@ export class NewTeamComponent implements OnInit {
       memberLimit: new FormControl({ value: 1, disabled: true }, [
         Validators.min(1),
       ]),
+      isPrivate: new FormControl(false),
+      password: new FormControl({ value: "", disabled: true }),
     });
   }
 
@@ -36,6 +39,15 @@ export class NewTeamComponent implements OnInit {
       this.newTeamForm.get("memberLimit")?.enable();
     } else {
       this.newTeamForm.get("memberLimit")?.disable();
+    }
+  }
+
+  togglePrivacy(): void {
+    this.isPrivate = !this.isPrivate;
+    if (this.isPrivate) {
+      this.newTeamForm.get("password")?.enable();
+    } else {
+      this.newTeamForm.get("password")?.disable();
     }
   }
 

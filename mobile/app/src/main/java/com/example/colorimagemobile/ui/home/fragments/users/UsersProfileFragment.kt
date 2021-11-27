@@ -142,12 +142,12 @@ class UsersProfileFragment : Fragment(R.layout.fragment_users_profile) {
     }
 
     private fun setAllDrawings() {
-        recyclerView.adapter = DrawingMenuRecyclerAdapter(drawingsMenu, R.id.usersMenuFrameLayout)
+        recyclerView.adapter = DrawingMenuRecyclerAdapter(requireActivity(), drawingsMenu, R.id.usersMenuFrameLayout)
     }
 
     private fun setPublishedDrawings() {
         val drawings = arrayListOf<DrawingMenuData>()
-        recyclerView.adapter = DrawingMenuRecyclerAdapter(drawings, R.id.usersMenuFrameLayout)
+        recyclerView.adapter = DrawingMenuRecyclerAdapter(requireActivity(), drawings, R.id.usersMenuFrameLayout)
     }
 
 }

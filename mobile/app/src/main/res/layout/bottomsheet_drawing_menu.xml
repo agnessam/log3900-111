@@ -99,19 +99,99 @@
     </LinearLayout>
 
 
-    <TextView
-        android:layout_marginTop="0dp"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Choose canvas color"/>
+        android:layout_marginTop="5dp"
+        android:orientation="horizontal">
 
-    <include
-        layout="@layout/view_color_picker"
-        android:layout_marginTop="-15dp"
-        android:id="@+id/colorPickerNewDrawing"
-        android:layout_gravity="center"
-        android:layout_height="300dp"
-        android:layout_width="match_parent"/>
+<!--        color-->
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="10px">
+
+            <TextView
+                android:layout_marginTop="0dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Choose canvas color"/>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <include
+                    layout="@layout/view_color_picker"
+                    android:layout_marginTop="5dp"
+                    android:id="@+id/colorPickerNewDrawing"
+                    android:layout_gravity="center"
+                    android:layout_height="250dp"
+                    android:layout_centerHorizontal="true"
+                    android:layout_width="wrap_content"/>
+            </RelativeLayout>
+
+        </RelativeLayout>
+
+<!--        bottom right - team, privacy-->
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10px">
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/newDrawingOwnerInputLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Assign to"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
+
+                <AutoCompleteTextView
+                    android:id="@+id/newDrawingOwnerAutoCompleteTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="none" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/newDrawingPrivacyInputLayout"
+                android:layout_below="@id/newDrawingOwnerInputLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Privacy"
+                android:layout_marginTop="8dp"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
+
+                <AutoCompleteTextView
+                    android:id="@+id/newDrawingPrivacyAutoCompleteTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="none" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/newDrawingPasswordLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Drawing password"
+                android:layout_marginTop="8dp"
+                android:enabled="false"
+                android:alpha="0.5"
+                android:layout_below="@id/newDrawingPrivacyInputLayout"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/newDrawingPasswordInputText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="text" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+        </RelativeLayout>
+
+    </LinearLayout>
 
     <Button
         android:id="@+id/createDrawingBtn"

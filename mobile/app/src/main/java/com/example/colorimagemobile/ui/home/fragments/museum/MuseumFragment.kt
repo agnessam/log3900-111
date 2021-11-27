@@ -1,5 +1,6 @@
 package com.example.colorimagemobile.ui.home.fragments.museum
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
@@ -9,12 +10,14 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SnapHelper
 import com.example.colorimagemobile.R
 import com.example.colorimagemobile.adapter.MuseumPostRecyclerAdapter
+import com.example.colorimagemobile.classes.NotificationSound.Notification
 import com.example.colorimagemobile.models.MuseumPostModel
 import com.example.colorimagemobile.repositories.MuseumRepository
 import com.example.colorimagemobile.services.museum.MuseumAdapters
 import com.example.colorimagemobile.services.museum.MuseumPostService
 import com.example.colorimagemobile.utils.CommonFun.Companion.hideKeyboard
 import com.example.colorimagemobile.utils.CommonFun.Companion.printToast
+import kotlinx.android.synthetic.main.recycler_museum_posts.*
 
 class MuseumFragment : Fragment(R.layout.fragment_museum) {
 
@@ -22,6 +25,7 @@ class MuseumFragment : Fragment(R.layout.fragment_museum) {
     private lateinit var posts: ArrayList<MuseumPostModel>
     private lateinit var recyclerView: RecyclerView
 
+    @SuppressLint("ClickableViewAccessibility")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -56,7 +60,7 @@ class MuseumFragment : Fragment(R.layout.fragment_museum) {
     }
 
     private fun postComment(position: Int, newComment: String) {
-       hideKeyboard(requireContext(),myView)
+        hideKeyboard(requireContext(),myView)
 
         if (newComment.isEmpty()) {
             printToast(requireContext(), "Please enter a valid comment!")
@@ -72,6 +76,7 @@ class MuseumFragment : Fragment(R.layout.fragment_museum) {
             comment.createdAt = it.data?.createdAt
             MuseumPostService.addCommentToPost(position, comment)
             MuseumAdapters.refreshCommentAdapter(position)
+            Notification().playSound(requireContext())
         })
     }
 

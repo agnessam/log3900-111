@@ -97,6 +97,7 @@ class LoginActivity : AppCompatActivity() {
         val response = HTTPResponse.data as HTTPResponseModel.LoginResponse
 
         // save users info and token and redirect to /Home
+        UserService.setToken(response.token)
         UserService.setUserInfo(response.user)
         sharedPreferencesService.setItem(Constants.STORAGE_KEY.TOKEN, response.token)
 

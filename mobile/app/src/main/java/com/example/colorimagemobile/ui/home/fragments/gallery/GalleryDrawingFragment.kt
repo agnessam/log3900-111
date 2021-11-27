@@ -1,14 +1,22 @@
 package com.example.colorimagemobile.ui.home.fragments.gallery
 
+import android.graphics.Color
 import android.graphics.drawable.ShapeDrawable
 import android.os.Bundle
+import android.text.Spannable
+import android.text.SpannableString
+import android.text.style.ImageSpan
 import android.transition.AutoTransition
 import android.transition.TransitionManager
 import android.view.View
+import android.widget.Button
+import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.view.marginLeft
+import androidx.core.view.marginTop
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -17,12 +25,17 @@ import com.example.colorimagemobile.adapter.ToolsButtonRecyclerAdapter
 import com.example.colorimagemobile.classes.MyFragmentManager
 import com.example.colorimagemobile.classes.tools.ToolsFactory
 import com.example.colorimagemobile.enumerators.ToolType
+import com.example.colorimagemobile.models.DrawingModel
+import com.example.colorimagemobile.models.OwnerModel
+import com.example.colorimagemobile.repositories.DrawingRepository
 import com.example.colorimagemobile.services.drawing.DrawingService
 import com.example.colorimagemobile.services.drawing.ToolTypeService
 import com.example.colorimagemobile.services.drawing.toolsAttribute.SelectionService
 import com.example.colorimagemobile.services.socket.DrawingSocketService
 import com.example.colorimagemobile.services.socket.SocketManagerService
 import com.example.colorimagemobile.services.users.UserService
+import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
+import com.example.colorimagemobile.utils.CommonFun.Companion.printToast
 import com.example.colorimagemobile.utils.Constants
 
 class GalleryDrawingFragment : Fragment(R.layout.fragment_gallery_drawing) {
@@ -43,6 +56,7 @@ class GalleryDrawingFragment : Fragment(R.layout.fragment_gallery_drawing) {
         addToolsOnSidebar()
         setToolsListener()
         connectToSocket()
+        checkMuseumOwner()
     }
 
     private fun setCurrentRoomName() {
@@ -84,6 +98,51 @@ class GalleryDrawingFragment : Fragment(R.layout.fragment_gallery_drawing) {
     override fun onDestroy() {
         super.onDestroy()
         this.leaveDrawingRoom()
+    }
+
+    private fun checkMuseumOwner() {
+        val currentDrawing = DrawingService.getDrawingById()
+
+        // we are the only user/owner of drawing ==> owner is us
+        if (currentDrawing.ownerModel == OwnerModel.USER.toString()) {
+            if (currentDrawing.owner == UserService.getUserInfo()._id) {
+                addMuseumButton()
+            }
+            return
+        }
+
+        // drawing belongs to a group ==> owner is teamId
+        if (currentDrawing.ownerModel == OwnerModel.TEAM.toString()) {
+            if (DrawingService.checkIfUserIsInTeam(currentDrawing.owner) != null) addMuseumButton()
+        }
+    }
+
+    private fun addMuseumButton() {
+        val museumButton = createSideButton(R.drawable.ic_museum)
+
+        museumButton.setOnClickListener {
+            val drawing = DrawingService.getDrawingById()
+            DrawingRepository().publishDrawing(drawing).observe(viewLifecycleOwner, { printToast(requireContext(), it.message!!) })
+        }
+    }
+
+    private fun createSideButton(icon: Int): Button {
+        val toolBtn = Button(context)
+
+        val layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+        layoutParams.setMargins(10, 8, 10, 8)
+        toolBtn.layoutParams = layoutParams
+        toolBtn.setBackgroundColor(Color.rgb(245, 245, 245))
+
+        // center button
+        toolBtn.text = SpannableString(" ").apply {
+            setSpan(ImageSpan(requireContext(), icon),0,1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+        }
+
+        val toolSidebar = galleryDrawingFragment.findViewById<LinearLayout>(R.id.canvas_tools)
+        toolSidebar.addView(toolBtn)
+
+        return toolBtn
     }
 
     // dynamically add tools on sidebar
