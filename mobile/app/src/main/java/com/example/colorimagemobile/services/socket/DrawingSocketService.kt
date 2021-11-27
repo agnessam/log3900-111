@@ -1,5 +1,6 @@
 package com.example.colorimagemobile.services.socket
 
+import android.provider.Settings
 import androidx.fragment.app.FragmentActivity
 import com.example.colorimagemobile.classes.AbsSocket
 import com.example.colorimagemobile.classes.JSONConvertor
@@ -8,6 +9,7 @@ import com.example.colorimagemobile.repositories.DrawingRepository
 import com.example.colorimagemobile.services.drawing.DrawingObjectManager
 import com.example.colorimagemobile.services.drawing.DrawingService
 import com.example.colorimagemobile.services.drawing.SynchronisationService
+import com.example.colorimagemobile.services.users.UserService
 import com.example.colorimagemobile.ui.home.HomeActivity
 import com.example.colorimagemobile.utils.CommonFun
 import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
@@ -20,8 +22,11 @@ import com.example.colorimagemobile.utils.Constants.SOCKETS.Companion.TRANSFORM_
 import com.example.colorimagemobile.utils.Constants.SOCKETS.Companion.UPDATE_DRAWING_EVENT
 import com.example.colorimagemobile.utils.Constants.SOCKETS.Companion.UPDATE_DRAWING_NOTIFICATION
 import io.socket.emitter.Emitter
+import kotlinx.coroutines.*
 import org.json.JSONException
 import org.json.JSONObject
+import retrofit2.awaitResponse
+import java.lang.Runnable
 
 object DrawingSocketService: AbsSocket(SOCKETS.COLLABORATIVE_DRAWING_NAMESPACE) {
     private var roomName: String? = null
@@ -240,14 +245,19 @@ object DrawingSocketService: AbsSocket(SOCKETS.COLLABORATIVE_DRAWING_NAMESPACE) 
     }
 
     private var updateDrawingRequestListen = Emitter.Listener { args ->
-        fragmentActivity!!.runOnUiThread(Runnable {
-            drawingRepository.saveCurrentDrawing().observe(homeActivity, {
-                if(!it.isError!!){
-                    val response = JSONObject(args[0].toString())
-                    sendDrawingUpdatedNotification(response["newUserId"] as String)
-                }
-            })
-        })
+        val responseJSON = JSONObject(args[0].toString())
+        val newUserId = responseJSON["newUserId"] as String
+
+        GlobalScope.launch(newSingleThreadContext("sendUpdateDrawingRequest")){
+            updateDrawingRequest(newUserId)
+        }
+    }
+
+    private suspend fun updateDrawingRequest(newUserId: String){
+        val drawing = drawingRepository.saveCurrentDrawing()
+        if(drawing != null){
+            sendDrawingUpdatedNotification(newUserId)
+        }
     }
 
     private fun sendDrawingUpdatedNotification(clientSocketId: String) {

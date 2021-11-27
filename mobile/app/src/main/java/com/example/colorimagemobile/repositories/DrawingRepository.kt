@@ -8,9 +8,11 @@ import com.example.colorimagemobile.services.drawing.DrawingObjectManager
 import com.example.colorimagemobile.services.drawing.DrawingService
 import com.example.colorimagemobile.services.users.UserService
 import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.newSingleThreadContext
+import kotlinx.coroutines.runBlocking
+import retrofit2.*
 
 class DrawingRepository {
 
@@ -79,25 +81,13 @@ class DrawingRepository {
         return liveData
     }
 
-    fun saveCurrentDrawing(): MutableLiveData<DataWrapper<DrawingModel.CreateDrawing>>{
+    suspend fun saveCurrentDrawing(): DrawingModel.CreateDrawing? {
         val saveDrawing = DrawingModel.SaveDrawing(DrawingObjectManager.getDrawingDataURI())
-
-        val drawingLiveData: MutableLiveData<DataWrapper<DrawingModel.CreateDrawing>> = MutableLiveData()
-        httpClient.saveDrawing(token = "Bearer ${UserService.getToken()}", DrawingService.getCurrentDrawingID()!!, saveDrawing).enqueue(object : Callback<DrawingModel.CreateDrawing>{
-            override fun onResponse(call: Call<DrawingModel.CreateDrawing>, response: Response<DrawingModel.CreateDrawing>) {
-                if (!response.isSuccessful) {
-                    drawingLiveData.value = DataWrapper(null, "An error occurred while saving drawing!", true)
-                    return
-                }
-                drawingLiveData.value = DataWrapper(response.body(), "", false)
-            }
-
-            override fun onFailure(call: Call<DrawingModel.CreateDrawing>, t: Throwable) {
-                drawingLiveData.value = DataWrapper(null, "Failed to save drawing!", true)
-            }
-        })
-
-        return drawingLiveData
+        val response = httpClient.saveDrawing(token = "Bearer ${UserService.getToken()}", DrawingService.getCurrentDrawingID()!!, saveDrawing).awaitResponse()
+        if(response.isSuccessful){
+            return response.body()
+        }
+        return null
     }
 
     fun saveDrawing(saveDrawing: DrawingModel.SaveDrawing): MutableLiveData<DataWrapper<DrawingModel.CreateDrawing>> {
