@@ -175,11 +175,11 @@ class UserRepository {
     }
 
     // update user profile password
-    fun updateUserPassword(newUserPassword: UserModel.PasswordUpdate): MutableLiveData<DataWrapper<HTTPResponseModel.UserResponse>> {
+    fun updateUserPassword(newPassword: UserModel.PasswordUpdate): MutableLiveData<DataWrapper<HTTPResponseModel.UserResponse>> {
 
         val updatePasswordLiveData: MutableLiveData<DataWrapper<HTTPResponseModel.UserResponse>> = MutableLiveData()
 
-        httpClient.updateUserPassword(token = "Bearer ${UserService.getToken()}",UserService.getUserInfo()._id, newUserPassword).enqueue(object :
+        httpClient.updateUserPassword(token = "Bearer ${UserService.getToken()}",UserService.getUserInfo()._id, newPassword).enqueue(object :
             Callback<HTTPResponseModel.UserResponse> {
             override fun onResponse(call: Call<HTTPResponseModel.UserResponse>, response: Response<HTTPResponseModel.UserResponse>) {
                 if (!response.isSuccessful) {

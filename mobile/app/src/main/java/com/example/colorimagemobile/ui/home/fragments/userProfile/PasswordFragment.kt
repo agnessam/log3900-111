@@ -7,10 +7,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.lifecycle.LiveData
 import com.example.colorimagemobile.R
 import com.example.colorimagemobile.models.UserModel
 import com.example.colorimagemobile.repositories.UserRepository
 import com.example.colorimagemobile.httpresponsehandler.GlobalHandler
+import com.example.colorimagemobile.models.DataWrapper
+import com.example.colorimagemobile.models.HTTPResponseModel
 import com.example.colorimagemobile.services.SharedPreferencesService
 import com.example.colorimagemobile.services.users.UserService
 import com.example.colorimagemobile.utils.CommonFun
@@ -55,14 +58,14 @@ class PasswordFragment : Fragment() {
         val inf = inflater.inflate(R.layout.fragment_password, container, false)
 
         // listeners  to be uncomment when update implement serverside
-        inf.findViewById<View>(R.id.updatepassword).setOnClickListener { areFieldEmpty()}
+        inf.findViewById<View>(R.id.updatepassword).setOnClickListener { update()}
 
         inf.findViewById<View>(R.id.editpasswordview).setOnTouchListener { v, event -> CommonFun.hideKeyboard(requireContext(), editpasswordview)}
 
         // keyboard   don't delete we need it when update implement
-        CommonFun.onEnterKeyPressed_(inf.findViewById<View>(R.id.oldpassword) as TextView) { updatePassword() }
-        CommonFun.onEnterKeyPressed_(inf.findViewById<View>(R.id.newpassword) as TextView) { updatePassword() }
-        CommonFun.onEnterKeyPressed_(inf.findViewById<View>(R.id.vnewpassword) as TextView) { updatePassword() }
+        CommonFun.onEnterKeyPressed_(inf.findViewById<View>(R.id.oldpassword) as TextView) { update() }
+        CommonFun.onEnterKeyPressed_(inf.findViewById<View>(R.id.newpassword) as TextView) { update() }
+        CommonFun.onEnterKeyPressed_(inf.findViewById<View>(R.id.vnewpassword) as TextView) { update() }
         infview = inf
 
         // Inflate the layout for this fragment
@@ -114,10 +117,25 @@ class PasswordFragment : Fragment() {
         }
     }
 
-    private fun updatePassword(){
+    private fun update(){
         if (areFieldEmpty() || !NewPasswordMatch()){return}
+        val userId = UserService.getUserInfo()._id
+        val updateData = UserModel.PasswordUpdate(userId,edtPassword,edtMatchPassword)
+        updatePassword(updateData).observe(viewLifecycleOwner, { context?.let { it1 ->globalHandler.response(it1,it) } })
+        //clear all field
+        clearTextField()
+    }
 
+    private fun clearTextField() {
+        oldP.setText("")
+        newP.setText("")
+        matchnewP.setText("")
 
+    }
+
+    //call retrofit request to database to update user info
+    private fun updatePassword(newPassword: UserModel.PasswordUpdate): LiveData<DataWrapper<HTTPResponseModel.UserResponse>> {
+        return UserRepository().updateUserPassword(newPassword)
     }
 
 }

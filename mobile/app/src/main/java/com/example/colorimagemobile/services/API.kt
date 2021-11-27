@@ -51,7 +51,7 @@ interface API {
 
     @Headers("Content-Type: application/json")
     @PATCH(Constants.ENDPOINTS.USER_PATH+"{id}/changePassword")
-    fun updateUserPassword(@Header("Authorization")token: String, @Path ("id") id : String, @Body  newUserPassword: UserModel.PasswordUpdate) : Call<HTTPResponseModel.UserResponse>
+    fun updateUserPassword(@Header("Authorization")token: String, @Path ("id") id : String, @Body  newPassword: UserModel.PasswordUpdate) : Call<HTTPResponseModel.UserResponse>
 
     //  TextChannel region
     @Headers("Content-Type: application/json")
