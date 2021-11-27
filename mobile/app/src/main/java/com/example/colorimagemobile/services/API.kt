@@ -16,9 +16,8 @@ interface API {
     @POST(Constants.ENDPOINTS.LOGIN_USER)
     fun loginUser(@Body user: UserModel.Login): Call<HTTPResponseModel.LoginResponse>
 
-    @Headers("Content-Type: application/json")
     @POST(Constants.ENDPOINTS.LOGOUT_USER)
-    fun logoutUser(@Body user: UserModel.Logout): Call<Boolean>
+    fun logoutUser(@Header("Authorization") token: String,@Body userId: UserModel.Logout): Call<Boolean>
 
 
     // register region
@@ -50,6 +49,7 @@ interface API {
     @GET("${Constants.ENDPOINTS.USER_PATH}{id}/drawings")
     fun getUserDrawings(@Header("Authorization") token: String, @Path ("id") id: String): Call<List<DrawingModel.Drawing>>
 
+
     //  TextChannel region
     @Headers("Content-Type: application/json")
     @GET(Constants.ENDPOINTS.TEXT_CHANNEL_PATH + "{channelId}" + "/messages")
@@ -67,6 +67,7 @@ interface API {
     @Headers("Content-Type: application/json")
     @DELETE(Constants.ENDPOINTS.TEXT_CHANNEL_PATH + "{channelId}")
     fun deleteChannelById(@Header("Authorization")token: String,@Path ("channelId") channelId: String): Call<TextChannelModel.AllInfo>
+
 
     // region message
     @Headers("Content-Type: application/json")
@@ -102,6 +103,7 @@ interface API {
     @PATCH("${Constants.ENDPOINTS.ALL_DRAWINGS}{id}")
     fun saveDrawing(@Header("Authorization") token: String, @Path ("id") id: String, @Body drawing: DrawingModel.SaveDrawing): Call<DrawingModel.CreateDrawing>
 
+
     // region avatar
     @Headers("Content-Type: application/json")
     @GET(Constants.ENDPOINTS.AVATAR_PATH+"/default")
@@ -114,6 +116,8 @@ interface API {
     @Headers("Content-Type: application/json")
     @POST(Constants.ENDPOINTS.AVATAR_PATH)
     fun postAvatar(@Header("Authorization") token: String, @Body newAvatar: AvatarModel.AllInfo): Call<AvatarModel.AllInfo>
+
+
     // teams
     @GET("${Constants.ENDPOINTS.TEAMS}{id}/drawings")
     fun getTeamDrawings(@Header("Authorization") token: String, @Path ("id") id: String): Call<List<DrawingModel.Drawing>>
@@ -136,9 +140,11 @@ interface API {
     @DELETE("${Constants.ENDPOINTS.TEAMS}{id}")
     fun deleteTeam(@Header("Authorization") token: String, @Path ("id") id: String): Call<Any>
 
+
     // Search
     @GET(Constants.ENDPOINTS.SEARCH)
     fun getSearchQuery(@Header("Authorization") token: String, @Query ("q") query: String): Call<SearchModel>
+
 
     // Museum Posts
     @GET(Constants.ENDPOINTS.MUSEUM_POST)

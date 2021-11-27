@@ -34,7 +34,6 @@ import com.example.colorimagemobile.services.drawing.toolsAttribute.SelectionSer
 import com.example.colorimagemobile.services.socket.DrawingSocketService
 import com.example.colorimagemobile.services.socket.SocketManagerService
 import com.example.colorimagemobile.services.users.UserService
-import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
 import com.example.colorimagemobile.utils.CommonFun.Companion.printToast
 import com.example.colorimagemobile.utils.Constants
 
