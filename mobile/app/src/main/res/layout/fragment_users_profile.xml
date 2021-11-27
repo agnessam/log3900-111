@@ -54,19 +54,19 @@
                 </androidx.cardview.widget.CardView>
 
                 <TextView
-                    android:id="@+id/userIdNbOfMembers"
+                    android:id="@+id/userIdNbOfFollowers"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/userIdImageViewCard"
                     android:textAlignment="center"
                     android:textColor="@color/black" />
 
-                <!--                follow and join teams button-->
+                <!--                follow button-->
                 <RelativeLayout
                     android:id="@+id/userIdActionContainer"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/userIdNbOfMembers"
+                    android:layout_below="@id/userIdNbOfFollowers"
                     android:layout_marginTop="30dp">
 
                     <View
@@ -76,9 +76,10 @@
                         android:layout_centerHorizontal="true" />
 
                     <RelativeLayout
-                        android:layout_toRightOf="@id/userId_action_empty_space"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
+                        android:layout_height="wrap_content"
+                        android:layout_toRightOf="@id/userId_action_empty_space" />
+
                     <Button
                         android:id="@+id/FollowBtn"
                         android:layout_width="wrap_content"
@@ -86,14 +87,15 @@
                         android:backgroundTint="@color/primary"
                         android:text="Follow"
                         android:textColor="@color/white" />
+
                     <com.google.android.material.button.MaterialButton
-                        android:visibility="gone"
                         android:id="@+id/UnfollowBtn"
                         style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Unfollow"
                         android:textColor="@color/primary"
+                        android:visibility="gone"
                         app:cornerRadius="4dp"
                         app:strokeColor="@color/primary"
                         app:strokeWidth="1dp" />

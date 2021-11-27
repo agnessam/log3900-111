@@ -1,6 +1,8 @@
 package com.example.colorimagemobile.models
 
 import com.google.gson.annotations.SerializedName
+import java.util.*
+import kotlin.collections.ArrayList
 
 // class for different uses related to User
 class UserModel {
@@ -48,7 +50,23 @@ class UserModel {
         val drawings: ArrayList<String>,
 
         @SerializedName("avatar")
-        var avatar : AvatarModel.AllInfo
+        var avatar : AvatarModel.AllInfo,
+
+        @SerializedName("followers")
+        var followers: ArrayList<String>,
+
+        @SerializedName("following")
+        var following: ArrayList<String>,
+
+        @SerializedName("lastLogin")
+        var lastLogin: Date,
+
+        @SerializedName("lastLogout")
+        var lastLogout: Date,
+
+        @SerializedName("collaborationHistory")
+        var collaborationHistory : Log.collaborationHistory
+
     )
 }
 
