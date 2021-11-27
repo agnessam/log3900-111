@@ -54,6 +54,9 @@ interface API {
     @POST("${Constants.ENDPOINTS.USER_PATH}{id}/followers/follow")
     fun followUser(@Header("Authorization") token: String, @Path ("id") id: String): Call<UserModel.AllInfo>
 
+    @Headers("Content-Type: application/json")
+    @POST("${Constants.ENDPOINTS.USER_PATH}{id}/followers/unfollow")
+    fun unfollowUser(@Header("Authorization") token: String, @Path ("id") id: String): Call<UserModel.AllInfo>
 
     //  TextChannel region
     @Headers("Content-Type: application/json")
