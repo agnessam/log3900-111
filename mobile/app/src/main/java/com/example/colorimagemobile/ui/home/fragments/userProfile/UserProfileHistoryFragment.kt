@@ -1,19 +1,26 @@
 package com.example.colorimagemobile.ui.home.fragments.userProfile
 
 
+import android.content.Context
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.colorimagemobile.R
 import com.example.colorimagemobile.adapter.CollaborationHistoryRecyclerAdapter
+import com.example.colorimagemobile.classes.MyFragmentManager
 import com.example.colorimagemobile.models.CollaborationHistory
+import com.example.colorimagemobile.services.drawing.CanvasUpdateService
+import com.example.colorimagemobile.services.drawing.DrawingObjectManager
+import com.example.colorimagemobile.services.drawing.DrawingService
 import com.example.colorimagemobile.services.users.UserService
+import com.example.colorimagemobile.ui.home.fragments.gallery.GalleryDrawingFragment
 import com.example.colorimagemobile.utils.Constants
 import kotlinx.android.synthetic.main.fragment_user_profile_history.*
 
@@ -53,7 +60,16 @@ class UserProfileHistoryFragment : Fragment() , CollaborationHistoryRecyclerAdap
     override fun onItemClick(position: Int) {
         val clickedItem: CollaborationHistory.drawingHistory= UserService.getUserInfo().collaborationHistory[position]
         UserService.setCurrentCollaborationHistory(clickedItem)
+//        openDrawing(position, itemView.context)
     }
+
+//    private fun openDrawing(position: Int, context: Context) {
+//        DrawingObjectManager.createDrawableObjects(drawingMenus[position].svgString)
+//
+//        DrawingService.setCurrentDrawingID(drawingMenus[position].drawing._id)
+//        MyFragmentManager(context as FragmentActivity).open(destination, GalleryDrawingFragment())
+//        CanvasUpdateService.invalidate()
+//    }
 
 }
 
