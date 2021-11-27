@@ -1,5 +1,12 @@
 import { Component, HostListener, OnInit } from "@angular/core";
-import { FormControl, FormGroup, Validators } from "@angular/forms";
+import {
+  AbstractControl,
+  FormControl,
+  FormGroup,
+  ValidationErrors,
+  ValidatorFn,
+  Validators,
+} from "@angular/forms";
 import { MatDialogRef } from "@angular/material/dialog";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { Router } from "@angular/router";
@@ -40,14 +47,19 @@ export class NewDrawingComponent implements OnInit {
 
   /// Créer un nouveau form avec les dimensions et la couleur
   ngOnInit(): void {
-    this.form = new FormGroup({
-      name: new FormControl("", Validators.required),
-      ownerModel: new FormControl(""),
-      ownerId: new FormControl({ value: "", disabled: true }),
-      privacyLevel: new FormControl("public"),
-      password: new FormControl({ value: "", disabled: true }),
-      color: this.colorPickerService.colorForm,
-    });
+    this.form = new FormGroup(
+      {
+        name: new FormControl("", Validators.required),
+        ownerModel: new FormControl(""),
+        ownerId: new FormControl({ value: "", disabled: true }, [
+          this.NonEmptyTeam,
+        ]),
+        privacyLevel: new FormControl("public"),
+        password: new FormControl({ value: "", disabled: true }),
+        color: this.colorPickerService.colorForm,
+      },
+      { validators: [this.NonEmptyPassword, this.NonEmptyTeam] }
+    );
     this.dialogRef.disableClose = true;
     this.dialogRef.afterOpened().subscribe(() => this.onResize());
     this.colorPickerService.setFormColor(DEFAULT_RGB_COLOR, DEFAULT_ALPHA);
@@ -69,14 +81,10 @@ export class NewDrawingComponent implements OnInit {
         a: this.colorPickerService.a.value,
       }
     );
-    console.log(this.ownerModel);
+
     this.form.value.ownerModel = this.ownerModel;
 
-    let ownerModel: string = this.form.value.ownerModel;
-    let ownerId: string = this.form.value.ownerId;
-    let drawingName: string = this.form.value.name;
-
-    this.form.value.drawingDataUri = drawingDataUri;
+    this.form.value.dataUri = drawingDataUri;
 
     const drawingParameters = new OptionalDrawingParameters(this.form.value);
 
@@ -88,11 +96,8 @@ export class NewDrawingComponent implements OnInit {
       drawingParameters.password = "";
     }
 
-    console.log(drawingParameters);
-    return;
-
     this.drawingHttpClient
-      .createNewDrawing(drawingDataUri, ownerModel, ownerId, drawingName)
+      .createNewDrawing(drawingParameters)
       .subscribe((response) => {
         if (response._id) {
           this.router.navigate([`/drawings/${response._id}`]);
@@ -132,4 +137,27 @@ export class NewDrawingComponent implements OnInit {
   onResize() {
     this.newDrawingService.onResize();
   }
+
+  NonEmptyTeam: ValidatorFn = (
+    group: AbstractControl
+  ): ValidationErrors | null => {
+    let ownerModel = this.ownerModel;
+    let ownerId = group.get("ownerId")?.value;
+    if (ownerModel == "Team" && ownerId == "") {
+      return { emptyTeam: true };
+    } else {
+      return null;
+    }
+  };
+
+  NonEmptyPassword: ValidatorFn = (
+    group: AbstractControl
+  ): ValidationErrors | null => {
+    const privacyLevel = group.get("privacyLevel")?.value;
+    const password = group.get("password")?.value;
+    if (privacyLevel == "protected" && password == "") {
+      return { required: true };
+    }
+    return null;
+  };
 }
