@@ -36,7 +36,7 @@
         <button
           mat-raised-button
           color="primary"
-          (click)="joinTeam(teamId)"
+          (click)="openConfirmJoinDialog()"
           *ngIf="!isAlreadyJoined() && !isTeamFull()"
         >
           Join team
