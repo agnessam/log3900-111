@@ -79,6 +79,7 @@
                         android:layout_toRightOf="@id/userId_action_empty_space"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"/>
+
                     <Button
                         android:id="@+id/FollowBtn"
                         android:layout_width="wrap_content"
