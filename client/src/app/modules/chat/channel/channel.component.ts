@@ -38,6 +38,7 @@ export class ChannelComponent implements OnInit, OnDestroy {
     private teamClient: TeamClientService,
     private ref: ChangeDetectorRef,
     private dialog: MatDialog,
+    private ref: ChangeDetectorRef,
   ) {
     this.connectedChannels = [];
   }
@@ -167,6 +168,7 @@ export class ChannelComponent implements OnInit, OnDestroy {
       // should automatically connect user to socket
       this.connectedChannels.push(channel);
       this.chatService.toggleChatOverlay.emit(channel);
+      this.ref.detectChanges();
     });
   }
 }

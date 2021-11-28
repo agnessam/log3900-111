@@ -20,7 +20,7 @@ export class ChatSocketService extends SocketServiceInterface {
   @inject(TYPES.TextChannelRepository)
   public textChannelRepository: TextChannelRepository;
 
-  messageHistory: Map<string, Set<MessageInterface>> = new Map();
+  // messageHistory: Map<string, Set<MessageInterface>> = new Map();
   io: Server;
 
   init(io: Server) {
@@ -41,19 +41,23 @@ export class ChatSocketService extends SocketServiceInterface {
 
   private listenMessage(socket: Socket): void {
     socket.on(TEXT_MESSAGE_EVENT_NAME, (message: MessageInterface) => {
-      // mobile sends the json object in string format
-      if (typeof message === 'string') {
-        message = JSON.parse(message);
-      }
       console.log(
         `${message.author} at ${message.timestamp}: ${message.message}`,
       );
       this.emitMessage(message);
+      
+      this.textChannelRepository
+      .getChannelByName(message.roomName)
+      .then((channel) => {
+        this.textChannelRepository.getMessages(channel._id)
+        .then((messages) => {
+          if (messages && messages.length !== 0){
+            this.emitHistory(message.roomName, messages);
+          }
+        })
+      })
 
-      if (!this.messageHistory.has(message.roomName)) {
-        this.messageHistory.set(message.roomName, new Set());
-      }
-      this.messageHistory.get(message.roomName)?.add(message);
+      this.messageRepository.storeMessages(message);
     });
   }
 
@@ -68,19 +72,17 @@ export class ChatSocketService extends SocketServiceInterface {
       );
       socket.join(socketInformation.roomName);
 
-      if (this.messageHistory.has(socketInformation.roomName)) {
-        this.emitHistory(
-          socketInformation.roomName,
-          Array.from(
-            (
-              this.messageHistory.get(
-                socketInformation.roomName,
-              ) as Set<MessageInterface>
-            ).values(),
-          ),
-        );
-      }
-
+      this.textChannelRepository
+      .getChannelByName(socketInformation.roomName)
+      .then((channel) => {
+        this.textChannelRepository.getMessages(channel._id)
+        .then((messages) => {
+          if (messages && messages.length !== 0){
+            this.emitHistory(socketInformation.roomName, messages);
+          }
+        })
+      })
+      
       console.log(
         `number of users in ${socketInformation.roomName} : ${
           this.namespace.adapter.rooms.get(socketInformation.roomName)?.size
@@ -102,38 +104,6 @@ export class ChatSocketService extends SocketServiceInterface {
         );
         socket.leave(socketInformation.roomName);
 
-        if (
-          this.namespace.adapter.rooms.get(socketInformation.roomName)?.size ===
-            undefined &&
-          this.messageHistory.has(socketInformation.roomName)
-        ) {
-          const currentMessages = Array.from(
-            (
-              this.messageHistory.get(
-                socketInformation.roomName,
-              ) as Set<MessageInterface>
-            ).values(),
-          );
-          this.textChannelRepository
-            .getChannelByName(socketInformation.roomName)
-            .then((room) => {
-              this.textChannelRepository
-                .getMessages(room._id)
-                .then((messages) => {
-                  const filtered = currentMessages.filter(
-                    (message) =>
-                      !messages.some(
-                        (dbMessage) =>
-                          message.author === dbMessage.author &&
-                          message.message === dbMessage.message &&
-                          message.timestamp === dbMessage.timestamp &&
-                          message.roomName === dbMessage.roomName,
-                      ),
-                  );
-                  this.messageRepository.storeMessages(filtered);
-                });
-            });
-        }
         console.log(
           `number of users in ${socketInformation.roomName} : ${
             this.namespace.adapter.rooms.get(socketInformation.roomName)?.size
