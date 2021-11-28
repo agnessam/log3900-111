@@ -254,7 +254,7 @@ object DrawingSocketService: AbsSocket(SOCKETS.COLLABORATIVE_DRAWING_NAMESPACE) 
         val responseJSON = JSONObject(args[0].toString())
         val newUserId = responseJSON["newUserId"] as String
 
-        GlobalScope.launch(newSingleThreadContext("sendUpdateDrawingRequest")){
+        runBlocking {
             updateDrawingRequest(newUserId)
         }
     }
