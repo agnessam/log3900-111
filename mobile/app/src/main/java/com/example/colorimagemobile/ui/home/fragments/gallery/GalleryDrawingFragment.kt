@@ -55,7 +55,6 @@ class GalleryDrawingFragment : Fragment(R.layout.fragment_gallery_drawing) {
         setCurrentRoomName()
         addToolsOnSidebar()
         setToolsListener()
-        connectToSocket()
         checkMuseumOwner()
     }
 

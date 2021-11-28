@@ -12,6 +12,10 @@ object CanvasUpdateService {
         updateCanvas.value = true
     }
 
+    fun asyncInvalidate(){
+        updateCanvas.postValue(true)
+    }
+
     fun getLiveData(): LiveData<Boolean> {
         return updateCanvas
     }
