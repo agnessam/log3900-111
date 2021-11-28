@@ -1,6 +1,6 @@
-import { Drawing } from "src/app/shared";
 import { Avatar } from "src/app/shared/models/avatar.model";
 import { CollaborationHistory } from "src/app/shared/models/collaboration-history.model";
+import { Drawing } from "src/app/shared/models/drawing.model";
 
 export interface User {
   _id?: string;
@@ -12,7 +12,7 @@ export interface User {
   email?: string;
   description?: string;
 
-  drawings?: Drawing[];
+  drawings?: string[] | Drawing[];
   lastLogin: Date;
   lastLogout: Date;
 

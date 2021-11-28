@@ -12,6 +12,9 @@ export class UserProfileComponent implements OnInit {
   user: User;
   userId: string;
 
+  userLoaded: Promise<boolean>;
+  drawingsLoaded: Promise<boolean>;
+
   constructor(
     private activatedRoute: ActivatedRoute,
     private usersService: UsersService
@@ -20,9 +23,11 @@ export class UserProfileComponent implements OnInit {
       this.userId = params["id"];
       this.usersService.getUser(this.userId).subscribe((user) => {
         this.user = user;
+        this.userLoaded = Promise.resolve(true);
       });
       this.usersService.getUserDrawings(this.userId).subscribe((drawings) => {
         this.user.drawings = drawings;
+        this.drawingsLoaded = Promise.resolve(true);
       });
     });
   }

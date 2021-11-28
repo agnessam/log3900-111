@@ -1,4 +1,4 @@
-<div id="team-profile">
+<div id="team-profile" *ngIf="teamLoaded && drawingsLoaded | async">
   <div id="team-header" fxLayout="row grid" fxLayoutAlign="center center">
     <div fxFlex="11%" id="avatar">
       <ngx-avatar [name]="this.team.name" size="150"></ngx-avatar>
