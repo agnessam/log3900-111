@@ -35,7 +35,7 @@ class DrawingMenuRecyclerAdapter(
 
     override fun onBindViewHolder(holder: DrawingMenuRecyclerAdapter.ViewHolder, position: Int) {
         holder.drawingMenuViewHolder.name.text = drawingMenus[position].drawing.privacyLevel
-        holder.drawingMenuViewHolder.authorName.text = drawingMenus[position].drawing.owner
+        holder.drawingMenuViewHolder.authorName.text = drawingMenus[position].drawing.owner._id
         holder.drawingMenuViewHolder.drawingDate.text = DateFormatter.getDate(drawingMenus[position].drawing.createdAt!!)
         holder.drawingMenuViewHolder.image.setImageBitmap(drawingMenus[position].imageBitmap)
 
