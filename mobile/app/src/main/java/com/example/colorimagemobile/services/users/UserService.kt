@@ -14,6 +14,7 @@ object UserService {
     private lateinit var allUserInfo : ArrayList<UserModel.AllInfo>
     private lateinit var currentCollaborationHistory : CollaborationHistory.drawingHistory
     private  var collaborationHistoryToShow : ArrayList<CollaborationHistory.drawingHistory>
+    private lateinit var collaborationHistoryDrawingId: ArrayList<String>
 
     init {
         updateProfileData =UserModel.UpdateUser(null,null,null)
@@ -77,15 +78,24 @@ object UserService {
 
     fun setCollaborationHistoryToshow(){
 
+        if(info.collaborationHistory.size == 0){ return }
         // set collaboration data
         val countLog = info.collaborationHistory.size
         collaborationHistoryToShow.add(info.collaborationHistory[countLog-1])
         collaborationHistoryToShow.add(info.collaborationHistory[countLog-2])
         collaborationHistoryToShow.add(info.collaborationHistory[countLog-3])
+
+        collaborationHistoryDrawingId.add(info.collaborationHistory[countLog-1].drawing)
+        collaborationHistoryDrawingId.add(info.collaborationHistory[countLog-2].drawing)
+        collaborationHistoryDrawingId.add(info.collaborationHistory[countLog-3].drawing)
     }
 
     fun getCollaborationToShow() : ArrayList<CollaborationHistory.drawingHistory>{
         return collaborationHistoryToShow
+    }
+
+    fun getIdCollaborationToShow() : ArrayList<String>{
+        return collaborationHistoryDrawingId
     }
 
 

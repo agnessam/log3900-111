@@ -1,21 +1,15 @@
 package com.example.colorimagemobile.utils
 
-import android.annotation.SuppressLint
 import android.app.Activity
-import android.content.ClipData
 import android.content.Context
 import android.content.Context.INPUT_METHOD_SERVICE
 import android.content.Intent
 import android.util.Log
 import android.view.KeyEvent
-import android.view.MenuItem
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
-import androidx.appcompat.view.menu.ActionMenuItemView
-import androidx.fragment.app.FragmentActivity
 import com.example.colorimagemobile.utils.Constants.Companion.DEBUG_KEY
-import com.squareup.picasso.Picasso
 
 class CommonFun {
     companion object {

@@ -3,12 +3,10 @@ package com.example.colorimagemobile.adapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.colorimagemobile.R
 import com.example.colorimagemobile.services.teams.TeamService
-import com.google.android.material.button.MaterialButton
 
 class TeamsMenuRecyclerAdapter(
         val layoutID: Int,

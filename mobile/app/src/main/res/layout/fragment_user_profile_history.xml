@@ -122,13 +122,13 @@
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/collabHistoryRecyclerView"
-                android:background="@color/container"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginStart="100dp"
-                android:layout_marginEnd="100dp"
                 android:layout_marginTop="60dp"
-                android:layout_marginBottom="10dp">
+                android:layout_marginEnd="100dp"
+                android:layout_marginBottom="10dp"
+                android:background="@color/container">
 
             </androidx.recyclerview.widget.RecyclerView>
         </androidx.cardview.widget.CardView>

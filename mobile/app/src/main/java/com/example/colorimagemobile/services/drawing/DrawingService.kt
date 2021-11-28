@@ -3,16 +3,20 @@ package com.example.colorimagemobile.services.drawing
 import android.content.Context
 import android.graphics.Bitmap
 import com.example.colorimagemobile.classes.ImageConvertor
+import com.example.colorimagemobile.models.CollaborationHistory
 import com.example.colorimagemobile.models.DrawingModel
 import com.example.colorimagemobile.models.OwnerModel
 import com.example.colorimagemobile.models.PrivacyLevel
 import com.example.colorimagemobile.models.recyclerAdapters.DrawingMenuData
+import com.example.colorimagemobile.services.CollaborationHistory.CollaborationHistoryService
 import com.example.colorimagemobile.services.users.UserService
+import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
 
 object DrawingService {
 
     private var allDrawings: List<DrawingModel.Drawing> = arrayListOf()
     private var currentDrawingID: String? = null
+    private var userCollaborationDrawings: List<DrawingModel.Drawing> = arrayListOf()
 
     fun setCurrentDrawingID(drawingId: String?) {
         currentDrawingID = drawingId
@@ -74,5 +78,20 @@ object DrawingService {
         }
 
         return drawingsMenu
+    }
+
+    fun getDrawing(position: Int): DrawingModel.Drawing{
+        return  allDrawings[position]
+    }
+
+    fun getCollaborationDrawingObject(): List<DrawingModel.Drawing> {
+         val firstDrawing = allDrawings.find { drawing -> drawing._id == UserService.getIdCollaborationToShow()[0] }!!
+         val secondDrawing = allDrawings.find { drawing -> drawing._id == UserService.getIdCollaborationToShow()[1] }!!
+         val thirdDrawing = allDrawings.find { drawing -> drawing._id == UserService.getIdCollaborationToShow()[2] }!!
+         userCollaborationDrawings = arrayListOf(firstDrawing,secondDrawing,thirdDrawing )
+
+        printMsg("all collaborationdrawing "+userCollaborationDrawings)
+
+        return userCollaborationDrawings
     }
 }

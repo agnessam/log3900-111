@@ -90,6 +90,12 @@ class Constants {
         }
     }
 
+    class DRAWINGS {
+        companion object {
+            const val CURRENT_DRAWING_ID_KEY = "CurrentDrawing"
+        }
+    }
+
 
     class SEARCH {
         companion object {

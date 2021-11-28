@@ -29,7 +29,7 @@ class DrawingMenuRecyclerAdapter(
     val drawingMenus: ArrayList<DrawingMenuData> = drawings
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DrawingMenuRecyclerAdapter.ViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout. recycler_drawing_menu, parent, false)
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.recycler_drawing_menu, parent, false)
         return ViewHolder(view)
     }
 

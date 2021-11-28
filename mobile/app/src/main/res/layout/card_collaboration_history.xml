@@ -1,72 +1,72 @@
 <?xml version="1.0" encoding="utf-8"?>
 
     <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="285dp"
+        android:layout_height="145dp"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/collaborationHistoryCard"
+        android:layout_margin="5dp"
+        app:cardElevation="3dp"
+        app:cardCornerRadius="10dp"
+        android:orientation="vertical"
+        app:contentPadding="4dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/card_drawingId"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="34dp"
+        android:layout_marginTop="16dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Drawing Id"
+            app:layout_constraintBaseline_toBaselineOf="@+id/drawingId"
+            app:layout_constraintStart_toStartOf="parent" />
+
+
+        <TextView
+            android:id="@+id/drawingId"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="120dp"
+            android:layout_marginTop="8dp"
+            android:text="c'est la putain de merde"
+            app:layout_constraintStart_toStartOf="@+id/textView"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/card_date"
+        android:layout_width="match_parent"
+        android:layout_height="34dp"
+        android:layout_marginTop="50dp"
         android:orientation="horizontal">
 
 
-        <LinearLayout
-            android:id="@+id/collaborationHistory"
-            android:layout_width="match_parent"
+        <TextView
+            android:id="@+id/textViewId"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:layout_marginStart="4dp"
+            android:text="Collaborate At"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:layout_editor_absoluteY="8dp"
+            tools:ignore="MissingConstraints" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="40dp"
-                android:layout_marginBottom="10dp"
-                android:text="Drawing Id"
-                android:textAlignment="center"
-                android:textSize="18sp"
-                android:textStyle="bold" />
-
-            <View
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_weight="1" />
-
-            <TextView
-                android:id="@+id/drawingId"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="180dp"
-                android:layout_marginTop="35dp"/>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/collaborationDateBox"
-            android:layout_width="match_parent"
+        <TextView
+            android:id="@+id/dateOfCollaboration"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/collaborationHistory"
-            android:orientation="horizontal"
-            android:layout_marginTop="80dp">
+            android:layout_marginTop="8dp"
+            android:text="c'est la putain de merde"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:layout_editor_absoluteX="123dp"
+            tools:ignore="MissingConstraints" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:layout_marginBottom="10dp"
-                android:text="Collaborate At"
-                android:textAlignment="center"
-                android:textSize="18sp"
-                android:textStyle="bold" />
-
-            <View
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_weight="1" />
-
-            <TextView
-                android:id="@+id/dateOfCollaboration"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:layout_marginEnd="180dp" />
-
-        </LinearLayout>
-
-    </androidx.cardview.widget.CardView>
+</androidx.cardview.widget.CardView>
