@@ -33,6 +33,7 @@ class MainActivity : AppCompatActivity() {
         } else {
             UserRepository().getUserByToken(token).observe(this, {
                 if (it.isError!!) {
+                    sharedPreferencesService.clear()
                     printToast(this@MainActivity, it.message!!)
                     redirectTo(this, LoginActivity::class.java)
                 }

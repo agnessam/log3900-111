@@ -50,6 +50,9 @@ interface API {
     @GET("${Constants.ENDPOINTS.USER_PATH}{id}/drawings")
     fun getUserDrawings(@Header("Authorization") token: String, @Path ("id") id: String): Call<List<DrawingModel.Drawing>>
 
+    @GET("${Constants.ENDPOINTS.USER_PATH}{id}/posts")
+    fun getUserPosts(@Header("Authorization") token: String, @Path ("id") id: String): Call<List<PublishedMuseumPostModel>>
+
     //  TextChannel region
     @Headers("Content-Type: application/json")
     @GET(Constants.ENDPOINTS.TEXT_CHANNEL_PATH + "{channelId}" + "/messages")

@@ -11,15 +11,20 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.colorimagemobile.R
 import com.example.colorimagemobile.adapter.DrawingMenuRecyclerAdapter
+import com.example.colorimagemobile.adapter.PostsMenuRecyclerAdapter
 import com.example.colorimagemobile.classes.ImageConvertor
 import com.example.colorimagemobile.classes.MyFragmentManager
 import com.example.colorimagemobile.classes.MyPicasso
 import com.example.colorimagemobile.models.DrawingModel
+import com.example.colorimagemobile.models.MuseumPostModel
+import com.example.colorimagemobile.models.PublishedMuseumPostModel
 import com.example.colorimagemobile.models.UserModel
 import com.example.colorimagemobile.models.recyclerAdapters.DrawingMenuData
 import com.example.colorimagemobile.repositories.UserRepository
 import com.example.colorimagemobile.services.drawing.DrawingService
 import com.example.colorimagemobile.services.users.UserService
+import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
+import com.example.colorimagemobile.utils.CommonFun.Companion.printToast
 import com.example.colorimagemobile.utils.Constants
 import com.google.android.material.tabs.TabLayout
 import kotlinx.android.synthetic.main.fragment_teams_profile.*
@@ -30,6 +35,7 @@ class UsersProfileFragment : Fragment(R.layout.fragment_users_profile) {
     private lateinit var myView: View
     private lateinit var recyclerView: RecyclerView
     private var drawingsMenu: ArrayList<DrawingMenuData> = arrayListOf()
+    private var publishedDrawings: List<PublishedMuseumPostModel> = listOf()
     private lateinit var followBtn: Button
     private lateinit var unfollewBtn: Button
 
@@ -51,6 +57,7 @@ class UsersProfileFragment : Fragment(R.layout.fragment_users_profile) {
         updateUI()
         setListeners()
         getUserDrawings()
+        getUserPosts()
     }
 
     private fun updateUI() {
@@ -104,6 +111,7 @@ class UsersProfileFragment : Fragment(R.layout.fragment_users_profile) {
     private fun getUserDrawings() {
         UserRepository().getUserDrawings(currentUser._id).observe(viewLifecycleOwner, {
             if (it.isError as Boolean) {
+                printToast(requireContext(), it.message!!)
                 return@observe
             }
             val drawings = it.data as List<DrawingModel.Drawing>
@@ -112,13 +120,25 @@ class UsersProfileFragment : Fragment(R.layout.fragment_users_profile) {
         })
     }
 
+
+    private fun getUserPosts() {
+        UserRepository().getUserPosts(currentUser._id).observe(viewLifecycleOwner, {
+            if (it.isError as Boolean) {
+                printToast(requireContext(), it.message!!)
+                return@observe
+            }
+            publishedDrawings = it.data as List<PublishedMuseumPostModel>
+        })
+    }
+
     private fun setAllDrawings() {
+        recyclerView.adapter = null
         recyclerView.adapter = DrawingMenuRecyclerAdapter(requireActivity(), drawingsMenu, R.id.usersMenuFrameLayout)
     }
 
     private fun setPublishedDrawings() {
-        val drawings = arrayListOf<DrawingMenuData>()
-        recyclerView.adapter = DrawingMenuRecyclerAdapter(requireActivity(), drawings, R.id.usersMenuFrameLayout)
+        recyclerView.adapter = null
+        recyclerView.adapter = PostsMenuRecyclerAdapter(publishedDrawings)
     }
 
 }
