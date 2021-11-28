@@ -1,17 +1,5 @@
-.mat-icon{
-  height:20px !important;
-  width:20px !important;
-  font-size:20px !important;
-}
-
-.btn {
-  border-radius: 50%;
-  border: none;
-  background-color: transparent;
-}
-
-.btn:hover{
-  background-color: #DEDEDE;
+:host ::ng-deep.mat-icon-button {
+  min-width: 30%;
 }
 
 #chat-popup {
@@ -37,12 +25,10 @@
   align-items: center;
 }
 .chat-top>:nth-child(1){
-  width: 50%;
+  width: max-content;
   margin-left: 10px;
 }
-.chat-menu{
-  width: 50%;
-}
+
 
 #chatbox {
   text-align: left;
@@ -79,21 +65,29 @@ input[type=text]{
   border: none;
 }
 
-#usermsg{
-  height: 100%;
-  margin-right: 5px;
-
-}
-
-#ArrowUp {
-  display:none;
-}
-
 .time{
   color:grey;
   font: 10px bold ;
   align-self: flex-end;
   margin-right:10px;
+}
+
+#new-message-form{
+  background-color: #fef9f7;
+  border-radius: 25px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#new-message-input{
+  border: none;
+  background-color: transparent;
+  width: 100%;
+}
+
+#new-message-input:focus{
+  outline: none;
 }
 
 .user, .other{

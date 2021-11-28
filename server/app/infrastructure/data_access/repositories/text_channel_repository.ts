@@ -33,14 +33,15 @@ export class TextChannelRepository extends GenericRepository<TextChannelInterfac
 		})
 	};
 
-	public async getChannelsByName(channelName: string): Promise<TextChannelInterface[]> {
+	// Channels have unique names
+	public async getChannelByName(channelName: string): Promise<TextChannelInterface> {
 		return new Promise((resolve, reject) => {
-			TextChannel.find({name: new RegExp('^'+ channelName +'$', "i")})
-			.exec((err, channels) => {
-				if (err) {
+			TextChannel.findOne({name: new RegExp('^'+ channelName +'$', "i")})
+			.exec((err, channel) => {
+				if (err || !channel) {
 					reject(err);
 				}
-				resolve(channels);
+				resolve(channel!);
 			})
 		})
 	}

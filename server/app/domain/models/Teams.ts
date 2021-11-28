@@ -1,4 +1,6 @@
 import mongoose, { Document, Model, Schema } from 'mongoose';
+import { DrawingInterface } from './Drawing';
+import { PostInterface } from './Post';
 import { UserInterface } from './user';
 
 export interface TeamInterface extends Document {
@@ -12,8 +14,8 @@ export interface TeamInterface extends Document {
   isPrivate: boolean;
   password: string;
 
-  drawings: string[];
-  posts: string[];
+  drawings: string[] | DrawingInterface[];
+  posts: string[] | PostInterface[];
 }
 
 const TeamSchema = new mongoose.Schema({
