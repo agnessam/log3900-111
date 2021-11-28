@@ -6,6 +6,7 @@ import android.view.View
 import com.example.colorimagemobile.R
 import com.example.colorimagemobile.classes.MyFragmentManager
 import com.example.colorimagemobile.services.drawing.DrawingService
+import com.example.colorimagemobile.services.socket.DrawingSocketService
 
 class GalleryFragment : Fragment(R.layout.fragment_gallery) {
     private val mainGalleryFragmentID = R.id.main_gallery_fragment
@@ -15,5 +16,6 @@ class GalleryFragment : Fragment(R.layout.fragment_gallery) {
 
         val fragmentDestination = if (DrawingService.getCurrentDrawingID() == null) GalleryMenuFragment() else GalleryDrawingFragment()
         MyFragmentManager(requireActivity()).open(mainGalleryFragmentID, fragmentDestination)
+        DrawingSocketService.setFragmentActivity(requireActivity())
     }
 }

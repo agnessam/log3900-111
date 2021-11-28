@@ -8,7 +8,8 @@ import { NewDrawingModule } from "../new-drawing/new-drawing.module";
 import { MatDialogModule } from "@angular/material/dialog";
 import { WorkspaceModule } from "../workspace/workspace.module";
 import { FlexLayoutModule } from "@angular/flex-layout";
-import { MatCardModule } from '@angular/material/card';
+import { MatCardModule } from "@angular/material/card";
+import { CardsModule } from "../cards/cards.module";
 
 @NgModule({
   declarations: [GalleryComponent],
@@ -21,7 +22,8 @@ import { MatCardModule } from '@angular/material/card';
     NewDrawingModule,
     WorkspaceModule,
     FlexLayoutModule,
-    MatCardModule
+    MatCardModule,
+    CardsModule,
   ],
 })
 export class GalleryModule {}

@@ -1,4 +1,4 @@
-<div id="team-profile">
+<div id="team-profile" *ngIf="teamLoaded | async">
   <div id="team-header" fxLayout="row grid" fxLayoutAlign="center center">
     <div fxFlex="11%" id="avatar">
       <ngx-avatar [name]="this.team.name" size="150"></ngx-avatar>
@@ -36,7 +36,7 @@
         <button
           mat-raised-button
           color="primary"
-          (click)="joinTeam(teamId)"
+          (click)="openConfirmJoinDialog()"
           *ngIf="!isAlreadyJoined() && !isTeamFull()"
         >
           Join team

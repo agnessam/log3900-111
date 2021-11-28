@@ -2,12 +2,15 @@ package com.example.colorimagemobile.services.drawing
 
 import com.example.colorimagemobile.classes.CommandFactory
 import com.example.colorimagemobile.classes.JSONConvertor
+import com.example.colorimagemobile.classes.toolsCommand.selectionToolCommands.ResizeCommand
 import com.example.colorimagemobile.interfaces.ICommand
 import com.example.colorimagemobile.models.*
+import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
 import org.json.JSONObject
 
 object SynchronisationService {
-
+    private var lastXTranslate: Float = 0f
+    private var lastYTranslate: Float = 0f
     private val previewShapes: HashMap<String, ICommand> = HashMap()
 
     fun isShapeInPreview(uuid: String?): Boolean{
@@ -129,7 +132,17 @@ object SynchronisationService {
             if(transformCommand == null || command == null) return
 
             if(transformCommand.javaClass == command.javaClass){
+                if(command is ResizeCommand){
+                    if((transformSelectionData.drawingCommand as ResizeData).xTranslate != lastXTranslate || transformSelectionData.drawingCommand.yTranslate != lastYTranslate){
+                        command.resetPathWithShapePath()
+                    }
+
+                    lastXTranslate = transformSelectionData.drawingCommand.xTranslate
+                    lastYTranslate = transformSelectionData.drawingCommand.yTranslate
+                }
+
                 command.update(transformSelectionData.drawingCommand)
+
             }
             else{
                 previewShapes[commandId] = transformCommand
