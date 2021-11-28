@@ -102,7 +102,7 @@ export class UserRepository extends GenericRepository<UserInterface> {
   public async getPosts(userId: string) {
     return new Promise((resolve, reject) => {
       User.findById({ _id: userId })
-        .populate('posts')
+        .populate({ path: 'posts', populate: { path: 'owner' } })
         .exec((err, user) => {
           if (err || !user) {
             reject(err);
