@@ -17,7 +17,7 @@ export class DrawingController {
 
   @httpGet('/')
   public async get() {
-    return await this.drawingRepository.findAll();
+    return await this.drawingRepository.getPopulatedDrawings();
   }
 
   @httpGet('/:drawingId')

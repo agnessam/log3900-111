@@ -12,6 +12,19 @@ export class DrawingRepository extends GenericRepository<DrawingInterface> {
     super(Drawing);
   }
 
+  public async getPopulatedDrawings(): Promise<DrawingInterface[]> {
+    return new Promise((resolve, reject) => {
+      Drawing.find({})
+        .populate('owner')
+        .exec((err, drawings) => {
+          if (err) {
+            reject(drawings);
+          }
+          resolve(drawings);
+        });
+    });
+  }
+
   public async createUserDrawing(
     item: DrawingInterface,
     ownerId: string,
@@ -36,8 +49,13 @@ export class DrawingRepository extends GenericRepository<DrawingInterface> {
             user.save();
           },
         );
+        Drawing.populate(drawing, { path: 'owner' }, (err, drawing) => {
+          if (err || !drawing) {
+            reject(err);
+          }
+          resolve(drawing);
+        });
       });
-      resolve(drawing);
     });
   }
 
@@ -45,6 +63,7 @@ export class DrawingRepository extends GenericRepository<DrawingInterface> {
     item: DrawingInterface,
   ): Promise<DrawingInterface> {
     return new Promise<DrawingInterface>((resolve, reject) => {
+      console.log(item);
       const drawing = new Drawing({
         dataUri: item.dataUri,
         owner: item.owner,
@@ -64,8 +83,13 @@ export class DrawingRepository extends GenericRepository<DrawingInterface> {
             team.save();
           },
         );
+        Drawing.populate(drawing, { path: 'owner' }, (err, drawing) => {
+          if (err || !drawing) {
+            reject(err);
+          }
+          resolve(drawing);
+        });
       });
-      resolve(drawing);
     });
   }
 

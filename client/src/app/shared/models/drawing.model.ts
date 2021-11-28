@@ -1,7 +1,10 @@
+import { User } from "src/app/modules/users/models/user";
+import { Team } from "./team.model";
+
 export interface Drawing {
   _id: string;
   dataUri: string;
-  ownerId: string;
+  owner: string | User | Team;
   ownerModel: string;
   name: string;
 

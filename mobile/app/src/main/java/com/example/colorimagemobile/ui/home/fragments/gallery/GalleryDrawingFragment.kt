@@ -54,7 +54,6 @@ class GalleryDrawingFragment : Fragment(R.layout.fragment_gallery_drawing) {
         setCurrentRoomName()
         addToolsOnSidebar()
         setToolsListener()
-        connectToSocket()
         checkMuseumOwner()
     }
 
@@ -104,7 +103,7 @@ class GalleryDrawingFragment : Fragment(R.layout.fragment_gallery_drawing) {
 
         // we are the only user/owner of drawing ==> owner is us
         if (currentDrawing.ownerModel == OwnerModel.USER.toString()) {
-            if (currentDrawing.owner == UserService.getUserInfo()._id) {
+            if (currentDrawing.owner._id == UserService.getUserInfo()._id) {
                 addMuseumButton()
             }
             return
@@ -112,7 +111,7 @@ class GalleryDrawingFragment : Fragment(R.layout.fragment_gallery_drawing) {
 
         // drawing belongs to a group ==> owner is teamId
         if (currentDrawing.ownerModel == OwnerModel.TEAM.toString()) {
-            if (DrawingService.checkIfUserIsInTeam(currentDrawing.owner) != null) addMuseumButton()
+            if (DrawingService.checkIfUserIsInTeam(currentDrawing.owner._id) != null) addMuseumButton()
         }
     }
 

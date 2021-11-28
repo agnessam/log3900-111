@@ -115,10 +115,10 @@ export class ChatSocketService extends SocketServiceInterface {
             ).values(),
           );
           this.textChannelRepository
-            .getChannelsByName(socketInformation.roomName)
-            .then((rooms) => {
+            .getChannelByName(socketInformation.roomName)
+            .then((room) => {
               this.textChannelRepository
-                .getMessages(rooms[0]._id)
+                .getMessages(room._id)
                 .then((messages) => {
                   const filtered = currentMessages.filter(
                     (message) =>
