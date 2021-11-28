@@ -124,6 +124,9 @@ interface API {
     @GET("${Constants.ENDPOINTS.TEAMS}{id}/drawings")
     fun getTeamDrawings(@Header("Authorization") token: String, @Path ("id") id: String): Call<List<DrawingModel.Drawing>>
 
+    @GET("${Constants.ENDPOINTS.TEAMS}{id}/posts")
+    fun getTeamPosts(@Header("Authorization") token: String, @Path ("id") id: String): Call<List<PublishedMuseumPostModel>>
+
     @GET(Constants.ENDPOINTS.TEAMS)
     fun getAllTeams(@Header("Authorization") token: String): Call<ArrayList<TeamModel>>
 

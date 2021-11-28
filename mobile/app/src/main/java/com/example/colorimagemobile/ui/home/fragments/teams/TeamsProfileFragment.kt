@@ -10,8 +10,10 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.colorimagemobile.R
 import com.example.colorimagemobile.adapter.DrawingMenuRecyclerAdapter
+import com.example.colorimagemobile.adapter.PostsMenuRecyclerAdapter
 import com.example.colorimagemobile.classes.MyFragmentManager
 import com.example.colorimagemobile.models.DrawingModel
+import com.example.colorimagemobile.models.PublishedMuseumPostModel
 import com.example.colorimagemobile.models.TeamModel
 import com.example.colorimagemobile.models.recyclerAdapters.DrawingMenuData
 import com.example.colorimagemobile.repositories.TeamRepository
@@ -28,6 +30,7 @@ class TeamsProfileFragment : Fragment(R.layout.fragment_teams_profile) {
     private lateinit var myView: View
     private lateinit var recyclerView: RecyclerView
     private var drawingsMenu: ArrayList<DrawingMenuData> = arrayListOf()
+    private var publishedDrawings: List<PublishedMuseumPostModel> = listOf()
     private lateinit var joinBtn: Button
     private lateinit var leaveBtn: Button
     private lateinit var deleteBtn: Button
@@ -49,6 +52,7 @@ class TeamsProfileFragment : Fragment(R.layout.fragment_teams_profile) {
         updateUI()
         setListeners()
         getTeamDrawings()
+        getTeamPosts()
     }
 
     private fun updateUI() {
@@ -138,12 +142,22 @@ class TeamsProfileFragment : Fragment(R.layout.fragment_teams_profile) {
         })
     }
 
+    private fun getTeamPosts() {
+        TeamRepository().getTeamPosts(currentTeam._id).observe(viewLifecycleOwner, {
+            if (it.isError as Boolean) {
+                return@observe
+            }
+            publishedDrawings = it.data as List<PublishedMuseumPostModel>
+        })
+    }
+
     private fun setAllDrawings() {
+        recyclerView.adapter = null
         recyclerView.adapter = DrawingMenuRecyclerAdapter(requireActivity(), drawingsMenu, R.id.teamsMenuFrameLayout)
     }
 
     private fun setPublishedDrawings() {
-        val drawings = arrayListOf<DrawingMenuData>()
-        recyclerView.adapter = DrawingMenuRecyclerAdapter(requireActivity(), drawings, R.id.teamsMenuFrameLayout)
+        recyclerView.adapter = null
+        recyclerView.adapter = PostsMenuRecyclerAdapter({  }, publishedDrawings)
     }
 }
