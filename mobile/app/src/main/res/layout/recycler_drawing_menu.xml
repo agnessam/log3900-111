@@ -61,6 +61,7 @@
                 android:layout_height="wrap_content">
 
                 <androidx.cardview.widget.CardView
+                    android:visibility="gone"
                     android:id="@+id/card_drawing_menu_author_image_main"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
