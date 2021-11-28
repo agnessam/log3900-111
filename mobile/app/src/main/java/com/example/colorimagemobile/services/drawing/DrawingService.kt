@@ -41,13 +41,13 @@ object DrawingService {
 
             if (drawing.privacyLevel == PrivacyLevel.PRIVATE.toString()) {
                 // if drawing is private and we are the owner -> show
-                if (drawing.ownerModel == OwnerModel.USER.toString() && drawing.owner == UserService.getUserInfo()._id) {
+                if (drawing.ownerModel == OwnerModel.USER.toString() && drawing.owner._id == UserService.getUserInfo()._id) {
                     filteredDrawings.add(drawing)
                 }
 
                 // if drawing is private and the ownerModel is Teams, check if user is included in teams
                 if (drawing.ownerModel == OwnerModel.TEAM.toString()) {
-                    if (checkIfUserIsInTeam(drawing.owner) != null) filteredDrawings.add(drawing)
+                    if (checkIfUserIsInTeam(drawing.owner._id) != null) filteredDrawings.add(drawing)
                 }
             }
         }
