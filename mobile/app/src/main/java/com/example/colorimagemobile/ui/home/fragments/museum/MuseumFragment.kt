@@ -10,7 +10,6 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SnapHelper
 import com.example.colorimagemobile.R
 import com.example.colorimagemobile.adapter.MuseumPostRecyclerAdapter
-import com.example.colorimagemobile.classes.NotificationSound.Notification
 import com.example.colorimagemobile.models.MuseumPostModel
 import com.example.colorimagemobile.repositories.MuseumRepository
 import com.example.colorimagemobile.services.museum.MuseumAdapters
@@ -60,51 +59,15 @@ class MuseumFragment : Fragment(R.layout.fragment_museum) {
     }
 
     private fun postComment(position: Int, newComment: String) {
-        hideKeyboard(requireContext(),myView)
-
-        if (newComment.isEmpty()) {
-            printToast(requireContext(), "Please enter a valid comment!")
-            return
-        }
-
-        val postId = posts[position]._id
-        val comment = MuseumPostService.createComment(postId, newComment)
-
-        MuseumRepository().postComment(postId, comment).observe(viewLifecycleOwner, {
-            if (it.isError as Boolean) { return@observe }
-
-            comment.createdAt = it.data?.createdAt
-            MuseumPostService.addCommentToPost(position, comment)
-            MuseumAdapters.refreshCommentAdapter(position)
-            Notification().playSound(requireContext())
-        })
+        hideKeyboard(requireContext(), myView)
+        MuseumPostService.postComment(position, newComment, viewLifecycleOwner, requireContext())
     }
 
     private fun likePost(position: Int) {
-        val postId = posts[position]._id
-
-        MuseumRepository().likePost(postId).observe(viewLifecycleOwner, {
-            if (it.isError as Boolean) {
-                printToast(requireContext(), it.message!!)
-                return@observe
-            }
-
-            MuseumPostService.likePost(position)
-            MuseumAdapters.refreshLikeSection(position)
-        })
+        MuseumPostService.likePostRequest(position, viewLifecycleOwner, requireContext())
     }
 
     private fun unlikePost(position: Int) {
-        val postId = posts[position]._id
-
-        MuseumRepository().unlikePost(postId).observe(viewLifecycleOwner, { it ->
-            if (it.isError as Boolean) {
-                printToast(requireContext(), it.message!!)
-                return@observe
-            }
-
-            MuseumPostService.unlikePost(position)
-            MuseumAdapters.refreshUnlikeSection(position)
-        })
+        MuseumPostService.unlikePostRequest(position, viewLifecycleOwner, requireContext())
     }
 }

@@ -27,6 +27,7 @@ import com.example.colorimagemobile.services.drawing.DrawingService
 import com.example.colorimagemobile.services.museum.MuseumAdapters
 import com.example.colorimagemobile.services.museum.MuseumPostService
 import com.example.colorimagemobile.services.users.UserService
+import com.example.colorimagemobile.utils.CommonFun.Companion.hideKeyboard
 import com.example.colorimagemobile.utils.CommonFun.Companion.printToast
 import com.example.colorimagemobile.utils.Constants
 import com.google.android.material.tabs.TabLayout
@@ -131,6 +132,7 @@ class UsersProfileFragment : Fragment(R.layout.fragment_users_profile) {
                 return@observe
             }
             publishedDrawings = it.data as List<PublishedMuseumPostModel>
+            setPublishedDrawings()
         })
     }
 
@@ -144,19 +146,6 @@ class UsersProfileFragment : Fragment(R.layout.fragment_users_profile) {
         recyclerView.adapter = PostsMenuRecyclerAdapter({ openPost(it) }, publishedDrawings)
     }
 
-    private fun createDialog(): Dialog {
-        val dialog = Dialog(requireContext())
-
-        dialog.setContentView(R.layout.modal_post)
-        val height = (resources.displayMetrics.heightPixels * 0.70).toInt()
-        val width = (resources.displayMetrics.widthPixels * 0.70).toInt()
-
-        dialog.window?.setBackgroundDrawableResource(R.drawable.modal_background)
-        dialog.window?.setLayout(width, height)
-
-        return dialog
-    }
-
     private fun openPost(postId: String) {
         MuseumRepository().getPostById(postId).observe(viewLifecycleOwner, {
             if (it.isError as Boolean) {
@@ -167,7 +156,7 @@ class UsersProfileFragment : Fragment(R.layout.fragment_users_profile) {
             val post = it.data as MuseumPostModel
             MuseumPostService.setPosts(arrayListOf(post))
 
-            val dialog = createDialog()
+            val dialog = MuseumPostService.createPostDialog(requireContext(), resources)
             val recyclerView = dialog.findViewById<RecyclerView>(R.id.dialogRecyclerView)
             recyclerView.layoutManager = LinearLayoutManager(requireContext())
             val adapter = MuseumPostRecyclerAdapter(
@@ -184,15 +173,18 @@ class UsersProfileFragment : Fragment(R.layout.fragment_users_profile) {
     }
 
     private fun postComment(position: Int, newComment: String) {
-
+        hideKeyboard(requireContext(), myView)
+        MuseumPostService.postComment(position, newComment, viewLifecycleOwner, requireContext())
+        getUserPosts()
     }
 
     private fun likePost(position: Int) {
-
+        MuseumPostService.likePostRequest(position, viewLifecycleOwner, requireContext())
+        getUserPosts()
     }
 
     private fun unlikePost(position: Int) {
-
+        MuseumPostService.unlikePostRequest(position, viewLifecycleOwner, requireContext())
+        getUserPosts()
     }
-
 }
