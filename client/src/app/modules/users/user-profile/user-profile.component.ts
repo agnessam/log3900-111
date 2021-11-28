@@ -12,6 +12,8 @@ export class UserProfileComponent implements OnInit {
   user: User;
   userId: string;
 
+  userLoaded: Promise<boolean>;
+
   constructor(
     private activatedRoute: ActivatedRoute,
     private usersService: UsersService
@@ -20,9 +22,7 @@ export class UserProfileComponent implements OnInit {
       this.userId = params["id"];
       this.usersService.getUser(this.userId).subscribe((user) => {
         this.user = user;
-      });
-      this.usersService.getUserDrawings(this.userId).subscribe((drawings) => {
-        this.user.drawings = drawings;
+        this.userLoaded = Promise.resolve(true);
       });
     });
   }
