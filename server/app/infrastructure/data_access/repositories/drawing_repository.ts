@@ -49,8 +49,13 @@ export class DrawingRepository extends GenericRepository<DrawingInterface> {
             user.save();
           },
         );
+        Drawing.populate(drawing, { path: 'owner' }, (err, drawing) => {
+          if (err || !drawing) {
+            reject(err);
+          }
+          resolve(drawing);
+        });
       });
-      resolve(drawing);
     });
   }
 
@@ -77,8 +82,13 @@ export class DrawingRepository extends GenericRepository<DrawingInterface> {
             team.save();
           },
         );
+        Drawing.populate(drawing, { path: 'owner' }, (err, drawing) => {
+          if (err || !drawing) {
+            reject(err);
+          }
+          resolve(drawing);
+        });
       });
-      resolve(drawing);
     });
   }
 
