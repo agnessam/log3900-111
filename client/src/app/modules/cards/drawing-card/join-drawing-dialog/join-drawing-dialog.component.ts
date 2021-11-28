@@ -1,6 +1,7 @@
 import { Component, Inject, OnInit } from "@angular/core";
 import { FormControl, FormGroup } from "@angular/forms";
 import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material/dialog";
+import { Router } from "@angular/router";
 import { ConfirmJoinDialogComponent } from "src/app/modules/team/team-profile/confirm-join-dialog/confirm-join-dialog.component";
 import { Drawing } from "src/app/shared";
 
@@ -14,7 +15,8 @@ export class JoinDrawingDialogComponent implements OnInit {
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: { drawing: Drawing },
-    private dialogRef: MatDialogRef<ConfirmJoinDialogComponent>
+    private dialogRef: MatDialogRef<ConfirmJoinDialogComponent>,
+    private router: Router
   ) {
     this.collaborativeSessionForm = new FormGroup({
       drawingPassword: new FormControl(""),
@@ -32,7 +34,12 @@ export class JoinDrawingDialogComponent implements OnInit {
       this.collaborativeSessionForm.controls["drawingPassword"].setErrors({
         wrongPassword: true,
       });
+      return;
     }
+
+    this.router.navigate([`/drawings/${this.data.drawing._id}`]);
+    this.dialogRef.close();
+    this.collaborativeSessionForm.reset();
   }
 
   onCancel() {
