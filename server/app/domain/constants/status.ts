@@ -1,5 +1,5 @@
 export enum STATUS {
-  Online,
-  Collaborating,
-  Offline,
+  Online = 'Online',
+  Collaborating = 'Collaborating',
+  Offline = 'Offline',
 }

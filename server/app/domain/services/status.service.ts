@@ -4,7 +4,7 @@ import { StatusServiceInterface } from '../interfaces/status-service.interface';
 
 @injectable()
 export class StatusService implements StatusServiceInterface {
-  userStatus: Map<string, STATUS>;
+  userStatus: Map<string, STATUS> = new Map<string, STATUS>();
 
   updateStatus(userId: string, status: STATUS) {
     this.userStatus.set(userId, status);
