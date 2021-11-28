@@ -11,15 +11,15 @@ export class StatusService implements StatusServiceInterface {
   }
 
   setOffline(userId: string) {
-    this.userStatus.delete(userId);
+    this.userStatus.set(userId, STATUS.Offline);
   }
 
   // We have to convert the hashmap into an object to be able to send it over in an HTTP Response.
   getUserStatus() {
-    const status = {};
+    const allUserStatus = {};
     this.userStatus.forEach((val: STATUS, key: string) => {
-      status[key] = val;
+      allUserStatus[key] = val;
     });
-    return status;
+    return allUserStatus;
   }
 }
