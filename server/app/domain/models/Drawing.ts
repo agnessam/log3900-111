@@ -1,4 +1,5 @@
 import mongoose, { Document, Model, Schema } from 'mongoose';
+import { UserInterface } from './user';
 
 enum PRIVACY_LEVEL {
   public,
@@ -8,7 +9,7 @@ enum PRIVACY_LEVEL {
 
 export interface DrawingInterface extends Document {
   dataUri: string;
-  owner: string;
+  owner: string | UserInterface;
   ownerModel: string;
   name: string;
 
