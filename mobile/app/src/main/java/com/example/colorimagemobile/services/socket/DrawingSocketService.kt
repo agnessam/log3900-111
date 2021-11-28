@@ -4,6 +4,7 @@ import androidx.fragment.app.FragmentActivity
 import com.example.colorimagemobile.classes.AbsSocket
 import com.example.colorimagemobile.classes.JSONConvertor
 import com.example.colorimagemobile.models.*
+import com.example.colorimagemobile.repositories.DrawingRepository
 import com.example.colorimagemobile.services.drawing.SynchronisationService
 import com.example.colorimagemobile.services.users.UserService
 import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
@@ -14,13 +15,19 @@ import com.example.colorimagemobile.utils.Constants.SOCKETS.Companion.CONFIRM_SE
 import com.example.colorimagemobile.utils.Constants.SOCKETS.Companion.IN_PROGRESS_DRAWING_EVENT
 import com.example.colorimagemobile.utils.Constants.SOCKETS.Companion.START_SELECTION_EVENT
 import com.example.colorimagemobile.utils.Constants.SOCKETS.Companion.TRANSFORM_SELECTION_EVENT
+import com.example.colorimagemobile.utils.Constants.SOCKETS.Companion.UPDATE_DRAWING_EVENT
+import com.example.colorimagemobile.utils.Constants.SOCKETS.Companion.UPDATE_DRAWING_NOTIFICATION
 import io.socket.emitter.Emitter
+import kotlinx.coroutines.*
 import org.json.JSONException
 import org.json.JSONObject
+import retrofit2.awaitResponse
+import java.lang.Runnable
 
 object DrawingSocketService: AbsSocket(SOCKETS.COLLABORATIVE_DRAWING_NAMESPACE) {
     private var roomName: String? = null
     private var fragmentActivity: FragmentActivity? = null
+    private val drawingRepository: DrawingRepository = DrawingRepository()
 
     override fun disconnect() {
         leaveRoom(this.roomName!!)
@@ -45,6 +52,7 @@ object DrawingSocketService: AbsSocket(SOCKETS.COLLABORATIVE_DRAWING_NAMESPACE) 
         this.listenStartSelectionCommand()
         this.listenConfirmSelectionCommand()
         this.listenTransformSelectionCommand()
+        this.listenUpdateDrawingRequest()
     }
 
     fun sendInProgressDrawingCommand(drawingCommand: Any, type: String) {
@@ -226,5 +234,29 @@ object DrawingSocketService: AbsSocket(SOCKETS.COLLABORATIVE_DRAWING_NAMESPACE) 
                 return@Runnable
             }
         })
+    }
+
+    private fun listenUpdateDrawingRequest() {
+        mSocket.on(UPDATE_DRAWING_EVENT, updateDrawingRequestListen)
+    }
+
+    private var updateDrawingRequestListen = Emitter.Listener { args ->
+        val responseJSON = JSONObject(args[0].toString())
+        val newUserId = responseJSON["newUserId"] as String
+
+        GlobalScope.launch(newSingleThreadContext("sendUpdateDrawingRequest")){
+            updateDrawingRequest(newUserId)
+        }
+    }
+
+    private suspend fun updateDrawingRequest(newUserId: String){
+        val drawing = drawingRepository.saveCurrentDrawing()
+        if(drawing != null){
+            sendDrawingUpdatedNotification(newUserId)
+        }
+    }
+
+    private fun sendDrawingUpdatedNotification(clientSocketId: String) {
+        mSocket.emit(UPDATE_DRAWING_NOTIFICATION, clientSocketId);
     }
 }
