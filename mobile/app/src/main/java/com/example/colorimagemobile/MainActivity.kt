@@ -31,16 +31,24 @@ class MainActivity : AppCompatActivity() {
             redirectTo(this, LoginActivity::class.java)
         } else {
             UserRepository().getUserByToken(token).observe(this, {
-                if (it.isError!!) {
-                    sharedPreferencesService.clear()
-                    printToast(this@MainActivity, it.message!!)
-                    redirectTo(this, LoginActivity::class.java)
+                if (it.isError!! || it.data == null) {
+                    goToLogin(it.message!!)
                 }
 
-                UserService.setToken(token)
-                UserService.setUserInfo(it.data?.user as UserModel.AllInfo)
-                redirectTo(this, HomeActivity::class.java)
+                try {
+                    UserService.setToken(token)
+                    UserService.setUserInfo(it.data?.user as UserModel.AllInfo)
+                    redirectTo(this, HomeActivity::class.java)
+                } catch (error: Throwable) {
+                    goToLogin("Failed to login!")
+                }
             })
         }
+    }
+
+    private fun goToLogin(message: String) {
+        sharedPreferencesService.clear()
+        printToast(this@MainActivity, message)
+        redirectTo(this, LoginActivity::class.java)
     }
 }

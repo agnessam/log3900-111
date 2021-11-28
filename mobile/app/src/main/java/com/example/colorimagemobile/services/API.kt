@@ -26,7 +26,6 @@ interface API {
     @POST(Constants.ENDPOINTS.REGISTER_USER)
     fun registerUser(@Body newUser: UserModel.Register): Call<HTTPResponseModel.RegisterResponse>
 
-
     // User crud region
     @GET(Constants.ENDPOINTS.GET_USER_BY_TOKEN)
     fun getUserByToken(@Header("Authorization") token: String): Call<HTTPResponseModel.UserResponse>
@@ -38,6 +37,10 @@ interface API {
     @Headers("Content-Type: application/json")
     @GET(Constants.ENDPOINTS.USER_PATH+"{id}")
     fun getUserById(@Header("Authorization") token: String, @Path ("id") id : String): Call<UserModel.AllInfo>
+
+    @Headers("Content-Type: application/json")
+    @GET(Constants.ENDPOINTS.USER_PATH+"{id}")
+    fun getUserByIdUserProfile(@Header("Authorization") token: String, @Path ("id") id : String): Call<UserModel.AllInfoProfile>
 
     @Headers("Content-Type: application/json")
     @PATCH(Constants.ENDPOINTS.USER_PATH+"{id}")
@@ -123,6 +126,9 @@ interface API {
     // teams
     @GET("${Constants.ENDPOINTS.TEAMS}{id}/drawings")
     fun getTeamDrawings(@Header("Authorization") token: String, @Path ("id") id: String): Call<List<DrawingModel.Drawing>>
+
+    @GET("${Constants.ENDPOINTS.TEAMS}{id}")
+    fun getTeamById(@Header("Authorization") token: String, @Path ("id") id: String): Call<TeamIdModel>
 
     @GET("${Constants.ENDPOINTS.TEAMS}{id}/posts")
     fun getTeamPosts(@Header("Authorization") token: String, @Path ("id") id: String): Call<List<PublishedMuseumPostModel>>

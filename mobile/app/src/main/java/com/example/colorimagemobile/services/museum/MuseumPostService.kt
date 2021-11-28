@@ -1,5 +1,9 @@
 package com.example.colorimagemobile.services.museum
 
+import android.app.Dialog
+import android.content.Context
+import android.content.res.Resources
+import com.example.colorimagemobile.R
 import com.example.colorimagemobile.models.CommentInterface
 import com.example.colorimagemobile.models.MuseumPostModel
 import com.example.colorimagemobile.services.users.UserService
@@ -40,5 +44,18 @@ object MuseumPostService {
             createdAt = null,
             updatedAt = null
         )
+    }
+
+    fun createPostDialog(context: Context, resources: Resources): Dialog {
+        val dialog = Dialog(context)
+
+        dialog.setContentView(R.layout.modal_post)
+        val height = (resources.displayMetrics.heightPixels * 0.70).toInt()
+        val width = (resources.displayMetrics.widthPixels * 0.70).toInt()
+
+        dialog.window?.setBackgroundDrawableResource(R.drawable.modal_background)
+        dialog.window?.setLayout(width, height)
+
+        return dialog
     }
 }

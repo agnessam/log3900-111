@@ -20,6 +20,7 @@ data class MuseumPostModel(
     val updatedAt: String?,
 )
 
+// Difference: comments is array of String rather than CommentInterface
 data class PublishedMuseumPostModel(
     val _id: String,
     val dataUri: String,
