@@ -41,10 +41,6 @@ export class ChatSocketService extends SocketServiceInterface {
 
   private listenMessage(socket: Socket): void {
     socket.on(TEXT_MESSAGE_EVENT_NAME, (message: MessageInterface) => {
-      // mobile sends the json object in string format
-      if (typeof message === 'string') {
-        message = JSON.parse(message);
-      }
       console.log(
         `${message.author} at ${message.timestamp}: ${message.message}`,
       );
@@ -63,7 +59,7 @@ export class ChatSocketService extends SocketServiceInterface {
         })
       })
 
-      this.messageRepository.storeMessages([message]).then(() => {console.log("stored message: " ); console.log(message);})
+      this.messageRepository.storeMessages(message).then(() => {console.log("stored message: " ); console.log(message);})
     });
   }
 
@@ -72,7 +68,7 @@ export class ChatSocketService extends SocketServiceInterface {
   }
 
   protected listenRoom(socket: Socket) {
-    socket.on(ROOM_EVENT_NAME, (socketInformation: SocketRoomInformation) => {
+    socket.on(ROOM_EVENT_NAME, async (socketInformation: SocketRoomInformation) => {
       console.log(
         `${socketInformation.userId} has joined room ${socketInformation.roomName}`,
       );
@@ -83,13 +79,28 @@ export class ChatSocketService extends SocketServiceInterface {
       .then((channel) => {
         this.textChannelRepository.getMessages(channel._id)
         .then((messages) => {
-          console.log(messages)
+          console.log("messages")
           if (messages && messages.length !== 0){
             console.log('EMITTED HSITORY')
             this.emitHistory(socketInformation.roomName, messages);
           }
         })
       })
+      
+      // try {
+      //   console.log("jfkldsajfjfldskjfkldasfjkasldf")
+      //   console.log(socketInformation.roomName)
+      //   const channel = await this.textChannelRepository.getChannelByName(socketInformation.roomName)
+      //   console.log("channel : ", channel)
+      //   const messages = await this.textChannelRepository.getMessages(channel._id)
+      //   console.log("messages", messages)
+      //   if (messages && messages.length !== 0){
+      //     console.log('EMITTED HSITORY')
+      //     this.emitHistory(socketInformation.roomName, messages);
+      //   }
+      // } catch(e: any) {
+      //   console.log(e)
+      // }
 
       console.log(
         `number of users in ${socketInformation.roomName} : ${

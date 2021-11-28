@@ -4,7 +4,7 @@ export interface MessageInterface extends Document{
     message: string, 
     timestamp: string, 
     author: string,
-    roomId: string,
+    _roomId: string,
     roomName: string,
 }
 
@@ -12,7 +12,7 @@ const MessageSchema = new mongoose.Schema({
 	message: { type: String, required: true },
     timestamp: { type: String, required: true },
 	author: { type: String, required: true },
-    roomId: { type: String, required: true, ref: 'TextChannel' },
+    _roomId: { type: String, required: true, ref: 'TextChannel' },
     roomName: { type: String, required: true, ref: 'TextChannel' },
 });
 

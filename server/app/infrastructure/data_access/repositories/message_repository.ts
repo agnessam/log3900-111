@@ -8,10 +8,12 @@ export class MessageRepository extends GenericRepository<MessageInterface> {
 		super(Message);
 	}
 
-	public async storeMessages(messages: MessageInterface[]): Promise<void> {
+	public async storeMessages(messages: MessageInterface): Promise<void> {
+		console.log("STORED MESSAGE" + messages.message)
 		return new Promise((resolve, reject) => {
-			Message.insertMany(messages, { ordered: false }, (err: Error) => {
+			Message.create(messages, (err: Error) => {
 				if (err) {
+					console.log("erreurrrr", err)
 				  reject(err);
 				}
 				resolve();
