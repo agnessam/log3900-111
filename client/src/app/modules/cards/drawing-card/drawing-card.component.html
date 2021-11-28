@@ -1,8 +1,22 @@
-<mat-card class="mat-elevation-z2 gallery" (click)="goToDrawing()">
+<mat-card class="drawing" (click)="goToDrawing()">
   <img
     alt=""
     [src]="getSanitizedUrl(drawing.dataUri)"
     width="100%"
     height="100%"
+    class="drawing-img"
   />
+  <div class="drawing-overlay">
+    <mat-card-title>
+      <div class="drawing-name">{{ drawing.name }}</div>
+    </mat-card-title>
+    <mat-card-content>
+      <p class="drawing-owner" *ngIf="drawing.owner; instanceof: User">
+        {{ $any(drawing.owner).username }}
+      </p>
+      <p class="drawing-owner" *ngIf="drawing.owner; instanceof: Team">
+        {{ $any(drawing.owner).name }}
+      </p>
+    </mat-card-content>
+  </div>
 </mat-card>

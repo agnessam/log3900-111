@@ -22,17 +22,7 @@
       fxFlex.sm="50%"
       *ngFor="let drawing of drawings"
     >
-      <mat-card
-        class="mat-elevation-z2 gallery"
-        (click)="goToDrawing(drawing._id)"
-      >
-        <img
-          alt=""
-          [src]="getSanitizedUrl(drawing.dataUri)"
-          width="100%"
-          height="100%"
-        />
-      </mat-card>
+      <app-drawing-card [drawing]="drawing"></app-drawing-card>
     </div>
   </div>
 </div>

@@ -26,7 +26,7 @@
       </mat-checkbox>
       <mat-form-field>
         <mat-label>Team name</mat-label>
-        <mat-select formControlName="ownerId">
+        <mat-select formControlName="owner">
           <mat-option value="{{ team._id }}" *ngFor="let team of teams">{{
             team.name
           }}</mat-option>

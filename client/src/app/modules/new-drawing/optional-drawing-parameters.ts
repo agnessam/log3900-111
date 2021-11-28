@@ -1,5 +1,5 @@
 export class OptionalDrawingParameters {
-  ownerId: string;
+  owner: string;
   ownerModel: string;
 
   privacyLevel: string;

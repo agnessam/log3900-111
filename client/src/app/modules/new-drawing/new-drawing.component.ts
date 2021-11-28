@@ -51,7 +51,7 @@ export class NewDrawingComponent implements OnInit {
       {
         name: new FormControl("", Validators.required),
         ownerModel: new FormControl(""),
-        ownerId: new FormControl({ value: "", disabled: true }, [
+        owner: new FormControl({ value: "", disabled: true }, [
           this.NonEmptyTeam,
         ]),
         privacyLevel: new FormControl("public"),
@@ -88,7 +88,7 @@ export class NewDrawingComponent implements OnInit {
     const drawingParameters = new OptionalDrawingParameters(this.form.value);
 
     if (drawingParameters.ownerModel == "User") {
-      drawingParameters.ownerId = localStorage.getItem("userId")!;
+      drawingParameters.owner = localStorage.getItem("userId")!;
     }
 
     if (drawingParameters.privacyLevel != "protected") {
@@ -112,9 +112,9 @@ export class NewDrawingComponent implements OnInit {
   toggleOwnerModel(): void {
     this.ownerModel = this.ownerModel == "User" ? "Team" : "User";
     if (this.ownerModel == "User") {
-      this.form.get("ownerId")?.disable();
+      this.form.get("owner")?.disable();
     } else {
-      this.form.get("ownerId")?.enable();
+      this.form.get("owner")?.enable();
     }
   }
 
