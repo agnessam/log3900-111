@@ -6,15 +6,34 @@
     height="100%"
     class="drawing-img"
   />
-  <div class="drawing-overlay" (click)="goToDrawing()">
+
+  <div class="drawing-overlay">
     <mat-card-title>
-      <div class="drawing-name">{{ drawing.name }}</div>
+      <div class="drawing-name" (click)="goToDrawing()">
+        {{ drawing.name }}
+      </div>
+
       <p class="drawing-creation-date">{{ drawing.createdAt.toString() }}</p>
     </mat-card-title>
     <p class="drawing-lock" *ngIf="isProtected()">
       <mat-icon inline="true">lock</mat-icon>
     </p>
     <mat-card-content>
+      <div class="drawing-menu" *ngIf="isOwner()">
+        <button
+          mat-icon-button
+          [matMenuTriggerFor]="menu"
+          aria-label="Example icon button with a vertical three dot icon"
+        >
+          <mat-icon id="settings-icon">more_vert</mat-icon>
+        </button>
+        <mat-menu #menu="matMenu">
+          <button mat-menu-item (click)="openEditDrawingParametersDialog()">
+            <span>Edit parameters</span>
+          </button>
+          <button mat-menu-item><span>Delete</span></button>
+        </mat-menu>
+      </div>
       <p class="drawing-privacy-level">
         {{ capitalizeFirstLetter(drawing.privacyLevel) }}
       </p>

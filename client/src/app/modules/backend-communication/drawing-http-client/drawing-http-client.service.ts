@@ -45,4 +45,17 @@ export class DrawingHttpClientService {
         })
       );
   }
+
+  updateDrawingParameters(
+    drawingId: string,
+    drawingParameters: OptionalDrawingParameters
+  ): Observable<Drawing> {
+    return this.httpClient
+      .patch<Drawing>(`${this.SERVER_ENDPOINT}${drawingId}`, drawingParameters)
+      .pipe(
+        map((drawing) => {
+          return drawing;
+        })
+      );
+  }
 }
