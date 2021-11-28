@@ -36,6 +36,7 @@ mat-card img {
   transition: opacity 0.25s;
 
   border-radius: 10%;
+  cursor: pointer;
 }
 
 .drawing-overlay:hover {
@@ -81,6 +82,10 @@ mat-card-title {
   margin: auto;
   padding-bottom: 10%;
   padding-right: 10%;
+}
+
+.drawing-owner:hover {
+  opacity: 0.8;
 }
 
 .inline-block-child {
