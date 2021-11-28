@@ -38,7 +38,4 @@ const PostSchema = new Schema(
   { timestamps: true },
 );
 
-export const Post: Model<PostInterface> = mongoose.model(
-  'PublishedDrawing',
-  PostSchema,
-);
+export const Post: Model<PostInterface> = mongoose.model('Post', PostSchema);
