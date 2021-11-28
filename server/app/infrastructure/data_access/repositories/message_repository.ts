@@ -9,11 +9,9 @@ export class MessageRepository extends GenericRepository<MessageInterface> {
 	}
 
 	public async storeMessages(messages: MessageInterface): Promise<void> {
-		console.log("STORED MESSAGE" + messages.message)
 		return new Promise((resolve, reject) => {
 			Message.create(messages, (err: Error) => {
 				if (err) {
-					console.log("erreurrrr", err)
 				  reject(err);
 				}
 				resolve();
