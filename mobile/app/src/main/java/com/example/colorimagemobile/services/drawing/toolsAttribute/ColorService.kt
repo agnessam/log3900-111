@@ -43,7 +43,9 @@ object ColorService {
     fun rgbaToInt(color: String): Int {
         val rgbValues = color.substring(color.indexOf('(') + 1, color.indexOf(')'))
         val splitRGB = removeWhitespace(rgbValues).split(",")
-        var alpha = if (splitRGB.size == 4) splitRGB[3].toInt() else Constants.DRAWING.MAX_OPACITY
+        var alpha = if (splitRGB.size == 4) {
+            if (splitRGB[3].toFloat() < 1)  (splitRGB[3].toFloat() * 255).toInt() else splitRGB[3].toInt()
+        } else Constants.DRAWING.MAX_OPACITY
 
         return Color.argb(alpha, splitRGB[0].toInt(), splitRGB[1].toInt(), splitRGB[2].toInt())
     }
