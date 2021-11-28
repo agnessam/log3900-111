@@ -12,6 +12,7 @@ import com.example.colorimagemobile.R
 import com.example.colorimagemobile.bottomsheets.ProtectedDrawingConfirmationBottomSheet
 import com.example.colorimagemobile.classes.DateFormatter
 import com.example.colorimagemobile.classes.MyFragmentManager
+import com.example.colorimagemobile.classes.MyPicasso
 import com.example.colorimagemobile.models.PrivacyLevel
 import com.example.colorimagemobile.models.recyclerAdapters.DrawingMenuData
 import com.example.colorimagemobile.models.recyclerAdapters.DrawingMenuViewHolder
@@ -34,12 +35,16 @@ class DrawingMenuRecyclerAdapter(
     }
 
     override fun onBindViewHolder(holder: DrawingMenuRecyclerAdapter.ViewHolder, position: Int) {
-        holder.drawingMenuViewHolder.name.text = drawingMenus[position].drawing.privacyLevel
-        holder.drawingMenuViewHolder.authorName.text = drawingMenus[position].drawing.owner._id
+        holder.drawingMenuViewHolder.name.text = drawingMenus[position].drawing.name
+        holder.drawingMenuViewHolder.authorName.text = drawingMenus[position].drawing.owner.username
         holder.drawingMenuViewHolder.drawingDate.text = DateFormatter.getDate(drawingMenus[position].drawing.createdAt!!)
         holder.drawingMenuViewHolder.image.setImageBitmap(drawingMenus[position].imageBitmap)
+        MyPicasso().loadImage(drawingMenus[position].drawing.owner.avatar.imageUrl, holder.drawingMenuViewHolder.authorImageView)
 
         if (drawingMenus[position].drawing.privacyLevel == PrivacyLevel.PROTECTED.toString()) holder.drawingMenuViewHolder.lockIconView.visibility = View.VISIBLE
+
+        // TO REMOVEEE
+        holder.drawingMenuViewHolder.privacyLevel.text = drawingMenus[position].drawing.privacyLevel
     }
 
     override fun getItemCount(): Int { return drawingMenus.size }
@@ -61,8 +66,10 @@ class DrawingMenuRecyclerAdapter(
             val drawingDate = itemView.findViewById<TextView>(R.id.card_drawing_menu_date)
             val imageView = itemView.findViewById<ImageView>(R.id.card_drawing_menu_image)
             val lockIconView = itemView.findViewById<ImageView>(R.id.card_drawing_menu_privacy_icon)
+            val authorImageView = itemView.findViewById<ImageView>(R.id.card_drawing_menu_author_image)
+            val privacyLevel = itemView.findViewById<TextView>(R.id.card_drawing_menu_date_privacy) // TO REMOVE
 
-            drawingMenuViewHolder = DrawingMenuViewHolder(name, authorName, drawingDate, imageView, lockIconView)
+            drawingMenuViewHolder = DrawingMenuViewHolder(name, authorName, drawingDate, imageView, lockIconView, authorImageView, privacyLevel)
 
             // click listener for clicking on specific drawing
             itemView.setOnClickListener {
