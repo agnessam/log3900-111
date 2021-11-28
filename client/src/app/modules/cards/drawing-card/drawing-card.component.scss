@@ -58,6 +58,11 @@ mat-card-title {
   cursor: pointer;
 }
 
+.drawing-name:hover {
+  opacity: 0.8;
+  text-decoration: underline;
+}
+
 .drawing-creation-date {
   font-size: 0.5em;
 }
@@ -103,10 +108,17 @@ mat-card-title {
   margin: auto;
   padding-bottom: 10%;
   padding-right: 10%;
+
+  cursor: pointer;
 }
 
 .drawing-owner:hover {
   opacity: 0.8;
+}
+
+.name {
+  padding-left: 5px;
+  padding-top: 14%;
 }
 
 .inline-block-child {
