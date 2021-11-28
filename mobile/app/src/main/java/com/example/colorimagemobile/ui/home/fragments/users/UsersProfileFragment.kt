@@ -1,6 +1,6 @@
 package com.example.colorimagemobile.ui.home.fragments.users
 
-import android.graphics.Bitmap
+import android.app.Dialog
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.View
@@ -8,11 +8,12 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.colorimagemobile.R
 import com.example.colorimagemobile.adapter.DrawingMenuRecyclerAdapter
+import com.example.colorimagemobile.adapter.MuseumPostRecyclerAdapter
 import com.example.colorimagemobile.adapter.PostsMenuRecyclerAdapter
-import com.example.colorimagemobile.classes.ImageConvertor
 import com.example.colorimagemobile.classes.MyFragmentManager
 import com.example.colorimagemobile.classes.MyPicasso
 import com.example.colorimagemobile.models.DrawingModel
@@ -20,10 +21,12 @@ import com.example.colorimagemobile.models.MuseumPostModel
 import com.example.colorimagemobile.models.PublishedMuseumPostModel
 import com.example.colorimagemobile.models.UserModel
 import com.example.colorimagemobile.models.recyclerAdapters.DrawingMenuData
+import com.example.colorimagemobile.repositories.MuseumRepository
 import com.example.colorimagemobile.repositories.UserRepository
 import com.example.colorimagemobile.services.drawing.DrawingService
+import com.example.colorimagemobile.services.museum.MuseumAdapters
+import com.example.colorimagemobile.services.museum.MuseumPostService
 import com.example.colorimagemobile.services.users.UserService
-import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
 import com.example.colorimagemobile.utils.CommonFun.Companion.printToast
 import com.example.colorimagemobile.utils.Constants
 import com.google.android.material.tabs.TabLayout
@@ -138,7 +141,58 @@ class UsersProfileFragment : Fragment(R.layout.fragment_users_profile) {
 
     private fun setPublishedDrawings() {
         recyclerView.adapter = null
-        recyclerView.adapter = PostsMenuRecyclerAdapter(publishedDrawings)
+        recyclerView.adapter = PostsMenuRecyclerAdapter({ openPost(it) }, publishedDrawings)
+    }
+
+    private fun createDialog(): Dialog {
+        val dialog = Dialog(requireContext())
+
+        dialog.setContentView(R.layout.modal_post)
+        val height = (resources.displayMetrics.heightPixels * 0.70).toInt()
+        val width = (resources.displayMetrics.widthPixels * 0.70).toInt()
+
+        dialog.window?.setBackgroundDrawableResource(R.drawable.modal_background)
+        dialog.window?.setLayout(width, height)
+
+        return dialog
+    }
+
+    private fun openPost(postId: String) {
+        MuseumRepository().getPostById(postId).observe(viewLifecycleOwner, {
+            if (it.isError as Boolean) {
+                printToast(requireContext(), it.message!!)
+                return@observe
+            }
+
+            val post = it.data as MuseumPostModel
+            MuseumPostService.setPosts(arrayListOf(post))
+
+            val dialog = createDialog()
+            val recyclerView = dialog.findViewById<RecyclerView>(R.id.dialogRecyclerView)
+            recyclerView.layoutManager = LinearLayoutManager(requireContext())
+            val adapter = MuseumPostRecyclerAdapter(
+                requireContext(),
+                { pos, comment -> postComment(pos, comment)},
+                { pos -> likePost(pos) },
+                { pos -> unlikePost(pos) })
+
+            recyclerView.adapter = adapter
+            MuseumAdapters.setPostsAdapter(adapter)
+
+            dialog.show()
+        })
+    }
+
+    private fun postComment(position: Int, newComment: String) {
+
+    }
+
+    private fun likePost(position: Int) {
+
+    }
+
+    private fun unlikePost(position: Int) {
+
     }
 
 }

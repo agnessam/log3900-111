@@ -150,6 +150,9 @@ interface API {
     @GET(Constants.ENDPOINTS.MUSEUM_POST)
     fun getAllPosts(@Header("Authorization") token: String): Call<ArrayList<MuseumPostModel>>
 
+    @GET("${Constants.ENDPOINTS.MUSEUM_POST}/{id}")
+    fun getPostById(@Header("Authorization") token: String, @Path ("id") postId: String): Call<MuseumPostModel>
+
     @Headers("Content-Type: application/json")
     @POST("${Constants.ENDPOINTS.MUSEUM_POST}/{id}/comments")
     fun postComment(@Header("Authorization") token: String, @Path ("id") postId: String, @Body comment: CommentInterface): Call<CommentInterface>
