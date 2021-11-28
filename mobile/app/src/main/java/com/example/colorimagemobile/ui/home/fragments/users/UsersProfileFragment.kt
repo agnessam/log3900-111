@@ -16,6 +16,7 @@ import com.example.colorimagemobile.adapter.MuseumPostRecyclerAdapter
 import com.example.colorimagemobile.adapter.PostsMenuRecyclerAdapter
 import com.example.colorimagemobile.classes.MyFragmentManager
 import com.example.colorimagemobile.classes.MyPicasso
+import com.example.colorimagemobile.classes.NotificationSound.Notification
 import com.example.colorimagemobile.models.DrawingModel
 import com.example.colorimagemobile.models.MuseumPostModel
 import com.example.colorimagemobile.models.PublishedMuseumPostModel
@@ -27,6 +28,7 @@ import com.example.colorimagemobile.services.drawing.DrawingService
 import com.example.colorimagemobile.services.museum.MuseumAdapters
 import com.example.colorimagemobile.services.museum.MuseumPostService
 import com.example.colorimagemobile.services.users.UserService
+import com.example.colorimagemobile.utils.CommonFun.Companion.hideKeyboard
 import com.example.colorimagemobile.utils.CommonFun.Companion.printToast
 import com.example.colorimagemobile.utils.Constants
 import com.google.android.material.tabs.TabLayout
@@ -157,8 +159,8 @@ class UsersProfileFragment : Fragment(R.layout.fragment_users_profile) {
         return dialog
     }
 
-    private fun openPost(postId: String) {
-        MuseumRepository().getPostById(postId).observe(viewLifecycleOwner, {
+    private fun openPost(postPosition: Int) {
+        MuseumRepository().getPostById(publishedDrawings[postPosition]._id).observe(viewLifecycleOwner, {
             if (it.isError as Boolean) {
                 printToast(requireContext(), it.message!!)
                 return@observe
@@ -172,9 +174,9 @@ class UsersProfileFragment : Fragment(R.layout.fragment_users_profile) {
             recyclerView.layoutManager = LinearLayoutManager(requireContext())
             val adapter = MuseumPostRecyclerAdapter(
                 requireContext(),
-                { pos, comment -> postComment(pos, comment)},
-                { pos -> likePost(pos) },
-                { pos -> unlikePost(pos) })
+                { _, comment -> postComment(postPosition, comment)},
+                { _ -> likePost(postPosition) },
+                { _ -> unlikePost(postPosition) })
 
             recyclerView.adapter = adapter
             MuseumAdapters.setPostsAdapter(adapter)
@@ -183,16 +185,50 @@ class UsersProfileFragment : Fragment(R.layout.fragment_users_profile) {
         })
     }
 
-    private fun postComment(position: Int, newComment: String) {
+    private fun postComment(postPosition: Int, newComment: String) {
+        hideKeyboard(requireContext(), myView)
 
+        if (newComment.isEmpty()) {
+            printToast(requireContext(), "Please enter a valid comment!")
+            return
+        }
+
+        val postId = publishedDrawings[postPosition]._id
+        val comment = MuseumPostService.createComment(postId, newComment)
+
+        MuseumRepository().postComment(postId, comment).observe(viewLifecycleOwner, {
+            if (it.isError as Boolean) { return@observe }
+
+            publishedDrawings[postPosition].comments.add("New Comment")
+            recyclerView.adapter?.notifyItemChanged(postPosition)
+            MuseumAdapters.refreshCommentAdapter(0)
+            Notification().playSound(requireContext())
+        })
     }
 
-    private fun likePost(position: Int) {
+    private fun likePost(postPosition: Int) {
+        MuseumRepository().likePost(publishedDrawings[postPosition]._id).observe(viewLifecycleOwner, {
+            if (it.isError as Boolean) {
+                printToast(requireContext(), it.message!!)
+                return@observe
+            }
 
+            publishedDrawings[postPosition].likes.add(UserService.getUserInfo()._id)
+            recyclerView.adapter?.notifyItemChanged(postPosition)
+            MuseumAdapters.refreshLikeSection(0)
+        })
     }
 
-    private fun unlikePost(position: Int) {
+    private fun unlikePost(postPosition: Int) {
+        MuseumRepository().unlikePost(publishedDrawings[postPosition]._id).observe(viewLifecycleOwner, { it ->
+            if (it.isError as Boolean) {
+                printToast(requireContext(), it.message!!)
+                return@observe
+            }
 
+            publishedDrawings[postPosition].likes.remove(UserService.getUserInfo()._id)
+            recyclerView.adapter?.notifyItemChanged(postPosition)
+            MuseumAdapters.refreshUnlikeSection(0)
+        })
     }
-
 }

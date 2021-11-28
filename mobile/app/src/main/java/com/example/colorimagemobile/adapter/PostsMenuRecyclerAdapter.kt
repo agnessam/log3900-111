@@ -11,7 +11,7 @@ import com.example.colorimagemobile.classes.ImageConvertor
 import com.example.colorimagemobile.models.PublishedMuseumPostModel
 
 class PostsMenuRecyclerAdapter(
-    val openPost: (String) -> Unit,
+    val openPost: (Int) -> Unit,
     val posts: List<PublishedMuseumPostModel>,
 ): RecyclerView.Adapter<PostsMenuRecyclerAdapter.ViewHolder>() {
 
@@ -42,7 +42,7 @@ class PostsMenuRecyclerAdapter(
         init {
 
             itemView.setOnClickListener {
-                openPost(posts[bindingAdapterPosition]._id)
+                openPost(bindingAdapterPosition)
             }
         }
     }
