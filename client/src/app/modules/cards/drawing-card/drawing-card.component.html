@@ -9,14 +9,33 @@
   <div class="drawing-overlay">
     <mat-card-title>
       <div class="drawing-name">{{ drawing.name }}</div>
+      <p class="drawing-creation-date">{{ drawing.createdAt.toString() }}</p>
     </mat-card-title>
+    <p class="drawing-lock" *ngIf="isProtected()">
+      <mat-icon>lock</mat-icon>
+    </p>
     <mat-card-content>
-      <p class="drawing-owner" *ngIf="drawing.owner; instanceof: User">
-        {{ $any(drawing.owner).username }}
+      <p class="drawing-privacy-level">
+        {{ capitalizeFirstLetter(drawing.privacyLevel) }}
       </p>
-      <p class="drawing-owner" *ngIf="drawing.owner; instanceof: Team">
-        {{ $any(drawing.owner).name }}
-      </p>
+      <div class="drawing-owner" *ngIf="isUser(drawing.owner)">
+        <ngx-avatar
+          [src]="$any(drawing.owner).avatar.imageUrl"
+          class="inline-block-child"
+        ></ngx-avatar>
+        <span class="inline-block-child name">{{
+          $any(drawing.owner).username
+        }}</span>
+      </div>
+      <div class="drawing-owner" *ngIf="isTeam(drawing.owner)">
+        <ngx-avatar
+          [name]="$any(drawing.owner).name"
+          class="inline-block-child"
+        ></ngx-avatar>
+        <span class="inline-block-child name">{{
+          $any(drawing.owner).name
+        }}</span>
+      </div>
     </mat-card-content>
   </div>
 </mat-card>

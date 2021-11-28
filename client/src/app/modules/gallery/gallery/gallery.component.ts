@@ -2,9 +2,8 @@ import { MatDialog } from "@angular/material/dialog";
 import { NewDrawingComponent } from "../../new-drawing";
 import { Component, AfterViewInit } from "@angular/core";
 import { DrawingHttpClientService } from "../../backend-communication";
-import { Router } from "@angular/router";
 import { Drawing } from "src/app/shared";
-import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
+import { DomSanitizer, SafeUrl } from "@angular/platform-browser";
 
 @Component({
   selector: "app-gallery",
@@ -14,7 +13,6 @@ import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 export class GalleryComponent implements AfterViewInit {
   drawings: Array<Drawing> = [];
   constructor(
-    private router: Router,
     private dialog: MatDialog,
     private drawingHttpClient: DrawingHttpClientService,
     private sanitizer: DomSanitizer
@@ -34,9 +32,5 @@ export class GalleryComponent implements AfterViewInit {
 
   createNewDrawing() {
     this.dialog.open(NewDrawingComponent, {});
-  }
-
-  goToDrawing(drawingId: string) {
-    this.router.navigate([`/drawings/${drawingId}`]);
   }
 }
