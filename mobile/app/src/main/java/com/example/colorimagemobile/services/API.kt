@@ -39,10 +39,6 @@ interface API {
     fun getUserById(@Header("Authorization") token: String, @Path ("id") id : String): Call<UserModel.AllInfo>
 
     @Headers("Content-Type: application/json")
-    @GET(Constants.ENDPOINTS.USER_PATH+"{id}")
-    fun getUserByIdUserProfile(@Header("Authorization") token: String, @Path ("id") id : String): Call<UserModel.AllInfoProfile>
-
-    @Headers("Content-Type: application/json")
     @PATCH(Constants.ENDPOINTS.USER_PATH+"{id}")
     fun updateUser(@Header("Authorization")token: String, @Path ("id") id : String, @Body  newUser: UserModel.UpdateUser) : Call<HTTPResponseModel.UserResponse>
 
