@@ -1,5 +1,6 @@
 package com.example.colorimagemobile.classes
 
+import com.example.colorimagemobile.classes.toolsCommand.selectionToolCommands.ResizeCommand
 import com.example.colorimagemobile.classes.toolsCommand.*
 import com.example.colorimagemobile.classes.toolsCommand.selectionToolCommands.SelectionCommand
 import com.example.colorimagemobile.interfaces.ICommand

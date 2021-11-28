@@ -24,9 +24,9 @@
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/museumPostsRecyclerView"
-            android:layout_below="@id/museum_swipe_indication"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_below="@id/museum_swipe_indication"
             android:layout_marginTop="5dp">
 
         </androidx.recyclerview.widget.RecyclerView>

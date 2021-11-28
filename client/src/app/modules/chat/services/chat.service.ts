@@ -12,7 +12,5 @@ export class ChatService{
 
   toggleChatOverlay = new EventEmitter<TextChannel>();
 
-  toggleChannelOverlay = new EventEmitter<null>();
-
   leaveRoomEventEmitter = new EventEmitter<TextChannel>();
 }

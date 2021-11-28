@@ -67,7 +67,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:background="@drawable/button_state_selector"
-                        android:drawableTop="@drawable/tool_rect_no_border"
+                        android:drawableTop="@drawable/drawing_icon_rectangle_no_border"
                         android:paddingTop="14dp"
                         android:button="@null" />
 
@@ -77,7 +77,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="15dp"
                         android:background="@drawable/button_state_selector"
-                        android:drawableTop="@drawable/tool_rect_no_border"
+                        android:drawableTop="@drawable/drawing_icon_rectangle_only_border"
                         android:paddingTop="14dp"
                         android:button="@null" />
 
