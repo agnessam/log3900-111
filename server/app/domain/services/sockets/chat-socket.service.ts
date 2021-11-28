@@ -49,13 +49,21 @@ export class ChatSocketService extends SocketServiceInterface {
         `${message.author} at ${message.timestamp}: ${message.message}`,
       );
       this.emitMessage(message);
+      
+      this.textChannelRepository
+      .getChannelByName(message.roomName)
+      .then((channel) => {
+        this.textChannelRepository.getMessages(channel._id)
+        .then((messages) => {
+          console.log(messages)
+          if (messages && messages.length !== 0){
+            console.log('EMITTED HSITORY')
+            this.emitHistory(message.roomName, messages);
+          }
+        })
+      })
 
-      this.messageRepository.storeMessages([message]);
-
-      // if (!this.messageHistory.has(message.roomName)) {
-      //   this.messageHistory.set(message.roomName, new Set());
-      // }
-      // this.messageHistory.get(message.roomName)?.add(message);
+      this.messageRepository.storeMessages([message]).then(() => {console.log("stored message: " ); console.log(message);})
     });
   }
 
@@ -75,22 +83,13 @@ export class ChatSocketService extends SocketServiceInterface {
       .then((channel) => {
         this.textChannelRepository.getMessages(channel._id)
         .then((messages) => {
-          this.emitHistory(socketInformation.roomName, messages);
+          console.log(messages)
+          if (messages && messages.length !== 0){
+            console.log('EMITTED HSITORY')
+            this.emitHistory(socketInformation.roomName, messages);
+          }
         })
       })
-
-      // if (this.messageHistory.has(socketInformation.roomName)) {
-      //   this.emitHistory(
-      //     socketInformation.roomName,
-      //     Array.from(
-      //       (
-      //         this.messageHistory.get(
-      //           socketInformation.roomName,
-      //         ) as Set<MessageInterface>
-      //       ).values(),
-      //     ),
-      //   );
-      // }
 
       console.log(
         `number of users in ${socketInformation.roomName} : ${

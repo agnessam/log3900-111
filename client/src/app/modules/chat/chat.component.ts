@@ -21,6 +21,7 @@ import { TextChannelService } from "./services/text-channel.service";
   templateUrl: "./chat.component.html",
   styleUrls: ["./chat.component.scss"],
 })
+// tslint:disable: no-non-null-assertion
 export class ChatComponent implements OnInit, OnDestroy {
   user: User | null;
   chatSubscription: Subscription;
@@ -84,8 +85,8 @@ export class ChatComponent implements OnInit, OnDestroy {
   openChatRoom() {
     // might want to run these in parallel (fork?)
     this.chatService.toggleChatOverlay.subscribe((channel) => {
-      console.log("opening chat room: " + channel.name)
-      this.currentChannel = channel
+      console.log("opening chat room: " + channel.name);
+      this.currentChannel = channel;
       if (!this.isPopoutOpen) {
         const chat = document.getElementById("chat-popup") as HTMLInputElement;
         chat.style.display = "block";
@@ -98,19 +99,19 @@ export class ChatComponent implements OnInit, OnDestroy {
 
   joinRoom(channelName: string) {
     if (!this.messageHistory.has(channelName)) {
-      this.messageHistory.set(channelName, new Array);
+      this.messageHistory.set(channelName, new Array());
       this.chatSocketService.joinRoom({
-        userId: this.user!._id!,
+        userId: this.user?._id!,
         roomName: channelName,
       });
-      this.chatSocketService.messageHistory.subscribe({
-        next: (history) => {
+      this.chatSocketService.messageHistory.subscribe((history) => {
+          if (!history) return;
           this.messageHistory.set(
             history[0].roomName,
-            history
+            history,
           );
         },
-      });
+      );
     }
   }
 
@@ -118,7 +119,7 @@ export class ChatComponent implements OnInit, OnDestroy {
     this.chatService.leaveRoomEventEmitter.subscribe((channel) => {
       this.messageHistory.delete(channel.name);
       this.chatSocketService.leaveRoom({
-        userId: this.user!._id!,
+        userId: this.user?._id!,
         roomName: channel.name,
       });
       this.currentChannel = null;
@@ -149,22 +150,17 @@ export class ChatComponent implements OnInit, OnDestroy {
     if (this.message === null || this.message.match(/^ *$/) !== null) return;
 
     if (this.user?.username === null) return;
-    const name = (this.user as User).username!;
-
-    // const hour = new Date().getHours().toString();
-    // const minute = new Date().getMinutes().toString();
-    // const second = new Date().getSeconds().toString();
-    // const time = hour + ":" + minute + ":" + second;
+    const name = this.user?.username!;
 
     this.textChannelService
-      .getChannel(this.currentChannel!._id)
+      .getChannel(this.currentChannel?._id!)
       .subscribe((channel) => {
         const message: Message = {
           message: this.message,
           timestamp: new Date(),
           author: name,
           _roomId: channel._id,
-          roomName: this.currentChannel!.name,
+          roomName: this.currentChannel?.name!,
         };
         this.chatSocketService.sendMessage(message);
         this.message = "";
@@ -179,6 +175,7 @@ export class ChatComponent implements OnInit, OnDestroy {
     const chat = document.getElementById("chat-popup") as HTMLInputElement;
     chat.style.display = "none";
     this.currentChannel = null;
+    this.loadedHistory = false;
   }
 
   openChatPopout() {
@@ -196,20 +193,19 @@ export class ChatComponent implements OnInit, OnDestroy {
   }
 
   getMessages(): Message[] {
-    if (!this.messageHistory.has(this.currentChannel!.name)) {
+
+    if (!this.messageHistory.has(this.currentChannel?.name!)) {
       return [];
     }
 
     if (!this.loadedHistory) {
-      const loginTimeIndex = this.messageHistory.get(this.currentChannel?.name!)?.findIndex((message) => {
-        message.timestamp >= this.user?.lastLogin!
-      })
-      console.log(loginTimeIndex)
+      const loginTimeIndex = this.messageHistory
+      // tslint:disable-next-line: max-line-length
+      .get(this.currentChannel?.name!)?.findIndex((message) => new Date(message.timestamp).getTime() >= new Date(this.user?.lastLogin!).getTime());
       const messagesFromConnection = this.messageHistory.get(this.currentChannel?.name!)?.slice(loginTimeIndex);
-      console.log(messagesFromConnection)
       return messagesFromConnection!;
     }
-    const messages = this.messageHistory.get(this.currentChannel!.name);
+    const messages = this.messageHistory.get(this.currentChannel?.name!);
     return messages!;
   }
 }
