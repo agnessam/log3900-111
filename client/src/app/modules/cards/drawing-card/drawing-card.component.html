@@ -1,4 +1,4 @@
-<mat-card class="drawing" (click)="goToDrawing()">
+<mat-card class="drawing">
   <img
     alt=""
     [src]="getSanitizedUrl(drawing.dataUri)"
@@ -6,7 +6,7 @@
     height="100%"
     class="drawing-img"
   />
-  <div class="drawing-overlay">
+  <div class="drawing-overlay" (click)="goToDrawing()">
     <mat-card-title>
       <div class="drawing-name">{{ drawing.name }}</div>
       <p class="drawing-creation-date">{{ drawing.createdAt.toString() }}</p>

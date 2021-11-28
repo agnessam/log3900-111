@@ -1,9 +1,11 @@
 import { Component, Input, OnInit } from "@angular/core";
+import { MatDialog, MatDialogRef } from "@angular/material/dialog";
 import { DomSanitizer } from "@angular/platform-browser";
 import { Router } from "@angular/router";
 import { Drawing } from "src/app/shared";
 import { Team } from "src/app/shared/models/team.model";
 import { User } from "../../users/models/user";
+import { JoinDrawingDialogComponent } from "./join-drawing-dialog/join-drawing-dialog.component";
 
 @Component({
   selector: "app-drawing-card",
@@ -13,7 +15,13 @@ import { User } from "../../users/models/user";
 export class DrawingCardComponent implements OnInit {
   @Input() drawing: Drawing;
 
-  constructor(private router: Router, private sanitizer: DomSanitizer) {}
+  joinDrawingDialogRef: MatDialogRef<JoinDrawingDialogComponent>;
+
+  constructor(
+    private router: Router,
+    private sanitizer: DomSanitizer,
+    private dialog: MatDialog
+  ) {}
 
   ngOnInit(): void {}
 
@@ -22,7 +30,21 @@ export class DrawingCardComponent implements OnInit {
   }
 
   goToDrawing() {
-    this.router.navigate([`/drawings/${this.drawing._id}`]);
+    if (this.drawing.privacyLevel == "protected") {
+      this.joinDrawingDialogRef = this.dialog.open(JoinDrawingDialogComponent, {
+        data: { drawing: this.drawing },
+      });
+    } else {
+      this.router.navigate([`/drawings/${this.drawing._id}`]);
+    }
+  }
+
+  goToUserProfile() {
+    this.router.navigate([`/users/${(this.drawing.owner as User)._id}`]);
+  }
+
+  goToTeamProfile() {
+    this.router.navigate([`/teams/${(this.drawing.owner as Team)._id}`]);
   }
 
   isUser(owner: any): owner is User {
