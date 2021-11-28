@@ -13,6 +13,7 @@ import { STATUS } from "src/app/shared/models/status.model";
 export class MemberListDialogComponent implements OnInit {
   userStatus: Map<string, STATUS>;
   statusLoaded: Promise<boolean>;
+
   constructor(
     @Inject(MAT_DIALOG_DATA)
     public data: { members: User[] },
@@ -38,5 +39,19 @@ export class MemberListDialogComponent implements OnInit {
 
   getOnlineStatus(userId: string) {
     return this.userStatus.get(userId);
+  }
+
+  getStatusColor(userId: string) {
+    const status = this.getOnlineStatus(userId);
+    switch (status) {
+      case STATUS.Online:
+        return "primary";
+      case STATUS.Collaborating:
+        return "basic";
+      case STATUS.Offline:
+        return "warn";
+      default:
+        return "primary";
+    }
   }
 }

@@ -5,19 +5,28 @@
       <div fxFlex="100%">
         <mat-card class="member-card">
           <mat-card-header>
-            <mat-icon mat-card-avatar style="padding-right: 30px">
+            <mat-icon
+              mat-card-avatar
+              matBadge="0"
+              matBadgePosition="below after"
+              matBadgeSize="small"
+              [matBadgeColor]="getStatusColor(member._id)"
+              class="hide-text"
+            >
               <ngx-avatar [src]="member.avatar?.imageUrl"></ngx-avatar>
             </mat-icon>
-            <mat-card-title
-              (click)="goToProfile(member._id)"
-              style="cursor: pointer"
-              >{{ member.username }}</mat-card-title
-            >
-            <mat-card-subtitle>
-              <p>
-                {{ getOnlineStatus(member._id) }}
-              </p>
-            </mat-card-subtitle>
+            <div style="padding-left: 20px">
+              <mat-card-title
+                (click)="goToProfile(member._id)"
+                style="cursor: pointer"
+                >{{ member.username }}</mat-card-title
+              >
+              <mat-card-subtitle>
+                <p>
+                  {{ getOnlineStatus(member._id) }}
+                </p>
+              </mat-card-subtitle>
+            </div>
           </mat-card-header>
         </mat-card>
       </div>
