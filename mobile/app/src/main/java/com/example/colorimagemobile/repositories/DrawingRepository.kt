@@ -61,25 +61,12 @@ class DrawingRepository {
         return liveData
     }
 
-    fun getDrawing(id: String): MutableLiveData<DataWrapper<DrawingModel.Drawing>> {
-        val liveData: MutableLiveData<DataWrapper<DrawingModel.Drawing>> = MutableLiveData()
-
-        httpClient.getDrawing(token = "Bearer ${UserService.getToken()}", id).enqueue(object : Callback<DrawingModel.Drawing> {
-            override fun onResponse(call: Call<DrawingModel.Drawing>, response: Response<DrawingModel.Drawing>) {
-                if (!response.isSuccessful) {
-                    liveData.value = DataWrapper(null, "An error occurred!", true)
-                    return
-                }
-                liveData.value = DataWrapper(response.body(), null, false)
-            }
-
-            override fun onFailure(call: Call<DrawingModel.Drawing>, t: Throwable) {
-                printMsg("Failed to get all drawings ${t.message!!}")
-                liveData.value = DataWrapper(null, "Failed to get all drawings!", true)
-            }
-        })
-
-        return liveData
+    suspend fun getDrawing(id: String): DrawingModel.Drawing? {
+        val response = httpClient.getDrawing(token = "Bearer ${UserService.getToken()}", id).awaitResponse()
+        if(response.isSuccessful){
+            return response.body()
+        }
+        return null
     }
 
     suspend fun saveCurrentDrawing(): DrawingModel.CreateDrawing? {

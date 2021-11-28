@@ -26,7 +26,6 @@ class MainActivity : AppCompatActivity() {
 
         sharedPreferencesService = SharedPreferencesService(this)
         val token = sharedPreferencesService.getItem(Constants.STORAGE_KEY.TOKEN)
-
         // if token exists, go to Home else go to Login for auth verification
         if (token.isNullOrEmpty()) {
             redirectTo(this, LoginActivity::class.java)

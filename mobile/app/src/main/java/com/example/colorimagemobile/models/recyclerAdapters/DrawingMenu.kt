@@ -9,7 +9,7 @@ import com.example.colorimagemobile.models.DrawingModel
 /* holds data of drawing displayed in Gallery */
 
 // our data to display
-data class DrawingMenuData(val drawing: DrawingModel.Drawing, val imageBitmap: Bitmap, val svgString: String)
+data class DrawingMenuData(val drawing: DrawingModel.Drawing, val imageBitmap: Bitmap, var svgString: String)
 
 // the layout elements in which we assign our data
 data class DrawingMenuViewHolder(

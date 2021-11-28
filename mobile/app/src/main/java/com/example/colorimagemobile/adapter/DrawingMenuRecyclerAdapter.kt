@@ -21,7 +21,14 @@ import com.example.colorimagemobile.services.drawing.CanvasUpdateService
 import com.example.colorimagemobile.services.drawing.DrawingObjectManager
 import com.example.colorimagemobile.services.drawing.DrawingOwnerService
 import com.example.colorimagemobile.services.drawing.DrawingService
+import com.example.colorimagemobile.services.socket.DrawingSocketService
+import com.example.colorimagemobile.services.users.UserService
 import com.example.colorimagemobile.ui.home.fragments.gallery.GalleryDrawingFragment
+import com.example.colorimagemobile.utils.Constants
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.newSingleThreadContext
+import kotlinx.coroutines.runBlocking
 
 class DrawingMenuRecyclerAdapter(
     val activity: FragmentActivity,
@@ -58,11 +65,26 @@ class DrawingMenuRecyclerAdapter(
     override fun getItemCount(): Int { return drawingMenus.size }
 
     private fun openDrawing(position: Int, context: Context) {
-        DrawingObjectManager.createDrawableObjects(drawingMenus[position].svgString)
+        // Set current room to drawing id
+
 
         DrawingService.setCurrentDrawingID(drawingMenus[position].drawing._id)
-        MyFragmentManager(context as FragmentActivity).open(destination, GalleryDrawingFragment())
-        CanvasUpdateService.invalidate()
+        // fetch drawing svgString from database
+        runBlocking{
+            if (DrawingService.getCurrentDrawingID() != null) {
+                DrawingSocketService.connect()
+
+                val socketInformation =
+                    Constants.SocketRoomInformation(UserService.getUserInfo()._id, DrawingService.getCurrentDrawingID()!!)
+                DrawingSocketService.joinRoom(socketInformation)
+            }
+
+            DrawingSocketService.sendGetUpdateDrawingRequest(context, drawingMenus, position)
+
+            DrawingObjectManager.createDrawableObjects(drawingMenus[position].svgString)
+            MyFragmentManager(context as FragmentActivity).open(destination, GalleryDrawingFragment())
+            CanvasUpdateService.asyncInvalidate()
+        }
     }
 
     inner class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
