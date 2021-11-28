@@ -4,6 +4,7 @@ import { environment } from "src/environments/environment";
 import { Observable } from "rxjs";
 import { map } from "rxjs/operators";
 import { Drawing } from "src/app/shared/";
+import { OptionalDrawingParameters } from "../../new-drawing/optional-drawing-parameters";
 
 @Injectable({
   providedIn: "root",
@@ -34,22 +35,26 @@ export class DrawingHttpClientService {
   }
 
   createNewDrawing(
-    drawingDataUri: string,
-    ownerModel: string,
-    ownerId: string,
-    name: string
+    drawingParameters: OptionalDrawingParameters
   ): Observable<Drawing> {
-    let newDrawing = {
-      dataUri: drawingDataUri,
-      owner: ownerId,
-      ownerModel: ownerModel,
-      name: name,
-    };
     return this.httpClient
-      .post<Drawing>(`${this.SERVER_ENDPOINT}`, newDrawing)
+      .post<Drawing>(`${this.SERVER_ENDPOINT}`, drawingParameters)
       .pipe(
         map((response) => {
           return response;
+        })
+      );
+  }
+
+  updateDrawingParameters(
+    drawingId: string,
+    drawingParameters: OptionalDrawingParameters
+  ): Observable<Drawing> {
+    return this.httpClient
+      .patch<Drawing>(`${this.SERVER_ENDPOINT}${drawingId}`, drawingParameters)
+      .pipe(
+        map((drawing) => {
+          return drawing;
         })
       );
   }

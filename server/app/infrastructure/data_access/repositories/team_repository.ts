@@ -18,6 +18,8 @@ export class TeamRepository extends GenericRepository<TeamInterface> {
         description: team.description,
         owner: team.owner,
         memberLimit: team.memberLimit,
+        isPrivate: team.isPrivate,
+        password: team.password,
       });
       newTeam
         .save()
@@ -51,6 +53,7 @@ export class TeamRepository extends GenericRepository<TeamInterface> {
     return new Promise((resolve, reject) => {
       Team.findById({ _id: teamId })
         .populate(['members'])
+        .populate({ path: 'drawings', populate: { path: 'owner' } })
         .exec((err, team) => {
           if (err || !team) {
             reject(err);
@@ -159,7 +162,7 @@ export class TeamRepository extends GenericRepository<TeamInterface> {
   public async getTeamDrawings(teamId: string) {
     return new Promise((resolve, reject) => {
       Team.findById({ _id: teamId })
-        .populate('drawings')
+        .populate({ path: 'drawings', populate: { path: 'owner' } })
         .exec((err, team) => {
           if (err || !team) {
             reject(err);
@@ -172,7 +175,7 @@ export class TeamRepository extends GenericRepository<TeamInterface> {
   public async getPosts(teamId: string) {
     return new Promise((resolve, reject) => {
       Team.findById({ _id: teamId })
-        .populate('posts')
+        .populate({ path: 'posts', populate: { path: 'owner' } })
         .exec((err, team) => {
           if (err || !team) {
             reject(err);
