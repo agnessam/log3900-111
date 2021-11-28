@@ -13,7 +13,6 @@ export class UserProfileComponent implements OnInit {
   userId: string;
 
   userLoaded: Promise<boolean>;
-  drawingsLoaded: Promise<boolean>;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -24,10 +23,6 @@ export class UserProfileComponent implements OnInit {
       this.usersService.getUser(this.userId).subscribe((user) => {
         this.user = user;
         this.userLoaded = Promise.resolve(true);
-      });
-      this.usersService.getUserDrawings(this.userId).subscribe((drawings) => {
-        this.user.drawings = drawings;
-        this.drawingsLoaded = Promise.resolve(true);
       });
     });
   }

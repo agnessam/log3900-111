@@ -19,7 +19,6 @@ export class TeamProfileComponent implements OnInit {
   team: Team;
 
   teamLoaded: Promise<boolean>;
-  drawingsLoaded: Promise<boolean>;
 
   openConfirmDeleteDialogRef: MatDialogRef<ConfirmDeleteDialogComponent>;
   openConfirmJoinDialogRef: MatDialogRef<ConfirmJoinDialogComponent>;
@@ -39,10 +38,6 @@ export class TeamProfileComponent implements OnInit {
       this.teamClient.getTeam(this.teamId).subscribe((team) => {
         this.team = team;
         this.teamLoaded = Promise.resolve(true);
-      });
-      this.teamClient.getTeamDrawings(this.teamId).subscribe((drawings) => {
-        this.team.drawings = drawings;
-        this.drawingsLoaded = Promise.resolve(true);
       });
     });
   }
