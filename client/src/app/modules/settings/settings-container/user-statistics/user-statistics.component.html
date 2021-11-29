@@ -27,8 +27,8 @@
                   <div fxLayout="row wrap">
                     <div fxFlex="50%">
                       <mat-card-subtitle
-                        >Number of drawings started</mat-card-subtitle
-                      >
+                        >Number of drawings started:
+                      </mat-card-subtitle>
                     </div>
                     <div fxFlex="50%">
                       {{ statistics.numberOfDrawings }}
@@ -39,8 +39,8 @@
                   <div fxLayout="row wrap">
                     <div fxFlex="50%">
                       <mat-card-subtitle
-                        >Number of collaborations</mat-card-subtitle
-                      >
+                        >Number of collaborations:
+                      </mat-card-subtitle>
                     </div>
                     <div fxFlex="50%">
                       {{ statistics.numberOfCollaborations }}
@@ -52,20 +52,20 @@
                   <div fxLayout="row wrap">
                     <div fxFlex="50%">
                       <mat-card-subtitle
-                        >Average time spent collaborating:</mat-card-subtitle
-                      >
+                        >Average time spent collaborating:
+                      </mat-card-subtitle>
                     </div>
                     <div
                       fxFlex="50%"
                       *ngIf="statistics.averageCollaborationTime"
                     >
-                      {{ statistics.averageCollaborationTime }}
+                      {{ statistics.averageCollaborationTime }} minutes
                     </div>
                     <div
                       fxFlex="50%"
                       *ngIf="!statistics.averageCollaborationTime"
                     >
-                      You still haven't collaborated yet! :(
+                      You haven't collaborated yet.
                     </div>
                   </div>
                 </div>
