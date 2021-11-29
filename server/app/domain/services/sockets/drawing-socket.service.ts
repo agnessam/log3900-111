@@ -82,13 +82,13 @@ export class DrawingSocketService extends SocketServiceInterface {
     socket.on(
       LEAVE_ROOM_EVENT_NAME,
       (socketInformation: SocketRoomInformation) => {
-        console.log(
-          `${socketInformation.userId} has left room ${socketInformation.roomName}`,
-        );
-
         this.statusService.updateStatus(
           socketInformation.userId,
           STATUS.Online,
+        );
+
+        console.log(
+          `${socketInformation.userId} has left room ${socketInformation.roomName}`,
         );
 
         socket.leave(socketInformation.roomName);
