@@ -21,6 +21,8 @@ import { UserRepository } from './infrastructure/data_access/repositories/user_r
 import { SearchService } from './domain/services/search.service';
 import { PostRepository } from './infrastructure/data_access/repositories/post_repository';
 import { CollaborationTrackerService } from './domain/services/collaboration-tracker.service';
+import { StatusServiceInterface } from './domain/interfaces/status-service.interface';
+import { StatusService } from './domain/services/status.service';
 
 export const referenceDataIoCModule = new ContainerModule((bind) => {
   // Services
@@ -37,6 +39,10 @@ export const referenceDataIoCModule = new ContainerModule((bind) => {
     .inSingletonScope();
 
   bind<SearchService>(TYPES.SearchService).to(SearchService).inSingletonScope();
+
+  bind<StatusServiceInterface>(TYPES.StatusService)
+    .to(StatusService)
+    .inSingletonScope();
 
   // Repositories
   bind<UserRepositoryInterface>(TYPES.UserRepository)
