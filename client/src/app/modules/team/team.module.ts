@@ -20,7 +20,8 @@ import { ConfirmDeleteDialogComponent } from "./team-profile/confirm-delete-dial
 import { MemberListDialogComponent } from "./team-profile/member-list-dialog/member-list-dialog.component";
 import { ConfirmLeaveDialogComponent } from "./team-profile/confirm-leave-dialog/confirm-leave-dialog.component";
 import { MatCheckboxModule } from "@angular/material/checkbox";
-import { ConfirmJoinDialogComponent } from './team-profile/confirm-join-dialog/confirm-join-dialog.component';
+import { ConfirmJoinDialogComponent } from "./team-profile/confirm-join-dialog/confirm-join-dialog.component";
+import { MatBadgeModule } from "@angular/material/badge";
 
 @NgModule({
   declarations: [
@@ -47,6 +48,7 @@ import { ConfirmJoinDialogComponent } from './team-profile/confirm-join-dialog/c
     CardsModule,
     AvatarModule,
     MatCheckboxModule,
+    MatBadgeModule,
   ],
 })
 export class TeamModule {}
