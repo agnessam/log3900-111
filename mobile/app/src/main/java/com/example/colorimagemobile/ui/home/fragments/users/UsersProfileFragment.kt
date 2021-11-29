@@ -120,6 +120,7 @@ class UsersProfileFragment : Fragment(R.layout.fragment_users_profile) {
                 return@observe
             }
             val drawings = it.data as List<DrawingModel.Drawing>
+            DrawingService.setAllDrawings(drawings)
             drawingsMenu = DrawingService.getDrawingsBitmap(requireContext(), drawings)
             setAllDrawings()
         })

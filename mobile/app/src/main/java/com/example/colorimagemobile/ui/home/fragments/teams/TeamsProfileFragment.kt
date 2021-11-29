@@ -144,6 +144,7 @@ class TeamsProfileFragment : Fragment(R.layout.fragment_teams_profile) {
             }
 
             val team = it.data as TeamIdModel
+            DrawingService.setAllDrawings(it.data.drawings)
             drawingsMenu = DrawingService.getDrawingsBitmap(requireContext(), team.drawings)
             publishedDrawings = team.posts
             setAllDrawings()
