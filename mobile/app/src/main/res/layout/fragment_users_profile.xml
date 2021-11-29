@@ -50,7 +50,7 @@
                     <de.hdodenhof.circleimageview.CircleImageView
                         android:id="@+id/userIdImageView"
                         android:layout_width="match_parent"
-                        android:layout_height="80dp"/>
+                        android:layout_height="80dp" />
 
                 </androidx.cardview.widget.CardView>
 
@@ -77,9 +77,9 @@
                         android:layout_centerHorizontal="true" />
 
                     <RelativeLayout
-                        android:layout_toRightOf="@id/userId_action_empty_space"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
+                        android:layout_height="wrap_content"
+                        android:layout_toRightOf="@id/userId_action_empty_space" />
 
                     <Button
                         android:id="@+id/FollowBtn"
@@ -88,17 +88,36 @@
                         android:backgroundTint="@color/primary"
                         android:text="Follow"
                         android:textColor="@color/white" />
+
                     <com.google.android.material.button.MaterialButton
-                        android:visibility="gone"
                         android:id="@+id/UnfollowBtn"
                         style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Unfollow"
                         android:textColor="@color/primary"
+                        android:visibility="gone"
                         app:cornerRadius="4dp"
                         app:strokeColor="@color/primary"
                         app:strokeWidth="1dp" />
+
+                    <Button
+                        android:id="@+id/showfollower"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:backgroundTint="@color/primary"
+                        android:text="wers"
+                        android:textColor="@color/white" />
+
+                    <Button
+                        android:id="@+id/showfollowingList"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:backgroundTint="@color/primary"
+                        android:text="wing"
+                        android:textColor="@color/white" />
 
                 </RelativeLayout>
 

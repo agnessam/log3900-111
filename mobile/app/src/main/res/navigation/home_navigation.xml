@@ -127,5 +127,18 @@
             android:id="@+id/action_usersProfileFragment_to_userProfileFragment"
             app:destination="@id/userProfileFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/followersListBottomSheet"
+        android:name="com.example.colorimagemobile.bottomsheets.FollowersListBottomSheet"
+        android:label="fragment_followers_list_bottom_sheet"
+        tools:layout="@layout/fragment_followers_list_bottom_sheet" >
+        <action
+            android:id="@+id/action_followersListBottomSheet_to_usersProfileFragment"
+            app:destination="@id/usersFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+    </fragment>
 
 </navigation>

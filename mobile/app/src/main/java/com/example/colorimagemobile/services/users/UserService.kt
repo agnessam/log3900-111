@@ -21,6 +21,9 @@ object UserService {
     private var collaborationHistoryDrawingId: ArrayList<String> = arrayListOf()
     private var temporaryEditUsername : String
     private var temporaryDescription : String
+    private var myFollowers : ArrayList<String> = arrayListOf()
+    private var following : ArrayList<String> = arrayListOf()
+    private lateinit var DataForMyFollowersList : ArrayList<UserModel.AllInfo>
 
     init {
         collaborationHistoryToShow = arrayListOf()
@@ -30,6 +33,8 @@ object UserService {
 
     fun setAllUserInfo(allInfo:ArrayList<UserModel.AllInfo>){
         allUserInfo = allInfo
+        setRecyclerDataForMyFollowers()
+
     }
 
     fun getAllUserInfo() : ArrayList<UserModel.AllInfo> {
@@ -38,7 +43,23 @@ object UserService {
 
     fun setUserInfo(newUserInfo: UserModel.AllInfo) {
         info = newUserInfo
+        myFollowers = info.followers
+        following = info.following
         setCollaborationHistoryToshow()
+    }
+
+    fun setRecyclerDataForMyFollowers(){
+        if(myFollowers.size!=0){
+            for (indice in myFollowers.indices){
+                DataForMyFollowersList= allUserInfo.find { user -> user._id == myFollowers[indice]}
+                    ?.let { arrayListOf(it) }!!
+            }
+        }
+
+    }
+
+    fun getRecyclerDataForMyFollowers():ArrayList<UserModel.AllInfo>{
+        return DataForMyFollowersList
     }
 
     fun getUserMePosition(): Int {

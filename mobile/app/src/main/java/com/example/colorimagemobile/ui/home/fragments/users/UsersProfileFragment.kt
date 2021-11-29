@@ -11,6 +11,8 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.colorimagemobile.R
 import com.example.colorimagemobile.adapter.DrawingMenuRecyclerAdapter
+import com.example.colorimagemobile.bottomsheets.FollowersListBottomSheet
+import com.example.colorimagemobile.bottomsheets.UpdatePasswordBottomSheet
 import com.example.colorimagemobile.classes.MyFragmentManager
 import com.example.colorimagemobile.classes.MyPicasso
 import com.example.colorimagemobile.models.DrawingModel
@@ -22,6 +24,7 @@ import com.example.colorimagemobile.services.users.UserService
 import com.example.colorimagemobile.utils.Constants
 import com.google.android.material.tabs.TabLayout
 import kotlinx.android.synthetic.main.fragment_teams_profile.*
+import kotlinx.android.synthetic.main.fragment_users_profile.*
 
 class UsersProfileFragment : Fragment(R.layout.fragment_users_profile) {
     private var userPosition: Int? = null
@@ -104,6 +107,10 @@ class UsersProfileFragment : Fragment(R.layout.fragment_users_profile) {
         unfollewBtn.setOnClickListener {
             // to be implement on branch follow unfollow
             showFollowBtn()
+        }
+        showfollower.setOnClickListener {
+            val showFollowers = FollowersListBottomSheet()
+            showFollowers.show(parentFragmentManager, "showFollowers")
         }
     }
 
