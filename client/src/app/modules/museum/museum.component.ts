@@ -89,15 +89,9 @@ export class MuseumComponent implements OnInit {
   }
 
   openPostDialog(post: PostInterface): void {
-    const dialogRef = this.dialog.open(PostDialogComponent, {
+    this.dialog.open(PostDialogComponent, {
       width: '80%',
       data: post,
     });
-
-    dialogRef.afterClosed().subscribe(result => {
-      console.log(result);
-      //this.posts.find(postItem => postItem._id === post._id)= result;
-    });
-
   }
 }
