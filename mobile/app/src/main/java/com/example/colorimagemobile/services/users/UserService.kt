@@ -54,44 +54,38 @@ object UserService {
     }
 
     fun setRecyclerDataForFollowers(){
-        printMsg("userPosition "+ userPositionForMenuNavigation)
-        printMsg("All user Info "+ allUserInfo)
-
-
-//        if (userPositionForMenuNavigation !=null ){
-//
-//        }
 
         if ( userPositionForMenuNavigation ==0) {
-            printMsg("Position inside formmenunav != o "+getUserMePosition())
             currentUserFollowerList = allUserInfo[getUserMePosition()].followers
         } else {
-            printMsg("inside else currentlist folowers")
             currentUserFollowerList = allUserInfo[userPositionForMenuNavigation!!].followers
         }
 
         if(currentUserFollowerList.size!=0){
             for (indice in currentUserFollowerList.indices){
-                DataForMyFollowersList= allUserInfo.find { user -> user._id == currentUserFollowerList[indice]}
-                    ?.let { arrayListOf(it) }!!
-                printMsg("followers ${currentUserFollowerList[indice]} = ${DataForMyFollowersList}")
+                allUserInfo.find { user -> user._id == currentUserFollowerList[indice]}
+                    ?.let { DataForMyFollowersList.add(it) }
             }
         }
 
     }
 
     fun setRecyclerDataForFollowing(){
-        currentUserFollowingList = allUserInfo[userPositionForMenuNavigation!!].following
-        if(currentUserFollowingList.size!=0){
-            for (indice in currentUserFollowingList.indices){
-                DataForFollowingList= allUserInfo.find { user -> user._id == currentUserFollowingList[indice]}
-                    ?.let { arrayListOf(it) }!!
 
-                printMsg("followers ${currentUserFollowingList[indice]} = ${DataForFollowingList}")
-            }
+        if ( userPositionForMenuNavigation ==0) {
+            currentUserFollowingList = allUserInfo[getUserMePosition()].following
+        } else {
+            currentUserFollowingList = allUserInfo[userPositionForMenuNavigation!!].following
         }
 
+        if(currentUserFollowingList.size!=0){
+            for (indice in currentUserFollowingList.indices){
+                allUserInfo.find { user -> user._id == currentUserFollowingList[indice]}
+                    ?.let { DataForFollowingList.add(it) }
+            }
+        }
     }
+
 
     fun getRecyclerDataForMyFollowers():ArrayList<UserModel.AllInfo>{
         printMsg("followers list finale "+ DataForMyFollowersList)
