@@ -1,6 +1,7 @@
 package com.example.colorimagemobile.models.recyclerAdapters
 
 import android.graphics.Bitmap
+import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.cardview.widget.CardView
@@ -20,5 +21,6 @@ data class DrawingMenuViewHolder(
     val lockIconView: ImageView,
     val authorImageView: ImageView,
     val privacyLevel: TextView,
-    val authorImageViewParent: CardView
+    val authorImageViewParent: CardView,
+    val popupMenu: ImageButton
 )

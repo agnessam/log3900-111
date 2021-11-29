@@ -82,6 +82,27 @@ class DrawingRepository {
         return null
     }
 
+    fun updateDrawing(id: String, drawing: DrawingModel.UpdateDrawing): MutableLiveData<DataWrapper<Any>> {
+        val liveData: MutableLiveData<DataWrapper<Any>> = MutableLiveData()
+
+        httpClient.updateDrawing(token = "Bearer ${UserService.getToken()}", id, drawing).enqueue(object : Callback<Any> {
+            override fun onResponse(call: Call<Any>, response: Response<Any>) {
+                if (!response.isSuccessful) {
+                    liveData.value = DataWrapper(null, "An error occurred while updating drawing!", true)
+                    return
+                }
+                liveData.value = DataWrapper(response.body(), null, false)
+            }
+
+            override fun onFailure(call: Call<Any>, t: Throwable) {
+                liveData.value = DataWrapper(null, "Failed to update drawing!", true)
+            }
+        })
+
+        return liveData
+    }
+
+
     fun publishDrawing(drawing: DrawingModel.Drawing): MutableLiveData<DataWrapper<Any>> {
         val drawingLiveData: MutableLiveData<DataWrapper<Any>> = MutableLiveData()
 
