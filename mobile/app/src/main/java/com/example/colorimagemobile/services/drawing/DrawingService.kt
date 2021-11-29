@@ -107,6 +107,9 @@ object DrawingService {
         printMsg("all collaborationdrawing "+userCollaborationDrawings)
 
         return userCollaborationDrawings
+
+    }
+
     fun updateDrawingFromMenu(drawingMenuData: DrawingMenuData, updatedDrawing: DrawingModel.UpdateDrawing): DrawingMenuData {
         drawingMenuData.drawing.name = updatedDrawing.name
         drawingMenuData.drawing.password = updatedDrawing.password
@@ -129,4 +132,5 @@ object DrawingService {
 
         return false
     }
+
 }
