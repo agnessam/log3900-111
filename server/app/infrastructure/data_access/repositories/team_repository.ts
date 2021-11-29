@@ -189,7 +189,6 @@ export class TeamRepository extends GenericRepository<TeamInterface> {
   }
 
   public async getPosts(teamId: string) {
-    console.log(teamId);
     return new Promise((resolve, reject) => {
       Team.findById({ _id: teamId })
         .populate({ path: 'posts', populate: { path: 'owner' } })
