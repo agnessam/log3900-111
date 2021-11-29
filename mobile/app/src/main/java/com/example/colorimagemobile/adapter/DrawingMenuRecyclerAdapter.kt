@@ -76,18 +76,15 @@ class DrawingMenuRecyclerAdapter(
 
     private fun openDrawing(position: Int, context: Context) {
         // Set current room to drawing id
-
-
         DrawingService.setCurrentDrawingID(drawingMenus[position].drawing._id)
+
         // fetch drawing svgString from database
         runBlocking{
-            DrawingSocketService.joinCurrentDrawingRoom()
-
-            DrawingSocketService.sendGetUpdateDrawingRequest(context, drawingMenus, position)
-
-            DrawingObjectManager.createDrawableObjects(drawingMenus[position].svgString)
-            MyFragmentManager(context as FragmentActivity).open(destination, GalleryDrawingFragment())
-            CanvasUpdateService.asyncInvalidate()
+            val job = launch{
+                DrawingSocketService.joinCurrentDrawingRoom()
+            }
+            job.join()
+            DrawingSocketService.sendGetUpdateDrawingRequest(drawingMenus, position, destination)
         }
     }
 

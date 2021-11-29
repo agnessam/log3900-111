@@ -7,7 +7,9 @@ import com.example.colorimagemobile.models.ChatSocketModel
 import com.example.colorimagemobile.services.chat.ChatAdapterService
 import com.example.colorimagemobile.services.chat.ChatService
 import com.example.colorimagemobile.services.chat.TextChannelService
+import com.example.colorimagemobile.services.users.UserService
 import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
+import com.example.colorimagemobile.utils.Constants
 import com.example.colorimagemobile.utils.Constants.SOCKETS
 import io.socket.emitter.Emitter
 import org.json.JSONException
@@ -21,7 +23,7 @@ object ChatSocketService: AbsSocket(SOCKETS.CHAT_NAMESPACE_NAME) {
 
         // leave each connected room
         TextChannelService.getConnectedChannels().forEach {
-            leaveRoom(it.name)
+            leaveRoom(Constants.SocketRoomInformation(UserService.getUserInfo()._id, it.name))
         }
 
         super.disconnect()
