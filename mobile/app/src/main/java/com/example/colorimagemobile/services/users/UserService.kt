@@ -33,6 +33,9 @@ object UserService {
 
     fun setAllUserInfo(allInfo:ArrayList<UserModel.AllInfo>){
         allUserInfo = allInfo
+        for(indice in allUserInfo.indices){
+            myFollowers[indice]= allUserInfo[indice].followers.toString()
+        }
         setRecyclerDataForMyFollowers()
 
     }
@@ -43,7 +46,7 @@ object UserService {
 
     fun setUserInfo(newUserInfo: UserModel.AllInfo) {
         info = newUserInfo
-        myFollowers = info.followers
+//        myFollowers = info.followers
         following = info.following
         setCollaborationHistoryToshow()
     }
