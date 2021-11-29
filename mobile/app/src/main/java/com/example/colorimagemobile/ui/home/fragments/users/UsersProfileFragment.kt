@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.colorimagemobile.R
 import com.example.colorimagemobile.adapter.DrawingMenuRecyclerAdapter
 import com.example.colorimagemobile.bottomsheets.FollowersListBottomSheet
+import com.example.colorimagemobile.bottomsheets.FollowingListBottomSheet
 import com.example.colorimagemobile.bottomsheets.UpdatePasswordBottomSheet
 import com.example.colorimagemobile.classes.MyFragmentManager
 import com.example.colorimagemobile.classes.MyPicasso
@@ -118,6 +119,10 @@ class UsersProfileFragment : Fragment(R.layout.fragment_users_profile) {
         showfollower.setOnClickListener {
             val showFollowers = FollowersListBottomSheet()
             showFollowers.show(parentFragmentManager, "showFollowers")
+        }
+        showfollowingList.setOnClickListener {
+            val showFollowing = FollowingListBottomSheet()
+            showFollowing.show(parentFragmentManager, "showFollowing")
         }
     }
 

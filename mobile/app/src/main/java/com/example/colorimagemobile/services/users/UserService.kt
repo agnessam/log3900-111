@@ -92,6 +92,12 @@ object UserService {
         return DataForMyFollowersList
     }
 
+    fun getRecyclerDataForFollowingList():ArrayList<UserModel.AllInfo>{
+        printMsg("followers list finale "+ DataForFollowingList)
+        return DataForFollowingList
+    }
+
+
     fun getUserMePosition(): Int {
         val position = allUserInfo.indexOf(allUserInfo.find { user -> user._id == info._id })
         return  position
