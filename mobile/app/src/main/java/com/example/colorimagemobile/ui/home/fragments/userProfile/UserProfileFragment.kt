@@ -45,12 +45,7 @@ class UserProfileFragment : Fragment() {
                 .commit()
 
         }
-        view.findViewById<TextView>(R.id.password).setOnClickListener {
-            val passwordFragment = PasswordFragment()
-            parentFragmentManager.beginTransaction().replace(R.id.newLayout, passwordFragment)
-                .commit()
 
-        }
         view.findViewById<TextView>(R.id.historique).setOnClickListener {
             val history = UserProfileHistoryFragment()
             parentFragmentManager.beginTransaction().replace(R.id.newLayout, history)

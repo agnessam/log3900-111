@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/updateDescription"
+    android:id="@+id/updateDescriptionForm"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:padding="15dp"
     android:orientation="vertical">
@@ -22,7 +22,7 @@
         android:text="@string/describe_yourself" />
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/newUsernameInputLayout"
+        android:id="@+id/newDescriptionInputLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/enter_a_description"
@@ -42,9 +42,8 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:orientation="horizontal">
 
         <View
@@ -62,7 +61,7 @@
             android:textColor="@color/white" />
 
         <Button
-            android:id="@+id/confirmDescriptionBtn"
+            android:id="@+id/changeDescriptionBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"

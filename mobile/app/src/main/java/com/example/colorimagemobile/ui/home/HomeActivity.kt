@@ -21,6 +21,7 @@ import com.example.colorimagemobile.httpresponsehandler.GlobalHandler
 import com.example.colorimagemobile.models.*
 import com.example.colorimagemobile.services.users.UserService
 import com.example.colorimagemobile.repositories.SearchRepository
+import com.example.colorimagemobile.repositories.UserRepository
 import com.example.colorimagemobile.services.SearchService
 import com.example.colorimagemobile.services.SharedPreferencesService
 import com.example.colorimagemobile.services.drawing.DrawingObjectManager
@@ -31,9 +32,9 @@ import com.example.colorimagemobile.ui.home.fragments.chat.ChatFragmentDirection
 import com.example.colorimagemobile.ui.home.fragments.gallery.GalleryFragmentDirections
 import com.example.colorimagemobile.ui.home.fragments.museum.MuseumFragmentDirections
 import com.example.colorimagemobile.ui.home.fragments.teams.TeamsFragmentDirections
-import com.example.colorimagemobile.ui.home.fragments.userProfile.ShowUserProfileFragmentDirections
 import com.example.colorimagemobile.ui.home.fragments.userProfile.UserProfileFragmentDirections
 import com.example.colorimagemobile.ui.home.fragments.users.UsersFragmentDirections
+import com.example.colorimagemobile.utils.CommonFun
 import com.example.colorimagemobile.utils.CommonFun.Companion.printToast
 import com.example.colorimagemobile.utils.CommonFun.Companion.redirectTo
 import com.example.colorimagemobile.utils.Constants
@@ -59,6 +60,7 @@ class HomeActivity : AppCompatActivity() {
         bottomNav = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
 
         setBottomNavigationView()
+        getAllUsers()
     }
 
     // side navigation navbar: upon click, change to new fragment
@@ -236,7 +238,6 @@ class HomeActivity : AppCompatActivity() {
         val showSettingsFromGallery = GalleryFragmentDirections.actionGalleryFragmentToUserProfileFragment()
         val showSettingsFromTeam = TeamsFragmentDirections.actionTeamsFragmentToUserProfileFragment()
         val showSettingsFromChat = ChatFragmentDirections.actionChatFragmentToUserProfileFragment()
-        val showSettingsFromProfileView = ShowUserProfileFragmentDirections.actionShowUserProfileFragmentToUserProfileFragment()
         val showSettingsFromPublicView = UsersFragmentDirections.actionUsersFragmentToUserProfileFragment()
         val showSettingsFromMuseum = MuseumFragmentDirections.actionMuseumFragmentToUserProfileFragment()
 
@@ -245,7 +246,6 @@ class HomeActivity : AppCompatActivity() {
             R.id.galleryFragment-> this.findNavController(R.id.fragment).navigate(showSettingsFromGallery)
             R.id.teamsFragment  -> this.findNavController(R.id.fragment).navigate(showSettingsFromTeam)
             R.id.chatFragment ->this.findNavController(R.id.fragment).navigate(showSettingsFromChat)
-            R.id.showUserProfileFragment -> this.findNavController(R.id.fragment).navigate(showSettingsFromProfileView)
             R.id.usersFragment -> this.findNavController(R.id.fragment).navigate(showSettingsFromPublicView)
             R.id.museumFragment -> this.findNavController(R.id.fragment).navigate(showSettingsFromMuseum)
         }
@@ -260,6 +260,18 @@ class HomeActivity : AppCompatActivity() {
 
             val filteredData = it.data as SearchModel
             MyFragmentManager(this).openWithData(R.id.fragment, SearchFragment(), Constants.SEARCH.CURRENT_QUERY, filteredData)
+        })
+    }
+
+    private fun getAllUsers() {
+        UserRepository().getAllUser(UserService.getToken()).observe(this,{ it ->
+            // some error occurred during HTTP request
+            if (it.isError as Boolean) {
+                CommonFun.printToast(this, it.message!!)
+                return@observe
+            }
+            val users = it.data as ArrayList<UserModel.AllInfo>
+            UserService.setAllUserInfo(users)
         })
     }
 }

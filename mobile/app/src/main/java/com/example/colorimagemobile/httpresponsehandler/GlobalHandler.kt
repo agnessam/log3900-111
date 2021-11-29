@@ -17,4 +17,5 @@ class GlobalHandler{
         // request successfully
         context?.let { CommonFun.printToast(it, "Request succeed") }
     }
+
 }

@@ -32,14 +32,6 @@
             android:textSize="30sp" />
 
         <TextView
-            android:id="@+id/password"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="20dp"
-            android:text="@string/edit_password"
-            android:textSize="30sp" />
-
-        <TextView
             android:id="@+id/historique"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

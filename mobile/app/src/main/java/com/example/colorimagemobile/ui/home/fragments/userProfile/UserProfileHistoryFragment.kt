@@ -5,7 +5,7 @@ import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.View
 import android.widget.TextView
-import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.colorimagemobile.R
 import com.example.colorimagemobile.classes.MyFragmentManager
@@ -21,12 +21,12 @@ import kotlinx.android.synthetic.main.fragment_user_profile_history.*
 
 class UserProfileHistoryFragment : Fragment(R.layout.fragment_user_profile_history) {
 
-//    val drawingMenus: ArrayList<DrawingMenuData> = drawings
     private lateinit var myView : View
     private lateinit var drawings: ArrayList<DrawingModel.Drawing>
     private var drawingPosition: Int? = null
     private lateinit var currentDrawing: DrawingModel.Drawing
     private lateinit var collabHistoryToShow : ArrayList<CollaborationHistory.drawingHistory>
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,8 +47,15 @@ class UserProfileHistoryFragment : Fragment(R.layout.fragment_user_profile_histo
 
     private fun setListeners() {
         // set value for login and logout
-        myView.findViewById<TextView>(R.id.userLastLogin).text = UserService.getUserInfo().lastLogin.toString()
-        myView.findViewById<TextView>(R.id.userlastLogout).text = UserService.getUserInfo().lastLogout.toString()
+        when(UserService.getUserInfo().lastLogin.toString()){
+            Constants.EMPTY_STRING -> {}
+            else->{ myView.findViewById<TextView>(R.id.userLastLogin).text = UserService.getUserInfo().lastLogin.toString()}
+        }
+        when(UserService.getUserInfo().lastLogout){
+            null -> {}
+            else->{myView.findViewById<TextView>(R.id.userlastLogout).text = UserService.getUserInfo().lastLogout.toString()}
+        }
+
     }
 
     private fun getAllDrawings() {
@@ -62,37 +69,16 @@ class UserProfileHistoryFragment : Fragment(R.layout.fragment_user_profile_histo
 
             drawings = it.data  as ArrayList<DrawingModel.Drawing>
             DrawingService.setAllDrawings(drawings)
-            val objectDrawing = DrawingService.getCollaborationDrawingObject()
+//            val objectDrawing = DrawingService.getCollaborationDrawingObject()
 
             val recyclerView = myView.findViewById<RecyclerView>(R.id.collabHistoryRecyclerView)
-            recyclerView.layoutManager = GridLayoutManager(requireContext(), Constants.NB_DATA_ROWS)
+            recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
             val adapter = CollabHistoryAdapterService.createAdapter(requireActivity(), R.layout.card_collaboration_history, R.id.collabHistoryRecyclerView)
             recyclerView.adapter = adapter
             CollabHistoryAdapterService.setAdapter(adapter)
-
-//            renderDrawings()
         })
     }
-
-
-//    private fun openDrawing(position: Int, context: Context) {
-//        DrawingObjectManager.createDrawableObjects(drawingMenus[position].svgString)
-//
-//        DrawingService.setCurrentDrawingID(drawingMenus[position].drawing._id)
-//        MyFragmentManager(context as FragmentActivity).open(destination, GalleryDrawingFragment())
-//        CanvasUpdateService.invalidate()
-//    }
-
-
-//    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-//        super.onViewCreated(view, savedInstanceState)
-//        layoutManager = LinearLayoutManager(context)
-//        collabHistoryRecyclerView.layoutManager = layoutManager
-//        adapter = CollaborationHistoryRecyclerAdapter()
-//        collabHistoryRecyclerView.adapter = adapter
-//    }
-
 
 }
 

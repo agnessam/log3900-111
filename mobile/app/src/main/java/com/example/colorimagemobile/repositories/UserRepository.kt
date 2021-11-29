@@ -41,12 +41,12 @@ class UserRepository {
     }
 
     // update user profile data
-    fun updateUserData(token: String, id: String): MutableLiveData<DataWrapper<HTTPResponseModel.UserResponse>> {
-        newProfileDate = UserService.getNewProfileData()
+    fun updateUserData(dataToUpdate:UserModel.UpdateUser , token: String, id: String): MutableLiveData<DataWrapper<HTTPResponseModel.UserResponse>> {
+//        newProfileDate = UserService.getNewProfileData()
 
         val updateLiveData: MutableLiveData<DataWrapper<HTTPResponseModel.UserResponse>> = MutableLiveData()
 
-        httpClient.updateUser(token = "Bearer $token",id, newProfileDate).enqueue(object :
+        httpClient.updateUser(token = "Bearer $token",id, dataToUpdate).enqueue(object :
             Callback<HTTPResponseModel.UserResponse> {
             override fun onResponse(call: Call<HTTPResponseModel.UserResponse>, response: Response<HTTPResponseModel.UserResponse>) {
                 if (!response.isSuccessful) {

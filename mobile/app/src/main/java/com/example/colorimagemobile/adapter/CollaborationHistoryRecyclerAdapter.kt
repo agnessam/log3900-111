@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.colorimagemobile.R
+import com.example.colorimagemobile.services.drawing.DrawingService
 import com.example.colorimagemobile.services.users.UserService
 
 class CollaborationHistoryRecyclerAdapter(
@@ -33,7 +34,10 @@ class CollaborationHistoryRecyclerAdapter(
         var collaborationHistory : TextView= itemView.findViewById(R.id.dateOfCollaboration)
 
         init {
-            itemView.setOnClickListener { openDrawing(bindingAdapterPosition) }
+            itemView.setOnClickListener {
+                val position: Int = bindingAdapterPosition
+                DrawingService.setCurrentDrawingID(DrawingService.getCollaborationDrawingObject()[position]._id)
+                openDrawing(bindingAdapterPosition) }
         }
     }
 }

@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.colorimagemobile.R
 import com.example.colorimagemobile.adapter.DrawingMenuRecyclerAdapter
-import com.example.colorimagemobile.classes.ImageConvertor
 import com.example.colorimagemobile.classes.MyFragmentManager
 import com.example.colorimagemobile.classes.MyPicasso
 import com.example.colorimagemobile.models.DrawingModel
@@ -37,8 +36,15 @@ class UsersProfileFragment : Fragment(R.layout.fragment_users_profile) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            userPosition = it.getInt(Constants.USERS.CURRENT_USER_ID_KEY)
+
+
+            if (userPosition == null){
+                userPosition = UserService.getUserMePosition()
+            } else {
+                userPosition = it.getInt(Constants.USERS.CURRENT_USER_ID_KEY)
+            }
             currentUser = UserService.getUser(userPosition!!)
+
         }
     }
 

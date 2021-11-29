@@ -44,7 +44,7 @@
     <string name="change_password">Change Password</string>
     <string name="edit_password">Edit Password</string>
     <string name="history_log">Log History</string>
-    <string name="edit_profil">Edit Profile</string>
+    <string name="edit_profil">Edit Profil</string>
     <string name="compte_parameter">ACCOUNT DETAILS</string>
     <string name="j_aime_le_bbq_korean">j\'aime le bbq korean</string>
     <string name="de_laroche">De Laroche</string>
@@ -68,5 +68,6 @@
     <string name="change_your_description">Change your description</string>
     <string name="describe_yourself">Describe yourself!</string>
     <string name="enter_a_description">Enter a description</string>
+    <string name="change_your_password">Change your Password</string>
 
 </resources>

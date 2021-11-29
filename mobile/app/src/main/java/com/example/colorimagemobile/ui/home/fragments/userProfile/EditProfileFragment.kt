@@ -15,7 +15,6 @@ import android.widget.TextView
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import com.example.colorimagemobile.R
-import com.example.colorimagemobile.adapter.CollaborationHistoryRecyclerAdapter
 import com.example.colorimagemobile.bottomsheets.DefaultAvatarListBottomSheet
 import com.example.colorimagemobile.bottomsheets.UpdateDescriptionBottomSheet
 import com.example.colorimagemobile.bottomsheets.UpdatePasswordBottomSheet
@@ -33,17 +32,14 @@ import com.example.colorimagemobile.services.avatar.AvatarService
 import com.example.colorimagemobile.services.users.UserService
 import com.example.colorimagemobile.utils.CommonFun
 import com.example.colorimagemobile.utils.CommonFun.Companion.imageView
-import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
 import com.example.colorimagemobile.utils.Constants
 import com.example.colorimagemobile.utils.Constants.Companion.CAMERA_REQUEST_CODE
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.karumi.dexter.Dexter
 import com.karumi.dexter.MultiplePermissionsReport
 import com.karumi.dexter.PermissionToken
 import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener
 import kotlinx.android.synthetic.main.fragment_edit_profile.*
-import kotlinx.android.synthetic.main.fragment_password.*
 import kotlinx.android.synthetic.main.fragment_show_user_profile.*
 import java.io.File
 import java.io.ByteArrayOutputStream
@@ -56,11 +52,7 @@ class EditProfileFragment : Fragment() {
 
     private lateinit var sharedPreferencesService: SharedPreferencesService
     private lateinit var avatarRepository : AvatarRepository
-//    private lateinit var edtDescription: String
-    private lateinit var currentUsername: TextView
-//    private lateinit var edtUsername: String
     private lateinit var globalHandler: GlobalHandler
-    private lateinit var currentDescription: TextView
     private lateinit var token : String
     private lateinit var user : UserModel.AllInfo
     private lateinit var currentAvatar : AvatarModel.AllInfo
@@ -131,10 +123,6 @@ class EditProfileFragment : Fragment() {
         inf.findViewById<TextView>(R.id.currentUserUsername).text = UserService.getUserInfo().username
         inf.findViewById<TextView>(R.id.currentUserDescription).text = UserService.getUserInfo().description
 
-        // setcollaborationdatatoshow
-//        UserService.setCollaborationHistoryToshow()
-//        printMsg("collab history to show in edit profile onview create "+UserService.getCollaborationToShow())
-
         infview = inf
         return inf
     }
@@ -156,24 +144,18 @@ class EditProfileFragment : Fragment() {
         })
     }
 
-    //Verify if field are empty and set username and description on change
-//    private fun areFieldEmpty(){
-//        currentUsername = (infview!!.findViewById<View>(R.id.currentUserUsername) as TextView)
-//        currentDescription = (infview!!.findViewById<View>(R.id.currentUserDescription) as TextView)
-////
-////        edtUsername = infName.text.toString()
-////        edtDescription = infDescription.text.toString()
-//        if (currentUsername.text.length != 0 ){
-//            newUserData.username = currentUsername.text as String?
-//        }
-//        if (currentDescription.text.length != 0){
-//            newUserData.description = currentDescription.text as String?
-//        }
-//
-//    }
+    //Set the data to be update
+    private fun setNewDataToUpdate(){
 
-    // set the data to be update
-    private fun setDataToUpdate(){
+        // update username data
+        if(!UserService.getTemporaryEditUsername().isNullOrBlank()){
+            newUserData.username = UserService.getTemporaryEditUsername()
+        }
+        //update description
+        if(!UserService.getTemporaryDescription().isNullOrBlank()){
+            newUserData.description = UserService.getTemporaryDescription()
+        }
+        //update avatar
         if(AvatarService.getCurrentAvatar().imageUrl!= Constants.EMPTY_STRING){
             currentAvatar = AvatarService.getCurrentAvatar()
             newUserData.avatar = currentAvatar
@@ -194,28 +176,17 @@ class EditProfileFragment : Fragment() {
             postAvatar(AvatarService.getCurrentAvatar()).observe(viewLifecycleOwner, { handleResponse(it) })
         }
 
-        setDataToUpdate()
-//        areFieldEmpty()
-        UserService.setNewProfileData(newUserData)
-
-        // update user
-        updateUserInfo().observe(viewLifecycleOwner, { context?.let { it1 ->globalHandler.response(it1,it) } })
-
-        //clear all field
-        clearTextField()
-
-        // update local user data
-        UserService.updateUserAfterUpdate(UserService.getNewProfileData())
-
-        // update menu item
+        setNewDataToUpdate()
+        updateUserInfo(newUserData).observe(viewLifecycleOwner, { context?.let { it1 ->globalHandler.response(it1,it) } })
+        UserService.updateMe(newUserData)
         requireActivity().invalidateOptionsMenu()
     }
 
 
 
     //call retrofit request to database to update user info
-    private fun updateUserInfo(): LiveData<DataWrapper<HTTPResponseModel.UserResponse>> {
-        return UserRepository().updateUserData(token, user._id)
+    private fun updateUserInfo(dataToUpdate:UserModel.UpdateUser): LiveData<DataWrapper<HTTPResponseModel.UserResponse>> {
+        return UserRepository().updateUserData(dataToUpdate,token, user._id)
     }
 
     //call retrofit request to upload image and get imageUrl from amazon S3
@@ -236,10 +207,6 @@ class EditProfileFragment : Fragment() {
         }
         CommonFun.printToast(requireContext(), HTTPResponse.message!!)
 
-    }
-    private fun clearTextField(){
-        currentUsername.setText("");
-        currentDescription.setText("");
     }
 
     // function to convert bitmap to file
