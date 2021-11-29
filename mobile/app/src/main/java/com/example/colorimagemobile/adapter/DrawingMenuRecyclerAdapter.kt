@@ -16,24 +16,16 @@ import com.example.colorimagemobile.R
 import com.example.colorimagemobile.bottomsheets.EditDrawingBottomSheet
 import com.example.colorimagemobile.bottomsheets.ProtectedDrawingConfirmationBottomSheet
 import com.example.colorimagemobile.classes.DateFormatter
-import com.example.colorimagemobile.classes.MyFragmentManager
 import com.example.colorimagemobile.classes.MyPicasso
 import com.example.colorimagemobile.models.DrawingModel
 import com.example.colorimagemobile.models.PrivacyLevel
 import com.example.colorimagemobile.models.recyclerAdapters.DrawingMenuData
 import com.example.colorimagemobile.models.recyclerAdapters.DrawingMenuViewHolder
-import com.example.colorimagemobile.services.drawing.CanvasUpdateService
-import com.example.colorimagemobile.services.drawing.DrawingObjectManager
 import com.example.colorimagemobile.services.drawing.DrawingOwnerService
 import com.example.colorimagemobile.services.drawing.DrawingService
 import com.example.colorimagemobile.services.socket.DrawingSocketService
-import com.example.colorimagemobile.services.users.UserService
-import com.example.colorimagemobile.ui.home.fragments.gallery.GalleryDrawingFragment
 import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
-import com.example.colorimagemobile.utils.Constants
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.newSingleThreadContext
 import kotlinx.coroutines.runBlocking
 
 class DrawingMenuRecyclerAdapter(

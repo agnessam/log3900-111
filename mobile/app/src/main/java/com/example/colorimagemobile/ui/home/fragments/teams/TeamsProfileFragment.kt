@@ -1,5 +1,6 @@
 package com.example.colorimagemobile.ui.home.fragments.teams
 
+import android.graphics.Color
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.View
@@ -10,6 +11,8 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.colorimagemobile.R
 import com.example.colorimagemobile.adapter.DrawingMenuRecyclerAdapter
+import com.example.colorimagemobile.bottomsheets.DeleteConfirmationBottomSheet
+import com.example.colorimagemobile.bottomsheets.NewTeamBottomSheet
 import com.example.colorimagemobile.classes.MyFragmentManager
 import com.example.colorimagemobile.models.DrawingModel
 import com.example.colorimagemobile.models.TeamModel
@@ -99,6 +102,8 @@ class TeamsProfileFragment : Fragment(R.layout.fragment_teams_profile) {
         currentTeam.memberLimit?.let {
             if (currentTeam.members.size >= currentTeam.memberLimit!!) {
                 toggleButton(button, false)
+                button.alpha = .6f
+                button.setBackgroundColor(Color.rgb(221, 208, 206))
             }
         }
     }
@@ -124,7 +129,10 @@ class TeamsProfileFragment : Fragment(R.layout.fragment_teams_profile) {
             showJoinBtn()
         }
         deleteBtn.setOnClickListener {
-            TeamService.deleteTeam(teamPosition!!, requireContext())
+            val title = "Are you sure you want to delete ${currentTeam.name}?"
+            val description = "Deleting this team will delete all drawings and publications associated to this team."
+            val deleteConfirmation = DeleteConfirmationBottomSheet({ TeamService.deleteTeam(teamPosition!!, requireContext()) }, title, description)
+            deleteConfirmation.show(parentFragmentManager, "DeleteConfirmationBottomSheet")
         }
     }
 

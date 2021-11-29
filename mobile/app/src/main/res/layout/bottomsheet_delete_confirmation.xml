@@ -8,20 +8,21 @@
     android:orientation="vertical">
 
     <TextView
+        android:id="@+id/confirmationTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:text="Delete channel confirmation"
+        android:text=""
         android:textSize="20sp"
         android:textStyle="bold"/>
 
     <TextView
+        android:id="@+id/confirmationDescription"
         android:layout_marginTop="40dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="16sp"
-        android:textAlignment="center"
-        android:text="Are you sure you want to delete the following channel?" />
+        android:textAlignment="center" />
 
     <TextView
         android:id="@+id/ChannelDeleteName"
@@ -38,17 +39,17 @@
         android:layout_marginTop="50dp">
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/channelDeleteCancelBtn"
+            android:id="@+id/confirmationCancelBtn"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
-            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
             android:layout_toLeftOf="@id/delete_empty_space"
             android:text="Cancel"
-            app:strokeColor="@color/primary"
-            app:strokeWidth="1dp"
+            android:textColor="@color/primary"
             app:cornerRadius="4dp"
-            android:textColor="@color/primary" />
+            app:strokeColor="@color/primary"
+            app:strokeWidth="1dp" />
 
         <View
             android:id="@+id/delete_empty_space"
@@ -57,7 +58,7 @@
             android:layout_centerHorizontal="true" />
 
         <Button
-            android:id="@+id/channelDeleteYesBtn"
+            android:id="@+id/confirmationConfirmBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
