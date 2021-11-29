@@ -19,7 +19,7 @@ class UserRepository {
         httpClient.getUserByToken(token = "Bearer $token").enqueue(object : Callback<HTTPResponseModel.UserResponse> {
             override fun onResponse(call: Call<HTTPResponseModel.UserResponse>, response: Response<HTTPResponseModel.UserResponse>) {
                 if (!response.isSuccessful) {
-                    userLiveData.value = DataWrapper(null, "An error occurred!", true)
+                    userLiveData.value = DataWrapper(null, "Sorry, failed to get your profile!", true)
                     return
                 }
                 val body = response.body() as HTTPResponseModel.UserResponse
@@ -32,7 +32,7 @@ class UserRepository {
             }
             // duplicate username is coming through here
             override fun onFailure(call: Call<HTTPResponseModel.UserResponse>, t: Throwable) {
-                userLiveData.value = DataWrapper(null, "Failed to get User!", true)
+                userLiveData.value = DataWrapper(null, "Sorry, failed to get your profile!", true)
             }
         })
 

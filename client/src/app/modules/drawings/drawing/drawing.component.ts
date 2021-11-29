@@ -1,4 +1,4 @@
-import { Component, AfterViewInit, OnInit } from "@angular/core";
+import { AfterViewInit, Component, OnInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { SocketRoomInformation } from "src/app/shared/socket/socket-room-information";
 import { DrawingService } from "../../workspace";
@@ -36,7 +36,6 @@ export class DrawingComponent implements OnInit, AfterViewInit {
 
   ngOnDestroy(): void {
     this.drawingService.saveDrawing();
-    this.drawingSocketService.disconnect();
     this.drawingSocketService.leaveRoom(this.socketInformation);
   }
 }

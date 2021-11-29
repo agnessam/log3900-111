@@ -1,17 +1,21 @@
 import {
+  ChangeDetectorRef,
   Component,
-  ElementRef,
+  EventEmitter,
   OnDestroy,
   OnInit,
-  ViewChild,
+  Output,
 } from "@angular/core";
-import { MatSnackBar } from "@angular/material/snack-bar";
+import { MatDialog, MatDialogRef } from "@angular/material/dialog";
 import { AuthenticationService } from "src/app/modules/authentication";
+import { Team } from "src/app/shared/models/team.model";
 import { User } from "../../authentication/models/user";
+import { TeamClientService } from "../../backend-communication/team-client/team-client.service";
 import { TextChannel } from "../models/text-channel.model";
 import { ChatSocketService } from "../services/chat-socket.service";
 import { ChatService } from "../services/chat.service";
 import { TextChannelService } from "../services/text-channel.service";
+import { NewChannelComponent } from "./new-channel/new-channel.component";
 
 @Component({
   selector: "channel",
@@ -19,31 +23,28 @@ import { TextChannelService } from "../services/text-channel.service";
   styleUrls: ["./channel.component.scss"],
 })
 export class ChannelComponent implements OnInit, OnDestroy {
+  @Output() closeChannelList = new EventEmitter<any>();
   user: User | null;
+  allTeams: Team[];
   allChannels: TextChannel[];
-  isSearchOpen: boolean;
   searchedChannels: TextChannel[];
-  newChannelName = "";
-  isChannelListOpen: boolean;
   connectedChannels: TextChannel[];
-  search: string;
-
-  @ViewChild("addChannelModal", { static: false })
-  private addChannelModal: ElementRef<HTMLInputElement>;
-  @ViewChild("newChannelNameInput", { static: false })
-  private newChannelNameInput: ElementRef<HTMLInputElement>;
-  @ViewChild("searchInput", { static: true })
-  private searchInput: ElementRef<HTMLInputElement>;
+  searchQuery: string;
+  newChannelDialogRef: MatDialogRef<NewChannelComponent>;
 
   constructor(
     private authenticationService: AuthenticationService,
     private chatService: ChatService,
     private chatSocketService: ChatSocketService,
     private textChannelService: TextChannelService,
-    private snackBar: MatSnackBar
+    private teamClient: TeamClientService,
+    private ref: ChangeDetectorRef,
+    private dialog: MatDialog,
   ) {
-    this.isSearchOpen = false;
-    this.connectedChannels = [];
+    this.connectedChannels = new Array();
+    this.allChannels = new Array();
+    this.searchedChannels = new Array();
+    this.allTeams = new Array();
   }
 
   ngOnInit(): void {
@@ -51,65 +52,54 @@ export class ChannelComponent implements OnInit, OnDestroy {
       (user) => (this.user = user)
     );
 
-    this.chatService.toggleChannelOverlay.subscribe(() => {
-      this.isChannelListOpen = !this.isChannelListOpen;
-      this.toggleChannelOverlay(this.isChannelListOpen);
+    this.textChannelService.getChannels().subscribe({
+      next: (channels) => {
+        channels.forEach(channel => this.allChannels.push(Object.assign({}, channel)));
+        this.searchedChannels = channels;
+        const general = channels.find((channel) => channel.name === "General");
+        if (general) {
+          this.chatSocketService.joinRoom({
+            userId: this.user!._id,
+            roomName: general.name,
+          });
+          this.connectedChannels.unshift(general);
+        }
+      },
+      complete: () => {
+        this.filterTeamChannels();
+      },
     });
 
-    this.textChannelService.getChannels().subscribe((channels) => {
-      this.allChannels = channels;
-      this.searchedChannels = channels;
-      const general = channels.find((channel) => channel.name === "General");
-      if (general) {
-        this.chatSocketService.joinRoom({
-          userId: this.user!._id,
-          roomName: general.name,
-        });
-        this.connectedChannels.unshift(general);
-      }
+    this.textChannelService.newChannel.subscribe((newChannel) => {
+      this.allChannels.push(newChannel);
+      this.resetSearch();
+      this.openChannel(newChannel);
     });
 
-    this.keyListener();
   }
 
   ngOnDestroy(): void {}
 
-  addChannel(): void {
-    const name = this.newChannelName;
-    this.newChannelName = "";
-    this.newChannelNameInput.nativeElement.value = "";
-
-    const isWhitespace = (name || "").trim().length === 0;
-    if (isWhitespace) {
-      this.snackBar.open("The name can not be empty", "Close", {
-        duration: 3000,
+  // only get channels that are visible to the user: teams and collaboration channels
+  filterTeamChannels(): void {
+    this.teamClient.getTeams().subscribe((response) => {
+      response.forEach((team) => {
+        this.allTeams.push(team);
+        const index = this.allChannels.findIndex((channel) => channel.name === team.name );
+        if (index !== -1) {
+          // remove from list if user is not a member
+          if (!(team.members as string[]).includes(this.user!._id) ) {
+              this.allChannels.splice(index, 1);
+              this.resetSearch();
+          } else {
+            // join team channels automatically
+            this.chatSocketService.joinRoom({userId: this.user!._id, roomName: team.name});
+            this.connectedChannels.push(this.allChannels[index]);
+          }
+        }
       });
-      return;
-    } else {
-      let isValid = true;
-      if (this.allChannels.find((channel) => channel.name === name)) {
-        this.snackBar.open("This channel already exist", "Close", {
-          duration: 3000,
-        });
-        isValid = false;
-      }
-
-      if (isValid) {
-        this.textChannelService
-          .createChannel(name, this.user?._id as string)
-          .subscribe((channel) => {
-            this.allChannels.push(channel);
-            // should automatically connect user to socket
-            this.connectedChannels.push(channel);
-            this.chatService.toggleChatOverlay.emit(channel);
-            this.isSearchOpen = false;
-            this.toggleChannelOverlay(false);
-            this.closeAddChannelModal();
-          });
-      }
-    }
+    });
   }
-
   // can only delete channel if owner id corresponds to user id
   deleteChannel(channel: TextChannel): void {
     this.textChannelService.deleteChannel(channel._id).subscribe(() => {
@@ -153,75 +143,55 @@ export class ChannelComponent implements OnInit, OnDestroy {
     }
   }
 
-  searchedInput(evt: Event): void {
-    this.search = (evt.target as HTMLInputElement).value;
-  }
-
-  searchChannels(search: string): void {
-    if (search === null || search.match(/^ *$/) !== null) {
+  searchChannels(): void {
+    if (this.searchQuery === undefined || this.searchQuery === null  || this.searchQuery?.match(/^ *$/) !== null) {
       this.searchedChannels = Object.assign([], this.allChannels);
     } else {
       this.textChannelService
-        .getChannelsByName(search)
+        .searchChannels(this.searchQuery)
         .subscribe((channels) => {
-          this.searchedChannels = channels;
+          this.allTeams.forEach((team) => {
+            const index = channels.findIndex((channel) => channel.name === team.name );
+            if (index !== -1 && !(team.members as string[]).includes(this.user!._id)) {
+              channels.splice(index, 1);
+            }
+            this.searchedChannels = channels;
+          });
         });
     }
   }
 
-  toggleSearchBar(): void {
-    this.isSearchOpen = !this.isSearchOpen;
-
-    if (this.isSearchOpen) {
-      setTimeout(() => {
-        this.searchInput.nativeElement.focus();
-      }, 0);
+  resetSearch(): void {
+    if (this.searchQuery === undefined || this.searchQuery === null  || this.searchQuery?.match(/^ *$/) !== null) {
+      this.searchedChannels = Object.assign([], this.allChannels);
     }
   }
 
   openChannel(channel: TextChannel): void {
     this.chatService.toggleChatOverlay.emit(channel);
-    this.toggleChannelOverlay(false);
-    this.isChannelListOpen = false;
+    this.closeChannelList.emit();
 
     if (!this.connectedChannels.find((x) => x.name === channel.name)) {
       this.connectedChannels.push(channel);
     }
 
-    if (this.isSearchOpen) {
-      this.searchInput.nativeElement.value = "";
-      this.isSearchOpen = false;
-    }
-  }
-
-  toggleChannelOverlay(open: boolean) {
-    const channelOverlay = document.getElementById(
-      "channel-overlay"
-    ) as HTMLInputElement;
-
-    if (open) channelOverlay.style.display = "block";
-    else channelOverlay.style.display = "none";
+    this.searchQuery = "";
   }
 
   openAddChannelModal() {
-    const modal = this.addChannelModal.nativeElement;
-    modal.style.display = "block";
-  }
-  closeAddChannelModal() {
-    const modal = this.addChannelModal.nativeElement;
-    modal.style.display = "none";
-  }
-
-  onInput(evt: Event): void {
-    this.newChannelName = (evt.target as HTMLInputElement).value;
-  }
-
-  keyListener() {
-    window.addEventListener("keydown", (event) => {
-      const modal = this.addChannelModal.nativeElement;
-      if (event.key === "Enter" && modal.style.display !== "none") {
-        this.addChannel();
+    this.newChannelDialogRef = this.dialog.open(NewChannelComponent, {});
+    this.newChannelDialogRef.afterClosed().subscribe((channel) => {
+      if (!channel) {
+        return;
       }
+
+      this.allChannels.push(channel);
+      this.searchedChannels = this.allChannels;
+      this.closeChannelList.emit();
+      // should automatically connect user to socket
+      this.connectedChannels.push(channel);
+      this.chatService.toggleChatOverlay.emit(channel);
+      this.ref.detectChanges();
     });
   }
 }

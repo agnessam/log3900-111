@@ -5,12 +5,15 @@ import com.example.colorimagemobile.models.DataWrapper
 import com.example.colorimagemobile.models.DrawingModel
 import com.example.colorimagemobile.models.MuseumPostModel
 import com.example.colorimagemobile.services.RetrofitInstance
+import com.example.colorimagemobile.services.drawing.DrawingObjectManager
 import com.example.colorimagemobile.services.drawing.DrawingService
 import com.example.colorimagemobile.services.users.UserService
 import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.newSingleThreadContext
+import kotlinx.coroutines.runBlocking
+import retrofit2.*
 
 class DrawingRepository {
 
@@ -57,6 +60,48 @@ class DrawingRepository {
 
         return liveData
     }
+
+    suspend fun getDrawing(id: String): DrawingModel.Drawing? {
+        val response = httpClient.getDrawing(token = "Bearer ${UserService.getToken()}", id).awaitResponse()
+        if(response.isSuccessful){
+            return response.body()
+        }
+        return null
+    }
+
+    suspend fun saveCurrentDrawing(): DrawingModel.CreateDrawing? {
+        val saveDrawing = DrawingModel.SaveDrawing(DrawingObjectManager.getDrawingDataURI())
+        val response = httpClient.saveDrawing(
+            token = "Bearer ${UserService.getToken()}",
+            DrawingService.getCurrentDrawingID()!!,
+            saveDrawing
+        ).awaitResponse()
+        if (response.isSuccessful) {
+            return response.body()
+        }
+        return null
+    }
+
+    fun updateDrawing(id: String, drawing: DrawingModel.UpdateDrawing): MutableLiveData<DataWrapper<Any>> {
+        val liveData: MutableLiveData<DataWrapper<Any>> = MutableLiveData()
+
+        httpClient.updateDrawing(token = "Bearer ${UserService.getToken()}", id, drawing).enqueue(object : Callback<Any> {
+            override fun onResponse(call: Call<Any>, response: Response<Any>) {
+                if (!response.isSuccessful) {
+                    liveData.value = DataWrapper(null, "An error occurred while updating drawing!", true)
+                    return
+                }
+                liveData.value = DataWrapper(response.body(), null, false)
+            }
+
+            override fun onFailure(call: Call<Any>, t: Throwable) {
+                liveData.value = DataWrapper(null, "Failed to update drawing!", true)
+            }
+        })
+
+        return liveData
+    }
+
 
     fun publishDrawing(drawing: DrawingModel.Drawing): MutableLiveData<DataWrapper<Any>> {
         val drawingLiveData: MutableLiveData<DataWrapper<Any>> = MutableLiveData()

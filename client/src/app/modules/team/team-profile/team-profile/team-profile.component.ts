@@ -2,6 +2,7 @@ import { ChangeDetectorRef, Component, OnInit } from "@angular/core";
 import { MatDialog, MatDialogRef } from "@angular/material/dialog";
 import { ActivatedRoute } from "@angular/router";
 import { TeamClientService } from "src/app/modules/backend-communication/team-client/team-client.service";
+import { ChatSocketService } from "src/app/modules/chat/services/chat-socket.service";
 import { User } from "src/app/modules/users/models/user";
 import { Team } from "src/app/shared/models/team.model";
 import { ConfirmDeleteDialogComponent } from "../confirm-delete-dialog/confirm-delete-dialog.component";
@@ -18,6 +19,8 @@ export class TeamProfileComponent implements OnInit {
   teamId: string;
   team: Team;
 
+  teamLoaded: Promise<boolean>;
+
   openConfirmDeleteDialogRef: MatDialogRef<ConfirmDeleteDialogComponent>;
   openConfirmJoinDialogRef: MatDialogRef<ConfirmJoinDialogComponent>;
   openConfirmLeaveDialogRef: MatDialogRef<ConfirmLeaveDialogComponent>;
@@ -26,6 +29,7 @@ export class TeamProfileComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private teamClient: TeamClientService,
+    private chatSocketService: ChatSocketService,
     private dialog: MatDialog,
     private changeDetectorRef: ChangeDetectorRef
   ) {}
@@ -35,9 +39,7 @@ export class TeamProfileComponent implements OnInit {
       this.teamId = params["id"];
       this.teamClient.getTeam(this.teamId).subscribe((team) => {
         this.team = team;
-      });
-      this.teamClient.getTeamDrawings(this.teamId).subscribe((drawings) => {
-        this.team.drawings = drawings;
+        this.teamLoaded = Promise.resolve(true);
       });
     });
   }
@@ -45,6 +47,7 @@ export class TeamProfileComponent implements OnInit {
   joinTeam(teamId: string) {
     this.teamClient.joinTeam(teamId).subscribe((team) => {
       this.team = team;
+      this.chatSocketService.joinRoom({userId: localStorage.getItem("userId")!, roomName: team.name});
       this.changeDetectorRef.detectChanges();
     });
   }
@@ -100,6 +103,7 @@ export class TeamProfileComponent implements OnInit {
         return;
       }
       this.team = team;
+      this.chatSocketService.leaveRoom(team.name);
       this.changeDetectorRef.detectChanges();
     });
   }

@@ -1,15 +1,25 @@
 <div id="chat-popup">
 <app-popout-window #popout (isOutEvent)="closeChatPopout($event)">
   <div class=chat-top>
-    <p>{{chatRoomName}}</p>
-    <div class="chat-menu" *ngIf="!isPopoutOpen; else openPopout">
-      <button mat-icon-button class="btn" id="ArrowDown" #arrowDown (click)="minimizeChat(true)">
+    <p>{{currentChannel?.name}}</p>
+    <div class="chat-menu" [hidden]="isPopoutOpen">
+      <button mat-icon-button 
+              class="btn" 
+              id="ArrowDown" 
+              #arrowDown 
+              [ngStyle]="{'display': isMinimized ? 'none' : 'inline'}"
+              (click)="minimizeChat(true)">
         <mat-icon>keyboard_arrow_down</mat-icon>
       </button>
-      <button mat-icon-button class="btn" id="ArrowUp" #arrowUp (click)="minimizeChat(false)">
+      <button mat-icon-button 
+              class="btn" 
+              id="ArrowUp" 
+              #arrowUp 
+              [ngStyle]="{'display': isMinimized ? 'inline' : 'none'}"
+              (click)="minimizeChat(false)">
         <mat-icon>keyboard_arrow_up</mat-icon>
       </button>
-      <div *ngIf="!isMinimized" style="display: inline;">
+      <div [hidden]="isMinimized" style="display: inline;">
         <button mat-icon-button class="btn" (click)="openChatPopout(); popout.popOut()">
         <mat-icon>open_in_full</mat-icon>
       </button>
@@ -18,8 +28,8 @@
         <mat-icon>close</mat-icon>
       </button>
     </div>
-    <ng-template #openPopout>
-      <div class="chat-menu-popout">
+    <ng-template #openPopout >
+      <div class="chat-menu-popout" [hidden]="!isPopoutOpen">
         <button mat-icon-button class="btn" (click)="popout.popIn()">
           <mat-icon>close_fullscreen</mat-icon>
         </button>
@@ -28,9 +38,9 @@
   </div>
 
 
-  <div id="chat-bottom" #chatBottom>
+  <div id="chat-bottom" #chatBottom [ngStyle]="{'display': isMinimized ? 'none' : 'block'}">
     <div id="chatbox" #chatBox >
-      <p id="loadHistory" *ngIf="!loadedDbMessages" (click)="getDatabaseMessages(chatRoomName)">Load previous messages ...</p>
+      <p id="loadHistory" *ngIf="!loadedHistory" (click)="loadedHistory = true">Load previous messages ...</p>
       <div *ngFor="let m of getMessages()">
           <div [ngClass]="getMessageClass(m.author)">
             <div class="authorName">{{m.author}}</div>
@@ -41,18 +51,21 @@
     </div>
 
     <div id="message">
-      <input
-      type="text"
-      #messageBody
-      id="usermsg"
-      autocomplete="off"
-      spellcheck="false"
-      placeholder="Enter your message here"
-      (input)="onInput($event)"
-      />
-      <button mat-icon-button class="buttonContainer"  (click)="sendMessage()">
-        <mat-icon>send</mat-icon>
-      </button>
+      <form id="new-message-form" (ngSubmit)="sendMessage()">
+        <input
+          type="text"
+          #messageBody
+          id="new-message-input"
+          autocomplete="off"
+          spellcheck="false"
+          placeholder="Enter your message here"
+          [(ngModel)]="this.message"
+          name="new-message"
+        />
+        <button mat-icon-button class="icon" type="submit">
+          <mat-icon>send</mat-icon>
+        </button>
+      </form>
     </div>
   </div>
   </app-popout-window>

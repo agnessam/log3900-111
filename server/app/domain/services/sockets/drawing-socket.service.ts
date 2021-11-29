@@ -18,6 +18,7 @@ import {
   SECONDARY_COLOR_EVENT,
   LINE_WIDTH_EVENT,
   ROOM_EVENT_NAME,
+  LEAVE_ROOM_EVENT_NAME,
 } from '../../constants/socket-constants';
 import { SocketServiceInterface } from '../../../domain/interfaces/socket.interface';
 import { inject, injectable } from 'inversify';
@@ -28,10 +29,16 @@ import { LineWidth } from '../../../domain/interfaces/line-width.interface';
 import { UserRepository } from '../../../infrastructure/data_access/repositories/user_repository';
 import { TYPES } from '../../../domain/constants/types';
 import { SocketRoomInformation } from '../../../domain/interfaces/socket-information';
+import { CollaborationTrackerService } from '../collaboration-tracker.service';
+import { StatusService } from '../status.service';
+import { STATUS } from '../../../domain/constants/status';
 
 @injectable()
 export class DrawingSocketService extends SocketServiceInterface {
   @inject(TYPES.UserRepository) public userRepository: UserRepository;
+  @inject(TYPES.CollaborationTrackerService)
+  public collaborationTrackerService: CollaborationTrackerService;
+  @inject(TYPES.StatusService) public statusService: StatusService;
 
   init(io: Server) {
     super.init(io, COLLABORATIVE_DRAWING_NAMESPACE);
@@ -59,12 +66,47 @@ export class DrawingSocketService extends SocketServiceInterface {
       console.log(
         `${socketInformation.userId} has joined room ${socketInformation.roomName}`,
       );
+
       this.userRepository.updateCollaborationHistory(
         socketInformation.userId,
         socketInformation.roomName,
       );
+
+      this.collaborationTrackerService.onSessionJoin(
+        socketInformation.roomName,
+        socketInformation.userId,
+      );
+
+      this.statusService.updateStatus(
+        socketInformation.userId,
+        STATUS.Collaborating,
+      );
+
       socket.join(socketInformation.roomName);
     });
+  }
+
+  protected listenLeaveRoom(socket: Socket) {
+    socket.on(
+      LEAVE_ROOM_EVENT_NAME,
+      (socketInformation: SocketRoomInformation) => {
+        this.statusService.updateStatus(
+          socketInformation.userId,
+          STATUS.Online,
+        );
+
+        this.collaborationTrackerService.onSessionLeave(
+          socketInformation.roomName,
+          socketInformation.userId,
+        );
+
+        console.log(
+          `${socketInformation.userId} has left room ${socketInformation.roomName}`,
+        );
+
+        socket.leave(socketInformation.roomName);
+      },
+    );
   }
 
   private listenLineWidthChange(socket: Socket): void {

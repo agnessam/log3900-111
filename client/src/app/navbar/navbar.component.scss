@@ -88,3 +88,10 @@
 #avatar {
   cursor: pointer;
 }
+
+::ng-deep .mat-menu-panel.customize-menu {
+  background-color: #fef9f7!important;
+  border-radius: 15px;
+  overflow: hidden;
+}
+

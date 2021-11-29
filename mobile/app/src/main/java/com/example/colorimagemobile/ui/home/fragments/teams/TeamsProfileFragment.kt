@@ -14,10 +14,12 @@ import com.example.colorimagemobile.classes.MyFragmentManager
 import com.example.colorimagemobile.models.DrawingModel
 import com.example.colorimagemobile.models.TeamModel
 import com.example.colorimagemobile.models.recyclerAdapters.DrawingMenuData
+import com.example.colorimagemobile.repositories.DrawingRepository
 import com.example.colorimagemobile.repositories.TeamRepository
 import com.example.colorimagemobile.services.drawing.DrawingService
 import com.example.colorimagemobile.services.teams.TeamService
 import com.example.colorimagemobile.services.users.UserService
+import com.example.colorimagemobile.utils.CommonFun.Companion.printToast
 import com.example.colorimagemobile.utils.CommonFun.Companion.toggleButton
 import com.example.colorimagemobile.utils.Constants
 import com.google.android.material.tabs.TabLayout
@@ -140,11 +142,23 @@ class TeamsProfileFragment : Fragment(R.layout.fragment_teams_profile) {
     }
 
     private fun setAllDrawings() {
-        recyclerView.adapter = DrawingMenuRecyclerAdapter(requireActivity(), drawingsMenu, R.id.teamsMenuFrameLayout)
+        recyclerView.adapter = DrawingMenuRecyclerAdapter(requireActivity(), drawingsMenu, R.id.teamsMenuFrameLayout) { updatedDrawing, pos -> updateDrawing(updatedDrawing, pos) }
     }
 
     private fun setPublishedDrawings() {
         val drawings = arrayListOf<DrawingMenuData>()
-        recyclerView.adapter = DrawingMenuRecyclerAdapter(requireActivity(), drawings, R.id.teamsMenuFrameLayout)
+//        recyclerView.adapter = DrawingMenuRecyclerAdapter(requireActivity(), drawings, R.id.teamsMenuFrameLayout, {_,_ -> {}})
+    }
+
+    private fun updateDrawing(updatedDrawing: DrawingModel.UpdateDrawing, position: Int) {
+        DrawingRepository().updateDrawing(drawingsMenu[position].drawing._id!!, updatedDrawing).observe(viewLifecycleOwner, {
+            if (it.isError as Boolean) {
+                printToast(requireActivity(), it.message!!)
+                return@observe
+            }
+
+            drawingsMenu[position] = DrawingService.updateDrawingFromMenu(drawingsMenu[position], updatedDrawing)
+            recyclerView.adapter?.notifyItemChanged(position)
+        })
     }
 }
