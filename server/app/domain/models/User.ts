@@ -50,7 +50,7 @@ const UserSchema = new mongoose.Schema({
   teams: [{ type: Schema.Types.ObjectId, ref: 'Team' }],
 
   drawings: [{ type: Schema.Types.ObjectId, ref: 'Drawing' }],
-  posts: [{ type: Schema.Types.ObjectId, ref: 'PublishedDrawing' }],
+  posts: [{ type: Schema.Types.ObjectId, ref: 'Post' }],
 
   followers: [{ type: Schema.Types.ObjectId, ref: 'User' }],
   following: [{ type: Schema.Types.ObjectId, ref: 'User' }],
