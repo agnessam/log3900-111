@@ -37,6 +37,5 @@ export class DrawingComponent implements OnInit, AfterViewInit {
   ngOnDestroy(): void {
     this.drawingService.saveDrawing();
     this.drawingSocketService.leaveRoom(this.socketInformation);
-    this.drawingSocketService.disconnect();
   }
 }

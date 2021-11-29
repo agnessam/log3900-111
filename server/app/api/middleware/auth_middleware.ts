@@ -6,8 +6,8 @@ import passport from 'passport';
 import JWTstrategy, { ExtractJwt } from 'passport-jwt';
 import localStrategy from 'passport-local';
 import { User } from '../../domain/models/user';
-import { StatusService } from '@app/domain/services/status.service';
-import { STATUS } from '@app/domain/constants/status';
+import { StatusService } from '../../domain/services/status.service';
+import { STATUS } from '../../domain/constants/status';
 
 export const passportRegisterMiddleware = () => {
   passport.use(

@@ -95,14 +95,15 @@ input[type=text]{
   flex-direction: column;
   width: 80%;
   margin-bottom: 8px;
+  align-self: flex-end;
 }
 
 .user{
-  align-self: flex-end;
+  justify-content: right;
 }
 
 .other{
-  align-self: flex-end;
+  justify-content: left;
 }
 
 .user > .messageBox {
