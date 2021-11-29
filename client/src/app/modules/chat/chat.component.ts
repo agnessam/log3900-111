@@ -7,19 +7,21 @@ import {
   ViewChild,
 } from "@angular/core";
 import { Subscription } from "rxjs";
-import { AuthenticationService } from "src/app/modules/authentication";
-import { User } from "../authentication/models/user";
+import { AuthenticationService } from "../authentication";
+import { User } from "../users/models/user";
+import { UsersService } from "../users/services/users.service";
 import { Message } from "./models/message.model";
 import { TextChannel } from "./models/text-channel.model";
 import { ChatSocketService } from "./services/chat-socket.service";
 import { ChatService } from "./services/chat.service";
-import { TextChannelService } from "./services/text-channel.service";
+// import { TextChannelService } from "./services/text-channel.service";
 
 @Component({
   selector: "chat",
   templateUrl: "./chat.component.html",
   styleUrls: ["./chat.component.scss"],
 })
+// tslint:disable: no-non-null-assertion
 export class ChatComponent implements OnInit, OnDestroy {
   user: User | null;
   chatSubscription: Subscription;
@@ -28,26 +30,23 @@ export class ChatComponent implements OnInit, OnDestroy {
 
   message = "";
   // saves connected rooms and message history from connection
-  connectedMessageHistory: Map<string, Set<Message>> = new Map();
+  messageHistory: Map<string, Message[]> = new Map();
 
-  chatStatus: boolean;
   isMinimized = false;
   isPopoutOpen = false;
-  hasDbMessages = false;
-  loadedDbMessages = false;
+  loadedHistory = false;
 
-  openChannel: TextChannel;
+  currentChannel: TextChannel | null;
 
   constructor(
-    private authenticationService: AuthenticationService,
+    private usersService: UsersService,
+    private authService: AuthenticationService,
     private chatSocketService: ChatSocketService,
     private chatService: ChatService,
-    private textChannelService: TextChannelService,
+    // private textChannelService: TextChannelService,
     private ref: ChangeDetectorRef
   ) {
-    this.loadedDbMessages = false;
-    this.hasDbMessages = false;
-    this.openChannel = {
+    this.currentChannel = {
       _id: "default",
       name: "General",
       ownerId: "default"
@@ -55,14 +54,15 @@ export class ChatComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.authenticationService.currentUserObservable.subscribe((user) => {
-      if (user) {
-        this.user = user;
-      } else {
-        this.closeChat();
+    this.usersService.getUser(localStorage.getItem("userId")!).subscribe((user) => {
+      this.user = user;
+    });
+    this.authService.currentUserObservable.subscribe((user) => {
+      if(!user) {
+        this.closeChat()
         this.closeChatPopout();
       }
-    });
+    })
     this.openChatRoom();
     this.receiveMessage();
     this.leaveRoom();
@@ -70,9 +70,9 @@ export class ChatComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.connectedMessageHistory.forEach((_messages, roomName) => {
+    this.messageHistory.forEach((_messages, roomName) => {
       this.chatSocketService.leaveRoom({
-        userId: this.user!._id,
+        userId: this.user!._id!,
         roomName: roomName,
       });
     });
@@ -85,8 +85,7 @@ export class ChatComponent implements OnInit, OnDestroy {
   openChatRoom() {
     // might want to run these in parallel (fork?)
     this.chatService.toggleChatOverlay.subscribe((channel) => {
-      console.log("opening chat room: " + channel.name)
-      this.openChannel = channel
+      this.currentChannel = channel;
       if (!this.isPopoutOpen) {
         const chat = document.getElementById("chat-popup") as HTMLInputElement;
         chat.style.display = "block";
@@ -98,31 +97,31 @@ export class ChatComponent implements OnInit, OnDestroy {
   }
 
   joinRoom(channelName: string) {
-    if (!this.connectedMessageHistory.has(channelName)) {
-      this.connectedMessageHistory.set(channelName, new Set());
+    if (!this.messageHistory.has(channelName)) {
+      this.messageHistory.set(channelName, new Array());
       this.chatSocketService.joinRoom({
-        userId: this.user!._id,
+        userId: this.user?._id!,
         roomName: channelName,
       });
-      this.loadedDbMessages = false;
-      this.chatSocketService.messageHistory.subscribe({
-        next: (history) => {
-          this.connectedMessageHistory.set(
+      this.chatSocketService.messageHistory.subscribe((history) => {
+          if (!history) return;
+          this.messageHistory.set(
             history[0].roomName,
-            new Set(history)
+            history,
           );
         },
-      });
+      );
     }
   }
 
   leaveRoom() {
     this.chatService.leaveRoomEventEmitter.subscribe((channel) => {
-      this.connectedMessageHistory.delete(channel.name);
+      this.messageHistory.delete(channel.name);
       this.chatSocketService.leaveRoom({
-        userId: this.user!._id,
+        userId: this.user?._id!,
         roomName: channel.name,
       });
+      this.currentChannel = null;
       this.closeChat();
       this.closeChatPopout();
     });
@@ -133,8 +132,8 @@ export class ChatComponent implements OnInit, OnDestroy {
     this.chatSubscription = this.chatSocketService.chatSubject.subscribe({
       next: (message) => {
         this.joinRoom(message.roomName);
-        if (!this.connectedMessageHistory.get(message.roomName)?.has(message)) {
-          this.connectedMessageHistory.get(message.roomName)?.add(message);
+        if (!this.messageHistory.get(message.roomName)?.includes(message)) {
+          this.messageHistory.get(message.roomName)?.push(message);
         }
         this.scrollDown();
       },
@@ -150,26 +149,15 @@ export class ChatComponent implements OnInit, OnDestroy {
     if (this.message === null || this.message.match(/^ *$/) !== null) return;
 
     if (this.user?.username === null) return;
-    const name = (this.user as User).username;
-
-    const hour = new Date().getHours().toString();
-    const minute = new Date().getMinutes().toString();
-    const second = new Date().getSeconds().toString();
-    const time = hour + ":" + minute + ":" + second;
-
-    this.textChannelService
-      .getChannel(this.openChannel._id)
-      .subscribe((channel) => {
-        const message = {
-          message: this.message,
-          timestamp: time,
-          author: name,
-          roomId: channel._id,
-          roomName: this.openChannel.name,
-        };
-        this.chatSocketService.sendMessage(message);
-        this.message = "";
-      });
+      const message: Message = {
+        message: this.message,
+        timestamp: new Date(),
+        author: this.user?.username!,
+        roomId: this.currentChannel?._id!,
+        roomName: this.currentChannel?.name!,
+      };
+      this.chatSocketService.sendMessage(message);
+      this.message = "";
   }
 
   minimizeChat(isMinimized: boolean) {
@@ -179,6 +167,8 @@ export class ChatComponent implements OnInit, OnDestroy {
   closeChat() {
     const chat = document.getElementById("chat-popup") as HTMLInputElement;
     chat.style.display = "none";
+    this.currentChannel = null;
+    this.loadedHistory = false;
   }
 
   openChatPopout() {
@@ -196,52 +186,21 @@ export class ChatComponent implements OnInit, OnDestroy {
   }
 
   getMessages(): Message[] {
-    if (!this.connectedMessageHistory.has(this.openChannel.name)) {
+    if (!this.messageHistory.has(this.currentChannel?.name!)) {
       return [];
     }
-    const messages = Array.from(
-      (
-        this.connectedMessageHistory.get(this.openChannel.name) as Set<Message>
-      ).values()
-    );
-    return messages;
-  }
-
-  getDatabaseMessages(channel: TextChannel): void {
-    this.textChannelService
-      .getChannel(channel._id)
-      .subscribe((channel) => {
-        this.textChannelService
-          .getMessages(channel._id)
-          .subscribe((messages) => {
-            if (this.connectedMessageHistory.has(channel.name)) {
-              this.loadedDbMessages = true;
-              this.hasDbMessages = messages.length !== 0;
-              if (!this.hasDbMessages) {
-                return;
-              }
-              const currentMessages = Array.from(
-                (
-                  this.connectedMessageHistory.get(channel.name) as Set<Message>
-                ).values()
-              );
-              // Filter out messages that match attributes from database (should be id but not generated yet for current)
-              const filtered = currentMessages.filter(
-                (message) =>
-                  !messages.some(
-                    (dbMessage) =>
-                      message.author === dbMessage.author &&
-                      message.message === dbMessage.message &&
-                      message.timestamp === dbMessage.timestamp &&
-                      message.roomName === dbMessage.roomName
-                  )
-              );
-              this.connectedMessageHistory.set(
-                channel.name,
-                new Set(messages.concat(filtered))
-              );
-            }
-          });
-      });
+    const messageArray = this.messageHistory.get(this.currentChannel?.name!) as Message[];
+    if (!this.loadedHistory) {
+      const loginTimeIndex =
+        messageArray.findIndex((message) => new Date(message.timestamp).getTime() >= new Date(this.user?.lastLogin!).getTime())!;
+      if (loginTimeIndex === 0) {
+        this.loadedHistory = true;
+        this.ref.detectChanges();
+      }
+      const messagesFromConnection = messageArray.slice(loginTimeIndex === -1 ? messageArray.length: loginTimeIndex);
+      return messagesFromConnection!;
+    }
+    const messages = this.messageHistory.get(this.currentChannel?.name!);
+    return messages!;
   }
 }

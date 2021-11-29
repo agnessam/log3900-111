@@ -8,9 +8,9 @@ export class MessageRepository extends GenericRepository<MessageInterface> {
 		super(Message);
 	}
 
-	public async storeMessages(messages: MessageInterface[]): Promise<void> {
+	public async storeMessages(messages: MessageInterface): Promise<void> {
 		return new Promise((resolve, reject) => {
-			Message.insertMany(messages, { ordered: false }, (err: Error) => {
+			Message.create(messages, (err: Error) => {
 				if (err) {
 				  reject(err);
 				}
