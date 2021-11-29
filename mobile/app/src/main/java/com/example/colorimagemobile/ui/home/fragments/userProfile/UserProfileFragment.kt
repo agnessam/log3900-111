@@ -28,7 +28,7 @@ class UserProfileFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val showUserProfile = ShowUserProfileFragment()
+        val showUserProfile = EditProfileFragment()
         parentFragmentManager.beginTransaction().replace(R.id.newLayout, showUserProfile)
             .commit()
 

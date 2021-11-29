@@ -34,6 +34,7 @@ import com.example.colorimagemobile.ui.home.fragments.museum.MuseumFragmentDirec
 import com.example.colorimagemobile.ui.home.fragments.teams.TeamsFragmentDirections
 import com.example.colorimagemobile.ui.home.fragments.userProfile.UserProfileFragmentDirections
 import com.example.colorimagemobile.ui.home.fragments.users.UsersFragmentDirections
+import com.example.colorimagemobile.ui.home.fragments.users.UsersProfileFragmentDirections
 import com.example.colorimagemobile.utils.CommonFun
 import com.example.colorimagemobile.utils.CommonFun.Companion.printToast
 import com.example.colorimagemobile.utils.CommonFun.Companion.redirectTo
@@ -238,6 +239,7 @@ class HomeActivity : AppCompatActivity() {
         val showSettingsFromGallery = GalleryFragmentDirections.actionGalleryFragmentToUserProfileFragment()
         val showSettingsFromTeam = TeamsFragmentDirections.actionTeamsFragmentToUserProfileFragment()
         val showSettingsFromChat = ChatFragmentDirections.actionChatFragmentToUserProfileFragment()
+        val showSettingsFromProfileView = UsersProfileFragmentDirections.actionUsersProfileFragmentToUserProfileFragment()
         val showSettingsFromPublicView = UsersFragmentDirections.actionUsersFragmentToUserProfileFragment()
         val showSettingsFromMuseum = MuseumFragmentDirections.actionMuseumFragmentToUserProfileFragment()
 
@@ -246,6 +248,7 @@ class HomeActivity : AppCompatActivity() {
             R.id.galleryFragment-> this.findNavController(R.id.fragment).navigate(showSettingsFromGallery)
             R.id.teamsFragment  -> this.findNavController(R.id.fragment).navigate(showSettingsFromTeam)
             R.id.chatFragment ->this.findNavController(R.id.fragment).navigate(showSettingsFromChat)
+            R.id.showUserProfileFragment -> this.findNavController(R.id.fragment).navigate(showSettingsFromProfileView)
             R.id.usersFragment -> this.findNavController(R.id.fragment).navigate(showSettingsFromPublicView)
             R.id.museumFragment -> this.findNavController(R.id.fragment).navigate(showSettingsFromMuseum)
         }
