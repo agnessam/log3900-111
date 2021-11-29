@@ -8,6 +8,7 @@ import {
 } from "@angular/core";
 import { MatDialog, MatDialogRef } from "@angular/material/dialog";
 import { AuthenticationService } from "src/app/modules/authentication";
+import { Team } from "src/app/shared/models/team.model";
 import { User } from "../../authentication/models/user";
 import { TeamClientService } from "../../backend-communication/team-client/team-client.service";
 import { TextChannel } from "../models/text-channel.model";
@@ -24,6 +25,7 @@ import { NewChannelComponent } from "./new-channel/new-channel.component";
 export class ChannelComponent implements OnInit, OnDestroy {
   @Output() closeChannelList = new EventEmitter<any>();
   user: User | null;
+  allTeams: Team[];
   allChannels: TextChannel[];
   searchedChannels: TextChannel[];
   connectedChannels: TextChannel[];
@@ -38,48 +40,66 @@ export class ChannelComponent implements OnInit, OnDestroy {
     private teamClient: TeamClientService,
     private ref: ChangeDetectorRef,
     private dialog: MatDialog,
-    private ref: ChangeDetectorRef,
   ) {
-    this.connectedChannels = [];
+    this.connectedChannels = new Array();
+    this.allChannels = new Array();
+    this.searchedChannels = new Array();
+    this.allTeams = new Array();
   }
 
   ngOnInit(): void {
     this.authenticationService.currentUserObservable.subscribe(
       (user) => (this.user = user)
     );
-    this.textChannelService.getChannels().subscribe((channels) => {
-      this.allChannels = channels;
-      this.searchedChannels = channels;
-      const general = channels.find((channel) => channel.name === "General");
-      if (general) {
-        this.chatSocketService.joinRoom({
-          userId: this.user!._id,
-          roomName: general.name,
-        });
-        this.connectedChannels.unshift(general);
-      }
+
+    this.textChannelService.getChannels().subscribe({
+      next: (channels) => { 
+        channels.forEach(channel => this.allChannels.push(Object.assign({}, channel)));
+        console.log("init allchannels")
+        this.searchedChannels = channels;
+        const general = channels.find((channel) => channel.name === "General");
+        if (general) {
+          this.chatSocketService.joinRoom({
+            userId: this.user!._id,
+            roomName: general.name,
+          });
+          this.connectedChannels.unshift(general);
+        }
+      },
+      complete: () => {
+        this.filterTeamChannels();
+      },
     });
 
-    this.filterTeamChannels();
+    this.textChannelService.newChannel.subscribe((newChannel) => {
+      this.allChannels.push(newChannel);
+      this.resetSearch();
+      this.openChannel(newChannel);
+    });
+
   }
 
   ngOnDestroy(): void {}
 
   // only get channels that are visible to the user: teams and collaboration channels
-  // TODO: find a way to get teamChannel type from server?
   filterTeamChannels(): void {
-    this.teamClient.getTeams().subscribe((teams) => {
-      teams.forEach((team) => {
-        // remove from list if user is not a member
-        if (!(team.members as string[]).includes(this.user!.username)) {
-          const index = this.allChannels.findIndex((channel) => channel.name === team.name );
-          if (index > -1) {
-            this.allChannels.splice(index, 1);
+    this.teamClient.getTeams().subscribe((response) => {
+      response.forEach((team) => {
+        this.allTeams.push(team);
+        const index = this.allChannels.findIndex((channel) => channel.name === team.name );
+        console.log("index", index)
+        if (index !== -1) {
+          // remove from list if user is not a member
+          if (!(team.members as string[]).includes(this.user!._id) ) {
+            console.log("spliced channel")
+              this.allChannels.splice(index, 1);
+              this.resetSearch();
+          } else {
+            console.log("joined team channel")
+            // join team channels automatically
+            this.chatSocketService.joinRoom({userId: this.user!._id, roomName: team.name});
+            this.connectedChannels.push(this.allChannels[index]);
           }
-        } else {
-          // join team channels automatically
-          this.chatSocketService.joinRoom({userId: this.user!._id, roomName: team.name});
-          this.ref.detectChanges();
         }
       });
     });
@@ -134,12 +154,18 @@ export class ChannelComponent implements OnInit, OnDestroy {
       this.textChannelService
         .searchChannels(this.searchQuery)
         .subscribe((channels) => {
-          this.searchedChannels = channels;
+          this.allTeams.forEach((team) => {
+            const index = channels.findIndex((channel) => channel.name === team.name );
+            if (index !== -1 && !(team.members as string[]).includes(this.user!._id)) {
+              channels.splice(index, 1);
+            }
+            this.searchedChannels = channels;
+          });
         });
     }
   }
 
-  toggleSearch(isOpen: boolean): void {
+  resetSearch(): void {
     if (this.searchQuery === undefined || this.searchQuery === null  || this.searchQuery?.match(/^ *$/) !== null) {
       this.searchedChannels = Object.assign([], this.allChannels);
     }
@@ -164,6 +190,7 @@ export class ChannelComponent implements OnInit, OnDestroy {
       }
 
       this.allChannels.push(channel);
+      this.searchedChannels = this.allChannels;
       this.closeChannelList.emit();
       // should automatically connect user to socket
       this.connectedChannels.push(channel);

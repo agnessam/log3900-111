@@ -1,6 +1,6 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { EditableChannelParameters } from '../models/editable-channel-parameters';
 import { Message } from '../models/message.model';
@@ -10,6 +10,7 @@ import { TextChannel } from '../models/text-channel.model';
   providedIn: 'root'
 })
 export class TextChannelService {
+  newChannel: Subject<TextChannel>;
 
   private endpointUrl: string = environment.serverURL + "/channels";
   private httpHeaders: HttpHeaders = new HttpHeaders().set(
@@ -17,7 +18,9 @@ export class TextChannelService {
     "application/x-www-form-urlencoded",
   );
 
-  constructor(private httpClient: HttpClient) { }
+  constructor(private httpClient: HttpClient) {
+    this.newChannel = new Subject<TextChannel>();
+   }
 
   getChannels(): Observable<TextChannel[]> {
     return this.httpClient
@@ -35,11 +38,13 @@ export class TextChannelService {
       });
   }
 
-  createChannel(newName: string, newOwner: string): Observable<TextChannel> {
+  createChannel(newName: string, newOwner: string, teamId?: string, drawingId?: string): Observable<TextChannel> {
     return this.httpClient
       .post<TextChannel>(this.endpointUrl, {
         name: newName,
         ownerId: newOwner,
+        team: teamId,
+        drawing: drawingId,
       }, {
         headers: this.httpHeaders,
       })
@@ -86,7 +91,10 @@ export class TextChannelService {
     return this.httpClient.get<TextChannel[]>(`${this.endpointUrl}/all/search`, {
       params: new HttpParams().set("q", query),
     });
+  }
 
+  emitNewChannel(channel: TextChannel): void {
+    this.newChannel.next(channel);
   }
 
 }

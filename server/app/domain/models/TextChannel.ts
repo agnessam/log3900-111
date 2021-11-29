@@ -2,30 +2,15 @@ import mongoose, { Document, Model } from 'mongoose';
 export interface TextChannelInterface extends Document{
     name: string;
     ownerId: string;
+    team: string;
+    drawing: string;
 }
 
 const TextChannelSchema = new mongoose.Schema({
-	name: { type: String, required: true, index: { unique: true } },
+	name: { type: String, required: true },
 	ownerId: { type: String, required: true },
+    team: { type: String },
+    drawing: { type: String },
 });
 
 export const TextChannel: Model<TextChannelInterface> = mongoose.model('TextChannels', TextChannelSchema);
-
-export interface CollaborationChannelInterface extends TextChannelInterface{
-    drawingId: string,
-}
-
-const CollaborationChannelSchema = new mongoose.Schema({
-	drawingId: { type: String, required: true, index: { unique: true } },
-});
-
-export const CollaborationChannel = TextChannel.discriminator('CollaborationChannels', CollaborationChannelSchema)
-export interface TeamChannelInterface extends TextChannelInterface{
-    teamId: string,
-}
-
-const TeamChannelSchema = new mongoose.Schema({
-	teamId: { type: String, required: true, index: { unique: true } },
-});
-
-export const TeamChannel = TextChannel.discriminator('TeamChannels', TeamChannelSchema)
