@@ -29,12 +29,15 @@ import { LineWidth } from '../../../domain/interfaces/line-width.interface';
 import { UserRepository } from '../../../infrastructure/data_access/repositories/user_repository';
 import { TYPES } from '../../../domain/constants/types';
 import { SocketRoomInformation } from '../../../domain/interfaces/socket-information';
+import { CollaborationTrackerService } from '../collaboration-tracker.service';
 import { StatusService } from '../status.service';
-import { STATUS } from '@app/domain/constants/status';
+import { STATUS } from '../../../domain/constants/status';
 
 @injectable()
 export class DrawingSocketService extends SocketServiceInterface {
   @inject(TYPES.UserRepository) public userRepository: UserRepository;
+  @inject(TYPES.CollaborationTrackerService)
+  public collaborationTrackerService: CollaborationTrackerService;
   @inject(TYPES.StatusService) public statusService: StatusService;
 
   init(io: Server) {
@@ -69,6 +72,11 @@ export class DrawingSocketService extends SocketServiceInterface {
         socketInformation.roomName,
       );
 
+      this.collaborationTrackerService.onSessionJoin(
+        socketInformation.roomName,
+        socketInformation.userId,
+      );
+
       this.statusService.updateStatus(
         socketInformation.userId,
         STATUS.Collaborating,
@@ -85,6 +93,11 @@ export class DrawingSocketService extends SocketServiceInterface {
         this.statusService.updateStatus(
           socketInformation.userId,
           STATUS.Online,
+        );
+
+        this.collaborationTrackerService.onSessionLeave(
+          socketInformation.roomName,
+          socketInformation.userId,
         );
 
         console.log(

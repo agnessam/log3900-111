@@ -12,7 +12,7 @@ import { TYPES } from '../../../domain/constants/types';
 import { MessageRepository } from '../../../infrastructure/data_access/repositories/message_repository';
 import { MessageInterface } from '../../../domain/models/Message';
 import { TextChannelRepository } from '../../../infrastructure/data_access/repositories/text_channel_repository';
-import { SocketRoomInformation } from '@app/domain/interfaces/socket-information';
+import { SocketRoomInformation } from '../../../domain/interfaces/socket-information';
 
 @injectable()
 export class ChatSocketService extends SocketServiceInterface {

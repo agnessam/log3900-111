@@ -19,7 +19,6 @@ export class ConfirmJoinDialogComponent implements OnInit {
     private teamClient: TeamClientService,
     private snackbar: MatSnackBar
   ) {
-    console.log(data.team);
     this.teamPasswordForm = new FormGroup({
       teamPassword: new FormControl(""),
     });

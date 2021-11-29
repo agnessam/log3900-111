@@ -1,0 +1,116 @@
+<div id="user-statistics" *ngIf="statisticsLoaded | async">
+  <mat-card-title style="padding-left: 50px; padding-bottom: 40px">
+    User Statistics
+  </mat-card-title>
+
+  <div fxLayout="column" fxLayoutAlign="center" fxLayoutGap="50px">
+    <mat-card id="statistics-card">
+      <mat-card-content>
+        <mat-card-title> Statistics </mat-card-title>
+        <div>
+          <mat-card id="statistics">
+            <mat-card-content>
+              <div fxLayout="column" fxLayoutAlign="center">
+                <div fxFlex="33%">
+                  <div fxLayout="row wrap">
+                    <div fxFlex="50%">
+                      <mat-card-subtitle
+                        >Number of teams joined:</mat-card-subtitle
+                      >
+                    </div>
+                    <div fxFlex="50%">
+                      {{ statistics.numberOfTeams }}
+                    </div>
+                  </div>
+                </div>
+                <div fxFlex="33%">
+                  <div fxLayout="row wrap">
+                    <div fxFlex="50%">
+                      <mat-card-subtitle
+                        >Number of drawings started</mat-card-subtitle
+                      >
+                    </div>
+                    <div fxFlex="50%">
+                      {{ statistics.numberOfDrawings }}
+                    </div>
+                  </div>
+                </div>
+                <div fxFlex="33%">
+                  <div fxLayout="row wrap">
+                    <div fxFlex="50%">
+                      <mat-card-subtitle
+                        >Number of collaborations</mat-card-subtitle
+                      >
+                    </div>
+                    <div fxFlex="50%">
+                      {{ statistics.numberOfCollaborations }}
+                    </div>
+                  </div>
+                </div>
+
+                <div fxFlex="33%">
+                  <div fxLayout="row wrap">
+                    <div fxFlex="50%">
+                      <mat-card-subtitle
+                        >Average time spent collaborating:</mat-card-subtitle
+                      >
+                    </div>
+                    <div
+                      fxFlex="50%"
+                      *ngIf="statistics.averageCollaborationTime"
+                    >
+                      {{ statistics.averageCollaborationTime }}
+                    </div>
+                    <div
+                      fxFlex="50%"
+                      *ngIf="!statistics.averageCollaborationTime"
+                    >
+                      You still haven't collaborated yet! :(
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </mat-card-content>
+          </mat-card>
+        </div>
+      </mat-card-content>
+    </mat-card>
+    <!-- <mat-card id="collaboration-history-card">
+      <mat-card-content>
+        <mat-card-title> Collaboration history </mat-card-title>
+        <div>
+          <mat-card id="collaboration-history">
+            <mat-card-content>
+              <div fxLayout="column" fxLayoutAlign="center">
+                <div
+                  fxFlex="33%"
+                  *ngFor="
+                    let collaborationHistory of currentUser.collaborationHistory
+                      | slice
+                        : currentUser.collaborationHistory.length - 3
+                        : currentUser.collaborationHistory.length
+                  "
+                >
+                  <div fxLayout="row wrap">
+                    <div fxFlex="50%">
+                      <mat-card-subtitle
+                        (click)="goToDrawing(collaborationHistory.drawing._id)"
+                        style="cursor: pointer"
+                        >{{
+                          collaborationHistory.drawing.name
+                        }}</mat-card-subtitle
+                      >
+                    </div>
+                    <div fxFlex="50%">
+                      {{ collaborationHistory.collaboratedAt }}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </mat-card-content>
+          </mat-card>
+        </div>
+      </mat-card-content>
+    </mat-card> -->
+  </div>
+</div>

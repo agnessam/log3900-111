@@ -37,7 +37,6 @@ export class TellMeAboutYourselfComponent implements OnInit {
   }
 
   onSubmit(): void {
-    console.log(this.customizeProfileForm.value.avatar);
     this.userService
       .updateUser(this.currentUser!._id, {
         avatar: this.chosenAvatar,

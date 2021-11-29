@@ -1,4 +1,4 @@
-import { StatusService } from '@app/domain/services/status.service';
+import { StatusService } from '../../domain/services/status.service';
 import { Request, Response } from 'express';
 import { inject } from 'inversify';
 import {
@@ -37,6 +37,11 @@ export class UserController {
   @httpGet('/:id')
   public async getUserById(@request() req: Request) {
     return await this.userRepository.getPopulatedUser(req.params.id);
+  }
+
+  @httpGet('/:id/statistics')
+  public async getUserStatistics(@request() req: Request) {
+    return await this.userRepository.getUserStatistics(req.params.id);
   }
 
   @httpPost('/')

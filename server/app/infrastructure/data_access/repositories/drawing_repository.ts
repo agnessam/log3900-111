@@ -78,7 +78,6 @@ export class DrawingRepository extends GenericRepository<DrawingInterface> {
     item: DrawingInterface,
   ): Promise<DrawingInterface> {
     return new Promise<DrawingInterface>((resolve, reject) => {
-      console.log(item);
       const drawing = new Drawing({
         dataUri: item.dataUri,
         owner: item.owner,
