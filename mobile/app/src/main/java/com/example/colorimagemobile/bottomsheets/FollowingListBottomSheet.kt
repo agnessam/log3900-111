@@ -12,7 +12,6 @@ import com.example.colorimagemobile.adapter.FollowingListRecyclerAdapter
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import kotlinx.android.synthetic.main.fragment_followers_list_bottom_sheet.*
 import kotlinx.android.synthetic.main.fragment_following_list_bottom_sheet.*
 
 class FollowingListBottomSheet : BottomSheetDialogFragment() , FollowingListRecyclerAdapter.OnItemClickListener{

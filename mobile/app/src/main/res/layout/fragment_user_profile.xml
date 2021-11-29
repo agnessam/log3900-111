@@ -32,11 +32,19 @@
             android:textSize="30sp" />
 
         <TextView
-            android:id="@+id/historique"
+            android:id="@+id/history"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="20dp"
             android:text="@string/history_log"
+            android:textSize="30sp" />
+
+        <TextView
+            android:id="@+id/stat"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp"
+            android:text="Statistic"
             android:textSize="30sp" />
 
     </LinearLayout>

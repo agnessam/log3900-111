@@ -39,9 +39,17 @@ class UserProfileFragment : Fragment() {
 
         }
 
-        view.findViewById<TextView>(R.id.historique).setOnClickListener {
+        view.findViewById<TextView>(R.id.history).setOnClickListener {
             val history = UserProfileHistoryFragment()
             parentFragmentManager.beginTransaction().replace(R.id.newLayout, history)
+                .commit()
+
+
+        }
+
+        view.findViewById<TextView>(R.id.stat).setOnClickListener {
+            val stat = UserStatistic()
+            parentFragmentManager.beginTransaction().replace(R.id.newLayout, stat)
                 .commit()
 
 
