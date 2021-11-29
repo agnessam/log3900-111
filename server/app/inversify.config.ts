@@ -20,6 +20,7 @@ import { TextChannelRepository } from './infrastructure/data_access/repositories
 import { UserRepository } from './infrastructure/data_access/repositories/user_repository';
 import { SearchService } from './domain/services/search.service';
 import { PostRepository } from './infrastructure/data_access/repositories/post_repository';
+import { CollaborationTrackerService } from './domain/services/collaboration-tracker.service';
 
 export const referenceDataIoCModule = new ContainerModule((bind) => {
   // Services
@@ -29,6 +30,10 @@ export const referenceDataIoCModule = new ContainerModule((bind) => {
 
   bind<DrawingSocketService>(TYPES.DrawingSocketService)
     .to(DrawingSocketService)
+    .inSingletonScope();
+
+  bind<CollaborationTrackerService>(TYPES.CollaborationTrackerService)
+    .to(CollaborationTrackerService)
     .inSingletonScope();
 
   bind<SearchService>(TYPES.SearchService).to(SearchService).inSingletonScope();

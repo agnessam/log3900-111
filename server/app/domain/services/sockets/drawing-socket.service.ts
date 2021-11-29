@@ -28,10 +28,13 @@ import { LineWidth } from '../../../domain/interfaces/line-width.interface';
 import { UserRepository } from '../../../infrastructure/data_access/repositories/user_repository';
 import { TYPES } from '../../../domain/constants/types';
 import { SocketRoomInformation } from '../../../domain/interfaces/socket-information';
+import { CollaborationTrackerService } from '../collaboration-tracker.service';
 
 @injectable()
 export class DrawingSocketService extends SocketServiceInterface {
   @inject(TYPES.UserRepository) public userRepository: UserRepository;
+  @inject(TYPES.CollaborationTrackerService)
+  public collaborationTrackerService: CollaborationTrackerService;
 
   init(io: Server) {
     super.init(io, COLLABORATIVE_DRAWING_NAMESPACE);
@@ -63,6 +66,12 @@ export class DrawingSocketService extends SocketServiceInterface {
         socketInformation.userId,
         socketInformation.roomName,
       );
+
+      this.collaborationTrackerService.onSessionJoin(
+        socketInformation.roomName,
+        socketInformation.userId,
+      );
+
       socket.join(socketInformation.roomName);
     });
   }
