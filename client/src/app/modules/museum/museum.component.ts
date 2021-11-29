@@ -6,6 +6,8 @@ import { User } from '../authentication/models/user';
 import { DomSanitizer } from '@angular/platform-browser';
 import { CommentInterface } from './models/comment.model';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatDialog } from '@angular/material/dialog';
+import { PostDialogComponent} from '../post-dialog/post-dialog.component';
 
 @Component({
   selector: 'app-museum',
@@ -20,6 +22,7 @@ export class MuseumComponent implements OnInit {
     private postService: PostService,
     private sanitizer: DomSanitizer,
     private snackBar: MatSnackBar,
+    public dialog: MatDialog
     )
     {
 
@@ -83,5 +86,18 @@ export class MuseumComponent implements OnInit {
   hasBeenLike(likes: string[]): boolean{
     if(this.user?._id == null) return false;
     return likes.includes(this.user?._id);
+  }
+
+  openPostDialog(post: PostInterface): void {
+    const dialogRef = this.dialog.open(PostDialogComponent, {
+      width: '80%',
+      data: {post: post},
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(result);
+      //this.posts.find(postItem => postItem._id === post._id)= result;
+    });
+
   }
 }

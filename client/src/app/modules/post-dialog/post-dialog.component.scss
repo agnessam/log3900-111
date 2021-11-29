@@ -1,0 +1,51 @@
+#post{
+  display: flex;
+  flex-direction: row;
+  :nth-child(1){
+    width: 60%;
+  }
+  :nth-child(2){
+    width: 40%;
+  }
+}
+
+.image{
+
+  background-color: aqua;
+}
+
+.comment{
+  color: rgba(0, 0, 0, 0.6);
+  font-size: 16px;
+  padding-bottom: 4px;
+}
+
+.bottom-comment{
+  background-color: white;
+  height: 50px;
+  width: 100%;
+  display:flex;
+  justify-content: center;
+  align-self: center;
+}
+
+.comment-input{
+  border: none;
+  background-color: transparent;
+  width: 80%;
+  padding: 3px;
+}
+
+.comment-input:focus{
+  outline:none
+}
+
+#postbtn{
+  background-color: transparent;
+  color: #DA7E70;
+  border:none
+}
+
+#postbtn:hover{
+  cursor: pointer;
+}

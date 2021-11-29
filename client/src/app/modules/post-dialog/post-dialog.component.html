@@ -1,0 +1,28 @@
+<div id="post">
+  <div class = "image">
+    <!--<img [src]="this.transformUri()" class="image">-->
+    yoo
+  </div>
+  <div class="comments-section">
+    <div *ngFor="let comment of post.comments">
+      <div class="comment">
+        {{comment.author?.username}} : {{comment.content}}
+      </div>
+    </div>
+
+    <div class="bottom-comment">
+      <input type="comment"
+                  #commentInput
+                  [id]="post._id"
+                  class="comment-input"
+                  autocomplete="off"
+                  spellcheck="false"
+                  placeholder="Add comment"
+                  >
+      <button mat-icon-button id="postbtn" (click)="addComment()">
+        POST
+      </button>
+    </div>
+
+  </div>
+</div>

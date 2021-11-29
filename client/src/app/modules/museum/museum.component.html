@@ -12,7 +12,7 @@
       </div>
 
       <div class="post-image">
-        <img [src]="this.transformUri(post.dataUri)" class="image">
+        <img [src]="this.transformUri(post.dataUri)" class="image" (click)="openPostDialog(post)">
 
         <div class="bottom-image" >
           <div class= "bottom-group" (click)="toggleLike(post)">
