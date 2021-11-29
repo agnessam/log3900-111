@@ -53,6 +53,7 @@ export class UserRepository extends GenericRepository<UserInterface> {
 
           User.aggregate(
             [
+              { $match: { _id: user!._id } },
               {
                 $addFields: {
                   averageTimeSpent: {
@@ -66,12 +67,13 @@ export class UserRepository extends GenericRepository<UserInterface> {
                   },
                 },
               },
+              { $limit: 1 },
             ],
             (err: Error, user: UserInterface) => {
               if (err) {
                 reject(err);
               }
-              resolve(user);
+              resolve(user[0]);
             },
           );
         });
