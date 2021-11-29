@@ -1,19 +1,43 @@
 <div id="post">
-  <div class = "image">
-    <!--<img [src]="this.transformUri()" class="image">-->
-    yoo
-  </div>
-  <div class="comments-section">
-    <div *ngFor="let comment of post.comments">
-      <div class="comment">
-        {{comment.author?.username}} : {{comment.content}}
+
+  <img [src]="this.transformUri()" class="image">
+
+  <div class="left-section">
+
+    <div class="post-header">
+      <div class="author-picture" *ngIf="post.owner">
+        <ngx-avatar [src]="post.owner.avatar?.imageUrl"></ngx-avatar>
       </div>
+      <div class="info">
+        <div class="author-text" *ngIf="post.owner">
+          {{ post.owner.username }}
+        </div>
+        <div class="time-text" *ngIf="post.owner">{{ post.createdAt }}</div>
+      </div>
+    </div>
+
+    <div class="comment-section">
+      <div *ngFor="let comment of this.post.comments">
+        <div class="comment">
+          {{comment.author.username}} : {{comment.content}}
+        </div>
+      </div>
+    </div>
+
+    <div class="like" (click)="toggleLike()">
+      <div *ngIf="hasBeenLike(post.likes); else notLikeBlock">
+        <mat-icon>favorite</mat-icon>
+      </div>
+      <ng-template #notLikeBlock>
+        <mat-icon>favorite_border</mat-icon>
+      </ng-template>
+      {{ post.likes.length }}
     </div>
 
     <div class="bottom-comment">
       <input type="comment"
                   #commentInput
-                  [id]="post._id"
+                  id = "comment-input"
                   class="comment-input"
                   autocomplete="off"
                   spellcheck="false"

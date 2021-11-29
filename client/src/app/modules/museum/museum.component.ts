@@ -91,7 +91,7 @@ export class MuseumComponent implements OnInit {
   openPostDialog(post: PostInterface): void {
     const dialogRef = this.dialog.open(PostDialogComponent, {
       width: '80%',
-      data: {post: post},
+      data: post,
     });
 
     dialogRef.afterClosed().subscribe(result => {

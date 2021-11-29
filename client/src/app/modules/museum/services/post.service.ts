@@ -42,6 +42,22 @@ export class PostService{
       });
   }
 
+  getPostsByFollowedUsers(): Observable<PostInterface[]> {
+    return this.httpClient
+      .get<PostInterface[]>(`${this.endpointUrl}/featured`)
+      .pipe((response) => {
+        return response;
+      });
+  }
+
+  getPostById(postId: string): Observable<PostInterface> {
+    return this.httpClient
+      .get<PostInterface>(`${this.endpointUrl}/${postId}`)
+      .pipe((response) => {
+        return response;
+      });
+  }
+
   addComment(postId: string, comment: CommentInterface): Observable<CommentInterface> {
     return this.httpClient
       .post<CommentInterface>(`${this.endpointUrl}/${postId}/comments`,
@@ -74,5 +90,6 @@ export class PostService{
         return response;
       });
   }
+
 
 }

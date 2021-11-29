@@ -4,7 +4,7 @@ import { User } from "../../users/models/user";
 export interface PostInterface extends Document {
   _id: string;
   dataUri: string;
-  owner: string | User;
+  owner: User;
   ownerModel: string;
   name: string;
 

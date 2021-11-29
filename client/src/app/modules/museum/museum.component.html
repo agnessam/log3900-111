@@ -5,7 +5,7 @@
         <div class="author-picture" *ngIf="post.owner">
           <ngx-avatar [src]="post.owner.avatar.imageUrl"></ngx-avatar>
         </div>
-        <div>
+        <div class="info">
           <div class="author-text" *ngIf="post.owner">
             {{ post.owner.username }}
           </div>
