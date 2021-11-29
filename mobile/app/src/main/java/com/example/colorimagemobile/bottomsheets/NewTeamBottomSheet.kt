@@ -1,5 +1,6 @@
 package com.example.colorimagemobile.bottomsheets
 
+import android.annotation.SuppressLint
 import android.app.Dialog
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -13,16 +14,18 @@ import com.example.colorimagemobile.R
 import com.example.colorimagemobile.models.CreateTeamModel
 import com.example.colorimagemobile.models.TeamModel
 import com.example.colorimagemobile.repositories.TeamRepository
-import com.example.colorimagemobile.services.users.UserService
 import com.example.colorimagemobile.services.teams.TeamAdapterService
 import com.example.colorimagemobile.services.teams.TeamService
+import com.example.colorimagemobile.services.users.UserService
+import com.example.colorimagemobile.utils.CommonFun.Companion.hideKeyboard
+import com.example.colorimagemobile.utils.CommonFun.Companion.printToast
 import com.example.colorimagemobile.utils.CommonFun.Companion.toggleButton
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
-import com.example.colorimagemobile.utils.CommonFun.Companion.printToast
+import kotlinx.android.synthetic.main.bottomsheet_create_team.*
 
 class NewTeamBottomSheet: BottomSheetDialogFragment() {
     private lateinit var createTeamBtn: Button
@@ -33,6 +36,9 @@ class NewTeamBottomSheet: BottomSheetDialogFragment() {
     private lateinit var memberLimitInput: TextInputEditText
     private lateinit var dialog: BottomSheetDialog
     private lateinit var memberCheckbox: CheckBox
+    private lateinit var privateCheckbox: CheckBox
+    private lateinit var passwordLayout: TextInputLayout
+    private lateinit var passwordInput: TextInputEditText
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.bottomsheet_create_team, container, false)
@@ -57,13 +63,19 @@ class NewTeamBottomSheet: BottomSheetDialogFragment() {
         memberCheckbox = view.findViewById(R.id.createMemberLimitCheckbox)
         memberLimitInput = view.findViewById(R.id.teamMemberInputText)
 
+        privateCheckbox = view.findViewById(R.id.createTeamPrivateCheckbox)
+        passwordLayout = view.findViewById(R.id.teamPrivatePasswordInputLayout)
+        passwordInput = view.findViewById(R.id.teamPrivatePasswordInputText)
+
         createTeamBtn = view.findViewById(R.id.createTeamBtn)
 
         toggleButton(createTeamBtn, false)
-        toggleEditText(false)
+        toggleEditText(passwordInput, false)
+        toggleEditText(memberLimitInput, false)
         setListeners()
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     private fun setListeners() {
         nameInput.doOnTextChanged { text, _, _, _ ->
             nameLayout.error = if (text.toString().isEmpty()) "Team name can't be empty" else null
@@ -75,12 +87,14 @@ class NewTeamBottomSheet: BottomSheetDialogFragment() {
             updateCreateBtn()
         }
 
-        memberCheckbox.setOnCheckedChangeListener { _, isChecked -> toggleEditText(isChecked) }
+        newTeamForm.setOnTouchListener{_, _ -> hideKeyboard(requireContext(), newTeamForm)}
+        privateCheckbox.setOnCheckedChangeListener { _, isChecked -> toggleEditText(passwordInput, isChecked) }
+        memberCheckbox.setOnCheckedChangeListener { _, isChecked -> toggleEditText(memberLimitInput, isChecked) }
         createTeamBtn.setOnClickListener { createTeam() }
     }
 
-    private fun toggleEditText(value: Boolean) {
-        memberLimitInput.isEnabled = value
+    private fun toggleEditText(editText: TextInputEditText, value: Boolean) {
+        editText.isEnabled = value
     }
 
     // activate/deactivate button depending on input fields
@@ -91,8 +105,21 @@ class NewTeamBottomSheet: BottomSheetDialogFragment() {
     }
 
     private fun createTeam() {
+        val password = if (privateCheckbox.isChecked) passwordInput.text.toString() else null
+
+        if (privateCheckbox.isChecked && password.isNullOrEmpty()) {
+            passwordLayout.error = "Password can't be empty"
+            return
+        }
+
         val memberLimit = if (memberCheckbox.isChecked) memberLimitInput.text.toString().toInt() else null
-        val newTeam = CreateTeamModel(name = nameInput.text.toString(), description = descriptionInput.text.toString(), owner = UserService.getUserInfo()._id, memberLimit = memberLimit)
+        val newTeam = CreateTeamModel(
+            name = nameInput.text.toString(),
+            description = descriptionInput.text.toString(),
+            isPrivate = privateCheckbox.isChecked,
+            owner = UserService.getUserInfo()._id,
+            password = password,
+            memberLimit = memberLimit)
 
         TeamRepository().createTeam(newTeam).observe(context as LifecycleOwner, {
             closeSheet()
@@ -102,6 +129,7 @@ class NewTeamBottomSheet: BottomSheetDialogFragment() {
                 return@observe
             }
 
+            printToast(requireContext(), "Team successfully created")
             val team = it.data as TeamModel
             TeamService.addTeam(team)
             TeamAdapterService.getTeamMenuAdapter().notifyDataSetChanged()
