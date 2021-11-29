@@ -27,7 +27,7 @@ abstract class AbsSocket(namespace: String) {
         emit(SOCKETS.ROOM_EVENT_NAME, jsonSocket)
     }
 
-    fun leaveRoom(roomInformation: Constants.SocketRoomInformation) {
+    open fun leaveRoom(roomInformation: Constants.SocketRoomInformation) {
         val jsonSocket = JSONConvertor.convertToJSON(roomInformation)
         emit(SOCKETS.LEAVE_ROOM_EVENT_NAME, jsonSocket)
     }

@@ -48,14 +48,20 @@ object DrawingSocketService: AbsSocket(SOCKETS.COLLABORATIVE_DRAWING_NAMESPACE) 
     private var position: Int? = null
     private var destination: Int? = null
 
+    private var hasBeenInitialized = false
+
     override fun disconnect() {
+        mSocket.off(IN_PROGRESS_DRAWING_EVENT, onProgressDrawing)
+        super.disconnect()
+    }
+
+    override fun leaveRoom(roomInformation: Constants.SocketRoomInformation){
+
         this.drawingMenus = null
         this.position = null
         this.destination = null
 
-        leaveRoom(Constants.SocketRoomInformation(UserService.getUserInfo()._id, this.roomName!!))
-        mSocket.off(IN_PROGRESS_DRAWING_EVENT, onProgressDrawing)
-        super.disconnect()
+        super.leaveRoom(roomInformation)
     }
 
     override fun setFragmentActivity(fragmentAct: FragmentActivity) {
@@ -70,13 +76,16 @@ object DrawingSocketService: AbsSocket(SOCKETS.COLLABORATIVE_DRAWING_NAMESPACE) 
     }
 
     override fun setSocketListeners() {
-        this.listenInProgressDrawingCommand()
-        this.listenConfirmDrawingCommand()
-        this.listenStartSelectionCommand()
-        this.listenConfirmSelectionCommand()
-        this.listenTransformSelectionCommand()
-        this.listenUpdateDrawingRequest()
-        this.listenFetchDrawingNotification()
+        if(!hasBeenInitialized){
+            this.listenInProgressDrawingCommand()
+            this.listenConfirmDrawingCommand()
+            this.listenStartSelectionCommand()
+            this.listenConfirmSelectionCommand()
+            this.listenTransformSelectionCommand()
+            this.listenUpdateDrawingRequest()
+            this.listenFetchDrawingNotification()
+            hasBeenInitialized = true
+        }
     }
 
     fun joinCurrentDrawingRoom() {
