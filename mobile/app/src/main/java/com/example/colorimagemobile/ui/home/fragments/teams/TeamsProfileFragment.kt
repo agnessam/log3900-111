@@ -18,6 +18,7 @@ import com.example.colorimagemobile.classes.NotificationSound.Notification
 import com.example.colorimagemobile.models.*
 import com.example.colorimagemobile.models.recyclerAdapters.DrawingMenuData
 import com.example.colorimagemobile.repositories.MuseumRepository
+import com.example.colorimagemobile.repositories.DrawingRepository
 import com.example.colorimagemobile.repositories.TeamRepository
 import com.example.colorimagemobile.services.drawing.DrawingService
 import com.example.colorimagemobile.services.museum.MuseumAdapters
@@ -151,7 +152,8 @@ class TeamsProfileFragment : Fragment(R.layout.fragment_teams_profile) {
 
     private fun setAllDrawings() {
         recyclerView.adapter = null
-        recyclerView.adapter = DrawingMenuRecyclerAdapter(requireActivity(), drawingsMenu, R.id.teamsMenuFrameLayout)
+        recyclerView.adapter = DrawingMenuRecyclerAdapter(requireActivity(), drawingsMenu, R.id.teamsMenuFrameLayout, {_,_ -> {}})
+//        recyclerView.adapter = DrawingMenuRecyclerAdapter(requireActivity(), drawingsMenu, R.id.teamsMenuFrameLayout) { updatedDrawing, pos -> updateDrawing(updatedDrawing, pos) }
     }
 
     private fun setPublishedDrawings() {
@@ -199,7 +201,10 @@ class TeamsProfileFragment : Fragment(R.layout.fragment_teams_profile) {
         MuseumRepository().postComment(postId, comment).observe(viewLifecycleOwner, {
             if (it.isError as Boolean) { return@observe }
 
+            comment.createdAt = it.data?.createdAt
+            MuseumPostService.addCommentToPost(0, comment)
             publishedDrawings[postPosition].comments.add("New Comment")
+
             recyclerView.adapter?.notifyItemChanged(postPosition)
             MuseumAdapters.refreshCommentAdapter(0)
             Notification().playSound(requireContext())
@@ -229,6 +234,18 @@ class TeamsProfileFragment : Fragment(R.layout.fragment_teams_profile) {
             publishedDrawings[postPosition].likes.remove(UserService.getUserInfo()._id)
             recyclerView.adapter?.notifyItemChanged(postPosition)
             MuseumAdapters.refreshUnlikeSection(0)
+        })
+    }
+
+    private fun updateDrawing(updatedDrawing: DrawingModel.UpdateDrawing, position: Int) {
+        DrawingRepository().updateDrawing(drawingsMenu[position].drawing._id!!, updatedDrawing).observe(viewLifecycleOwner, {
+            if (it.isError as Boolean) {
+                printToast(requireActivity(), it.message!!)
+                return@observe
+            }
+
+            drawingsMenu[position] = DrawingService.updateDrawingFromMenu(drawingsMenu[position], updatedDrawing)
+            recyclerView.adapter?.notifyItemChanged(position)
         })
     }
 }

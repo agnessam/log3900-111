@@ -9,7 +9,7 @@
     app:cardCornerRadius="10dp"
     android:background="@color/black"
     android:layout_centerHorizontal="true"
-    app:contentPadding="4dp">
+    app:contentPadding="3dp">
 
     <RelativeLayout
         android:id="@+id/card_post_menu_parent"
@@ -44,7 +44,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/card_post_menu_image"
-            android:layout_marginTop="3dp">
+            android:layout_marginTop="6dp">
 
             <ImageButton
                 android:id="@+id/card_post_menu_like"
@@ -58,8 +58,8 @@
                 android:id="@+id/card_post_menu_like_nb"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_toRightOf="@id/card_post_menu_like"
                 android:layout_marginLeft="5dp"
+                android:layout_toRightOf="@id/card_post_menu_like"
                 android:textSize="16sp" />
 
             <ImageButton
@@ -75,8 +75,8 @@
                 android:id="@+id/card_post_menu_comment_nb"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_toRightOf="@id/card_post_menu_comment"
                 android:layout_marginLeft="5dp"
+                android:layout_toRightOf="@id/card_post_menu_comment"
                 android:textSize="16sp" />
 
 

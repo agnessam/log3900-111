@@ -76,4 +76,27 @@ object DrawingService {
 
         return drawingsMenu
     }
+
+    fun updateDrawingFromMenu(drawingMenuData: DrawingMenuData, updatedDrawing: DrawingModel.UpdateDrawing): DrawingMenuData {
+        drawingMenuData.drawing.name = updatedDrawing.name
+        drawingMenuData.drawing.password = updatedDrawing.password
+        drawingMenuData.drawing.privacyLevel = updatedDrawing.privacyLevel
+
+        return drawingMenuData
+    }
+
+    fun isOwner(drawing: DrawingModel.Drawing): Boolean {
+        if (drawing.ownerModel == OwnerModel.USER.toString()) {
+            if (drawing.owner._id == UserService.getUserInfo()._id) {
+                return true
+            }
+        }
+
+        // drawing belongs to a group ==> owner is teamId
+        if (drawing.ownerModel == OwnerModel.TEAM.toString()) {
+            if (checkIfUserIsInTeam(drawing.owner._id) != null) return true
+        }
+
+        return false
+    }
 }

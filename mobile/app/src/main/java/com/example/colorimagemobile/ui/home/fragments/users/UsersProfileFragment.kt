@@ -23,6 +23,7 @@ import com.example.colorimagemobile.models.PublishedMuseumPostModel
 import com.example.colorimagemobile.models.UserModel
 import com.example.colorimagemobile.models.recyclerAdapters.DrawingMenuData
 import com.example.colorimagemobile.repositories.MuseumRepository
+import com.example.colorimagemobile.repositories.DrawingRepository
 import com.example.colorimagemobile.repositories.UserRepository
 import com.example.colorimagemobile.services.drawing.DrawingService
 import com.example.colorimagemobile.services.museum.MuseumAdapters
@@ -138,25 +139,12 @@ class UsersProfileFragment : Fragment(R.layout.fragment_users_profile) {
 
     private fun setAllDrawings() {
         recyclerView.adapter = null
-        recyclerView.adapter = DrawingMenuRecyclerAdapter(requireActivity(), drawingsMenu, R.id.usersMenuFrameLayout)
+        recyclerView.adapter = DrawingMenuRecyclerAdapter(requireActivity(), drawingsMenu, R.id.usersMenuFrameLayout, {_,_ -> {}})
     }
 
     private fun setPublishedDrawings() {
         recyclerView.adapter = null
         recyclerView.adapter = PostsMenuRecyclerAdapter({ openPost(it) }, publishedDrawings)
-    }
-
-    private fun createDialog(): Dialog {
-        val dialog = Dialog(requireContext())
-
-        dialog.setContentView(R.layout.modal_post)
-        val height = (resources.displayMetrics.heightPixels * 0.70).toInt()
-        val width = (resources.displayMetrics.widthPixels * 0.70).toInt()
-
-        dialog.window?.setBackgroundDrawableResource(R.drawable.modal_background)
-        dialog.window?.setLayout(width, height)
-
-        return dialog
     }
 
     private fun openPost(postPosition: Int) {
@@ -169,7 +157,7 @@ class UsersProfileFragment : Fragment(R.layout.fragment_users_profile) {
             val post = it.data as MuseumPostModel
             MuseumPostService.setPosts(arrayListOf(post))
 
-            val dialog = createDialog()
+            val dialog = MuseumPostService.createPostDialog(requireContext(), resources)
             val recyclerView = dialog.findViewById<RecyclerView>(R.id.dialogRecyclerView)
             recyclerView.layoutManager = LinearLayoutManager(requireContext())
             val adapter = MuseumPostRecyclerAdapter(
@@ -199,7 +187,10 @@ class UsersProfileFragment : Fragment(R.layout.fragment_users_profile) {
         MuseumRepository().postComment(postId, comment).observe(viewLifecycleOwner, {
             if (it.isError as Boolean) { return@observe }
 
+            comment.createdAt = it.data?.createdAt
+            MuseumPostService.addCommentToPost(0, comment)
             publishedDrawings[postPosition].comments.add("New Comment")
+
             recyclerView.adapter?.notifyItemChanged(postPosition)
             MuseumAdapters.refreshCommentAdapter(0)
             Notification().playSound(requireContext())
@@ -229,6 +220,18 @@ class UsersProfileFragment : Fragment(R.layout.fragment_users_profile) {
             publishedDrawings[postPosition].likes.remove(UserService.getUserInfo()._id)
             recyclerView.adapter?.notifyItemChanged(postPosition)
             MuseumAdapters.refreshUnlikeSection(0)
+        })
+    }
+
+    private fun updateDrawing(updatedDrawing: DrawingModel.UpdateDrawing, position: Int) {
+        DrawingRepository().updateDrawing(drawingsMenu[position].drawing._id!!, updatedDrawing).observe(viewLifecycleOwner, {
+            if (it.isError as Boolean) {
+                printToast(requireActivity(), it.message!!)
+                return@observe
+            }
+
+            drawingsMenu[position] = DrawingService.updateDrawingFromMenu(drawingsMenu[position], updatedDrawing)
+            recyclerView.adapter?.notifyItemChanged(position)
         })
     }
 }
