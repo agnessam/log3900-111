@@ -13,10 +13,12 @@ import androidx.cardview.widget.CardView
 import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.example.colorimagemobile.R
+import com.example.colorimagemobile.bottomsheets.EditDrawingBottomSheet
 import com.example.colorimagemobile.bottomsheets.ProtectedDrawingConfirmationBottomSheet
 import com.example.colorimagemobile.classes.DateFormatter
 import com.example.colorimagemobile.classes.MyFragmentManager
 import com.example.colorimagemobile.classes.MyPicasso
+import com.example.colorimagemobile.models.DrawingModel
 import com.example.colorimagemobile.models.PrivacyLevel
 import com.example.colorimagemobile.models.recyclerAdapters.DrawingMenuData
 import com.example.colorimagemobile.models.recyclerAdapters.DrawingMenuViewHolder
@@ -37,7 +39,8 @@ import kotlinx.coroutines.runBlocking
 class DrawingMenuRecyclerAdapter(
     val activity: FragmentActivity,
     drawings: ArrayList<DrawingMenuData>,
-    val destination: Int
+    val destination: Int,
+    val updateDrawing: (newDrawingInfo: DrawingModel.UpdateDrawing, pos: Int) -> Unit
 ): RecyclerView.Adapter<DrawingMenuRecyclerAdapter.ViewHolder>() {
 
     val drawingMenus: ArrayList<DrawingMenuData> = drawings
@@ -62,8 +65,11 @@ class DrawingMenuRecyclerAdapter(
         if (drawingMenus[position].drawing.privacyLevel == PrivacyLevel.PROTECTED.toString())
             holder.drawingMenuViewHolder.lockIconView.visibility = View.VISIBLE
 
-        // TO REMOVEEE
         holder.drawingMenuViewHolder.privacyLevel.text = drawingMenus[position].drawing.privacyLevel
+
+        if (!DrawingService.isOwner(drawingMenus[position].drawing)) {
+            holder.drawingMenuViewHolder.popupMenu.visibility = View.GONE
+        }
     }
 
     override fun getItemCount(): Int { return drawingMenus.size }
@@ -128,7 +134,8 @@ class DrawingMenuRecyclerAdapter(
 
                     when (item!!.itemId) {
                         R.id.edit_drawing -> {
-                            printMsg("editt $bindingAdapterPosition")
+                            val updateDrawingBS = EditDrawingBottomSheet(activity, drawingMenus[bindingAdapterPosition].drawing) { updatedDrawing -> updateDrawing(updatedDrawing, bindingAdapterPosition) }
+                            updateDrawingBS.show(activity.supportFragmentManager, "EditDrawingBottomSheet")
                         }
                         R.id.delete_drawing -> {
                             printMsg("delete $bindingAdapterPosition")
