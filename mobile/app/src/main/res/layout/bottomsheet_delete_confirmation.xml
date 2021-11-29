@@ -63,8 +63,6 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_toRightOf="@id/delete_empty_space"
-            android:backgroundTint="@color/delete"
-            android:text="Delete"
             android:textColor="@color/white" />
 
     </RelativeLayout>

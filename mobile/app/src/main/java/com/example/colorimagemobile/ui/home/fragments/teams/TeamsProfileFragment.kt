@@ -11,9 +11,9 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.colorimagemobile.R
 import com.example.colorimagemobile.adapter.DrawingMenuRecyclerAdapter
-import com.example.colorimagemobile.bottomsheets.DeleteConfirmationBottomSheet
-import com.example.colorimagemobile.bottomsheets.NewTeamBottomSheet
+import com.example.colorimagemobile.bottomsheets.ConfirmationBottomSheet
 import com.example.colorimagemobile.classes.MyFragmentManager
+import com.example.colorimagemobile.enumerators.ButtonType
 import com.example.colorimagemobile.models.DrawingModel
 import com.example.colorimagemobile.models.TeamModel
 import com.example.colorimagemobile.models.recyclerAdapters.DrawingMenuData
@@ -121,19 +121,41 @@ class TeamsProfileFragment : Fragment(R.layout.fragment_teams_profile) {
         })
 
         joinBtn.setOnClickListener {
-            TeamService.joinTeam(teamPosition!!, requireContext())
-            hideJoinBtn()
+            openJoinModal()
         }
         leaveBtn.setOnClickListener {
-            TeamService.leaveTeam(teamPosition!!, requireContext())
-            showJoinBtn()
+            openLeaveModal()
         }
         deleteBtn.setOnClickListener {
             val title = "Are you sure you want to delete ${currentTeam.name}?"
             val description = "Deleting this team will delete all drawings and publications associated to this team."
-            val deleteConfirmation = DeleteConfirmationBottomSheet({ TeamService.deleteTeam(teamPosition!!, requireContext()) }, title, description)
-            deleteConfirmation.show(parentFragmentManager, "DeleteConfirmationBottomSheet")
+            val deleteConfirmation = ConfirmationBottomSheet({ TeamService.deleteTeam(teamPosition!!, requireContext()) }, title, description, "DELETE", ButtonType.DELETE.toString())
+            deleteConfirmation.show(parentFragmentManager, "ConfirmationBottomSheet")
         }
+    }
+
+    private fun openJoinModal() {
+        if (currentTeam.isPrivate) {
+
+        } else {
+            val title = "Are you sure you want join ${currentTeam.name}?"
+            val description = "The owner has set this team public. Looks like anyone can join!"
+            val confirmation = ConfirmationBottomSheet({
+                TeamService.joinTeam(teamPosition!!, requireContext())
+                hideJoinBtn()
+            }, title, description, "Join", ButtonType.PRIMARY.toString())
+            confirmation.show(parentFragmentManager, "ConfirmationBottomSheet")
+        }
+    }
+
+    private fun openLeaveModal() {
+        val title = "Are you sure you want to leave ${currentTeam.name}?"
+        val description = "Leaving this team does not prevent you from rejoining this team later on."
+        val confirmation = ConfirmationBottomSheet({
+            TeamService.leaveTeam(teamPosition!!, requireContext())
+            showJoinBtn()
+        }, title, description, "Leave", ButtonType.PRIMARY.toString())
+        confirmation.show(parentFragmentManager, "ConfirmationBottomSheet")
     }
 
     private fun getTeamDrawings() {

@@ -1,6 +1,7 @@
 package com.example.colorimagemobile.bottomsheets
 
 import android.app.Dialog
+import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,18 +9,21 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 import com.example.colorimagemobile.R
+import com.example.colorimagemobile.enumerators.ButtonType
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.button.MaterialButton
 
-class DeleteConfirmationBottomSheet(
+class ConfirmationBottomSheet(
     val onConfirm: () -> Unit,
     private val title: String,
-    private val description: String
+    private val description: String,
+    private val buttonName: String,
+    private val backgroundTint: String
 ): BottomSheetDialogFragment() {
     private lateinit var cancelBtn: Button
-    private lateinit var deleteBtn: MaterialButton
+    private lateinit var confirmBtn: MaterialButton
     private lateinit var dialog: BottomSheetDialog
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -40,14 +44,17 @@ class DeleteConfirmationBottomSheet(
         view.findViewById<TextView>(R.id.confirmationTitle).text = title
         view.findViewById<TextView>(R.id.confirmationDescription).text = description
         cancelBtn = view.findViewById(R.id.confirmationCancelBtn)
-        deleteBtn = view.findViewById(R.id.confirmationConfirmBtn)
+        confirmBtn = view.findViewById(R.id.confirmationConfirmBtn)
+
+        confirmBtn.text = buttonName
+        confirmBtn.background.setTint(Color.parseColor(backgroundTint))
 
         setListeners()
     }
 
     private fun setListeners() {
         cancelBtn.setOnClickListener { closeSheet() }
-        deleteBtn.setOnClickListener {
+        confirmBtn.setOnClickListener {
             onConfirm()
             closeSheet()
         }
