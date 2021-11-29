@@ -2,9 +2,12 @@ package com.example.colorimagemobile.adapter
 
 import android.content.Context
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageButton
 import android.widget.ImageView
+import android.widget.PopupMenu
 import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.fragment.app.FragmentActivity
@@ -24,6 +27,7 @@ import com.example.colorimagemobile.services.drawing.DrawingService
 import com.example.colorimagemobile.services.socket.DrawingSocketService
 import com.example.colorimagemobile.services.users.UserService
 import com.example.colorimagemobile.ui.home.fragments.gallery.GalleryDrawingFragment
+import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
 import com.example.colorimagemobile.utils.Constants
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -98,9 +102,10 @@ class DrawingMenuRecyclerAdapter(
             val lockIconView = itemView.findViewById<ImageView>(R.id.card_drawing_menu_privacy_icon)
             val authorImageView = itemView.findViewById<ImageView>(R.id.card_drawing_menu_author_image)
             val authorImageViewParent = itemView.findViewById<CardView>(R.id.card_drawing_menu_author_image_main)
-            val privacyLevel = itemView.findViewById<TextView>(R.id.card_drawing_menu_date_privacy) // TO REMOVE
+            val privacyLevel = itemView.findViewById<TextView>(R.id.card_drawing_menu_date_privacy)
+            val popupMenu = itemView.findViewById<ImageButton>(R.id.card_drawing_menu_options)
 
-            drawingMenuViewHolder = DrawingMenuViewHolder(name, authorName, drawingDate, imageView, lockIconView, authorImageView, privacyLevel, authorImageViewParent)
+            drawingMenuViewHolder = DrawingMenuViewHolder(name, authorName, drawingDate, imageView, lockIconView, authorImageView, privacyLevel, authorImageViewParent, popupMenu)
 
             // click listener for clicking on specific drawing
             itemView.setOnClickListener {
@@ -114,6 +119,25 @@ class DrawingMenuRecyclerAdapter(
                 }
 
                 openDrawing(bindingAdapterPosition, itemView.context)
+            }
+
+            popupMenu.setOnClickListener {
+                val optionMenu = PopupMenu(it.context, it!!)
+                optionMenu.inflate(R.menu.drawing_popup_menu)
+                optionMenu.setOnMenuItemClickListener(PopupMenu.OnMenuItemClickListener { item: MenuItem? ->
+
+                    when (item!!.itemId) {
+                        R.id.edit_drawing -> {
+                            printMsg("editt $bindingAdapterPosition")
+                        }
+                        R.id.delete_drawing -> {
+                            printMsg("delete $bindingAdapterPosition")
+                        }
+                    }
+
+                    true
+                })
+                optionMenu.show()
             }
         }
     }
