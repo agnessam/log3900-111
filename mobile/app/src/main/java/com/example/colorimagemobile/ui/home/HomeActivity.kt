@@ -213,6 +213,7 @@ class HomeActivity : AppCompatActivity() {
 
     // menu item show user profile
     private fun showUserProfile(){
+        UserService.setUserPosition(null)
         // define path
         val showUserProfileFromGallery = GalleryFragmentDirections.actionGalleryFragmentToShowUserProfileFragment()
         val showUserProfileFromTeam = TeamsFragmentDirections.actionTeamsFragmentToShowUserProfileFragment()

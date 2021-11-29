@@ -2,13 +2,9 @@ package com.example.colorimagemobile.services.users
 
 import com.example.colorimagemobile.models.AvatarModel
 import com.example.colorimagemobile.models.CollaborationHistory
-import com.example.colorimagemobile.models.DrawingModel
 import com.example.colorimagemobile.models.UserModel
-import com.example.colorimagemobile.services.drawing.DrawingService
 import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
 import com.example.colorimagemobile.utils.Constants
-import java.time.LocalDateTime
-import java.util.*
 import kotlin.collections.ArrayList
 
 // Singleton User object which is accessible globally
@@ -21,22 +17,30 @@ object UserService {
     private var collaborationHistoryDrawingId: ArrayList<String> = arrayListOf()
     private var temporaryEditUsername : String
     private var temporaryDescription : String
-    private var myFollowers : ArrayList<String> = arrayListOf()
-    private var following : ArrayList<String> = arrayListOf()
-    private lateinit var DataForMyFollowersList : ArrayList<UserModel.AllInfo>
+    private var currentUserFollowerList : ArrayList<String> = arrayListOf()
+    private var currentUserFollowingList : ArrayList<String> = arrayListOf()
+    private var DataForMyFollowersList : ArrayList<UserModel.AllInfo>
+    private var DataForFollowingList : ArrayList<UserModel.AllInfo>
+    private var userPositionForMenuNavigation: Int? = null
 
     init {
         collaborationHistoryToShow = arrayListOf()
         temporaryDescription = Constants.EMPTY_STRING
         temporaryEditUsername = Constants.EMPTY_STRING
+        DataForMyFollowersList = arrayListOf()
+        DataForFollowingList = arrayListOf()
+    }
+
+    fun setUserPosition(position : Int?){
+        userPositionForMenuNavigation = position
+    }
+
+    fun getUserPosition(): Int?{
+        return userPositionForMenuNavigation
     }
 
     fun setAllUserInfo(allInfo:ArrayList<UserModel.AllInfo>){
         allUserInfo = allInfo
-        for(indice in allUserInfo.indices){
-            myFollowers[indice]= allUserInfo[indice].followers.toString()
-        }
-        setRecyclerDataForMyFollowers()
 
     }
 
@@ -46,22 +50,51 @@ object UserService {
 
     fun setUserInfo(newUserInfo: UserModel.AllInfo) {
         info = newUserInfo
-//        myFollowers = info.followers
-        following = info.following
         setCollaborationHistoryToshow()
     }
 
-    fun setRecyclerDataForMyFollowers(){
-        if(myFollowers.size!=0){
-            for (indice in myFollowers.indices){
-                DataForMyFollowersList= allUserInfo.find { user -> user._id == myFollowers[indice]}
+    fun setRecyclerDataForFollowers(){
+        printMsg("userPosition "+ userPositionForMenuNavigation)
+        printMsg("All user Info "+ allUserInfo)
+
+
+//        if (userPositionForMenuNavigation !=null ){
+//
+//        }
+
+        if ( userPositionForMenuNavigation ==0) {
+            printMsg("Position inside formmenunav != o "+getUserMePosition())
+            currentUserFollowerList = allUserInfo[getUserMePosition()].followers
+        } else {
+            printMsg("inside else currentlist folowers")
+            currentUserFollowerList = allUserInfo[userPositionForMenuNavigation!!].followers
+        }
+
+        if(currentUserFollowerList.size!=0){
+            for (indice in currentUserFollowerList.indices){
+                DataForMyFollowersList= allUserInfo.find { user -> user._id == currentUserFollowerList[indice]}
                     ?.let { arrayListOf(it) }!!
+                printMsg("followers ${currentUserFollowerList[indice]} = ${DataForMyFollowersList}")
+            }
+        }
+
+    }
+
+    fun setRecyclerDataForFollowing(){
+        currentUserFollowingList = allUserInfo[userPositionForMenuNavigation!!].following
+        if(currentUserFollowingList.size!=0){
+            for (indice in currentUserFollowingList.indices){
+                DataForFollowingList= allUserInfo.find { user -> user._id == currentUserFollowingList[indice]}
+                    ?.let { arrayListOf(it) }!!
+
+                printMsg("followers ${currentUserFollowingList[indice]} = ${DataForFollowingList}")
             }
         }
 
     }
 
     fun getRecyclerDataForMyFollowers():ArrayList<UserModel.AllInfo>{
+        printMsg("followers list finale "+ DataForMyFollowersList)
         return DataForMyFollowersList
     }
 

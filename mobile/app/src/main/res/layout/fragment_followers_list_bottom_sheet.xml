@@ -20,7 +20,7 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewFollowers"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="581dp"
         android:layout_marginTop="100dp"
         android:orientation="horizontal">
 

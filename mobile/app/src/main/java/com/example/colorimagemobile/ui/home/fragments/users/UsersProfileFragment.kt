@@ -21,6 +21,7 @@ import com.example.colorimagemobile.models.recyclerAdapters.DrawingMenuData
 import com.example.colorimagemobile.repositories.UserRepository
 import com.example.colorimagemobile.services.drawing.DrawingService
 import com.example.colorimagemobile.services.users.UserService
+import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
 import com.example.colorimagemobile.utils.Constants
 import com.google.android.material.tabs.TabLayout
 import kotlinx.android.synthetic.main.fragment_teams_profile.*
@@ -40,12 +41,18 @@ class UsersProfileFragment : Fragment(R.layout.fragment_users_profile) {
         super.onCreate(savedInstanceState)
         arguments?.let {
 
-
-            if (userPosition == null){
+            if (UserService.getUserPosition() == null){
                 userPosition = UserService.getUserMePosition()
-            } else {
+                UserService.setUserPosition(0)
+
+            }else if(it.getInt(Constants.USERS.CURRENT_USER_ID_KEY)>=0 ){
                 userPosition = it.getInt(Constants.USERS.CURRENT_USER_ID_KEY)
+                UserService.setUserPosition(userPosition)
+
             }
+
+            UserService.setRecyclerDataForFollowers()
+            UserService.setRecyclerDataForFollowing()
             currentUser = UserService.getUser(userPosition!!)
 
         }
