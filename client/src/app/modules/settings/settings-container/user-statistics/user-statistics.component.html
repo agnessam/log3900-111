@@ -75,42 +75,5 @@
         </div>
       </mat-card-content>
     </mat-card>
-    <!-- <mat-card id="collaboration-history-card">
-      <mat-card-content>
-        <mat-card-title> Collaboration history </mat-card-title>
-        <div>
-          <mat-card id="collaboration-history">
-            <mat-card-content>
-              <div fxLayout="column" fxLayoutAlign="center">
-                <div
-                  fxFlex="33%"
-                  *ngFor="
-                    let collaborationHistory of currentUser.collaborationHistory
-                      | slice
-                        : currentUser.collaborationHistory.length - 3
-                        : currentUser.collaborationHistory.length
-                  "
-                >
-                  <div fxLayout="row wrap">
-                    <div fxFlex="50%">
-                      <mat-card-subtitle
-                        (click)="goToDrawing(collaborationHistory.drawing._id)"
-                        style="cursor: pointer"
-                        >{{
-                          collaborationHistory.drawing.name
-                        }}</mat-card-subtitle
-                      >
-                    </div>
-                    <div fxFlex="50%">
-                      {{ collaborationHistory.collaboratedAt }}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </mat-card-content>
-          </mat-card>
-        </div>
-      </mat-card-content>
-    </mat-card> -->
   </div>
 </div>
