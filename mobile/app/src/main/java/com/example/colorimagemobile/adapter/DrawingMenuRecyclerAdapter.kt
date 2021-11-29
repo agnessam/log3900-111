@@ -74,7 +74,7 @@ class DrawingMenuRecyclerAdapter(
                 DrawingSocketService.joinCurrentDrawingRoom()
             }
             job.join()
-            DrawingSocketService.sendGetUpdateDrawingRequest(context, drawingMenus, position, destination)
+            DrawingSocketService.sendGetUpdateDrawingRequest(drawingMenus, position, destination)
         }
     }
 

@@ -30,6 +30,7 @@ import com.example.colorimagemobile.utils.Constants.SOCKETS.Companion.TRANSFORM_
 import com.example.colorimagemobile.utils.Constants.SOCKETS.Companion.UPDATE_DRAWING_EVENT
 import com.example.colorimagemobile.utils.Constants.SOCKETS.Companion.UPDATE_DRAWING_NOTIFICATION
 import io.socket.client.Ack
+import io.socket.client.Socket
 import io.socket.emitter.Emitter
 import kotlinx.coroutines.*
 import org.json.JSONException
@@ -52,7 +53,7 @@ object DrawingSocketService: AbsSocket(SOCKETS.COLLABORATIVE_DRAWING_NAMESPACE) 
         this.position = null
         this.destination = null
 
-        leaveRoom(this.roomName!!)
+        leaveRoom(Constants.SocketRoomInformation(UserService.getUserInfo()._id, this.roomName!!))
         mSocket.off(IN_PROGRESS_DRAWING_EVENT, onProgressDrawing)
         super.disconnect()
     }
@@ -294,14 +295,14 @@ object DrawingSocketService: AbsSocket(SOCKETS.COLLABORATIVE_DRAWING_NAMESPACE) 
     }
 
     private fun listenFetchDrawingNotification(){
-        mSocket.on(FETCH_DRAWING_NOTIFICATION) { args ->
+        mSocket.on(FETCH_DRAWING_NOTIFICATION) {
             if(drawingMenus != null && destination != null && position != null && fragmentActivity != null){
                 getDrawingAndUpdateGUI(fragmentActivity!!, drawingMenus!!, position!!, destination!!)
             }
         }
     }
 
-    fun sendGetUpdateDrawingRequest(context: Context, drawingMenus: ArrayList<DrawingMenuData>, position: Int, destination: Int) {
+    fun sendGetUpdateDrawingRequest(drawingMenus: ArrayList<DrawingMenuData>, position: Int, destination: Int) {
         mSocket.emit(UPDATE_DRAWING_EVENT, roomName, Ack{
             args ->
             this.drawingMenus = drawingMenus
