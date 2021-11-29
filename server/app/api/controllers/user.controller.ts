@@ -1,4 +1,4 @@
-import { StatusService } from '@app/domain/services/status.service';
+import { StatusService } from '../../domain/services/status.service';
 import { Request, Response } from 'express';
 import { inject } from 'inversify';
 import {

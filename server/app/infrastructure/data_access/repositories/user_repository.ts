@@ -1,4 +1,4 @@
-import { CollaborationHistory } from '@app/domain/models/CollaborationHistory';
+import { CollaborationHistory } from '../../../domain/models/CollaborationHistory';
 import bcrypt from 'bcrypt';
 import { Request, Response } from 'express';
 import { injectable } from 'inversify';

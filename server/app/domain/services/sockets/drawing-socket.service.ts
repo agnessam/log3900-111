@@ -31,7 +31,7 @@ import { TYPES } from '../../../domain/constants/types';
 import { SocketRoomInformation } from '../../../domain/interfaces/socket-information';
 import { CollaborationTrackerService } from '../collaboration-tracker.service';
 import { StatusService } from '../status.service';
-import { STATUS } from '@app/domain/constants/status';
+import { STATUS } from '../../../domain/constants/status';
 
 @injectable()
 export class DrawingSocketService extends SocketServiceInterface {
