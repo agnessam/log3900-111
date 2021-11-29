@@ -1,4 +1,6 @@
 import { injectable } from 'inversify';
+import { Collaboration } from '../models/Collaboration';
+import { User, UserInterface } from '../models/user';
 
 @injectable()
 export class CollaborationTrackerService {
@@ -31,7 +33,43 @@ export class CollaborationTrackerService {
     const joinTimestamp = this.collaborationToUsersSession
       .get(drawingId)
       ?.get(userId);
-    console.log(joinTimestamp);
+
+    if (!joinTimestamp) {
+      return;
+    }
+
+    this.collaborationToUsersSession.get(drawingId)?.delete(userId);
+
+    const timeSpent = new Date().getTime() - joinTimestamp.getTime();
+
+    const timeSpentInMinutes = timeSpent / 60000;
+
+    User.findOneAndUpdate(
+      { _id: userId, collaborations: { $elemMatch: { drawing: drawingId } } },
+      { $inc: { 'collaborations.$.timeSpent': timeSpentInMinutes } },
+      { new: true, upsert: true },
+      (err: Error, user: UserInterface) => {
+        // Means we couldn't find it
+        if (err) {
+          const collaboration = new Collaboration({
+            drawing: drawingId,
+            timeSpent: timeSpentInMinutes,
+          });
+          User.findOneAndUpdate(
+            { _id: userId },
+            { $push: { collaborations: collaboration } },
+            { new: true },
+            (err: Error, user: UserInterface) => {
+              if (err) {
+                throw new Error('Failed to update');
+              }
+              return user;
+            },
+          );
+        }
+        return user;
+      },
+    );
   }
 
   private setUserSession(

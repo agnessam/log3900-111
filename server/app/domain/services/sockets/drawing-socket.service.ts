@@ -95,6 +95,11 @@ export class DrawingSocketService extends SocketServiceInterface {
           STATUS.Online,
         );
 
+        this.collaborationTrackerService.onSessionLeave(
+          socketInformation.roomName,
+          socketInformation.userId,
+        );
+
         console.log(
           `${socketInformation.userId} has left room ${socketInformation.roomName}`,
         );

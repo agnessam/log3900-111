@@ -1,4 +1,4 @@
-import mongoose, { Document, Schema } from 'mongoose';
+import mongoose, { Document, Model, Schema } from 'mongoose';
 
 export interface CollaborationInterface extends Document {
   drawing: string;
@@ -15,3 +15,8 @@ export const CollaborationSchema = new mongoose.Schema({
     type: Number,
   },
 });
+
+export const Collaboration: Model<CollaborationInterface> = mongoose.model(
+  'Collaboration',
+  CollaborationSchema,
+);
