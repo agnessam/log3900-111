@@ -25,6 +25,21 @@ export class DrawingRepository extends GenericRepository<DrawingInterface> {
     });
   }
 
+  public async getPopulatedDrawing(
+    drawingId: string,
+  ): Promise<DrawingInterface> {
+    return new Promise((resolve, reject) => {
+      Drawing.findOne({ _id: drawingId })
+        .populate('owner')
+        .exec((err, drawing) => {
+          if (err || !drawing) {
+            reject(err);
+          }
+          resolve(drawing!);
+        });
+    });
+  }
+
   public async createUserDrawing(
     item: DrawingInterface,
     ownerId: string,

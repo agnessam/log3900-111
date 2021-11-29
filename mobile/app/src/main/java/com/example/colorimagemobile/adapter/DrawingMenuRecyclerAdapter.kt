@@ -81,13 +81,7 @@ class DrawingMenuRecyclerAdapter(
         DrawingService.setCurrentDrawingID(drawingMenus[position].drawing._id)
         // fetch drawing svgString from database
         runBlocking{
-            if (DrawingService.getCurrentDrawingID() != null) {
-                DrawingSocketService.connect()
-
-                val socketInformation =
-                    Constants.SocketRoomInformation(UserService.getUserInfo()._id, DrawingService.getCurrentDrawingID()!!)
-                DrawingSocketService.joinRoom(socketInformation)
-            }
+            DrawingSocketService.joinCurrentDrawingRoom()
 
             DrawingSocketService.sendGetUpdateDrawingRequest(context, drawingMenus, position)
 

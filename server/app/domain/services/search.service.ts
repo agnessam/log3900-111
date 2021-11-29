@@ -58,7 +58,7 @@ export class SearchService implements SearchServiceInterface {
     ];
 
     const drawingsFromOwners = await this.drawingRepository.findManyById(
-      matchingDrawingIds,
+      matchingDrawingIds as string[],
     );
 
     let drawingQuery: any = {
