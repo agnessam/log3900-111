@@ -40,7 +40,6 @@ import com.karumi.dexter.PermissionToken
 import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener
 import kotlinx.android.synthetic.main.fragment_edit_profile.*
-import kotlinx.android.synthetic.main.fragment_show_user_profile.*
 import java.io.File
 import java.io.ByteArrayOutputStream
 import java.io.FileOutputStream

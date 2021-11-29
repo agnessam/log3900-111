@@ -32,13 +32,6 @@ class UserProfileFragment : Fragment() {
         parentFragmentManager.beginTransaction().replace(R.id.newLayout, showUserProfile)
             .commit()
 
-
-        view.findViewById<TextView>(R.id.parametredecompt).setOnClickListener {
-            val showUserProfile = ShowUserProfileFragment()
-            parentFragmentManager.beginTransaction().replace(R.id.newLayout, showUserProfile)
-                .commit()
-
-        }
         view.findViewById<TextView>(R.id.modifyprofile).setOnClickListener {
             val editProfileFragment = EditProfileFragment()
             parentFragmentManager.beginTransaction().replace(R.id.newLayout, editProfileFragment)

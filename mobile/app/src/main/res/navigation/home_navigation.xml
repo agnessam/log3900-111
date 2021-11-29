@@ -125,11 +125,7 @@
         tools:layout="@layout/fragment_users_profile">
         <action
             android:id="@+id/action_usersProfileFragment_to_userProfileFragment"
-            app:destination="@id/userProfileFragment"
-            app:enterAnim="@anim/slide_in_right"
-            app:exitAnim="@anim/slide_out_left"
-            app:popEnterAnim="@android:anim/slide_out_right"
-            app:popExitAnim="@anim/slide_in_left" />
+            app:destination="@id/userProfileFragment" />
     </fragment>
 
 </navigation>
