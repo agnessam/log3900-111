@@ -32,6 +32,7 @@ class UsersProfileFragment : Fragment(R.layout.fragment_users_profile) {
     private lateinit var followBtn: Button
     private lateinit var unfollewBtn: Button
     private lateinit var descriptionCardView : CardView
+    private  var nbFollowers : Int = 0
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -39,6 +40,8 @@ class UsersProfileFragment : Fragment(R.layout.fragment_users_profile) {
         arguments?.let {
             userPosition = it.getInt(Constants.USERS.CURRENT_USER_ID_KEY)
             currentUser = UserService.getUser(userPosition!!)
+            nbFollowers = UserService.getUser(userPosition!!).followers.size
+            UserService.setCurrentNbFollowers(nbFollowers)
         }
     }
 
@@ -122,11 +125,16 @@ class UsersProfileFragment : Fragment(R.layout.fragment_users_profile) {
         })
         followBtn.setOnClickListener {
             UserService.followUser(userPosition!!, requireContext())
+            myView.findViewById<TextView>(R.id.userIdNbOfFollowers).text = UserService.getCurrentNbFollower().toString()
             hideFollowBtn()
+
+
         }
         unfollewBtn.setOnClickListener {
             UserService.unfollowUser(userPosition!!, requireContext())
             showFollowBtn()
+
+            myView.findViewById<TextView>(R.id.userIdNbOfFollowers).text = UserService.getCurrentNbFollower().toString()
         }
     }
 

@@ -6,6 +6,7 @@ import com.example.colorimagemobile.models.AvatarModel
 import com.example.colorimagemobile.models.UserModel
 import com.example.colorimagemobile.repositories.UserRepository
 import com.example.colorimagemobile.utils.CommonFun
+import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
 import com.example.colorimagemobile.utils.Constants
 
 // Singleton User object which is accessible globally
@@ -15,6 +16,7 @@ object UserService {
     private var token : String =Constants.EMPTY_STRING
     private var updateProfileData : UserModel.UpdateUser
     private lateinit var allUserInfo : ArrayList<UserModel.AllInfo>
+    private var actualNbFollowers : Int = 0
 
     init {
         updateProfileData =UserModel.UpdateUser(null,null,null)
@@ -93,9 +95,16 @@ object UserService {
         }
 
     }
+    fun setCurrentNbFollowers(currentValue: Int){
+        actualNbFollowers = currentValue
+    }
+
+    fun getCurrentNbFollower(): Int{
+        return actualNbFollowers
+    }
+
     fun followUser(position: Int, context: Context) {
         val user = getUser(position)
-
         UserRepository().followUser(user._id).observe(context as LifecycleOwner, {
             if (it.isError as Boolean) {
                 CommonFun.printToast(context, it.message!!)
@@ -103,14 +112,16 @@ object UserService {
             }
 
             val followedUser = it.data as UserModel.AllInfo
+
             updateUserByPosition(position, followedUser)
             UserAdapterService.getUserMenuAdapter().notifyItemChanged(position)
         })
+
+        actualNbFollowers++
     }
 
     fun unfollowUser(position: Int, context: Context) {
         val user = getUser(position)
-
         UserRepository().unfollowUser(user._id).observe(context as LifecycleOwner, {
             if (it.isError as Boolean) {
                 CommonFun.printToast(context, it.message!!)
@@ -120,6 +131,8 @@ object UserService {
             removeUserFromFollowing(position)
             UserAdapterService.getUserMenuAdapter().notifyItemChanged(position)
         })
+
+        actualNbFollowers--
     }
 
 
