@@ -122,8 +122,6 @@ class NewTeamBottomSheet: BottomSheetDialogFragment() {
             memberLimit = memberLimit)
 
         TeamRepository().createTeam(newTeam).observe(context as LifecycleOwner, {
-            closeSheet()
-
             if (it.isError as Boolean) {
                 printToast(requireContext(), "Sorry, team name is possibly already in use")
                 return@observe
@@ -133,6 +131,7 @@ class NewTeamBottomSheet: BottomSheetDialogFragment() {
             val team = it.data as TeamModel
             TeamService.addTeam(team)
             TeamAdapterService.getTeamMenuAdapter().notifyDataSetChanged()
+            closeSheet()
         })
     }
 }
