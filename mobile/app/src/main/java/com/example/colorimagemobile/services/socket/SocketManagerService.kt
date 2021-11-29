@@ -1,6 +1,8 @@
 package com.example.colorimagemobile.services.socket
 
 import com.example.colorimagemobile.services.drawing.DrawingService
+import com.example.colorimagemobile.services.users.UserService
+import com.example.colorimagemobile.utils.Constants
 
 object SocketManagerService {
 
@@ -13,7 +15,7 @@ object SocketManagerService {
     fun leaveDrawingRoom() {
         if (DrawingService.getCurrentDrawingID() == null) return
 
-        DrawingSocketService.leaveRoom(DrawingService.getCurrentDrawingID()!!)
-        DrawingSocketService.disconnect()
+        DrawingSocketService.leaveRoom(Constants.SocketRoomInformation(UserService.getUserInfo()._id, DrawingService.getCurrentDrawingID()!!))
+//        DrawingSocketService.disconnect()
     }
 }
