@@ -105,13 +105,12 @@ export class UserRepository extends GenericRepository<UserInterface> {
       const validate = await currentUser!.isValidPassword(currentPassword);
       if (!validate) {
         resolve({ err: 'Incorrect password' });
+      } else {
+        const hashedPassword = await bcrypt.hash(newPassword, 10);
+        currentUser!.password = hashedPassword;
+        currentUser!.save();
+        resolve(currentUser);
       }
-
-      const hashedPassword = await bcrypt.hash(newPassword, 10);
-
-      currentUser!.password = hashedPassword;
-      currentUser!.save();
-      resolve(currentUser);
     });
   }
 
