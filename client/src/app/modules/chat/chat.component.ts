@@ -14,6 +14,7 @@ import { Message } from "./models/message.model";
 import { TextChannel } from "./models/text-channel.model";
 import { ChatSocketService } from "./services/chat-socket.service";
 import { ChatService } from "./services/chat.service";
+import { TextChannelService } from "./services/text-channel.service";
 // import { TextChannelService } from "./services/text-channel.service";
 
 @Component({
@@ -43,7 +44,7 @@ export class ChatComponent implements OnInit, OnDestroy {
     private authService: AuthenticationService,
     private chatSocketService: ChatSocketService,
     private chatService: ChatService,
-    // private textChannelService: TextChannelService,
+    private textChannelService: TextChannelService,
     private ref: ChangeDetectorRef
   ) {
     this.currentChannel = {
@@ -59,14 +60,18 @@ export class ChatComponent implements OnInit, OnDestroy {
     });
     this.authService.currentUserObservable.subscribe((user) => {
       if(!user) {
-        this.closeChat()
         this.closeChatPopout();
+        this.closeChat()
       }
     })
     this.openChatRoom();
     this.receiveMessage();
     this.leaveRoom();
     this.chatSocketService.connect();
+    this.textChannelService.leftCollabChannel.subscribe(() => {
+      this.closeChatPopout()
+      this.closeChat();
+    })
   }
 
   ngOnDestroy(): void {
@@ -78,8 +83,8 @@ export class ChatComponent implements OnInit, OnDestroy {
     });
     this.chatSocketService.disconnect();
     this.chatSubscription.unsubscribe();
-    this.closeChat();
     this.closeChatPopout();
+    this.closeChat();
   }
 
   openChatRoom() {
@@ -122,8 +127,8 @@ export class ChatComponent implements OnInit, OnDestroy {
         roomName: channel.name,
       });
       this.currentChannel = null;
-      this.closeChat();
       this.closeChatPopout();
+      this.closeChat();
     });
   }
 

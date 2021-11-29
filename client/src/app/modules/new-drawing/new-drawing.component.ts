@@ -18,6 +18,7 @@ import { NewDrawingService } from "./new-drawing.service";
 import { UsersService } from "../users/services/users.service";
 import { Team } from "src/app/shared/models/team.model";
 import { OptionalDrawingParameters } from "./optional-drawing-parameters";
+import { TextChannelService } from "../chat/services/text-channel.service";
 
 const ONE_SECOND = 1000;
 const DEFAULT_DRAWING_WIDTH = 1440;
@@ -42,7 +43,8 @@ export class NewDrawingComponent implements OnInit {
     private colorPickerService: ColorPickerService,
     private drawingHttpClient: DrawingHttpClientService,
     private usersService: UsersService,
-    private router: Router
+    private textChannelService: TextChannelService,
+    private router: Router,
   ) {}
 
   /// Créer un nouveau form avec les dimensions et la couleur
@@ -103,6 +105,11 @@ export class NewDrawingComponent implements OnInit {
           this.snackBar.open("Nouveau dessin créé", "", {
             duration: ONE_SECOND,
           });
+          this.textChannelService
+            .createChannel(response.name, response.owner as string, undefined, response._id)
+            .subscribe((channel) => {
+              this.textChannelService.emitNewChannel(channel);
+            });
         }
       });
     this.newDrawingService.form.reset();

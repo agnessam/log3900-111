@@ -1,6 +1,6 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, Subject } from 'rxjs';
+import { Observable, ReplaySubject, Subject } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { EditableChannelParameters } from '../models/editable-channel-parameters';
 import { Message } from '../models/message.model';
@@ -11,6 +11,8 @@ import { TextChannel } from '../models/text-channel.model';
 })
 export class TextChannelService {
   newChannel: Subject<TextChannel>;
+  joinedCollabChannel: ReplaySubject<TextChannel>;
+  leftCollabChannel: Subject<TextChannel>;
 
   private endpointUrl: string = environment.serverURL + "/channels";
   private httpHeaders: HttpHeaders = new HttpHeaders().set(
@@ -20,6 +22,8 @@ export class TextChannelService {
 
   constructor(private httpClient: HttpClient) {
     this.newChannel = new Subject<TextChannel>();
+    this.joinedCollabChannel = new ReplaySubject<TextChannel>();
+    this.leftCollabChannel = new Subject<TextChannel>();
    }
 
   getChannels(): Observable<TextChannel[]> {
@@ -95,6 +99,14 @@ export class TextChannelService {
 
   emitNewChannel(channel: TextChannel): void {
     this.newChannel.next(channel);
+  }
+
+  emitJoinCollaboration(channel: TextChannel): void {
+    this.joinedCollabChannel.next(channel);
+  }
+
+  emitLeaveCollaboration(channel: TextChannel): void {
+    this.leftCollabChannel.next(channel);
   }
 
 }
