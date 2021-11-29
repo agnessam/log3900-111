@@ -5,6 +5,7 @@ import { map } from "rxjs/operators";
 import { Drawing } from "src/app/shared";
 import { STATUS } from "src/app/shared/models/status.model";
 import { Team } from "src/app/shared/models/team.model";
+import { UserStatistics } from "src/app/shared/models/user-statistics.model";
 import { environment } from "src/environments/environment";
 import { EditableUserParameters } from "../models/editable-user-parameters";
 import { User } from "../models/user";
@@ -24,6 +25,14 @@ export class UsersService {
   getUser(userId: string): Observable<User> {
     return this.httpClient
       .get<User>(`${this.endpointUrl}/${userId}`)
+      .pipe((response) => {
+        return response;
+      });
+  }
+
+  getUserStatistics(userId: string): Observable<UserStatistics> {
+    return this.httpClient
+      .get<UserStatistics>(`${this.endpointUrl}/${userId}/statistics`)
       .pipe((response) => {
         return response;
       });

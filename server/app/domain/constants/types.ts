@@ -1,5 +1,6 @@
 export const TYPES = {
   Application: Symbol('Application'),
+  CollaborationTrackerService: Symbol('CollaborationTrackerService'),
   SearchService: Symbol('SearchService'),
   ChatSocketService: Symbol('ChatSocketService'),
   DrawingSocketService: Symbol('DrawingSocketService'),

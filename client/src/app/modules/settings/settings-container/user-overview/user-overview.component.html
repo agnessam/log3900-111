@@ -1,9 +1,9 @@
 <div id="my-account" *ngIf="userLoaded | async">
-  <mat-card-title style="padding-left: 50px; padding-bottom: 50px"
+  <mat-card-title style="padding-left: 50px; padding-bottom: 25px"
     >My Account</mat-card-title
   >
   <div fxLayout="column" fxLayoutAlign="center">
-    <mat-card id="profile-card">
+    <mat-card id="profile-card" dynamicHeight>
       <mat-card-content>
         <mat-card-title style="padding-bottom: 1%">{{
           currentUser.username
@@ -51,6 +51,30 @@
                     </div>
                   </div>
                 </div>
+                <br />
+
+                <div fxFlex="33%">
+                  <div fxLayout="row wrap">
+                    <div fxFlex="50%">
+                      <mat-card-subtitle>First name</mat-card-subtitle>
+                      <p>{{ currentUser.firstName }}</p>
+                    </div>
+
+                    <div fxFlex="50%">
+                      <mat-card-subtitle>Last name</mat-card-subtitle>
+                      <p>{{ currentUser.lastName }}</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div fxFlex="33%">
+                  <div fxLayout="row wrap">
+                    <div fxFlex="50%">
+                      <mat-card-subtitle>Email</mat-card-subtitle>
+                      <p>{{ currentUser.email }}</p>
+                    </div>
+                  </div>
+                </div>
               </div>
             </mat-card-content>
           </mat-card>
@@ -59,7 +83,7 @@
     </mat-card>
 
     <div fxFlex="50%" style="padding-top: 50px; padding-left: 50px">
-      <mat-card-title style="padding-bottom: 50px"
+      <mat-card-title style="padding-bottom: 25px"
         >Password and authentication</mat-card-title
       >
       <button
