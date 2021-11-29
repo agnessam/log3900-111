@@ -4,6 +4,7 @@ export const TYPES = {
   ChatSocketService: Symbol('ChatSocketService'),
   DrawingSocketService: Symbol('DrawingSocketService'),
   UploadService: Symbol('UploadService'),
+  StatusService: Symbol('StatusService'),
   DbClient: Symbol('DbClient'),
   UserRepository: Symbol('UserRepository'),
   TextChannelRepository: Symbol('TextChannelRepository'),
