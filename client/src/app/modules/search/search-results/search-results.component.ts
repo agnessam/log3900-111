@@ -12,6 +12,8 @@ export class SearchResultsComponent implements OnInit {
   searchQuery: string;
   searchResults: SearchResult;
 
+  searchCompleted: Promise<boolean>;
+
   constructor(
     private activatedRoute: ActivatedRoute,
     private searchClient: SearchClientService
@@ -20,6 +22,9 @@ export class SearchResultsComponent implements OnInit {
       this.searchQuery = params.q;
       this.searchClient.search(this.searchQuery).subscribe((searchResult) => {
         this.searchResults = searchResult;
+        console.log(this.searchResults);
+
+        this.searchCompleted = Promise.resolve(true);
       });
     });
   }

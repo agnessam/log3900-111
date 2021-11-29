@@ -7,17 +7,12 @@ import { FlexModule } from "@angular/flex-layout";
 import { UserCardComponent } from "./cards/user-card/user-card.component";
 import { MatCardModule } from "@angular/material/card";
 import { TeamCardComponent } from "./cards/team-card/team-card.component";
-import { DrawingCardComponent } from "./cards/drawing-card/drawing-card.component";
 import { AvatarModule } from "ngx-avatar";
 import { MatTabsModule } from "@angular/material/tabs";
+import { CardsModule } from "../cards/cards.module";
 
 @NgModule({
-  declarations: [
-    SearchResultsComponent,
-    UserCardComponent,
-    TeamCardComponent,
-    DrawingCardComponent,
-  ],
+  declarations: [SearchResultsComponent, UserCardComponent, TeamCardComponent],
   imports: [
     CommonModule,
     SearchRoutingModule,
@@ -25,6 +20,7 @@ import { MatTabsModule } from "@angular/material/tabs";
     MatCardModule,
     AvatarModule,
     MatTabsModule,
+    CardsModule,
   ],
 })
 export class SearchModule {}

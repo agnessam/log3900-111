@@ -57,9 +57,10 @@ export class SearchService implements SearchServiceInterface {
       ...matchingTeamsDrawingsIds,
     ];
 
-    const drawingsFromOwners = await this.drawingRepository.findManyById(
-      matchingDrawingIds as string[],
-    );
+    const drawingsFromOwners =
+      await this.drawingRepository.findManyDrawingsById(
+        matchingDrawingIds as string[],
+      );
 
     let drawingQuery: any = {
       $or: [{ name: { $regex: new RegExp(query, 'ig') } }],
@@ -70,7 +71,9 @@ export class SearchService implements SearchServiceInterface {
       drawingQuery.$or.push({ createdAt: { $gte: date, $lte: endDate } });
     }
 
-    const drawings = await this.drawingRepository.findManyByQuery(drawingQuery);
+    const drawings = await this.drawingRepository.findManyDrawingsByQuery(
+      drawingQuery,
+    );
 
     return {
       users: [...users],
