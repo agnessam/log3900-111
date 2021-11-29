@@ -65,6 +65,30 @@
 
     </com.google.android.material.textfield.TextInputLayout>
 
+    <CheckBox
+        android:id="@+id/createMemberLimitCheckbox"
+        android:layout_marginTop="60px"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Limit the number of members that can join?" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/teamMemberLimitInputLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Member limit"
+        app:helperTextTextColor="#ff0000"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/teamMemberInputText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="1"
+            android:maxLines="1"
+            android:inputType="number" />
+    </com.google.android.material.textfield.TextInputLayout>
+
     <Button
         android:id="@+id/createTeamBtn"
         android:layout_width="wrap_content"

@@ -29,6 +29,7 @@ import { MuseumModule } from "./modules/museum/museum.module";
 import { SearchModule } from "./modules/search/search.module";
 import { CardsModule } from "./modules/cards/cards.module";
 import { PostDialogModule } from "./modules/post-dialog/post-dialog.module";
+import { SettingsModule } from "./modules/settings/settings.module";
 
 @NgModule({
   declarations: [AppComponent],
@@ -63,6 +64,7 @@ import { PostDialogModule } from "./modules/post-dialog/post-dialog.module";
     MuseumModule,
     CardsModule,
     PostDialogModule,
+    SettingsModule,
   ],
   exports: [],
   providers: [],

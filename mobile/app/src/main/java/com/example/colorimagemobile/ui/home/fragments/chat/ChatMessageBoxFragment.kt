@@ -26,6 +26,7 @@ import com.example.colorimagemobile.services.socket.ChatSocketService
 import com.example.colorimagemobile.utils.CommonFun.Companion.hideKeyboard
 import com.example.colorimagemobile.utils.CommonFun.Companion.onEnterKeyPressed
 import com.example.colorimagemobile.utils.CommonFun.Companion.printToast
+import com.example.colorimagemobile.utils.Constants
 import com.example.colorimagemobile.utils.Constants.Companion.GENERAL_CHANNEL_NAME
 import kotlinx.android.synthetic.main.fragment_chat_message_box.*
 
@@ -67,7 +68,9 @@ class ChatMessageBoxFragment : Fragment(R.layout.fragment_chat_message_box) {
     private fun connectToSocket() {
         ChatSocketService.connect()
         ChatSocketService.setFragmentActivity(requireActivity())
-        ChatSocketService.joinRoom(channel.name)
+
+        val socketInformation = Constants.SocketRoomInformation(UserService.getUserInfo()._id, channel.name)
+        ChatSocketService.joinRoom(socketInformation)
     }
 
     private fun updateUI() {

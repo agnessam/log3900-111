@@ -10,6 +10,7 @@ import { Subscription } from "rxjs";
 import { AuthenticationService } from "src/app/modules/authentication";
 import { User } from "../authentication/models/user";
 import { Message } from "./models/message.model";
+import { TextChannel } from "./models/text-channel.model";
 import { ChatSocketService } from "./services/chat-socket.service";
 import { ChatService } from "./services/chat.service";
 import { TextChannelService } from "./services/text-channel.service";
@@ -22,16 +23,9 @@ import { TextChannelService } from "./services/text-channel.service";
 export class ChatComponent implements OnInit, OnDestroy {
   user: User | null;
   chatSubscription: Subscription;
-  @ViewChild("messageBody", { static: false })
-  private messageBody: ElementRef<HTMLInputElement>;
   @ViewChild("chatBox", { static: false })
   private chatBox: ElementRef<HTMLInputElement>;
-  @ViewChild("arrowDown", { static: false })
-  private iconArrowDown: ElementRef<HTMLInputElement>;
-  @ViewChild("arrowUp", { static: false })
-  private iconArrowUp: ElementRef<HTMLInputElement>;
-  @ViewChild("chatBottom", { static: false })
-  private chatBottom: ElementRef<HTMLInputElement>;
+
   message = "";
   // saves connected rooms and message history from connection
   connectedMessageHistory: Map<string, Set<Message>> = new Map();
@@ -42,7 +36,7 @@ export class ChatComponent implements OnInit, OnDestroy {
   hasDbMessages = false;
   loadedDbMessages = false;
 
-  chatRoomName = "General";
+  openChannel: TextChannel;
 
   constructor(
     private authenticationService: AuthenticationService,
@@ -53,6 +47,11 @@ export class ChatComponent implements OnInit, OnDestroy {
   ) {
     this.loadedDbMessages = false;
     this.hasDbMessages = false;
+    this.openChannel = {
+      _id: "default",
+      name: "General",
+      ownerId: "default"
+    }
   }
 
   ngOnInit(): void {
@@ -65,7 +64,6 @@ export class ChatComponent implements OnInit, OnDestroy {
       }
     });
     this.openChatRoom();
-    this.keyListener();
     this.receiveMessage();
     this.leaveRoom();
     this.chatSocketService.connect();
@@ -73,7 +71,10 @@ export class ChatComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.connectedMessageHistory.forEach((_messages, roomName) => {
-      this.chatSocketService.leaveRoom(roomName);
+      this.chatSocketService.leaveRoom({
+        userId: this.user!._id,
+        roomName: roomName,
+      });
     });
     this.chatSocketService.disconnect();
     this.chatSubscription.unsubscribe();
@@ -81,33 +82,28 @@ export class ChatComponent implements OnInit, OnDestroy {
     this.closeChatPopout();
   }
 
-  // Note: this event listener listens throughout the whole app
-  keyListener() {
-    window.addEventListener("keydown", (event) => {
-      if (event.key === "Enter") {
-        this.sendMessage();
-      }
-    });
-  }
-
   openChatRoom() {
     // might want to run these in parallel (fork?)
     this.chatService.toggleChatOverlay.subscribe((channel) => {
-      this.chatRoomName = channel.name;
+      console.log("opening chat room: " + channel.name)
+      this.openChannel = channel
       if (!this.isPopoutOpen) {
         const chat = document.getElementById("chat-popup") as HTMLInputElement;
         chat.style.display = "block";
         this.minimizeChat(false);
       }
       this.scrollDown();
-      this.joinRoom(this.chatRoomName);
+      this.joinRoom(channel.name);
     });
   }
 
   joinRoom(channelName: string) {
     if (!this.connectedMessageHistory.has(channelName)) {
       this.connectedMessageHistory.set(channelName, new Set());
-      this.chatSocketService.joinRoom(channelName);
+      this.chatSocketService.joinRoom({
+        userId: this.user!._id,
+        roomName: channelName,
+      });
       this.loadedDbMessages = false;
       this.chatSocketService.messageHistory.subscribe({
         next: (history) => {
@@ -123,7 +119,10 @@ export class ChatComponent implements OnInit, OnDestroy {
   leaveRoom() {
     this.chatService.leaveRoomEventEmitter.subscribe((channel) => {
       this.connectedMessageHistory.delete(channel.name);
-      this.chatSocketService.leaveRoom(channel.name);
+      this.chatSocketService.leaveRoom({
+        userId: this.user!._id,
+        roomName: channel.name,
+      });
       this.closeChat();
       this.closeChatPopout();
     });
@@ -150,9 +149,8 @@ export class ChatComponent implements OnInit, OnDestroy {
   sendMessage() {
     if (this.message === null || this.message.match(/^ *$/) !== null) return;
 
-    let name = "";
     if (this.user?.username === null) return;
-    name = (this.user as User).username;
+    const name = (this.user as User).username;
 
     const hour = new Date().getHours().toString();
     const minute = new Date().getMinutes().toString();
@@ -160,40 +158,22 @@ export class ChatComponent implements OnInit, OnDestroy {
     const time = hour + ":" + minute + ":" + second;
 
     this.textChannelService
-      .getChannelsByName(this.chatRoomName)
-      .subscribe((channels) => {
+      .getChannel(this.openChannel._id)
+      .subscribe((channel) => {
         const message = {
           message: this.message,
           timestamp: time,
           author: name,
-          roomId: channels[0]._id,
-          roomName: this.chatRoomName,
+          roomId: channel._id,
+          roomName: this.openChannel.name,
         };
         this.chatSocketService.sendMessage(message);
-        this.messageBody.nativeElement.value = "";
         this.message = "";
       });
   }
 
-  onInput(evt: Event): void {
-    this.message = (evt.target as HTMLInputElement).value;
-  }
-
   minimizeChat(isMinimized: boolean) {
     this.isMinimized = isMinimized;
-    const iconArrowDown = this.iconArrowDown.nativeElement;
-    const iconArrowUp = this.iconArrowUp.nativeElement;
-    const message = this.chatBottom.nativeElement;
-
-    if (!isMinimized) {
-      iconArrowDown.style.display = "inline";
-      iconArrowUp.style.display = "none";
-      message.style.display = "block";
-    } else {
-      iconArrowDown.style.display = "none";
-      iconArrowUp.style.display = "inline";
-      message.style.display = "none";
-    }
   }
 
   closeChat() {
@@ -216,26 +196,25 @@ export class ChatComponent implements OnInit, OnDestroy {
   }
 
   getMessages(): Message[] {
-    if (!this.connectedMessageHistory.has(this.chatRoomName)) {
+    if (!this.connectedMessageHistory.has(this.openChannel.name)) {
       return [];
     }
     const messages = Array.from(
       (
-        this.connectedMessageHistory.get(this.chatRoomName) as Set<Message>
+        this.connectedMessageHistory.get(this.openChannel.name) as Set<Message>
       ).values()
     );
-    console.log(messages);
     return messages;
   }
 
-  getDatabaseMessages(channelName: string): void {
+  getDatabaseMessages(channel: TextChannel): void {
     this.textChannelService
-      .getChannelsByName(channelName)
-      .subscribe((channels) => {
+      .getChannel(channel._id)
+      .subscribe((channel) => {
         this.textChannelService
-          .getMessages(channels[0]._id)
+          .getMessages(channel._id)
           .subscribe((messages) => {
-            if (this.connectedMessageHistory.has(channelName)) {
+            if (this.connectedMessageHistory.has(channel.name)) {
               this.loadedDbMessages = true;
               this.hasDbMessages = messages.length !== 0;
               if (!this.hasDbMessages) {
@@ -243,7 +222,7 @@ export class ChatComponent implements OnInit, OnDestroy {
               }
               const currentMessages = Array.from(
                 (
-                  this.connectedMessageHistory.get(channelName) as Set<Message>
+                  this.connectedMessageHistory.get(channel.name) as Set<Message>
                 ).values()
               );
               // Filter out messages that match attributes from database (should be id but not generated yet for current)
@@ -258,7 +237,7 @@ export class ChatComponent implements OnInit, OnDestroy {
                   )
               );
               this.connectedMessageHistory.set(
-                channelName,
+                channel.name,
                 new Set(messages.concat(filtered))
               );
             }

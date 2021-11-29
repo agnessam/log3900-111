@@ -10,26 +10,25 @@ import com.example.colorimagemobile.repositories.DrawingRepository
 import com.example.colorimagemobile.services.SharedPreferencesService
 import com.example.colorimagemobile.utils.Constants
 import java.util.*
-import android.graphics.Bitmap
 import android.widget.Button
 import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.colorimagemobile.adapter.DrawingMenuRecyclerAdapter
 import com.example.colorimagemobile.bottomsheets.NewDrawingMenuBottomSheet
-import com.example.colorimagemobile.classes.ImageConvertor
 import com.example.colorimagemobile.classes.MyFragmentManager
 import com.example.colorimagemobile.models.recyclerAdapters.DrawingMenuData
 import com.example.colorimagemobile.services.drawing.DrawingService
-import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
+import com.example.colorimagemobile.utils.CommonFun.Companion.printToast
 import kotlin.collections.ArrayList
 
 class GalleryMenuFragment : Fragment(R.layout.fragment_gallery_menu) {
     private lateinit var drawingRepo: DrawingRepository
     private lateinit var sharedPreferencesService: SharedPreferencesService
-    private lateinit var drawings: List<DrawingModel.Drawing>
+    private lateinit var drawings: ArrayList<DrawingModel.Drawing>
     private lateinit var galleryView: ConstraintLayout
+    private lateinit var drawingsMenu: ArrayList<DrawingMenuData>
+    private lateinit var recyclerView: RecyclerView
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -63,7 +62,8 @@ class GalleryMenuFragment : Fragment(R.layout.fragment_gallery_menu) {
                 return@observe
             }
 
-            drawings = it.data as List<DrawingModel.Drawing>
+            drawings = DrawingService.filterDrawingsByPrivacy(it.data as ArrayList<DrawingModel.Drawing>)
+            DrawingService.setAllDrawings(drawings)
             galleryView.findViewById<TextView>(R.id.loadingDrawingsText).visibility = View.GONE
             renderDrawings()
         })
@@ -71,9 +71,21 @@ class GalleryMenuFragment : Fragment(R.layout.fragment_gallery_menu) {
 
     // display all existing drawings in menu
     private fun renderDrawings() {
-        val recyclerView = galleryView.findViewById<RecyclerView>(R.id.drawingMenuRecyclerView)
-        val drawingsMenu: ArrayList<DrawingMenuData> = DrawingService.getDrawingsBitmap(requireContext(), drawings)
+        recyclerView = galleryView.findViewById<RecyclerView>(R.id.drawingMenuRecyclerView)
+        drawingsMenu = DrawingService.getDrawingsBitmap(requireContext(), drawings)
         recyclerView.layoutManager = GridLayoutManager(requireContext(), Constants.NB_DATA_ROWS)
-        recyclerView.adapter = DrawingMenuRecyclerAdapter(drawingsMenu, R.id.main_gallery_fragment)
+        recyclerView.adapter = DrawingMenuRecyclerAdapter(requireActivity(), drawingsMenu, R.id.main_gallery_fragment) { updatedDrawing, pos -> updateDrawing(updatedDrawing, pos) }
+    }
+
+    private fun updateDrawing(updatedDrawing: DrawingModel.UpdateDrawing, position: Int) {
+        drawingRepo.updateDrawing(drawingsMenu[position].drawing._id!!, updatedDrawing).observe(viewLifecycleOwner, {
+            if (it.isError as Boolean) {
+                printToast(requireActivity(), it.message!!)
+                return@observe
+            }
+
+            drawingsMenu[position] = DrawingService.updateDrawingFromMenu(drawingsMenu[position], updatedDrawing)
+            recyclerView.adapter?.notifyItemChanged(position)
+        })
     }
 }

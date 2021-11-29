@@ -12,30 +12,30 @@ data class SvgStyle (
 data class Polyline (
     val id: String,
     val name: String,
-    val points: String,
-    val style: String
+    var points: String,
+    var style: String
 )
 
 data class Ellipse (
     val id: String,
     val name: String,
-    val cx: String,
-    val cy: String,
-    val width: String,
-    val height: String,
-    val rx: String,
-    val ry: String,
-    val style: String,
+    var cx: String,
+    var cy: String,
+    var width: String,
+    var height: String,
+    var rx: String,
+    var ry: String,
+    var style: String,
 )
 
 data class Rectangle (
     val id: String,
     val name: String,
-    val x: String,
-    val y: String,
-    val width: String,
-    val height: String,
-    val style: String
+    var x: String,
+    var y: String,
+    var width: String,
+    var height: String,
+    var style: String
 )
 
 data class BaseSVG(
@@ -48,9 +48,9 @@ data class CustomSVG(
     val width: String,
     val height: String,
     val style: String,
-    val ellipse: ArrayList<Ellipse>?,
-    val polyline: ArrayList<Polyline>?,
-    val rect: ArrayList<Rectangle>?
+    var ellipse: ArrayList<Ellipse>?,
+    var polyline: ArrayList<Polyline>?,
+    var rect: ArrayList<Rectangle>?
 )
 
 

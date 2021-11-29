@@ -3,9 +3,9 @@ package com.example.colorimagemobile.classes.NotificationSound
 import android.content.Context
 import android.media.RingtoneManager
 
-class NotificationSound {
+class Notification {
 
-    fun play(context: Context){
+    fun playSound(context: Context){
         try{
             val defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
             val r = RingtoneManager.getRingtone(context, defaultSoundUri)

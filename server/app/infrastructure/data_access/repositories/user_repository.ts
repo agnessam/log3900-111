@@ -4,6 +4,8 @@ import { request, response } from 'inversify-express-utils';
 import { User, UserInterface } from '../../../domain/models/user';
 import { GenericRepository } from './generic_repository';
 import { Team } from '../../../domain/models/teams';
+import bcrypt from 'bcrypt';
+import { CollaborationHistory } from '@app/domain/models/CollaborationHistory';
 
 declare global {
   namespace Express {
@@ -36,6 +38,43 @@ export class UserRepository extends GenericRepository<UserInterface> {
     }
   }
 
+  public async getPopulatedUser(userId: string) {
+    return new Promise((resolve, reject) => {
+      User.findById({ _id: userId })
+        .populate({
+          path: 'collaborationHistory',
+          populate: { path: 'drawing' },
+        })
+        .populate({ path: 'drawings', populate: { path: 'owner' } })
+        .exec((err, user) => {
+          if (err || !user) {
+            reject(err);
+          }
+          resolve(user);
+        });
+    });
+  }
+
+  public async changePassword(
+    userId: string,
+    currentPassword: string,
+    newPassword: string,
+  ) {
+    return new Promise(async (resolve, reject) => {
+      const currentUser = await User.findOne({ _id: userId });
+      const validate = await currentUser!.isValidPassword(currentPassword);
+      if (!validate) {
+        resolve({ err: 'Incorrect password' });
+      }
+
+      const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+      currentUser!.password = hashedPassword;
+      currentUser!.save();
+      resolve(currentUser);
+    });
+  }
+
   public async getUserTeams(userId: string) {
     return new Promise((resolve, reject) => {
       Team.find({ members: userId }).exec((err, teams) => {
@@ -51,7 +90,7 @@ export class UserRepository extends GenericRepository<UserInterface> {
   public async getUserDrawings(userId: string) {
     return new Promise((resolve, reject) => {
       User.findById({ _id: userId })
-        .populate('drawings')
+        .populate({ path: 'drawings', populate: { path: 'owner' } })
         .exec((err, user) => {
           if (err || !user) {
             reject(err);
@@ -64,7 +103,7 @@ export class UserRepository extends GenericRepository<UserInterface> {
   public async getPosts(userId: string) {
     return new Promise((resolve, reject) => {
       User.findById({ _id: userId })
-        .populate('posts')
+        .populate({ path: 'posts', populate: { path: 'owner' } })
         .exec((err, user) => {
           if (err || !user) {
             reject(err);
@@ -120,6 +159,41 @@ export class UserRepository extends GenericRepository<UserInterface> {
             reject(err);
           }
           resolve(unfollowedUser);
+        },
+      );
+    });
+  }
+
+  public async updateLogout(userId: string) {
+    return new Promise((resolve, reject) => {
+      User.findOneAndUpdate(
+        { _id: userId },
+        { lastLogout: new Date() },
+        (err: Error, user: any) => {
+          if (err) {
+            reject(err);
+          }
+          resolve(true);
+        },
+      );
+    });
+  }
+
+  public async updateCollaborationHistory(userId: string, drawingId: string) {
+    return new Promise((resolve, reject) => {
+      const collaborationHistory = new CollaborationHistory({
+        drawing: drawingId,
+        collaboratedAt: new Date(),
+      });
+      User.findOneAndUpdate(
+        { _id: userId },
+        { $push: { collaborationHistory: collaborationHistory } },
+        { new: true },
+        (err: Error, user: UserInterface) => {
+          if (err) {
+            reject(err);
+          }
+          resolve(user);
         },
       );
     });

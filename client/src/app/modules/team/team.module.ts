@@ -16,9 +16,23 @@ import { MatInputModule } from "@angular/material/input";
 import { MatTabsModule } from "@angular/material/tabs";
 import { CardsModule } from "../cards/cards.module";
 import { AvatarModule } from "ngx-avatar";
+import { ConfirmDeleteDialogComponent } from "./team-profile/confirm-delete-dialog/confirm-delete-dialog.component";
+import { MemberListDialogComponent } from "./team-profile/member-list-dialog/member-list-dialog.component";
+import { ConfirmLeaveDialogComponent } from "./team-profile/confirm-leave-dialog/confirm-leave-dialog.component";
+import { MatCheckboxModule } from "@angular/material/checkbox";
+import { ConfirmJoinDialogComponent } from "./team-profile/confirm-join-dialog/confirm-join-dialog.component";
+import { MatBadgeModule } from "@angular/material/badge";
 
 @NgModule({
-  declarations: [TeamMainPageComponent, TeamProfileComponent, NewTeamComponent],
+  declarations: [
+    TeamMainPageComponent,
+    TeamProfileComponent,
+    NewTeamComponent,
+    ConfirmDeleteDialogComponent,
+    MemberListDialogComponent,
+    ConfirmLeaveDialogComponent,
+    ConfirmJoinDialogComponent,
+  ],
   imports: [
     CommonModule,
     TeamRoutingModule,
@@ -33,6 +47,8 @@ import { AvatarModule } from "ngx-avatar";
     MatTabsModule,
     CardsModule,
     AvatarModule,
+    MatCheckboxModule,
+    MatBadgeModule,
   ],
 })
 export class TeamModule {}

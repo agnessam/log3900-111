@@ -2,8 +2,8 @@ package com.example.colorimagemobile.classes.xml_json
 
 import com.github.underscore.lodash.U
 
-class SVGBuilder {
-
+class SVGBuilder(property: String) {
+    private val property = property
     private val parentBuilder: U.Builder = U.objectBuilder(); // root CustomSVG element
     private val innerBuilder: U.Builder = U.objectBuilder(); // CustomSVG inner styles
 
@@ -18,7 +18,11 @@ class SVGBuilder {
 
     // add all attributes to CustomSVG (parent) element
     fun completeBuild() {
-        parentBuilder.add("svg", innerBuilder)
+        parentBuilder.add(property, innerBuilder)
+    }
+
+    fun addArrayAttr(key: String, value: U.ArrayBuilder) {
+        innerBuilder.add("$key", value)
     }
 
     // "-" to insert the value inside the svg itself instead of its child
@@ -27,10 +31,6 @@ class SVGBuilder {
     }
 
     fun addAttr(key: String, value: Int) {
-        addAttr(key, value.toString())
-    }
-
-    fun addAttr(key: String, value: Float) {
         addAttr(key, value.toString())
     }
 
@@ -43,5 +43,4 @@ class SVGBuilder {
         completeBuild()
         return parentBuilder.toXml()
     }
-
 }

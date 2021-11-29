@@ -30,6 +30,8 @@ class Constants {
             const val START_SELECTION_EVENT = "selection-start"
             const val CONFIRM_SELECTION_EVENT = "selection-confirm"
             const val TRANSFORM_SELECTION_EVENT = "selection-transform"
+            const val UPDATE_DRAWING_NOTIFICATION = "drawing-update-notification"
+            const val UPDATE_DRAWING_EVENT = "drawing-update"
         }
     }
 
@@ -104,4 +106,6 @@ class Constants {
             const val TOKEN = "token"
         }
     }
+
+    data class SocketRoomInformation( val userId: String, val roomName: String)
 }

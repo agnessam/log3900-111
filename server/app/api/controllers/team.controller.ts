@@ -23,12 +23,13 @@ export class TeamController {
 
   @httpGet('/:teamId')
   public async getTeamById(@request() req: Request) {
-    return await this.teamRepository.findById(req.params.teamId);
+    return await this.teamRepository.getTeam(req.params.teamId);
   }
 
   @httpPost('/')
   public async createTeam(@request() req: Request) {
-    return await this.teamRepository.createTeam(req.body, req.user!.id);
+    req.body.owner = req.user!.id;
+    return await this.teamRepository.createTeam(req.body);
   }
 
   @httpPatch('/:teamId')
@@ -38,7 +39,7 @@ export class TeamController {
 
   @httpDelete('/:teamId')
   public async deleteTeam(@request() req: Request) {
-    return await this.teamRepository.deleteById(req.params.teamId);
+    return await this.teamRepository.deleteTeam(req.params.teamId);
   }
 
   @httpGet('/:teamId/members')

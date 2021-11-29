@@ -1,4 +1,4 @@
-<div id="user-profile">
+<div id="user-profile" *ngIf="userLoaded | async">
   <div id="team-header" fxLayout="row grid" fxLayoutAlign="center center">
     <div fxFlex="13%" style="text-align: center">
       <ngx-avatar [src]="this.user.avatar?.imageUrl" [size]="150"></ngx-avatar>

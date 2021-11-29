@@ -2,9 +2,10 @@ import { MatDialog } from "@angular/material/dialog";
 import { NewDrawingComponent } from "../../new-drawing";
 import { Component, AfterViewInit } from "@angular/core";
 import { DrawingHttpClientService } from "../../backend-communication";
-import { Router } from "@angular/router";
 import { Drawing } from "src/app/shared";
-import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
+import { DomSanitizer, SafeUrl } from "@angular/platform-browser";
+import { Team } from "src/app/shared/models/team.model";
+import { User } from "../../users/models/user";
 
 @Component({
   selector: "app-gallery",
@@ -13,17 +14,21 @@ import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 })
 export class GalleryComponent implements AfterViewInit {
   drawings: Array<Drawing> = [];
+  userId: string;
   constructor(
-    private router: Router,
     private dialog: MatDialog,
     private drawingHttpClient: DrawingHttpClientService,
     private sanitizer: DomSanitizer
-  ) {}
+  ) {
+    this.userId = localStorage.getItem("userId")!;
+  }
 
   ngAfterViewInit(): void {
     this.drawingHttpClient.getDrawings().subscribe((response) => {
       for (let drawing of response) {
-        this.drawings.push(drawing);
+        if (this.hasPermission(drawing)) {
+          this.drawings.push(drawing);
+        }
       }
     });
   }
@@ -36,7 +41,22 @@ export class GalleryComponent implements AfterViewInit {
     this.dialog.open(NewDrawingComponent, {});
   }
 
-  goToDrawing(drawingId: string) {
-    this.router.navigate([`/drawings/${drawingId}`]);
+  hasPermission(drawing: Drawing): boolean {
+    if (drawing.privacyLevel != "private") return true;
+
+    if (
+      drawing.ownerModel == "User" &&
+      (drawing.owner as User)._id == this.userId
+    ) {
+      return true;
+    }
+
+    if (drawing.ownerModel == "Team") {
+      if (((drawing.owner as Team).members as string[]).includes(this.userId)) {
+        return true;
+      }
+    }
+
+    return false;
   }
 }

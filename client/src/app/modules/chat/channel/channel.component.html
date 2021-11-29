@@ -1,72 +1,60 @@
 <div id="channel-overlay">
   <div class="channel-top" id="channel-top" >
     <p>Channels</p>
-    <button mat-icon-button class="btn" (click)="openAddChannelModal()">
+    <button mat-icon-button (click)="openAddChannelModal()">
       <mat-icon>add</mat-icon>
     </button>
-    <button mat-icon-button class="btn" (click)="toggleSearchBar()">
-      <mat-icon>search</mat-icon>
-    </button>
   </div>
-    <div [hidden]="!isSearchOpen">
-      <input type="search"
-              #searchInput
-              id="search-input"
-              autocomplete="off"
-              spellcheck="false"
-              placeholder="Search groups..."
-              (input)="searchedInput($event)" >
-      <button mat-icon-button class="btn" (click)="searchChannels(this.search)">
-        <mat-icon>manage_search</mat-icon>
-      </button>
-      <div class="channel-list">
-        <div *ngFor="let channel of searchedChannels">
-          <div class="channel" (click)="openChannel(channel)">
-            <p>{{channel.name}}</p>
+    
+    <mat-tab-group mat-align-tabs="start">
+      <mat-tab label="All">
+        <form id="search-bar" (ngSubmit)="searchChannels()">
+          <button mat-icon-button class="icon" type="submit">
+            <mat-icon>search</mat-icon>
+          </button>
+          <input
+            #searchInput
+            type="search"
+            id="search-input"
+            autocomplete="off"
+            spellcheck="false"
+            placeholder="Search channels"
+            [(ngModel)]="this.searchQuery"
+            (focus)="toggleSearch(true)"
+            (focusout)="toggleSearch(false)"
+            name="search"
+          />
+        </form>
+
+        <div fxLayout="row wrap"
+        fxLayoutAlign="center center"
+        class="channel-list">
+          <div *ngFor="let channel of searchedChannels">
+            <div class="channel" (click)="openChannel(channel);">
+              <p>{{channel.name}}</p>
+            </div>
           </div>
         </div>
-      </div>
-    </div>
-
-  <div class="channel-list" [hidden]="isSearchOpen">
-    <div *ngFor="let channel of connectedChannels">
-      <div class="channel" (mouseover)="toggleChannelButton(channel, true)" (mouseout)="toggleChannelButton(channel, false)">
-        <p (click)="openChannel(channel)">{{channel.name}}</p>
-        <div class="deleteChannelBtn" [id]="channel.name">
-          <button mat-icon-button class="btn" (click)="removeChannel(channel)">
-            <mat-icon>clear</mat-icon>
-          </button>
-          <button mat-icon-button class="btn" (click)="deleteChannel(channel)">
-            <mat-icon>delete</mat-icon>
-          </button>
+      </mat-tab>
+      <mat-tab label="Connected">
+        <div fxLayout="row wrap"
+            fxLayoutAlign="center center" 
+            class="channel-list" 
+            >
+          <div *ngFor="let channel of connectedChannels">
+            <div class="channel" (mouseover)="toggleChannelButton(channel, true)" (mouseout)="toggleChannelButton(channel, false)" (click)="openChannel(channel)">
+              <p (click)="openChannel(channel)">{{channel.name}}</p>
+              <div class="deleteChannelBtn" [id]="channel.name">
+                <button mat-icon-button class="btn" (click)="removeChannel(channel)">
+                  <mat-icon>clear</mat-icon>
+                </button>
+                <button mat-icon-button class="btn" (click)="deleteChannel(channel)">
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </div>
+      
+            </div>
+          </div>
         </div>
-
-      </div>
-    </div>
-  </div>
-</div>
-
-<div #addChannelModal class="modal">
-  <div class="modal-content">
-    <div class="headerModal">
-      <h2>Create a new channel!</h2>
-      <button mat-icon-button class="btn" (click)="closeAddChannelModal()">
-        <mat-icon>close</mat-icon>
-      </button>
-    </div>
-    <div class="bottomModal">
-      <input
-      type="text"
-      #newChannelNameInput
-      id="channelName"
-      autocomplete="off"
-      spellcheck="false"
-      placeholder="Enter a channel name"
-      (input)="onInput($event)"
-      />
-      <button mat-icon-button class="btn" (click)="addChannel()">
-        <mat-icon>send</mat-icon>
-      </button>
-    </div>
-  </div>
-</div>
+      </mat-tab>
+    </mat-tab-group>

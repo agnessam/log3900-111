@@ -1,6 +1,5 @@
 package com.example.colorimagemobile.ui.home.fragments.users
 
-import android.graphics.Bitmap
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.View
@@ -11,15 +10,16 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.colorimagemobile.R
 import com.example.colorimagemobile.adapter.DrawingMenuRecyclerAdapter
-import com.example.colorimagemobile.classes.ImageConvertor
 import com.example.colorimagemobile.classes.MyFragmentManager
 import com.example.colorimagemobile.classes.MyPicasso
 import com.example.colorimagemobile.models.DrawingModel
 import com.example.colorimagemobile.models.UserModel
 import com.example.colorimagemobile.models.recyclerAdapters.DrawingMenuData
+import com.example.colorimagemobile.repositories.DrawingRepository
 import com.example.colorimagemobile.repositories.UserRepository
 import com.example.colorimagemobile.services.drawing.DrawingService
 import com.example.colorimagemobile.services.users.UserService
+import com.example.colorimagemobile.utils.CommonFun.Companion.printToast
 import com.example.colorimagemobile.utils.Constants
 import com.google.android.material.tabs.TabLayout
 import kotlinx.android.synthetic.main.fragment_teams_profile.*
@@ -113,12 +113,23 @@ class UsersProfileFragment : Fragment(R.layout.fragment_users_profile) {
     }
 
     private fun setAllDrawings() {
-        recyclerView.adapter = DrawingMenuRecyclerAdapter(drawingsMenu, R.id.usersMenuFrameLayout)
+        recyclerView.adapter = DrawingMenuRecyclerAdapter(requireActivity(), drawingsMenu, R.id.usersMenuFrameLayout) { updatedDrawing, pos -> updateDrawing(updatedDrawing, pos) }
     }
 
     private fun setPublishedDrawings() {
         val drawings = arrayListOf<DrawingMenuData>()
-        recyclerView.adapter = DrawingMenuRecyclerAdapter(drawings, R.id.usersMenuFrameLayout)
+        recyclerView.adapter = DrawingMenuRecyclerAdapter(requireActivity(), drawings, R.id.usersMenuFrameLayout, {_,_ -> {}})
     }
 
+    private fun updateDrawing(updatedDrawing: DrawingModel.UpdateDrawing, position: Int) {
+        DrawingRepository().updateDrawing(drawingsMenu[position].drawing._id!!, updatedDrawing).observe(viewLifecycleOwner, {
+            if (it.isError as Boolean) {
+                printToast(requireActivity(), it.message!!)
+                return@observe
+            }
+
+            drawingsMenu[position] = DrawingService.updateDrawingFromMenu(drawingsMenu[position], updatedDrawing)
+            recyclerView.adapter?.notifyItemChanged(position)
+        })
+    }
 }

@@ -1,7 +1,9 @@
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
+import { map } from "rxjs/operators";
 import { Drawing } from "src/app/shared";
+import { STATUS } from "src/app/shared/models/status.model";
 import { Team } from "src/app/shared/models/team.model";
 import { environment } from "src/environments/environment";
 import { EditableUserParameters } from "../models/editable-user-parameters";
@@ -37,6 +39,21 @@ export class UsersService {
       });
   }
 
+  changePassword(
+    userId: string,
+    currentPassword: string,
+    newPassword: string
+  ): Observable<any> {
+    return this.httpClient
+      .patch(`${this.endpointUrl}/${userId}/changePassword`, {
+        currentPassword: currentPassword,
+        newPassword: newPassword,
+      })
+      .pipe((response) => {
+        return response;
+      });
+  }
+
   getUserTeams(userId: string): Observable<Team[]> {
     return this.httpClient
       .get<Team[]>(`${this.endpointUrl}/${userId}/teams`)
@@ -51,5 +68,13 @@ export class UsersService {
       .pipe((response) => {
         return response;
       });
+  }
+
+  getUserStatus(): Observable<Map<string, STATUS>> {
+    return this.httpClient.get<{}>(`${this.endpointUrl}/status`).pipe(
+      map((response) => {
+        return new Map(Object.entries(response));
+      })
+    );
   }
 }
