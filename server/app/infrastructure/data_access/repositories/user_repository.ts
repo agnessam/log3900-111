@@ -50,7 +50,30 @@ export class UserRepository extends GenericRepository<UserInterface> {
           if (err || !user) {
             reject(err);
           }
-          resolve(user);
+
+          User.aggregate(
+            [
+              {
+                $addFields: {
+                  averageTimeSpent: {
+                    $avg: {
+                      $map: {
+                        input: '$collaborations',
+                        as: 'e1',
+                        in: '$$e1.timeSpent',
+                      },
+                    },
+                  },
+                },
+              },
+            ],
+            (err: Error, user: UserInterface) => {
+              if (err) {
+                reject(err);
+              }
+              resolve(user);
+            },
+          );
         });
     });
   }
