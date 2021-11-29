@@ -22,7 +22,9 @@ export class DrawingController {
 
   @httpGet('/:drawingId')
   public async getDrawingById(@request() req: Request) {
-    return await this.drawingRepository.findById(req.params.drawingId);
+    return await this.drawingRepository.getPopulatedDrawing(
+      req.params.drawingId,
+    );
   }
 
   @httpPost('/')

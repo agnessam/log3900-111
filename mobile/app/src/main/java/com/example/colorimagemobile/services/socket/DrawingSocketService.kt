@@ -65,6 +65,16 @@ object DrawingSocketService: AbsSocket(SOCKETS.COLLABORATIVE_DRAWING_NAMESPACE) 
         this.listenUpdateDrawingRequest()
     }
 
+    fun joinCurrentDrawingRoom() {
+        if (DrawingService.getCurrentDrawingID() != null) {
+            connect()
+
+            val socketInformation =
+                Constants.SocketRoomInformation(UserService.getUserInfo()._id, DrawingService.getCurrentDrawingID()!!)
+            joinRoom(socketInformation)
+        }
+    }
+
     fun sendInProgressDrawingCommand(drawingCommand: Any, type: String) {
         val socketToolCommand = SocketTool(
             type = type,
