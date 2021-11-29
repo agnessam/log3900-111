@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.colorimagemobile.R
 import com.example.colorimagemobile.adapter.DrawingMenuRecyclerAdapter
 import com.example.colorimagemobile.bottomsheets.ConfirmationBottomSheet
+import com.example.colorimagemobile.bottomsheets.PasswordConfirmationBottomSheet
 import com.example.colorimagemobile.classes.MyFragmentManager
 import com.example.colorimagemobile.enumerators.ButtonType
 import com.example.colorimagemobile.models.DrawingModel
@@ -134,16 +135,29 @@ class TeamsProfileFragment : Fragment(R.layout.fragment_teams_profile) {
         }
     }
 
+    private fun joinTeam() {
+        TeamService.joinTeam(teamPosition!!, requireContext())
+        hideJoinBtn()
+        printToast(requireActivity(), "Successfully joined the team")
+    }
+
     private fun openJoinModal() {
         if (currentTeam.isPrivate) {
-
+            val title = "Are you sure you want join ${currentTeam.name}?"
+            val description = "The owner has set this team to protected. Enter the correct password to join!"
+            val passwordConfirmation = PasswordConfirmationBottomSheet(
+                requireActivity(),
+                currentTeam.password,
+                title,
+                description,
+                "Join",
+                "Enter the team's password"
+            ) { joinTeam() }
+            passwordConfirmation.show(parentFragmentManager, "PasswordConfirmationBottomSheet")
         } else {
             val title = "Are you sure you want join ${currentTeam.name}?"
             val description = "The owner has set this team public. Looks like anyone can join!"
-            val confirmation = ConfirmationBottomSheet({
-                TeamService.joinTeam(teamPosition!!, requireContext())
-                hideJoinBtn()
-            }, title, description, "Join", ButtonType.PRIMARY.toString())
+            val confirmation = ConfirmationBottomSheet({ joinTeam() }, title, description, "Join", ButtonType.PRIMARY.toString())
             confirmation.show(parentFragmentManager, "ConfirmationBottomSheet")
         }
     }

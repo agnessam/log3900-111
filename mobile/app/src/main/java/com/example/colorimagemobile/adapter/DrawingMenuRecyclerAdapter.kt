@@ -14,7 +14,7 @@ import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.example.colorimagemobile.R
 import com.example.colorimagemobile.bottomsheets.EditDrawingBottomSheet
-import com.example.colorimagemobile.bottomsheets.ProtectedDrawingConfirmationBottomSheet
+import com.example.colorimagemobile.bottomsheets.PasswordConfirmationBottomSheet
 import com.example.colorimagemobile.classes.DateFormatter
 import com.example.colorimagemobile.classes.MyPicasso
 import com.example.colorimagemobile.models.DrawingModel
@@ -102,8 +102,17 @@ class DrawingMenuRecyclerAdapter(
 
                 if (drawingMenus[position].drawing.privacyLevel == PrivacyLevel.PROTECTED.toString()) {
                     // show password dialog
-                    val passwordConfirmation = ProtectedDrawingConfirmationBottomSheet(activity, drawingMenus[position].drawing.password) { openDrawing(bindingAdapterPosition, itemView.context)}
-                    passwordConfirmation.show(activity.supportFragmentManager, "ProtectedDrawingConfirmationBottomSheet")
+                    val title = "Protected Drawing"
+                    val description = "Enter drawing's password"
+                    val passwordConfirmation = PasswordConfirmationBottomSheet(
+                        activity,
+                        drawingMenus[position].drawing.password,
+                        title,
+                        description,
+                        "Confirm and open",
+                        "Password"
+                    ) { openDrawing(bindingAdapterPosition, itemView.context) }
+                    passwordConfirmation.show(activity.supportFragmentManager, "PasswordConfirmationBottomSheet")
                     return@setOnClickListener
                 }
 
