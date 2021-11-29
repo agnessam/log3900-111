@@ -50,7 +50,7 @@ class RectangleCommand(rectangleData: RectangleData): ICommand {
         DrawingJsonService.createRect(rectangle)
     }
 
-    private fun initializePaint(color: String, opacity: String, defaultColor: Int): Paint{
+    fun initializePaint(color: String, opacity: String, defaultColor: Int): Paint{
         var paint = Paint()
 
         val transformedColor = ColorService.addAlphaToRGBA(color, opacity)
