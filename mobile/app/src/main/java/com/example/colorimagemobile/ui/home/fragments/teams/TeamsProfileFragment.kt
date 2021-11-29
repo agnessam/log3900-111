@@ -152,8 +152,7 @@ class TeamsProfileFragment : Fragment(R.layout.fragment_teams_profile) {
 
     private fun setAllDrawings() {
         recyclerView.adapter = null
-        recyclerView.adapter = DrawingMenuRecyclerAdapter(requireActivity(), drawingsMenu, R.id.teamsMenuFrameLayout, {_,_ -> {}})
-//        recyclerView.adapter = DrawingMenuRecyclerAdapter(requireActivity(), drawingsMenu, R.id.teamsMenuFrameLayout) { updatedDrawing, pos -> updateDrawing(updatedDrawing, pos) }
+        recyclerView.adapter = DrawingMenuRecyclerAdapter(requireActivity(), drawingsMenu, R.id.teamsMenuFrameLayout) { updatedDrawing, pos -> updateDrawing(updatedDrawing, pos) }
     }
 
     private fun setPublishedDrawings() {

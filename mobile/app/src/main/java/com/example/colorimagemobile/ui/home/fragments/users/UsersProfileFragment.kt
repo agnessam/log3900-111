@@ -1,6 +1,5 @@
 package com.example.colorimagemobile.ui.home.fragments.users
 
-import android.app.Dialog
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.View
@@ -139,7 +138,7 @@ class UsersProfileFragment : Fragment(R.layout.fragment_users_profile) {
 
     private fun setAllDrawings() {
         recyclerView.adapter = null
-        recyclerView.adapter = DrawingMenuRecyclerAdapter(requireActivity(), drawingsMenu, R.id.usersMenuFrameLayout, {_,_ -> {}})
+        recyclerView.adapter = DrawingMenuRecyclerAdapter(requireActivity(), drawingsMenu, R.id.usersMenuFrameLayout) { updatedDrawing, pos -> updateDrawing(updatedDrawing, pos) }
     }
 
     private fun setPublishedDrawings() {
