@@ -4,7 +4,6 @@ import androidx.fragment.app.FragmentActivity
 import com.example.colorimagemobile.adapter.CollaborationHistoryRecyclerAdapter
 import com.example.colorimagemobile.classes.MyFragmentManager
 import com.example.colorimagemobile.ui.home.fragments.gallery.GalleryDrawingFragment
-import com.example.colorimagemobile.ui.home.fragments.userProfile.UserProfileHistoryFragment
 import com.example.colorimagemobile.utils.Constants
 
 object CollabHistoryAdapterService {

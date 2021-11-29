@@ -10,7 +10,6 @@
     android:layout_height="match_parent">
 
     <LinearLayout
-        android:overScrollMode="always"
         android:scrollbarStyle="insideInset"
         android:scrollbars="vertical"
         android:id="@+id/editprofileview"
@@ -174,7 +173,6 @@
             </LinearLayout>
 
             <LinearLayout
-
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/descriptionBox">
@@ -192,11 +190,38 @@
 
             </LinearLayout>
 
+
+            <LinearLayout
+                android:id="@+id/validateBtn"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@id/descriptionBox">
+
+                <Button
+                    android:id="@+id/valideChange"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="180dp"
+                    android:layout_marginBottom="10dp"
+                    android:backgroundTint="@color/primary"
+                    android:gravity="center"
+                    android:text="Update Profile "
+                    android:textAlignment="center"
+                    android:textSize="18sp" />
+
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/container">
             <LinearLayout
                 android:id="@+id/passwordBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="200dp"
                 android:layout_below="@id/currentUserDescription">
                 <TextView
                     android:layout_width="wrap_content"
@@ -220,95 +245,13 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="20dp"
-                    android:backgroundTint="@color/white"
-                    android:shadowColor="#ccc"
-                    android:text="Edit"
-                    android:textColor="@color/black" />
-            </LinearLayout>
-            <LinearLayout
-                android:id="@+id/validateBtn"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/descriptionBox">
-
-                <Button
-                    android:id="@+id/valideChange"
-                    android:layout_width="930dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="20dp"
-                    android:layout_marginTop="270dp"
-                    android:layout_marginBottom="10dp"
                     android:backgroundTint="@color/primary"
-                    android:gravity="center"
-                    android:text="Update Profile "
-                    android:textAlignment="center"
-                    android:textSize="18sp" />
-
+                    android:shadowColor="#ccc"
+                    android:text="Update Password"
+                    android:textColor="@color/white" />
             </LinearLayout>
-
         </androidx.cardview.widget.CardView>
 
-
-
-<!--        <LinearLayout-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_margin="20dp">-->
-
-<!--            <TextView-->
-<!--                android:layout_width="0dp"-->
-<!--                android:layout_height="match_parent"-->
-<!--                android:layout_weight="1"-->
-<!--                android:text="@string/Username"-->
-<!--                android:textSize="30sp" />-->
-
-<!--            <EditText-->
-<!--                android:id="@+id/edtusername"-->
-<!--                android:overScrollMode="always"-->
-<!--                android:scrollbarStyle="insideInset"-->
-<!--                android:scrollbars="vertical"-->
-<!--                android:layout_width="0dp"-->
-<!--                android:layout_height="match_parent"-->
-<!--                android:layout_weight="1"-->
-<!--                android:textSize="30sp"-->
-<!--                tools:ignore="SpeakableTextPresentCheck" />-->
-
-
-<!--        </LinearLayout>-->
-
-<!--        <LinearLayout-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_margin="20dp"-->
-<!--            android:orientation="horizontal">-->
-
-<!--            <TextView-->
-<!--                android:layout_width="0dp"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_weight="1"-->
-<!--                android:text="@string/description"-->
-<!--                android:textSize="30sp" />-->
-
-<!--            <EditText-->
-<!--                android:id="@+id/edtdescription"-->
-<!--                android:overScrollMode="always"-->
-<!--                android:scrollbarStyle="insideInset"-->
-<!--                android:scrollbars="vertical"-->
-<!--                android:layout_width="0dp"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_weight="1"-->
-<!--                android:textSize="30sp"-->
-<!--                tools:ignore="SpeakableTextPresentCheck" />-->
-
-<!--        </LinearLayout>-->
-
-<!--        <Button-->
-<!--            android:id="@+id/updateprofile"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="0dp"-->
-<!--            android:layout_weight="1"-->
-<!--            android:backgroundTint="@color/primary"-->
-<!--            android:text="@string/customize" />-->
 
     </LinearLayout>
 </ScrollView>

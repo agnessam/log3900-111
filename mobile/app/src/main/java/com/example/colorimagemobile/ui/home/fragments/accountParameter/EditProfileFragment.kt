@@ -59,6 +59,8 @@ class EditProfileFragment : Fragment() {
     private var infview : View ? = null
     private lateinit var bitmap: Bitmap
     private  var file : File? = null
+    private lateinit var newUsername : TextView
+    private lateinit var newDescription : TextView
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -178,6 +180,12 @@ class EditProfileFragment : Fragment() {
         setNewDataToUpdate()
         updateUserInfo(newUserData).observe(viewLifecycleOwner, { context?.let { it1 ->globalHandler.response(it1,it) } })
         UserService.updateMe(newUserData)
+
+        newUsername = infview!!.findViewById<TextView>(R.id.currentUserUsername)
+        newDescription = infview!!.findViewById<TextView>(R.id.currentUserDescription)
+        newUsername.text = newUserData.username
+        newDescription.text = newUserData.description
+
         requireActivity().invalidateOptionsMenu()
     }
 

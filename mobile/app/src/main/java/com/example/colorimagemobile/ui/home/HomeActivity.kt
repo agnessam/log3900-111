@@ -32,7 +32,7 @@ import com.example.colorimagemobile.ui.home.fragments.chat.ChatFragmentDirection
 import com.example.colorimagemobile.ui.home.fragments.gallery.GalleryFragmentDirections
 import com.example.colorimagemobile.ui.home.fragments.museum.MuseumFragmentDirections
 import com.example.colorimagemobile.ui.home.fragments.teams.TeamsFragmentDirections
-import com.example.colorimagemobile.ui.home.fragments.userProfile.UserProfileFragmentDirections
+import com.example.colorimagemobile.ui.home.fragments.accountParameter.UserProfileFragmentDirections
 import com.example.colorimagemobile.ui.home.fragments.users.UsersFragmentDirections
 import com.example.colorimagemobile.ui.home.fragments.users.UsersProfileFragmentDirections
 import com.example.colorimagemobile.utils.CommonFun

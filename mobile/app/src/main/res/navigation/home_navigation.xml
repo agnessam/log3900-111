@@ -87,7 +87,7 @@
     </fragment>
     <fragment
         android:id="@+id/userProfileFragment"
-        android:name="com.example.colorimagemobile.ui.home.fragments.userProfile.UserProfileFragment"
+        android:name="com.example.colorimagemobile.ui.home.fragments.accountParameter.UserProfileFragment"
         android:label="Account Parameter"
         tools:layout="@layout/fragment_user_profile">
         <action
