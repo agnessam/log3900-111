@@ -11,6 +11,21 @@ export class TeamRepository extends GenericRepository<TeamInterface> {
     super(Team);
   }
 
+  public async getPopulatedTeams(): Promise<TeamInterface[]> {
+    return new Promise((resolve, reject) => {
+      Team.find({})
+        .populate({ path: 'members' })
+        .populate({ path: 'drawings', populate: { path: 'owner' } })
+        .populate({ path: 'posts', populate: { path: 'owner' } })
+        .exec((err, team) => {
+          if (err) {
+            reject(team);
+          }
+          resolve(team);
+        });
+    });
+  }
+
   public async createTeam(team: TeamInterface): Promise<TeamInterface> {
     return new Promise<TeamInterface>((resolve, reject) => {
       const newTeam = new Team({
@@ -54,6 +69,7 @@ export class TeamRepository extends GenericRepository<TeamInterface> {
       Team.findById({ _id: teamId })
         .populate(['members'])
         .populate({ path: 'drawings', populate: { path: 'owner' } })
+        .populate({ path: 'posts', populate: { path: 'owner' } })
         .exec((err, team) => {
           if (err || !team) {
             reject(err);

@@ -1,3 +1,4 @@
+import { StatusService } from '../../domain/services/status.service';
 import { Request, Response } from 'express';
 import { inject } from 'inversify';
 import {
@@ -16,6 +17,7 @@ import { UserRepository } from '../../infrastructure/data_access/repositories/us
 @controller('/users', passport.authenticate('jwt', { session: false }))
 export class UserController {
   @inject(TYPES.UserRepository) public userRepository: UserRepository;
+  @inject(TYPES.StatusService) public statusService: StatusService;
 
   @httpGet('/')
   public async get() {
@@ -27,9 +29,19 @@ export class UserController {
     return await this.userRepository.getMe(req, res);
   }
 
+  @httpGet('/status')
+  public getUserStatus() {
+    return this.statusService.getUserStatus();
+  }
+
   @httpGet('/:id')
   public async getUserById(@request() req: Request) {
     return await this.userRepository.getPopulatedUser(req.params.id);
+  }
+
+  @httpGet('/:id/statistics')
+  public async getUserStatistics(@request() req: Request) {
+    return await this.userRepository.getUserStatistics(req.params.id);
   }
 
   @httpPost('/')

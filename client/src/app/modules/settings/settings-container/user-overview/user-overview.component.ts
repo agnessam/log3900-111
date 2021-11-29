@@ -77,10 +77,7 @@ export class UserOverviewComponent implements OnInit {
   openChangePasswordDialog() {
     this.changePasswordDialogRef = this.dialog.open(
       ChangePasswordDialogComponent,
-      {
-        width: "500px",
-        height: "600px",
-      }
+      {}
     );
     this.changePasswordDialogRef.afterClosed().subscribe((response) => {
       if (response) {

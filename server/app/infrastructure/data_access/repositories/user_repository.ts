@@ -1,11 +1,12 @@
+import { CollaborationHistory } from '../../../domain/models/CollaborationHistory';
+import bcrypt from 'bcrypt';
 import { Request, Response } from 'express';
 import { injectable } from 'inversify';
 import { request, response } from 'inversify-express-utils';
+import mongoose from 'mongoose';
+import { Team } from '../../../domain/models/teams';
 import { User, UserInterface } from '../../../domain/models/user';
 import { GenericRepository } from './generic_repository';
-import { Team } from '../../../domain/models/teams';
-import bcrypt from 'bcrypt';
-import { CollaborationHistory } from '@app/domain/models/CollaborationHistory';
 
 declare global {
   namespace Express {
@@ -55,6 +56,45 @@ export class UserRepository extends GenericRepository<UserInterface> {
     });
   }
 
+  public async getUserStatistics(userId: string) {
+    return new Promise((resolve, reject) => {
+      User.aggregate(
+        [
+          {
+            $match: {
+              _id: new mongoose.Types.ObjectId(userId),
+            },
+          },
+          {
+            $project: {
+              _id: userId,
+              numberOfDrawings: { $size: '$drawings' },
+              numberOfTeams: { $size: '$teams' },
+              numberOfCollaborations: {
+                $size: '$collaborations',
+              },
+              averageCollaborationTime: {
+                $avg: {
+                  $map: {
+                    input: '$collaborations',
+                    as: 'e1',
+                    in: '$$e1.timeSpent',
+                  },
+                },
+              },
+            },
+          },
+        ],
+        (err: Error, user: UserInterface) => {
+          if (err) {
+            reject(err);
+          }
+          resolve(user[0]);
+        },
+      );
+    });
+  }
+
   public async changePassword(
     userId: string,
     currentPassword: string,
@@ -65,13 +105,12 @@ export class UserRepository extends GenericRepository<UserInterface> {
       const validate = await currentUser!.isValidPassword(currentPassword);
       if (!validate) {
         resolve({ err: 'Incorrect password' });
+      } else {
+        const hashedPassword = await bcrypt.hash(newPassword, 10);
+        currentUser!.password = hashedPassword;
+        currentUser!.save();
+        resolve(currentUser);
       }
-
-      const hashedPassword = await bcrypt.hash(newPassword, 10);
-
-      currentUser!.password = hashedPassword;
-      currentUser!.save();
-      resolve(currentUser);
     });
   }
 

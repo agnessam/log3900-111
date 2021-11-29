@@ -1,9 +1,13 @@
+import { TYPES } from '../../domain/constants/types';
+import { container } from '../../infrastructure/ioc/ioc_container';
 import { NextFunction, Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
 import passport from 'passport';
 import JWTstrategy, { ExtractJwt } from 'passport-jwt';
 import localStrategy from 'passport-local';
 import { User } from '../../domain/models/user';
+import { StatusService } from '../../domain/services/status.service';
+import { STATUS } from '../../domain/constants/status';
 
 export const passportRegisterMiddleware = () => {
   passport.use(
@@ -145,11 +149,17 @@ const authLoginMiddlewareFactory = () => {
 
           const token = jwt.sign({ user: body }, 'SIMPSRISE');
 
+          // Updating the last login
           User.updateOne(
             { _id: user._id },
             { lastLogin: new Date() },
             (err: Error, user: any) => {},
           );
+
+          const statusService = container.get(
+            TYPES.StatusService,
+          ) as StatusService;
+          statusService.updateStatus(user._id.toString(), STATUS.Online);
 
           return res.json({
             user: user,

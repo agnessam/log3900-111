@@ -21,7 +21,7 @@ import com.google.android.material.textfield.TextInputLayout
 import com.example.colorimagemobile.utils.CommonFun.Companion.printToast
 import kotlinx.android.synthetic.main.bottomsheet_drawing_protected_confirmation.*
 
-class ProtectedDrawingConfirmationBottomSheet(private val activity: Activity, private val password: String, val openDrawing: () -> Unit): BottomSheetDialogFragment() {
+class ProtectedDrawingConfirmationBottomSheet(private val activity: Activity, private val password: String?, val openDrawing: () -> Unit): BottomSheetDialogFragment() {
     private lateinit var confirmBtn: Button
     private lateinit var passwordLayout: TextInputLayout
     private lateinit var passwordInput: TextInputEditText
