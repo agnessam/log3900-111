@@ -53,9 +53,8 @@ export class ChannelComponent implements OnInit, OnDestroy {
     );
 
     this.textChannelService.getChannels().subscribe({
-      next: (channels) => { 
+      next: (channels) => {
         channels.forEach(channel => this.allChannels.push(Object.assign({}, channel)));
-        console.log("init allchannels")
         this.searchedChannels = channels;
         const general = channels.find((channel) => channel.name === "General");
         if (general) {
@@ -87,15 +86,12 @@ export class ChannelComponent implements OnInit, OnDestroy {
       response.forEach((team) => {
         this.allTeams.push(team);
         const index = this.allChannels.findIndex((channel) => channel.name === team.name );
-        console.log("index", index)
         if (index !== -1) {
           // remove from list if user is not a member
           if (!(team.members as string[]).includes(this.user!._id) ) {
-            console.log("spliced channel")
               this.allChannels.splice(index, 1);
               this.resetSearch();
           } else {
-            console.log("joined team channel")
             // join team channels automatically
             this.chatSocketService.joinRoom({userId: this.user!._id, roomName: team.name});
             this.connectedChannels.push(this.allChannels[index]);
