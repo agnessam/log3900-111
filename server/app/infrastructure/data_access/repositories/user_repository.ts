@@ -1,11 +1,12 @@
+import { CollaborationHistory } from '@app/domain/models/CollaborationHistory';
+import bcrypt from 'bcrypt';
 import { Request, Response } from 'express';
 import { injectable } from 'inversify';
 import { request, response } from 'inversify-express-utils';
+import mongoose from 'mongoose';
+import { Team } from '../../../domain/models/teams';
 import { User, UserInterface } from '../../../domain/models/user';
 import { GenericRepository } from './generic_repository';
-import { Team } from '../../../domain/models/teams';
-import bcrypt from 'bcrypt';
-import { CollaborationHistory } from '@app/domain/models/CollaborationHistory';
 
 declare global {
   namespace Express {
@@ -50,33 +51,47 @@ export class UserRepository extends GenericRepository<UserInterface> {
           if (err || !user) {
             reject(err);
           }
+          resolve(user);
+        });
+    });
+  }
 
-          User.aggregate(
-            [
-              { $match: { _id: user!._id } },
-              {
-                $addFields: {
-                  averageTimeSpent: {
-                    $avg: {
-                      $map: {
-                        input: '$collaborations',
-                        as: 'e1',
-                        in: '$$e1.timeSpent',
-                      },
-                    },
+  public async getUserStatistics(userId: string) {
+    return new Promise((resolve, reject) => {
+      User.aggregate(
+        [
+          {
+            $match: {
+              _id: new mongoose.Types.ObjectId(userId),
+            },
+          },
+          {
+            $project: {
+              _id: userId,
+              numberOfDrawings: { $size: '$drawings' },
+              numberOfTeams: { $size: '$teams' },
+              numberOfCollaborations: {
+                $size: '$collaborations',
+              },
+              averageCollaborationsTime: {
+                $avg: {
+                  $map: {
+                    input: '$collaborations',
+                    as: 'e1',
+                    in: '$$e1.timeSpent',
                   },
                 },
               },
-              { $limit: 1 },
-            ],
-            (err: Error, user: UserInterface) => {
-              if (err) {
-                reject(err);
-              }
-              resolve(user[0]);
             },
-          );
-        });
+          },
+        ],
+        (err: Error, user: UserInterface) => {
+          if (err) {
+            reject(err);
+          }
+          resolve(user[0]);
+        },
+      );
     });
   }
 

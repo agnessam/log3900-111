@@ -39,6 +39,11 @@ export class UserController {
     return await this.userRepository.getPopulatedUser(req.params.id);
   }
 
+  @httpGet('/:id/statistics')
+  public async getUserStatistics(@request() req: Request) {
+    return await this.userRepository.getUserStatistics(req.params.id);
+  }
+
   @httpPost('/')
   public async createUser(@request() req: Request) {
     return await this.userRepository.create(req.body);
