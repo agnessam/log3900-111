@@ -17,9 +17,16 @@ object UserService {
     private var updateProfileData : UserModel.UpdateUser
     private lateinit var allUserInfo : ArrayList<UserModel.AllInfo>
     private var actualNbFollowers : Int = 0
+    private var currentUserFollowerList : ArrayList<String> = arrayListOf()
+    private var currentUserFollowingList : ArrayList<String> = arrayListOf()
+    private var DataForMyFollowersList : ArrayList<UserModel.AllInfo>
+    private var DataForFollowingList : ArrayList<UserModel.AllInfo>
+    private var userPositionForMenuNavigation: Int? = null
 
     init {
         updateProfileData =UserModel.UpdateUser(null,null,null)
+        DataForMyFollowersList = arrayListOf()
+        DataForFollowingList = arrayListOf()
     }
 
     fun setAllUserInfo(allInfo:ArrayList<UserModel.AllInfo>){
@@ -135,6 +142,58 @@ object UserService {
         actualNbFollowers--
     }
 
+    fun setUserPosition(position : Int?){
+        userPositionForMenuNavigation = position
+    }
+
+    fun getUserPosition(): Int?{
+        return userPositionForMenuNavigation
+    }
+
+    fun setRecyclerDataForFollowers(){
+
+        if ( userPositionForMenuNavigation ==0) {
+            currentUserFollowerList = allUserInfo[getUserMePosition()].followers
+        } else {
+            currentUserFollowerList = allUserInfo[userPositionForMenuNavigation!!].followers
+        }
+
+        if(currentUserFollowerList.size!=0){
+            for (indice in currentUserFollowerList.indices){
+                allUserInfo.find { user -> user._id == currentUserFollowerList[indice]}
+                    ?.let { DataForMyFollowersList.add(it) }
+            }
+        }
+
+    }
+
+    fun setRecyclerDataForFollowing(){
+
+        if ( userPositionForMenuNavigation ==0) {
+            currentUserFollowingList = allUserInfo[getUserMePosition()].following
+        } else {
+            currentUserFollowingList = allUserInfo[userPositionForMenuNavigation!!].following
+        }
+
+        if(currentUserFollowingList.size!=0){
+            for (indice in currentUserFollowingList.indices){
+                allUserInfo.find { user -> user._id == currentUserFollowingList[indice]}
+                    ?.let { DataForFollowingList.add(it) }
+            }
+        }
+    }
 
 
+    fun getRecyclerDataForMyFollowers():ArrayList<UserModel.AllInfo>{
+        return DataForMyFollowersList
+    }
+
+    fun getRecyclerDataForFollowingList():ArrayList<UserModel.AllInfo>{
+        return DataForFollowingList
+    }
+
+    fun getUserMePosition(): Int {
+        val position = allUserInfo.indexOf(allUserInfo.find { user -> user._id == info._id })
+        return  position
+    }
 }
