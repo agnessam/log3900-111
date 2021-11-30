@@ -87,9 +87,9 @@ export class UsersService {
     );
   }
 
-  followUser(userId: string) {
+  followUser(userId: string): Observable<User> {
     return this.httpClient
-      .post<any>(`${this.endpointUrl}/${userId}/followers/follow`, {})
+      .post<User>(`${this.endpointUrl}/${userId}/followers/follow`, {})
       .pipe(
         map((response) => {
           return response;
@@ -97,9 +97,9 @@ export class UsersService {
       );
   }
 
-  unfollowUser(userId: string) {
+  unfollowUser(userId: string): Observable<User> {
     return this.httpClient
-      .post<any>(`${this.endpointUrl}/${userId}/followers/unfollow`, {})
+      .post<User>(`${this.endpointUrl}/${userId}/followers/unfollow`, {})
       .pipe(
         map((response) => {
           return response;
