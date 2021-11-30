@@ -15,10 +15,6 @@ object CollabHistoryAdapterService {
         ) { pos -> openDrawing(fragmentActivity, pos, parentFragmentID) }
     }
 
-    fun getTeamMenuAdapter(): CollaborationHistoryRecyclerAdapter {
-        return CollaborationHistoryDrawingAdapter
-    }
-
     fun setAdapter(adapter: CollaborationHistoryRecyclerAdapter) {
         CollaborationHistoryDrawingAdapter = adapter
     }

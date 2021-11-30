@@ -21,8 +21,8 @@ class CollaborationHistoryRecyclerAdapter(
 
     override fun onBindViewHolder(holder: CollaborationHistoryRecyclerAdapter.ViewHolder, position: Int) {
 
-       holder.drawingId.text = UserService.getCollaborationToShow()[position].drawing
-       holder.collaborationHistory.text = UserService.getCollaborationToShow()[position].collaboratedAt.toString()
+        holder.drawingId.text = DrawingService.getCollaborationDrawingObject()[position].name
+        holder.collaborationHistory.text = UserService.getCollaborationToShow()[position].collaboratedAt.toString()
     }
 
     override fun getItemCount(): Int {
@@ -37,7 +37,10 @@ class CollaborationHistoryRecyclerAdapter(
             itemView.setOnClickListener {
                 val position: Int = bindingAdapterPosition
                 DrawingService.setCurrentDrawingID(DrawingService.getCollaborationDrawingObject()[position]._id)
-                openDrawing(bindingAdapterPosition) }
+                openDrawing(bindingAdapterPosition)
+
+            }
         }
+
     }
 }

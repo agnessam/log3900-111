@@ -88,12 +88,10 @@ object UserService {
 
 
     fun getRecyclerDataForMyFollowers():ArrayList<UserModel.AllInfo>{
-        printMsg("followers list finale "+ DataForMyFollowersList)
         return DataForMyFollowersList
     }
 
     fun getRecyclerDataForFollowingList():ArrayList<UserModel.AllInfo>{
-        printMsg("followers list finale "+ DataForFollowingList)
         return DataForFollowingList
     }
 

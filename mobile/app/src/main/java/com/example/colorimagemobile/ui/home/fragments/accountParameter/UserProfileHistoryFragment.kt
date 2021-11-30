@@ -8,6 +8,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.colorimagemobile.R
+import com.example.colorimagemobile.adapter.DrawingMenuRecyclerAdapter
 import com.example.colorimagemobile.classes.MyFragmentManager
 import com.example.colorimagemobile.models.CollaborationHistory
 import com.example.colorimagemobile.models.DrawingModel
@@ -77,7 +78,7 @@ class UserProfileHistoryFragment : Fragment(R.layout.fragment_user_profile_histo
             val collabDrawing = DrawingService.getCollaborationDrawingObject()
             allDrawingToShow = DrawingService.getDrawingsBitmap(requireContext(), collabDrawing)
 
-
+//            recyclerView.adapter = DrawingMenuRecyclerAdapter(requireActivity(), drawingsMenu, R.id.main_gallery_fragment) { updatedDrawing, pos -> updateDrawing(updatedDrawing, pos) }
             val adapter = CollabHistoryAdapterService.createAdapter(requireActivity(), R.layout.card_collaboration_history, R.id.collabHistoryRecyclerView)
             recyclerView.adapter = adapter
             CollabHistoryAdapterService.setAdapter(adapter)

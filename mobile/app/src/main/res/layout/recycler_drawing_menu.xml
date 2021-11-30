@@ -56,8 +56,8 @@
         <ImageView
             android:id="@+id/card_drawing_menu_image"
             android:layout_width="match_parent"
-            android:layout_below="@id/card_drawing_menu_header"
             android:layout_height="300dp"
+            android:layout_below="@id/card_drawing_menu_header"
             android:layout_gravity="center" />
 
         <RelativeLayout
@@ -95,18 +95,18 @@
                     android:id="@+id/card_drawing_menu_author"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
                     android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true" />
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="10dp" />
 
                 <ImageView
                     android:id="@+id/card_drawing_menu_privacy_icon"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:layout_centerVertical="true"
                     android:layout_alignParentLeft="true"
-                    android:visibility="gone"
-                    android:src="@drawable/ic_lock" />
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/ic_lock"
+                    android:visibility="gone" />
 
                 <TextView
                     android:id="@+id/card_drawing_menu_date_privacy"
