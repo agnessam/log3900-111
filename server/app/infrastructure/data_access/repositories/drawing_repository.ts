@@ -142,16 +142,28 @@ export class DrawingRepository extends GenericRepository<DrawingInterface> {
           if (err) {
             reject(err);
           }
-          console.log(deletedDrawing);
-          User.findById(
-            { _id: deletedDrawing.owner },
-            { $pull: { drawings: deletedDrawing._id } },
-            (err: Error) => {
-              if (err) {
-                reject(err);
-              }
-            },
-          );
+
+          if (deletedDrawing.ownerModel == 'User') {
+            User.findById(
+              { _id: deletedDrawing.owner },
+              { $pull: { drawings: deletedDrawing._id } },
+              (err: Error) => {
+                if (err) {
+                  reject(err);
+                }
+              },
+            );
+          } else {
+            Team.findById(
+              { _id: deletedDrawing.owner },
+              { $pull: { drawings: deletedDrawing._id } },
+              (err: Error) => {
+                if (err) {
+                  reject(err);
+                }
+              },
+            );
+          }
 
           resolve(deletedDrawing);
         },
