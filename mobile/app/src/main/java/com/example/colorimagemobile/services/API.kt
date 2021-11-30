@@ -50,6 +50,14 @@ interface API {
     @GET("${Constants.ENDPOINTS.USER_PATH}{id}/drawings")
     fun getUserDrawings(@Header("Authorization") token: String, @Path ("id") id: String): Call<List<DrawingModel.Drawing>>
 
+    @Headers("Content-Type: application/json")
+    @POST("${Constants.ENDPOINTS.USER_PATH}{id}/followers/follow")
+    fun followUser(@Header("Authorization") token: String, @Path ("id") id: String): Call<UserModel.AllInfo>
+
+    @Headers("Content-Type: application/json")
+    @POST("${Constants.ENDPOINTS.USER_PATH}{id}/followers/unfollow")
+    fun unfollowUser(@Header("Authorization") token: String, @Path ("id") id: String): Call<UserModel.AllInfo>
+
     //  TextChannel region
     @Headers("Content-Type: application/json")
     @GET(Constants.ENDPOINTS.TEXT_CHANNEL_PATH + "{channelId}" + "/messages")

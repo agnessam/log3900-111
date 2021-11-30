@@ -18,6 +18,9 @@ object UserAdapterService {
     fun setAdapter(adapter: UsersMenuRecyclerAdapter) {
         usersMenuAdapter = adapter
     }
+    fun getUserMenuAdapter(): UsersMenuRecyclerAdapter {
+        return usersMenuAdapter
+    }
 
     private fun openUser(fragmentActivity: FragmentActivity, position: Int, parentFragmentID: Int) {
         MyFragmentManager(fragmentActivity).openWithData(parentFragmentID, UsersProfileFragment(), Constants.USERS.CURRENT_USER_ID_KEY, position)
