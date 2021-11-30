@@ -1,4 +1,4 @@
-package com.example.colorimagemobile.ui.home.fragments.userProfile
+package com.example.colorimagemobile.ui.home.fragments.accountParameter
 
 import android.annotation.SuppressLint
 import android.os.Bundle

@@ -4,7 +4,7 @@ xmlns:tools="http://schemas.android.com/tools"
 android:background="@color/mainTheme"
 android:layout_height="match_parent"
 android:id="@+id/showUserProfileFragment"
- tools:context = ".ui.home.fragments.userProfile.ShowUserProfileFragment"  >
+ tools:context = ".ui.home.fragments.accountParameter.ShowUserProfileFragment"  >
 
 <LinearLayout
     android:layout_width="match_parent"
