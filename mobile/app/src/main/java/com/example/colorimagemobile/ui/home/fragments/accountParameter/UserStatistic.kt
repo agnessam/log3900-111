@@ -8,14 +8,10 @@ import android.view.ViewGroup
 import android.widget.TextView
 import com.example.colorimagemobile.R
 import com.example.colorimagemobile.services.users.UserService
+import com.example.colorimagemobile.utils.Constants
 
 
 class UserStatistic : Fragment() {
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -24,13 +20,13 @@ class UserStatistic : Fragment() {
         // Inflate the layout for this fragment
         val inf = inflater.inflate(R.layout.fragment_user_statistic, container, false)
 
-        inf.findViewById<TextView>(R.id.nbCollab).text = UserService.getUserInfo().collaborationHistory.size.toString()
-        inf.findViewById<TextView>(R.id.nbDrawings).text = UserService.getUserInfo().drawings.size.toString()
-        inf.findViewById<TextView>(R.id.nbTeams).text = UserService.getUserInfo().teams.size.toString()
-        inf.findViewById<TextView>(R.id.Time).text = UserService.getUserInfo().teams.size.toString()
-
+        //set value for statistics
+        inf.findViewById<TextView>(R.id.nbCollab).text = UserService.getStat().numberOfCollaborations.toString()
+        inf.findViewById<TextView>(R.id.nbDrawings).text = UserService.getStat().numberOfDrawings.toString()
+        inf.findViewById<TextView>(R.id.nbTeams).text = UserService.getStat().numberOfTeams.toString()
+        val averageTime = String.format("%.2f",UserService.getStat().averageCollaborationTime)+Constants.MINUTES
+        inf.findViewById<TextView>(R.id.Time).text = averageTime
         return inf
     }
-
 
 }

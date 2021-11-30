@@ -10,6 +10,7 @@ class UserModel {
     data class Register(val firstName: String, val lastName: String, val username: String, val email: String, val password: String,val createdAt : String)
     data class Logout(val username: String)
     data class PasswordUpdate(val id : String , val currentPassword: String , val newPassword: String)
+    data class Statistics(val _id : String, val numberOfDrawings: Int, val numberOfTeams: Int, val numberOfCollaborations: Int, val averageCollaborationTime: Double)
     data class UpdateUser (
         @SerializedName("username")
         var username: String?,

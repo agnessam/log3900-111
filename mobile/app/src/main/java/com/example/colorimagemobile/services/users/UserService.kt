@@ -23,6 +23,7 @@ object UserService {
     private var collaborationHistoryDrawingId: ArrayList<String>
     private var temporaryEditUsername : String
     private var temporaryDescription : String
+    private lateinit var userStatistics : UserModel.Statistics
 
     init {
         updateProfileData =UserModel.UpdateUser(null,null,null)
@@ -30,6 +31,7 @@ object UserService {
         collaborationHistoryDrawingId = arrayListOf()
         temporaryDescription = Constants.EMPTY_STRING
         temporaryEditUsername = Constants.EMPTY_STRING
+        userStatistics = UserModel.Statistics(Constants.EMPTY_STRING,0,0,0,0.00)
     }
 
     fun setAllUserInfo(allInfo:ArrayList<UserModel.AllInfo>){
@@ -211,6 +213,11 @@ object UserService {
         return this.temporaryDescription
     }
 
-
+    fun setStat(stat: UserModel.Statistics){
+        userStatistics = stat
+    }
+    fun getStat(): UserModel.Statistics{
+        return userStatistics
+    }
 
 }

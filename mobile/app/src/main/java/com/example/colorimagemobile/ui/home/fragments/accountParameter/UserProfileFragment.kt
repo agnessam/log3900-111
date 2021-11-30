@@ -9,6 +9,9 @@ import android.widget.Button
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.example.colorimagemobile.R
+import com.example.colorimagemobile.models.UserModel
+import com.example.colorimagemobile.repositories.UserRepository
+import com.example.colorimagemobile.services.users.UserService
 import com.example.colorimagemobile.ui.userProfile.EditProfileFragment
 import kotlinx.android.synthetic.main.fragment_user_profile.*
 
@@ -17,7 +20,7 @@ class UserProfileFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        getUserStatistics()
     }
 
     override fun onCreateView(
@@ -81,6 +84,14 @@ class UserProfileFragment : Fragment() {
         menuTxt3.setTextColor(Color.parseColor("#888888"))
         menuTxt4.setTextColor(Color.parseColor("#888888"))
     }
-
+    private fun getUserStatistics(){
+        UserRepository().getUserStatistics().observe(this, {
+            if (it.isError as Boolean) {
+                return@observe
+            }
+            val stat = it.data as UserModel.Statistics
+            UserService.setStat(stat)
+        })
+    }
 
 }

@@ -236,4 +236,24 @@ class UserRepository {
         return updatePasswordLiveData
     }
 
+    // get user by id
+    fun getUserStatistics(): MutableLiveData<DataWrapper<UserModel.Statistics>> {
+        val userData: MutableLiveData<DataWrapper<UserModel.Statistics>> = MutableLiveData()
+
+        httpClient.getUserStatistics(token = "Bearer ${UserService.getToken()}",UserService.getUserInfo()._id).enqueue(object : Callback<UserModel.Statistics> {
+            override fun onResponse(call: Call<UserModel.Statistics>, response: Response<UserModel.Statistics>) {
+                if (!response.isSuccessful) {
+                    userData.value = DataWrapper(null, "An error occurred!", true)
+                    return
+                }
+                userData.value = DataWrapper(response.body(), null, false)
+            }
+            override fun onFailure(call: Call<UserModel.Statistics>, t: Throwable) {
+                userData.value = DataWrapper(null, "Failed to get User Statistics!", true)
+            }
+        })
+
+        return userData
+    }
+
 }

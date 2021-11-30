@@ -14,6 +14,7 @@ class Constants {
         const val AVATAR_ALL_INFO_DEFAULT = true
 
         const val NB_DATA_ROWS = 3
+        const val MINUTES = " minutes"
     }
 
     class SOCKETS {
