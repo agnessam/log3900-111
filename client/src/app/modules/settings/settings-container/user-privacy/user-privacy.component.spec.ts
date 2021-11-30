@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { DrawingCardComponent } from './drawing-card.component';
+import { UserPrivacyComponent } from './user-privacy.component';
 
-describe('DrawingCardComponent', () => {
-  let component: DrawingCardComponent;
-  let fixture: ComponentFixture<DrawingCardComponent>;
+describe('UserPrivacyComponent', () => {
+  let component: UserPrivacyComponent;
+  let fixture: ComponentFixture<UserPrivacyComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ DrawingCardComponent ]
+      declarations: [ UserPrivacyComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(DrawingCardComponent);
+    fixture = TestBed.createComponent(UserPrivacyComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

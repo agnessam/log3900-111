@@ -49,24 +49,91 @@
                     <de.hdodenhof.circleimageview.CircleImageView
                         android:id="@+id/userIdImageView"
                         android:layout_width="match_parent"
-                        android:layout_height="80dp"/>
+                        android:layout_height="80dp" />
 
                 </androidx.cardview.widget.CardView>
 
-                <TextView
-                    android:id="@+id/userIdNbOfMembers"
+                <!-- Posts Followers Following header -->
+                <RelativeLayout
+                    android:id="@+id/FollwerFollowingHeaders"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/userIdImageViewCard"
-                    android:textAlignment="center"
-                    android:textColor="@color/black" />
+                    android:orientation="horizontal"
+                    android:singleLine="true">
 
-                <!--                follow and join teams button-->
+                    <TextView
+                        android:id="@+id/userIdNbOfPosts"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="40dp"
+                        android:textColor="@color/black"
+                        android:textSize="22sp"
+                        android:textStyle="italic|bold" />
+
+                    <TextView
+                        android:id="@+id/userIdNbOfFollowers"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:layout_marginStart="20dp"
+                        android:textColor="@color/black"
+                        android:textSize="22sp"
+                        android:textStyle="italic|bold" />
+
+                    <TextView
+                        android:id="@+id/userIdNbOfFollowing"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginEnd="60dp"
+                        android:textSize="22sp"
+                        android:textColor="@color/black"
+                        android:textStyle="italic|bold" />
+
+
+                </RelativeLayout>
+
+                <!-- Posts Followers Following header -->
+                <RelativeLayout
+                    android:id="@+id/FollwerFollowingvalues"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/FollwerFollowingHeaders"
+                    android:orientation="horizontal"
+                    android:singleLine="true">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="20dp"
+                        android:text="@string/posts"
+                        android:textSize="22sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:text="@string/followers"
+                        android:textSize="22sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginEnd="10dp"
+                        android:text="@string/following"
+                        android:textSize="22sp" />
+
+
+                </RelativeLayout>
+
+                <!--                follow button-->
                 <RelativeLayout
                     android:id="@+id/userIdActionContainer"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/userIdNbOfMembers"
+                    android:layout_below="@id/FollwerFollowingvalues"
                     android:layout_marginTop="30dp">
 
                     <View
@@ -78,6 +145,7 @@
                     <RelativeLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
                         android:layout_toRightOf="@id/userId_action_empty_space" />
 
                     <Button
@@ -85,6 +153,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:backgroundTint="@color/primary"
+                        android:layout_centerInParent="true"
                         android:text="Follow"
                         android:layout_centerHorizontal="true"
                         android:textColor="@color/white" />
@@ -94,6 +163,7 @@
                         style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
                         android:text="Unfollow"
                         android:textColor="@color/primary"
                         android:visibility="gone"

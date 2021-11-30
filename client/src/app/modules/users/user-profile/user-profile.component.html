@@ -10,7 +10,7 @@
         </div>
         <div fxLayout="row grid" fxLayoutAlign="center center">
           <div>
-            <p>999 followers</p>
+            <p>{{ this.user.followers.length }} followers</p>
           </div>
         </div>
         <div fxFlex="100%" style="text-align: center">
@@ -20,12 +20,34 @@
     </div>
     <div fxFlex="13%" style="text-align: center">
       <div fxLayout="column" fxLayoutGap="12px" fxLayoutAlign="center center">
-        <button mat-raised-button color="primary">Follow</button>
+        <button
+          mat-raised-button
+          color="primary"
+          *ngIf="!isMyProfile() && !isFollowing()"
+          (click)="followUser()"
+        >
+          Follow
+        </button>
+        <button
+          mat-raised-button
+          color="warn"
+          *ngIf="!isMyProfile() && isFollowing()"
+          (click)="openConfirmUnfollowDialog()"
+        >
+          Unfollow
+        </button>
+        <button
+          mat-raised-button
+          color="primary"
+          *ngIf="isMyProfile()"
+          (click)="navigateToSettingsPage()"
+        >
+          Edit Profile
+        </button>
       </div>
     </div>
   </div>
   <br />
-  <!-- TODO: Add the teams drawings here -->
   <div id="user-drawings">
     <mat-tab-group mat-align-tabs="center">
       <mat-tab label="All Drawings">
@@ -35,7 +57,13 @@
           </div>
         </div>
       </mat-tab>
-      <mat-tab label="Published Drawings"> </mat-tab>
+      <mat-tab label="Published Drawings">
+        <div fxLayout="row wrap" id="posts">
+          <div fxFlex="33%" *ngFor="let post of user.posts">
+            <app-post-card [post]="post"></app-post-card>
+          </div>
+        </div>
+      </mat-tab>
     </mat-tab-group>
   </div>
 </div>

@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import android.widget.Button
+import android.widget.TextView
 import androidx.core.widget.doOnTextChanged
 import com.example.colorimagemobile.R
 import com.example.colorimagemobile.utils.CommonFun.Companion.hideKeyboard
@@ -19,16 +20,24 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import com.example.colorimagemobile.utils.CommonFun.Companion.printToast
-import kotlinx.android.synthetic.main.bottomsheet_drawing_protected_confirmation.*
+import kotlinx.android.synthetic.main.bottomsheet_password_confirmation.*
 
-class ProtectedDrawingConfirmationBottomSheet(private val activity: Activity, private val password: String?, val openDrawing: () -> Unit): BottomSheetDialogFragment() {
+class PasswordConfirmationBottomSheet(
+    private val activity: Activity,
+    private val password: String?,
+    private val title: String,
+    private val description: String,
+    private val buttonName: String,
+    private val hint: String,
+    val onConfirm: () -> Unit,
+): BottomSheetDialogFragment() {
     private lateinit var confirmBtn: Button
     private lateinit var passwordLayout: TextInputLayout
     private lateinit var passwordInput: TextInputEditText
     private lateinit var dialog: BottomSheetDialog
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.bottomsheet_drawing_protected_confirmation, container, false)
+        return inflater.inflate(R.layout.bottomsheet_password_confirmation, container, false)
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
@@ -43,8 +52,13 @@ class ProtectedDrawingConfirmationBottomSheet(private val activity: Activity, pr
         super.onViewCreated(view, savedInstanceState)
         passwordLayout = view.findViewById(R.id.confirmProtectedPasswordInputLayout)
         passwordInput = view.findViewById(R.id.confirmProtectedPasswordInputText)
+        passwordLayout.hint = hint
+
+        view.findViewById<TextView>(R.id.passwordConfirmationTitle).text = title
+        view.findViewById<TextView>(R.id.passwordConfirmationDescription).text = description
 
         confirmBtn = view.findViewById(R.id.confirmProtectedPasswordBtn)
+        confirmBtn.text = buttonName
 
         setListeners()
     }
@@ -70,7 +84,7 @@ class ProtectedDrawingConfirmationBottomSheet(private val activity: Activity, pr
 
         if (enteredPassword == password) {
             closeSheet()
-            openDrawing()
+            onConfirm()
         } else {
             printToast(activity, "Wrong password!")
         }

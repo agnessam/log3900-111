@@ -14,12 +14,15 @@ import { JoinDrawingDialogComponent } from "./drawing-card/join-drawing-dialog/j
 import { EditDrawingParametersDialogComponent } from "./drawing-card/edit-drawing-parameters-dialog/edit-drawing-parameters-dialog.component";
 import { MatOptionModule } from "@angular/material/core";
 import { MatSelectModule } from "@angular/material/select";
+import { PostCardComponent } from "./post-card/post-card.component";
+import { FlexLayoutModule } from "@angular/flex-layout";
 
 @NgModule({
   declarations: [
     DrawingCardComponent,
     JoinDrawingDialogComponent,
     EditDrawingParametersDialogComponent,
+    PostCardComponent,
   ],
   imports: [
     CommonModule,
@@ -34,7 +37,8 @@ import { MatSelectModule } from "@angular/material/select";
     MatMenuModule,
     MatOptionModule,
     MatSelectModule,
+    FlexLayoutModule,
   ],
-  exports: [DrawingCardComponent],
+  exports: [DrawingCardComponent, PostCardComponent],
 })
 export class CardsModule {}

@@ -34,6 +34,9 @@ class PencilCommand(pencilData: PencilData): ICommand {
 
     fun initializePaint() {
         paint.color = ColorService.rgbaToInt(this.pencil.stroke)
+        if(this.pencil.strokeOpacity != "none"){
+            paint.alpha = ColorService.convertOpacityToAndroid(this.pencil.strokeOpacity)
+        }
         paint.style = Paint.Style.STROKE
         paint.strokeJoin = Paint.Join.ROUND
         paint.strokeCap = Paint.Cap.ROUND

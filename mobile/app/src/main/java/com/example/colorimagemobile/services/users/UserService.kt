@@ -1,7 +1,12 @@
 package com.example.colorimagemobile.services.users
 
+import android.content.Context
+import androidx.lifecycle.LifecycleOwner
 import com.example.colorimagemobile.models.AvatarModel
 import com.example.colorimagemobile.models.UserModel
+import com.example.colorimagemobile.repositories.UserRepository
+import com.example.colorimagemobile.utils.CommonFun
+import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
 import com.example.colorimagemobile.utils.Constants
 
 // Singleton User object which is accessible globally
@@ -11,6 +16,7 @@ object UserService {
     private var token : String =Constants.EMPTY_STRING
     private var updateProfileData : UserModel.UpdateUser
     private lateinit var allUserInfo : ArrayList<UserModel.AllInfo>
+    private var actualNbFollowers : Int = 0
 
     init {
         updateProfileData =UserModel.UpdateUser(null,null,null)
@@ -60,6 +66,26 @@ object UserService {
         return allUserInfo[position]
     }
 
+    fun updateUserByPosition(position: Int, newFollower: UserModel.AllInfo) {
+        allUserInfo[position] = newFollower
+    }
+
+    fun removeUserFromFollowing(position: Int) {
+        allUserInfo[position].following = allUserInfo[position].following.filter { following -> following != getUserInfo()._id } as ArrayList<String>
+    }
+
+    fun isAlreadyFollower(position: Int): Boolean {
+        return allUserInfo[position].followers.contains(getUserInfo()._id)
+    }
+
+    fun isCurrentUser(position: Int): Boolean {
+        return allUserInfo[position]._id.contains(getUserInfo()._id)
+    }
+
+    fun isDescriptionNullOrBlank(position: Int): Boolean {
+        return allUserInfo[position].description.isNullOrBlank()
+    }
+
     fun updateUserAfterUpdate(currentdata: UserModel.UpdateUser){
         if (!currentdata.username.isNullOrEmpty()){
             info.username = currentdata.username!!
@@ -69,6 +95,46 @@ object UserService {
         }
 
     }
+    fun setCurrentNbFollowers(currentValue: Int){
+        actualNbFollowers = currentValue
+    }
+
+    fun getCurrentNbFollower(): Int{
+        return actualNbFollowers
+    }
+
+    fun followUser(position: Int, context: Context) {
+        val user = getUser(position)
+        UserRepository().followUser(user._id).observe(context as LifecycleOwner, {
+            if (it.isError as Boolean) {
+                CommonFun.printToast(context, it.message!!)
+                return@observe
+            }
+
+            val followedUser = it.data as UserModel.AllInfo
+
+            updateUserByPosition(position, followedUser)
+            UserAdapterService.getUserMenuAdapter().notifyItemChanged(position)
+        })
+
+        actualNbFollowers++
+    }
+
+    fun unfollowUser(position: Int, context: Context) {
+        val user = getUser(position)
+        UserRepository().unfollowUser(user._id).observe(context as LifecycleOwner, {
+            if (it.isError as Boolean) {
+                CommonFun.printToast(context, it.message!!)
+                return@observe
+            }
+
+            removeUserFromFollowing(position)
+            UserAdapterService.getUserMenuAdapter().notifyItemChanged(position)
+        })
+
+        actualNbFollowers--
+    }
+
 
 
 }

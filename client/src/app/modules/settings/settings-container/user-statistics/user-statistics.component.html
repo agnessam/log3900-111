@@ -27,8 +27,8 @@
                   <div fxLayout="row wrap">
                     <div fxFlex="50%">
                       <mat-card-subtitle
-                        >Number of drawings started</mat-card-subtitle
-                      >
+                        >Number of drawings started:
+                      </mat-card-subtitle>
                     </div>
                     <div fxFlex="50%">
                       {{ statistics.numberOfDrawings }}
@@ -39,8 +39,8 @@
                   <div fxLayout="row wrap">
                     <div fxFlex="50%">
                       <mat-card-subtitle
-                        >Number of collaborations</mat-card-subtitle
-                      >
+                        >Number of collaborations:
+                      </mat-card-subtitle>
                     </div>
                     <div fxFlex="50%">
                       {{ statistics.numberOfCollaborations }}
@@ -52,20 +52,20 @@
                   <div fxLayout="row wrap">
                     <div fxFlex="50%">
                       <mat-card-subtitle
-                        >Average time spent collaborating:</mat-card-subtitle
-                      >
+                        >Average time spent collaborating:
+                      </mat-card-subtitle>
                     </div>
                     <div
                       fxFlex="50%"
                       *ngIf="statistics.averageCollaborationTime"
                     >
-                      {{ statistics.averageCollaborationTime }}
+                      {{ statistics.averageCollaborationTime }} minutes
                     </div>
                     <div
                       fxFlex="50%"
                       *ngIf="!statistics.averageCollaborationTime"
                     >
-                      You still haven't collaborated yet! :(
+                      You haven't collaborated yet.
                     </div>
                   </div>
                 </div>
@@ -75,42 +75,5 @@
         </div>
       </mat-card-content>
     </mat-card>
-    <!-- <mat-card id="collaboration-history-card">
-      <mat-card-content>
-        <mat-card-title> Collaboration history </mat-card-title>
-        <div>
-          <mat-card id="collaboration-history">
-            <mat-card-content>
-              <div fxLayout="column" fxLayoutAlign="center">
-                <div
-                  fxFlex="33%"
-                  *ngFor="
-                    let collaborationHistory of currentUser.collaborationHistory
-                      | slice
-                        : currentUser.collaborationHistory.length - 3
-                        : currentUser.collaborationHistory.length
-                  "
-                >
-                  <div fxLayout="row wrap">
-                    <div fxFlex="50%">
-                      <mat-card-subtitle
-                        (click)="goToDrawing(collaborationHistory.drawing._id)"
-                        style="cursor: pointer"
-                        >{{
-                          collaborationHistory.drawing.name
-                        }}</mat-card-subtitle
-                      >
-                    </div>
-                    <div fxFlex="50%">
-                      {{ collaborationHistory.collaboratedAt }}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </mat-card-content>
-          </mat-card>
-        </div>
-      </mat-card-content>
-    </mat-card> -->
   </div>
 </div>

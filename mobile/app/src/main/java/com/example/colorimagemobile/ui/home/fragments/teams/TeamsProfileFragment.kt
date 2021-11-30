@@ -1,5 +1,6 @@
 package com.example.colorimagemobile.ui.home.fragments.teams
 
+import android.graphics.Color
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.View
@@ -13,9 +14,14 @@ import com.example.colorimagemobile.R
 import com.example.colorimagemobile.adapter.DrawingMenuRecyclerAdapter
 import com.example.colorimagemobile.adapter.MuseumPostRecyclerAdapter
 import com.example.colorimagemobile.adapter.PostsMenuRecyclerAdapter
-import com.example.colorimagemobile.classes.MyFragmentManager
 import com.example.colorimagemobile.classes.NotificationSound.Notification
 import com.example.colorimagemobile.models.*
+import com.example.colorimagemobile.bottomsheets.ConfirmationBottomSheet
+import com.example.colorimagemobile.bottomsheets.PasswordConfirmationBottomSheet
+import com.example.colorimagemobile.classes.MyFragmentManager
+import com.example.colorimagemobile.enumerators.ButtonType
+import com.example.colorimagemobile.models.DrawingModel
+import com.example.colorimagemobile.models.TeamModel
 import com.example.colorimagemobile.models.recyclerAdapters.DrawingMenuData
 import com.example.colorimagemobile.repositories.MuseumRepository
 import com.example.colorimagemobile.repositories.DrawingRepository
@@ -69,6 +75,7 @@ class TeamsProfileFragment : Fragment(R.layout.fragment_teams_profile) {
 //        myView.findViewById<ImageView>(R.id.teamIdImageView).
         myView.findViewById<TextView>(R.id.teamIdNbOfMembers).text = "${currentTeam.members.size} members"
         myView.findViewById<TextView>(R.id.teamIdDescription).text = currentTeam.description
+        myView.findViewById<TextView>(R.id.teamIdNbOfPosts).text = currentTeam.posts.size.toString()
 
         joinBtn = myView.findViewById<Button>(R.id.teamIdJoinBtn)
         leaveBtn = myView.findViewById<Button>(R.id.leaveTeamIdBtn)
@@ -82,6 +89,21 @@ class TeamsProfileFragment : Fragment(R.layout.fragment_teams_profile) {
             myView.findViewById<RelativeLayout>(R.id.deleteTeamIdBtnMain).visibility = View.GONE
             updateTeamButtons()
         }
+    }
+
+    private fun getCurrentTeam() {
+        TeamRepository().getTeamById(currentTeam._id).observe(viewLifecycleOwner, {
+            if (it.isError as Boolean) {
+                printToast(requireContext(), it.message!!)
+                return@observe
+            }
+
+            val team = it.data as TeamIdModel
+            DrawingService.setAllDrawings(it.data.drawings)
+            drawingsMenu = DrawingService.getDrawingsBitmap(requireContext(), team.drawings)
+            publishedDrawings = team.posts
+            setAllDrawings()
+        })
     }
 
     private fun updateTeamButtons() {
@@ -107,6 +129,8 @@ class TeamsProfileFragment : Fragment(R.layout.fragment_teams_profile) {
         currentTeam.memberLimit?.let {
             if (currentTeam.members.size >= currentTeam.memberLimit!!) {
                 toggleButton(button, false)
+                button.alpha = .6f
+                button.setBackgroundColor(Color.rgb(221, 208, 206))
             }
         }
     }
@@ -124,31 +148,54 @@ class TeamsProfileFragment : Fragment(R.layout.fragment_teams_profile) {
         })
 
         joinBtn.setOnClickListener {
-            TeamService.joinTeam(teamPosition!!, requireContext())
-            hideJoinBtn()
+            openJoinModal()
         }
         leaveBtn.setOnClickListener {
-            TeamService.leaveTeam(teamPosition!!, requireContext())
-            showJoinBtn()
+            openLeaveModal()
         }
         deleteBtn.setOnClickListener {
-            TeamService.deleteTeam(teamPosition!!, requireContext())
+            val title = "Are you sure you want to delete ${currentTeam.name}?"
+            val description = "Deleting this team will delete all drawings and publications associated to this team."
+            val deleteConfirmation = ConfirmationBottomSheet({ TeamService.deleteTeam(teamPosition!!, requireContext()) }, title, description, "DELETE", ButtonType.DELETE.toString())
+            deleteConfirmation.show(parentFragmentManager, "ConfirmationBottomSheet")
         }
     }
 
-    private fun getCurrentTeam() {
-        TeamRepository().getTeamById(currentTeam._id).observe(viewLifecycleOwner, {
-            if (it.isError as Boolean) {
-                printToast(requireContext(), it.message!!)
-                return@observe
-            }
+    private fun joinTeam() {
+        TeamService.joinTeam(teamPosition!!, requireContext())
+        hideJoinBtn()
+        printToast(requireActivity(), "Successfully joined the team")
+    }
 
-            val team = it.data as TeamIdModel
-            DrawingService.setAllDrawings(it.data.drawings)
-            drawingsMenu = DrawingService.getDrawingsBitmap(requireContext(), team.drawings)
-            publishedDrawings = team.posts
-            setAllDrawings()
-        })
+    private fun openJoinModal() {
+        if (currentTeam.isPrivate) {
+            val title = "Are you sure you want join ${currentTeam.name}?"
+            val description = "The owner has set this team to protected. Enter the correct password to join!"
+            val passwordConfirmation = PasswordConfirmationBottomSheet(
+                requireActivity(),
+                currentTeam.password,
+                title,
+                description,
+                "Join",
+                "Enter the team's password"
+            ) { joinTeam() }
+            passwordConfirmation.show(parentFragmentManager, "PasswordConfirmationBottomSheet")
+        } else {
+            val title = "Are you sure you want join ${currentTeam.name}?"
+            val description = "The owner has set this team public. Looks like anyone can join!"
+            val confirmation = ConfirmationBottomSheet({ joinTeam() }, title, description, "Join", ButtonType.PRIMARY.toString())
+            confirmation.show(parentFragmentManager, "ConfirmationBottomSheet")
+        }
+    }
+
+    private fun openLeaveModal() {
+        val title = "Are you sure you want to leave ${currentTeam.name}?"
+        val description = "Leaving this team does not prevent you from rejoining this team later on."
+        val confirmation = ConfirmationBottomSheet({
+            TeamService.leaveTeam(teamPosition!!, requireContext())
+            showJoinBtn()
+        }, title, description, "Leave", ButtonType.PRIMARY.toString())
+        confirmation.show(parentFragmentManager, "ConfirmationBottomSheet")
     }
 
     private fun setAllDrawings() {
