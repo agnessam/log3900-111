@@ -58,6 +58,9 @@ interface API {
     @POST("${Constants.ENDPOINTS.USER_PATH}{id}/followers/unfollow")
     fun unfollowUser(@Header("Authorization") token: String, @Path ("id") id: String): Call<UserModel.AllInfo>
 
+    @PATCH(Constants.ENDPOINTS.USER_PATH+"{id}/changePassword")
+    fun updateUserPassword(@Header("Authorization")token: String, @Path ("id") id : String, @Body  newPassword: UserModel.PasswordUpdate) : Call<HTTPResponseModel.UserResponse>
+
     //  TextChannel region
     @Headers("Content-Type: application/json")
     @GET(Constants.ENDPOINTS.TEXT_CHANNEL_PATH + "{channelId}" + "/messages")

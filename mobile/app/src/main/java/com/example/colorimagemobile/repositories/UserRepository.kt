@@ -211,6 +211,29 @@ class UserRepository {
 
         return unfollowUserLiveData
     }
+    // update user profile password
+    fun updateUserPassword(newPassword: UserModel.PasswordUpdate): MutableLiveData<DataWrapper<HTTPResponseModel.UserResponse>> {
 
+        val updatePasswordLiveData: MutableLiveData<DataWrapper<HTTPResponseModel.UserResponse>> = MutableLiveData()
+
+        httpClient.updateUserPassword(token = "Bearer ${UserService.getToken()}",UserService.getUserInfo()._id, newPassword).enqueue(object :
+            Callback<HTTPResponseModel.UserResponse> {
+            override fun onResponse(call: Call<HTTPResponseModel.UserResponse>, response: Response<HTTPResponseModel.UserResponse>) {
+                if (!response.isSuccessful) {
+                    updatePasswordLiveData.value = DataWrapper(null, "An error occurred!", true)
+                    return
+                }
+                // password successfully update
+                updatePasswordLiveData.value = DataWrapper(response.body(), "", false)
+            }
+
+            override fun onFailure(call: Call<HTTPResponseModel.UserResponse>, t: Throwable) {
+                updatePasswordLiveData.value = DataWrapper(null, "Failed to update password!", true)
+            }
+
+        })
+
+        return updatePasswordLiveData
+    }
 
 }
