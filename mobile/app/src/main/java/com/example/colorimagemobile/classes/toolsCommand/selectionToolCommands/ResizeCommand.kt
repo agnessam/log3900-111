@@ -28,12 +28,7 @@ class ResizeCommand(objectId: String) : ICommand {
     private var transformationLog: String
 
     val id: String = objectId
-    val shapeLabel: ShapeLabel? = when(commandToResize){
-        is PencilCommand -> ShapeLabel.POLYLINE
-        is RectangleCommand -> ShapeLabel.RECTANGLE
-        is EllipseCommand -> ShapeLabel.ELLIPSE
-        else -> null
-    }
+    private var shapeLabel: ShapeLabel?
 
     init{
         commandToResize = DrawingObjectManager.getCommand(objectId)
@@ -43,6 +38,12 @@ class ResizeCommand(objectId: String) : ICommand {
             previousTransformation[id] = ""
         }
         transformationLog = previousTransformation[id]!!
+        shapeLabel = when(commandToResize){
+            is PencilCommand -> ShapeLabel.POLYLINE
+            is RectangleCommand -> ShapeLabel.RECTANGLE
+            is EllipseCommand -> ShapeLabel.ELLIPSE
+            else -> null
+        }
     }
 
     fun resetPathWithShapePath() {
@@ -74,7 +75,7 @@ class ResizeCommand(objectId: String) : ICommand {
             else -> {}
         }
         if(shapeLabel != null){
-            TransformationManager.saveResizeTransformation(xTranslate, yTranslate, xScale, yScale, id, transformationLog, shapeLabel)
+            TransformationManager.saveResizeTransformation(xTranslate, yTranslate, xScale, yScale, id, transformationLog, shapeLabel!!)
         }
     }
 
