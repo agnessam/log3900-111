@@ -1,5 +1,6 @@
 package com.example.colorimagemobile.ui.home.fragments.teams
 
+import android.graphics.Color
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.View
@@ -10,7 +11,10 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.colorimagemobile.R
 import com.example.colorimagemobile.adapter.DrawingMenuRecyclerAdapter
+import com.example.colorimagemobile.bottomsheets.ConfirmationBottomSheet
+import com.example.colorimagemobile.bottomsheets.PasswordConfirmationBottomSheet
 import com.example.colorimagemobile.classes.MyFragmentManager
+import com.example.colorimagemobile.enumerators.ButtonType
 import com.example.colorimagemobile.models.DrawingModel
 import com.example.colorimagemobile.models.TeamModel
 import com.example.colorimagemobile.models.recyclerAdapters.DrawingMenuData
@@ -99,6 +103,8 @@ class TeamsProfileFragment : Fragment(R.layout.fragment_teams_profile) {
         currentTeam.memberLimit?.let {
             if (currentTeam.members.size >= currentTeam.memberLimit!!) {
                 toggleButton(button, false)
+                button.alpha = .6f
+                button.setBackgroundColor(Color.rgb(221, 208, 206))
             }
         }
     }
@@ -116,16 +122,54 @@ class TeamsProfileFragment : Fragment(R.layout.fragment_teams_profile) {
         })
 
         joinBtn.setOnClickListener {
-            TeamService.joinTeam(teamPosition!!, requireContext())
-            hideJoinBtn()
+            openJoinModal()
         }
         leaveBtn.setOnClickListener {
-            TeamService.leaveTeam(teamPosition!!, requireContext())
-            showJoinBtn()
+            openLeaveModal()
         }
         deleteBtn.setOnClickListener {
-            TeamService.deleteTeam(teamPosition!!, requireContext())
+            val title = "Are you sure you want to delete ${currentTeam.name}?"
+            val description = "Deleting this team will delete all drawings and publications associated to this team."
+            val deleteConfirmation = ConfirmationBottomSheet({ TeamService.deleteTeam(teamPosition!!, requireContext()) }, title, description, "DELETE", ButtonType.DELETE.toString())
+            deleteConfirmation.show(parentFragmentManager, "ConfirmationBottomSheet")
         }
+    }
+
+    private fun joinTeam() {
+        TeamService.joinTeam(teamPosition!!, requireContext())
+        hideJoinBtn()
+        printToast(requireActivity(), "Successfully joined the team")
+    }
+
+    private fun openJoinModal() {
+        if (currentTeam.isPrivate) {
+            val title = "Are you sure you want join ${currentTeam.name}?"
+            val description = "The owner has set this team to protected. Enter the correct password to join!"
+            val passwordConfirmation = PasswordConfirmationBottomSheet(
+                requireActivity(),
+                currentTeam.password,
+                title,
+                description,
+                "Join",
+                "Enter the team's password"
+            ) { joinTeam() }
+            passwordConfirmation.show(parentFragmentManager, "PasswordConfirmationBottomSheet")
+        } else {
+            val title = "Are you sure you want join ${currentTeam.name}?"
+            val description = "The owner has set this team public. Looks like anyone can join!"
+            val confirmation = ConfirmationBottomSheet({ joinTeam() }, title, description, "Join", ButtonType.PRIMARY.toString())
+            confirmation.show(parentFragmentManager, "ConfirmationBottomSheet")
+        }
+    }
+
+    private fun openLeaveModal() {
+        val title = "Are you sure you want to leave ${currentTeam.name}?"
+        val description = "Leaving this team does not prevent you from rejoining this team later on."
+        val confirmation = ConfirmationBottomSheet({
+            TeamService.leaveTeam(teamPosition!!, requireContext())
+            showJoinBtn()
+        }, title, description, "Leave", ButtonType.PRIMARY.toString())
+        confirmation.show(parentFragmentManager, "ConfirmationBottomSheet")
     }
 
     private fun getTeamDrawings() {
