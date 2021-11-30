@@ -44,15 +44,15 @@ export class SearchService implements SearchServiceInterface {
         },
         {
           email: { $regex: new RegExp(query, 'ig') },
-          'privacySetting.email': false,
+          'privacySetting.searchableByEmail': true,
         },
         {
           firstName: { $regex: new RegExp(query, 'ig') },
-          'privacySetting.firstName': false,
+          'privacySetting.searchableByFirstName': true,
         },
         {
           lastName: { $regex: new RegExp(query, 'ig') },
-          'privacySetting.lastName': false,
+          'privacySetting.searchableByLastName': true,
         },
       ],
     });

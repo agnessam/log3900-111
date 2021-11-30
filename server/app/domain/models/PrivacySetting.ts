@@ -7,9 +7,9 @@ export interface PrivacySettingInterface extends Document {
 }
 
 export const PrivacySettingSchema = new mongoose.Schema({
-  email: { type: Boolean, default: false },
-  firstName: { type: Boolean, default: false },
-  lastName: { type: Boolean, default: false },
+  searchableByEmail: { type: Boolean },
+  searchableByFirstName: { type: Boolean },
+  searchableByLastName: { type: Boolean },
 });
 
 export const PrivacySetting: Model<PrivacySettingInterface> = mongoose.model(

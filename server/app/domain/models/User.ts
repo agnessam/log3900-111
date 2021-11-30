@@ -69,9 +69,9 @@ const UserSchema = new mongoose.Schema({
   privacySetting: {
     type: PrivacySettingSchema,
     default: {
-      email: false,
-      firstName: false,
-      lastName: false,
+      searchableByEmail: true,
+      searchableByFirstName: true,
+      searchableByLastName: true,
     },
   },
 
