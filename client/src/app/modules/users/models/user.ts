@@ -18,6 +18,9 @@ export interface User {
   drawings?: string[] | Drawing[];
   posts?: string[] | Post[];
 
+  followers: string[] | User[];
+  following: string[] | User[];
+
   lastLogin: Date;
   lastLogout: Date;
 
