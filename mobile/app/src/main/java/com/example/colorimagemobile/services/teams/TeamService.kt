@@ -47,13 +47,8 @@ object TeamService {
 
         TeamRepository().joinTeam(team._id).observe(context as LifecycleOwner, {
             if (it.isError as Boolean) {
-                printToast(context, it.message!!)
                 return@observe
             }
-
-            val joinedTeam = it.data as TeamModel
-            updateTeamByPosition(position, joinedTeam)
-            TeamAdapterService.getTeamMenuAdapter().notifyItemChanged(position)
         })
     }
 
@@ -62,12 +57,8 @@ object TeamService {
 
         TeamRepository().leaveTeam(team._id).observe(context as LifecycleOwner, {
             if (it.isError as Boolean) {
-                printToast(context, it.message!!)
                 return@observe
             }
-
-            removeMemberFromTeam(position)
-            TeamAdapterService.getTeamMenuAdapter().notifyItemChanged(position)
         })
     }
 

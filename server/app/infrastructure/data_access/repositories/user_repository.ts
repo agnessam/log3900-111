@@ -47,6 +47,7 @@ export class UserRepository extends GenericRepository<UserInterface> {
           populate: { path: 'drawing' },
         })
         .populate({ path: 'drawings', populate: { path: 'owner' } })
+        .populate({ path: 'posts', populate: { path: 'owner' } })
         .exec((err, user) => {
           if (err || !user) {
             reject(err);
@@ -105,13 +106,12 @@ export class UserRepository extends GenericRepository<UserInterface> {
       const validate = await currentUser!.isValidPassword(currentPassword);
       if (!validate) {
         resolve({ err: 'Incorrect password' });
+      } else {
+        const hashedPassword = await bcrypt.hash(newPassword, 10);
+        currentUser!.password = hashedPassword;
+        currentUser!.save();
+        resolve(currentUser);
       }
-
-      const hashedPassword = await bcrypt.hash(newPassword, 10);
-
-      currentUser!.password = hashedPassword;
-      currentUser!.save();
-      resolve(currentUser);
     });
   }
 

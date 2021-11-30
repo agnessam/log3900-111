@@ -4,11 +4,9 @@ import androidx.lifecycle.MutableLiveData
 import com.example.colorimagemobile.models.*
 import com.example.colorimagemobile.services.RetrofitInstance
 import com.example.colorimagemobile.services.users.UserService
-import com.example.colorimagemobile.utils.CommonFun
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-
 
 class UserRepository {
     private val httpClient = RetrofitInstance.HTTP
@@ -173,4 +171,65 @@ class UserRepository {
 
         return userDrawingsLiveData
     }
+
+    // get user posts
+    fun getUserPosts(id: String): MutableLiveData<DataWrapper<List<PublishedMuseumPostModel>>> {
+        val userPostsLiveData: MutableLiveData<DataWrapper<List<PublishedMuseumPostModel>>> = MutableLiveData()
+
+        httpClient.getUserPosts(token = "Bearer ${UserService.getToken()}", id).enqueue(object : Callback<List<PublishedMuseumPostModel>> {
+            override fun onResponse(call: Call<List<PublishedMuseumPostModel>>, response: Response<List<PublishedMuseumPostModel>>) {
+                if (!response.isSuccessful) {
+                    userPostsLiveData.value = DataWrapper(null, "An error occurred while fetching user's posts!", true)
+                    return
+                }
+                userPostsLiveData.value = DataWrapper(response.body(), "", false)
+            }
+            override fun onFailure(call: Call<List<PublishedMuseumPostModel>>, t: Throwable) {
+                userPostsLiveData.value = DataWrapper(null, "Sorry, failed to get fetch user's posts!", true)
+            }
+        })
+
+        return userPostsLiveData
+    }
+    //follow user
+    fun followUser(userId: String): MutableLiveData<DataWrapper<UserModel.AllInfo>> {
+        val followUserLiveData: MutableLiveData<DataWrapper<UserModel.AllInfo>> = MutableLiveData()
+
+        httpClient.followUser(token = "Bearer ${UserService.getToken()}", userId).enqueue(object : Callback<UserModel.AllInfo> {
+            override fun onResponse(call: Call<UserModel.AllInfo>, response: Response<UserModel.AllInfo>) {
+                if (!response.isSuccessful) {
+                    followUserLiveData.value = DataWrapper(null, "An error occurred while following user!", true)
+                    return
+                }
+                followUserLiveData.value = DataWrapper(response.body(), "", false)
+            }
+            override fun onFailure(call: Call<UserModel.AllInfo>, t: Throwable) {
+                followUserLiveData.value = DataWrapper(null, "Sorry, failed to get follow user!", true)
+            }
+        })
+
+        return followUserLiveData
+    }
+
+    //unfollow user
+    fun unfollowUser(userId: String): MutableLiveData<DataWrapper<UserModel.AllInfo>> {
+        val unfollowUserLiveData: MutableLiveData<DataWrapper<UserModel.AllInfo>> = MutableLiveData()
+
+        httpClient.unfollowUser(token = "Bearer ${UserService.getToken()}", userId).enqueue(object : Callback<UserModel.AllInfo> {
+            override fun onResponse(call: Call<UserModel.AllInfo>, response: Response<UserModel.AllInfo>) {
+                if (!response.isSuccessful) {
+                    unfollowUserLiveData.value = DataWrapper(null, "An error occurred while unfollowing user!", true)
+                    return
+                }
+                unfollowUserLiveData.value = DataWrapper(response.body(), "", false)
+            }
+            override fun onFailure(call: Call<UserModel.AllInfo>, t: Throwable) {
+                unfollowUserLiveData.value = DataWrapper(null, "Sorry, failed to get unfollow user!", true)
+            }
+        })
+
+        return unfollowUserLiveData
+    }
+
+
 }

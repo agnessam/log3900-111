@@ -36,12 +36,24 @@ export class SearchService implements SearchServiceInterface {
   async search(query: string): Promise<any> {
     const date = this.extractDate(query);
 
+    // Find with username
     const users = await this.userRepository.findManyByQuery({
       $or: [
-        { username: { $regex: new RegExp(query, 'ig') } },
-        { email: { $regex: new RegExp(query, 'ig') } },
-        { firstName: { $regex: new RegExp(query, 'ig') } },
-        { lastName: { $regex: new RegExp(query, 'ig') } },
+        {
+          username: { $regex: new RegExp(query, 'ig') },
+        },
+        {
+          email: { $regex: new RegExp(query, 'ig') },
+          'privacySetting.searchableByEmail': true,
+        },
+        {
+          firstName: { $regex: new RegExp(query, 'ig') },
+          'privacySetting.searchableByFirstName': true,
+        },
+        {
+          lastName: { $regex: new RegExp(query, 'ig') },
+          'privacySetting.searchableByLastName': true,
+        },
       ],
     });
 
@@ -57,9 +69,10 @@ export class SearchService implements SearchServiceInterface {
       ...matchingTeamsDrawingsIds,
     ];
 
-    const drawingsFromOwners = await this.drawingRepository.findManyById(
-      matchingDrawingIds as string[],
-    );
+    const drawingsFromOwners =
+      await this.drawingRepository.findManyDrawingsById(
+        matchingDrawingIds as string[],
+      );
 
     let drawingQuery: any = {
       $or: [{ name: { $regex: new RegExp(query, 'ig') } }],
@@ -70,7 +83,9 @@ export class SearchService implements SearchServiceInterface {
       drawingQuery.$or.push({ createdAt: { $gte: date, $lte: endDate } });
     }
 
-    const drawings = await this.drawingRepository.findManyByQuery(drawingQuery);
+    const drawings = await this.drawingRepository.findManyDrawingsByQuery(
+      drawingQuery,
+    );
 
     return {
       users: [...users],

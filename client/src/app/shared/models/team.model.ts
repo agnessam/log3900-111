@@ -1,5 +1,6 @@
 import { User } from "src/app/modules/users/models/user";
 import { Drawing } from "..";
+import { Post } from "./post.model";
 
 export interface Team {
   _id: string;
@@ -16,4 +17,5 @@ export interface Team {
   password: string;
 
   drawings: string[] | Drawing[];
+  posts: string[] | Post[];
 }
