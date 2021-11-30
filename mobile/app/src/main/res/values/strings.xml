@@ -61,4 +61,12 @@
     <string name="display_name">Display name</string>
     <string name="posts">Posts</string>
     <string name="privacy_safety"><![CDATA[Privacy & Safety]]></string>
+    <string name="cancel">Cancel</string>
+    <string name="confirm">Confirm</string>
+    <string name="change_your_username">Change your username</string>
+    <string name="enter_a_new_username">Enter a new username</string>
+    <string name="change_your_description">Change your description</string>
+    <string name="describe_yourself">Describe yourself!</string>
+    <string name="enter_a_description">Enter a description</string>
+    <string name="change_your_password">Change your Password</string>
 </resources>
