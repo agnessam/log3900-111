@@ -24,27 +24,42 @@
             android:textSize="30sp" />
 
         <TextView
+            android:id="@+id/myPrivacy"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp"
+            android:text="My Profile"
+            android:textSize="30sp" />
+        <TextView
             android:id="@+id/modifyprofile"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="20dp"
-            android:text="@string/edit_profil"
+            android:text="@string/privacy_safety"
             android:textSize="30sp" />
 
         <TextView
-            android:id="@+id/password"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="20dp"
-            android:text="@string/edit_password"
-            android:textSize="30sp" />
-
-        <TextView
-            android:id="@+id/historique"
+            android:id="@+id/history"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="20dp"
             android:text="@string/history_log"
+            android:textSize="30sp" />
+
+        <TextView
+        android:id="@+id/stat"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:text="Statistics"
+        android:textSize="30sp" />
+
+        <TextView
+            android:id="@+id/visibility"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp"
+            android:text="Account Visibility"
             android:textSize="30sp" />
 
     </LinearLayout>
