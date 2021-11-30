@@ -14,6 +14,10 @@ export class PostCardComponent implements OnInit {
 
   ngOnInit(): void {}
 
+  openPostDialog() {
+    return;
+  }
+
   getSanitizedUrl(dataUri: string) {
     return this.sanitizer.bypassSecurityTrustUrl(dataUri);
   }

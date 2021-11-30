@@ -20,6 +20,7 @@ mat-card img {
 
 .post {
   position: relative;
+  cursor: pointer;
 }
 
 .post-img {
@@ -59,8 +60,6 @@ mat-card-title {
 .post-name {
   font-size: 1em;
   font-weight: bold;
-
-  cursor: pointer;
 }
 
 .post-stats {

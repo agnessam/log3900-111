@@ -20,12 +20,21 @@
     </div>
     <div fxFlex="13%" style="text-align: center">
       <div fxLayout="column" fxLayoutGap="12px" fxLayoutAlign="center center">
-        <button mat-raised-button color="primary">Follow</button>
+        <button mat-raised-button color="primary" *ngIf="!isMyProfile()">
+          Follow
+        </button>
+        <button
+          mat-raised-button
+          color="primary"
+          *ngIf="isMyProfile()"
+          (click)="navigateToSettingsPage()"
+        >
+          Edit Profile
+        </button>
       </div>
     </div>
   </div>
   <br />
-  <!-- TODO: Add the teams drawings here -->
   <div id="user-drawings">
     <mat-tab-group mat-align-tabs="center">
       <mat-tab label="All Drawings">
