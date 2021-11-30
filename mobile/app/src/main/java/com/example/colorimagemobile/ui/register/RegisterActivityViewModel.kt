@@ -12,6 +12,8 @@ class RegisterActivityViewModel: ViewModel() {
     private val HTTPResponseLiveData: MutableLiveData<DataWrapper<HTTPResponseModel>>
     private val authRepository: AuthRepository
 
+
+
     init {
         HTTPResponseLiveData = MutableLiveData()
         authRepository = AuthRepository()
@@ -20,4 +22,5 @@ class RegisterActivityViewModel: ViewModel() {
     fun registerUser(newUserData: UserModel.Register): LiveData<DataWrapper<HTTPResponseModel.RegisterResponse>> {
         return authRepository.registerUser(newUserData)
     }
+
 }

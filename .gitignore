@@ -10,9 +10,10 @@ out/
 server/key.json
 **/key.json
 **/package-lock.json
+**/mobile/.project
 
 **/.DS_Store
 **/*.lock
 coverage
 /*/node_modules
-mobile/.idea/
+*/.idea/

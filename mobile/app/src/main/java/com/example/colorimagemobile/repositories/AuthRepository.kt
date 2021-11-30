@@ -6,9 +6,7 @@ import com.example.colorimagemobile.models.UserModel
 import com.example.colorimagemobile.services.RetrofitInstance
 import com.example.colorimagemobile.models.DataWrapper
 import com.example.colorimagemobile.models.HTTPResponseModel
-import com.example.colorimagemobile.services.UserService
 import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
-import com.example.colorimagemobile.utils.Constants
 import com.example.colorimagemobile.utils.Constants.Companion.DEBUG_KEY
 import retrofit2.Call
 import retrofit2.Callback
@@ -45,7 +43,6 @@ class AuthRepository {
 
             // HTTP failure
             override fun onFailure(call: Call<HTTPResponseModel.LoginResponse>, t: Throwable) {
-                printMsg("User failed to login ${t.message!!}")
                 authLiveData.value = DataWrapper(null, "An error occurred while logging you in!", true)
             }
         })
@@ -66,13 +63,9 @@ class AuthRepository {
                 }
 
                 authLiveData.value = DataWrapper(null, "Logging you out ${user.username}!", false)
-
-                // Set lastLogin date to localtime
-                UserService.setLogHistory(Constants.LAST_LOGOUT_DATE)
             }
 
             override fun onFailure(call: Call<Boolean>, t: Throwable) {
-                printMsg("User failed to log out ${t.message!!}")
                 authLiveData.value = DataWrapper(null, "Failed to you logout!", true)
             }
         })

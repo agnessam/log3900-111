@@ -6,6 +6,7 @@ import { WorkspaceModule } from "../workspace/workspace.module";
 import { ToolParameterModule } from "../tool-parameters/tool-parameter.module";
 import { ControlMenuComponent } from "./components/control-menu/control-menu.component";
 import { ParameterDirective } from "./directives/parameter.directive";
+import { ToolsColorModule } from "../tools-color/tools-color.module";
 
 @NgModule({
   providers: [ControlMenuComponent],
@@ -19,6 +20,7 @@ import { ParameterDirective } from "./directives/parameter.directive";
     MaterialModules,
     ToolParameterModule,
     WorkspaceModule,
+    ToolsColorModule,
   ],
   exports: [ParameterMenuComponent],
 })

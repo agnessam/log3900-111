@@ -45,5 +45,25 @@
   >
     Supprimer la sélection
   </button>
- 
+  <br />
+  <br />
+  <div [formGroup]="form">
+    <div>
+      <mat-form-field>
+        <mat-label>Épaisseur de la bordure</mat-label>
+        <input
+          id="strokeInput"
+          matInput
+          matTextareaAutosize
+          formControlName="strokeWidth"
+          type="number"
+          placeholder="Épaisseur de la bordure"
+          min="1"
+          oninput="validity.valid||(value='1');"
+          onblur="validity.valid||(value='1');"
+          (ngModelChange)="changeLineWidth()"
+        />
+      </mat-form-field>
+    </div>
+  </div>
 </div>

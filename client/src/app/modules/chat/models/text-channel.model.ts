@@ -1,8 +1,7 @@
-import { Message } from './message.model';
-
 export interface TextChannel {
-    channelId: string;
-    channelName: string;
+    _id: string;
+    name: string;
     ownerId: string;
-    messages?: Message[];
+    team?: string;
+    drawing?: string;
 }

@@ -1,11 +1,6 @@
-import {
-  EventEmitter,
-  Injectable,
-  Output,
-  Renderer2,
-  Directive,
-} from "@angular/core";
-import { DEFAULT_RGB_COLOR, RGB, DEFAULT_ALPHA, RGBA } from "src/app/shared";
+import { EventEmitter, Injectable, Output, Renderer2, Directive } from '@angular/core';
+import { DEFAULT_RGB_COLOR, RGB, DEFAULT_ALPHA, RGBA } from 'src/app/shared';
+import { DrawingHttpClientService } from 'src/app/modules/backend-communication';
 
 /// Service qui contient les fonction pour dessiner a l'écran
 @Directive()
@@ -26,9 +21,11 @@ export class DrawingService {
   height = 0;
   drawing: SVGElement;
 
+  drawingId: string;
+
   private objectList: Map<string, SVGElement>;
 
-  constructor(public renderer: Renderer2) {
+  constructor(public renderer: Renderer2, private drawingHttpClientService:DrawingHttpClientService) {
     this.objectList = new Map<string, SVGElement>();
   }
 
@@ -122,6 +119,11 @@ export class DrawingService {
     return this.getDrawingDataUriBase64();
   }
 
+  async saveDrawing(): Promise<void>{
+    let dataUri = this.getDrawingDataUriBase64();
+    await this.drawingHttpClientService.updateDrawing(this.drawingId, dataUri).toPromise();
+  }
+
   /// Get drawing svg uri
   private getDrawingDataUriBase64(): string {
     return (
@@ -130,13 +132,17 @@ export class DrawingService {
     );
   }
 
-  openSvgFromDataUri(dataUri: string): void {
+  getSvgFromDataUri(dataUri: string): SVGElement{
     let svgDomString = atob(dataUri.replace("data:image/svg+xml;base64,", ""));
-    const documentSvg = new DOMParser().parseFromString(
+    return new DOMParser().parseFromString(
       svgDomString,
       "image/svg+xml"
-    );
-    this.openDrawing(documentSvg.children[0] as SVGElement);
+    ).children[0] as SVGElement;
+  }
+
+  openSvgFromDataUri(dataUri: string): void {
+    const svg = this.getSvgFromDataUri(dataUri);
+    this.openDrawing(svg);
   }
 
   /// Permer l'ouverture d'un dessin sous la forme du model Drawing
@@ -186,5 +192,9 @@ export class DrawingService {
     });
 
     this.drawingEmit.emit(this.drawing);
+  }
+
+  publishDrawing():void{
+
   }
 }

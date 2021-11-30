@@ -1,7 +1,9 @@
 package com.example.colorimagemobile.enumerators
 
 enum class ToolType {
+    SELECTION,
     PENCIL,
-    ERASER,
+    RECTANGLE,
+    ELLIPSE,
     COLOR_PALETTE
 }

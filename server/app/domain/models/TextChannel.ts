@@ -1,19 +1,16 @@
-import mongoose, { Document, Model, Schema } from 'mongoose';
-import { Message } from '../interfaces/message.interface';
-
+import mongoose, { Document, Model } from 'mongoose';
 export interface TextChannelInterface extends Document{
-    channelName: string;
+    name: string;
     ownerId: string;
-    messages: Message[];
+    team: string;
+    drawing: string;
 }
 
-// ajouter schema de message ici
-
 const TextChannelSchema = new mongoose.Schema({
-	channelName: { type: String, required: true, index: { unique: true } },
+	name: { type: String, required: true },
 	ownerId: { type: String, required: true },
-    // Type translates to 'any'
-	messages: { type: Schema.Types.Mixed },
+    team: { type: String },
+    drawing: { type: String },
 });
 
 export const TextChannel: Model<TextChannelInterface> = mongoose.model('TextChannels', TextChannelSchema);

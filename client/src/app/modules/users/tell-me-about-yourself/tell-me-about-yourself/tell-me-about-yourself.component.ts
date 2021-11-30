@@ -3,7 +3,7 @@ import { FormControl, FormGroup } from "@angular/forms";
 import { Router } from "@angular/router";
 import { AuthenticationService } from "src/app/modules/authentication";
 import { User } from "src/app/modules/authentication/models/user";
-import { EditableUserParameters } from "../../models/editable-user-parameters";
+import { Avatar } from "src/app/shared/models/avatar.model";
 import { UsersService } from "../../services/users.service";
 
 @Component({
@@ -14,6 +14,8 @@ import { UsersService } from "../../services/users.service";
 export class TellMeAboutYourselfComponent implements OnInit {
   currentUser: User | null;
   customizeProfileForm: FormGroup;
+
+  chosenAvatar: Avatar;
 
   constructor(
     private userService: UsersService,
@@ -30,12 +32,16 @@ export class TellMeAboutYourselfComponent implements OnInit {
     });
   }
 
+  updateUserAvatar(avatar: Avatar) {
+    this.chosenAvatar = avatar;
+  }
+
   onSubmit(): void {
-    const updatedUserParameters = new EditableUserParameters(
-      this.customizeProfileForm.value
-    );
     this.userService
-      .updateUser(this.currentUser!._id, updatedUserParameters)
+      .updateUser(this.currentUser!._id, {
+        avatar: this.chosenAvatar,
+        description: this.customizeProfileForm.value.description,
+      })
       .subscribe((response) => {
         this.router.navigate([""]);
       });

@@ -52,12 +52,17 @@ export abstract class GenericRepository<TModel extends Document>
   // https://masteringjs.io/tutorials/mongoose/update
   updateById(id: string, item: {}): Promise<TModel> {
     return new Promise<TModel>((resolve, reject) => {
-      this.model.findByIdAndUpdate(id, item, (err: any, data: TModel) => {
-        if (err) {
-          reject(err);
-        }
-        resolve(data);
-      });
+      this.model.findByIdAndUpdate(
+        id,
+        item,
+        { new: true },
+        (err: any, data: TModel) => {
+          if (err) {
+            reject(err);
+          }
+          resolve(data);
+        },
+      );
     });
   }
 
@@ -68,6 +73,29 @@ export abstract class GenericRepository<TModel extends Document>
           reject(err);
         }
         resolve(data);
+      });
+    });
+  }
+
+  public findManyById(ids: string[]): Promise<TModel[]> {
+    return new Promise<TModel[]>((resolve, reject) => {
+      const query = { _id: { $in: ids } };
+      this.model.find(query as any, (err, res) => {
+        if (err) {
+          reject(err);
+        }
+        resolve(res);
+      });
+    });
+  }
+
+  public findManyByQuery(query: any) {
+    return new Promise<TModel[]>((resolve, reject) => {
+      this.model.find(query as any, (err, res) => {
+        if (err) {
+          reject(err);
+        }
+        resolve(res);
       });
     });
   }

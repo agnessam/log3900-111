@@ -9,6 +9,8 @@ import { User } from "../modules/authentication/models/user";
 })
 export class NavbarComponent implements OnInit {
   public user: User | null;
+  public searchQuery: string;
+
   constructor(
     private router: Router,
     private authenticationService: AuthenticationService
@@ -20,10 +22,20 @@ export class NavbarComponent implements OnInit {
 
   ngOnInit(): void {}
 
+  search(): void {
+    this.router.navigate(["/search"], { queryParams: { q: this.searchQuery } });
+  }
+
+  goToProfile(): void {
+    this.router.navigate(["/users/" + this.user?._id]);
+  }
+
+  goToSettings(): void {
+    this.router.navigate(["/settings"]);
+  }
+
   logout(): void {
-    this.authenticationService.logout().subscribe((response) => {
-      console.log(response);
-    });
+    this.authenticationService.logout().subscribe((response) => {});
     this.router.navigate(["/login"]);
   }
 }

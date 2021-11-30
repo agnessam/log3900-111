@@ -2,6 +2,7 @@ import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { BehaviorSubject, Observable } from "rxjs";
 import { map } from "rxjs/operators";
+import { UsersService } from "src/app/modules/users/services/users.service";
 import { environment } from "src/environments/environment";
 import { User } from "../../models/user";
 
@@ -17,7 +18,10 @@ export class AuthenticationService {
   private currentUserSubject: BehaviorSubject<User | null>;
   public currentUserObservable: Observable<User | null>;
 
-  constructor(private httpClient: HttpClient) {
+  constructor(
+    private httpClient: HttpClient,
+    private usersService: UsersService
+  ) {
     this.authTokenSubject = new BehaviorSubject<string | null>(null);
     this.currentUserSubject = new BehaviorSubject<User | null>(null);
 
@@ -35,15 +39,19 @@ export class AuthenticationService {
 
   public isAuthenticated(): boolean {
     // Covers the case where the user deletes the token himself.
-    if (!localStorage.getItem("token")) {
+    const token = localStorage.getItem("token");
+    const userId = localStorage.getItem("userId");
+    if (!token && !userId) {
       this.authTokenSubject.next(null);
       this.currentUserSubject.next(null);
       return false;
     }
 
-    if (this.authToken == null) {
-      return false;
-    }
+    this.usersService.getUser(userId!).subscribe((user) => {
+      this.currentUserSubject.next(user as User);
+      this.authTokenSubject.next(token);
+      return true;
+    });
 
     return true;
   }
@@ -104,15 +112,17 @@ export class AuthenticationService {
 
   public logout() {
     const logoutEndpoint = this.endpointUrl + "logout";
-    return this.httpClient.post<any>(logoutEndpoint, {}).pipe(
-      map((response) => {
-        localStorage.removeItem("userId");
-        localStorage.removeItem("token");
+    return this.httpClient
+      .post<any>(logoutEndpoint, { userId: localStorage.getItem("userId") })
+      .pipe(
+        map((response) => {
+          localStorage.removeItem("userId");
+          localStorage.removeItem("token");
 
-        this.authTokenSubject.next(null);
-        this.currentUserSubject.next(null);
-        return response;
-      })
-    );
+          this.authTokenSubject.next(null);
+          this.currentUserSubject.next(null);
+          return response;
+        })
+      );
   }
 }

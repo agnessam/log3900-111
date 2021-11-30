@@ -36,8 +36,12 @@
 
     <mat-divider></mat-divider>
     <div>
-      <app-tools-color></app-tools-color>
+      <app-background-color-picker></app-background-color-picker>
     </div>
+
+    <button mat-icon-button matTooltip="Publish to museum" (click)="openMuseumDialog()">
+      <mat-icon>museum</mat-icon>
+    </button>
   </mat-sidenav>
   <mat-sidenav-content>
     <app-parameter-menu [selectId]="selectedParameter"></app-parameter-menu>

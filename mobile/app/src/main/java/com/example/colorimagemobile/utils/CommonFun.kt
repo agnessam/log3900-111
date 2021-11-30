@@ -1,23 +1,27 @@
 package com.example.colorimagemobile.utils
 
+import android.annotation.SuppressLint
 import android.app.Activity
+import android.content.ClipData
 import android.content.Context
 import android.content.Context.INPUT_METHOD_SERVICE
 import android.content.Intent
 import android.util.Log
 import android.view.KeyEvent
+import android.view.MenuItem
 import android.view.View
 import android.view.inputmethod.InputMethodManager
-import android.widget.Button
-import android.widget.EditText
-import android.widget.TextView
-import android.widget.Toast
-import androidx.fragment.app.Fragment
+import android.widget.*
+import androidx.appcompat.view.menu.ActionMenuItemView
 import androidx.fragment.app.FragmentActivity
 import com.example.colorimagemobile.utils.Constants.Companion.DEBUG_KEY
+import com.squareup.picasso.Picasso
 
 class CommonFun {
     companion object {
+
+        lateinit var imageView: ImageView
+
         // print in the terminal with the tag: DEBUG
         fun printMsg(msg: String) {
             Log.d(DEBUG_KEY, msg)
@@ -28,6 +32,10 @@ class CommonFun {
             Toast.makeText(applicationContext, message, Toast.LENGTH_LONG).show()
         }
 
+        fun removeWhitespace(value: String): String {
+            return value.replace("\\s".toRegex(), "")
+        }
+
         // close Activity and start another one
         fun redirectTo(currentActivity: Activity, destinationClass: Class<*>?) {
             val intent: Intent = Intent(currentActivity, destinationClass)
@@ -35,31 +43,11 @@ class CommonFun {
             currentActivity.finish()
         }
 
-        // close Activity and start another one
-        fun redirectTo_(currentActivity: FragmentActivity, destinationClass: Class<*>?) {
-            val intent: Intent = Intent(currentActivity, destinationClass)
-            currentActivity.startActivity(intent)
-            currentActivity.finish()
-        }
-
-
         // close/hide Android keyboard
-        fun closeKeyboard(currentActivity: Activity): Boolean {
+        fun hideKeyboard(context: Context, view: View): Boolean {
             return try {
-                val inputMethodManager =
-                    currentActivity.getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
-                inputMethodManager.hideSoftInputFromWindow(currentActivity.currentFocus!!.windowToken, 0)
-                true
-            } catch (e: Exception) {
-                false
-            }
-        }
-        // close/hide Android keyboard
-        fun closeKeyboard_(currentActivity: FragmentActivity): Boolean {
-            return try {
-                val inputMethodManager =
-                    currentActivity.getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
-                inputMethodManager.hideSoftInputFromWindow(currentActivity.currentFocus!!.windowToken, 0)
+                val inputMethodManager = context.getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+                inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
                 true
             } catch (e: Exception) {
                 false

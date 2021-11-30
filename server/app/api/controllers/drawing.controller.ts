@@ -17,18 +17,20 @@ export class DrawingController {
 
   @httpGet('/')
   public async get() {
-    return await this.drawingRepository.findAll();
+    return await this.drawingRepository.getPopulatedDrawings();
   }
 
   @httpGet('/:drawingId')
   public async getDrawingById(@request() req: Request) {
-    return await this.drawingRepository.findById(req.params.drawingId);
+    return await this.drawingRepository.getPopulatedDrawing(
+      req.params.drawingId,
+    );
   }
 
   @httpPost('/')
   public async createDrawing(@request() req: Request) {
     return req.body.ownerModel === 'User'
-      ? await this.drawingRepository.createUserDrawing(req.body)
+      ? await this.drawingRepository.createUserDrawing(req.body, req.user!.id)
       : await this.drawingRepository.createTeamDrawing(req.body);
   }
 
@@ -38,5 +40,10 @@ export class DrawingController {
       req.params.drawingId,
       req.body,
     );
+  }
+
+  @httpPost('/:drawingId/publish')
+  public async publishDrawing(@request() req: Request) {
+    return await this.drawingRepository.publishDrawing(req.body);
   }
 }

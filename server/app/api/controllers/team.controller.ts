@@ -1,5 +1,3 @@
-import { TYPES } from '../../domain/constants/types';
-import { TeamRepository } from '../../infrastructure/data_access/repositories/team_repository';
 import { Request } from 'express';
 import { inject } from 'inversify';
 import {
@@ -11,6 +9,8 @@ import {
   request,
 } from 'inversify-express-utils';
 import passport from 'passport';
+import { TYPES } from '../../domain/constants/types';
+import { TeamRepository } from '../../infrastructure/data_access/repositories/team_repository';
 
 @controller('/teams', passport.authenticate('jwt', { session: false }))
 export class TeamController {
@@ -23,12 +23,13 @@ export class TeamController {
 
   @httpGet('/:teamId')
   public async getTeamById(@request() req: Request) {
-    return await this.teamRepository.findById(req.params.teamId);
+    return await this.teamRepository.getTeam(req.params.teamId);
   }
 
   @httpPost('/')
   public async createTeam(@request() req: Request) {
-    return await this.teamRepository.create(req.body);
+    req.body.owner = req.user!.id;
+    return await this.teamRepository.createTeam(req.body);
   }
 
   @httpPatch('/:teamId')
@@ -38,7 +39,7 @@ export class TeamController {
 
   @httpDelete('/:teamId')
   public async deleteTeam(@request() req: Request) {
-    return await this.teamRepository.deleteById(req.params.teamId);
+    return await this.teamRepository.deleteTeam(req.params.teamId);
   }
 
   @httpGet('/:teamId/members')
@@ -51,7 +52,7 @@ export class TeamController {
   public async addMemberToTeam(@request() req: Request) {
     return await this.teamRepository.addMemberToTeam(
       req.params.teamId,
-      req.body.userId,
+      req.user!.id,
     );
   }
 
@@ -59,12 +60,17 @@ export class TeamController {
   public async removeMemberFromTeam(@request() req: Request) {
     return await this.teamRepository.removeMemberFromTeam(
       req.params.teamId,
-      req.body.userId,
+      req.user!.id,
     );
   }
 
   @httpGet('/:teamId/drawings')
   public async getTeamDrawings(@request() req: Request) {
     return await this.teamRepository.getTeamDrawings(req.params.teamId);
+  }
+
+  @httpGet('/:teamId/posts')
+  public async getPosts(@request() req: Request) {
+    return await this.teamRepository.getPosts(req.params.teamId);
   }
 }

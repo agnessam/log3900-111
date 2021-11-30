@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { AbstractSocketService } from "src/app/shared";
+import { AbstractSocketService, ROOM_EVENT_NAME } from "src/app/shared";
 import {
   CHAT_NAMESPACE_NAME,
   TEXT_MESSAGE_EVENT_NAME,
@@ -11,7 +11,8 @@ import { Subject } from "rxjs";
   providedIn: "root",
 })
 export class ChatSocketService extends AbstractSocketService {
-  public chatSubject: Subject<Message>;
+  chatSubject: Subject<Message>;
+  messageHistory: Subject<Message[]>;
 
   constructor() {
     super();
@@ -21,6 +22,7 @@ export class ChatSocketService extends AbstractSocketService {
   protected init(): void {
     super.init(CHAT_NAMESPACE_NAME);
     this.chatSubject = new Subject<Message>();
+    this.messageHistory = new Subject<Message[]>();
   }
 
   sendMessage(message: Message): void {
@@ -29,11 +31,18 @@ export class ChatSocketService extends AbstractSocketService {
 
   protected setSocketListens(): void {
     this.listenMessage();
+    this.listenHistory();
   }
 
   private listenMessage(): void {
     this.namespaceSocket.on(TEXT_MESSAGE_EVENT_NAME, (message: Message) => {
       this.chatSubject.next(message);
+    });
+  }
+
+  private listenHistory(): void {
+    this.namespaceSocket.on(ROOM_EVENT_NAME, (history: Message[]) => {
+      this.messageHistory.next(history);
     });
   }
 }

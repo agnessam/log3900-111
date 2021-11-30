@@ -23,7 +23,12 @@ import { UsersModule } from "./modules/users/users.module";
 import { GalleryModule } from "./modules/gallery/gallery.module";
 import { SidenavModule } from "./modules/sidenav/sidenav.module";
 import { DrawingsModule } from "./modules/drawings/drawings.module";
-import {BackendCommunicationModule}  from "./modules/backend-communication/backend-communication.module";
+import { BackendCommunicationModule } from "./modules/backend-communication/backend-communication.module";
+import { TeamModule } from "./modules/team/team.module";
+import { MuseumModule } from "./modules/museum/museum.module";
+import { SearchModule } from "./modules/search/search.module";
+import { CardsModule } from "./modules/cards/cards.module";
+import { SettingsModule } from "./modules/settings/settings.module";
 
 @NgModule({
   declarations: [AppComponent],
@@ -50,9 +55,14 @@ import {BackendCommunicationModule}  from "./modules/backend-communication/backe
     ParameterMenuModule,
     UsersModule,
     SidenavModule,
+    SearchModule,
     ErrorModule,
     DrawingsModule,
-    BackendCommunicationModule
+    TeamModule,
+    BackendCommunicationModule,
+    MuseumModule,
+    CardsModule,
+    SettingsModule,
   ],
   exports: [],
   providers: [],

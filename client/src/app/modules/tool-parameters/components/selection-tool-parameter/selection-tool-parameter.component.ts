@@ -1,4 +1,5 @@
 import { Component } from "@angular/core";
+import { FormControl, FormGroup, Validators } from "@angular/forms";
 import {
   CopyPasteToolService,
   DeletingToolService,
@@ -11,11 +12,22 @@ import {
   styleUrls: ["./selection-tool-parameter.component.scss"],
 })
 export class SelectionToolParameterComponent {
+  form: FormGroup;
+  private strokeWidth: FormControl;
+
   constructor(
     private selectionService: SelectionToolService,
     private deletingService: DeletingToolService,
     private copyPasteService: CopyPasteToolService
-  ) {}
+  ) {
+    this.strokeWidth = new FormControl(1, Validators.min(1));
+    this.form = new FormGroup({
+      strokeWidth: this.strokeWidth,
+    });
+    this.selectionService.lineWidthSubject.subscribe((lineWidth: number) => {
+      this.strokeWidth.setValue(lineWidth);
+    });
+  }
 
   get toolName(): string {
     return this.selectionService.toolName;
@@ -52,5 +64,9 @@ export class SelectionToolParameterComponent {
   /// SelectAll
   deleteSelection(): void {
     this.deletingService.deleteSelection();
+  }
+
+  changeLineWidth(): void {
+    this.selectionService.setSelectionLineWidth(this.strokeWidth.value);
   }
 }

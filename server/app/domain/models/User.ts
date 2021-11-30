@@ -1,19 +1,35 @@
-import mongoose, { Document, Model, Schema } from 'mongoose';
 import bcrypt from 'bcrypt';
-import { DrawingInterface } from './Drawing';
+import mongoose, { Document, Model, Schema } from 'mongoose';
+import { AvatarInterface, AvatarSchema } from './Avatar';
+import { CollaborationInterface, CollaborationSchema } from './Collaboration';
+import {
+  CollaborationHistoryInterface,
+  CollaborationHistorySchema,
+} from './CollaborationHistory';
+import { PostInterface } from './Post';
 import { TeamInterface } from './teams';
 
 export interface UserInterface extends Document {
   username: string;
   description: string;
-
+  avatar: AvatarInterface;
   email: string;
   password: string;
   firstName: string;
   lastName: string;
-
   teams: string[] | TeamInterface[];
-  drawings: string[] | DrawingInterface[];
+
+  drawings: string[];
+  posts: string[] | PostInterface[];
+
+  followers: string[] | UserInterface[];
+  following: string[] | UserInterface[];
+
+  lastLogin: Date;
+  lastLogout: Date;
+
+  collaborations: CollaborationInterface[];
+  collaborationHistory: CollaborationHistoryInterface[];
 
   isValidPassword(password: string): Promise<boolean>;
 }
@@ -21,6 +37,12 @@ export interface UserInterface extends Document {
 const UserSchema = new mongoose.Schema({
   username: { type: String, required: true, index: { unique: true } },
   description: String,
+  avatar: {
+    type: AvatarSchema,
+    default: {
+      imageUrl: 'https://colorimage-111.s3.amazonaws.com/default/default.jpeg',
+    },
+  },
 
   email: { type: String, required: true, index: { unique: true } },
   password: { type: String, required: true },
@@ -28,12 +50,25 @@ const UserSchema = new mongoose.Schema({
   lastName: { type: String, required: true },
 
   teams: [{ type: Schema.Types.ObjectId, ref: 'Team' }],
+
   drawings: [{ type: Schema.Types.ObjectId, ref: 'Drawing' }],
+  posts: [{ type: Schema.Types.ObjectId, ref: 'Post' }],
+
+  followers: [{ type: Schema.Types.ObjectId, ref: 'User' }],
+  following: [{ type: Schema.Types.ObjectId, ref: 'User' }],
+
+  lastLogin: { type: Date },
+  lastLogout: { type: Date },
+
+  collaborations: [{ type: CollaborationSchema }],
+  collaborationHistory: [{ type: CollaborationHistorySchema }],
 });
 
 UserSchema.pre('save', async function (next) {
-  const hash = await bcrypt.hash(this.password, 10);
-  this.password = hash;
+  if (this.isNew) {
+    const hash = await bcrypt.hash(this.password, 10);
+    this.password = hash;
+  }
   next();
 });
 
