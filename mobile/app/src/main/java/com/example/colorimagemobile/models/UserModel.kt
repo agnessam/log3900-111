@@ -22,54 +22,22 @@ class UserModel {
 
     // holds all the data of User
     data class AllInfo(
-        @SerializedName("_id")
         val _id: String,
-
-        @SerializedName("username")
         var username: String,
-
-        @SerializedName("firstName")
         val firstName: String,
-
-        @SerializedName("lastName")
         val lastName: String,
-
-        @SerializedName("password")
         val password: String,
-
-        @SerializedName("email")
         val email: String,
-
-        @SerializedName("description")
         var description: String,
-
-        @SerializedName("teams")
         val teams: ArrayList<String>,
-
-        @SerializedName("drawings")
         val drawings: ArrayList<String>,
-
-        @SerializedName("avatar")
         var avatar : AvatarModel.AllInfo,
-
-        @SerializedName("followers")
+        val posts: ArrayList<String>,
         var followers: ArrayList<String>,
-
-        @SerializedName("following")
         var following: ArrayList<String>,
-
-        @SerializedName("lastLogin")
-        var lastLogin: Date,
-
-        @SerializedName("lastLogout")
-        var lastLogout: Date,
-
-        @SerializedName("collaborationHistory")
-        var collaborationHistory : ArrayList<CollaborationHistory.drawingHistory>,
-
-        @SerializedName("posts")
-        var posts : ArrayList<String>
-
+        var lastLogin: Date?,
+        var lastLogout: Date?,
+        var collaborationHistory: ArrayList<Any>?,
     )
 }
 

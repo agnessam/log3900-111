@@ -26,7 +26,6 @@ interface API {
     @POST(Constants.ENDPOINTS.REGISTER_USER)
     fun registerUser(@Body newUser: UserModel.Register): Call<HTTPResponseModel.RegisterResponse>
 
-
     // User crud region
     @GET(Constants.ENDPOINTS.GET_USER_BY_TOKEN)
     fun getUserByToken(@Header("Authorization") token: String): Call<HTTPResponseModel.UserResponse>
@@ -50,6 +49,9 @@ interface API {
     @GET("${Constants.ENDPOINTS.USER_PATH}{id}/drawings")
     fun getUserDrawings(@Header("Authorization") token: String, @Path ("id") id: String): Call<List<DrawingModel.Drawing>>
 
+    @GET("${Constants.ENDPOINTS.USER_PATH}{id}/posts")
+    fun getUserPosts(@Header("Authorization") token: String, @Path ("id") id: String): Call<List<PublishedMuseumPostModel>>
+    
     @Headers("Content-Type: application/json")
     @POST("${Constants.ENDPOINTS.USER_PATH}{id}/followers/follow")
     fun followUser(@Header("Authorization") token: String, @Path ("id") id: String): Call<UserModel.AllInfo>
@@ -133,6 +135,12 @@ interface API {
     @GET("${Constants.ENDPOINTS.TEAMS}{id}/drawings")
     fun getTeamDrawings(@Header("Authorization") token: String, @Path ("id") id: String): Call<List<DrawingModel.Drawing>>
 
+    @GET("${Constants.ENDPOINTS.TEAMS}{id}")
+    fun getTeamById(@Header("Authorization") token: String, @Path ("id") id: String): Call<TeamIdModel>
+
+    @GET("${Constants.ENDPOINTS.TEAMS}{id}/posts")
+    fun getTeamPosts(@Header("Authorization") token: String, @Path ("id") id: String): Call<List<PublishedMuseumPostModel>>
+
     @GET(Constants.ENDPOINTS.TEAMS)
     fun getAllTeams(@Header("Authorization") token: String): Call<ArrayList<TeamModel>>
 
@@ -158,6 +166,9 @@ interface API {
     // Museum Posts
     @GET(Constants.ENDPOINTS.MUSEUM_POST)
     fun getAllPosts(@Header("Authorization") token: String): Call<ArrayList<MuseumPostModel>>
+
+    @GET("${Constants.ENDPOINTS.MUSEUM_POST}/{id}")
+    fun getPostById(@Header("Authorization") token: String, @Path ("id") postId: String): Call<MuseumPostModel>
 
     @Headers("Content-Type: application/json")
     @POST("${Constants.ENDPOINTS.MUSEUM_POST}/{id}/comments")

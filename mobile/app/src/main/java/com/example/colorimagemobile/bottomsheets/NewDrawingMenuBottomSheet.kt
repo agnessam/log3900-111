@@ -112,7 +112,7 @@ class NewDrawingMenuBottomSheet: BottomSheetDialogFragment() {
 
     @SuppressLint("ClickableViewAccessibility")
     private fun setListeners(view: View) {
-        var color = "rgba(255, 255, 255, 1)"
+        var color = "rgba(255, 255, 255, 255)"
         val colorPicker = view.findViewById<ColorPickerView>(R.id.colorPickerNewDrawing)
         colorPicker.setInitialColor(Color.WHITE)
 

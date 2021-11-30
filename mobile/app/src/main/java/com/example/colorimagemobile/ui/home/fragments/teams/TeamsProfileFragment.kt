@@ -8,9 +8,14 @@ import android.widget.Button
 import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.colorimagemobile.R
 import com.example.colorimagemobile.adapter.DrawingMenuRecyclerAdapter
+import com.example.colorimagemobile.adapter.MuseumPostRecyclerAdapter
+import com.example.colorimagemobile.adapter.PostsMenuRecyclerAdapter
+import com.example.colorimagemobile.classes.NotificationSound.Notification
+import com.example.colorimagemobile.models.*
 import com.example.colorimagemobile.bottomsheets.ConfirmationBottomSheet
 import com.example.colorimagemobile.bottomsheets.PasswordConfirmationBottomSheet
 import com.example.colorimagemobile.classes.MyFragmentManager
@@ -18,11 +23,15 @@ import com.example.colorimagemobile.enumerators.ButtonType
 import com.example.colorimagemobile.models.DrawingModel
 import com.example.colorimagemobile.models.TeamModel
 import com.example.colorimagemobile.models.recyclerAdapters.DrawingMenuData
+import com.example.colorimagemobile.repositories.MuseumRepository
 import com.example.colorimagemobile.repositories.DrawingRepository
 import com.example.colorimagemobile.repositories.TeamRepository
 import com.example.colorimagemobile.services.drawing.DrawingService
+import com.example.colorimagemobile.services.museum.MuseumAdapters
+import com.example.colorimagemobile.services.museum.MuseumPostService
 import com.example.colorimagemobile.services.teams.TeamService
 import com.example.colorimagemobile.services.users.UserService
+import com.example.colorimagemobile.utils.CommonFun
 import com.example.colorimagemobile.utils.CommonFun.Companion.printToast
 import com.example.colorimagemobile.utils.CommonFun.Companion.toggleButton
 import com.example.colorimagemobile.utils.Constants
@@ -34,6 +43,7 @@ class TeamsProfileFragment : Fragment(R.layout.fragment_teams_profile) {
     private lateinit var myView: View
     private lateinit var recyclerView: RecyclerView
     private var drawingsMenu: ArrayList<DrawingMenuData> = arrayListOf()
+    private var publishedDrawings: List<PublishedMuseumPostModel> = listOf()
     private lateinit var joinBtn: Button
     private lateinit var leaveBtn: Button
     private lateinit var deleteBtn: Button
@@ -54,7 +64,7 @@ class TeamsProfileFragment : Fragment(R.layout.fragment_teams_profile) {
 
         updateUI()
         setListeners()
-        getTeamDrawings()
+        getCurrentTeam()
     }
 
     private fun updateUI() {
@@ -79,6 +89,21 @@ class TeamsProfileFragment : Fragment(R.layout.fragment_teams_profile) {
             myView.findViewById<RelativeLayout>(R.id.deleteTeamIdBtnMain).visibility = View.GONE
             updateTeamButtons()
         }
+    }
+
+    private fun getCurrentTeam() {
+        TeamRepository().getTeamById(currentTeam._id).observe(viewLifecycleOwner, {
+            if (it.isError as Boolean) {
+                printToast(requireContext(), it.message!!)
+                return@observe
+            }
+
+            val team = it.data as TeamIdModel
+            DrawingService.setAllDrawings(it.data.drawings)
+            drawingsMenu = DrawingService.getDrawingsBitmap(requireContext(), team.drawings)
+            publishedDrawings = team.posts
+            setAllDrawings()
+        })
     }
 
     private fun updateTeamButtons() {
@@ -173,25 +198,90 @@ class TeamsProfileFragment : Fragment(R.layout.fragment_teams_profile) {
         confirmation.show(parentFragmentManager, "ConfirmationBottomSheet")
     }
 
-    private fun getTeamDrawings() {
-        TeamRepository().getTeamDrawings(currentTeam._id).observe(viewLifecycleOwner, {
-            if (it.isError as Boolean) {
-                return@observe
-            }
-
-            val drawings = it.data as List<DrawingModel.Drawing>
-            drawingsMenu = DrawingService.getDrawingsBitmap(requireContext(), drawings)
-            setAllDrawings()
-        })
-    }
-
     private fun setAllDrawings() {
+        recyclerView.adapter = null
         recyclerView.adapter = DrawingMenuRecyclerAdapter(requireActivity(), drawingsMenu, R.id.teamsMenuFrameLayout) { updatedDrawing, pos -> updateDrawing(updatedDrawing, pos) }
     }
 
     private fun setPublishedDrawings() {
-        val drawings = arrayListOf<DrawingMenuData>()
-//        recyclerView.adapter = DrawingMenuRecyclerAdapter(requireActivity(), drawings, R.id.teamsMenuFrameLayout, {_,_ -> {}})
+        recyclerView.adapter = null
+        recyclerView.adapter = PostsMenuRecyclerAdapter({ openPost(it) }, publishedDrawings)
+    }
+
+    private fun openPost(postPosition: Int) {
+        MuseumRepository().getPostById(publishedDrawings[postPosition]._id).observe(viewLifecycleOwner, {
+            if (it.isError as Boolean) {
+                printToast(requireContext(), it.message!!)
+                return@observe
+            }
+
+            val post = it.data as MuseumPostModel
+            MuseumPostService.setPosts(arrayListOf(post))
+
+            val dialog = MuseumPostService.createPostDialog(requireContext(), resources)
+            val recyclerView = dialog.findViewById<RecyclerView>(R.id.dialogRecyclerView)
+            recyclerView.layoutManager = LinearLayoutManager(requireContext())
+            val adapter = MuseumPostRecyclerAdapter(
+                requireContext(),
+                { _, comment -> postComment(postPosition, comment)},
+                { _ -> likePost(postPosition) },
+                { _ -> unlikePost(postPosition) })
+
+            recyclerView.adapter = adapter
+            MuseumAdapters.setPostsAdapter(adapter)
+
+            dialog.show()
+        })
+    }
+
+    private fun postComment(postPosition: Int, newComment: String) {
+        CommonFun.hideKeyboard(requireContext(), myView)
+
+        if (newComment.isEmpty()) {
+            printToast(requireContext(), "Please enter a valid comment!")
+            return
+        }
+
+        val postId = publishedDrawings[postPosition]._id
+        val comment = MuseumPostService.createComment(postId, newComment)
+
+        MuseumRepository().postComment(postId, comment).observe(viewLifecycleOwner, {
+            if (it.isError as Boolean) { return@observe }
+
+            comment.createdAt = it.data?.createdAt
+            MuseumPostService.addCommentToPost(0, comment)
+            publishedDrawings[postPosition].comments.add("New Comment")
+
+            recyclerView.adapter?.notifyItemChanged(postPosition)
+            MuseumAdapters.refreshCommentAdapter(0)
+            Notification().playSound(requireContext())
+        })
+    }
+
+    private fun likePost(postPosition: Int) {
+        MuseumRepository().likePost(publishedDrawings[postPosition]._id).observe(viewLifecycleOwner, {
+            if (it.isError as Boolean) {
+                printToast(requireContext(), it.message!!)
+                return@observe
+            }
+
+            publishedDrawings[postPosition].likes.add(UserService.getUserInfo()._id)
+            recyclerView.adapter?.notifyItemChanged(postPosition)
+            MuseumAdapters.refreshLikeSection(0)
+        })
+    }
+
+    private fun unlikePost(postPosition: Int) {
+        MuseumRepository().unlikePost(publishedDrawings[postPosition]._id).observe(viewLifecycleOwner, { it ->
+            if (it.isError as Boolean) {
+                printToast(requireContext(), it.message!!)
+                return@observe
+            }
+
+            publishedDrawings[postPosition].likes.remove(UserService.getUserInfo()._id)
+            recyclerView.adapter?.notifyItemChanged(postPosition)
+            MuseumAdapters.refreshUnlikeSection(0)
+        })
     }
 
     private fun updateDrawing(updatedDrawing: DrawingModel.UpdateDrawing, position: Int) {
