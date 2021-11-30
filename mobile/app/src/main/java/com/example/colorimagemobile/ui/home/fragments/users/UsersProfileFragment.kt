@@ -6,6 +6,7 @@ import android.view.View
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.colorimagemobile.R
@@ -36,6 +37,8 @@ class UsersProfileFragment : Fragment(R.layout.fragment_users_profile) {
     private var drawingsMenu: ArrayList<DrawingMenuData> = arrayListOf()
     private lateinit var followBtn: Button
     private lateinit var unfollewBtn: Button
+    private lateinit var descriptionCardView : CardView
+    private  var nbFollowers : Int = 0
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -55,7 +58,8 @@ class UsersProfileFragment : Fragment(R.layout.fragment_users_profile) {
             UserService.setRecyclerDataForFollowers()
             UserService.setRecyclerDataForFollowing()
             currentUser = UserService.getUser(userPosition!!)
-
+            nbFollowers = UserService.getUser(userPosition!!).followers.size
+            UserService.setCurrentNbFollowers(nbFollowers)
         }
     }
 
@@ -72,18 +76,46 @@ class UsersProfileFragment : Fragment(R.layout.fragment_users_profile) {
 
     private fun updateUI() {
         MyFragmentManager(requireActivity()).showBackButton()
-        var userIdImageView : ImageView = myView.findViewById(R.id.userIdImageView);
+
+        val userIdImageView : ImageView = myView.findViewById(R.id.userIdImageView);
         myView.findViewById<TextView>(R.id.userIdNameCard).text = currentUser.username
         MyPicasso().loadImage(currentUser.avatar.imageUrl,userIdImageView)
         myView.findViewById<TextView>(R.id.userIdDescription).text = currentUser.description
+        myView.findViewById<TextView>(R.id.userIdNbOfPosts).text = currentUser.posts.size.toString()
+        myView.findViewById<TextView>(R.id.userIdNbOfFollowers).text = currentUser.followers.size.toString()
+        myView.findViewById<TextView>(R.id.userIdNbOfFollowing).text = currentUser.following.size.toString()
 
         followBtn = myView.findViewById<Button>(R.id.FollowBtn)
         unfollewBtn = myView.findViewById<Button>(R.id.UnfollowBtn)
         updateUserButtons()
 
+        descriptionCardView = myView.findViewById(R.id.userIdDescriptionCardView)
+        hideShowDescription()
     }
-    private fun updateUserButtons() {
-     // to be implement on branch Follow unfollow
+    private fun updateUserButtons(){
+        if (UserService.isCurrentUser(userPosition!!)) {
+            followBtn.visibility = View.GONE
+            unfollewBtn.visibility = View.GONE
+        } else{
+            updateButtons()
+        }
+    }
+
+    private fun updateButtons() {
+        if (UserService.isAlreadyFollower(userPosition!!)) {
+            hideFollowBtn()
+        } else {
+            showFollowBtn()
+        }
+    }
+
+    private fun hideShowDescription(){
+        if (UserService.isDescriptionNullOrBlank(userPosition!!)){
+            descriptionCardView.visibility = View.GONE
+        } else {
+            descriptionCardView.visibility = View.VISIBLE
+        }
+
     }
 
     private fun hideFollowBtn() {
@@ -97,7 +129,8 @@ class UsersProfileFragment : Fragment(R.layout.fragment_users_profile) {
     }
 
     private fun setListeners() {
-        myView.findViewById<TabLayout>(R.id.userProfileDrawingsTabLayout).addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+        myView.findViewById<TabLayout>(R.id.userProfileDrawingsTabLayout).
+        addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
 
             override fun onTabSelected(tab: TabLayout.Tab?) {
                 when (tab!!.position) {
@@ -109,12 +142,17 @@ class UsersProfileFragment : Fragment(R.layout.fragment_users_profile) {
             override fun onTabUnselected(tab: TabLayout.Tab?) { }
         })
         followBtn.setOnClickListener {
-            // to be implement on branch follow unfollow
+            UserService.followUser(userPosition!!, requireContext())
+            myView.findViewById<TextView>(R.id.userIdNbOfFollowers).text = UserService.getCurrentNbFollower().toString()
             hideFollowBtn()
+
+
         }
         unfollewBtn.setOnClickListener {
-            // to be implement on branch follow unfollow
+            UserService.unfollowUser(userPosition!!, requireContext())
             showFollowBtn()
+
+            myView.findViewById<TextView>(R.id.userIdNbOfFollowers).text = UserService.getCurrentNbFollower().toString()
         }
         showfollower.setOnClickListener {
             val showFollowers = FollowersListBottomSheet()
