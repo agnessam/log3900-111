@@ -13,8 +13,9 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.colorimagemobile.R
-import com.example.colorimagemobile.bottomsheets.DeleteChannelConfirmationBottomSheet
+import com.example.colorimagemobile.bottomsheets.ConfirmationBottomSheet
 import com.example.colorimagemobile.classes.JSONConvertor
+import com.example.colorimagemobile.enumerators.ButtonType
 import com.example.colorimagemobile.models.ChatSocketModel
 import com.example.colorimagemobile.models.TextChannelModel
 import com.example.colorimagemobile.repositories.TextChannelRepository
@@ -110,8 +111,10 @@ class ChatMessageBoxFragment : Fragment(R.layout.fragment_chat_message_box) {
         myView.findViewById<Button>(R.id.channel_load_more_btn).setOnClickListener { loadPreviousMessages() }
 
         myView.findViewById<Button>(R.id.channel_delete_btn).setOnClickListener {
-            val deleteConfirmation = DeleteChannelConfirmationBottomSheet()
-            deleteConfirmation.show(parentFragmentManager, "DeleteChannelConfirmationBottomSheet")
+            val title = "Delete channel confirmation"
+            val description = "Are you sure you want to delete the following channel?\n${TextChannelService.getCurrentChannel().name}"
+            val deleteConfirmation = ConfirmationBottomSheet({deleteChannel()}, title, description, "DELETE", ButtonType.DELETE.toString())
+            deleteConfirmation.show(parentFragmentManager, "ConfirmationBottomSheet")
         }
 
         // close keyboard when clicked on screen but allow scroll
@@ -121,6 +124,19 @@ class ChatMessageBoxFragment : Fragment(R.layout.fragment_chat_message_box) {
             }
             v?.onTouchEvent(event) ?: true
         }
+    }
+
+    private fun deleteChannel() {
+        val channelRepository = TextChannelRepository()
+        val currentChannel = TextChannelService.getCurrentChannel()
+
+        TextChannelService.deleteChannel(currentChannel)
+        ChatService.refreshChatBox(requireActivity())
+        TextChannelService.refreshChannelList()
+
+        channelRepository.deleteChannelById(currentChannel._id as String, currentChannel.name).observe(this, {
+            printToast(requireActivity(), it.message!!)
+        })
     }
 
     private fun sendChat() {

@@ -107,6 +107,33 @@ export class DrawingRepository extends GenericRepository<DrawingInterface> {
     });
   }
 
+  public async findManyDrawingsById(ids: string[]) {
+    return new Promise<DrawingInterface[]>((resolve, reject) => {
+      const query = { _id: { $in: ids } };
+      Drawing.find(query as any)
+        .populate('owner')
+        .exec((err, drawings) => {
+          if (err) {
+            reject(err);
+          }
+          resolve(drawings);
+        });
+    });
+  }
+
+  public async findManyDrawingsByQuery(query: any) {
+    return new Promise<DrawingInterface[]>((resolve, reject) => {
+      Drawing.find(query as any)
+        .populate('owner')
+        .exec((err, drawings) => {
+          if (err) {
+            reject(err);
+          }
+          resolve(drawings);
+        });
+    });
+  }
+
   public async publishDrawing(
     drawing: DrawingInterface,
   ): Promise<PostInterface> {

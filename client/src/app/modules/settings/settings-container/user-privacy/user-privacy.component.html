@@ -1,0 +1,78 @@
+<div id="user-privacy" *ngIf="userLoaded | async">
+  <mat-card-title style="padding-left: 50px; padding-bottom: 40px">
+    Privacy & Safety
+  </mat-card-title>
+
+  <div fxLayout="column" fxLayoutAlign="center" fxLayoutGap="50px">
+    <mat-card id="privacy-card">
+      <mat-card-content>
+        <mat-card-title> Search filtering</mat-card-title>
+        <div>
+          <mat-card id="privacy">
+            <mat-card-content>
+              <div fxLayout="column" fxLayoutAlign="center">
+                <div fxFlex="33%">
+                  <div fxLayout="row wrap">
+                    <div fxFlex="50%">
+                      <p>Allow users to search you with your e-mail</p>
+                      <mat-card-subtitle>
+                        Disabling this setting prevents users by finding you and
+                        your drawings with your e-mail via our search
+                        functionality.
+                      </mat-card-subtitle>
+                    </div>
+                    <div fxFlex="50%" class="toggle">
+                      <br />
+                      <mat-slide-toggle
+                        (change)="toggleSearchableByEmail($event)"
+                        [ngModel]="user.privacySetting.searchableByEmail"
+                      ></mat-slide-toggle>
+                    </div>
+                  </div>
+                </div>
+                <div fxFlex="33%">
+                  <div fxLayout="row wrap">
+                    <div fxFlex="50%">
+                      <p>Allow users to search you with your first name</p>
+                      <mat-card-subtitle>
+                        Disabling this setting prevents users by finding you and
+                        your drawings with your first name via our search
+                        functionality.
+                      </mat-card-subtitle>
+                    </div>
+                    <div fxFlex="50%" class="toggle">
+                      <br />
+                      <mat-slide-toggle
+                        (change)="toggleSearchableByFirstName($event)"
+                        [ngModel]="user.privacySetting.searchableByFirstName"
+                      ></mat-slide-toggle>
+                    </div>
+                  </div>
+                </div>
+                <div fxFlex="33%">
+                  <div fxLayout="row wrap">
+                    <div fxFlex="50%">
+                      <p>Allow users to search you with your last name</p>
+                      <mat-card-subtitle>
+                        Disabling this setting prevents users by finding you and
+                        your drawings with your last name via our search
+                        functionality.
+                      </mat-card-subtitle>
+                    </div>
+                    <div fxFlex="50%" class="toggle">
+                      <br />
+                      <mat-slide-toggle
+                        (change)="toggleSearchableByLastName($event)"
+                        [ngModel]="user.privacySetting.searchableByLastName"
+                      ></mat-slide-toggle>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </mat-card-content>
+          </mat-card>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>

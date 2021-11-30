@@ -1,0 +1,28 @@
+<mat-card class="post" (click)="openPostDialog()">
+  <img
+    alt=""
+    [src]="getSanitizedUrl(post.dataUri)"
+    width="100%"
+    height="100%"
+    class="post-img"
+  />
+
+  <div class="post-overlay">
+    <mat-card-title>
+      <div class="post-name">
+        {{ post.name }}
+      </div>
+      <p class="post-creation-date">{{ post.createdAt.toString() }}</p>
+    </mat-card-title>
+    <div class="post-stats">
+      <div class="inline-block-child">
+        {{ post.likes.length }}
+        <mat-icon inline="true" class="icon">favorite</mat-icon>
+      </div>
+      <div class="inline-block-child comments">
+        {{ post.comments.length }}
+        <mat-icon inline="true" class="icon">chat_bubble</mat-icon>
+      </div>
+    </div>
+  </div>
+</mat-card>

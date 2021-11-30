@@ -47,6 +47,7 @@ export class UserRepository extends GenericRepository<UserInterface> {
           populate: { path: 'drawing' },
         })
         .populate({ path: 'drawings', populate: { path: 'owner' } })
+        .populate({ path: 'posts', populate: { path: 'owner' } })
         .exec((err, user) => {
           if (err || !user) {
             reject(err);
