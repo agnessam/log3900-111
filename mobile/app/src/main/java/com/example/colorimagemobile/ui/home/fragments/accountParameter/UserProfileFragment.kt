@@ -39,7 +39,7 @@ class UserProfileFragment : Fragment() {
         view.findViewById<TextView>(R.id.myPrivacy).setOnClickListener {
 
             // to be change after i create view for account visibility
-            changeTxtColor(myPrivacy,modifyprofile,history,history,history)
+            changeTxtColor(myPrivacy,modifyprofile,history,stat,history)
             val showUserProfile = ShowUserProfileFragment()
             parentFragmentManager.beginTransaction().replace(R.id.newLayout, showUserProfile)
                 .commit()
@@ -47,7 +47,7 @@ class UserProfileFragment : Fragment() {
         }
         view.findViewById<TextView>(R.id.modifyprofile).setOnClickListener {
 
-            changeTxtColor(modifyprofile,myPrivacy,history,history,history)
+            changeTxtColor(modifyprofile,myPrivacy,history,stat,history)
             val editProfileFragment = EditProfileFragment()
             parentFragmentManager.beginTransaction().replace(R.id.newLayout, editProfileFragment)
                 .commit()
@@ -55,9 +55,18 @@ class UserProfileFragment : Fragment() {
         }
         view.findViewById<TextView>(R.id.history).setOnClickListener {
 
-            changeTxtColor(history,modifyprofile,myPrivacy,history,history)
+            changeTxtColor(history,modifyprofile,myPrivacy,stat,history)
             val history = UserProfileHistoryFragment()
             parentFragmentManager.beginTransaction().replace(R.id.newLayout, history)
+                .commit()
+
+
+        }
+        view.findViewById<TextView>(R.id.stat).setOnClickListener {
+
+            changeTxtColor(stat,modifyprofile,myPrivacy,history,history)
+            val stat = UserStatistic()
+            parentFragmentManager.beginTransaction().replace(R.id.newLayout, stat)
                 .commit()
 
 
