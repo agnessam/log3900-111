@@ -29,6 +29,7 @@ class UsersMenuFragment : Fragment(R.layout.fragment_users_menu) {
     }
 
     private fun getAllUsers() {
+        UserService.setUserPosition(0)
         myView.findViewById<TextView>(R.id.loadingUsersText).visibility = View.VISIBLE
 
         UserRepository().getAllUser(UserService.getToken()).observe(viewLifecycleOwner, { it ->

@@ -17,6 +17,7 @@ object UserService {
     private var updateProfileData : UserModel.UpdateUser
     private lateinit var allUserInfo : ArrayList<UserModel.AllInfo>
     private var actualNbFollowers : Int = 0
+    private var userPositionForMenuNavigation: Int? = null
 
     init {
         updateProfileData =UserModel.UpdateUser(null,null,null)
@@ -133,6 +134,19 @@ object UserService {
         })
 
         actualNbFollowers--
+    }
+
+    fun setUserPosition(position : Int?){
+        userPositionForMenuNavigation = position
+    }
+
+    fun getUserPosition(): Int?{
+        return userPositionForMenuNavigation
+    }
+
+    fun getUserMePosition(): Int {
+        val position = allUserInfo.indexOf(allUserInfo.find { user -> user._id == info._id })
+        return  position
     }
 
 

@@ -21,6 +21,7 @@ import com.example.colorimagemobile.httpresponsehandler.GlobalHandler
 import com.example.colorimagemobile.models.*
 import com.example.colorimagemobile.services.users.UserService
 import com.example.colorimagemobile.repositories.SearchRepository
+import com.example.colorimagemobile.repositories.UserRepository
 import com.example.colorimagemobile.services.SearchService
 import com.example.colorimagemobile.services.SharedPreferencesService
 import com.example.colorimagemobile.services.drawing.DrawingObjectManager
@@ -34,6 +35,7 @@ import com.example.colorimagemobile.ui.home.fragments.teams.TeamsFragmentDirecti
 import com.example.colorimagemobile.ui.home.fragments.accountParameter.UserProfileFragmentDirections
 import com.example.colorimagemobile.ui.home.fragments.users.UsersFragmentDirections
 import com.example.colorimagemobile.ui.home.fragments.users.UsersProfileFragmentDirections
+import com.example.colorimagemobile.utils.CommonFun
 import com.example.colorimagemobile.utils.CommonFun.Companion.printToast
 import com.example.colorimagemobile.utils.CommonFun.Companion.redirectTo
 import com.example.colorimagemobile.utils.Constants
@@ -59,6 +61,7 @@ class HomeActivity : AppCompatActivity() {
         bottomNav = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
 
         setBottomNavigationView()
+        getAllUsers()
     }
 
     // side navigation navbar: upon click, change to new fragment
@@ -210,6 +213,7 @@ class HomeActivity : AppCompatActivity() {
 
     // menu item show user profile
     private fun showUserProfile(){
+        UserService.setUserPosition(null)
         // define path
         val showUserProfileFromGallery = GalleryFragmentDirections.actionGalleryFragmentToShowUserProfileFragment()
         val showUserProfileFromTeam = TeamsFragmentDirections.actionTeamsFragmentToShowUserProfileFragment()
@@ -261,4 +265,17 @@ class HomeActivity : AppCompatActivity() {
             MyFragmentManager(this).openWithData(R.id.fragment, SearchFragment(), Constants.SEARCH.CURRENT_QUERY, filteredData)
         })
     }
+
+    private fun getAllUsers() {
+        UserRepository().getAllUser(UserService.getToken()).observe(this,{ it ->
+            // some error occurred during HTTP request
+            if (it.isError as Boolean) {
+                CommonFun.printToast(this, it.message!!)
+                return@observe
+            }
+            val users = it.data as ArrayList<UserModel.AllInfo>
+            UserService.setAllUserInfo(users)
+        })
+    }
+
 }

@@ -40,7 +40,15 @@ class UsersProfileFragment : Fragment(R.layout.fragment_users_profile) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            userPosition = it.getInt(Constants.USERS.CURRENT_USER_ID_KEY)
+            if (UserService.getUserPosition() == null){
+                userPosition = UserService.getUserMePosition()
+                UserService.setUserPosition(0)
+
+            }else if(it.getInt(Constants.USERS.CURRENT_USER_ID_KEY)>=0 ){
+                userPosition = it.getInt(Constants.USERS.CURRENT_USER_ID_KEY)
+                UserService.setUserPosition(userPosition)
+
+            }
             currentUser = UserService.getUser(userPosition!!)
             nbFollowers = UserService.getUser(userPosition!!).followers.size
             UserService.setCurrentNbFollowers(nbFollowers)
