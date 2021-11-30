@@ -96,13 +96,32 @@ export class UserRepository extends GenericRepository<UserInterface> {
                 $size: '$collaborations',
               },
               averageCollaborationTime: {
-                $avg: {
-                  $map: {
-                    input: '$collaborations',
-                    as: 'e1',
-                    in: '$$e1.timeSpent',
+                $round: [
+                  {
+                    $avg: {
+                      $map: {
+                        input: '$collaborations',
+                        as: 'e1',
+                        in: '$$e1.timeSpent',
+                      },
+                    },
                   },
-                },
+                  2,
+                ],
+              },
+              totalCollaborationTime: {
+                $round: [
+                  {
+                    $sum: {
+                      $map: {
+                        input: '$collaborations',
+                        as: 'e1',
+                        in: '$$e1.timeSpent',
+                      },
+                    },
+                  },
+                  2,
+                ],
               },
             },
           },
