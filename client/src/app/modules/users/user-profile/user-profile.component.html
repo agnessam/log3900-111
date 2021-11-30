@@ -23,6 +23,9 @@
         <button mat-raised-button color="primary" *ngIf="!isMyProfile()">
           Follow
         </button>
+        <button mat-raised-button color="warn" disabled *ngIf="!isMyProfile()">
+          Unfollow
+        </button>
         <button
           mat-raised-button
           color="primary"

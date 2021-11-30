@@ -86,4 +86,24 @@ export class UsersService {
       })
     );
   }
+
+  followUser(userId: string) {
+    return this.httpClient
+      .post<any>(`${this.endpointUrl}/${userId}/followers/follow`, {})
+      .pipe(
+        map((response) => {
+          return response;
+        })
+      );
+  }
+
+  unfollowUser(userId: string) {
+    return this.httpClient
+      .post<any>(`${this.endpointUrl}/${userId}/followers/unfollow`, {})
+      .pipe(
+        map((response) => {
+          return response;
+        })
+      );
+  }
 }
