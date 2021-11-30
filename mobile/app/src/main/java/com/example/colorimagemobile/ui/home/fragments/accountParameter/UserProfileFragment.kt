@@ -1,13 +1,16 @@
 package com.example.colorimagemobile.ui.home.fragments.accountParameter
 
+import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.example.colorimagemobile.R
 import com.example.colorimagemobile.ui.userProfile.EditProfileFragment
+import kotlinx.android.synthetic.main.fragment_user_profile.*
 
 
 class UserProfileFragment : Fragment() {
@@ -27,31 +30,32 @@ class UserProfileFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        myPrivacy.setTextColor(Color.parseColor("#4050b5"))
         val showUserProfile = ShowUserProfileFragment()
         parentFragmentManager.beginTransaction().replace(R.id.newLayout, showUserProfile)
             .commit()
 
 
-        view.findViewById<TextView>(R.id.parametredecompt).setOnClickListener {
+        view.findViewById<TextView>(R.id.myPrivacy).setOnClickListener {
+
+            // to be change after i create view for account visibility
+            changeTxtColor(myPrivacy,modifyprofile,history,history,history)
             val showUserProfile = ShowUserProfileFragment()
             parentFragmentManager.beginTransaction().replace(R.id.newLayout, showUserProfile)
                 .commit()
 
         }
         view.findViewById<TextView>(R.id.modifyprofile).setOnClickListener {
+
+            changeTxtColor(modifyprofile,myPrivacy,history,history,history)
             val editProfileFragment = EditProfileFragment()
             parentFragmentManager.beginTransaction().replace(R.id.newLayout, editProfileFragment)
                 .commit()
 
         }
-        view.findViewById<TextView>(R.id.password).setOnClickListener {
-            val passwordFragment = PasswordFragment()
-            parentFragmentManager.beginTransaction().replace(R.id.newLayout, passwordFragment)
-                .commit()
+        view.findViewById<TextView>(R.id.history).setOnClickListener {
 
-        }
-        view.findViewById<TextView>(R.id.historique).setOnClickListener {
+            changeTxtColor(history,modifyprofile,myPrivacy,history,history)
             val history = UserProfileHistoryFragment()
             parentFragmentManager.beginTransaction().replace(R.id.newLayout, history)
                 .commit()
@@ -59,6 +63,14 @@ class UserProfileFragment : Fragment() {
 
         }
 
+    }
+
+    private fun changeTxtColor(selectedTxt: TextView, menuTxt1: TextView,menuTxt2: TextView,menuTxt3: TextView,menuTxt4: TextView) {
+        selectedTxt.setTextColor(Color.parseColor("#4050b5"))
+        menuTxt1.setTextColor(Color.parseColor("#888888"))
+        menuTxt2.setTextColor(Color.parseColor("#888888"))
+        menuTxt3.setTextColor(Color.parseColor("#888888"))
+        menuTxt4.setTextColor(Color.parseColor("#888888"))
     }
 
 
