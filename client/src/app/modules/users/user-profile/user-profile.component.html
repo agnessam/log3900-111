@@ -9,7 +9,7 @@
           <h2>{{ this.user.username }}</h2>
         </div>
         <div fxLayout="row grid" fxLayoutAlign="center center">
-          <div fxFlex="33%">
+          <div>
             <p>{{ this.user.followers.length }} followers</p>
           </div>
         </div>
@@ -20,10 +20,20 @@
     </div>
     <div fxFlex="13%" style="text-align: center">
       <div fxLayout="column" fxLayoutGap="12px" fxLayoutAlign="center center">
-        <button mat-raised-button color="primary" *ngIf="!isMyProfile()">
+        <button
+          mat-raised-button
+          color="primary"
+          *ngIf="!isMyProfile() && !isFollowing()"
+          (click)="followUser()"
+        >
           Follow
         </button>
-        <button mat-raised-button color="warn" disabled *ngIf="!isMyProfile()">
+        <button
+          mat-raised-button
+          color="warn"
+          *ngIf="!isMyProfile() && isFollowing()"
+          (click)="openConfirmUnfollowDialog()"
+        >
           Unfollow
         </button>
         <button
