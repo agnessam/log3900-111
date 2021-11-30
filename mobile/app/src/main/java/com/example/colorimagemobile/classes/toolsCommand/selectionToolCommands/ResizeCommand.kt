@@ -8,7 +8,11 @@ import com.example.colorimagemobile.classes.toolsCommand.PencilCommand
 import com.example.colorimagemobile.classes.toolsCommand.RectangleCommand
 import com.example.colorimagemobile.interfaces.ICommand
 import com.example.colorimagemobile.models.ResizeData
+import com.example.colorimagemobile.services.drawing.DrawingJsonService
 import com.example.colorimagemobile.services.drawing.DrawingObjectManager
+import com.example.colorimagemobile.services.drawing.ShapeLabel
+import com.example.colorimagemobile.services.drawing.TransformationManager
+import com.example.colorimagemobile.services.drawing.TransformationManager.previousTransformation
 import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
 
 class ResizeCommand(objectId: String) : ICommand {
@@ -23,17 +27,13 @@ class ResizeCommand(objectId: String) : ICommand {
 
     private var transformationLog: String
 
-    companion object{
-        var previousTransformation: HashMap<String, String> = HashMap()
+    val id: String = objectId
+    val shapeLabel: ShapeLabel? = when(commandToResize){
+        is PencilCommand -> ShapeLabel.POLYLINE
+        is RectangleCommand -> ShapeLabel.RECTANGLE
+        is EllipseCommand -> ShapeLabel.ELLIPSE
+        else -> null
     }
-
-    var id: String = ""
-        get() = when(commandToResize){
-            is PencilCommand -> (commandToResize!! as PencilCommand).pencil.id
-            is RectangleCommand -> (commandToResize!! as RectangleCommand).rectangle.id
-            is EllipseCommand -> (commandToResize as EllipseCommand).ellipse.id
-            else -> ""
-        }
 
     init{
         commandToResize = DrawingObjectManager.getCommand(objectId)
@@ -73,8 +73,9 @@ class ResizeCommand(objectId: String) : ICommand {
             is EllipseCommand -> (commandToResize as EllipseCommand).resize(this.xScale, this.yScale, this.xTranslate, this.yTranslate)
             else -> {}
         }
-        val currentTransformation = " translate($xTranslate $yTranslate) scale($xScale $yScale) translate(-$xTranslate -$yTranslate)"
-        previousTransformation[id] = currentTransformation + transformationLog
+        if(shapeLabel != null){
+            TransformationManager.saveResizeTransformation(xTranslate, yTranslate, xScale, yScale, id, transformationLog, shapeLabel)
+        }
     }
 
     override fun update(drawingCommand: Any) {
