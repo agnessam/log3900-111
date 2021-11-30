@@ -102,7 +102,10 @@ export class SearchService implements SearchServiceInterface {
         drawing.set('collaborators', drawingToCollaborators[drawing._id], {
           strict: false,
         });
+      } else {
+        drawing.set('collaborators', [], { strict: false });
       }
+
       return drawing;
     });
 

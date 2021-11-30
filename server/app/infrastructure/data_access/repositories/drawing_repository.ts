@@ -36,6 +36,8 @@ export class DrawingRepository extends GenericRepository<DrawingInterface> {
                 drawingToCollaborators[drawing._id],
                 { strict: false },
               );
+            } else {
+              drawing.set('collaborators', [], { strict: false });
             }
             return drawing;
           });

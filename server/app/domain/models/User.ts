@@ -6,6 +6,7 @@ import {
   CollaborationHistoryInterface,
   CollaborationHistorySchema,
 } from './CollaborationHistory';
+import { DrawingInterface } from './Drawing';
 import { PostInterface } from './Post';
 import {
   PrivacySettingInterface,
@@ -23,7 +24,7 @@ export interface UserInterface extends Document {
   lastName: string;
   teams: string[] | TeamInterface[];
 
-  drawings: string[];
+  drawings: string[] | DrawingInterface[];
   posts: string[] | PostInterface[];
 
   followers: string[] | UserInterface[];
