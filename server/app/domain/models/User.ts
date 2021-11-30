@@ -7,6 +7,10 @@ import {
   CollaborationHistorySchema,
 } from './CollaborationHistory';
 import { PostInterface } from './Post';
+import {
+  PrivacySettingInterface,
+  PrivacySettingSchema,
+} from './PrivacySetting';
 import { TeamInterface } from './teams';
 
 export interface UserInterface extends Document {
@@ -30,6 +34,8 @@ export interface UserInterface extends Document {
 
   collaborations: CollaborationInterface[];
   collaborationHistory: CollaborationHistoryInterface[];
+
+  privacySetting: PrivacySettingInterface;
 
   isValidPassword(password: string): Promise<boolean>;
 }
@@ -59,6 +65,15 @@ const UserSchema = new mongoose.Schema({
 
   lastLogin: { type: Date },
   lastLogout: { type: Date },
+
+  privacySetting: {
+    type: PrivacySettingSchema,
+    default: {
+      email: false,
+      firstName: false,
+      lastName: false,
+    },
+  },
 
   collaborations: [{ type: CollaborationSchema }],
   collaborationHistory: [{ type: CollaborationHistorySchema }],

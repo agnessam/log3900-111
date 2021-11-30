@@ -36,12 +36,24 @@ export class SearchService implements SearchServiceInterface {
   async search(query: string): Promise<any> {
     const date = this.extractDate(query);
 
+    // Find with username
     const users = await this.userRepository.findManyByQuery({
       $or: [
-        { username: { $regex: new RegExp(query, 'ig') } },
-        { email: { $regex: new RegExp(query, 'ig') } },
-        { firstName: { $regex: new RegExp(query, 'ig') } },
-        { lastName: { $regex: new RegExp(query, 'ig') } },
+        {
+          username: { $regex: new RegExp(query, 'ig') },
+        },
+        {
+          email: { $regex: new RegExp(query, 'ig') },
+          'privacySetting.email': false,
+        },
+        {
+          firstName: { $regex: new RegExp(query, 'ig') },
+          'privacySetting.firstName': false,
+        },
+        {
+          lastName: { $regex: new RegExp(query, 'ig') },
+          'privacySetting.lastName': false,
+        },
       ],
     });
 
