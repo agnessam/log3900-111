@@ -134,6 +134,43 @@ export class DrawingRepository extends GenericRepository<DrawingInterface> {
     });
   }
 
+  public async deleteDrawing(drawingId: string) {
+    return new Promise<DrawingInterface>((resolve, reject) => {
+      Drawing.findOneAndDelete(
+        { _id: drawingId },
+        (err: Error, deletedDrawing: DrawingInterface) => {
+          if (err) {
+            reject(err);
+          }
+
+          if (deletedDrawing.ownerModel == 'User') {
+            User.findById(
+              { _id: deletedDrawing.owner },
+              { $pull: { drawings: deletedDrawing._id } },
+              (err: Error) => {
+                if (err) {
+                  reject(err);
+                }
+              },
+            );
+          } else {
+            Team.findById(
+              { _id: deletedDrawing.owner },
+              { $pull: { drawings: deletedDrawing._id } },
+              (err: Error) => {
+                if (err) {
+                  reject(err);
+                }
+              },
+            );
+          }
+
+          resolve(deletedDrawing);
+        },
+      );
+    });
+  }
+
   public async publishDrawing(
     drawing: DrawingInterface,
   ): Promise<PostInterface> {

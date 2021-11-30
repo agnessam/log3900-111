@@ -53,7 +53,10 @@
       <mat-tab label="All Drawings">
         <div fxLayout="row wrap" id="drawings">
           <div fxFlex="33%" *ngFor="let drawing of user.drawings">
-            <app-drawing-card [drawing]="drawing"></app-drawing-card>
+            <app-drawing-card
+              [drawing]="drawing"
+              (deletedDrawingEvent)="deleteDrawingFromView($event)"
+            ></app-drawing-card>
           </div>
         </div>
       </mat-tab>

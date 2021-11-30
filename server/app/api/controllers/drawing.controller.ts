@@ -2,6 +2,7 @@ import { Request } from 'express';
 import { inject } from 'inversify';
 import {
   controller,
+  httpDelete,
   httpGet,
   httpPatch,
   httpPost,
@@ -40,6 +41,11 @@ export class DrawingController {
       req.params.drawingId,
       req.body,
     );
+  }
+
+  @httpDelete('/:drawingId')
+  public async deleteDrawing(@request() req: Request) {
+    return await this.drawingRepository.deleteDrawing(req.params.drawingId);
   }
 
   @httpPost('/:drawingId/publish')

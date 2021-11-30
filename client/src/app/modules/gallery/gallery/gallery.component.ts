@@ -1,6 +1,6 @@
 import { MatDialog } from "@angular/material/dialog";
 import { NewDrawingComponent } from "../../new-drawing";
-import { Component, AfterViewInit } from "@angular/core";
+import { Component, AfterViewInit, ChangeDetectorRef } from "@angular/core";
 import { DrawingHttpClientService } from "../../backend-communication";
 import { Drawing } from "src/app/shared";
 import { DomSanitizer, SafeUrl } from "@angular/platform-browser";
@@ -18,7 +18,8 @@ export class GalleryComponent implements AfterViewInit {
   constructor(
     private dialog: MatDialog,
     private drawingHttpClient: DrawingHttpClientService,
-    private sanitizer: DomSanitizer
+    private sanitizer: DomSanitizer,
+    private changeDetector: ChangeDetectorRef
   ) {
     this.userId = localStorage.getItem("userId")!;
   }
@@ -39,6 +40,11 @@ export class GalleryComponent implements AfterViewInit {
 
   createNewDrawing() {
     this.dialog.open(NewDrawingComponent, {});
+  }
+
+  deleteDrawingFromView(deletedDrawing: Drawing) {
+    this.drawings.splice(this.drawings.indexOf(deletedDrawing), 1);
+    this.changeDetector.detectChanges();
   }
 
   hasPermission(drawing: Drawing): boolean {

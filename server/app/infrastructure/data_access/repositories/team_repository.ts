@@ -87,6 +87,17 @@ export class TeamRepository extends GenericRepository<TeamInterface> {
           if (err || !deletedTeam) {
             reject(err);
           }
+
+          User.findByIdAndUpdate(
+            { _id: deletedTeam.owner },
+            { $pull: { teams: deletedTeam._id } },
+            (err: Error) => {
+              if (err) {
+                reject(err);
+              }
+            },
+          );
+
           Drawing.deleteMany({ _id: { $in: deletedTeam.drawings } }, (err) => {
             if (err) {
               reject(err);

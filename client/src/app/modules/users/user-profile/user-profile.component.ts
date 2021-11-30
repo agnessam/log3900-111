@@ -1,6 +1,7 @@
 import { ChangeDetectorRef, Component, OnInit } from "@angular/core";
 import { MatDialog, MatDialogRef } from "@angular/material/dialog";
 import { ActivatedRoute, Router } from "@angular/router";
+import { Drawing } from "src/app/shared";
 import { User } from "../models/user";
 import { UsersService } from "../services/users.service";
 import { ConfirmUnfollowDialogComponent } from "./confirm-unfollow-dialog/confirm-unfollow-dialog.component";
@@ -63,6 +64,14 @@ export class UserProfileComponent implements OnInit {
       this.user.followers = user.followers;
       this.changeDetector.detectChanges();
     });
+  }
+
+  deleteDrawingFromView(deletedDrawing: Drawing) {
+    this.user.drawings!.splice(
+      (this.user.drawings! as Drawing[]).indexOf(deletedDrawing),
+      1
+    );
+    this.changeDetector.detectChanges();
   }
 
   isMyProfile(): boolean {
