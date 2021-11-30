@@ -16,6 +16,8 @@ export interface DrawingInterface extends Document {
   privacyLevel: PRIVACY_LEVEL;
   password: string;
 
+  collaborators: string[];
+
   createdAt: string;
   updatedAt: string;
 }

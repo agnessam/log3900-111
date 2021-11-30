@@ -50,7 +50,7 @@
   <br />
   <div id="user-drawings">
     <mat-tab-group mat-align-tabs="center">
-      <mat-tab label="All Drawings">
+      <mat-tab label="Drawings">
         <div fxLayout="row wrap" id="drawings">
           <div fxFlex="33%" *ngFor="let drawing of user.drawings">
             <app-drawing-card
@@ -60,7 +60,7 @@
           </div>
         </div>
       </mat-tab>
-      <mat-tab label="Published Drawings">
+      <mat-tab label="Posts">
         <div fxLayout="row wrap" id="posts">
           <div fxFlex="33%" *ngFor="let post of user.posts">
             <app-post-card [post]="post"></app-post-card>

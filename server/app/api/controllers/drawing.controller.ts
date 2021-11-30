@@ -11,14 +11,22 @@ import {
 import { TYPES } from '../../domain/constants/types';
 import { DrawingRepository } from '../../infrastructure/data_access/repositories/drawing_repository';
 import passport from 'passport';
+import { CollaborationTrackerService } from '@app/domain/services/collaboration-tracker.service';
 
 @controller('/drawings', passport.authenticate('jwt', { session: false }))
 export class DrawingController {
   @inject(TYPES.DrawingRepository) public drawingRepository: DrawingRepository;
+  @inject(TYPES.CollaborationTrackerService)
+  public collaborationTrackerService: CollaborationTrackerService;
 
   @httpGet('/')
   public async get() {
     return await this.drawingRepository.getPopulatedDrawings();
+  }
+
+  @httpGet('/collaborators')
+  public getDrawingCollaborators() {
+    return this.collaborationTrackerService.getDrawingCollaborators();
   }
 
   @httpGet('/:drawingId')

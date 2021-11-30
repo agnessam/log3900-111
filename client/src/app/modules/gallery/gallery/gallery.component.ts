@@ -14,6 +14,7 @@ import { User } from "../../users/models/user";
 })
 export class GalleryComponent implements AfterViewInit {
   drawings: Array<Drawing> = [];
+
   userId: string;
   constructor(
     private dialog: MatDialog,
@@ -39,6 +40,7 @@ export class GalleryComponent implements AfterViewInit {
   }
 
   createNewDrawing() {
+    console.log(this.drawings);
     this.dialog.open(NewDrawingComponent, {});
   }
 
