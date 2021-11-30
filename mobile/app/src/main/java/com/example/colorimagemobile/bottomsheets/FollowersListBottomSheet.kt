@@ -5,10 +5,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.colorimagemobile.R
 import com.example.colorimagemobile.adapter.FollowersListRecyclerAdapter
+import com.example.colorimagemobile.utils.Constants
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -37,7 +39,7 @@ class FollowersListBottomSheet : BottomSheetDialogFragment() , FollowersListRecy
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        layoutManagerFollower = LinearLayoutManager(context)
+        layoutManagerFollower = GridLayoutManager(context,Constants.NB_DATA_ROWS_TWO)
         recyclerViewFollowers.layoutManager = layoutManagerFollower
         adapterFollower = FollowersListRecyclerAdapter(this)
         recyclerViewFollowers.adapter = adapterFollower

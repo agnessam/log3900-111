@@ -156,7 +156,7 @@ class EditProfileFragment : Fragment() {
 
         setDataToUpdate()
         areFieldEmpty()
-        UserService.setNewProfileData(newUserData)
+//        UserService.setNewProfileData(newUserData)
 
         // update user
         updateUserInfo().observe(viewLifecycleOwner, { context?.let { it1 ->globalHandler.response(it1,it) } })
@@ -165,7 +165,7 @@ class EditProfileFragment : Fragment() {
         clearTextField()
 
         // update local user data
-        UserService.updateUserAfterUpdate(UserService.getNewProfileData())
+//        UserService.updateUserAfterUpdate(UserService.getNewProfileData())
 
         // update menu item
         requireActivity().invalidateOptionsMenu()

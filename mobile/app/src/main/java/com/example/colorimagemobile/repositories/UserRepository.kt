@@ -41,7 +41,7 @@ class UserRepository {
 
     // update user profile data
     fun updateUserData(token: String, id: String): MutableLiveData<DataWrapper<HTTPResponseModel.UserResponse>> {
-        newProfileDate = UserService.getNewProfileData()
+//        newProfileDate = UserService.getNewProfileData()
 
         val updateLiveData: MutableLiveData<DataWrapper<HTTPResponseModel.UserResponse>> = MutableLiveData()
 

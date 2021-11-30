@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.colorimagemobile.R
 import com.example.colorimagemobile.adapter.DrawingMenuRecyclerAdapter
+import com.example.colorimagemobile.bottomsheets.FollowersListBottomSheet
 import com.example.colorimagemobile.classes.MyFragmentManager
 import com.example.colorimagemobile.classes.MyPicasso
 import com.example.colorimagemobile.models.DrawingModel
@@ -24,6 +25,7 @@ import com.example.colorimagemobile.utils.CommonFun.Companion.printToast
 import com.example.colorimagemobile.utils.Constants
 import com.google.android.material.tabs.TabLayout
 import kotlinx.android.synthetic.main.fragment_teams_profile.*
+import kotlinx.android.synthetic.main.fragment_users_profile.*
 
 class UsersProfileFragment : Fragment(R.layout.fragment_users_profile) {
     private var userPosition: Int? = null
@@ -40,7 +42,16 @@ class UsersProfileFragment : Fragment(R.layout.fragment_users_profile) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            userPosition = it.getInt(Constants.USERS.CURRENT_USER_ID_KEY)
+            if (UserService.getUserPosition() == null){
+                userPosition = UserService.getUserMePosition()
+                UserService.setUserPosition(0)
+
+            }else if(it.getInt(Constants.USERS.CURRENT_USER_ID_KEY)>=0 ){
+                userPosition = it.getInt(Constants.USERS.CURRENT_USER_ID_KEY)
+                UserService.setUserPosition(userPosition)
+
+            }
+            UserService.setRecyclerDataForFollowers()
             currentUser = UserService.getUser(userPosition!!)
             nbFollowers = UserService.getUser(userPosition!!).followers.size
             UserService.setCurrentNbFollowers(nbFollowers)
@@ -137,6 +148,11 @@ class UsersProfileFragment : Fragment(R.layout.fragment_users_profile) {
             showFollowBtn()
 
             myView.findViewById<TextView>(R.id.userIdNbOfFollowers).text = UserService.getCurrentNbFollower().toString()
+        }
+
+        showFollowerList.setOnClickListener {
+            val showFollowers = FollowersListBottomSheet()
+            showFollowers.show(parentFragmentManager, "showFollowers")
         }
     }
 

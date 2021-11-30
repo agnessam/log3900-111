@@ -13,7 +13,6 @@ import com.example.colorimagemobile.services.users.UserService
 class FollowersListRecyclerAdapter(private val listener: OnItemClickListener) : RecyclerView.Adapter<FollowersListRecyclerAdapter.ViewHolder>() {
 
     override fun onBindViewHolder(holder: FollowersListRecyclerAdapter.ViewHolder, position: Int) {
-
         holder.username.text = UserService.getRecyclerDataForMyFollowers()[position].username
         MyPicasso().loadImage(UserService.getRecyclerDataForMyFollowers()[position].avatar.imageUrl, holder.image)
     }
