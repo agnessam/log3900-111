@@ -31,7 +31,7 @@ export class UserProfileComponent implements OnInit {
   ngOnInit(): void {}
 
   isMyProfile(): boolean {
-    return this.user._id == this.userId;
+    return this.user._id == localStorage.getItem("userId");
   }
 
   navigateToSettingsPage() {
