@@ -31,7 +31,9 @@
           <button mat-menu-item (click)="openEditDrawingParametersDialog()">
             <span>Edit parameters</span>
           </button>
-          <button mat-menu-item><span>Delete</span></button>
+          <button mat-menu-item (click)="openConfirmDeleteDrawingDialog()">
+            <span>Delete</span>
+          </button>
         </mat-menu>
       </div>
       <p class="drawing-privacy-level">
