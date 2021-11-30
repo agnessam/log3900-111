@@ -20,6 +20,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="20dp"
             android:text="@string/compte_parameter"
+            android:textColor="@color/black"
             android:textStyle="bold"
             android:textSize="30sp" />
 
@@ -28,39 +29,37 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="20dp"
+            android:textColor="@color/primary"
             android:text="My Profile"
-            android:textSize="30sp" />
+            android:textSize="20sp" />
         <TextView
             android:id="@+id/modifyprofile"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="20dp"
+            android:textColor="@color/primary"
             android:text="@string/privacy_safety"
-            android:textSize="30sp" />
+            android:textSize="20sp" />
 
         <TextView
             android:id="@+id/history"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="20dp"
+            android:textColor="@color/primary"
             android:text="@string/history_log"
-            android:textSize="30sp" />
+            android:textSize="20sp" />
 
         <TextView
         android:id="@+id/stat"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="20dp"
+        android:textColor="@color/primary"
         android:text="Statistics"
-        android:textSize="30sp" />
+        android:textSize="20sp" />
 
-        <TextView
-            android:id="@+id/visibility"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="20dp"
-            android:text="Account Visibility"
-            android:textSize="30sp" />
+
 
     </LinearLayout>
     <androidx.constraintlayout.widget.ConstraintLayout

@@ -14,6 +14,7 @@ import com.example.colorimagemobile.repositories.UserRepository
 import com.example.colorimagemobile.services.users.UserService
 import com.example.colorimagemobile.ui.userProfile.EditProfileFragment
 import kotlinx.android.synthetic.main.fragment_user_profile.*
+import org.w3c.dom.Text
 
 
 class UserProfileFragment : Fragment() {

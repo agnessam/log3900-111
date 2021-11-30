@@ -73,8 +73,8 @@ class UserProfileHistoryFragment : Fragment(R.layout.fragment_user_profile_histo
 
             drawings = it.data  as ArrayList<DrawingModel.Drawing>
             DrawingService.setAllDrawings(drawings)
-            val collabDrawing = DrawingService.getCollaborationDrawingObject()
-            allDrawingToShow = DrawingService.getDrawingsBitmap(requireContext(), collabDrawing)
+//            val collabDrawing = DrawingService.getCollaborationDrawingObject()
+//            allDrawingToShow = DrawingService.getDrawingsBitmap(requireContext(), collabDrawing)
 
 //            val adapter = CollabHistoryAdapterService.createAdapter(requireActivity(), R.layout.card_collaboration_history, R.id.collabHistoryRecyclerView)
 //            recyclerView.adapter = adapter

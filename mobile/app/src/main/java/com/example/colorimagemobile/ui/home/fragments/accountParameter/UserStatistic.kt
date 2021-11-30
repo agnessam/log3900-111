@@ -25,7 +25,9 @@ class UserStatistic : Fragment() {
         inf.findViewById<TextView>(R.id.nbDrawings).text = UserService.getStat().numberOfDrawings.toString()
         inf.findViewById<TextView>(R.id.nbTeams).text = UserService.getStat().numberOfTeams.toString()
         val averageTime = String.format("%.2f",UserService.getStat().averageCollaborationTime)+Constants.MINUTES
-        inf.findViewById<TextView>(R.id.Time).text = averageTime
+        val totalTime = String.format("%.2f",UserService.getStat().totalCollaborationTime)+Constants.MINUTES
+        inf.findViewById<TextView>(R.id.averageTime).text = averageTime
+        inf.findViewById<TextView>(R.id.totalTime).text = totalTime
         return inf
     }
 
