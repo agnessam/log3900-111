@@ -1,4 +1,4 @@
-<div id="search">
+<div id="search" *ngIf="searchCompleted | async">
   <h2>Search results for {{ this.searchQuery }}</h2>
   <mat-tab-group mat-align-tabs="start">
     <mat-tab label="Drawings">
