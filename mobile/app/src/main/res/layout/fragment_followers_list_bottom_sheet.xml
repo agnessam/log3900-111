@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/FollowersListView"
+    tools:context=".bottomsheets.FollowersListBottomSheet">
+
+    <TextView
+        android:layout_width="276dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="11dp"
+        android:text="My Followers List"
+        android:textColor="@color/primary"
+        android:textSize="30sp">
+
+    </TextView>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerViewFollowers"
+        android:layout_width="match_parent"
+        android:layout_height="581dp"
+        android:layout_marginTop="100dp"
+        android:orientation="horizontal">
+
+    </androidx.recyclerview.widget.RecyclerView>
+
+</FrameLayout>
