@@ -69,6 +69,25 @@
                     </div>
                   </div>
                 </div>
+
+                <div fxFlex="33%">
+                  <div fxLayout="row wrap">
+                    <div fxFlex="50%">
+                      <mat-card-subtitle
+                        >Total time collaborating:
+                      </mat-card-subtitle>
+                    </div>
+                    <div fxFlex="50%" *ngIf="statistics.totalCollaborationTime">
+                      {{ statistics.totalCollaborationTime }} minutes
+                    </div>
+                    <div
+                      fxFlex="50%"
+                      *ngIf="!statistics.totalCollaborationTime"
+                    >
+                      You haven't collaborated yet.
+                    </div>
+                  </div>
+                </div>
               </div>
             </mat-card-content>
           </mat-card>

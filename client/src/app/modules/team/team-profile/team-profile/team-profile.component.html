@@ -77,7 +77,10 @@
             *ngFor="let drawing of team.drawings"
             class="team-drawing-card"
           >
-            <app-drawing-card [drawing]="drawing"></app-drawing-card>
+            <app-drawing-card
+              [drawing]="drawing"
+              (deletedDrawingEvent)="deleteDrawingFromView($event)"
+            ></app-drawing-card>
           </div>
         </div>
       </mat-tab>

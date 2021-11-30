@@ -1,0 +1,22 @@
+<h1 mat-dialog-title>
+  Are you sure you want to delete <i>{{ data.name }}</i>
+</h1>
+<p>
+  All data will be lost and permanently erased from ColorImage. This action is
+  irreversible.
+</p>
+<div>
+  <mat-dialog-actions align="end">
+    <button
+      mat-raised-button
+      color="primary"
+      type="submit"
+      (click)="deleteDrawing()"
+    >
+      Delete
+    </button>
+    <button mat-raised-button color="accent" (click)="onCancel()">
+      Cancel
+    </button>
+  </mat-dialog-actions>
+</div>

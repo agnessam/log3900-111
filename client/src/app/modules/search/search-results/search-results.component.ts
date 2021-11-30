@@ -1,5 +1,6 @@
-import { Component, OnInit } from "@angular/core";
+import { ChangeDetectorRef, Component, OnInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
+import { Drawing } from "src/app/shared";
 import { SearchResult } from "src/app/shared/models/search-result.model";
 import { SearchClientService } from "../../backend-communication/search-client/search-client.service";
 
@@ -16,13 +17,13 @@ export class SearchResultsComponent implements OnInit {
 
   constructor(
     private activatedRoute: ActivatedRoute,
-    private searchClient: SearchClientService
+    private searchClient: SearchClientService,
+    private changeDetector: ChangeDetectorRef
   ) {
     this.activatedRoute.queryParams.subscribe((params) => {
       this.searchQuery = params.q;
       this.searchClient.search(this.searchQuery).subscribe((searchResult) => {
         this.searchResults = searchResult;
-        console.log(this.searchResults);
 
         this.searchCompleted = Promise.resolve(true);
       });
@@ -30,4 +31,12 @@ export class SearchResultsComponent implements OnInit {
   }
 
   ngOnInit(): void {}
+
+  deleteDrawingFromView(deletedDrawing: Drawing) {
+    this.searchResults.drawings.splice(
+      this.searchResults.drawings.indexOf(deletedDrawing),
+      1
+    );
+    this.changeDetector.detectChanges();
+  }
 }

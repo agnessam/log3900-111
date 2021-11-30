@@ -15,8 +15,6 @@ import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.view.marginLeft
-import androidx.core.view.marginTop
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -28,13 +26,13 @@ import com.example.colorimagemobile.enumerators.ToolType
 import com.example.colorimagemobile.models.DrawingModel
 import com.example.colorimagemobile.models.OwnerModel
 import com.example.colorimagemobile.repositories.DrawingRepository
+import com.example.colorimagemobile.services.drawing.DrawingObjectManager
 import com.example.colorimagemobile.services.drawing.DrawingService
 import com.example.colorimagemobile.services.drawing.ToolTypeService
 import com.example.colorimagemobile.services.drawing.toolsAttribute.SelectionService
 import com.example.colorimagemobile.services.socket.DrawingSocketService
 import com.example.colorimagemobile.services.socket.SocketManagerService
 import com.example.colorimagemobile.services.users.UserService
-import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
 import com.example.colorimagemobile.utils.CommonFun.Companion.printToast
 import com.example.colorimagemobile.utils.Constants
 
@@ -120,8 +118,17 @@ class GalleryDrawingFragment : Fragment(R.layout.fragment_gallery_drawing) {
         val museumButton = createSideButton(R.drawable.ic_museum)
 
         museumButton.setOnClickListener {
-            val drawing = DrawingService.getDrawingById()
-            DrawingRepository().publishDrawing(drawing).observe(viewLifecycleOwner, { printToast(requireContext(), it.message!!) })
+            val saveDrawing = DrawingModel.SaveDrawing(DrawingObjectManager.getDrawingDataURI())
+
+            DrawingRepository().saveDrawing(saveDrawing).observe(viewLifecycleOwner, {
+                if (it.isError as Boolean) { return@observe }
+
+                val drawing = DrawingService.getDrawingById()
+                val createDrawing = it.data as DrawingModel.CreateDrawing
+                drawing.dataUri = createDrawing.dataUri
+
+                DrawingRepository().publishDrawing(drawing).observe(viewLifecycleOwner, { published -> printToast(requireContext(), published.message!!) })
+            })
         }
     }
 

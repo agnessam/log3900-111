@@ -1,13 +1,18 @@
 import { Post, PostInterface } from '../../../domain/models/Post';
-import { injectable } from 'inversify';
+import { inject, injectable } from 'inversify';
 import { Types } from 'mongoose';
 import { Drawing, DrawingInterface } from '../../../domain/models/Drawing';
 import { Team, TeamInterface } from '../../../domain/models/teams';
 import { User, UserInterface } from '../../../domain/models/user';
 import { GenericRepository } from './generic_repository';
+import { CollaborationTrackerService } from '@app/domain/services/collaboration-tracker.service';
+import { TYPES } from '../../../domain/constants/types';
 
 @injectable()
 export class DrawingRepository extends GenericRepository<DrawingInterface> {
+  @inject(TYPES.CollaborationTrackerService)
+  private collaborationTrackerService: CollaborationTrackerService;
+
   constructor() {
     super(Drawing);
   }
@@ -16,10 +21,27 @@ export class DrawingRepository extends GenericRepository<DrawingInterface> {
     return new Promise((resolve, reject) => {
       Drawing.find({})
         .populate('owner')
-        .exec((err, drawings) => {
+        .exec((err, drawings: DrawingInterface[]) => {
           if (err) {
             reject(drawings);
           }
+
+          const drawingToCollaborators: {} =
+            this.collaborationTrackerService.getDrawingCollaborators();
+
+          drawings.map((drawing) => {
+            if (drawingToCollaborators[drawing._id] != null) {
+              drawing.set(
+                'collaborators',
+                drawingToCollaborators[drawing._id],
+                { strict: false },
+              );
+            } else {
+              drawing.set('collaborators', [], { strict: false });
+            }
+            return drawing;
+          });
+
           resolve(drawings);
         });
     });
@@ -131,6 +153,43 @@ export class DrawingRepository extends GenericRepository<DrawingInterface> {
           }
           resolve(drawings);
         });
+    });
+  }
+
+  public async deleteDrawing(drawingId: string) {
+    return new Promise<DrawingInterface>((resolve, reject) => {
+      Drawing.findOneAndDelete(
+        { _id: drawingId },
+        (err: Error, deletedDrawing: DrawingInterface) => {
+          if (err) {
+            reject(err);
+          }
+
+          if (deletedDrawing.ownerModel == 'User') {
+            User.findById(
+              { _id: deletedDrawing.owner },
+              { $pull: { drawings: deletedDrawing._id } },
+              (err: Error) => {
+                if (err) {
+                  reject(err);
+                }
+              },
+            );
+          } else {
+            Team.findById(
+              { _id: deletedDrawing.owner },
+              { $pull: { drawings: deletedDrawing._id } },
+              (err: Error) => {
+                if (err) {
+                  reject(err);
+                }
+              },
+            );
+          }
+
+          resolve(deletedDrawing);
+        },
+      );
     });
   }
 
