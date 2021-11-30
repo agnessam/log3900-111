@@ -50,6 +50,10 @@ class CreateRectangleCommand(rectangles: ArrayList<Rectangle>?): ICreateDrawingC
 
             command.setEndPoint(endPoint)
             command.execute()
+
+            if(rectangle.transform != null) {
+                transformShape(rectangle.transform, rectangle.id)
+            }
         }
     }
 }
