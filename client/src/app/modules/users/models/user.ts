@@ -2,6 +2,7 @@ import { Avatar } from "src/app/shared/models/avatar.model";
 import { CollaborationHistory } from "src/app/shared/models/collaboration-history.model";
 import { Collaboration } from "src/app/shared/models/collaboration.model";
 import { Drawing } from "src/app/shared/models/drawing.model";
+import { Post } from "src/app/shared/models/post.model";
 import { PrivacySetting } from "src/app/shared/models/privacy-setting.interface";
 
 export interface User {
@@ -15,6 +16,8 @@ export interface User {
   description?: string;
 
   drawings?: string[] | Drawing[];
+  posts?: string[] | Post[];
+
   lastLogin: Date;
   lastLogout: Date;
 
