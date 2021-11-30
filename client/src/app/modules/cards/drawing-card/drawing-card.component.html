@@ -14,6 +14,9 @@
       </div>
 
       <p class="drawing-creation-date">{{ drawing.createdAt.toString() }}</p>
+      <p class="drawing-collaborators">
+        {{ drawing.collaborators.length }} collaborators
+      </p>
     </mat-card-title>
     <p class="drawing-lock" *ngIf="isProtected()">
       <mat-icon inline="true">lock</mat-icon>

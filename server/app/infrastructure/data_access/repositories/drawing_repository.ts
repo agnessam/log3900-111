@@ -1,13 +1,18 @@
 import { Post, PostInterface } from '../../../domain/models/Post';
-import { injectable } from 'inversify';
+import { inject, injectable } from 'inversify';
 import { Types } from 'mongoose';
 import { Drawing, DrawingInterface } from '../../../domain/models/Drawing';
 import { Team, TeamInterface } from '../../../domain/models/teams';
 import { User, UserInterface } from '../../../domain/models/user';
 import { GenericRepository } from './generic_repository';
+import { CollaborationTrackerService } from '@app/domain/services/collaboration-tracker.service';
+import { TYPES } from '../../../domain/constants/types';
 
 @injectable()
 export class DrawingRepository extends GenericRepository<DrawingInterface> {
+  @inject(TYPES.CollaborationTrackerService)
+  private collaborationTrackerService: CollaborationTrackerService;
+
   constructor() {
     super(Drawing);
   }
@@ -16,10 +21,25 @@ export class DrawingRepository extends GenericRepository<DrawingInterface> {
     return new Promise((resolve, reject) => {
       Drawing.find({})
         .populate('owner')
-        .exec((err, drawings) => {
+        .exec((err, drawings: DrawingInterface[]) => {
           if (err) {
             reject(drawings);
           }
+
+          const drawingToCollaborators: {} =
+            this.collaborationTrackerService.getDrawingCollaborators();
+
+          drawings.map((drawing) => {
+            if (drawingToCollaborators[drawing._id] != null) {
+              drawing.set(
+                'collaborators',
+                drawingToCollaborators[drawing._id],
+                { strict: false },
+              );
+            }
+            return drawing;
+          });
+
           resolve(drawings);
         });
     });

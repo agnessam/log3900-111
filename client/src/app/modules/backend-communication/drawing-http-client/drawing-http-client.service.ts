@@ -68,4 +68,12 @@ export class DrawingHttpClientService {
         })
       );
   }
+
+  getDrawingCollaborators(): Observable<Map<string, string[]>> {
+    return this.httpClient.get<{}>(`${this.SERVER_ENDPOINT}collaborators`).pipe(
+      map((response) => {
+        return new Map(Object.entries(response));
+      })
+    );
+  }
 }

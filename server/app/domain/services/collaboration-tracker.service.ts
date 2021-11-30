@@ -72,6 +72,19 @@ export class CollaborationTrackerService {
     );
   }
 
+  getDrawingCollaborators() {
+    const drawingToCollaborators = {};
+    this.collaborationToUsersSession.forEach(
+      (session: Map<string, Date>, drawingId: string) => {
+        drawingToCollaborators[drawingId] = new Array();
+        session.forEach((_date: Date, userId: string) => {
+          drawingToCollaborators[drawingId].push(userId);
+        });
+      },
+    );
+    return drawingToCollaborators;
+  }
+
   private setUserSession(
     userToStartingDate: Map<string, Date>,
     userId: string,
