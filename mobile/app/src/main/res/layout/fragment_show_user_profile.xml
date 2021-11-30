@@ -11,6 +11,7 @@ android:id="@+id/showUserProfileFragment"
     android:layout_height="match_parent"
     android:id="@+id/fragment_show_user_profile"
     android:layout_margin="20dp"
+    android:background="@color/white"
     android:orientation="vertical">
 
     <LinearLayout
