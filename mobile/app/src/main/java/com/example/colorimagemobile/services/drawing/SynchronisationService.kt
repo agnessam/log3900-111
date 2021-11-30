@@ -26,6 +26,7 @@ object SynchronisationService {
     }
 
     fun draw(socketToolArgs: String) {
+        if(!CanvasService.extraCanvasIsIntialized()) return
 
         val drawingCommandJSON = JSONObject(socketToolArgs)
 
