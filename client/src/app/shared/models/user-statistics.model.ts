@@ -4,4 +4,5 @@ export interface UserStatistics {
   numberOfTeams: number;
   numberOfCollaborations: number;
   averageCollaborationTime: number;
+  totalCollaborationTime: number;
 }
