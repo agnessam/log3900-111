@@ -3,15 +3,10 @@ import { CommandInvokerService } from "src/app/modules/workspace";
 import { ICommand } from "src/app/modules/workspace/interfaces/command.interface";
 import { Tools } from "../../interfaces/tools.interface";
 import { DrawingService } from "../drawing/drawing.service";
-import { EraserToolService } from "./eraser-tool/eraser-tool.service";
-import { LineToolService } from "./line-tool/line-tool.service";
 import { PencilToolService } from "./pencil-tool/pencil-tool.service";
-import { PolygonToolService } from "./polygon-tool/polygon-tool.service";
 import { SelectionToolService } from "./selection-tool/selection-tool.service";
 import { ToolEllipseService } from "./tool-ellipse/tool-ellipse.service";
-import { ToolIdConstants } from "./tool-id-constants";
 import { ToolRectangleService } from "./tool-rectangle/tool-rectangle.service";
-import { ToolsApplierColorsService } from "./tools-applier-colors/tools-applier-colors.service";
 
 /// Service permettant de gérer l'outil présent selon son ID
 /// Appelle les bonnes fonctions d'évenement souris selon l'outil selectionner
@@ -27,13 +22,9 @@ export class ToolsService {
   constructor(
     private drawingService: DrawingService,
     private pencilTool: PencilToolService,
-    private colorApplicator: ToolsApplierColorsService,
     private rectangleTool: ToolRectangleService,
     private ellipseTool: ToolEllipseService,
-    private polygonService: PolygonToolService,
-    private lineTool: LineToolService,
     private selectionTool: SelectionToolService,
-    private eraserTool: EraserToolService,
 
     private commandInvoker: CommandInvokerService
   ) {
@@ -46,11 +37,7 @@ export class ToolsService {
     this.tools.set(this.pencilTool.id, this.pencilTool);
     this.tools.set(this.rectangleTool.id, this.rectangleTool);
     this.tools.set(this.ellipseTool.id, this.ellipseTool);
-    this.tools.set(this.polygonService.id, this.polygonService);
-    this.tools.set(this.lineTool.id, this.lineTool);
-    this.tools.set(this.colorApplicator.id, this.colorApplicator);
     this.tools.set(this.selectionTool.id, this.selectionTool);
-    this.tools.set(this.eraserTool.id, this.eraserTool);
   }
 
   /// Selectionner un outil avec son id
@@ -94,7 +81,7 @@ export class ToolsService {
       if (!tool) {
         return;
       }
-      if (this.isPressed || tool.id === ToolIdConstants.LINE_ID) {
+      if (this.isPressed) {
         const command: ICommand | void = tool.onRelease(event);
         if (command) {
           this.commandInvoker.addCommand(command);
@@ -111,11 +98,7 @@ export class ToolsService {
       if (!tool) {
         return;
       }
-      if (
-        this.isPressed ||
-        tool.id === ToolIdConstants.LINE_ID ||
-        tool.id === ToolIdConstants.ERASER_ID
-      ) {
+      if (this.isPressed) {
         tool.onMove(event);
       }
     }
@@ -128,11 +111,7 @@ export class ToolsService {
         if (!tool) {
           return;
         }
-        if (
-          this.isPressed ||
-          tool.id === ToolIdConstants.LINE_ID ||
-          tool.id === ToolIdConstants.SELECTION_ID
-        ) {
+        if (this.isPressed) {
           tool.onKeyDown(event);
         }
       }
@@ -144,11 +123,7 @@ export class ToolsService {
         if (!tool) {
           return;
         }
-        if (
-          this.isPressed ||
-          tool.id === ToolIdConstants.LINE_ID ||
-          tool.id === ToolIdConstants.SELECTION_ID
-        ) {
+        if (this.isPressed) {
           tool.onKeyUp(event);
         }
       }

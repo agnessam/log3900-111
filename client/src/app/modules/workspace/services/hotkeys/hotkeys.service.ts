@@ -1,9 +1,6 @@
 import { Injectable } from "@angular/core";
 import { MatDialog } from "@angular/material/dialog";
-import { NewDrawingComponent } from "src/app/modules/new-drawing";
-import { CommandInvokerService } from "src/app/modules/workspace";
 import { SidenavService } from "src/app/modules/sidenav";
-import { CopyPasteToolService } from "../tools/copy-paste-tool/copy-paste-tool.service";
 import { DeletingToolService } from "../tools/selection-tool/delete-command/delete-tool.service";
 import { ToolIdConstants } from "../tools/tool-id-constants";
 import { ToolsService } from "../tools/tools.service";
@@ -22,9 +19,7 @@ export class HotkeysService {
     private dialog: MatDialog,
     private sideNavService: SidenavService,
     private toolsService: ToolsService,
-    private copyPasteService: CopyPasteToolService,
     private deletingTool: DeletingToolService,
-    private commandInvoker: CommandInvokerService,
 
     private hotkeysEmitterService: HotkeysEmitterService,
 
@@ -34,21 +29,14 @@ export class HotkeysService {
 
     this.toolSelectorList.set(EmitReturn.PENCIL, ToolIdConstants.PENCIL_ID);
     this.toolSelectorList.set(
-      EmitReturn.APPLICATEUR,
-      ToolIdConstants.APPLIER_ID
-    );
-    this.toolSelectorList.set(
       EmitReturn.RECTANGLE,
       ToolIdConstants.RECTANGLE_ID
     );
     this.toolSelectorList.set(EmitReturn.ELLIPSE, ToolIdConstants.ELLIPSE_ID);
-    this.toolSelectorList.set(EmitReturn.LINE, ToolIdConstants.LINE_ID);
     this.toolSelectorList.set(
       EmitReturn.SELECTION,
       ToolIdConstants.SELECTION_ID
     );
-    this.toolSelectorList.set(EmitReturn.POLYGON, ToolIdConstants.POLYGON_ID);
-    this.toolSelectorList.set(EmitReturn.ERASER, ToolIdConstants.ERASER_ID);
 
     this.dialog.afterOpened.subscribe(() => {
       this.hotkeysEnablerService.disableHotkeys();
@@ -77,29 +65,8 @@ export class HotkeysService {
         this.toolsService.selectTool(toolId);
       } else {
         switch (value) {
-          case EmitReturn.NEW_DRAWING:
-            this.dialog.open(NewDrawingComponent, {});
-            break;
-          case EmitReturn.COPY:
-            this.copyPasteService.copy();
-            break;
-          case EmitReturn.CUT:
-            this.copyPasteService.cut();
-            break;
-          case EmitReturn.PASTE:
-            this.copyPasteService.paste();
-            break;
-          case EmitReturn.DUPLICATE:
-            this.copyPasteService.duplicate();
-            break;
           case EmitReturn.DELETE:
             this.deletingTool.deleteSelection();
-            break;
-          case EmitReturn.UNDO:
-            this.commandInvoker.undo();
-            break;
-          case EmitReturn.REDO:
-            this.commandInvoker.redo();
             break;
           default:
             console.log("Warning : Hotkey callBack not implemented !");
