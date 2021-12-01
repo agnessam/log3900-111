@@ -1,15 +1,153 @@
 @use "~@angular/material" as mat;
-
+@use "~@angular/material/theming";
 @include mat.core();
 
-$polydessin-theme-primary: mat.define-palette(mat.$indigo-palette);
-$polydessin-theme-accent: mat.define-palette(mat.$blue-grey-palette);
-$polydessin-theme-theme: mat.define-light-theme(
-  $polydessin-theme-primary,
-  $polydessin-theme-accent
+$pastel-pink-palette: (
+  50: #da7e70,
+  100: #da7e70,
+  200: #da7e70,
+  300: #e79a90,
+  400: #f4b6b0,
+  500: #f4b6b0,
+  600: #da7e70,
+  700: #da7e70,
+  800: #da7e70,
+  900: #da7e70,
+  contrast: (
+    50: rgba(black, 0.87),
+    100: rgba(black, 0.87),
+    200: rgba(black, 0.87),
+    300: rgba(black, 0.87),
+    400: rgba(black, 0.87),
+    500: rgba(black, 0.87),
+    600: rgba(black, 0.87),
+    700: rgba(black, 0.87),
+    800: rgba(black, 0.87),
+    900: rgba(black, 0.87),
+  ),
 );
 
-@include mat.all-component-themes($polydessin-theme-theme);
+$dark-palette: (
+  50: #ffffff,
+  100: #ffffff,
+  200: #ffffff,
+  300: #ffffff,
+  400: #413d4b,
+  500: #303030,
+  600: #ffffff,
+  700: #ffffff,
+  800: #323232,
+  900: #ffffff,
+  contrast: (
+    50: rgba(black, 0.87),
+    100: rgba(black, 0.87),
+    200: rgba(black, 0.87),
+    300: white,
+    400: white,
+    500: white,
+    600: white,
+    700: white,
+    800: white,
+    900: white,
+  ),
+);
+
+$polydessin-theme-primary: mat.define-palette($pastel-pink-palette);
+$polydessin-theme-accent: mat.define-palette(mat.$blue-grey-palette);
+$colorimage-theme-warn: mat.define-palette(mat.$red-palette);
+
+$colorimage-theme-dark-primary: mat.define-palette($dark-palette);
+
+$colorimage-light-theme: mat.define-light-theme(
+  (
+    color: (
+      primary: $polydessin-theme-primary,
+      accent: $polydessin-theme-accent,
+      warn: $colorimage-theme-warn,
+    ),
+    typography:
+      mat.define-typography-config(
+        $font-family: inter,
+      ),
+  )
+);
+
+$background-light: #fcedea;
+
+$colorimage-dark-theme: mat.define-dark-theme(
+  (
+    color: (
+      primary: $colorimage-theme-dark-primary,
+      accent: $polydessin-theme-accent,
+      warn: $colorimage-theme-warn,
+      background: $background-light,
+    ),
+    typography:
+      mat.define-typography-config(
+        $font-family: inter,
+      ),
+  )
+);
+
+$background-dark: #413d4b;
+
+$background: map-get($colorimage-dark-theme, background);
+
+$background: map_merge(
+  $background,
+  (
+    background: $background-dark,
+  )
+);
+$colorimage-dark-theme: map_merge(
+  $colorimage-dark-theme,
+  (
+    background: $background,
+  )
+);
+
+.color-scheme-dark {
+  @include mat.all-component-colors($colorimage-dark-theme);
+  background-color: #413d4b;
+  .mat-app-background {
+    background-color: #413d4b;
+  }
+  .mat-flat-button.mat-primary,
+  .mat-raised-button.mat-primary,
+  .mat-fab.mat-primary,
+  .mat-mini-fab.mat-primary {
+    background-color: #fbdeac;
+    color: black;
+    box-shadow: none;
+  }
+  #nav-bar {
+    background-color: #413d4b;
+  }
+  mat-label {
+    color: white;
+  }
+}
+
+.color-scheme-light {
+  @include mat.all-component-colors($colorimage-light-theme);
+  background-color: #fcedea;
+  .mat-app-background {
+    background-color: #fcedea;
+  }
+  .mat-flat-button.mat-primary,
+  .mat-raised-button.mat-primary,
+  .mat-fab.mat-primary,
+  .mat-mini-fab.mat-primary {
+    background-color: #da7e70;
+    color: white;
+    box-shadow: none;
+  }
+  #nav-bar {
+    background-color: #fcedea;
+  }
+}
+
+// @include mat.all-component-themes($polydessin-theme-theme);
 
 html,
 body {
@@ -18,7 +156,7 @@ body {
 body {
   margin: 0;
   font-family: Roboto, "Helvetica Neue", sans-serif;
-  background-color: #fcedea;
+  // background-color: #fcedea;
 }
 
 .thumbnail-wrapper {
@@ -36,23 +174,23 @@ body {
 }
 body {
   margin: 0;
-  font-family: Roboto, "Helvetica Neue", sans-serif;
-  background-color: #fcedea;
+  font-family: "Inter", sans-serif;
+  // background-color: #fcedea;
 }
 
-.mat-flat-button.mat-primary,
-.mat-raised-button.mat-primary,
-.mat-fab.mat-primary,
-.mat-mini-fab.mat-primary {
-  background-color: #da7e70;
-  box-shadow: none;
-}
+// .mat-flat-button.mat-primary,
+// .mat-raised-button.mat-primary,
+// .mat-fab.mat-primary,
+// .mat-mini-fab.mat-primary {
+//   background-color: #da7e70;
+//   box-shadow: none;
+// }
 
-.mat-button,
-.mat-icon-button,
-.mat-stroked-button {
-  color: #da7e70;
-}
+// .mat-button,
+// .mat-icon-button,
+// .mat-stroked-button {
+//   color: #da7e70;
+// }
 
 .mat-card:not([class*="mat-elevation-z"]) {
   -webkit-box-shadow: none;

@@ -1,5 +1,5 @@
 .page-link {
-  color: #5b4d5a;
+  // color: #5b4d5a;
   font-size: 24px;
 }
 
@@ -12,7 +12,6 @@
   padding-left: 1%;
   padding-right: 1%;
   padding-bottom: 1%;
-  background-color: #fcedea;
   position: sticky;
   position: -webkit-sticky; /* For macOS/iOS Safari */
   top: 0; /* Sets the sticky toolbar to be on top */
@@ -26,7 +25,7 @@
   height: 90%;
   width: 30%;
   border-radius: 25px;
-  background-color: #fef9f7;
+  // background-color: #fef9f7;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -34,7 +33,7 @@
 
 #searchbar-input {
   border: none;
-  background-color: transparent;
+  // background-color: transparent;
   width: 100%;
   margin-right: 20px;
 }
@@ -44,13 +43,13 @@
 }
 
 #main-logo {
-  color: #924642;
+  color: #da7e70;
   font-size: 36px;
   padding-right: 20px;
 }
 
 #logout-button {
-  color: #924642;
+  // color: #924642;
   font-size: 24px;
 }
 
@@ -65,24 +64,24 @@
   height: 90%;
   width: 40%;
   border-radius: 25px;
-  background-color: #FEF9F7;
-  display:flex;
+  // background-color: #fef9f7;
+  display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
 #searchbar-input {
   border: none;
-  background-color: transparent;
+  // background-color: transparent;
   width: 90%;
   margin-right: 20px;
 }
 
-#searchbar-input:focus{
-  outline:none
+#searchbar-input:focus {
+  outline: none;
 }
 
-.icon{
+.icon {
   color: black;
 }
 #avatar {
@@ -90,8 +89,7 @@
 }
 
 ::ng-deep .mat-menu-panel.customize-menu {
-  background-color: #fef9f7!important;
+  // background-color: #fef9f7 !important;
   border-radius: 15px;
   overflow: hidden;
 }
-

@@ -1,5 +1,10 @@
-<mat-drawer-container id="settings-container">
-  <mat-drawer mode="side" opened id="settings-drawer">
+<mat-drawer-container id="settings-container" class="mat-app-background">
+  <mat-drawer
+    mode="side"
+    opened
+    id="settings-drawer"
+    class="mat-app-background"
+  >
     <div
       id="settings-options"
       fxLayout="column wrap"
@@ -48,7 +53,7 @@
       </div>
     </div>
   </mat-drawer>
-  <mat-drawer-content id="settings">
+  <mat-drawer-content id="settings" class="mat-app-background">
     <router-outlet></router-outlet>
   </mat-drawer-content>
 </mat-drawer-container>
