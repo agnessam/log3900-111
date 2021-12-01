@@ -20,10 +20,10 @@ class CreateEllipseCommand(ellipses: ArrayList<Ellipse>?): ICreateDrawingCommand
             fillOpacity = style.fillOpacity,
             strokeOpacity = style.strokeOpacity,
             strokeWidth = style.strokeWidth,
-            x = 0,
-            y = 0,
-            width = 0,
-            height = 0
+            x = 0f,
+            y = 0f,
+            width = 0f,
+            height = 0f
         )
     }
 
@@ -38,16 +38,16 @@ class CreateEllipseCommand(ellipses: ArrayList<Ellipse>?): ICreateDrawingCommand
 
             // add ellipse attributes
             ellipseData.id = ellipse.id
-            ellipseData.width = StringParser.removePX(ellipse.width)
-            ellipseData.height = StringParser.removePX(ellipse.height)
-            ellipseData.x = StringParser.removePX(ellipse.cx) - StringParser.removePX(ellipse.rx)
-            ellipseData.y = StringParser.removePX(ellipse.cy) - StringParser.removePX(ellipse.ry)
+            ellipseData.width = StringParser.removePX(ellipse.width).toFloat()
+            ellipseData.height = StringParser.removePX(ellipse.height).toFloat()
+            ellipseData.x = StringParser.removePX(ellipse.cx).toFloat() - StringParser.removePX(ellipse.rx).toFloat()
+            ellipseData.y = StringParser.removePX(ellipse.cy).toFloat() - StringParser.removePX(ellipse.ry).toFloat()
 
             // create ending point and execute command to draw
             val command = CommandFactory.createCommand("Ellipse", ellipseData) as EllipseCommand
             val endPoint = Point(
-                (StringParser.removePX(ellipse.cx) + StringParser.removePX(ellipse.rx).toFloat()),
-                (StringParser.removePX(ellipse.cy) + StringParser.removePX(ellipse.ry).toFloat()))
+                (StringParser.removePX(ellipse.cx).toFloat() + StringParser.removePX(ellipse.rx).toFloat()),
+                (StringParser.removePX(ellipse.cy).toFloat() + StringParser.removePX(ellipse.ry).toFloat()))
 
             command.setEndPoint(endPoint)
             command.execute()

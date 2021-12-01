@@ -37,7 +37,9 @@ object DrawingObjectManager {
         return layerId
     }
 
-    fun getDrawable(layerIndex: Int): Drawable{
+    fun getDrawable(layerIndex: Int): Drawable?{
+        if(layerIndex >= layerDrawable.numberOfLayers)
+            return null
         return layerDrawable.getDrawable(layerIndex)
     }
 

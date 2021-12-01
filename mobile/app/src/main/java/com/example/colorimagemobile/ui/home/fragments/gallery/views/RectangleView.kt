@@ -48,10 +48,10 @@ class RectangleView(context: Context?): CanvasView(context) {
             fillOpacity = ColorService.getAlphaForDesktop(fill),
             strokeOpacity = ColorService.getAlphaForDesktop(stroke),
             strokeWidth = RectangleService.currentWidth,
-            x = currentX.toInt(),
-            y = currentY.toInt(),
-            width = 0,
-            height = 0
+            x = currentX,
+            y = currentY,
+            width = 0f,
+            height = 0f
         )
 
         rectangleCommand = RectangleCommand(rectangleData)
