@@ -23,6 +23,7 @@ import com.example.colorimagemobile.utils.Constants
 import com.example.colorimagemobile.utils.Constants.SOCKETS
 import com.example.colorimagemobile.utils.Constants.SOCKETS.Companion.CONFIRM_DRAWING_EVENT
 import com.example.colorimagemobile.utils.Constants.SOCKETS.Companion.CONFIRM_SELECTION_EVENT
+import com.example.colorimagemobile.utils.Constants.SOCKETS.Companion.DELETE_SELECTION_EVENT
 import com.example.colorimagemobile.utils.Constants.SOCKETS.Companion.FETCH_DRAWING_NOTIFICATION
 import com.example.colorimagemobile.utils.Constants.SOCKETS.Companion.IN_PROGRESS_DRAWING_EVENT
 import com.example.colorimagemobile.utils.Constants.SOCKETS.Companion.START_SELECTION_EVENT
@@ -86,6 +87,7 @@ object DrawingSocketService: AbsSocket(SOCKETS.COLLABORATIVE_DRAWING_NAMESPACE) 
         this.listenStartSelectionCommand()
         this.listenConfirmSelectionCommand()
         this.listenTransformSelectionCommand()
+        this.listenDeleteSelectionCommand()
     }
 
     fun joinCurrentDrawingRoom() {
@@ -243,6 +245,25 @@ object DrawingSocketService: AbsSocket(SOCKETS.COLLABORATIVE_DRAWING_NAMESPACE) 
                 }
             })
         }
+
+    private fun listenDeleteSelectionCommand() {
+        mSocket.on(DELETE_SELECTION_EVENT, deleteSelection)
+    }
+
+    private var deleteSelection = Emitter.Listener { args ->
+        fragmentActivity!!.runOnUiThread(Runnable {
+            val  responseJSON = JSONObject(args[0].toString())
+            val deleteSelectionData = SocketTool(
+                type = responseJSON["type"] as String,
+                roomName = responseJSON["roomName"] as String,
+                drawingCommand = JSONConvertor.getJSONObject(
+                    responseJSON["drawingCommand"].toString(),
+                    DeleteData::class.java)
+            )
+
+            SynchronisationService.deleteSelection(deleteSelectionData)
+        })
+    }
 
     private fun listenTransformSelectionCommand() {
         mSocket.on(TRANSFORM_SELECTION_EVENT, transformSelection)

@@ -8,20 +8,21 @@ import com.example.colorimagemobile.services.drawing.DrawingJsonService
 import com.example.colorimagemobile.services.drawing.DrawingObjectManager
 import com.example.colorimagemobile.services.drawing.toolsAttribute.SelectionService
 
-class DeleteCommand(deletedShape: Drawable): ICommand {
-    private var deletedShape = deletedShape
-
+class DeleteCommand(objectId: String): ICommand {
+//    TODO("IMPLEMENT WITH SHAPE ID RATHER THAN ACTUAL SHAPE")
+    private var id: String = objectId
+    private var deleteShapeLayerIndex: Int = DrawingObjectManager.getLayerIndex(id)
+    private var deletedShape: Drawable? = DrawingObjectManager.getDrawable(this.deleteShapeLayerIndex)
     override fun update(drawingCommand: Any) {
         TODO("Not yet implemented")
     }
 
     private fun deleteFromJson() {
-        val id = DrawingObjectManager.getUuid(SelectionService.selectedShapeIndex)
 
         when (DrawingObjectManager.getCommand(SelectionService.selectedShapeIndex)) {
-            is PencilCommand -> DrawingJsonService.removePolyline(id!!)
-            is RectangleCommand -> DrawingJsonService.removeRectangle(id!!)
-            is EllipseCommand -> DrawingJsonService.removeEllipse(id!!)
+            is PencilCommand -> DrawingJsonService.removePolyline(id)
+            is RectangleCommand -> DrawingJsonService.removeRectangle(id)
+            is EllipseCommand -> DrawingJsonService.removeEllipse(id)
         }
     }
 

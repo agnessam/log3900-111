@@ -7,6 +7,7 @@ import com.example.colorimagemobile.interfaces.ICommand
 import com.example.colorimagemobile.models.*
 import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
 import org.json.JSONObject
+import java.net.Socket
 
 object SynchronisationService {
     private var lastXTranslate: Float = 0f
@@ -151,5 +152,10 @@ object SynchronisationService {
         }
 
         previewShapes[commandId]?.execute()
+    }
+
+    fun deleteSelection(deleteSelectionData: SocketTool){
+        val deleteCommand = CommandFactory.createCommand(deleteSelectionData.type, deleteSelectionData.drawingCommand)
+        deleteCommand?.execute()
     }
 }
