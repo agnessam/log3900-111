@@ -33,6 +33,7 @@ import com.example.colorimagemobile.services.avatar.AvatarService
 import com.example.colorimagemobile.services.users.UserService
 import com.example.colorimagemobile.utils.CommonFun
 import com.example.colorimagemobile.utils.CommonFun.Companion.imageView
+import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
 import com.example.colorimagemobile.utils.Constants
 import com.example.colorimagemobile.utils.Constants.Companion.CAMERA_REQUEST_CODE
 import com.karumi.dexter.Dexter
@@ -57,8 +58,6 @@ class EditProfileFragment : Fragment() {
     private lateinit var user : UserModel.AllInfo
     private lateinit var currentAvatar : AvatarModel.AllInfo
     private lateinit var newUserData : UserModel.UpdateUser
-    private lateinit var newDescription : TextView
-    private lateinit var newUsername : TextView
     private var infview : View ? = null
     private lateinit var bitmap: Bitmap
     private  var file : File? = null
@@ -93,7 +92,7 @@ class EditProfileFragment : Fragment() {
         inf.findViewById<View>(R.id.choosedefaultavatar).setOnClickListener {
             val defaultAvatarList = DefaultAvatarListBottomSheet()
             defaultAvatarList.show(parentFragmentManager, "DefaultAvatarListBottomSheetDialog")
-            ChooseAvatarUpload()
+
         }
         imageView = (inf.findViewById<View>(R.id.current_avatar) as ImageView)
         MyPicasso().loadImage(user.avatar.imageUrl, imageView )
@@ -152,6 +151,7 @@ class EditProfileFragment : Fragment() {
     }
 
     private fun updateAvatar(){
+        printMsg("inside update avatar")
         var countExistingAvatar : Int = 0
         for(indices in AvatarService.getAvatars().indices){
             if (AvatarService.getCurrentAvatar() != AvatarService.getAvatars()[indices]){
@@ -160,16 +160,17 @@ class EditProfileFragment : Fragment() {
         }
         if (countExistingAvatar == 0){
             postAvatar(AvatarService.getCurrentAvatar()).observe(viewLifecycleOwner, { handleResponse(it) })
+            printMsg("on post avatar")
         }
 
         UpdateUserProfile().updateUserInfo(newUserData).observe(viewLifecycleOwner, { context?.let { it1 ->globalHandler.response(it1,it) } })
-
-
-
         requireActivity().invalidateOptionsMenu()
+
+        printMsg("avatar url after update"+UserService.getUserInfo().avatar.imageUrl)
     }
 
     private fun ChooseAvatarUpload(){
+        printMsg("avatar url before choosing"+UserService.getUserInfo().avatar.imageUrl)
         if(AvatarService.getCurrentAvatar().imageUrl!= Constants.EMPTY_STRING){
             currentAvatar = AvatarService.getCurrentAvatar()
             newUserData.avatar = currentAvatar
@@ -194,8 +195,7 @@ class EditProfileFragment : Fragment() {
             CommonFun.printToast(requireContext(), HTTPResponse.message as String)
             return
         }
-        CommonFun.printToast(requireContext(), HTTPResponse.message!!)
-
+        updateAvatar()
     }
 
     // function to convert bitmap to file
@@ -248,21 +248,15 @@ class EditProfileFragment : Fragment() {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        printMsg("avatar url before upload"+UserService.getUserInfo().avatar.imageUrl)
         if (requestCode == 1 && data != null) {
             bitmap = data.extras?.get("data") as Bitmap
             imageView.setImageBitmap(bitmap)
             val fileToUpload: File? =
                 bitmapToFile(bitmap, user.username.take(4)+LocalDateTime.now().toString()+Constants.PNG)
             uploadAvatar(fileToUpload!!).observe(viewLifecycleOwner, { handleResponse(it) })
-            updateAvatar()
+//            updateAvatar()
         }
-    }
-
-    fun UpdateView(){
-        newUsername = infview!!.findViewById(R.id.currentUserUsername)
-        newDescription = infview!!.findViewById(R.id.currentUserDescription)
-        newUsername.text = UserService.getUserInfo().username
-        newDescription.text = UserService.getUserInfo().description
     }
 
 }

@@ -22,14 +22,6 @@ class PrivacyAndSafety : Fragment() {
      private lateinit var switch_lastname : SwitchCompat
      private var newSetting: Privacy.Setting = Privacy.Setting(false,false,false)
 
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-    }
-
-
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?

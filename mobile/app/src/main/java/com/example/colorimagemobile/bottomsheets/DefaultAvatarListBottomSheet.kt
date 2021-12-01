@@ -55,10 +55,11 @@ class DefaultAvatarListBottomSheet : BottomSheetDialogFragment() , AvatarRecycle
         val clickedItem: AvatarModel.AllInfo = AvatarService.getAvatars()[position]
         AvatarService.setCurrentAvatar(clickedItem)
         applyAvatarChoose()
+
     }
 
     // Change avatar in view
-    fun applyAvatarChoose(){
+    private fun applyAvatarChoose(){
         val currentAvatar = AvatarService.getCurrentAvatar()
         MyPicasso().loadImage(currentAvatar.imageUrl, CommonFun.imageView)
         closeSheet()
