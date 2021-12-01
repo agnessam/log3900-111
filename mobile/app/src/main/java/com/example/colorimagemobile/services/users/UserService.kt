@@ -161,37 +161,37 @@ object UserService {
         val position = allUserInfo.indexOf(allUserInfo.find { user -> user._id == info._id })
         return  position
     }
-//    fun setCollaborationHistoryToshow() {
-//
-//        when (info.collaborationHistory.size) {
-//
-//            0 -> {}
-//            1 -> {
-//                collaborationHistoryToShow.add(info.collaborationHistory!![0])
-//                collaborationHistoryDrawingId.add(info.collaborationHistory[0].drawing)
-//            }
-//            2 -> {
-//                collaborationHistoryToShow.add(info.collaborationHistory[0])
-//                collaborationHistoryToShow.add(info.collaborationHistory[1])
-//                collaborationHistoryDrawingId.add(info.collaborationHistory[0].drawing)
-//                collaborationHistoryDrawingId.add(info.collaborationHistory[1].drawing)
-//
-//            }
-//            else -> {
-//                // set collaboration data
-//                val countLog = info.collaborationHistory.size
-//                collaborationHistoryToShow.add(info.collaborationHistory[countLog - 1])
-//                collaborationHistoryToShow.add(info.collaborationHistory[countLog - 2])
-//                collaborationHistoryToShow.add(info.collaborationHistory[countLog - 3])
-//
-//                collaborationHistoryDrawingId.add(info.collaborationHistory[countLog - 1].drawing)
-//                collaborationHistoryDrawingId.add(info.collaborationHistory[countLog - 2].drawing)
-//                collaborationHistoryDrawingId.add(info.collaborationHistory[countLog - 3].drawing)
-//            }
-//
-//        }
-//
-//    }
+    fun setCollaborationHistoryToshow() {
+
+        when (info.collaborationHistory!!.size) {
+
+            0 -> {}
+            1 -> {
+                collaborationHistoryToShow.add(info.collaborationHistory!![0])
+                collaborationHistoryDrawingId.add(info.collaborationHistory!![0].drawing)
+            }
+            2 -> {
+                collaborationHistoryToShow.add(info.collaborationHistory!![0])
+                collaborationHistoryToShow.add(info.collaborationHistory!![1])
+                collaborationHistoryDrawingId.add(info.collaborationHistory!![0].drawing)
+                collaborationHistoryDrawingId.add(info.collaborationHistory!![1].drawing)
+
+            }
+            else -> {
+                // set collaboration data
+                val countLog = info.collaborationHistory!!.size
+                collaborationHistoryToShow.add(info.collaborationHistory!![countLog - 1])
+                collaborationHistoryToShow.add(info.collaborationHistory!![countLog - 2])
+                collaborationHistoryToShow.add(info.collaborationHistory!![countLog - 3])
+
+                collaborationHistoryDrawingId.add(info.collaborationHistory!![countLog - 1].drawing)
+                collaborationHistoryDrawingId.add(info.collaborationHistory!![countLog - 2].drawing)
+                collaborationHistoryDrawingId.add(info.collaborationHistory!![countLog - 3].drawing)
+            }
+
+        }
+
+    }
 
     fun getCollaborationToShow(): ArrayList<CollaborationHistory.drawingHistory> {
         return collaborationHistoryToShow

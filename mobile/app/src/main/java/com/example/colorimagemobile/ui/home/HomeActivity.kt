@@ -32,7 +32,6 @@ import com.example.colorimagemobile.ui.home.fragments.chat.ChatFragmentDirection
 import com.example.colorimagemobile.ui.home.fragments.gallery.GalleryFragmentDirections
 import com.example.colorimagemobile.ui.home.fragments.museum.MuseumFragmentDirections
 import com.example.colorimagemobile.ui.home.fragments.teams.TeamsFragmentDirections
-import com.example.colorimagemobile.ui.home.fragments.accountParameter.UserProfileFragmentDirections
 import com.example.colorimagemobile.ui.home.fragments.users.UsersFragmentDirections
 import com.example.colorimagemobile.ui.home.fragments.users.UsersProfileFragmentDirections
 import com.example.colorimagemobile.utils.CommonFun
@@ -40,7 +39,6 @@ import com.example.colorimagemobile.utils.CommonFun.Companion.printToast
 import com.example.colorimagemobile.utils.CommonFun.Companion.redirectTo
 import com.example.colorimagemobile.utils.Constants
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import kotlinx.android.synthetic.main.fragment_show_user_profile.*
 
 class HomeActivity : AppCompatActivity() {
     private lateinit var homeViewModel: HomeActivityViewModel
@@ -218,7 +216,7 @@ class HomeActivity : AppCompatActivity() {
         val showUserProfileFromGallery = GalleryFragmentDirections.actionGalleryFragmentToShowUserProfileFragment()
         val showUserProfileFromTeam = TeamsFragmentDirections.actionTeamsFragmentToShowUserProfileFragment()
         val showUserProfileFromChat = ChatFragmentDirections.actionChatFragmentToShowUserProfileFragment()
-        val showUserProfileFromSettings = UserProfileFragmentDirections.actionUserProfileFragmentToShowUserProfileFragment()
+//        val showUserProfileFromSettings = UserProfileFragmentDirections.actionUserProfileFragmentToShowUserProfileFragment()
         val showUserProfileFromPublicView = UsersFragmentDirections.actionUsersFragmentToShowUserProfileFragment()
         val showUserProfileFromMuseum = MuseumFragmentDirections.actionMuseumFragmentToShowUserProfileFragment()
 
@@ -227,7 +225,7 @@ class HomeActivity : AppCompatActivity() {
             R.id.galleryFragment-> this.findNavController(R.id.fragment).navigate(showUserProfileFromGallery)
             R.id.teamsFragment  -> this.findNavController(R.id.fragment).navigate(showUserProfileFromTeam)
             R.id.chatFragment ->this.findNavController(R.id.fragment).navigate(showUserProfileFromChat)
-            R.id.userProfileFragment ->this.findNavController(R.id.fragment).navigate(showUserProfileFromSettings)
+//            R.id.userProfileFragment ->this.findNavController(R.id.fragment).navigate(showUserProfileFromSettings)
             R.id.usersFragment ->this.findNavController(R.id.fragment).navigate(showUserProfileFromPublicView)
             R.id.museumFragment -> this.findNavController(R.id.fragment).navigate(showUserProfileFromMuseum)
         }

@@ -2,64 +2,74 @@ package com.example.colorimagemobile.ui.home.fragments.accountParameter
 
 
 import android.os.Bundle
+import android.view.LayoutInflater
 import androidx.fragment.app.Fragment
 import android.view.View
-import android.widget.TextView
+import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.colorimagemobile.R
-import com.example.colorimagemobile.classes.MyFragmentManager
+import com.example.colorimagemobile.adapter.CollaborationHistoryRecyclerAdapter
+import com.example.colorimagemobile.adapter.DrawingMenuRecyclerAdapter
 import com.example.colorimagemobile.models.CollaborationHistory
 import com.example.colorimagemobile.models.DrawingModel
 import com.example.colorimagemobile.models.recyclerAdapters.DrawingMenuData
 import com.example.colorimagemobile.repositories.DrawingRepository
 import com.example.colorimagemobile.services.drawing.DrawingService
 import com.example.colorimagemobile.services.users.UserService
-import com.example.colorimagemobile.utils.Constants
-import kotlinx.android.synthetic.main.fragment_user_profile_history.*
+import com.example.colorimagemobile.utils.CommonFun
 
 
-class HistoryFragment : Fragment(R.layout.fragment_user_profile_history) {
+class HistoryFragment : Fragment() {
 
-    private lateinit var myView : View
-    private var drawingPosition: Int? = null
-    private lateinit var currentDrawing: DrawingModel.Drawing
+    private var collabDrawingObject : List<DrawingModel.Drawing> = arrayListOf()
+    private var bitmapOfdrawingToOpen : ArrayList<DrawingMenuData> = arrayListOf()
     private lateinit var collabHistoryToShow : ArrayList<CollaborationHistory.drawingHistory>
     private lateinit var recyclerView: RecyclerView
+    private var adapter : RecyclerView.Adapter<CollaborationHistoryRecyclerAdapter.ViewHolder>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.let {
-            drawingPosition = it.getInt(Constants.DRAWINGS.CURRENT_DRAWING_ID_KEY)
-            currentDrawing = DrawingService.getDrawing(drawingPosition!!)
-        }
+        UserService.setCollaborationHistoryToshow()
+        DrawingService.setCollaborationDrawingObject()
+        collabDrawingObject = DrawingService.getCollaborationDrawingObject()
+        bitmapOfdrawingToOpen = DrawingService.getDrawingsBitmap(requireContext(), collabDrawingObject)
+        DrawingService.setCollabHistoryDrawingsBitmap(bitmapOfdrawingToOpen)
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        val inf = inflater.inflate(R.layout.fragment_user_profile_history, container, false)
+
+        recyclerView = inf.findViewById(R.id.collabHistoryRecyclerView)
+        recyclerView.layoutManager = LinearLayoutManager(requireContext())
+        adapter = CollaborationHistoryRecyclerAdapter()
+        recyclerView.adapter = adapter
+        collabHistoryToShow = UserService.getCollaborationToShow()
+
+        return inf
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        myView = view
-        recyclerView = myView.findViewById<RecyclerView>(R.id.collabHistoryRecyclerView)
-        recyclerView.layoutManager = LinearLayoutManager(requireContext())
-
-        MyFragmentManager(requireActivity()).hideBackButton()
-        collabHistoryToShow = UserService.getCollaborationToShow()
-        setListeners()
-    }
-
-    private fun setListeners() {
-        // set value for login and logout
-        when(UserService.getUserInfo().lastLogin.toString()){
-            Constants.EMPTY_STRING -> {}
-            else->{ myView.findViewById<TextView>(R.id.userLastLogin).text = UserService.getUserInfo().lastLogin.toString()}
-        }
-        when(UserService.getUserInfo().lastLogout){
-            null -> {}
-            else->{myView.findViewById<TextView>(R.id.userlastLogout).text = UserService.getUserInfo().lastLogout.toString()}
-        }
+       DrawingMenuRecyclerAdapter(requireActivity(), bitmapOfdrawingToOpen, R.id.main_gallery_fragment) { updatedDrawing, pos -> updateDrawing(updatedDrawing, pos) }
 
     }
 
+    private fun updateDrawing(updatedDrawing: DrawingModel.UpdateDrawing, position: Int) {
+        DrawingRepository().updateDrawing(bitmapOfdrawingToOpen[position].drawing._id!!, updatedDrawing).observe(viewLifecycleOwner, {
+            if (it.isError as Boolean) {
+                CommonFun.printToast(requireActivity(), it.message!!)
+                return@observe
+            }
 
+            bitmapOfdrawingToOpen[position] = DrawingService.updateDrawingFromMenu(bitmapOfdrawingToOpen[position], updatedDrawing)
+            recyclerView.adapter?.notifyItemChanged(position)
+        })
+    }
 
 }
 
