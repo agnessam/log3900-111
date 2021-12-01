@@ -20,10 +20,10 @@ class CreateRectangleCommand(rectangles: ArrayList<Rectangle>?): ICreateDrawingC
             fillOpacity = style.fillOpacity,
             strokeOpacity = style.strokeOpacity,
             strokeWidth = style.strokeWidth,
-            x = 0,
-            y = 0,
-            width = 0,
-            height = 0
+            x = 0f,
+            y = 0f,
+            width = 0f,
+            height = 0f
         )
     }
 
@@ -37,10 +37,10 @@ class CreateRectangleCommand(rectangles: ArrayList<Rectangle>?): ICreateDrawingC
             val rectangleData = createData(style)
 
             rectangleData.id = rectangle.id
-            rectangleData.x = StringParser.removePX(rectangle.x)
-            rectangleData.y = StringParser.removePX(rectangle.y)
-            rectangleData.width = StringParser.removePX(rectangle.width)
-            rectangleData.height = StringParser.removePX(rectangle.height)
+            rectangleData.x = StringParser.removePX(rectangle.x).toFloat()
+            rectangleData.y = StringParser.removePX(rectangle.y).toFloat()
+            rectangleData.width = StringParser.removePX(rectangle.width).toFloat()
+            rectangleData.height = StringParser.removePX(rectangle.height).toFloat()
 
             val command = CommandFactory.createCommand("Rectangle", rectangleData) as RectangleCommand
             val endPoint = Point(

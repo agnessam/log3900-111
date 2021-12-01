@@ -80,10 +80,10 @@ class EllipseCommand(ellipseData: EllipseData): ICommand {
 
     fun setEndPoint(endPoint: Point) {
         endingPoint = endPoint
-        ellipse.width = kotlin.math.abs(endingPoint!!.x - startingPoint!!.x).toInt()
-        ellipse.x = ((endingPoint!!.x + startingPoint!!.x) / 2).toInt()
-        ellipse.height = kotlin.math.abs(endingPoint!!.y - startingPoint!!.y).toInt()
-        ellipse.y = ((endingPoint!!.y + startingPoint!!.y) / 2).toInt()
+        ellipse.width = kotlin.math.abs(endingPoint!!.x - startingPoint!!.x)
+        ellipse.x = ((endingPoint!!.x + startingPoint!!.x) / 2)
+        ellipse.height = kotlin.math.abs(endingPoint!!.y - startingPoint!!.y)
+        ellipse.y = ((endingPoint!!.y + startingPoint!!.y) / 2)
 
         DrawingJsonService.updateEllipse(ellipse)
 

@@ -33,6 +33,7 @@ class PencilCommand(pencilData: PencilData): ICommand {
     }
 
     fun initializePaint() {
+
         paint.color = ColorService.rgbaToInt(this.pencil.stroke)
         if(this.pencil.strokeOpacity != "none"){
             paint.alpha = ColorService.convertOpacityToAndroid(this.pencil.strokeOpacity)
@@ -41,6 +42,10 @@ class PencilCommand(pencilData: PencilData): ICommand {
         paint.strokeJoin = Paint.Join.ROUND
         paint.strokeCap = Paint.Cap.ROUND
         paint.strokeWidth = this.pencil.strokeWidth.toFloat()
+    }
+
+    private fun areAllParamsAreInitialized(): Boolean {
+        return this.pencil.id != null && this.pencil.fill != null && this.pencil.stroke != null && this.pencil.fillOpacity != null && this.pencil.strokeOpacity != null && this.pencil.strokeWidth != null && this.pencil.pointsList != null
     }
 
     private fun setStartingPoint(){

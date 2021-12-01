@@ -17,6 +17,7 @@ import com.example.colorimagemobile.services.drawing.Point
 import com.example.colorimagemobile.services.drawing.toolsAttribute.ColorService
 import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
 import java.lang.Integer.min
+import kotlin.math.min
 
 class RectangleCommand(rectangleData: RectangleData): ICommand {
     private var boundingRectangle = Rect(0,0, CanvasService.extraCanvas.width, CanvasService.extraCanvas.height)
@@ -84,10 +85,10 @@ class RectangleCommand(rectangleData: RectangleData): ICommand {
     fun setEndPoint(endPoint: Point) {
         endingPoint = endPoint
 
-        rectangle.width = kotlin.math.abs(endingPoint!!.x - startingPoint!!.x).toInt()
-        rectangle.x = min(endingPoint!!.x.toInt(), startingPoint!!.x.toInt())
-        rectangle.height = kotlin.math.abs(endingPoint!!.y - startingPoint!!.y).toInt()
-        rectangle.y = min(endingPoint!!.y.toInt(), startingPoint!!.y.toInt())
+        rectangle.width = kotlin.math.abs(endingPoint!!.x - startingPoint!!.x)
+        rectangle.x = min(endingPoint!!.x, startingPoint!!.x)
+        rectangle.height = kotlin.math.abs(endingPoint!!.y - startingPoint!!.y)
+        rectangle.y = min(endingPoint!!.y, startingPoint!!.y)
 
         DrawingJsonService.updateRect(rectangle)
 
