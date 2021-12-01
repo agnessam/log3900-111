@@ -41,8 +41,6 @@ export class UserOverviewComponent implements OnInit {
     this.editParameterDialogRef = this.dialog.open(
       EditParameterDialogComponent,
       {
-        width: "500px",
-        height: "400px",
         data: {
           username: this.currentUser.username,
         },
@@ -59,8 +57,6 @@ export class UserOverviewComponent implements OnInit {
     this.editDescriptionDialogRef = this.dialog.open(
       EditDescriptionDialogComponent,
       {
-        width: "500px",
-        height: "400px",
         data: {
           description: this.currentUser.description,
         },
