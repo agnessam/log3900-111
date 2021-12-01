@@ -12,7 +12,7 @@ import com.google.android.material.button.MaterialButton
 
 class TeamsMenuRecyclerAdapter(
         val layoutID: Int,
-        val openTeam: (Int) -> Unit):
+        val openTeam: (String) -> Unit):
     RecyclerView.Adapter<TeamsMenuRecyclerAdapter.ViewHolder>() {
 
     // create card view and sets its contents format
@@ -37,7 +37,10 @@ class TeamsMenuRecyclerAdapter(
         var teamDescription : TextView = itemView.findViewById(R.id.card_team_description);
 
         init {
-            itemView.setOnClickListener { openTeam(bindingAdapterPosition) }
+            itemView.setOnClickListener {
+                val team = TeamService.getAllTeams()[bindingAdapterPosition]
+                openTeam(team._id)
+            }
         }
     }
 }

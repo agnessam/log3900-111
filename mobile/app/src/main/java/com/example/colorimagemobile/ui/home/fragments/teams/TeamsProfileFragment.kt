@@ -17,11 +17,11 @@ import com.example.colorimagemobile.adapter.PostsMenuRecyclerAdapter
 import com.example.colorimagemobile.classes.NotificationSound.Notification
 import com.example.colorimagemobile.models.*
 import com.example.colorimagemobile.bottomsheets.ConfirmationBottomSheet
+import com.example.colorimagemobile.bottomsheets.MembersListBottomSheet
 import com.example.colorimagemobile.bottomsheets.PasswordConfirmationBottomSheet
 import com.example.colorimagemobile.classes.MyFragmentManager
 import com.example.colorimagemobile.enumerators.ButtonType
 import com.example.colorimagemobile.models.DrawingModel
-import com.example.colorimagemobile.models.TeamModel
 import com.example.colorimagemobile.models.recyclerAdapters.DrawingMenuData
 import com.example.colorimagemobile.repositories.MuseumRepository
 import com.example.colorimagemobile.repositories.DrawingRepository
@@ -38,8 +38,8 @@ import com.example.colorimagemobile.utils.Constants
 import com.google.android.material.tabs.TabLayout
 
 class TeamsProfileFragment : Fragment(R.layout.fragment_teams_profile) {
-    private var teamPosition: Int? = null
-    private lateinit var currentTeam: TeamModel
+    private var teamId: String? = null
+    private lateinit var currentTeam: TeamIdModel
     private lateinit var myView: View
     private lateinit var recyclerView: RecyclerView
     private var drawingsMenu: ArrayList<DrawingMenuData> = arrayListOf()
@@ -51,8 +51,7 @@ class TeamsProfileFragment : Fragment(R.layout.fragment_teams_profile) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            teamPosition = it.getInt(Constants.TEAMS.CURRENT_TEAM_ID_KEY)
-            currentTeam = TeamService.getTeam(teamPosition!!)
+            teamId = it.getString(Constants.TEAMS.CURRENT_TEAM_ID_KEY)
         }
     }
 
@@ -62,8 +61,6 @@ class TeamsProfileFragment : Fragment(R.layout.fragment_teams_profile) {
         recyclerView = myView.findViewById(R.id.teamProfileDrawingsRecycler)
         recyclerView.layoutManager = GridLayoutManager(requireContext(), Constants.NB_DATA_ROWS)
 
-        updateUI()
-        setListeners()
         getCurrentTeam()
     }
 
@@ -92,26 +89,31 @@ class TeamsProfileFragment : Fragment(R.layout.fragment_teams_profile) {
     }
 
     private fun getCurrentTeam() {
-        TeamRepository().getTeamById(currentTeam._id).observe(viewLifecycleOwner, {
+        TeamRepository().getTeamById(teamId!!).observe(viewLifecycleOwner, {
             if (it.isError as Boolean) {
                 printToast(requireContext(), it.message!!)
                 return@observe
             }
 
-            val team = it.data as TeamIdModel
+            currentTeam = it.data as TeamIdModel
             DrawingService.setAllDrawings(it.data.drawings)
-            drawingsMenu = DrawingService.getDrawingsBitmap(requireContext(), team.drawings)
-            publishedDrawings = team.posts
+            drawingsMenu = DrawingService.getDrawingsBitmap(requireContext(), currentTeam.drawings)
+            publishedDrawings = currentTeam.posts
+            updateUI()
+            setListeners()
             setAllDrawings()
         })
     }
 
     private fun updateTeamButtons() {
-        if (TeamService.isUserAlreadyTeamMember(teamPosition!!)) {
-            hideJoinBtn()
-        } else {
-            showJoinBtn()
-            checkIsTeamFull(joinBtn)
+        showJoinBtn()
+        checkIsTeamFull(joinBtn)
+
+        currentTeam.members.forEach { member ->
+            if (member._id == UserService.getUserInfo()._id) {
+                hideJoinBtn()
+                return@forEach
+            }
         }
     }
 
@@ -156,13 +158,18 @@ class TeamsProfileFragment : Fragment(R.layout.fragment_teams_profile) {
         deleteBtn.setOnClickListener {
             val title = "Are you sure you want to delete ${currentTeam.name}?"
             val description = "Deleting this team will delete all drawings and publications associated to this team."
-            val deleteConfirmation = ConfirmationBottomSheet({ TeamService.deleteTeam(teamPosition!!, requireContext()) }, title, description, "DELETE", ButtonType.DELETE.toString())
+            val deleteConfirmation = ConfirmationBottomSheet({ TeamService.deleteTeam(currentTeam._id, requireContext()) }, title, description, "DELETE", ButtonType.DELETE.toString())
             deleteConfirmation.show(parentFragmentManager, "ConfirmationBottomSheet")
+        }
+
+        myView.findViewById<TextView>(R.id.teamIdNbOfMembers).setOnClickListener {
+            val membersListBS = MembersListBottomSheet(requireActivity(), currentTeam.members)
+            membersListBS.show(parentFragmentManager, "MembersListBottomSheet")
         }
     }
 
     private fun joinTeam() {
-        TeamService.joinTeam(teamPosition!!, requireContext())
+        TeamService.joinTeam(currentTeam._id, requireContext())
         hideJoinBtn()
         printToast(requireActivity(), "Successfully joined the team")
     }
@@ -192,7 +199,7 @@ class TeamsProfileFragment : Fragment(R.layout.fragment_teams_profile) {
         val title = "Are you sure you want to leave ${currentTeam.name}?"
         val description = "Leaving this team does not prevent you from rejoining this team later on."
         val confirmation = ConfirmationBottomSheet({
-            TeamService.leaveTeam(teamPosition!!, requireContext())
+            TeamService.leaveTeam(currentTeam._id, requireContext())
             showJoinBtn()
         }, title, description, "Leave", ButtonType.PRIMARY.toString())
         confirmation.show(parentFragmentManager, "ConfirmationBottomSheet")
