@@ -19,15 +19,13 @@ import com.example.colorimagemobile.utils.Constants
 import kotlinx.android.synthetic.main.fragment_user_profile_history.*
 
 
-class UserProfileHistoryFragment : Fragment(R.layout.fragment_user_profile_history) {
+class HistoryFragment : Fragment(R.layout.fragment_user_profile_history) {
 
     private lateinit var myView : View
-    private lateinit var drawings: ArrayList<DrawingModel.Drawing>
     private var drawingPosition: Int? = null
     private lateinit var currentDrawing: DrawingModel.Drawing
     private lateinit var collabHistoryToShow : ArrayList<CollaborationHistory.drawingHistory>
     private lateinit var recyclerView: RecyclerView
-    private var allDrawingToShow: ArrayList<DrawingMenuData> = arrayListOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,7 +44,6 @@ class UserProfileHistoryFragment : Fragment(R.layout.fragment_user_profile_histo
         MyFragmentManager(requireActivity()).hideBackButton()
         collabHistoryToShow = UserService.getCollaborationToShow()
         setListeners()
-        getAllDrawings()
     }
 
     private fun setListeners() {
@@ -62,25 +59,7 @@ class UserProfileHistoryFragment : Fragment(R.layout.fragment_user_profile_histo
 
     }
 
-    private fun getAllDrawings() {
-        val token = UserService.getToken()
 
-        DrawingRepository().getAllDrawings(token).observe(viewLifecycleOwner, {
-            // some error occurred during HTTP request
-            if (it.isError as Boolean) {
-                return@observe
-            }
-
-            drawings = it.data  as ArrayList<DrawingModel.Drawing>
-            DrawingService.setAllDrawings(drawings)
-//            val collabDrawing = DrawingService.getCollaborationDrawingObject()
-//            allDrawingToShow = DrawingService.getDrawingsBitmap(requireContext(), collabDrawing)
-
-//            val adapter = CollabHistoryAdapterService.createAdapter(requireActivity(), R.layout.card_collaboration_history, R.id.collabHistoryRecyclerView)
-//            recyclerView.adapter = adapter
-//            CollabHistoryAdapterService.setAdapter(adapter)
-        })
-    }
 
 }
 

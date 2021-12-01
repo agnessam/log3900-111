@@ -20,6 +20,7 @@ import com.example.colorimagemobile.bottomsheets.UpdateDescriptionBottomSheet
 import com.example.colorimagemobile.bottomsheets.UpdatePasswordBottomSheet
 import com.example.colorimagemobile.bottomsheets.UpdateUsernameBottomSheet
 import com.example.colorimagemobile.classes.MyPicasso
+import com.example.colorimagemobile.classes.UpdateUserProfile
 import com.example.colorimagemobile.models.DataWrapper
 import com.example.colorimagemobile.models.HTTPResponseModel
 import com.example.colorimagemobile.models.UserModel
@@ -56,11 +57,11 @@ class EditProfileFragment : Fragment() {
     private lateinit var user : UserModel.AllInfo
     private lateinit var currentAvatar : AvatarModel.AllInfo
     private lateinit var newUserData : UserModel.UpdateUser
+    private lateinit var newDescription : TextView
+    private lateinit var newUsername : TextView
     private var infview : View ? = null
     private lateinit var bitmap: Bitmap
     private  var file : File? = null
-    private lateinit var newUsername : TextView
-    private lateinit var newDescription : TextView
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -92,6 +93,7 @@ class EditProfileFragment : Fragment() {
         inf.findViewById<View>(R.id.choosedefaultavatar).setOnClickListener {
             val defaultAvatarList = DefaultAvatarListBottomSheet()
             defaultAvatarList.show(parentFragmentManager, "DefaultAvatarListBottomSheetDialog")
+            ChooseAvatarUpload()
         }
         imageView = (inf.findViewById<View>(R.id.current_avatar) as ImageView)
         MyPicasso().loadImage(user.avatar.imageUrl, imageView )
@@ -101,6 +103,7 @@ class EditProfileFragment : Fragment() {
             .setOnClickListener{
                 val changeUsername = UpdateUsernameBottomSheet()
                 changeUsername.show(parentFragmentManager, "changeUserUsername")
+                currentUserUsername.text = UserService.getUserInfo().username
             }
 
         //description
@@ -108,6 +111,7 @@ class EditProfileFragment : Fragment() {
             .setOnClickListener{
                 val changeDescription = UpdateDescriptionBottomSheet()
                 changeDescription.show(parentFragmentManager, "changeUserDescription")
+                inf.findViewById<TextView>(R.id.currentUserDescription).text = UserService.getUserInfo().description
             }
 
         //password
@@ -117,12 +121,14 @@ class EditProfileFragment : Fragment() {
                 changeDescription.show(parentFragmentManager, "changeUserPassword")
             }
 
-        // validate change
-        inf.findViewById<View>(R.id.valideChange).setOnClickListener { update() }
-
         //set username and description
         inf.findViewById<TextView>(R.id.currentUserUsername).text = UserService.getUserInfo().username
         inf.findViewById<TextView>(R.id.currentUserDescription).text = UserService.getUserInfo().description
+        inf.findViewById<TextView>(R.id.username).text = UserService.getUserInfo().username
+        inf.findViewById<TextView>(R.id.firstname).text = UserService.getUserInfo().firstName
+        inf.findViewById<TextView>(R.id.lastname).text = UserService.getUserInfo().lastName
+        inf.findViewById<TextView>(R.id.email).text = UserService.getUserInfo().email
+
 
         infview = inf
         return inf
@@ -145,28 +151,7 @@ class EditProfileFragment : Fragment() {
         })
     }
 
-    //Set the data to be update
-    private fun setNewDataToUpdate(){
-
-        // update username data
-        if(!UserService.getTemporaryEditUsername().isNullOrBlank()){
-            newUserData.username = UserService.getTemporaryEditUsername()
-        }
-        //update description
-        if(!UserService.getTemporaryDescription().isNullOrBlank()){
-            newUserData.description = UserService.getTemporaryDescription()
-        }
-        //update avatar
-        if(AvatarService.getCurrentAvatar().imageUrl!= Constants.EMPTY_STRING){
-            currentAvatar = AvatarService.getCurrentAvatar()
-            newUserData.avatar = currentAvatar
-            UserService.setUserAvatar(currentAvatar)
-        }
-
-    }
-
-    // update profile with the data enter
-    private fun update(){
+    private fun updateAvatar(){
         var countExistingAvatar : Int = 0
         for(indices in AvatarService.getAvatars().indices){
             if (AvatarService.getCurrentAvatar() != AvatarService.getAvatars()[indices]){
@@ -177,23 +162,20 @@ class EditProfileFragment : Fragment() {
             postAvatar(AvatarService.getCurrentAvatar()).observe(viewLifecycleOwner, { handleResponse(it) })
         }
 
-        setNewDataToUpdate()
-        updateUserInfo(newUserData).observe(viewLifecycleOwner, { context?.let { it1 ->globalHandler.response(it1,it) } })
-        UserService.updateMe(newUserData)
+        UpdateUserProfile().updateUserInfo(newUserData).observe(viewLifecycleOwner, { context?.let { it1 ->globalHandler.response(it1,it) } })
 
-        newUsername = infview!!.findViewById<TextView>(R.id.currentUserUsername)
-        newDescription = infview!!.findViewById<TextView>(R.id.currentUserDescription)
-        newUsername.text = newUserData.username
-        newDescription.text = newUserData.description
+
 
         requireActivity().invalidateOptionsMenu()
     }
 
-
-
-    //call retrofit request to database to update user info
-    private fun updateUserInfo(dataToUpdate:UserModel.UpdateUser): LiveData<DataWrapper<HTTPResponseModel.UserResponse>> {
-        return UserRepository().updateUserData(dataToUpdate,token, user._id)
+    private fun ChooseAvatarUpload(){
+        if(AvatarService.getCurrentAvatar().imageUrl!= Constants.EMPTY_STRING){
+            currentAvatar = AvatarService.getCurrentAvatar()
+            newUserData.avatar = currentAvatar
+            UserService.setUserAvatar(currentAvatar)
+        }
+        updateAvatar()
     }
 
     //call retrofit request to upload image and get imageUrl from amazon S3
@@ -265,7 +247,6 @@ class EditProfileFragment : Fragment() {
             ).onSameThread().check()
     }
 
-    // call whenever we try to take a picture
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == 1 && data != null) {
             bitmap = data.extras?.get("data") as Bitmap
@@ -273,7 +254,15 @@ class EditProfileFragment : Fragment() {
             val fileToUpload: File? =
                 bitmapToFile(bitmap, user.username.take(4)+LocalDateTime.now().toString()+Constants.PNG)
             uploadAvatar(fileToUpload!!).observe(viewLifecycleOwner, { handleResponse(it) })
+            updateAvatar()
         }
+    }
+
+    fun UpdateView(){
+        newUsername = infview!!.findViewById(R.id.currentUserUsername)
+        newDescription = infview!!.findViewById(R.id.currentUserDescription)
+        newUsername.text = UserService.getUserInfo().username
+        newDescription.text = UserService.getUserInfo().description
     }
 
 }

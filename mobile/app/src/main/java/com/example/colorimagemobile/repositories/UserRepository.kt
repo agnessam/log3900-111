@@ -10,7 +10,6 @@ import retrofit2.Response
 
 class UserRepository {
     private val httpClient = RetrofitInstance.HTTP
-    private lateinit var newProfileDate : UserModel.UpdateUser
 
     fun getUserByToken(token: String): MutableLiveData<DataWrapper<HTTPResponseModel.UserResponse>> {
         val userLiveData: MutableLiveData<DataWrapper<HTTPResponseModel.UserResponse>> = MutableLiveData()
@@ -61,51 +60,6 @@ class UserRepository {
         })
 
         return updateLiveData
-    }
-
-    // get user by id
-    fun getUserById(token: String,id:String): MutableLiveData<DataWrapper<UserModel.AllInfo>> {
-        val userData: MutableLiveData<DataWrapper<UserModel.AllInfo>> = MutableLiveData()
-
-        httpClient.getUserById(token = "Bearer $token",id).enqueue(object : Callback<UserModel.AllInfo> {
-            override fun onResponse(call: Call<UserModel.AllInfo>, response: Response<UserModel.AllInfo>) {
-                if (!response.isSuccessful) {
-                    userData.value = DataWrapper(null, "An error occurred!", true)
-                    return
-                }
-                userData.value = DataWrapper(response.body(), null, false)
-            }
-            override fun onFailure(call: Call<UserModel.AllInfo>, t: Throwable) {
-                userData.value = DataWrapper(null, "Failed to get User!", true)
-            }
-        })
-
-        return userData
-    }
-
-    // delete user by id
-    fun deleteUserById(token: String, id: String): MutableLiveData<DataWrapper<HTTPResponseModel.UserResponse>> {
-
-        val deleteUserData: MutableLiveData<DataWrapper<HTTPResponseModel.UserResponse>> = MutableLiveData()
-        httpClient.deleteUserById(token = "Bearer $token",id).enqueue(object :
-            Callback<HTTPResponseModel.UserResponse> {
-            override fun onResponse(call: Call<HTTPResponseModel.UserResponse>, response: Response<HTTPResponseModel.UserResponse>) {
-                if (!response.isSuccessful) {
-                    deleteUserData.value = DataWrapper(null, "An error occurred!", true)
-                    return
-                }
-
-                // account successfully delete
-                deleteUserData.value = DataWrapper(response.body(), "", false)
-            }
-
-            override fun onFailure(call: Call<HTTPResponseModel.UserResponse>, t: Throwable) {
-                deleteUserData.value = DataWrapper(null, "Failed to delete account!", true)
-            }
-
-        })
-
-        return deleteUserData
     }
 
     // get all user

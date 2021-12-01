@@ -4,8 +4,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/ic_home_theme"
+    android:id="@+id/parameterFragment"
     android:orientation="horizontal"
-    tools:context=".ui.home.fragments.accountParameter.UserProfileFragment">
+    tools:context=".ui.home.fragments.accountParameter.accountParameterFragment">
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -25,7 +26,7 @@
             android:textSize="30sp" />
 
         <TextView
-            android:id="@+id/myPrivacy"
+            android:id="@+id/myProfile"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="20dp"
@@ -33,7 +34,7 @@
             android:text="My Profile"
             android:textSize="20sp" />
         <TextView
-            android:id="@+id/modifyprofile"
+            android:id="@+id/privacy"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="20dp"
@@ -64,7 +65,7 @@
     </LinearLayout>
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/newLayout"
-        android:layout_margin="20dp"
+        android:layout_margin="10dp"
         android:background="@color/mainTheme"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>

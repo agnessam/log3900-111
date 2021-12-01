@@ -9,8 +9,14 @@ import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import android.widget.Button
 import androidx.core.widget.doOnTextChanged
+import androidx.fragment.app.FragmentActivity
 import com.example.colorimagemobile.R
+import com.example.colorimagemobile.classes.MyFragmentManager
+import com.example.colorimagemobile.classes.UpdateUserProfile
+import com.example.colorimagemobile.httpresponsehandler.GlobalHandler
+import com.example.colorimagemobile.models.UserModel
 import com.example.colorimagemobile.services.users.UserService
+import com.example.colorimagemobile.ui.home.fragments.accountParameter.accountParameterFragment
 import com.example.colorimagemobile.utils.CommonFun
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -25,10 +31,12 @@ class UpdateDescriptionBottomSheet : BottomSheetDialogFragment() {
     private lateinit var cancelBtn: Button
     private lateinit var descriptionLayout: TextInputLayout
     private lateinit var descriptionInputName: TextInputEditText
+    private lateinit var newUserData : UserModel.UpdateUser
     private lateinit var dialog: BottomSheetDialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        newUserData = UserModel.UpdateUser(null,null,null)
 
     }
 
@@ -82,10 +90,12 @@ class UpdateDescriptionBottomSheet : BottomSheetDialogFragment() {
                 newDescriptionInputText.startAnimation(shake);
                 return@setOnClickListener
             }
-            UserService.setTemporaryDescription(descriptionInputName.text.toString())
-            CommonFun.printToast(
-                requireContext(),
-                "Description change temporary to ${descriptionInputName.text.toString()}. It will be effective after you validate"
+            newUserData.description = descriptionInputName.text.toString()
+            UpdateUserProfile().updateUserInfo(newUserData).observe(viewLifecycleOwner, { context?.let { it1 -> GlobalHandler().response(it1,it) } })
+            UserService.updateMe(newUserData)
+            requireActivity().invalidateOptionsMenu()
+            MyFragmentManager(context as FragmentActivity).open(R.id.parameterFragment,
+                accountParameterFragment()
             )
             closeSheet()
         }
