@@ -33,7 +33,7 @@ $dark-palette: (
   200: #ffffff,
   300: #ffffff,
   400: #413d4b,
-  500: #303030,
+  500: #2c2a33,
   600: #ffffff,
   700: #ffffff,
   800: #323232,
@@ -108,9 +108,9 @@ $colorimage-dark-theme: map_merge(
 
 .color-scheme-dark {
   @include mat.all-component-colors($colorimage-dark-theme);
-  background-color: #413d4b;
+  background-color: #2c2a33;
   .mat-app-background {
-    background-color: #413d4b;
+    background-color: #2c2a33;
   }
   .mat-flat-button.mat-primary,
   .mat-raised-button.mat-primary,
@@ -120,11 +120,30 @@ $colorimage-dark-theme: map_merge(
     color: black;
     box-shadow: none;
   }
+
+  .mat-flat-button,
+  .mat-raised-button,
+  .mat-fab,
+  .mat-mini-fab {
+    background-color: #dedede;
+    color: black;
+    box-shadow: none;
+  }
+
   #nav-bar {
-    background-color: #413d4b;
+    background-color: #2c2a33;
   }
   mat-label {
     color: white;
+  }
+  .mat-card:not([class*="mat-elevation-z"]) {
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+  }
+
+  .mat-card {
+    border-radius: 15px;
   }
 }
 
@@ -142,8 +161,19 @@ $colorimage-dark-theme: map_merge(
     color: white;
     box-shadow: none;
   }
+
   #nav-bar {
     background-color: #fcedea;
+  }
+  .mat-card:not([class*="mat-elevation-z"]) {
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+  }
+
+  .mat-card {
+    border-radius: 15px;
+    background-color: #fef9f7;
   }
 }
 
@@ -191,14 +221,3 @@ body {
 // .mat-stroked-button {
 //   color: #da7e70;
 // }
-
-.mat-card:not([class*="mat-elevation-z"]) {
-  -webkit-box-shadow: none;
-  -moz-box-shadow: none;
-  box-shadow: none;
-}
-
-.mat-card {
-  border-radius: 15px;
-  background-color: #fef9f7;
-}
