@@ -11,7 +11,7 @@ import {
 import { TYPES } from '../../domain/constants/types';
 import { DrawingRepository } from '../../infrastructure/data_access/repositories/drawing_repository';
 import passport from 'passport';
-import { CollaborationTrackerService } from '@app/domain/services/collaboration-tracker.service';
+import { CollaborationTrackerService } from '../../domain/services/collaboration-tracker.service';
 
 @controller('/drawings', passport.authenticate('jwt', { session: false }))
 export class DrawingController {
