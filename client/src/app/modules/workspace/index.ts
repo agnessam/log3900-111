@@ -20,6 +20,5 @@ export * from "./services/tools/tool-ellipse/ellipse-command";
 export * from "./services/tools/tool-ellipse/tool-ellipse.service";
 export * from "./services/tools/tool-rectangle/rectangle-command";
 export * from "./services/tools/tool-rectangle/tool-rectangle.service";
-export * from "./services/hotkeys/hotkeys.service";
 export * from "./workspace.service";
 export * from "./classes/textures/texture-id";
