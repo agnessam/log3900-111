@@ -2,11 +2,9 @@ import {
   AfterViewInit,
   Component,
   ElementRef,
-  HostListener,
   OnInit,
   ViewChild,
 } from "@angular/core";
-import { ToolsService } from "./services/tools/tools.service";
 import { WorkspaceService } from "./workspace.service";
 
 @Component({
@@ -20,8 +18,7 @@ export class WorkspaceComponent implements OnInit, AfterViewInit {
 
   constructor(
     private el: ElementRef,
-    private workspaceService: WorkspaceService,
-    private toolsService: ToolsService
+    private workspaceService: WorkspaceService
   ) {}
 
   ngOnInit(): void {
@@ -30,27 +27,5 @@ export class WorkspaceComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit(): void {
     this.workspaceService.scrolledElement = this.workspaceEnv;
-  }
-
-  /// Effectue un onPress sur le clique droit de la sourie
-  onRightClick(event: MouseEvent): boolean {
-    return false;
-  }
-
-  /// Effectue un onPress sur le clique gauche de la sourie
-  onMouseDown(event: MouseEvent): void {
-    this.toolsService.onPressed(event);
-  }
-
-  /// Effectue un onRelease quand le clique de la sourie est relaché
-  @HostListener("window:mouseup", ["$event"])
-  onMouseUp(event: MouseEvent): void {
-    this.toolsService.onRelease(event);
-  }
-
-  /// Effectue un onMove quand la sourie bouge
-  @HostListener("window:mousemove", ["$event"])
-  onMouseMove(event: MouseEvent): void {
-    this.toolsService.onMove(event);
   }
 }

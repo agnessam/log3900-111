@@ -2,12 +2,13 @@ import {
   AfterViewInit,
   Component,
   ElementRef,
+  HostListener,
   OnDestroy,
   Renderer2,
   ViewChild,
 } from "@angular/core";
 import { Subscription } from "rxjs";
-import { DrawingService } from "src/app/modules/workspace";
+import { DrawingService, ToolsService } from "src/app/modules/workspace";
 
 /// S'occupe d'afficher le svg dans un component
 @Component({
@@ -24,7 +25,8 @@ export class CanvasComponent implements AfterViewInit, OnDestroy {
 
   constructor(
     private drawingService: DrawingService,
-    public renderer: Renderer2
+    public renderer: Renderer2,
+    private toolsService: ToolsService
   ) {
     this.drawingService.renderer = this.renderer;
     this.drawingService.isCreated = true;
@@ -67,5 +69,27 @@ export class CanvasComponent implements AfterViewInit, OnDestroy {
 
   get isDrawingCreated(): boolean {
     return this.drawingService.isCreated;
+  }
+
+  /// Effectue un onPress sur le clique droit de la sourie
+  onRightClick(event: MouseEvent): boolean {
+    return false;
+  }
+
+  /// Effectue un onPress sur le clique gauche de la sourie
+  onMouseDown(event: MouseEvent): void {
+    this.toolsService.onPressed(event);
+  }
+
+  /// Effectue un onRelease quand le clique de la sourie est relaché
+  @HostListener("window:mouseup", ["$event"])
+  onMouseUp(event: MouseEvent): void {
+    this.toolsService.onRelease(event);
+  }
+
+  /// Effectue un onMove quand la sourie bouge
+  @HostListener("window:mousemove", ["$event"])
+  onMouseMove(event: MouseEvent): void {
+    this.toolsService.onMove(event);
   }
 }

@@ -1,2 +1,6 @@
-<div #svgCanvas class="mat-elevation-z4 sizeCorrector">
-</div>
+<div
+  #svgCanvas
+  class="mat-elevation-z4 sizeCorrector"
+  (mousedown)="onMouseDown($event)"
+  (contextmenu)="onRightClick($event)"
+></div>
