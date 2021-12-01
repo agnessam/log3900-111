@@ -99,8 +99,9 @@ class EllipseCommand(ellipseData: EllipseData): ICommand {
         return ellipseShape.getDrawable(borderEllipseIndex) as ShapeDrawable
     }
 
-    private fun getEllipseDrawable(): LayerDrawable {
-        return DrawingObjectManager.getDrawable(this.layerIndex) as LayerDrawable
+    private fun getEllipseDrawable(): LayerDrawable? {
+        val drawable = DrawingObjectManager.getDrawable(this.layerIndex) ?: return null
+        return drawable as LayerDrawable
     }
 
     override fun update(drawingCommand: Any) {
@@ -115,6 +116,8 @@ class EllipseCommand(ellipseData: EllipseData): ICommand {
     }
 
     override fun execute() {
+        if(this.getEllipseDrawable() == null) return
+
         if(ellipse.stroke != "none"){
             val borderRectPathShape = PathShape(borderPath,
                 CanvasService.extraCanvas.width.toFloat(), CanvasService.extraCanvas.height.toFloat()
@@ -122,7 +125,7 @@ class EllipseCommand(ellipseData: EllipseData): ICommand {
             var borderRectDrawable = ShapeDrawable(borderRectPathShape)
             this.getBorderEllipse().bounds = this.boundingRectangle
 
-            this.getEllipseDrawable().setDrawable(this.borderEllipseIndex, borderRectDrawable)
+            this.getEllipseDrawable()!!.setDrawable(this.borderEllipseIndex, borderRectDrawable)
             this.getBorderEllipse().paint.set(this.borderPaint)
         }
 
@@ -134,11 +137,11 @@ class EllipseCommand(ellipseData: EllipseData): ICommand {
             var fillRectDrawable = ShapeDrawable(fillRectPathShape)
             this.getFillEllipse().bounds = this.boundingRectangle
 
-            this.getEllipseDrawable().setDrawable(this.fillEllipseIndex, fillRectDrawable)
+            this.getEllipseDrawable()!!.setDrawable(this.fillEllipseIndex, fillRectDrawable)
             this.getFillEllipse().paint.set(this.fillPaint)
         }
         
-        this.getEllipseDrawable().bounds = this.boundingRectangle
+        this.getEllipseDrawable()!!.bounds = this.boundingRectangle
         DrawingObjectManager.addCommand(ellipse.id, this)
         DrawingObjectManager.setDrawable(layerIndex, ellipseShape)
         CanvasUpdateService.invalidate()

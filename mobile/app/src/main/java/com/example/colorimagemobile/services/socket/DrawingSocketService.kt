@@ -50,17 +50,14 @@ object DrawingSocketService: AbsSocket(SOCKETS.COLLABORATIVE_DRAWING_NAMESPACE) 
 
     private var hasBeenInitialized = false
 
-    override fun disconnect() {
-        mSocket.off(IN_PROGRESS_DRAWING_EVENT, onProgressDrawing)
-        super.disconnect()
-    }
-
     override fun leaveRoom(roomInformation: Constants.SocketRoomInformation){
 
         this.drawingMenus = null
         this.position = null
         this.destination = null
+        hasBeenInitialized = false
 
+        mSocket.off(IN_PROGRESS_DRAWING_EVENT, onProgressDrawing)
         super.leaveRoom(roomInformation)
     }
 

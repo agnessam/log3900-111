@@ -104,8 +104,9 @@ class RectangleCommand(rectangleData: RectangleData): ICommand {
         return rectangleShape.getDrawable(borderRectangleIndex) as ShapeDrawable
     }
 
-    private fun getRectangleDrawable(): LayerDrawable{
-        return DrawingObjectManager.getDrawable(this.layerIndex) as LayerDrawable
+    private fun getRectangleDrawable(): LayerDrawable?{
+        val drawable = DrawingObjectManager.getDrawable(this.layerIndex) ?: return null
+        return drawable as LayerDrawable
     }
 
     override fun update(drawingCommand: Any) {
@@ -120,6 +121,8 @@ class RectangleCommand(rectangleData: RectangleData): ICommand {
     }
 
     override fun execute() {
+        if(this.getRectangleDrawable() == null) return
+
         if(rectangle.stroke != "none"){
             val borderRectPathShape = PathShape(borderPath,
                 CanvasService.extraCanvas.width.toFloat(), CanvasService.extraCanvas.height.toFloat()
@@ -127,7 +130,7 @@ class RectangleCommand(rectangleData: RectangleData): ICommand {
             var borderRectDrawable = ShapeDrawable(borderRectPathShape)
             this.getBorderRectangle().bounds = this.boundingRectangle
 
-            this.getRectangleDrawable().setDrawable(this.borderRectangleIndex, borderRectDrawable)
+            this.getRectangleDrawable()!!.setDrawable(this.borderRectangleIndex, borderRectDrawable)
             this.getBorderRectangle().paint.set(this.borderPaint)
         }
 
@@ -139,11 +142,11 @@ class RectangleCommand(rectangleData: RectangleData): ICommand {
             var fillRectDrawable = ShapeDrawable(fillRectPathShape)
             this.getFillRectangle().bounds = this.boundingRectangle
 
-            this.getRectangleDrawable().setDrawable(this.fillRectangleIndex, fillRectDrawable)
+            this.getRectangleDrawable()!!.setDrawable(this.fillRectangleIndex, fillRectDrawable)
             this.getFillRectangle().paint.set(this.fillPaint)
         }
 
-        this.getRectangleDrawable().bounds = this.boundingRectangle
+        this.getRectangleDrawable()!!.bounds = this.boundingRectangle
         DrawingObjectManager.addCommand(rectangle.id, this)
         DrawingObjectManager.setDrawable(layerIndex, rectangleShape)
         CanvasUpdateService.invalidate()

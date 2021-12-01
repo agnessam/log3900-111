@@ -146,8 +146,8 @@ class HomeActivity : AppCompatActivity() {
             // back button clicked on Gallery Drawing
             R.id.galleryFragment -> {
                 saveDrawing()
-                DrawingObjectManager.clearLayers()
                 SocketManagerService.leaveDrawingRoom()
+                DrawingObjectManager.clearLayers()
                 DrawingService.setCurrentDrawingID(null)
                 bottomNav.selectedItemId = R.id.galleryFragment
                 true
