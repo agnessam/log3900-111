@@ -27,7 +27,7 @@ import { LineWidthCommand } from "./line-width-command/line-width-command.servic
 export class SelectionToolService implements Tools {
   readonly id: number = ToolIdConstants.SELECTION_ID;
   readonly faIcon: IconDefinition = faMousePointer;
-  readonly toolName = "Sélection";
+  readonly toolName = "Selection";
   parameters: FormGroup;
 
   private hasSelectedItems = false;
