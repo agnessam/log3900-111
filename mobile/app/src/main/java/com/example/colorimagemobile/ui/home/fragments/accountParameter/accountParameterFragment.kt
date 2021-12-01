@@ -32,9 +32,9 @@ class accountParameterFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        myProfile.setTextColor(Color.parseColor("#FF4040"))
-        val showUserProfile = EditProfileFragment()
-        parentFragmentManager.beginTransaction().replace(R.id.newLayout, showUserProfile)
+        changeTxtColor(myProfile,privacy,history,stat)
+        val editProfileFragment = EditProfileFragment()
+        parentFragmentManager.beginTransaction().replace(R.id.newLayout, editProfileFragment)
             .commit()
 
 

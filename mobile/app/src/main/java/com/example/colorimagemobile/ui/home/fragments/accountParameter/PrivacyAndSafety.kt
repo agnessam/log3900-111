@@ -13,11 +13,14 @@ import com.example.colorimagemobile.models.DataWrapper
 import com.example.colorimagemobile.models.HTTPResponseModel
 import com.example.colorimagemobile.models.Privacy
 import com.example.colorimagemobile.repositories.UserRepository
+import com.example.colorimagemobile.services.SharedPreferencesService
 import com.example.colorimagemobile.services.users.UserService
 import com.example.colorimagemobile.utils.CommonFun
+import com.example.colorimagemobile.utils.Constants
+import java.lang.Boolean.getBoolean
 
 class PrivacyAndSafety : Fragment() {
-     private lateinit var switch_email : SwitchCompat
+    private lateinit var switch_email : SwitchCompat
      private lateinit var switch_firstname : SwitchCompat
      private lateinit var switch_lastname : SwitchCompat
      private var newSetting: Privacy.Setting = Privacy.Setting(false,false,false)
@@ -75,6 +78,7 @@ class PrivacyAndSafety : Fragment() {
         }
         // request successfully
         UserService.updatePrivacySetting(newSetting)
+        context.let { CommonFun.printToast(it, "Request successful you update your privacy to be ${newSetting}") }
     }
 
 }

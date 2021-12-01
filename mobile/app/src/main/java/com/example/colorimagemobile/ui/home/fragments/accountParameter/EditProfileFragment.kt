@@ -120,6 +120,9 @@ class EditProfileFragment : Fragment() {
                 changeDescription.show(parentFragmentManager, "changeUserPassword")
             }
 
+        // validate change
+        inf.findViewById<View>(R.id.validateChange).setOnClickListener { updateAvatar() }
+
         //set username and description
         inf.findViewById<TextView>(R.id.currentUserUsername).text = UserService.getUserInfo().username
         inf.findViewById<TextView>(R.id.currentUserDescription).text = UserService.getUserInfo().description
@@ -150,8 +153,8 @@ class EditProfileFragment : Fragment() {
         })
     }
 
-    private fun updateAvatar(){
-        printMsg("inside update avatar")
+    // update profile with the data enter
+    private fun update(){
         var countExistingAvatar : Int = 0
         for(indices in AvatarService.getAvatars().indices){
             if (AvatarService.getCurrentAvatar() != AvatarService.getAvatars()[indices]){
@@ -160,23 +163,37 @@ class EditProfileFragment : Fragment() {
         }
         if (countExistingAvatar == 0){
             postAvatar(AvatarService.getCurrentAvatar()).observe(viewLifecycleOwner, { handleResponse(it) })
-            printMsg("on post avatar")
         }
 
-        UpdateUserProfile().updateUserInfo(newUserData).observe(viewLifecycleOwner, { context?.let { it1 ->globalHandler.response(it1,it) } })
-        requireActivity().invalidateOptionsMenu()
-
-        printMsg("avatar url after update"+UserService.getUserInfo().avatar.imageUrl)
-    }
-
-    private fun ChooseAvatarUpload(){
-        printMsg("avatar url before choosing"+UserService.getUserInfo().avatar.imageUrl)
+        //update avatar
         if(AvatarService.getCurrentAvatar().imageUrl!= Constants.EMPTY_STRING){
             currentAvatar = AvatarService.getCurrentAvatar()
             newUserData.avatar = currentAvatar
             UserService.setUserAvatar(currentAvatar)
         }
-        updateAvatar()
+        UpdateUserProfile().updateUserInfo(newUserData).observe(viewLifecycleOwner, { context?.let { it1 ->globalHandler.response(it1,it) } })
+        requireActivity().invalidateOptionsMenu()
+    }
+
+    private fun updateAvatar(){
+        var countExistingAvatar : Int = 0
+        for(indices in AvatarService.getAvatars().indices){
+            if (AvatarService.getCurrentAvatar() != AvatarService.getAvatars()[indices]){
+                countExistingAvatar++
+            }
+        }
+        if (countExistingAvatar == 0){
+            postAvatar(AvatarService.getCurrentAvatar()).observe(viewLifecycleOwner, { handleResponse(it) })
+        }
+        //update avatar
+        if(AvatarService.getCurrentAvatar().imageUrl!= Constants.EMPTY_STRING){
+            currentAvatar = AvatarService.getCurrentAvatar()
+            newUserData.avatar = currentAvatar
+            UserService.setUserAvatar(currentAvatar)}
+
+        UpdateUserProfile().updateUserInfo(newUserData).observe(viewLifecycleOwner, { context?.let { it1 ->globalHandler.response(it1,it) } })
+        requireActivity().invalidateOptionsMenu()
+
     }
 
     //call retrofit request to upload image and get imageUrl from amazon S3
@@ -195,7 +212,7 @@ class EditProfileFragment : Fragment() {
             CommonFun.printToast(requireContext(), HTTPResponse.message as String)
             return
         }
-        updateAvatar()
+        CommonFun.printToast(requireContext(), HTTPResponse.message!!)
     }
 
     // function to convert bitmap to file
@@ -248,14 +265,12 @@ class EditProfileFragment : Fragment() {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        printMsg("avatar url before upload"+UserService.getUserInfo().avatar.imageUrl)
         if (requestCode == 1 && data != null) {
             bitmap = data.extras?.get("data") as Bitmap
             imageView.setImageBitmap(bitmap)
             val fileToUpload: File? =
                 bitmapToFile(bitmap, user.username.take(4)+LocalDateTime.now().toString()+Constants.PNG)
             uploadAvatar(fileToUpload!!).observe(viewLifecycleOwner, { handleResponse(it) })
-//            updateAvatar()
         }
     }
 

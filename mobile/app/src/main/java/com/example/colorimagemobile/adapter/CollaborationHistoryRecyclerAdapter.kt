@@ -5,20 +5,25 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.example.colorimagemobile.R
+import com.example.colorimagemobile.models.DrawingModel
 import com.example.colorimagemobile.models.recyclerAdapters.DrawingMenuData
 import com.example.colorimagemobile.services.drawing.DrawingService
 import com.example.colorimagemobile.services.socket.DrawingSocketService
 import com.example.colorimagemobile.services.users.UserService
-import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
-class CollaborationHistoryRecyclerAdapter :
+class CollaborationHistoryRecyclerAdapter(
+    drawings: ArrayList<DrawingMenuData>,
+    val destination: Int,
+    val updateDrawing: (newDrawingInfo: DrawingModel.UpdateDrawing, pos: Int) -> Unit
+) :
     RecyclerView.Adapter<CollaborationHistoryRecyclerAdapter.ViewHolder>() {
 
-    private var drawings : ArrayList<DrawingMenuData> = arrayListOf()
+    private var drawings : ArrayList<DrawingMenuData> = drawings
 
     // create card view and sets its contents format
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CollaborationHistoryRecyclerAdapter.ViewHolder {
@@ -28,7 +33,6 @@ class CollaborationHistoryRecyclerAdapter :
 
     // populate each data to cardview
     override fun onBindViewHolder(holder: CollaborationHistoryRecyclerAdapter.ViewHolder, position: Int) {
-        printMsg("inside onbindview du recycler")
         holder.drawingName.text = DrawingService.getCollaborationDrawingObject()[position].name
         holder.dateOfCollaboration.text = UserService.getCollaborationToShow()[position].collaboratedAt.toString()
     }
@@ -43,16 +47,14 @@ class CollaborationHistoryRecyclerAdapter :
         var dateOfCollaboration : TextView = itemView.findViewById(R.id.dateOfCollaboration);
 
         init {
-            drawings = DrawingService.getCollabHistoryDrawingsBitmap()
+//            drawings = DrawingService.getCollabHistoryDrawingsBitmap()
             itemView.setOnClickListener {
-                printMsg("inside listener ==================================================================================")
-
-                openDrawing(bindingAdapterPosition,itemView.context,R.id.main_gallery_fragment)
+                openDrawing(bindingAdapterPosition,itemView.context)
             }
         }
     }
 
-    private fun openDrawing(position: Int, context: Context, destination: Int) {
+    private fun openDrawing(position: Int, context: Context) {
         // Set current room to drawing id
         DrawingService.setCurrentDrawingID(drawings[position].drawing._id)
 

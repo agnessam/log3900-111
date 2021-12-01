@@ -74,8 +74,8 @@
 
                 <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/card_drawing_menu_author_image"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
                     android:layout_alignParentTop="true"
                     android:layout_gravity="center"
                     android:layout_toLeftOf="@id/card_drawing_menu_author" />

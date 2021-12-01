@@ -42,7 +42,6 @@ class DrawingMenuRecyclerAdapter(
     }
 
     override fun onBindViewHolder(holder: DrawingMenuRecyclerAdapter.ViewHolder, position: Int) {
-        printMsg("inside onbin de gallery menu recycler ==================================================================================")
         holder.drawingMenuViewHolder.name.text = drawingMenus[position].drawing.name
         holder.drawingMenuViewHolder.authorName.text = DrawingOwnerService.getUsername(drawingMenus[position].drawing.owner)
         holder.drawingMenuViewHolder.drawingDate.text = DateFormatter.getDate(drawingMenus[position].drawing.createdAt!!)
@@ -67,7 +66,6 @@ class DrawingMenuRecyclerAdapter(
     override fun getItemCount(): Int { return drawingMenus.size }
 
     private fun openDrawing(position: Int, context: Context) {
-        printMsg("inside open menu de gallery menu recycler ==================================================================================")
 
         // Set current room to drawing id
         DrawingService.setCurrentDrawingID(drawingMenus[position].drawing._id)
@@ -116,14 +114,9 @@ class DrawingMenuRecyclerAdapter(
                     passwordConfirmation.show(activity.supportFragmentManager, "PasswordConfirmationBottomSheet")
                     return@setOnClickListener
                 }
-                printMsg("before open ==================================================================================")
-
                 openDrawing(bindingAdapterPosition, itemView.context)
             }
-
             popupMenu.setOnClickListener {
-                printMsg("popupmenu listener ==================================================================================")
-
                 val optionMenu = PopupMenu(it.context, it!!)
                 optionMenu.inflate(R.menu.drawing_popup_menu)
                 optionMenu.setOnMenuItemClickListener(PopupMenu.OnMenuItemClickListener { item: MenuItem? ->

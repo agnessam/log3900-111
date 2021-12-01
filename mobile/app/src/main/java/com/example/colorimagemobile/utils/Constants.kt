@@ -112,6 +112,9 @@ class Constants {
         companion object {
             const val MAIN = "localStorage"
             const val TOKEN = "token"
+            const val PRIVACY_EMAIL ="email"
+            const val PRIVACY_FIRSTNAME ="firstname"
+            const val PRIVACY_LASTNAME = "lastname"
         }
     }
 
