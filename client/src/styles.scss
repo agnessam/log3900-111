@@ -145,6 +145,28 @@ $colorimage-dark-theme: map_merge(
   .mat-card {
     border-radius: 15px;
   }
+
+  .register-body {
+    background-image: url("./assets/backgrounds/dark-auth-background.png");
+    background-position: center;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+  }
+
+  .login-body {
+    background-image: url("./assets/backgrounds/dark-auth-background.png");
+    background-position: center;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+  }
+
+  .mat-card-title#titleCard {
+    color: #f4b6b0;
+  }
 }
 
 .color-scheme-light {
@@ -174,6 +196,32 @@ $colorimage-dark-theme: map_merge(
   .mat-card {
     border-radius: 15px;
     background-color: #fef9f7;
+  }
+
+  mat-label {
+    color: black;
+  }
+
+  .register-body {
+    background-image: url("./assets/backgrounds/auth-background.png");
+    background-position: center;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+  }
+
+  .login-body {
+    background-image: url("./assets/backgrounds/auth-background.png");
+    background-position: center;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+  }
+
+  .mat-card-title#titleCard {
+    color: #924642;
   }
 }
 
