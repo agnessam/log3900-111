@@ -7,7 +7,7 @@
       [attr.fill-opacity]="secondaryAlpha"
       class="color-selector"
       (click)="clickSecondary($event)"
-      matTooltip="Couleur secondaire"
+      matTooltip="Secondary color"
     />
     <rect
       [attr.x]="primarySize.x"
@@ -18,16 +18,7 @@
       [attr.fill-opacity]="primaryAlpha"
       class="color-selector"
       (click)="clickPrimary($event)"
-      matTooltip="Couleur primaire"
+      matTooltip="Primary color"
     />
   </svg>
-</div>
-<div class="row">
-  <button
-    mat-icon-button
-    matTooltip="Inverser les couleurs"
-    (click)="switchColor()"
-  >
-    <mat-icon>invert_colors</mat-icon>
-  </button>
 </div>
