@@ -1,5 +1,6 @@
 import { NgModule } from "@angular/core";
 import { RouterModule, Routes } from "@angular/router";
+import { ApplicationSettingsComponent } from "./settings-container/application-settings/application-settings.component";
 import { SettingsContainerComponent } from "./settings-container/settings-container.component";
 import { UserHistoryComponent } from "./settings-container/user-history/user-history.component";
 import { UserOverviewComponent } from "./settings-container/user-overview/user-overview.component";
@@ -31,6 +32,10 @@ const routes: Routes = [
       {
         path: "statistics",
         component: UserStatisticsComponent,
+      },
+      {
+        path: "application",
+        component: ApplicationSettingsComponent,
       },
     ],
   },
