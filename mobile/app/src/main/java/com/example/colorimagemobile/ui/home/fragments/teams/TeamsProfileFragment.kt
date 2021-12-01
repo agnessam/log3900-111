@@ -32,6 +32,7 @@ import com.example.colorimagemobile.services.museum.MuseumPostService
 import com.example.colorimagemobile.services.teams.TeamService
 import com.example.colorimagemobile.services.users.UserService
 import com.example.colorimagemobile.utils.CommonFun
+import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
 import com.example.colorimagemobile.utils.CommonFun.Companion.printToast
 import com.example.colorimagemobile.utils.CommonFun.Companion.toggleButton
 import com.example.colorimagemobile.utils.Constants
@@ -61,6 +62,7 @@ class TeamsProfileFragment : Fragment(R.layout.fragment_teams_profile) {
         myView = view
         recyclerView = myView.findViewById(R.id.teamProfileDrawingsRecycler)
         recyclerView.layoutManager = GridLayoutManager(requireContext(), Constants.NB_DATA_ROWS)
+        printMsg("on view create ==================================================================================")
 
         updateUI()
         setListeners()
@@ -97,6 +99,7 @@ class TeamsProfileFragment : Fragment(R.layout.fragment_teams_profile) {
                 printToast(requireContext(), it.message!!)
                 return@observe
             }
+            printMsg("inside get current team ==================================================================================")
 
             val team = it.data as TeamIdModel
             DrawingService.setAllDrawings(it.data.drawings)
@@ -200,15 +203,21 @@ class TeamsProfileFragment : Fragment(R.layout.fragment_teams_profile) {
 
     private fun setAllDrawings() {
         recyclerView.adapter = null
+        printMsg("inside set all drawing before drawingmenu recycler call ==================================================================================")
+
         recyclerView.adapter = DrawingMenuRecyclerAdapter(requireActivity(), drawingsMenu, R.id.teamsMenuFrameLayout) { updatedDrawing, pos -> updateDrawing(updatedDrawing, pos) }
     }
 
     private fun setPublishedDrawings() {
         recyclerView.adapter = null
+        printMsg("inside set publish ==================================================================================")
+
         recyclerView.adapter = PostsMenuRecyclerAdapter({ openPost(it) }, publishedDrawings)
     }
 
     private fun openPost(postPosition: Int) {
+        printMsg("inside oprn post ==================================================================================")
+
         MuseumRepository().getPostById(publishedDrawings[postPosition]._id).observe(viewLifecycleOwner, {
             if (it.isError as Boolean) {
                 printToast(requireContext(), it.message!!)
@@ -292,6 +301,7 @@ class TeamsProfileFragment : Fragment(R.layout.fragment_teams_profile) {
             }
 
             drawingsMenu[position] = DrawingService.updateDrawingFromMenu(drawingsMenu[position], updatedDrawing)
+            printMsg("after updateDrawingfrommenu ==================================================================================")
             recyclerView.adapter?.notifyItemChanged(position)
         })
     }

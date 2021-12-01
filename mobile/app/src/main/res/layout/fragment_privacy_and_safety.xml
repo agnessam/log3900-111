@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.home.fragments.accountParameter.PrivacyAndSafety">
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginStart="20dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Search filtering"
+            android:textStyle="bold"
+            android:textSize="30sp"
+            android:textColor="@color/black"
+            android:layout_marginTop="10dp"/>
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:text="Allow users to search you with your e-mail"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="60dp"/>
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/switch_email"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="50dp"
+            android:layout_marginStart="500dp"
+            android:layout_marginEnd="20dp" />
+
+        <TextView
+            android:layout_width="266dp"
+            android:layout_height="57dp"
+            android:layout_marginTop="80dp"
+            android:layout_marginStart="20dp"
+            android:text="@string/info_privacy_email_filter" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="150dp"
+            android:layout_marginStart="20dp"
+            android:textColor="@color/black"
+            android:text="Allow users to search you with your first name"/>
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/switch_firstname"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="130dp"
+            android:layout_marginStart="500dp"
+            android:layout_marginEnd="20dp" />
+        <TextView
+            android:layout_width="266dp"
+            android:layout_height="57dp"
+            android:layout_marginTop="180dp"
+            android:layout_marginStart="20dp"
+            android:text="@string/info_privacy_firstname_filter" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="250dp"
+            android:textColor="@color/black"
+            android:layout_marginStart="20dp"
+            android:text="Allow users to search you with your first name"/>
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/switch_lastname"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="240dp"
+            android:layout_marginStart="500dp"
+            android:layout_marginEnd="20dp" />
+        <TextView
+            android:layout_width="266dp"
+            android:layout_height="57dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="280dp"
+            android:text="@string/info_privacy_lastname_filter" />
+
+
+
+    </androidx.cardview.widget.CardView>
+
+</FrameLayout>

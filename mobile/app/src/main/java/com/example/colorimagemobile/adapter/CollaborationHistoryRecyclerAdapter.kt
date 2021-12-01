@@ -28,7 +28,7 @@ class CollaborationHistoryRecyclerAdapter :
 
     // populate each data to cardview
     override fun onBindViewHolder(holder: CollaborationHistoryRecyclerAdapter.ViewHolder, position: Int) {
-        printMsg("data in collabobject "+DrawingService.getCollaborationDrawingObject()[position].name)
+        printMsg("inside onbindview du recycler")
         holder.drawingName.text = DrawingService.getCollaborationDrawingObject()[position].name
         holder.dateOfCollaboration.text = UserService.getCollaborationToShow()[position].collaboratedAt.toString()
     }
@@ -45,6 +45,8 @@ class CollaborationHistoryRecyclerAdapter :
         init {
             drawings = DrawingService.getCollabHistoryDrawingsBitmap()
             itemView.setOnClickListener {
+                printMsg("inside listener ==================================================================================")
+
                 openDrawing(bindingAdapterPosition,itemView.context,R.id.main_gallery_fragment)
             }
         }

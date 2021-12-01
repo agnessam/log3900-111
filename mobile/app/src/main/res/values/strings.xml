@@ -69,4 +69,7 @@
     <string name="describe_yourself">Describe yourself!</string>
     <string name="enter_a_description">Enter a description</string>
     <string name="change_your_password">Change your Password</string>
+    <string name="info_privacy_lastname_filter">Disabling this setting prevents users by finding you and your drawings with your last name via our search functionality.</string>
+    <string name="info_privacy_firstname_filter">Disabling this setting prevents users by finding you and your drawings with your first name via our search functionality.</string>
+    <string name="info_privacy_email_filter">Disabling this setting prevents users by finding you and your drawings with your e-mail via our search functionality.</string>
 </resources>
