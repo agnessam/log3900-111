@@ -187,18 +187,19 @@ class HomeActivity : AppCompatActivity() {
     }
 
     private fun logUserOut() {
-        val user = UserModel.Logout(UserService.getUserInfo().username)
+        val user = UserModel.Logout(UserService.getUserInfo()._id)
         val logOutObserver = homeViewModel.logoutUser(user)
-        logOutObserver.observe(this, { handleLogOutResponse(it) })
+        handleLogOutResponse(logOutObserver)
     }
 
-    private fun handleLogOutResponse(it: DataWrapper<HTTPResponseModel>) {
-        printToast(applicationContext, it.message as String)
-
+    private fun handleLogOutResponse(it: Boolean) {
         // some error occurred during HTTP request
-        if (it.isError as Boolean) {
+        if (it) {
+            printToast(applicationContext,"An error occurred!")
             return
         }
+
+        printToast(applicationContext,"Logging you out ${UserService.getUserInfo().username}!")
 
         val token = sharedPreferencesService.getItem(Constants.STORAGE_KEY.TOKEN)
         UserService.setToken(token)
