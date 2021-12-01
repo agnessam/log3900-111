@@ -15,25 +15,14 @@ class LoginActivityViewModel: ViewModel() {
 
     private val HTTPResponseLiveData: MutableLiveData<DataWrapper<HTTPResponseModel>>
     private val authRepository: AuthRepository
-    private val userRepository: UserRepository
-
 
     init {
         HTTPResponseLiveData = MutableLiveData()
         authRepository = AuthRepository()
-        userRepository = UserRepository()
 
-    }
-
-    fun getLoginResponseLiveData(): LiveData<DataWrapper<HTTPResponseModel>> {
-        return HTTPResponseLiveData
     }
 
     fun loginUser(user: UserModel.Login): LiveData<DataWrapper<HTTPResponseModel.LoginResponse>> {
         return authRepository.loginUser(user)
     }
-
-
-
-
 }

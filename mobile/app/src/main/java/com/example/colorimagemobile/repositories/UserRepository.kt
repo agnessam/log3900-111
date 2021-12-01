@@ -228,4 +228,29 @@ class UserRepository {
         return userData
     }
 
+    // update privacy
+    fun updateUserPrivacy(newSetting: Privacy.Setting): MutableLiveData<DataWrapper<HTTPResponseModel.UserResponse>> {
+
+        val updateSettingLiveData: MutableLiveData<DataWrapper<HTTPResponseModel.UserResponse>> = MutableLiveData()
+
+        httpClient.updateUserPrivacy(token = "Bearer ${UserService.getToken()}",UserService.getUserInfo()._id, newSetting).enqueue(object :
+            Callback<HTTPResponseModel.UserResponse> {
+            override fun onResponse(call: Call<HTTPResponseModel.UserResponse>, response: Response<HTTPResponseModel.UserResponse>) {
+                if (!response.isSuccessful) {
+                    updateSettingLiveData.value = DataWrapper(null, "An error occurred!", true)
+                    return
+                }
+                // settings successfully update
+                updateSettingLiveData.value = DataWrapper(response.body(), "", false)
+            }
+
+            override fun onFailure(call: Call<HTTPResponseModel.UserResponse>, t: Throwable) {
+                updateSettingLiveData.value = DataWrapper(null, "Failed to update search privacy setting!", true)
+            }
+
+        })
+
+        return updateSettingLiveData
+    }
+
 }

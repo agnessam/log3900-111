@@ -35,16 +35,8 @@ interface API {
     fun getAllUser(@Header("Authorization") token: String): Call<ArrayList<UserModel.AllInfo>>
 
     @Headers("Content-Type: application/json")
-    @GET(Constants.ENDPOINTS.USER_PATH+"{id}")
-    fun getUserById(@Header("Authorization") token: String, @Path ("id") id : String): Call<UserModel.AllInfo>
-
-    @Headers("Content-Type: application/json")
     @PATCH(Constants.ENDPOINTS.USER_PATH+"{id}")
     fun updateUser(@Header("Authorization")token: String, @Path ("id") id : String, @Body  newUser: UserModel.UpdateUser) : Call<HTTPResponseModel.UserResponse>
-
-    @Headers("Content-Type: application/json")
-    @DELETE(Constants.ENDPOINTS.USER_PATH+"{id}")
-    fun deleteUserById(@Header("Authorization")token: String, @Path ("id") id : String) : Call<HTTPResponseModel.UserResponse>
 
     @GET("${Constants.ENDPOINTS.USER_PATH}{id}/drawings")
     fun getUserDrawings(@Header("Authorization") token: String, @Path ("id") id: String): Call<List<DrawingModel.Drawing>>
@@ -66,6 +58,10 @@ interface API {
     @Headers("Content-Type: application/json")
     @GET(Constants.ENDPOINTS.USER_PATH+"{id}/statistics")
     fun getUserStatistics(@Header("Authorization") token: String, @Path ("id") id : String): Call<UserModel.Statistics>
+
+    @Headers("Content-Type: application/json")
+    @PATCH(Constants.ENDPOINTS.USER_PATH+"{id}")
+    fun updateUserPrivacy(@Header("Authorization")token: String, @Path ("id") id : String, @Body  newUserSetting: Privacy.Setting) : Call<HTTPResponseModel.UserResponse>
 
     //  TextChannel region
     @Headers("Content-Type: application/json")

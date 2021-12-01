@@ -4,10 +4,10 @@ import android.content.Context
 import androidx.lifecycle.LifecycleOwner
 import com.example.colorimagemobile.models.AvatarModel
 import com.example.colorimagemobile.models.CollaborationHistory
+import com.example.colorimagemobile.models.Privacy
 import com.example.colorimagemobile.models.UserModel
 import com.example.colorimagemobile.repositories.UserRepository
 import com.example.colorimagemobile.utils.CommonFun
-import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
 import com.example.colorimagemobile.utils.Constants
 
 // Singleton User object which is accessible globally
@@ -23,7 +23,7 @@ object UserService {
     private var collaborationHistoryDrawingId: ArrayList<String>
     private var temporaryEditUsername : String
     private var temporaryDescription : String
-    private lateinit var userStatistics : UserModel.Statistics
+    private var userStatistics : UserModel.Statistics
 
     init {
         updateProfileData =UserModel.UpdateUser(null,null,null)
@@ -44,24 +44,12 @@ object UserService {
         return allUserInfo
     }
 
-    fun setNewProfileData (newValues: UserModel.UpdateUser){
-        updateProfileData = newValues
-    }
-
-    fun getNewProfileData(): UserModel.UpdateUser{
-        return updateProfileData
-    }
-
     fun setUserInfo(newUserInfo: UserModel.AllInfo) {
         info = newUserInfo
     }
 
     fun getUserInfo(): UserModel.AllInfo {
         return info
-    }
-
-    fun isNull(): Boolean {
-        return !UserService::info.isInitialized
     }
 
     fun setToken(token:String){
@@ -199,21 +187,6 @@ object UserService {
     fun getIdCollaborationToShow(): ArrayList<String> {
         return collaborationHistoryDrawingId
     }
-    fun setTemporaryEditUsername(newUsername: String) {
-        this.temporaryEditUsername = newUsername
-    }
-
-    fun getTemporaryEditUsername(): String {
-        return this.temporaryEditUsername
-    }
-
-    fun setTemporaryDescription(newDescription: String) {
-        this.temporaryDescription = newDescription
-    }
-
-    fun getTemporaryDescription(): String {
-        return this.temporaryDescription
-    }
 
     fun setStat(stat: UserModel.Statistics){
         userStatistics = stat
@@ -221,5 +194,10 @@ object UserService {
     fun getStat(): UserModel.Statistics{
         return userStatistics
     }
+
+    fun updatePrivacySetting(newSetting : Privacy.Setting ){
+      this.info.privacySetting = newSetting
+    }
+
 
 }
