@@ -58,4 +58,16 @@ export class TextChannelRepository extends GenericRepository<TextChannelInterfac
       });
     });
   }
+
+  public async getChannelByDrawingId(drawingId: string) {
+    return new Promise((resolve, reject) => {
+      TextChannel.findOne(
+        { drawing: drawingId },
+        (err: Error, channel: TextChannelInterface) => {
+          if (err) reject(err);
+          resolve(channel);
+        },
+      );
+    });
+  }
 }

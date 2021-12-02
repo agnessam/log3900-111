@@ -43,6 +43,14 @@ export class TextChannelService {
       });
   }
 
+  getChannelByDrawingId(drawingId: string): Observable<TextChannel> {
+    return this.httpClient
+      .get<TextChannel>(`${this.endpointUrl}/drawings/${drawingId}`)
+      .pipe((response) => {
+        return response;
+      });
+  }
+
   createChannel(
     newName: string,
     newOwner: string,

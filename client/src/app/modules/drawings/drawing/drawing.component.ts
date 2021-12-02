@@ -21,7 +21,7 @@ export class DrawingComponent implements OnInit, AfterViewInit {
     private drawingService: DrawingService,
     private drawingSocketService: DrawingSocketService,
     private chatSocketService: ChatSocketService,
-    private textChannelService: TextChannelService,
+    private textChannelService: TextChannelService
   ) {}
 
   ngOnInit(): void {
@@ -35,17 +35,22 @@ export class DrawingComponent implements OnInit, AfterViewInit {
       this.drawingSocketService.connect();
       this.drawingSocketService.joinRoom(this.socketInformation);
 
-      this.textChannelService.getChannels().subscribe((channels) => {
-        this.collaborationChannel = channels.find((channel) => channel.drawing === this.socketInformation.roomName);
-        if (this.collaborationChannel !== undefined) {
-          this.channelSocketInfo = {
-            roomName: this.collaborationChannel.name,
-            userId: localStorage.getItem("userId")!,
+      this.textChannelService
+        .getChannelByDrawingId(this.drawingId)
+        .subscribe((channel) => {
+          this.collaborationChannel = channel;
+
+          if (this.collaborationChannel !== undefined) {
+            this.channelSocketInfo = {
+              roomName: this.collaborationChannel.name,
+              userId: localStorage.getItem("userId")!,
+            };
+            this.chatSocketService.joinRoom(this.channelSocketInfo);
+            this.textChannelService.emitJoinCollaboration(
+              this.collaborationChannel
+            );
           }
-          this.chatSocketService.joinRoom(this.channelSocketInfo);
-          this.textChannelService.emitJoinCollaboration(this.collaborationChannel);
-        }
-      })
+        });
     });
   }
 

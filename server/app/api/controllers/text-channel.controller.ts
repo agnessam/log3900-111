@@ -30,6 +30,13 @@ export class TextChannelController {
     return await this.textChannelRepository.findById(req.params.channelId);
   }
 
+  @httpGet('/drawings/:drawingId')
+  public async getChannelByDrawingId(@request() req: Request) {
+    return await this.textChannelRepository.getChannelByDrawingId(
+      req.params.drawingId,
+    );
+  }
+
   @httpPost('/')
   public async createChannel(@request() req: Request) {
     return await this.textChannelRepository.create(req.body);
