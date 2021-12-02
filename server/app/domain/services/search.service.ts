@@ -1,7 +1,7 @@
 import { DrawingRepository } from '../../infrastructure/data_access/repositories/drawing_repository';
 import { TeamRepository } from '../../infrastructure/data_access/repositories/team_repository';
 import { UserRepository } from '../../infrastructure/data_access/repositories/user_repository';
-import { injectable } from 'inversify';
+import { inject, injectable } from 'inversify';
 import {
   drawingRepository,
   teamRepository,
@@ -11,6 +11,8 @@ import { SearchServiceInterface } from '../interfaces/search-service.interface';
 import { DrawingInterface } from '../models/Drawing';
 import { TeamInterface } from '../models/teams';
 import { UserInterface } from '../models/user';
+import { TYPES } from '../constants/types';
+import { CollaborationTrackerService } from './collaboration-tracker.service';
 
 const MONTH = {
   january: 0,
@@ -33,15 +35,30 @@ export class SearchService implements SearchServiceInterface {
   @teamRepository private teamRepository: TeamRepository;
   @userRepository private userRepository: UserRepository;
 
+  @inject(TYPES.CollaborationTrackerService)
+  private collaborationTrackerService: CollaborationTrackerService;
+
   async search(query: string): Promise<any> {
     const date = this.extractDate(query);
 
+    // Find with username
     const users = await this.userRepository.findManyByQuery({
       $or: [
-        { username: { $regex: new RegExp(query, 'ig') } },
-        { email: { $regex: new RegExp(query, 'ig') } },
-        { firstName: { $regex: new RegExp(query, 'ig') } },
-        { lastName: { $regex: new RegExp(query, 'ig') } },
+        {
+          username: { $regex: new RegExp(query, 'ig') },
+        },
+        {
+          email: { $regex: new RegExp(query, 'ig') },
+          'privacySetting.searchableByEmail': true,
+        },
+        {
+          firstName: { $regex: new RegExp(query, 'ig') },
+          'privacySetting.searchableByFirstName': true,
+        },
+        {
+          lastName: { $regex: new RegExp(query, 'ig') },
+          'privacySetting.searchableByLastName': true,
+        },
       ],
     });
 
@@ -57,9 +74,10 @@ export class SearchService implements SearchServiceInterface {
       ...matchingTeamsDrawingsIds,
     ];
 
-    const drawingsFromOwners = await this.drawingRepository.findManyById(
-      matchingDrawingIds,
-    );
+    const drawingsFromOwners =
+      await this.drawingRepository.findManyDrawingsById(
+        matchingDrawingIds as string[],
+      );
 
     let drawingQuery: any = {
       $or: [{ name: { $regex: new RegExp(query, 'ig') } }],
@@ -70,12 +88,31 @@ export class SearchService implements SearchServiceInterface {
       drawingQuery.$or.push({ createdAt: { $gte: date, $lte: endDate } });
     }
 
-    const drawings = await this.drawingRepository.findManyByQuery(drawingQuery);
+    let drawings = await this.drawingRepository.findManyDrawingsByQuery(
+      drawingQuery,
+    );
+
+    drawings = this.removeDuplicates([...drawings, ...drawingsFromOwners]);
+
+    const drawingToCollaborators: {} =
+      this.collaborationTrackerService.getDrawingCollaborators();
+
+    drawings.map((drawing) => {
+      if (drawingToCollaborators[drawing._id] != null) {
+        drawing.set('collaborators', drawingToCollaborators[drawing._id], {
+          strict: false,
+        });
+      } else {
+        drawing.set('collaborators', [], { strict: false });
+      }
+
+      return drawing;
+    });
 
     return {
       users: [...users],
       teams: [...teams],
-      drawings: this.removeDuplicates([...drawings, ...drawingsFromOwners]),
+      drawings: drawings,
     };
   }
 

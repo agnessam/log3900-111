@@ -58,4 +58,22 @@ export class DrawingHttpClientService {
         })
       );
   }
+
+  deleteDrawing(drawingId: string): Observable<Drawing> {
+    return this.httpClient
+      .delete<Drawing>(`${this.SERVER_ENDPOINT}${drawingId}`)
+      .pipe(
+        map((drawing) => {
+          return drawing;
+        })
+      );
+  }
+
+  getDrawingCollaborators(): Observable<Map<string, string[]>> {
+    return this.httpClient.get<{}>(`${this.SERVER_ENDPOINT}collaborators`).pipe(
+      map((response) => {
+        return new Map(Object.entries(response));
+      })
+    );
+  }
 }

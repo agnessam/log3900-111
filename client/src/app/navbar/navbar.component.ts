@@ -13,15 +13,14 @@ export class NavbarComponent implements OnInit {
 
   constructor(
     private router: Router,
-    private authenticationService: AuthenticationService,
+    private authenticationService: AuthenticationService
   ) {
     this.authenticationService.currentUserObservable.subscribe(
       (user) => (this.user = user)
     );
   }
-  
-  ngOnInit(): void {
-  }
+
+  ngOnInit(): void {}
 
   search(): void {
     this.router.navigate(["/search"], { queryParams: { q: this.searchQuery } });
@@ -36,9 +35,7 @@ export class NavbarComponent implements OnInit {
   }
 
   logout(): void {
-    this.authenticationService.logout().subscribe((response) => {
-      console.log(response);
-    });
+    this.authenticationService.logout().subscribe((response) => {});
     this.router.navigate(["/login"]);
   }
 }

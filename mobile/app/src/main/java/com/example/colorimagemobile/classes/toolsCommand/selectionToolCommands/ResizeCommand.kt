@@ -8,7 +8,11 @@ import com.example.colorimagemobile.classes.toolsCommand.PencilCommand
 import com.example.colorimagemobile.classes.toolsCommand.RectangleCommand
 import com.example.colorimagemobile.interfaces.ICommand
 import com.example.colorimagemobile.models.ResizeData
+import com.example.colorimagemobile.services.drawing.DrawingJsonService
 import com.example.colorimagemobile.services.drawing.DrawingObjectManager
+import com.example.colorimagemobile.services.drawing.ShapeLabel
+import com.example.colorimagemobile.services.drawing.TransformationManager
+import com.example.colorimagemobile.services.drawing.TransformationManager.previousTransformation
 import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
 
 class ResizeCommand(objectId: String) : ICommand {
@@ -23,17 +27,8 @@ class ResizeCommand(objectId: String) : ICommand {
 
     private var transformationLog: String
 
-    companion object{
-        var previousTransformation: HashMap<String, String> = HashMap()
-    }
-
-    var id: String = ""
-        get() = when(commandToResize){
-            is PencilCommand -> (commandToResize!! as PencilCommand).pencil.id
-            is RectangleCommand -> (commandToResize!! as RectangleCommand).rectangle.id
-            is EllipseCommand -> (commandToResize as EllipseCommand).ellipse.id
-            else -> ""
-        }
+    val id: String = objectId
+    private var shapeLabel: ShapeLabel?
 
     init{
         commandToResize = DrawingObjectManager.getCommand(objectId)
@@ -43,6 +38,12 @@ class ResizeCommand(objectId: String) : ICommand {
             previousTransformation[id] = ""
         }
         transformationLog = previousTransformation[id]!!
+        shapeLabel = when(commandToResize){
+            is PencilCommand -> ShapeLabel.POLYLINE
+            is RectangleCommand -> ShapeLabel.RECTANGLE
+            is EllipseCommand -> ShapeLabel.ELLIPSE
+            else -> null
+        }
     }
 
     fun resetPathWithShapePath() {
@@ -73,8 +74,9 @@ class ResizeCommand(objectId: String) : ICommand {
             is EllipseCommand -> (commandToResize as EllipseCommand).resize(this.xScale, this.yScale, this.xTranslate, this.yTranslate)
             else -> {}
         }
-        val currentTransformation = " translate($xTranslate $yTranslate) scale($xScale $yScale) translate(-$xTranslate -$yTranslate)"
-        previousTransformation[id] = currentTransformation + transformationLog
+        if(shapeLabel != null){
+            TransformationManager.saveResizeTransformation(xTranslate, yTranslate, xScale, yScale, id, transformationLog, shapeLabel!!)
+        }
     }
 
     override fun update(drawingCommand: Any) {

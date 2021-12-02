@@ -1,10 +1,18 @@
-import { ChangeDetectorRef, Component, Input, OnInit } from "@angular/core";
+import {
+  ChangeDetectorRef,
+  Component,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+} from "@angular/core";
 import { MatDialog, MatDialogRef } from "@angular/material/dialog";
 import { DomSanitizer } from "@angular/platform-browser";
 import { Router } from "@angular/router";
 import { Drawing } from "src/app/shared";
 import { Team } from "src/app/shared/models/team.model";
 import { User } from "../../users/models/user";
+import { ConfirmDeleteDrawingDialogComponent } from "./confirm-delete-drawing-dialog/confirm-delete-drawing-dialog.component";
 import { EditDrawingParametersDialogComponent } from "./edit-drawing-parameters-dialog/edit-drawing-parameters-dialog.component";
 import { JoinDrawingDialogComponent } from "./join-drawing-dialog/join-drawing-dialog.component";
 
@@ -15,10 +23,13 @@ import { JoinDrawingDialogComponent } from "./join-drawing-dialog/join-drawing-d
 })
 export class DrawingCardComponent implements OnInit {
   @Input() drawing: Drawing;
+  @Output() deletedDrawingEvent: EventEmitter<Drawing> =
+    new EventEmitter<Drawing>();
   userId: string;
 
   joinDrawingDialogRef: MatDialogRef<JoinDrawingDialogComponent>;
   editDrawingParametersDialogRef: MatDialogRef<EditDrawingParametersDialogComponent>;
+  confirmDeleteDrawingDialogRef: MatDialogRef<ConfirmDeleteDrawingDialogComponent>;
 
   constructor(
     private router: Router,
@@ -90,6 +101,20 @@ export class DrawingCardComponent implements OnInit {
         this.changeDetector.detectChanges();
       }
     });
+  }
+
+  openConfirmDeleteDrawingDialog() {
+    this.confirmDeleteDrawingDialogRef = this.dialog.open(
+      ConfirmDeleteDrawingDialogComponent,
+      { data: this.drawing }
+    );
+    this.confirmDeleteDrawingDialogRef
+      .afterClosed()
+      .subscribe((deletedDrawing) => {
+        if (deletedDrawing) {
+          this.deletedDrawingEvent.emit(deletedDrawing);
+        }
+      });
   }
 
   capitalizeFirstLetter(string: string) {

@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.Bitmap
 import com.example.colorimagemobile.classes.ImageConvertor
 import com.example.colorimagemobile.models.DrawingModel
+import com.example.colorimagemobile.models.MuseumPostModel
 import com.example.colorimagemobile.models.OwnerModel
 import com.example.colorimagemobile.models.PrivacyLevel
 import com.example.colorimagemobile.models.recyclerAdapters.DrawingMenuData
@@ -74,5 +75,28 @@ object DrawingService {
         }
 
         return drawingsMenu
+    }
+
+    fun updateDrawingFromMenu(drawingMenuData: DrawingMenuData, updatedDrawing: DrawingModel.UpdateDrawing): DrawingMenuData {
+        drawingMenuData.drawing.name = updatedDrawing.name
+        drawingMenuData.drawing.password = updatedDrawing.password
+        drawingMenuData.drawing.privacyLevel = updatedDrawing.privacyLevel
+
+        return drawingMenuData
+    }
+
+    fun isOwner(drawing: DrawingModel.Drawing): Boolean {
+        if (drawing.ownerModel == OwnerModel.USER.toString()) {
+            if (drawing.owner._id == UserService.getUserInfo()._id) {
+                return true
+            }
+        }
+
+        // drawing belongs to a group ==> owner is teamId
+        if (drawing.ownerModel == OwnerModel.TEAM.toString()) {
+            if (checkIfUserIsInTeam(drawing.owner._id) != null) return true
+        }
+
+        return false
     }
 }

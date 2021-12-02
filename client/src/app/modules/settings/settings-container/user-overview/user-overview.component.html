@@ -1,9 +1,9 @@
 <div id="my-account" *ngIf="userLoaded | async">
-  <mat-card-title style="padding-left: 50px; padding-bottom: 50px"
+  <mat-card-title style="padding-left: 50px; padding-bottom: 20px"
     >My Account</mat-card-title
   >
   <div fxLayout="column" fxLayoutAlign="center">
-    <mat-card id="profile-card">
+    <mat-card id="profile-card" dynamicHeight>
       <mat-card-content>
         <mat-card-title style="padding-bottom: 1%">{{
           currentUser.username
@@ -20,8 +20,10 @@
                 <div fxFlex="33%">
                   <div fxLayout="row wrap">
                     <div fxFlex="50%">
-                      <mat-card-subtitle>Username</mat-card-subtitle>
-                      <p>{{ currentUser.username }}</p>
+                      <p>Username</p>
+                      <mat-card-subtitle>{{
+                        currentUser.username
+                      }}</mat-card-subtitle>
                     </div>
                     <div fxFlex="50%" class="edit-button">
                       <br />
@@ -37,8 +39,10 @@
                 <div fxFlex="33%">
                   <div fxLayout="row wrap">
                     <div fxFlex="50%">
-                      <mat-card-subtitle>Description</mat-card-subtitle>
-                      <p>{{ currentUser.description }}</p>
+                      <p>Description</p>
+                      <mat-card-subtitle>{{
+                        currentUser.description
+                      }}</mat-card-subtitle>
                     </div>
                     <div fxFlex="50%" class="edit-button">
                       <br />
@@ -51,6 +55,36 @@
                     </div>
                   </div>
                 </div>
+                <br />
+
+                <div fxFlex="33%">
+                  <div fxLayout="row wrap">
+                    <div fxFlex="50%">
+                      <p>First name</p>
+                      <mat-card-subtitle>{{
+                        currentUser.firstName
+                      }}</mat-card-subtitle>
+                    </div>
+
+                    <div fxFlex="50%">
+                      <p>Last name</p>
+                      <mat-card-subtitle>{{
+                        currentUser.lastName
+                      }}</mat-card-subtitle>
+                    </div>
+                  </div>
+                </div>
+
+                <div fxFlex="33%">
+                  <div fxLayout="row wrap">
+                    <div fxFlex="50%">
+                      <p>Email</p>
+                      <mat-card-subtitle>{{
+                        currentUser.email
+                      }}</mat-card-subtitle>
+                    </div>
+                  </div>
+                </div>
               </div>
             </mat-card-content>
           </mat-card>
@@ -59,7 +93,7 @@
     </mat-card>
 
     <div fxFlex="50%" style="padding-top: 50px; padding-left: 50px">
-      <mat-card-title style="padding-bottom: 50px"
+      <mat-card-title style="padding-bottom: 20px"
         >Password and authentication</mat-card-title
       >
       <button

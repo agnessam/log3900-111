@@ -14,20 +14,24 @@
                 <div fxFlex="33%">
                   <div fxLayout="row wrap">
                     <div fxFlex="50%">
-                      <mat-card-subtitle>Last Login</mat-card-subtitle>
+                      <p>Last Login</p>
                     </div>
                     <div fxFlex="50%">
-                      {{ currentUser.lastLogin }}
+                      <p>
+                        {{ currentUser.lastLogin }}
+                      </p>
                     </div>
                   </div>
                 </div>
                 <div fxFlex="33%">
                   <div fxLayout="row wrap">
                     <div fxFlex="50%">
-                      <mat-card-subtitle>Last Logout</mat-card-subtitle>
+                      <p>Last Logout</p>
                     </div>
                     <div fxFlex="50%">
-                      {{ currentUser.lastLogout }}
+                      <p>
+                        {{ currentUser.lastLogout }}
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -55,16 +59,18 @@
                 >
                   <div fxLayout="row wrap">
                     <div fxFlex="50%">
-                      <mat-card-subtitle
+                      <p
                         (click)="goToDrawing(collaborationHistory.drawing._id)"
                         style="cursor: pointer"
-                        >{{
-                          collaborationHistory.drawing.name
-                        }}</mat-card-subtitle
+                        class="drawing-link"
                       >
+                        {{ collaborationHistory.drawing.name }}
+                      </p>
                     </div>
                     <div fxFlex="50%">
-                      {{ collaborationHistory.collaboratedAt }}
+                      <p>
+                        {{ collaborationHistory.collaboratedAt }}
+                      </p>
                     </div>
                   </div>
                 </div>

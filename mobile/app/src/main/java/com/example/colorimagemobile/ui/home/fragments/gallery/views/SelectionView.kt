@@ -82,7 +82,7 @@ class SelectionView(context: Context?): CanvasView(context) {
         SelectionService.clearSelection()
         val numberOfLayers = DrawingObjectManager.numberOfLayers
         for (index in numberOfLayers - 1 downTo 0) {
-            val drawable = DrawingObjectManager.getDrawable(index)
+            val drawable = DrawingObjectManager.getDrawable(index) ?: return
             val command = DrawingObjectManager.getCommand(index)
             var isInsidePath = false
             var strokeWidth = 0

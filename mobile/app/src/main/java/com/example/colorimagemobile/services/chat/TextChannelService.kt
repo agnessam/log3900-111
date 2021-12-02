@@ -2,6 +2,8 @@ package com.example.colorimagemobile.services.chat
 
 import com.example.colorimagemobile.models.TextChannelModel
 import com.example.colorimagemobile.services.socket.ChatSocketService
+import com.example.colorimagemobile.services.users.UserService
+import com.example.colorimagemobile.utils.Constants
 
 object TextChannelService {
     private var hasConnectedToGeneral = false
@@ -55,12 +57,14 @@ object TextChannelService {
 
     fun removeFromConnectedChannels(channelToRemove: TextChannelModel.AllInfo) {
         connectedChannels.remove(channelToRemove)
-        ChatSocketService.leaveRoom(channelToRemove.name)
+        val socketInformation = Constants.SocketRoomInformation(UserService.getUserInfo()._id, channelToRemove.name)
+        ChatSocketService.leaveRoom(socketInformation)
         updateCurrentChannel()
     }
 
     fun deleteChannel(channelToDelete: TextChannelModel.AllInfo) {
-        ChatSocketService.leaveRoom(channelToDelete.name)
+        val socketInformation = Constants.SocketRoomInformation(UserService.getUserInfo()._id, channelToDelete.name)
+        ChatSocketService.leaveRoom(socketInformation)
         allChannels.remove(channelToDelete)
         removeFromConnectedChannels(channelToDelete)
         updateCurrentChannel()

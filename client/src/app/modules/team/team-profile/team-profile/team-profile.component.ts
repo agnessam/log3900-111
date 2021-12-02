@@ -4,6 +4,7 @@ import { ActivatedRoute } from "@angular/router";
 import { TeamClientService } from "src/app/modules/backend-communication/team-client/team-client.service";
 import { ChatSocketService } from "src/app/modules/chat/services/chat-socket.service";
 import { User } from "src/app/modules/users/models/user";
+import { Drawing } from "src/app/shared";
 import { Team } from "src/app/shared/models/team.model";
 import { ConfirmDeleteDialogComponent } from "../confirm-delete-dialog/confirm-delete-dialog.component";
 import { ConfirmJoinDialogComponent } from "../confirm-join-dialog/confirm-join-dialog.component";
@@ -47,7 +48,10 @@ export class TeamProfileComponent implements OnInit {
   joinTeam(teamId: string) {
     this.teamClient.joinTeam(teamId).subscribe((team) => {
       this.team = team;
-      this.chatSocketService.joinRoom({userId: localStorage.getItem("userId")!, roomName: team.name});
+      this.chatSocketService.joinRoom({
+        userId: localStorage.getItem("userId")!,
+        roomName: team.name,
+      });
       this.changeDetectorRef.detectChanges();
     });
   }
@@ -113,5 +117,13 @@ export class TeamProfileComponent implements OnInit {
       width: "400px",
       data: { members: this.team.members },
     });
+  }
+
+  deleteDrawingFromView(deletedDrawing: Drawing) {
+    this.team.drawings.splice(
+      (this.team.drawings as Drawing[]).indexOf(deletedDrawing),
+      1
+    );
+    this.changeDetectorRef.detectChanges();
   }
 }

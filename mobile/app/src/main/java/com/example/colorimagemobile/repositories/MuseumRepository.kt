@@ -31,6 +31,26 @@ class MuseumRepository {
         return postsLiveData
     }
 
+
+    fun getPostById(id: String): MutableLiveData<DataWrapper<MuseumPostModel>> {
+        val postsLiveData: MutableLiveData<DataWrapper<MuseumPostModel>> = MutableLiveData()
+
+        httpClient.getPostById(token = "Bearer ${UserService.getToken()}", id).enqueue(object : Callback<MuseumPostModel> {
+            override fun onResponse(call: Call<MuseumPostModel>, response: Response<MuseumPostModel>) {
+                if (!response.isSuccessful) {
+                    postsLiveData.value = DataWrapper(null, "An error occurred while fetching post!", true)
+                    return
+                }
+                postsLiveData.value = DataWrapper(response.body(), "", false)
+            }
+            override fun onFailure(call: Call<MuseumPostModel>, t: Throwable) {
+                postsLiveData.value = DataWrapper(null, "Sorry, failed to get fetch post!", true)
+            }
+        })
+
+        return postsLiveData
+    }
+
     fun postComment(postId: String, comment: CommentInterface): MutableLiveData<DataWrapper<CommentInterface>> {
         val postCommentLiveData: MutableLiveData<DataWrapper<CommentInterface>> = MutableLiveData()
 

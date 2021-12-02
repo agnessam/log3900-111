@@ -26,10 +26,12 @@ import com.example.colorimagemobile.services.drawing.CanvasUpdateService
 import com.example.colorimagemobile.services.drawing.DrawingObjectManager
 import com.example.colorimagemobile.services.drawing.DrawingService
 import com.example.colorimagemobile.services.drawing.toolsAttribute.ColorService
+import com.example.colorimagemobile.services.socket.DrawingSocketService
 import com.example.colorimagemobile.services.users.UserService
 import com.example.colorimagemobile.ui.home.fragments.gallery.GalleryDrawingFragment
 import com.example.colorimagemobile.utils.CommonFun.Companion.hideKeyboard
 import com.example.colorimagemobile.utils.CommonFun.Companion.printToast
+import com.example.colorimagemobile.utils.Constants
 import com.example.colorimagemobile.utils.Constants.DRAWING.Companion.MAX_HEIGHT
 import com.example.colorimagemobile.utils.Constants.DRAWING.Companion.MAX_WIDTH
 import com.example.colorimagemobile.utils.Constants.DRAWING.Companion.MIN_HEIGHT
@@ -110,7 +112,7 @@ class NewDrawingMenuBottomSheet: BottomSheetDialogFragment() {
 
     @SuppressLint("ClickableViewAccessibility")
     private fun setListeners(view: View) {
-        var color = "rgba(255, 255, 255, 1)"
+        var color = "rgba(255, 255, 255, 255)"
         val colorPicker = view.findViewById<ColorPickerView>(R.id.colorPickerNewDrawing)
         colorPicker.setInitialColor(Color.WHITE)
 
@@ -208,10 +210,12 @@ class NewDrawingMenuBottomSheet: BottomSheetDialogFragment() {
                 DrawingService.setAllDrawings(listOf(drawing))
                 DrawingService.setCurrentDrawingID(drawing._id)
 
+                // join room socket
+                DrawingSocketService.joinCurrentDrawingRoom()
+
                 val imageConvertor = ImageConvertor(requireContext())
                 val svgString = imageConvertor.getSvgAsString(drawing.dataUri)
                 DrawingObjectManager.createDrawableObjects(svgString)
-
                 MyFragmentManager(context as FragmentActivity).open(R.id.main_gallery_fragment, GalleryDrawingFragment())
                 CanvasUpdateService.invalidate()
             }

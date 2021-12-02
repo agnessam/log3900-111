@@ -32,6 +32,8 @@ class Constants {
             const val TRANSFORM_SELECTION_EVENT = "selection-transform"
             const val UPDATE_DRAWING_NOTIFICATION = "drawing-update-notification"
             const val UPDATE_DRAWING_EVENT = "drawing-update"
+            const val FETCH_DRAWING_NOTIFICATION = "drawing-fetch"
+            const val DELETE_SELECTION_EVENT = "selection-delete"
         }
     }
 

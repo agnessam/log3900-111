@@ -64,14 +64,6 @@ export class SelectionTransformService {
     this.commandType = type;
   }
 
-  setAlt(value: boolean): void {
-    this.resizeSelectionService.isAlt = value;
-  }
-
-  setShift(value: boolean): void {
-    this.resizeSelectionService.isShift = value;
-  }
-
   hasCommand(): boolean {
     return this.resizeSelectionService.hasCommand();
   }

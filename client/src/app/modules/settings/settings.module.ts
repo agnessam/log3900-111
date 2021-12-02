@@ -1,7 +1,7 @@
 import { CommonModule } from "@angular/common";
 import { NgModule } from "@angular/core";
 import { FlexLayoutModule } from "@angular/flex-layout";
-import { ReactiveFormsModule } from "@angular/forms";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { MatButtonModule } from "@angular/material/button";
 import { MatCardModule } from "@angular/material/card";
 import { MatDialogModule } from "@angular/material/dialog";
@@ -15,8 +15,11 @@ import { EditParameterDialogComponent } from "./settings-container/user-overview
 import { UserOverviewComponent } from "./settings-container/user-overview/user-overview.component";
 import { SettingsRoutingModule } from "./settings-routing.module";
 import { ChangePasswordDialogComponent } from "./settings-container/user-overview/change-password-dialog/change-password-dialog.component";
-import { UserHistoryComponent } from './settings-container/user-history/user-history.component';
-import { EditDescriptionDialogComponent } from './settings-container/user-overview/edit-description-dialog/edit-description-dialog.component';
+import { UserHistoryComponent } from "./settings-container/user-history/user-history.component";
+import { EditDescriptionDialogComponent } from "./settings-container/user-overview/edit-description-dialog/edit-description-dialog.component";
+import { UserStatisticsComponent } from "./settings-container/user-statistics/user-statistics.component";
+import { UserPrivacyComponent } from "./settings-container/user-privacy/user-privacy.component";
+import { MatSlideToggleModule } from "@angular/material/slide-toggle";
 
 @NgModule({
   declarations: [
@@ -26,6 +29,8 @@ import { EditDescriptionDialogComponent } from './settings-container/user-overvi
     ChangePasswordDialogComponent,
     UserHistoryComponent,
     EditDescriptionDialogComponent,
+    UserStatisticsComponent,
+    UserPrivacyComponent,
   ],
   imports: [
     CommonModule,
@@ -40,6 +45,8 @@ import { EditDescriptionDialogComponent } from './settings-container/user-overvi
     MatInputModule,
     MatDialogModule,
     MatSnackBarModule,
+    MatSlideToggleModule,
+    FormsModule,
   ],
 })
 export class SettingsModule {}

@@ -22,6 +22,7 @@ import { AvatarModule } from "ngx-avatar";
 import { FlexLayoutModule } from "@angular/flex-layout";
 import { MatTabsModule } from "@angular/material/tabs";
 import { CardsModule } from "../cards/cards.module";
+import { ConfirmUnfollowDialogComponent } from "./user-profile/confirm-unfollow-dialog/confirm-unfollow-dialog.component";
 
 @NgModule({
   declarations: [
@@ -31,6 +32,7 @@ import { CardsModule } from "../cards/cards.module";
     FileUploadComponent,
     AvatarComponent,
     AvatarDialogComponent,
+    ConfirmUnfollowDialogComponent,
   ],
   imports: [
     MatCardModule,

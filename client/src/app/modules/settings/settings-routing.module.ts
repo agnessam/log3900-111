@@ -3,6 +3,8 @@ import { RouterModule, Routes } from "@angular/router";
 import { SettingsContainerComponent } from "./settings-container/settings-container.component";
 import { UserHistoryComponent } from "./settings-container/user-history/user-history.component";
 import { UserOverviewComponent } from "./settings-container/user-overview/user-overview.component";
+import { UserPrivacyComponent } from "./settings-container/user-privacy/user-privacy.component";
+import { UserStatisticsComponent } from "./settings-container/user-statistics/user-statistics.component";
 
 const routes: Routes = [
   {
@@ -19,8 +21,16 @@ const routes: Routes = [
         component: UserOverviewComponent,
       },
       {
+        path: "privacy",
+        component: UserPrivacyComponent,
+      },
+      {
         path: "history",
         component: UserHistoryComponent,
+      },
+      {
+        path: "statistics",
+        component: UserStatisticsComponent,
       },
     ],
   },

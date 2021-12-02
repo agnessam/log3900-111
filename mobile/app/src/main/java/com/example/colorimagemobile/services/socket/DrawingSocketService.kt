@@ -2,7 +2,9 @@ package com.example.colorimagemobile.services.socket
 
 import android.content.Context
 import android.graphics.Bitmap
+import android.util.Base64
 import androidx.fragment.app.FragmentActivity
+import com.example.colorimagemobile.adapter.DrawingMenuRecyclerAdapter
 import com.example.colorimagemobile.classes.AbsSocket
 import com.example.colorimagemobile.classes.ImageConvertor
 import com.example.colorimagemobile.classes.JSONConvertor
@@ -21,28 +23,43 @@ import com.example.colorimagemobile.utils.Constants
 import com.example.colorimagemobile.utils.Constants.SOCKETS
 import com.example.colorimagemobile.utils.Constants.SOCKETS.Companion.CONFIRM_DRAWING_EVENT
 import com.example.colorimagemobile.utils.Constants.SOCKETS.Companion.CONFIRM_SELECTION_EVENT
+import com.example.colorimagemobile.utils.Constants.SOCKETS.Companion.DELETE_SELECTION_EVENT
+import com.example.colorimagemobile.utils.Constants.SOCKETS.Companion.FETCH_DRAWING_NOTIFICATION
 import com.example.colorimagemobile.utils.Constants.SOCKETS.Companion.IN_PROGRESS_DRAWING_EVENT
 import com.example.colorimagemobile.utils.Constants.SOCKETS.Companion.START_SELECTION_EVENT
 import com.example.colorimagemobile.utils.Constants.SOCKETS.Companion.TRANSFORM_SELECTION_EVENT
 import com.example.colorimagemobile.utils.Constants.SOCKETS.Companion.UPDATE_DRAWING_EVENT
 import com.example.colorimagemobile.utils.Constants.SOCKETS.Companion.UPDATE_DRAWING_NOTIFICATION
 import io.socket.client.Ack
+import io.socket.client.Socket
 import io.socket.emitter.Emitter
 import kotlinx.coroutines.*
 import org.json.JSONException
 import org.json.JSONObject
 import retrofit2.awaitResponse
 import java.lang.Runnable
+import java.nio.charset.StandardCharsets
 
 object DrawingSocketService: AbsSocket(SOCKETS.COLLABORATIVE_DRAWING_NAMESPACE) {
     private var roomName: String? = null
     private var fragmentActivity: FragmentActivity? = null
     private val drawingRepository: DrawingRepository = DrawingRepository()
 
-    override fun disconnect() {
-        leaveRoom(this.roomName!!)
+    private var drawingMenus: ArrayList<DrawingMenuData>? = null
+    private var position: Int? = null
+    private var destination: Int? = null
+
+    private var hasBeenInitialized = false
+
+    override fun leaveRoom(roomInformation: Constants.SocketRoomInformation){
+
+        this.drawingMenus = null
+        this.position = null
+        this.destination = null
+        hasBeenInitialized = false
+
         mSocket.off(IN_PROGRESS_DRAWING_EVENT, onProgressDrawing)
-        super.disconnect()
+        super.leaveRoom(roomInformation)
     }
 
     override fun setFragmentActivity(fragmentAct: FragmentActivity) {
@@ -56,13 +73,31 @@ object DrawingSocketService: AbsSocket(SOCKETS.COLLABORATIVE_DRAWING_NAMESPACE) 
         super.joinRoom(socketInformation)
     }
 
-    override fun setSocketListeners() {
+    public override fun setSocketListeners() {
+        if(!hasBeenInitialized){
+            this.listenUpdateDrawingRequest()
+            this.listenFetchDrawingNotification()
+            hasBeenInitialized = true
+        }
+    }
+
+    fun setDrawingCommandSocketListeners(){
         this.listenInProgressDrawingCommand()
         this.listenConfirmDrawingCommand()
         this.listenStartSelectionCommand()
         this.listenConfirmSelectionCommand()
         this.listenTransformSelectionCommand()
-        this.listenUpdateDrawingRequest()
+        this.listenDeleteSelectionCommand()
+    }
+
+    fun joinCurrentDrawingRoom() {
+        if (DrawingService.getCurrentDrawingID() != null) {
+            connect()
+
+            val socketInformation =
+                Constants.SocketRoomInformation(UserService.getUserInfo()._id, DrawingService.getCurrentDrawingID()!!)
+            joinRoom(socketInformation)
+        }
     }
 
     fun sendInProgressDrawingCommand(drawingCommand: Any, type: String) {
@@ -211,6 +246,35 @@ object DrawingSocketService: AbsSocket(SOCKETS.COLLABORATIVE_DRAWING_NAMESPACE) 
             })
         }
 
+    fun sendDeleteSelectionCommand(objectToDeleteId: String){
+        val deleteCommand = SocketTool(
+            type = "Delete",
+            roomName = this.roomName as String,
+            drawingCommand = DeleteData(objectToDeleteId),
+        )
+        val jsonSocket = JSONConvertor.convertToJSON(deleteCommand)
+        super.emit(DELETE_SELECTION_EVENT, jsonSocket)
+    }
+
+    private fun listenDeleteSelectionCommand() {
+        mSocket.on(DELETE_SELECTION_EVENT, deleteSelection)
+    }
+
+    private var deleteSelection = Emitter.Listener { args ->
+        fragmentActivity!!.runOnUiThread(Runnable {
+            val  responseJSON = JSONObject(args[0].toString())
+            val deleteSelectionData = SocketTool(
+                type = responseJSON["type"] as String,
+                roomName = responseJSON["roomName"] as String,
+                drawingCommand = JSONConvertor.getJSONObject(
+                    responseJSON["drawingCommand"].toString(),
+                    DeleteData::class.java)
+            )
+
+            SynchronisationService.deleteSelection(deleteSelectionData)
+        })
+    }
+
     private fun listenTransformSelectionCommand() {
         mSocket.on(TRANSFORM_SELECTION_EVENT, transformSelection)
     }
@@ -270,29 +334,60 @@ object DrawingSocketService: AbsSocket(SOCKETS.COLLABORATIVE_DRAWING_NAMESPACE) 
         mSocket.emit(UPDATE_DRAWING_NOTIFICATION, clientSocketId);
     }
 
-    fun sendGetUpdateDrawingRequest(context: Context, drawingMenus: ArrayList<DrawingMenuData>, position: Int) {
+    private fun listenFetchDrawingNotification(){
+        mSocket.on(FETCH_DRAWING_NOTIFICATION) {
+            if(drawingMenus != null && destination != null && position != null && fragmentActivity != null){
+                getDrawingAndUpdateGUI(fragmentActivity!!, drawingMenus!!, position!!, destination!!)
+            }
+        }
+    }
+
+    fun sendGetUpdateDrawingRequest(drawingMenus: ArrayList<DrawingMenuData>, position: Int, destination: Int) {
         mSocket.emit(UPDATE_DRAWING_EVENT, roomName, Ack{
             args ->
+            this.drawingMenus = drawingMenus
+            this.position = position
+            this.destination = destination
+
             val responseJSON = JSONObject(args[0].toString())
-            if(responseJSON["status"] is String){
-                runBlocking{
-                    processUpdateDrawingRequestCallback(responseJSON["status"] as String, context, drawingMenus, position)
+            if(responseJSON["status"] is String && responseJSON["status"] == "One User"){
+                if(fragmentActivity != null){
+                    getDrawingAndUpdateGUI(fragmentActivity!!, drawingMenus, position, destination)
                 }
             }
         })
     }
 
-    private suspend fun processUpdateDrawingRequestCallback(status: String, context: Context, drawingMenus: ArrayList<DrawingMenuData>, position: Int){
-        if (status == "One User") {
-            val drawingId = DrawingService.getCurrentDrawingID()
-            if (drawingId != null) {
-                val response = drawingRepository.getDrawing(DrawingService.getCurrentDrawingID()!!)
-                if(response != null){
-                    val imageConvertor = ImageConvertor(context)
-                    val svgString = imageConvertor.getSvgAsString(response.dataUri)
-                    drawingMenus[position].svgString = svgString
-                }
+    private suspend fun processUpdateDrawingRequestCallback(drawingMenus: ArrayList<DrawingMenuData>, position: Int){
+        val drawingId = DrawingService.getCurrentDrawingID()
+        if (drawingId != null) {
+            val response = drawingRepository.getDrawing(DrawingService.getCurrentDrawingID()!!)
+            if(response != null){
+                val svgString = getSvgAsString(response.dataUri)
+                drawingMenus[position].svgString = svgString
             }
         }
+    }
+
+    private fun getDrawingAndUpdateGUI(context: FragmentActivity, drawingMenus: ArrayList<DrawingMenuData>, position: Int, destination: Int) {
+        GlobalScope.launch{
+            val processUpdateDrawingRequestCallbackJob = launch{
+                processUpdateDrawingRequestCallback(drawingMenus, position)
+            }
+            withContext(Dispatchers.Main){
+                processUpdateDrawingRequestCallbackJob.join()
+                DrawingObjectManager.createDrawableObjects(drawingMenus[position].svgString)
+                MyFragmentManager(context).open(destination, GalleryDrawingFragment())
+                CanvasUpdateService.asyncInvalidate()
+            }
+        }
+    }
+
+    private fun getSvgAsString(dataURI: String): String {
+        if (!dataURI.contains(ImageConvertor.BASE_64_URI)) return dataURI
+
+        val base64Data = dataURI.replace(ImageConvertor.BASE_64_URI, "");
+        val imageBytes = Base64.decode(base64Data, Base64.DEFAULT);
+        return String(imageBytes, StandardCharsets.UTF_8)
     }
 }

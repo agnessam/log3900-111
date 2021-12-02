@@ -1,10 +1,7 @@
 package com.example.colorimagemobile.repositories
 
 import androidx.lifecycle.MutableLiveData
-import com.example.colorimagemobile.models.CreateTeamModel
-import com.example.colorimagemobile.models.DataWrapper
-import com.example.colorimagemobile.models.DrawingModel
-import com.example.colorimagemobile.models.TeamModel
+import com.example.colorimagemobile.models.*
 import com.example.colorimagemobile.services.RetrofitInstance
 import com.example.colorimagemobile.services.users.UserService
 import retrofit2.Call
@@ -14,6 +11,25 @@ import retrofit2.Response
 class TeamRepository {
 
     private val httpClient = RetrofitInstance.HTTP
+
+    fun getTeamById(id: String): MutableLiveData<DataWrapper<TeamIdModel>> {
+        val teamDrawingsLiveData: MutableLiveData<DataWrapper<TeamIdModel>> = MutableLiveData()
+
+        httpClient.getTeamById(token = "Bearer ${UserService.getToken()}", id).enqueue(object : Callback<TeamIdModel> {
+            override fun onResponse(call: Call<TeamIdModel>, response: Response<TeamIdModel>) {
+                if (!response.isSuccessful) {
+                    teamDrawingsLiveData.value = DataWrapper(null, "An error occurred while fetching team!", true)
+                    return
+                }
+                teamDrawingsLiveData.value = DataWrapper(response.body(), "", false)
+            }
+            override fun onFailure(call: Call<TeamIdModel>, t: Throwable) {
+                teamDrawingsLiveData.value = DataWrapper(null, "Sorry, failed to get fetch team!", true)
+            }
+        })
+
+        return teamDrawingsLiveData
+    }
 
     fun getTeamDrawings(id: String): MutableLiveData<DataWrapper<List<DrawingModel.Drawing>>> {
         val teamDrawingsLiveData: MutableLiveData<DataWrapper<List<DrawingModel.Drawing>>> = MutableLiveData()
@@ -28,6 +44,25 @@ class TeamRepository {
             }
             override fun onFailure(call: Call<List<DrawingModel.Drawing>>, t: Throwable) {
                 teamDrawingsLiveData.value = DataWrapper(null, "Sorry, failed to get fetch team's drawings!", true)
+            }
+        })
+
+        return teamDrawingsLiveData
+    }
+
+    fun getTeamPosts(id: String): MutableLiveData<DataWrapper<List<PublishedMuseumPostModel>>> {
+        val teamDrawingsLiveData: MutableLiveData<DataWrapper<List<PublishedMuseumPostModel>>> = MutableLiveData()
+
+        httpClient.getTeamPosts(token = "Bearer ${UserService.getToken()}", id).enqueue(object : Callback<List<PublishedMuseumPostModel>> {
+            override fun onResponse(call: Call<List<PublishedMuseumPostModel>>, response: Response<List<PublishedMuseumPostModel>>) {
+                if (!response.isSuccessful) {
+                    teamDrawingsLiveData.value = DataWrapper(null, "An error occurred while fetching team's posts!", true)
+                    return
+                }
+                teamDrawingsLiveData.value = DataWrapper(response.body(), "", false)
+            }
+            override fun onFailure(call: Call<List<PublishedMuseumPostModel>>, t: Throwable) {
+                teamDrawingsLiveData.value = DataWrapper(null, "Sorry, failed to get fetch team's posts!", true)
             }
         })
 

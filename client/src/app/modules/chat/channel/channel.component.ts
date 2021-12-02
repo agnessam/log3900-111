@@ -32,7 +32,7 @@ export class ChannelComponent implements OnInit, OnDestroy {
   connectedChannels: TextChannel[];
   teamChannels: TextChannel[];
   // only one collaboration channel at a time
-  collaborationChannel : TextChannel;
+  collaborationChannel: TextChannel;
   searchQuery: string;
   newChannelDialogRef: MatDialogRef<NewChannelComponent>;
   currentDrawingId: string | undefined;
@@ -44,7 +44,7 @@ export class ChannelComponent implements OnInit, OnDestroy {
     private textChannelService: TextChannelService,
     private teamClient: TeamClientService,
     private ref: ChangeDetectorRef,
-    private dialog: MatDialog,
+    private dialog: MatDialog
   ) {
     this.connectedChannels = new Array();
     this.allChannels = new Array();
@@ -61,7 +61,9 @@ export class ChannelComponent implements OnInit, OnDestroy {
 
     this.textChannelService.getChannels().subscribe({
       next: (channels) => {
-        channels.forEach(channel => this.allChannels.push(Object.assign({}, channel)));
+        channels.forEach((channel) =>
+          this.allChannels.push(Object.assign({}, channel))
+        );
         this.resetSearch();
         const general = channels.find((channel) => channel.name === "General");
         if (general) {
@@ -85,7 +87,6 @@ export class ChannelComponent implements OnInit, OnDestroy {
       this.resetSearch();
       this.openChannel(teamChannel);
     });
-
   }
 
   ngOnDestroy(): void {}
@@ -95,18 +96,25 @@ export class ChannelComponent implements OnInit, OnDestroy {
     this.teamClient.getTeams().subscribe((response) => {
       response.forEach((team) => {
         this.allTeams.push(team);
-        const index = this.allChannels.findIndex((channel) => channel.name === team.name );
+        const index = this.allChannels.findIndex(
+          (channel) => channel.name === team.name
+        );
         if (index !== -1) {
           // remove from list if user is not a member
-          if (!(team.members as string[]).includes(this.user!._id) ) {
-              this.allChannels.splice(index, 1);
-              const connectedIndex = this.connectedChannels.findIndex((channel) => channel.name === team.name);
-              if (connectedIndex !== -1)
-                this.connectedChannels.splice(connectedIndex, 1);
-              this.resetSearch();
+          if (!(team.members as string[]).includes(this.user!._id)) {
+            this.allChannels.splice(index, 1);
+            const connectedIndex = this.connectedChannels.findIndex(
+              (channel) => channel.name === team.name
+            );
+            if (connectedIndex !== -1)
+              this.connectedChannels.splice(connectedIndex, 1);
+            this.resetSearch();
           } else {
             // join team channels automatically
-            this.chatSocketService.joinRoom({userId: this.user!._id, roomName: team.name});
+            this.chatSocketService.joinRoom({
+              userId: this.user!._id,
+              roomName: team.name,
+            });
             this.connectedChannels.push(this.allChannels[index]);
           }
         }
@@ -117,7 +125,10 @@ export class ChannelComponent implements OnInit, OnDestroy {
   filterCollaborationChannels(): void {
     // purge collab channel from list in case we're not in one
     if (this.currentDrawingId === undefined) {
-      this.allChannels.splice(this.allChannels.findIndex((channel) => channel.drawing !== undefined), 1);
+      this.allChannels.splice(
+        this.allChannels.findIndex((channel) => channel.drawing !== undefined),
+        1
+      );
     }
 
     this.textChannelService.joinedCollabChannel.subscribe((channel) => {
@@ -137,7 +148,6 @@ export class ChannelComponent implements OnInit, OnDestroy {
       }
       this.connectedChannels.splice(this.connectedChannels.indexOf(channel), 1);
       this.resetSearch();
-
     });
   }
 
@@ -185,15 +195,24 @@ export class ChannelComponent implements OnInit, OnDestroy {
   }
 
   searchChannels(): void {
-    if (this.searchQuery === undefined || this.searchQuery === null  || this.searchQuery?.match(/^ *$/) !== null) {
+    if (
+      this.searchQuery === undefined ||
+      this.searchQuery === null ||
+      this.searchQuery?.match(/^ *$/) !== null
+    ) {
       this.searchedChannels = Object.assign([], this.allChannels);
     } else {
       this.textChannelService
         .searchChannels(this.searchQuery)
         .subscribe((channels) => {
           this.allTeams.forEach((team) => {
-            const index = channels.findIndex((channel) => channel.name === team.name );
-            if (index !== -1 && !(team.members as string[]).includes(this.user!._id)) {
+            const index = channels.findIndex(
+              (channel) => channel.name === team.name
+            );
+            if (
+              index !== -1 &&
+              !(team.members as string[]).includes(this.user!._id)
+            ) {
               channels.splice(index, 1);
             }
             this.searchedChannels = channels;
@@ -203,7 +222,11 @@ export class ChannelComponent implements OnInit, OnDestroy {
   }
 
   resetSearch(): void {
-    if (this.searchQuery === undefined || this.searchQuery === null  || this.searchQuery?.match(/^ *$/) !== null) {
+    if (
+      this.searchQuery === undefined ||
+      this.searchQuery === null ||
+      this.searchQuery?.match(/^ *$/) !== null
+    ) {
       this.searchedChannels = Object.assign([], this.allChannels);
     }
   }
