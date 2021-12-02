@@ -143,7 +143,7 @@ export class ResizeSelectionService {
         scaleReturn.xScale,
         scaleReturn.yScale,
         scaleReturn.xTranslate,
-        scaleReturn.yTranslate - 64
+        scaleReturn.yTranslate - 64 // HAHAHAHHAHAHHAHAHAHAHAHAHHAHAHAHAHAHHAHAHHAHAHAHHAHAH
       );
 
       this.resizeCommand.execute();
