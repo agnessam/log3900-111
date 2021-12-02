@@ -9,12 +9,11 @@ import com.example.colorimagemobile.services.drawing.DrawingObjectManager
 import com.example.colorimagemobile.services.drawing.toolsAttribute.SelectionService
 
 class DeleteCommand(objectId: String): ICommand {
-//    TODO("IMPLEMENT WITH SHAPE ID RATHER THAN ACTUAL SHAPE")
     private var id: String = objectId
     private var deleteShapeLayerIndex: Int = DrawingObjectManager.getLayerIndex(id)
-    private var deletedShape: Drawable? = DrawingObjectManager.getDrawable(this.deleteShapeLayerIndex)
+    var deletedShape: Drawable? = DrawingObjectManager.getDrawable(this.deleteShapeLayerIndex)
     override fun update(drawingCommand: Any) {
-        TODO("Not yet implemented")
+        // No update for deleteCommand
     }
 
     private fun deleteFromJson() {
@@ -27,17 +26,12 @@ class DeleteCommand(objectId: String): ICommand {
     }
 
     override fun execute() {
-        if (SelectionService.isShapeInitialized() && deletedShape == SelectionService.selectedShape) {
-            var emptyShapeDrawable = ShapeDrawable()
-            emptyShapeDrawable.paint.alpha = 0
+        var emptyShapeDrawable = ShapeDrawable()
+        emptyShapeDrawable.paint.alpha = 0
 
-            deleteFromJson()
-            DrawingObjectManager.setDrawable(SelectionService.selectedShapeIndex, emptyShapeDrawable)
-            DrawingObjectManager.removeCommand(SelectionService.selectedShapeIndex)
-            SelectionService.selectedShapeIndex = -1
-            SelectionService.selectedShape = ShapeDrawable()
-            SelectionService.clearSelection()
-        }
+        deleteFromJson()
+        DrawingObjectManager.setDrawable(deleteShapeLayerIndex, emptyShapeDrawable)
+        DrawingObjectManager.removeCommand(deleteShapeLayerIndex)
         CanvasUpdateService.invalidate()
     }
 }

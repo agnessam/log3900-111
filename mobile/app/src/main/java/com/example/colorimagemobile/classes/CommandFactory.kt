@@ -33,9 +33,7 @@ class CommandFactory {
                     return translateCommand
                 }
                 "Delete" -> {
-                    val drawableIndex = DrawingObjectManager.getLayerIndex((toolData as DeleteData).id)
-                    val drawableToDelete = DrawingObjectManager.getDrawable(drawableIndex) ?: return null
-                    return DeleteCommand(drawableToDelete)
+                    return DeleteCommand((toolData as DeleteData).id)
                 }
             }
             return null

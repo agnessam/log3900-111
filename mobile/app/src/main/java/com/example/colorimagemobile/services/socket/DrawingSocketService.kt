@@ -246,6 +246,16 @@ object DrawingSocketService: AbsSocket(SOCKETS.COLLABORATIVE_DRAWING_NAMESPACE) 
             })
         }
 
+    fun sendDeleteSelectionCommand(objectToDeleteId: String){
+        val deleteCommand = SocketTool(
+            type = "Delete",
+            roomName = this.roomName as String,
+            drawingCommand = DeleteData(objectToDeleteId),
+        )
+        val jsonSocket = JSONConvertor.convertToJSON(deleteCommand)
+        super.emit(DELETE_SELECTION_EVENT, jsonSocket)
+    }
+
     private fun listenDeleteSelectionCommand() {
         mSocket.on(DELETE_SELECTION_EVENT, deleteSelection)
     }
