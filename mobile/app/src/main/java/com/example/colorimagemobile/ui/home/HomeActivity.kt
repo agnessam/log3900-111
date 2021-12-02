@@ -33,7 +33,6 @@ import com.example.colorimagemobile.ui.home.fragments.museum.MuseumFragmentDirec
 import com.example.colorimagemobile.ui.home.fragments.teams.TeamsFragmentDirections
 import com.example.colorimagemobile.ui.home.fragments.userProfile.ShowUserProfileFragmentDirections
 import com.example.colorimagemobile.ui.home.fragments.userProfile.UserProfileFragmentDirections
-import com.example.colorimagemobile.ui.home.fragments.users.UsersFragmentDirections
 import com.example.colorimagemobile.utils.CommonFun.Companion.printToast
 import com.example.colorimagemobile.utils.CommonFun.Companion.redirectTo
 import com.example.colorimagemobile.utils.Constants
@@ -70,7 +69,7 @@ class HomeActivity : AppCompatActivity() {
         }
 
         val appBarConfiguration = AppBarConfiguration(setOf(
-            R.id.galleryFragment, R.id.chatFragment, R.id.teamsFragment, R.id.usersFragment, R.id.museumFragment))
+            R.id.galleryFragment, R.id.chatFragment, R.id.usersFragment, R.id.museumFragment))
         setupActionBarWithNavController(navController, appBarConfiguration)
         bottomNav.setupWithNavController(navController)
     }
@@ -162,10 +161,6 @@ class HomeActivity : AppCompatActivity() {
                 bottomNav.selectedItemId = R.id.chatChannelFragment
                 true
             }
-            R.id.usersFragment -> {
-                bottomNav.selectedItemId = R.id.usersFragment
-                true
-            }
             R.id.museumFragment -> {
                 bottomNav.selectedItemId = R.id.museumFragment
                 true
@@ -217,7 +212,6 @@ class HomeActivity : AppCompatActivity() {
         val showUserProfileFromTeam = TeamsFragmentDirections.actionTeamsFragmentToShowUserProfileFragment()
         val showUserProfileFromChat = ChatFragmentDirections.actionChatFragmentToShowUserProfileFragment()
         val showUserProfileFromSettings = UserProfileFragmentDirections.actionUserProfileFragmentToShowUserProfileFragment()
-        val showUserProfileFromPublicView = UsersFragmentDirections.actionUsersFragmentToShowUserProfileFragment()
         val showUserProfileFromMuseum = MuseumFragmentDirections.actionMuseumFragmentToShowUserProfileFragment()
 
         // redirect from actual page to userProfile
@@ -226,7 +220,6 @@ class HomeActivity : AppCompatActivity() {
             R.id.teamsFragment  -> this.findNavController(R.id.fragment).navigate(showUserProfileFromTeam)
             R.id.chatFragment ->this.findNavController(R.id.fragment).navigate(showUserProfileFromChat)
             R.id.userProfileFragment ->this.findNavController(R.id.fragment).navigate(showUserProfileFromSettings)
-            R.id.usersFragment ->this.findNavController(R.id.fragment).navigate(showUserProfileFromPublicView)
             R.id.museumFragment -> this.findNavController(R.id.fragment).navigate(showUserProfileFromMuseum)
         }
     }
@@ -238,7 +231,6 @@ class HomeActivity : AppCompatActivity() {
         val showSettingsFromTeam = TeamsFragmentDirections.actionTeamsFragmentToUserProfileFragment()
         val showSettingsFromChat = ChatFragmentDirections.actionChatFragmentToUserProfileFragment()
         val showSettingsFromProfileView = ShowUserProfileFragmentDirections.actionShowUserProfileFragmentToUserProfileFragment()
-        val showSettingsFromPublicView = UsersFragmentDirections.actionUsersFragmentToUserProfileFragment()
         val showSettingsFromMuseum = MuseumFragmentDirections.actionMuseumFragmentToUserProfileFragment()
 
         // redirect from actual page to settings
@@ -247,7 +239,6 @@ class HomeActivity : AppCompatActivity() {
             R.id.teamsFragment  -> this.findNavController(R.id.fragment).navigate(showSettingsFromTeam)
             R.id.chatFragment ->this.findNavController(R.id.fragment).navigate(showSettingsFromChat)
             R.id.showUserProfileFragment -> this.findNavController(R.id.fragment).navigate(showSettingsFromProfileView)
-            R.id.usersFragment -> this.findNavController(R.id.fragment).navigate(showSettingsFromPublicView)
             R.id.museumFragment -> this.findNavController(R.id.fragment).navigate(showSettingsFromMuseum)
         }
     }
