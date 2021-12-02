@@ -13,7 +13,7 @@ object TeamAdapterService {
     fun createAdapter(fragmentActivity: FragmentActivity, layoutID: Int, parentFragmentID: Int): TeamsMenuRecyclerAdapter {
         return TeamsMenuRecyclerAdapter(
             layoutID
-        ) { pos -> openTeam(fragmentActivity, pos, parentFragmentID) }
+        ) { teamId -> openTeam(fragmentActivity, teamId, parentFragmentID) }
     }
 
     fun getTeamMenuAdapter(): TeamsMenuRecyclerAdapter {
@@ -24,7 +24,7 @@ object TeamAdapterService {
         teamMenuAdapter = adapter
     }
 
-    private fun openTeam(fragmentActivity: FragmentActivity, position: Int, parentFragmentID: Int) {
-        MyFragmentManager(fragmentActivity).openWithData(parentFragmentID, TeamsProfileFragment(), Constants.TEAMS.CURRENT_TEAM_ID_KEY, position)
+    private fun openTeam(fragmentActivity: FragmentActivity, teamId: String, parentFragmentID: Int) {
+        MyFragmentManager(fragmentActivity).openWithData(parentFragmentID, TeamsProfileFragment(), Constants.TEAMS.CURRENT_TEAM_ID_KEY, teamId)
     }
 }

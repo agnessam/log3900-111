@@ -10,6 +10,12 @@ class CommandFactory {
 
     companion object {
         fun createCommand(commandType: String, toolData: Any): ICommand? {
+            if(commandType != "SelectionStart"
+                && commandType != "SelectionResize"
+                && commandType != "Translation"
+                && (toolData as ToolData).stroke == null)
+                return null
+
             when(commandType) {
                 "Pencil" -> return PencilCommand(toolData as PencilData)
                 "Rectangle" -> return RectangleCommand(toolData as RectangleData)

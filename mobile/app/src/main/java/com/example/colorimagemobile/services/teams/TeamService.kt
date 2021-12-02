@@ -34,38 +34,28 @@ object TeamService {
         allTeams[position] = newTeam
     }
 
-    fun isUserAlreadyTeamMember(position: Int): Boolean {
-        return allTeams[position].members.contains(UserService.getUserInfo()._id)
-    }
-
     fun removeMemberFromTeam(position: Int) {
         allTeams[position].members = allTeams[position].members.filter { member -> member != UserService.getUserInfo()._id } as ArrayList<String>
     }
 
-    fun joinTeam(position: Int, context: Context) {
-        val team = getTeam(position)
-
-        TeamRepository().joinTeam(team._id).observe(context as LifecycleOwner, {
+    fun joinTeam(teamId: String, context: Context) {
+        TeamRepository().joinTeam(teamId).observe(context as LifecycleOwner, {
             if (it.isError as Boolean) {
                 return@observe
             }
         })
     }
 
-    fun leaveTeam(position: Int, context: Context) {
-        val team = getTeam(position)
-
-        TeamRepository().leaveTeam(team._id).observe(context as LifecycleOwner, {
+    fun leaveTeam(teamId: String, context: Context) {
+        TeamRepository().leaveTeam(teamId).observe(context as LifecycleOwner, {
             if (it.isError as Boolean) {
                 return@observe
             }
         })
     }
 
-    fun deleteTeam(position: Int, context: Context) {
-        val team = getTeam(position)
-
-        TeamRepository().deleteTeam(team._id).observe(context as LifecycleOwner, {
+    fun deleteTeam(teamId: String, context: Context) {
+        TeamRepository().deleteTeam(teamId).observe(context as LifecycleOwner, {
             printToast(context, it.message!!)
 
             if (it.isError as Boolean) { return@observe }

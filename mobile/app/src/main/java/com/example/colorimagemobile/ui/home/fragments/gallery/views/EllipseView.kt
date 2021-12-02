@@ -47,10 +47,10 @@ class EllipseView(context: Context?): CanvasView(context) {
             fillOpacity = ColorService.getAlphaForDesktop(fill),
             strokeOpacity = ColorService.getAlphaForDesktop(stroke),
             strokeWidth = EllipseService.currentWidth,
-            x = currentX.toInt(),
-            y = currentY.toInt(),
-            width = 0,
-            height = 0
+            x = currentX,
+            y = currentY,
+            width = 0f,
+            height = 0f
         )
 
         ellipseCommand = EllipseCommand(ellipseData)

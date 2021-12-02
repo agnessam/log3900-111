@@ -71,7 +71,7 @@ class HomeActivity : AppCompatActivity() {
         }
 
         val appBarConfiguration = AppBarConfiguration(setOf(
-            R.id.galleryFragment, R.id.chatFragment, R.id.teamsFragment, R.id.usersFragment, R.id.museumFragment))
+            R.id.galleryFragment, R.id.chatFragment, R.id.usersFragment, R.id.museumFragment))
         setupActionBarWithNavController(navController, appBarConfiguration)
         bottomNav.setupWithNavController(navController)
     }
@@ -146,10 +146,12 @@ class HomeActivity : AppCompatActivity() {
         return when(navController.currentDestination?.id) {
             // back button clicked on Gallery Drawing
             R.id.galleryFragment -> {
-                saveDrawing()
-                DrawingObjectManager.clearLayers()
-                SocketManagerService.leaveDrawingRoom()
-                DrawingService.setCurrentDrawingID(null)
+                if (DrawingService.getCurrentDrawingID() != null) {
+                    saveDrawing()
+                    SocketManagerService.leaveDrawingRoom()
+                    DrawingObjectManager.clearLayers()
+                    DrawingService.setCurrentDrawingID(null)
+                }
                 bottomNav.selectedItemId = R.id.galleryFragment
                 true
             }
@@ -159,10 +161,6 @@ class HomeActivity : AppCompatActivity() {
             }
             R.id.chatFragment -> {
                 bottomNav.selectedItemId = R.id.chatChannelFragment
-                true
-            }
-            R.id.usersFragment -> {
-                bottomNav.selectedItemId = R.id.usersFragment
                 true
             }
             R.id.museumFragment -> {

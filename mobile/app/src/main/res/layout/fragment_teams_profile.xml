@@ -58,7 +58,7 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@id/teamIdImageViewCard"
                     android:textAlignment="center"
-                    android:textColor="@color/black" />
+                    android:textColor="@color/primary" />
 
                 <!-- Posts Followers Following header -->
                 <RelativeLayout

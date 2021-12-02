@@ -62,6 +62,51 @@ class UserRepository {
         return updateLiveData
     }
 
+    // get user by id
+    fun getUserById(token: String,id:String): MutableLiveData<DataWrapper<UserModel.AllInfoWithData>> {
+        val userData: MutableLiveData<DataWrapper<UserModel.AllInfoWithData>> = MutableLiveData()
+
+        httpClient.getUserById(token = "Bearer $token",id).enqueue(object : Callback<UserModel.AllInfoWithData> {
+            override fun onResponse(call: Call<UserModel.AllInfoWithData>, response: Response<UserModel.AllInfoWithData>) {
+                if (!response.isSuccessful) {
+                    userData.value = DataWrapper(null, "An error occurred!", true)
+                    return
+                }
+                userData.value = DataWrapper(response.body(), null, false)
+            }
+            override fun onFailure(call: Call<UserModel.AllInfoWithData>, t: Throwable) {
+                userData.value = DataWrapper(null, "Failed to get User!", true)
+            }
+        })
+
+        return userData
+    }
+
+    // delete user by id
+    fun deleteUserById(token: String, id: String): MutableLiveData<DataWrapper<HTTPResponseModel.UserResponse>> {
+
+        val deleteUserData: MutableLiveData<DataWrapper<HTTPResponseModel.UserResponse>> = MutableLiveData()
+        httpClient.deleteUserById(token = "Bearer $token",id).enqueue(object :
+            Callback<HTTPResponseModel.UserResponse> {
+            override fun onResponse(call: Call<HTTPResponseModel.UserResponse>, response: Response<HTTPResponseModel.UserResponse>) {
+                if (!response.isSuccessful) {
+                    deleteUserData.value = DataWrapper(null, "An error occurred!", true)
+                    return
+                }
+
+                // account successfully delete
+                deleteUserData.value = DataWrapper(response.body(), "", false)
+            }
+
+            override fun onFailure(call: Call<HTTPResponseModel.UserResponse>, t: Throwable) {
+                deleteUserData.value = DataWrapper(null, "Failed to delete account!", true)
+            }
+
+        })
+
+        return deleteUserData
+    }
+
     // get all user
     fun getAllUser(token: String): MutableLiveData<DataWrapper<ArrayList<UserModel.AllInfo>>> {
         val AllUserData: MutableLiveData<DataWrapper<ArrayList<UserModel.AllInfo>>> = MutableLiveData()
@@ -252,5 +297,22 @@ class UserRepository {
 
         return updateSettingLiveData
     }
+    fun getUserStatus(): MutableLiveData<DataWrapper<HashMap<String, UserModel.STATUS>>> {
+        val status: MutableLiveData<DataWrapper<HashMap<String, UserModel.STATUS>>> = MutableLiveData()
 
+        httpClient.getUserStatus(token = "Bearer ${UserService.getToken()}").enqueue(object : Callback<HashMap<String, UserModel.STATUS>> {
+            override fun onResponse(call: Call<HashMap<String, UserModel.STATUS>>, response: Response<HashMap<String, UserModel.STATUS>>) {
+                if (!response.isSuccessful) {
+                    status.value = DataWrapper(null, "An error occurred!", true)
+                    return
+                }
+                status.value = DataWrapper(response.body(), null, false)
+            }
+            override fun onFailure(call: Call<HashMap<String, UserModel.STATUS>>, t: Throwable) {
+                status.value = DataWrapper(null, "Failed to get User!", true)
+            }
+        })
+
+        return status
+    }
 }
