@@ -51,6 +51,10 @@ class CreateEllipseCommand(ellipses: ArrayList<Ellipse>?): ICreateDrawingCommand
 
             command.setEndPoint(endPoint)
             command.execute()
+
+            if(ellipse.transform != null) {
+                transformShape(ellipse.transform, ellipse.id)
+            }
         }
     }
 }

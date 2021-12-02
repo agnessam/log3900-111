@@ -121,7 +121,8 @@ object DrawingObjectManager {
                     .add("-id", pencil.id)
                     .add("-name", pencil.name)
                     .add("-points", pencil.points)
-                    .add("-style", pencil.style))
+                    .add("-style", pencil.style)
+                    .add("-transform", pencil.transform))
             }
 
             rootSVG.addArrayAttr("polyline", polylineArrayBuilder)
@@ -138,7 +139,8 @@ object DrawingObjectManager {
                     .add("-y", rect.y)
                     .add("-width", rect.width)
                     .add("-height", rect.height)
-                    .add("-style", rect.style))
+                    .add("-style", rect.style)
+                    .add("-transform", rect.transform))
             }
             rootSVG.addArrayAttr("rect", rectArrayBuilder)
         }
@@ -156,7 +158,8 @@ object DrawingObjectManager {
                     .add("-ry", ellipse.ry)
                     .add("-width", ellipse.width)
                     .add("-height", ellipse.height)
-                    .add("-style", ellipse.style))
+                    .add("-style", ellipse.style)
+                    .add("-transform", ellipse.transform))
             }
             rootSVG.addArrayAttr("ellipse", ellipseArrayBuilder)
         }

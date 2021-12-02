@@ -58,6 +58,10 @@ class CreatePolylineCommand(polyLines: ArrayList<Polyline>?): ICreateDrawingComm
                 command.addPoint(splicedPoint[0].toFloat(), splicedPoint[1].toFloat())
                 command.execute()
             }
+
+            if(pencil.transform != null) {
+                transformShape(pencil.transform, pencil.id)
+            }
         }
     }
 }
