@@ -35,9 +35,9 @@ class CollaborationHistoryRecyclerAdapter(
 
         init {
             itemView.setOnClickListener {
-                val position: Int = bindingAdapterPosition
-                DrawingService.setCurrentDrawingID(DrawingService.getCollaborationDrawingObject()[position]._id)
-                openDrawing(bindingAdapterPosition)
+//                val position: Int = bindingAdapterPosition
+//                DrawingService.setCurrentDrawingID(DrawingService.getCollaborationDrawingObject()[position]._id)
+//                openDrawing(bindingAdapterPosition)
 
             }
         }

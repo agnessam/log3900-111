@@ -14,7 +14,7 @@ class Constants {
         const val AVATAR_ALL_INFO_DEFAULT = true
 
         const val NB_DATA_ROWS = 3
-    }
+        const val NOTIFICATION_URI ="android.resource://com.example.colorimagemobile/raw/pop"    }
 
     class SOCKETS {
         companion object {

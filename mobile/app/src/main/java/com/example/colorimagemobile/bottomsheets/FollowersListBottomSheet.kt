@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.colorimagemobile.R
 import com.example.colorimagemobile.adapter.FollowersListRecyclerAdapter
+import com.example.colorimagemobile.services.users.UserService
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -41,10 +42,11 @@ class FollowersListBottomSheet : BottomSheetDialogFragment() , FollowersListRecy
         recyclerViewFollowers.layoutManager = layoutManagerFollower
         adapterFollower = FollowersListRecyclerAdapter(this)
         recyclerViewFollowers.adapter = adapterFollower
-
+//        adapterFollower.notifyDataSetChanged()
     }
     override fun onItemClick(position: Int) {
         closeSheet()
-
+        adapterFollower.notifyDataSetChanged()
+        UserService.initDataForMyFollowerslist()
     }
 }

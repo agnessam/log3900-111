@@ -2,10 +2,12 @@ package com.example.colorimagemobile.services.users
 
 import android.content.Context
 import androidx.lifecycle.LifecycleOwner
+import com.example.colorimagemobile.adapter.FollowersListRecyclerAdapter
 import com.example.colorimagemobile.models.AvatarModel
 import com.example.colorimagemobile.models.CollaborationHistory
 import com.example.colorimagemobile.models.UserModel
 import com.example.colorimagemobile.repositories.UserRepository
+import com.example.colorimagemobile.services.teams.TeamAdapterService
 import com.example.colorimagemobile.utils.CommonFun
 import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
 import com.example.colorimagemobile.utils.Constants
@@ -59,7 +61,7 @@ object UserService {
     }
 
     fun setRecyclerDataForFollowers(){
-
+//        DataForFollowingList = arrayListOf()
         if ( userPositionForMenuNavigation ==0) {
             currentUserFollowerList = allUserInfo[getUserMePosition()].followers
         } else {
@@ -91,6 +93,9 @@ object UserService {
         }
     }
 
+    fun initDataForMyFollowerslist(){
+        DataForMyFollowersList = arrayListOf()
+    }
 
     fun getRecyclerDataForMyFollowers():ArrayList<UserModel.AllInfo>{
         return DataForMyFollowersList
@@ -130,133 +135,135 @@ object UserService {
         return allUserInfo[position]
     }
 
-    fun updateMe(currentdata: UserModel.UpdateUser){
-    fun updateUserByPosition(position: Int, newFollower: UserModel.AllInfo) {
-        allUserInfo[position] = newFollower
-    }
 
-    fun removeUserFromFollowing(position: Int) {
-        allUserInfo[position].following = allUserInfo[position].following.filter { following -> following != getUserInfo()._id } as ArrayList<String>
-    }
-
-    fun isAlreadyFollower(position: Int): Boolean {
-        return allUserInfo[position].followers.contains(getUserInfo()._id)
-    }
-
-    fun isCurrentUser(position: Int): Boolean {
-        return allUserInfo[position]._id.contains(getUserInfo()._id)
-    }
-
-    fun isDescriptionNullOrBlank(position: Int): Boolean {
-        return allUserInfo[position].description.isNullOrBlank()
-    }
-
-    fun updateUserAfterUpdate(currentdata: UserModel.UpdateUser){
-        if (!currentdata.username.isNullOrEmpty()){
-            info.username = currentdata.username!!
-        }
-        if (!currentdata.description.isNullOrEmpty()){
-            info.description = currentdata.description!!
+        fun updateUserByPosition(position: Int, newFollower: UserModel.AllInfo) {
+            allUserInfo[position] = newFollower
         }
 
-    }
-    fun setCurrentNbFollowers(currentValue: Int){
-        actualNbFollowers = currentValue
-    }
+        fun removeUserFromFollowing(position: Int) {
+            allUserInfo[position].following =
+                allUserInfo[position].following.filter { following -> following != getUserInfo()._id } as ArrayList<String>
+        }
 
-    fun getCurrentNbFollower(): Int{
-        return actualNbFollowers
-    }
+        fun isAlreadyFollower(position: Int): Boolean {
+            return allUserInfo[position].followers.contains(getUserInfo()._id)
+        }
 
-    fun followUser(position: Int, context: Context) {
-        val user = getUser(position)
-        UserRepository().followUser(user._id).observe(context as LifecycleOwner, {
-            if (it.isError as Boolean) {
-                CommonFun.printToast(context, it.message!!)
-                return@observe
+        fun isCurrentUser(position: Int): Boolean {
+            return allUserInfo[position]._id.contains(getUserInfo()._id)
+        }
+
+        fun isDescriptionNullOrBlank(position: Int): Boolean {
+            return allUserInfo[position].description.isNullOrBlank()
+        }
+
+        fun updateMe(currentdata: UserModel.UpdateUser) {
+            if (!currentdata.username.isNullOrEmpty()) {
+                info.username = currentdata.username!!
             }
-
-            val followedUser = it.data as UserModel.AllInfo
-
-            updateUserByPosition(position, followedUser)
-            UserAdapterService.getUserMenuAdapter().notifyItemChanged(position)
-        })
-
-        actualNbFollowers++
-    }
-
-    fun unfollowUser(position: Int, context: Context) {
-        val user = getUser(position)
-        UserRepository().unfollowUser(user._id).observe(context as LifecycleOwner, {
-            if (it.isError as Boolean) {
-                CommonFun.printToast(context, it.message!!)
-                return@observe
-            }
-
-            removeUserFromFollowing(position)
-            UserAdapterService.getUserMenuAdapter().notifyItemChanged(position)
-        })
-
-        actualNbFollowers--
-    }
-
-
-    fun setCollaborationHistoryToshow(){
-
-        printMsg("Taille collab : "+info.collaborationHistory.size)
-        when(info.collaborationHistory.size){
-
-            0->{}
-            1 -> {
-                collaborationHistoryToShow.add(info.collaborationHistory[0])
-                collaborationHistoryDrawingId.add(info.collaborationHistory[0].drawing)
-            }
-            2 ->{
-                collaborationHistoryToShow.add(info.collaborationHistory[0])
-                collaborationHistoryToShow.add(info.collaborationHistory[1])
-                collaborationHistoryDrawingId.add(info.collaborationHistory[0].drawing)
-                collaborationHistoryDrawingId.add(info.collaborationHistory[1].drawing)
-
-            }
-            else -> {
-                // set collaboration data
-                val countLog = info.collaborationHistory.size
-                collaborationHistoryToShow.add(info.collaborationHistory[countLog-1])
-                collaborationHistoryToShow.add(info.collaborationHistory[countLog-2])
-                collaborationHistoryToShow.add(info.collaborationHistory[countLog-3])
-
-                collaborationHistoryDrawingId.add(info.collaborationHistory[countLog-1].drawing)
-                collaborationHistoryDrawingId.add(info.collaborationHistory[countLog-2].drawing)
-                collaborationHistoryDrawingId.add(info.collaborationHistory[countLog-3].drawing)
+            if (!currentdata.description.isNullOrEmpty()) {
+                info.description = currentdata.description!!
             }
 
         }
 
-    }
+        fun setCurrentNbFollowers(currentValue: Int) {
+            actualNbFollowers = currentValue
+        }
 
-    fun getCollaborationToShow() : ArrayList<CollaborationHistory.drawingHistory>{
-        return collaborationHistoryToShow
-    }
+        fun getCurrentNbFollower(): Int {
+            return actualNbFollowers
+        }
 
-    fun getIdCollaborationToShow() : ArrayList<String>{
-        return collaborationHistoryDrawingId
-    }
+        fun followUser(position: Int, context: Context) {
+            val user = getUser(position)
+            UserRepository().followUser(user._id).observe(context as LifecycleOwner, {
+                if (it.isError as Boolean) {
+                    CommonFun.printToast(context, it.message!!)
+                    return@observe
+                }
 
-    fun setTemporaryEditUsername(newUsername: String){
-        this.temporaryEditUsername = newUsername
-    }
+                val followedUser = it.data as UserModel.AllInfo
 
-    fun getTemporaryEditUsername(): String{
-        return this.temporaryEditUsername
-    }
+                updateUserByPosition(position, followedUser)
+                UserAdapterService.getUserMenuAdapter().notifyItemChanged(position)
+            })
 
-    fun setTemporaryDescription(newDescription: String){
-        this.temporaryDescription = newDescription
-    }
+            actualNbFollowers++
+        }
 
-    fun getTemporaryDescription(): String{
-        return this.temporaryDescription
-    }
+        fun unfollowUser(position: Int, context: Context) {
+            val user = getUser(position)
+            UserRepository().unfollowUser(user._id).observe(context as LifecycleOwner, {
+                if (it.isError as Boolean) {
+                    CommonFun.printToast(context, it.message!!)
+                    return@observe
+                }
+
+                removeUserFromFollowing(position)
+                UserAdapterService.getUserMenuAdapter().notifyItemChanged(position)
+            })
+
+            actualNbFollowers--
+        }
+
+
+        fun setCollaborationHistoryToshow() {
+
+            printMsg("Taille collab : " + info.collaborationHistory.size)
+            when (info.collaborationHistory.size) {
+
+                0 -> {}
+                1 -> {
+                    collaborationHistoryToShow.add(info.collaborationHistory[0])
+                    collaborationHistoryDrawingId.add(info.collaborationHistory[0].drawing)
+                }
+                2 -> {
+                    collaborationHistoryToShow.add(info.collaborationHistory[0])
+                    collaborationHistoryToShow.add(info.collaborationHistory[1])
+                    collaborationHistoryDrawingId.add(info.collaborationHistory[0].drawing)
+                    collaborationHistoryDrawingId.add(info.collaborationHistory[1].drawing)
+
+                }
+                else -> {
+                    // set collaboration data
+                    val countLog = info.collaborationHistory.size
+                    collaborationHistoryToShow.add(info.collaborationHistory[countLog - 1])
+                    collaborationHistoryToShow.add(info.collaborationHistory[countLog - 2])
+                    collaborationHistoryToShow.add(info.collaborationHistory[countLog - 3])
+
+                    collaborationHistoryDrawingId.add(info.collaborationHistory[countLog - 1].drawing)
+                    collaborationHistoryDrawingId.add(info.collaborationHistory[countLog - 2].drawing)
+                    collaborationHistoryDrawingId.add(info.collaborationHistory[countLog - 3].drawing)
+                }
+
+            }
+
+        }
+
+        fun getCollaborationToShow(): ArrayList<CollaborationHistory.drawingHistory> {
+            return collaborationHistoryToShow
+        }
+
+        fun getIdCollaborationToShow(): ArrayList<String> {
+            return collaborationHistoryDrawingId
+        }
+
+        fun setTemporaryEditUsername(newUsername: String) {
+            this.temporaryEditUsername = newUsername
+        }
+
+        fun getTemporaryEditUsername(): String {
+            return this.temporaryEditUsername
+        }
+
+        fun setTemporaryDescription(newDescription: String) {
+            this.temporaryDescription = newDescription
+        }
+
+        fun getTemporaryDescription(): String {
+            return this.temporaryDescription
+        }
 
 
 }
