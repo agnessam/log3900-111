@@ -36,8 +36,8 @@ import com.google.android.material.tabs.TabLayout
 import kotlinx.android.synthetic.main.fragment_teams_profile.*
 
 class UsersProfileFragment : Fragment(R.layout.fragment_users_profile) {
-    private var userPosition: Int? = null
-    private lateinit var currentUser: UserModel.AllInfo
+    private var userId: String? = null
+    private lateinit var currentUser: UserModel.AllInfoWithData
     private lateinit var myView: View
     private lateinit var recyclerView: RecyclerView
     private var drawingsMenu: ArrayList<DrawingMenuData> = arrayListOf()
@@ -45,16 +45,11 @@ class UsersProfileFragment : Fragment(R.layout.fragment_users_profile) {
     private lateinit var followBtn: Button
     private lateinit var unfollewBtn: Button
     private lateinit var descriptionCardView : CardView
-    private  var nbFollowers : Int = 0
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            userPosition = it.getInt(Constants.USERS.CURRENT_USER_ID_KEY)
-            currentUser = UserService.getUser(userPosition!!)
-            nbFollowers = UserService.getUser(userPosition!!).followers.size
-            UserService.setCurrentNbFollowers(nbFollowers)
+            userId = it.getString(Constants.USERS.CURRENT_USER_ID_KEY)
         }
     }
 
@@ -64,10 +59,29 @@ class UsersProfileFragment : Fragment(R.layout.fragment_users_profile) {
         recyclerView = myView.findViewById(R.id.userProfileDrawingsRecycler)
         recyclerView.layoutManager = GridLayoutManager(requireContext(), Constants.NB_DATA_ROWS)
 
-        updateUI()
-        setListeners()
-        getUserDrawings()
-        getUserPosts()
+        getCurrentUser()
+    }
+
+    private fun getCurrentUser() {
+        UserRepository().getUserById(UserService.getToken(), userId!!).observe(viewLifecycleOwner, {
+            if (it.isError as Boolean) {
+                printToast(requireContext(), it.message!!)
+                return@observe
+            }
+
+            currentUser = it.data!!
+            publishedDrawings = it.data.posts
+
+            val drawings = it.data.drawings
+            DrawingService.setAllDrawings(drawings)
+            drawingsMenu = DrawingService.getDrawingsBitmap(requireContext(), drawings)
+            setAllDrawings()
+
+            UserService.setCurrentNbFollowers(currentUser.followers.size)
+
+            updateUI()
+            setListeners()
+        })
     }
 
     private fun updateUI() {
@@ -88,17 +102,18 @@ class UsersProfileFragment : Fragment(R.layout.fragment_users_profile) {
         descriptionCardView = myView.findViewById(R.id.userIdDescriptionCardView)
         hideShowDescription()
     }
+
     private fun updateUserButtons(){
-        if (UserService.isCurrentUser(userPosition!!)) {
+        if (UserService.getUserInfo()._id == userId) {
             followBtn.visibility = View.GONE
             unfollewBtn.visibility = View.GONE
-        } else{
+        } else {
             updateButtons()
         }
     }
 
     private fun updateButtons() {
-        if (UserService.isAlreadyFollower(userPosition!!)) {
+        if (currentUser.followers.contains(UserService.getUserInfo()._id)) {
             hideFollowBtn()
         } else {
             showFollowBtn()
@@ -106,12 +121,11 @@ class UsersProfileFragment : Fragment(R.layout.fragment_users_profile) {
     }
 
     private fun hideShowDescription(){
-        if (UserService.isDescriptionNullOrBlank(userPosition!!)){
+        if (UserService.isDescriptionNullOrBlank(userId!!)){
             descriptionCardView.visibility = View.GONE
         } else {
             descriptionCardView.visibility = View.VISIBLE
         }
-
     }
 
     private fun hideFollowBtn() {
@@ -138,42 +152,18 @@ class UsersProfileFragment : Fragment(R.layout.fragment_users_profile) {
             override fun onTabUnselected(tab: TabLayout.Tab?) { }
         })
         followBtn.setOnClickListener {
-            UserService.followUser(userPosition!!, requireContext())
+            UserService.followUser(userId!!, requireContext())
             myView.findViewById<TextView>(R.id.userIdNbOfFollowers).text = UserService.getCurrentNbFollower().toString()
             hideFollowBtn()
 
 
         }
         unfollewBtn.setOnClickListener {
-            UserService.unfollowUser(userPosition!!, requireContext())
+            UserService.unfollowUser(userId!!, requireContext())
             showFollowBtn()
 
             myView.findViewById<TextView>(R.id.userIdNbOfFollowers).text = UserService.getCurrentNbFollower().toString()
         }
-    }
-
-    private fun getUserDrawings() {
-        UserRepository().getUserDrawings(currentUser._id).observe(viewLifecycleOwner, {
-            if (it.isError as Boolean) {
-                printToast(requireContext(), it.message!!)
-                return@observe
-            }
-            val drawings = it.data as List<DrawingModel.Drawing>
-            DrawingService.setAllDrawings(drawings)
-            drawingsMenu = DrawingService.getDrawingsBitmap(requireContext(), drawings)
-            setAllDrawings()
-        })
-    }
-
-
-    private fun getUserPosts() {
-        UserRepository().getUserPosts(currentUser._id).observe(viewLifecycleOwner, {
-            if (it.isError as Boolean) {
-                printToast(requireContext(), it.message!!)
-                return@observe
-            }
-            publishedDrawings = it.data as List<PublishedMuseumPostModel>
-        })
     }
 
     private fun setAllDrawings() {

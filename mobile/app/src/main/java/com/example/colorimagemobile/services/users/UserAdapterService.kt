@@ -12,7 +12,7 @@ object UserAdapterService {
     private lateinit var usersMenuAdapter: UsersMenuRecyclerAdapter
 
     fun createAdapter(context: Context, fragmentActivity: FragmentActivity, layoutID: Int, parentFragmentID: Int): UsersMenuRecyclerAdapter {
-        return UsersMenuRecyclerAdapter(layoutID) { pos -> openUser(fragmentActivity, pos, parentFragmentID) }
+        return UsersMenuRecyclerAdapter(layoutID) { userId -> openUser(fragmentActivity, userId, parentFragmentID) }
     }
 
     fun setAdapter(adapter: UsersMenuRecyclerAdapter) {
@@ -22,7 +22,7 @@ object UserAdapterService {
         return usersMenuAdapter
     }
 
-    private fun openUser(fragmentActivity: FragmentActivity, position: Int, parentFragmentID: Int) {
-        MyFragmentManager(fragmentActivity).openWithData(parentFragmentID, UsersProfileFragment(), Constants.USERS.CURRENT_USER_ID_KEY, position)
+    private fun openUser(fragmentActivity: FragmentActivity, userId: String, parentFragmentID: Int) {
+        MyFragmentManager(fragmentActivity).openWithData(parentFragmentID, UsersProfileFragment(), Constants.USERS.CURRENT_USER_ID_KEY, userId)
     }
 }
