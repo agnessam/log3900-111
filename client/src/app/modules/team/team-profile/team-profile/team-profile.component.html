@@ -24,15 +24,19 @@
       <div fxLayout="column" fxLayoutGap="12px" fxLayoutAlign="center center">
         <button
           mat-raised-button
+          color="primary"
+          (click)="openEditTeamParametersDialog()"
+          *ngIf="isOwner()"
+        >
+          Edit Team
+        </button>
+        <button
+          mat-raised-button
           color="warn"
           *ngIf="isOwner()"
           (click)="openConfirmDeleteDialog()"
         >
           Delete team
-        </button>
-
-        <button mat-raised-button color="primary" *ngIf="!isOwner()">
-          Follow
         </button>
 
         <button
