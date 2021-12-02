@@ -1,48 +1,61 @@
-import { TextChannel, TextChannelInterface } from '../../../domain/models/TextChannel';
+import {
+  TextChannel,
+  TextChannelInterface,
+} from '../../../domain/models/TextChannel';
 import { injectable } from 'inversify';
 import { GenericRepository } from './generic_repository';
 import { Message, MessageInterface } from '../../../domain/models/Message';
 
 @injectable()
 export class TextChannelRepository extends GenericRepository<TextChannelInterface> {
-	constructor() {
-		super(TextChannel);
-	}
+  constructor() {
+    super(TextChannel);
+  }
 
-	public async getMessages(channelId: string): Promise<MessageInterface[]> {
-		return new Promise((resolve, reject) => {
-			Message.find({ roomId: channelId })
-			.exec((err, messages) => {
-				if (err) {
-					reject(err);
-				}
-				resolve(messages);
-			})
-		})
-	};
+  getPublicChannels() {
+    return new Promise((resolve, reject) => {
+      TextChannel.find({ isPrivate: false }, (err, channels) => {
+        if (err) reject(err);
+        resolve(channels);
+      });
+    });
+  }
 
-	public async deleteMessages(channelId: string): Promise<void> {
-		return new Promise((resolve, reject) => {
-			Message.deleteMany({ roomId: channelId })
-			.exec((err) => {
-				if (err) {
-					reject(err);
-				}
-				resolve();
-			})
-		})
-	};
+  public async getMessages(channelId: string): Promise<MessageInterface[]> {
+    return new Promise((resolve, reject) => {
+      Message.find({ roomId: channelId }).exec((err, messages) => {
+        if (err) {
+          reject(err);
+        }
+        resolve(messages);
+      });
+    });
+  }
 
-	// Channels have unique names
-	public async getChannelByName(channelName: string): Promise<TextChannelInterface> {
-		return new Promise((resolve, reject) => {
-			TextChannel.findOne({name: new RegExp('^'+ channelName +'$', "i")})
-			.exec((err, channel) => {
-				if (err || !channel) {
-					reject(err);
-				}
-				resolve(channel!);
-			})
-		})
-	}
+  public async deleteMessages(channelId: string): Promise<void> {
+    return new Promise((resolve, reject) => {
+      Message.deleteMany({ roomId: channelId }).exec((err) => {
+        if (err) {
+          reject(err);
+        }
+        resolve();
+      });
+    });
+  }
+
+  // Channels have unique names
+  public async getChannelByName(
+    channelName: string,
+  ): Promise<TextChannelInterface> {
+    return new Promise((resolve, reject) => {
+      TextChannel.findOne({
+        name: new RegExp('^' + channelName + '$', 'i'),
+      }).exec((err, channel) => {
+        if (err || !channel) {
+          reject(err);
+        }
+        resolve(channel!);
+      });
+    });
+  }
 }

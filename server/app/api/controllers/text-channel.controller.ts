@@ -16,12 +16,13 @@ import { ChatSocketService } from '@app/domain/services/sockets/chat-socket.serv
 
 @controller('/channels', passport.authenticate('jwt', { session: false }))
 export class TextChannelController {
-  @inject(TYPES.TextChannelRepository) private textChannelRepository: TextChannelRepository;
+  @inject(TYPES.TextChannelRepository)
+  private textChannelRepository: TextChannelRepository;
   @inject(TYPES.ChatSocketService) private chatSocketService: ChatSocketService;
 
   @httpGet('/')
   public async get() {
-    return await this.textChannelRepository.findAll();
+    return await this.textChannelRepository.getPublicChannels();
   }
 
   @httpGet('/:channelId')
@@ -38,24 +39,31 @@ export class TextChannelController {
   public async deleteChannel(@request() req: Request) {
     // TODO: force leave everyone in the room
     try {
-      const deletedChannel = await this.textChannelRepository.deleteById(req.params.channelId);
+      const deletedChannel = await this.textChannelRepository.deleteById(
+        req.params.channelId,
+      );
       this.chatSocketService.emitLeave(deletedChannel.name);
       this.deleteMessages(req);
       return deletedChannel;
     } catch (e: any) {
-      console.log("Couldn't delete channel: ", e)
+      console.log("Couldn't delete channel: ", e);
       return e;
     }
   }
 
   @httpDelete('/:channelId/messages')
   public async deleteMessages(@request() req: Request) {
-    return await this.textChannelRepository.deleteMessages(req.params.channelId);
+    return await this.textChannelRepository.deleteMessages(
+      req.params.channelId,
+    );
   }
 
   @httpPatch('/:channelId')
   public async updateChannel(@request() req: Request) {
-    return await this.textChannelRepository.updateById(req.params.channelId, req.body);
+    return await this.textChannelRepository.updateById(
+      req.params.channelId,
+      req.body,
+    );
   }
 
   @httpGet('/:channelId/messages')
@@ -66,7 +74,7 @@ export class TextChannelController {
   @httpGet('/all/search')
   public async searchChannels(@queryParam('q') query: string) {
     const channels = await this.textChannelRepository.findManyByQuery({
-      $or: [{ name: { $regex: new RegExp(query, 'ig') } }],
+      $or: [{ name: { $regex: new RegExp(query, 'ig') }, isPrivate: false }],
     });
     return [...channels];
   }

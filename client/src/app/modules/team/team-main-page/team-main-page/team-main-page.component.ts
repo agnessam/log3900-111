@@ -51,11 +51,15 @@ export class TeamMainPageComponent implements OnInit {
       }
 
       this.teams.push(result);
-      this.textChannelService.createChannel(result.name, result.owner, result._id).subscribe((channel) => {
-        console.log("created new channel : " + channel);
-        this.textChannelService.emitNewTeamChannel(channel);
-        this.chatSocketService.joinRoom({userId: localStorage.getItem("userId")!, roomName: channel.name});
-      });
+      this.textChannelService
+        .createChannel(result.name, result.owner, result._id, undefined, true)
+        .subscribe((channel) => {
+          this.textChannelService.emitNewTeamChannel(channel);
+          this.chatSocketService.joinRoom({
+            userId: localStorage.getItem("userId")!,
+            roomName: channel.name,
+          });
+        });
     });
   }
 }

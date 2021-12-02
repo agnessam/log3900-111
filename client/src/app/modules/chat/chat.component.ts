@@ -53,6 +53,7 @@ export class ChatComponent implements OnInit, OnDestroy {
       _id: "default",
       name: "General",
       ownerId: "default",
+      isPrivate: false,
     };
   }
 

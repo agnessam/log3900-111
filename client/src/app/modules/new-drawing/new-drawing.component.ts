@@ -44,7 +44,7 @@ export class NewDrawingComponent implements OnInit {
     private drawingHttpClient: DrawingHttpClientService,
     private usersService: UsersService,
     private textChannelService: TextChannelService,
-    private router: Router,
+    private router: Router
   ) {}
 
   /// Créer un nouveau form avec les dimensions et la couleur
@@ -102,11 +102,17 @@ export class NewDrawingComponent implements OnInit {
       .subscribe((response) => {
         if (response._id) {
           this.router.navigate([`/drawings/${response._id}`]);
-          this.snackBar.open("Nouveau dessin créé", "", {
+          this.snackBar.open("Succesfully created drawing", "", {
             duration: ONE_SECOND,
           });
           this.textChannelService
-            .createChannel(response.name, response.owner as string, undefined, response._id)
+            .createChannel(
+              response.name,
+              response.owner as string,
+              undefined,
+              response._id,
+              true
+            )
             .subscribe((channel) => {
               this.textChannelService.emitJoinCollaboration(channel);
             });
