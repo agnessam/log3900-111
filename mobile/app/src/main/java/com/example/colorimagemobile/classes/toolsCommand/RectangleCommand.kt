@@ -1,9 +1,5 @@
 package com.example.colorimagemobile.classes.toolsCommand
 
-import android.graphics.Color
-import android.graphics.Paint
-import android.graphics.Rect
-import android.graphics.RectF
 import android.graphics.*
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.LayerDrawable
@@ -15,8 +11,6 @@ import com.example.colorimagemobile.models.RectangleUpdate
 import com.example.colorimagemobile.services.drawing.*
 import com.example.colorimagemobile.services.drawing.Point
 import com.example.colorimagemobile.services.drawing.toolsAttribute.ColorService
-import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
-import java.lang.Integer.min
 import kotlin.math.min
 
 class RectangleCommand(rectangleData: RectangleData): ICommand {
@@ -33,8 +27,8 @@ class RectangleCommand(rectangleData: RectangleData): ICommand {
 
     private lateinit var rectangleShape: LayerDrawable
 
-    private var borderPaint: Paint = Paint()
-    private var fillPaint: Paint = Paint()
+    var borderPaint: Paint = Paint()
+    var fillPaint: Paint = Paint()
 
     var borderPath = Path()
     var fillPath = Path()
@@ -51,7 +45,7 @@ class RectangleCommand(rectangleData: RectangleData): ICommand {
         DrawingJsonService.createRect(rectangle)
     }
 
-    private fun initializePaint(color: String, opacity: String, defaultColor: Int): Paint{
+    fun initializePaint(color: String, opacity: String, defaultColor: Int): Paint{
         var paint = Paint()
 
         val transformedColor = ColorService.addAlphaToRGBA(color, opacity)
