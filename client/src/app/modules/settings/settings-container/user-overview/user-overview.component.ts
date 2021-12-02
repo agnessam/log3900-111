@@ -84,16 +84,6 @@ export class UserOverviewComponent implements OnInit {
     });
   }
 
-  openSnackBar(avatar: Avatar) {
-    let snackBarRef = this.snackBar.open(
-      "Careful -- you have unsaved changes!",
-      "Confirm"
-    );
-    snackBarRef.onAction().subscribe(() => {
-      this.updateUserAvatar(avatar);
-    });
-  }
-
   updateUserAvatar(avatar: Avatar) {
     this.usersService
       .updateUser(
