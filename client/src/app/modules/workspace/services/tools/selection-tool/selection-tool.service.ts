@@ -337,7 +337,7 @@ export class SelectionToolService implements Tools {
         this.rendererService.renderer.setAttribute(point, "transform", "");
       });
 
-      let boundingRect = this.objects[0].getBoundingClientRect();
+      let boundingRect: DOMRect = this.objects[0].getBoundingClientRect();
 
       let x = 0;
       let y = 0;
@@ -356,7 +356,7 @@ export class SelectionToolService implements Tools {
 
       if (this.objects.length === 1 || !this.wasMoved) {
         x = boundingRect.left - this.xFactor() - objStrokeWidth / 2;
-        y = boundingRect.top - objStrokeWidth / 2;
+        y = boundingRect.top - objStrokeWidth / 2 - 64;
         width = boundingRect.width + objStrokeWidth;
         height = boundingRect.height + objStrokeWidth;
       } else {
