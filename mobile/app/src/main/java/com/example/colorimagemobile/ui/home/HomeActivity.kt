@@ -145,10 +145,12 @@ class HomeActivity : AppCompatActivity() {
         return when(navController.currentDestination?.id) {
             // back button clicked on Gallery Drawing
             R.id.galleryFragment -> {
-                saveDrawing()
-                DrawingObjectManager.clearLayers()
-                SocketManagerService.leaveDrawingRoom()
-                DrawingService.setCurrentDrawingID(null)
+                if (DrawingService.getCurrentDrawingID() != null) {
+                    saveDrawing()
+                    DrawingObjectManager.clearLayers()
+                    SocketManagerService.leaveDrawingRoom()
+                    DrawingService.setCurrentDrawingID(null)
+                }
                 bottomNav.selectedItemId = R.id.galleryFragment
                 true
             }
