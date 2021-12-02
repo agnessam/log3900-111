@@ -143,8 +143,9 @@ export class ResizeSelectionService {
         scaleReturn.xScale,
         scaleReturn.yScale,
         scaleReturn.xTranslate,
-        scaleReturn.yTranslate
+        scaleReturn.yTranslate - 64
       );
+
       this.resizeCommand.execute();
       let objectIds: String[] = [];
       this.objectList.forEach((object) => objectIds.push(object.id));
