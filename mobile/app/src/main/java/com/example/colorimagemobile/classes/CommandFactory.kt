@@ -5,14 +5,15 @@ import com.example.colorimagemobile.classes.toolsCommand.*
 import com.example.colorimagemobile.classes.toolsCommand.selectionToolCommands.SelectionCommand
 import com.example.colorimagemobile.interfaces.ICommand
 import com.example.colorimagemobile.models.*
+import com.example.colorimagemobile.services.drawing.DrawingObjectManager
 
 class CommandFactory {
 
     companion object {
+        var nonShapeCommands = arrayOf("SelectionStart", "SelectionResize", "Translation", "Delete")
+
         fun createCommand(commandType: String, toolData: Any): ICommand? {
-            if(commandType != "SelectionStart"
-                && commandType != "SelectionResize"
-                && commandType != "Translation"
+            if( commandType !in nonShapeCommands
                 && (toolData as ToolData).stroke == null)
                 return null
 
@@ -30,6 +31,9 @@ class CommandFactory {
                     val translateCommand = TranslateCommand(toolData as TranslateData)
                     translateCommand.setTransformation(toolData.deltaX, toolData.deltaY)
                     return translateCommand
+                }
+                "Delete" -> {
+                    return DeleteCommand((toolData as DeleteData).id)
                 }
             }
             return null
