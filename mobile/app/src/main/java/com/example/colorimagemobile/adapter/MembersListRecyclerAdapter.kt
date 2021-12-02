@@ -40,7 +40,7 @@ class MembersListRecyclerAdapter(
     private fun getStatusColor(memberId: String): Int {
         val color = when(userStatus[memberId]) {
             UserModel.STATUS.Online -> "#3f51b5"
-            UserModel.STATUS.Offline -> "#CCC"
+            UserModel.STATUS.Offline -> "#CCCCCC"
             else -> "#00ff00"
         }
 
