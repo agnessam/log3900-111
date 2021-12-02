@@ -13,7 +13,6 @@ export class TextChannelService {
   newTeamChannel: Subject<TextChannel>;
   joinedCollabChannel: ReplaySubject<TextChannel>;
   leftCollabChannel: Subject<TextChannel>;
-  // isOutEvent = new EventEmitter<boolean>();
 
   private endpointUrl: string = environment.serverURL + "/channels";
   private httpHeaders: HttpHeaders = new HttpHeaders().set(

@@ -2,6 +2,7 @@ import {
   ChangeDetectorRef,
   Component,
   EventEmitter,
+  Input,
   OnDestroy,
   OnInit,
   Output,
@@ -61,7 +62,7 @@ export class ChannelComponent implements OnInit, OnDestroy {
     this.textChannelService.getChannels().subscribe({
       next: (channels) => {
         channels.forEach(channel => this.allChannels.push(Object.assign({}, channel)));
-        this.searchedChannels = channels;
+        this.resetSearch();
         const general = channels.find((channel) => channel.name === "General");
         if (general) {
           this.chatSocketService.joinRoom({
@@ -70,10 +71,12 @@ export class ChannelComponent implements OnInit, OnDestroy {
           });
           this.connectedChannels.unshift(general);
         }
+        this.ref.detectChanges();
       },
       complete: () => {
         this.filterTeamChannels();
         this.filterCollaborationChannels();
+        this.ref.detectChanges();
       },
     });
 

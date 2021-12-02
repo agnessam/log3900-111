@@ -32,7 +32,7 @@
     <img src="../../../../assets/svg-icon/group-icon.svg">
   </button>
   <mat-menu #channels="matMenu" class="customize-menu">
-      <channel *ngIf="user" (closeChannelList)="channelToggle.closeMenu()" (click)="$event.stopPropagation();" ></channel>
+      <channel *ngIf="user" (closeChannelList)="channelToggle.closeMenu()" (click)="$event.stopPropagation();"></channel>
   </mat-menu>
   
   <button mat-icon-button #channelToggle="matMenuTrigger" [matMenuTriggerFor]="channels">

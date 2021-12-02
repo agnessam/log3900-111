@@ -50,7 +50,8 @@
               <div class="deleteChannelBtn" [id]="channel.name">
                 <button mat-icon-button 
                   (click)="removeChannel(channel)" 
-                  [ngStyle]="{'display': channel.ownerId === this.user?._id ? 'inline' : 'none'}">
+                  >
+                  <!-- [ngStyle]="{'display': channel.ownerId === this.user?._id ? 'inline' : 'none'}" -->
                   <mat-icon>clear</mat-icon>
                 </button>
                 <button mat-icon-button (click)="deleteChannel(channel)" >
