@@ -43,13 +43,11 @@
 }
 
 #main-logo {
-  color: #da7e70;
   font-size: 36px;
   padding-right: 20px;
 }
 
 #logout-button {
-  // color: #924642;
   font-size: 24px;
 }
 
@@ -64,7 +62,6 @@
   height: 90%;
   width: 40%;
   border-radius: 25px;
-  // background-color: #fef9f7;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -72,7 +69,6 @@
 
 #searchbar-input {
   border: none;
-  // background-color: transparent;
   width: 90%;
   margin-right: 20px;
 }
@@ -89,7 +85,6 @@
 }
 
 ::ng-deep .mat-menu-panel.customize-menu {
-  // background-color: #fef9f7 !important;
   border-radius: 15px;
   overflow: hidden;
 }

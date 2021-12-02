@@ -133,6 +133,11 @@ $colorimage-dark-theme: map_merge(
   #nav-bar {
     background-color: #2c2a33;
   }
+
+  #main-logo {
+    color: #f4b6b0;
+  }
+
   mat-label {
     color: white;
   }
@@ -187,6 +192,9 @@ $colorimage-dark-theme: map_merge(
   #nav-bar {
     background-color: #fcedea;
   }
+  #main-logo {
+    color: #da7e70;
+  }
   .mat-card:not([class*="mat-elevation-z"]) {
     -webkit-box-shadow: none;
     -moz-box-shadow: none;
@@ -225,8 +233,6 @@ $colorimage-dark-theme: map_merge(
   }
 }
 
-// @include mat.all-component-themes($polydessin-theme-theme);
-
 html,
 body {
   height: 100%;
@@ -234,7 +240,6 @@ body {
 body {
   margin: 0;
   font-family: Roboto, "Helvetica Neue", sans-serif;
-  // background-color: #fcedea;
 }
 
 .thumbnail-wrapper {
@@ -253,19 +258,4 @@ body {
 body {
   margin: 0;
   font-family: "Inter", sans-serif;
-  // background-color: #fcedea;
 }
-
-// .mat-flat-button.mat-primary,
-// .mat-raised-button.mat-primary,
-// .mat-fab.mat-primary,
-// .mat-mini-fab.mat-primary {
-//   background-color: #da7e70;
-//   box-shadow: none;
-// }
-
-// .mat-button,
-// .mat-icon-button,
-// .mat-stroked-button {
-//   color: #da7e70;
-// }
