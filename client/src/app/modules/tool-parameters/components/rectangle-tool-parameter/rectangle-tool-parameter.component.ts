@@ -1,21 +1,20 @@
-import { Component, OnInit } from '@angular/core';
-import { FormGroup } from '@angular/forms';
-import { RectangleStyle } from 'src/app/shared';
-import { ToolRectangleService } from 'src/app/modules/workspace';
+import { Component, OnInit } from "@angular/core";
+import { FormGroup } from "@angular/forms";
+import { RectangleStyle } from "src/app/shared";
+import { ToolRectangleService } from "src/app/modules/workspace";
 
 const FILL_ID = 0;
 const CENTER_ID = 1;
 const BORDER_ID = 2;
 
 @Component({
-  selector: 'app-rectangle-tool-parameter',
-  templateUrl: './rectangle-tool-parameter.component.html',
-  styleUrls: ['./rectangle-tool-parameter.component.scss'],
+  selector: "app-rectangle-tool-parameter",
+  templateUrl: "./rectangle-tool-parameter.component.html",
+  styleUrls: ["./rectangle-tool-parameter.component.scss"],
 })
 
 /// Le component d'affichage des paramètres du rectangle
 export class RectangleToolParameterComponent implements OnInit {
-
   form: FormGroup;
 
   currentStyle = 0;
@@ -23,18 +22,18 @@ export class RectangleToolParameterComponent implements OnInit {
   styles: RectangleStyle[] = [
     {
       id: FILL_ID,
-      type: 'fill',
-      tooltip: 'Rempli',
+      type: "fill",
+      tooltip: "Fill",
     },
     {
       id: CENTER_ID,
-      type: 'center',
-      tooltip: 'Centre',
+      type: "center",
+      tooltip: "Center",
     },
     {
       id: BORDER_ID,
-      type: 'border',
-      tooltip: 'Bordure',
+      type: "border",
+      tooltip: "Border",
     },
   ];
 
@@ -46,7 +45,7 @@ export class RectangleToolParameterComponent implements OnInit {
     });
   }
 
-  constructor(private rectangleToolService: ToolRectangleService) { }
+  constructor(private rectangleToolService: ToolRectangleService) {}
   /// Assignation des parametre du service de rectangle au form
   ngOnInit(): void {
     this.form = this.rectangleToolService.parameters;
@@ -55,5 +54,4 @@ export class RectangleToolParameterComponent implements OnInit {
   get toolName(): string {
     return this.rectangleToolService.toolName;
   }
-
 }

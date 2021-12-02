@@ -16,6 +16,7 @@ import com.example.colorimagemobile.R
 import com.example.colorimagemobile.bottomsheets.EditDrawingBottomSheet
 import com.example.colorimagemobile.bottomsheets.PasswordConfirmationBottomSheet
 import com.example.colorimagemobile.classes.DateFormatter
+import com.example.colorimagemobile.classes.MyFragmentManager
 import com.example.colorimagemobile.classes.MyPicasso
 import com.example.colorimagemobile.models.DrawingModel
 import com.example.colorimagemobile.models.PrivacyLevel
@@ -24,7 +25,9 @@ import com.example.colorimagemobile.models.recyclerAdapters.DrawingMenuViewHolde
 import com.example.colorimagemobile.services.drawing.DrawingOwnerService
 import com.example.colorimagemobile.services.drawing.DrawingService
 import com.example.colorimagemobile.services.socket.DrawingSocketService
+import com.example.colorimagemobile.ui.home.fragments.users.UsersProfileFragment
 import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
+import com.example.colorimagemobile.utils.Constants
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
@@ -78,6 +81,7 @@ class DrawingMenuRecyclerAdapter(
             job.join()
             DrawingSocketService.sendGetUpdateDrawingRequest(drawingMenus, position, destination)
         }
+        DrawingSocketService.setDrawingCommandSocketListeners()
     }
 
     inner class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
@@ -137,6 +141,11 @@ class DrawingMenuRecyclerAdapter(
                     true
                 })
                 optionMenu.show()
+            }
+
+            authorName.setOnClickListener {
+                val userId = drawingMenus[bindingAdapterPosition].drawing.owner._id
+                MyFragmentManager(activity).openWithData(R.id.main_gallery_fragment, UsersProfileFragment(), Constants.USERS.CURRENT_USER_ID_KEY, userId)
             }
         }
     }

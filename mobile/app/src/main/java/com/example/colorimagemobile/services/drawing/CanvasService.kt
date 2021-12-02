@@ -13,6 +13,10 @@ object CanvasService {
     private var width = Constants.DRAWING.MAX_WIDTH
     private var height = Constants.DRAWING.MAX_HEIGHT
 
+    fun extraCanvasIsIntialized(): Boolean{
+        return this::extraCanvas.isInitialized
+    }
+
     fun getWidth(): Int {
         return width
     }

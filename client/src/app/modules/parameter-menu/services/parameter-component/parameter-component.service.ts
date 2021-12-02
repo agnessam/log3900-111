@@ -1,12 +1,7 @@
 import { Injectable, Type } from "@angular/core";
-import { ControlMenuComponent } from "../../components/control-menu/control-menu.component";
 import {
-  ApplierToolParameterComponent,
   EllipseToolParameterComponent,
-  EraserToolParameterComponent,
-  LineToolParameterComponent,
   PencilToolParameterComponent,
-  PolygonToolParameterComponent,
   RectangleToolParameterComponent,
   SelectionToolParameterComponent,
 } from "src/app/modules/tool-parameters";
@@ -20,16 +15,10 @@ export class ParameterComponentService {
   constructor() {
     this.parameterComponentList.push(
       SelectionToolParameterComponent,
-      EraserToolParameterComponent,
       PencilToolParameterComponent,
       RectangleToolParameterComponent,
-      EllipseToolParameterComponent,
-      PolygonToolParameterComponent,
-      LineToolParameterComponent,
-      ApplierToolParameterComponent
+      EllipseToolParameterComponent
     );
-    // Le push se fait par la suite pour s'assurer qu'il s'agit de la derniere classe
-    this.parameterComponentList.push(ControlMenuComponent);
   }
 
   /// Retourne le parameterComponent de l'index donner

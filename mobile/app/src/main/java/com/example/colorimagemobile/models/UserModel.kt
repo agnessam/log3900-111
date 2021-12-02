@@ -39,6 +39,32 @@ class UserModel {
         var lastLogout: Date?,
         var collaborationHistory: ArrayList<Any>?,
     )
+
+    // user contains posts and drawings instead of Strings
+    data class AllInfoWithData(
+        val _id: String,
+        var username: String,
+        val firstName: String,
+        val lastName: String,
+        val password: String,
+        val email: String,
+        var description: String,
+        val teams: ArrayList<String>,
+        val drawings: ArrayList<DrawingModel.Drawing>,
+        var avatar : AvatarModel.AllInfo,
+        val posts: ArrayList<PublishedMuseumPostModel>,
+        var followers: ArrayList<String>,
+        var following: ArrayList<String>,
+        var lastLogin: Date?,
+        var lastLogout: Date?,
+        var collaborationHistory: ArrayList<Any>?,
+    )
+
+    enum class STATUS(val status: String) {
+        Online("Online"),
+        Collaborating("Collaborating"),
+        Offline("Offline"),
+    }
 }
 
 

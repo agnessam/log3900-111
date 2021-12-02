@@ -5,7 +5,7 @@ import { Drawing, DrawingInterface } from '../../../domain/models/Drawing';
 import { Team, TeamInterface } from '../../../domain/models/teams';
 import { User, UserInterface } from '../../../domain/models/user';
 import { GenericRepository } from './generic_repository';
-import { CollaborationTrackerService } from '@app/domain/services/collaboration-tracker.service';
+import { CollaborationTrackerService } from '../../../domain/services/collaboration-tracker.service';
 import { TYPES } from '../../../domain/constants/types';
 
 @injectable()

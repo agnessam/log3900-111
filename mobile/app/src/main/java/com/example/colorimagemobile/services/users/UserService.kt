@@ -62,28 +62,14 @@ object UserService {
      this.info.avatar = avatar
     }
 
-    fun getUser(position: Int): UserModel.AllInfo {
-        return allUserInfo[position]
+    fun updateUserFollowers(userId: String, newFollower: UserModel.AllInfo) {
+        var user = allUserInfo.find { user -> user._id == userId }
+        user = newFollower
     }
 
-    fun updateUserByPosition(position: Int, newFollower: UserModel.AllInfo) {
-        allUserInfo[position] = newFollower
-    }
-
-    fun removeUserFromFollowing(position: Int) {
-        allUserInfo[position].following = allUserInfo[position].following.filter { following -> following != getUserInfo()._id } as ArrayList<String>
-    }
-
-    fun isAlreadyFollower(position: Int): Boolean {
-        return allUserInfo[position].followers.contains(getUserInfo()._id)
-    }
-
-    fun isCurrentUser(position: Int): Boolean {
-        return allUserInfo[position]._id.contains(getUserInfo()._id)
-    }
-
-    fun isDescriptionNullOrBlank(position: Int): Boolean {
-        return allUserInfo[position].description.isNullOrBlank()
+    fun removeUserFromFollowing(userId: String) {
+        val user = allUserInfo.find {user -> user._id == userId}
+        user?.following = user?.following!!.filter { following -> following != getUserInfo()._id } as ArrayList<String>
     }
 
     fun updateUserAfterUpdate(currentdata: UserModel.UpdateUser){
@@ -95,41 +81,39 @@ object UserService {
         }
 
     }
-    fun setCurrentNbFollowers(currentValue: Int){
-        actualNbFollowers = currentValue
-    }
 
     fun getCurrentNbFollower(): Int{
         return actualNbFollowers
     }
 
-    fun followUser(position: Int, context: Context) {
-        val user = getUser(position)
-        UserRepository().followUser(user._id).observe(context as LifecycleOwner, {
+    fun setCurrentNbFollowers(currentValue: Int){
+        actualNbFollowers = currentValue
+    }
+
+    fun followUser(userId: String, context: Context) {
+        UserRepository().followUser(userId).observe(context as LifecycleOwner, {
             if (it.isError as Boolean) {
                 CommonFun.printToast(context, it.message!!)
                 return@observe
             }
 
             val followedUser = it.data as UserModel.AllInfo
-
-            updateUserByPosition(position, followedUser)
-            UserAdapterService.getUserMenuAdapter().notifyItemChanged(position)
+            updateUserFollowers(userId, followedUser)
+//            UserAdapterService.getUserMenuAdapter().notifyItemChanged(position)
         })
 
         actualNbFollowers++
     }
 
-    fun unfollowUser(position: Int, context: Context) {
-        val user = getUser(position)
-        UserRepository().unfollowUser(user._id).observe(context as LifecycleOwner, {
+    fun unfollowUser(userId: String, context: Context) {
+        UserRepository().unfollowUser(userId).observe(context as LifecycleOwner, {
             if (it.isError as Boolean) {
                 CommonFun.printToast(context, it.message!!)
                 return@observe
             }
 
-            removeUserFromFollowing(position)
-            UserAdapterService.getUserMenuAdapter().notifyItemChanged(position)
+            removeUserFromFollowing(userId)
+//            UserAdapterService.getUserMenuAdapter().notifyItemChanged(position)
         })
 
         actualNbFollowers--
