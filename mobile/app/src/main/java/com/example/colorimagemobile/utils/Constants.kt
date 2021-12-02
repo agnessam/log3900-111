@@ -39,8 +39,8 @@ class Constants {
 
     class URL {
         companion object {
-            const val SERVER = "http://10.0.2.2:3000"
-//        const val SERVER = "http://colorimage.us-east-1.elasticbeanstalk.com"
+//            const val SERVER = "http://10.0.2.2:3000"
+        const val SERVER = "http://colorimage.us-east-1.elasticbeanstalk.com"
         }
     }
 
