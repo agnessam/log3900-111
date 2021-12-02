@@ -44,14 +44,23 @@
                 android:textColor="#6d6d6d"
                 android:textSize="12sp" />
 
+            <TextView
+                android:id="@+id/card_drawing_menu_collaborators"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/card_drawing_menu_date"
+                android:layout_alignParentLeft="true"
+                android:textColor="#6d6d6d"
+                android:textSize="12sp" />
+
             <ImageButton
                 android:id="@+id/card_drawing_menu_options"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
-                android:src="@drawable/ic_more"
-                android:background="?android:attr/selectableItemBackground" />
+                android:background="?android:attr/selectableItemBackground"
+                android:src="@drawable/ic_more" />
 
         </RelativeLayout>
 
@@ -96,11 +105,11 @@
                 <TextView
                     android:id="@+id/card_drawing_menu_author"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_alignParentRight="true"
-                    android:textColor="@color/primary"
                     android:layout_centerVertical="true"
-                    android:layout_marginLeft="10dp" />
+                    android:layout_marginLeft="10dp"
+                    android:textColor="@color/primary" />
 
                 <ImageView
                     android:id="@+id/card_drawing_menu_privacy_icon"

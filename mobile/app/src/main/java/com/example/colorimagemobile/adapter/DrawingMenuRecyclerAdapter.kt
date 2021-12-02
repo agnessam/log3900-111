@@ -33,6 +33,8 @@ import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
 import com.example.colorimagemobile.utils.Constants
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import java.util.*
+import kotlin.collections.ArrayList
 
 class DrawingMenuRecyclerAdapter(
     val activity: FragmentActivity,
@@ -64,7 +66,10 @@ class DrawingMenuRecyclerAdapter(
         if (drawingMenus[position].drawing.privacyLevel == PrivacyLevel.PROTECTED.toString())
             holder.drawingMenuViewHolder.lockIconView.visibility = View.VISIBLE
 
-        holder.drawingMenuViewHolder.privacyLevel.text = drawingMenus[position].drawing.privacyLevel
+        holder.drawingMenuViewHolder.privacyLevel.text = drawingMenus[position].drawing.privacyLevel.replaceFirstChar {
+            if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString()
+        }
+        holder.drawingMenuViewHolder.collaborators.text = "${drawingMenus[position].drawing.collaborators!!.size} collaborators"
 
         if (!DrawingService.isOwner(drawingMenus[position].drawing)) {
             holder.drawingMenuViewHolder.popupMenu.visibility = View.GONE
@@ -101,8 +106,9 @@ class DrawingMenuRecyclerAdapter(
             val authorImageViewParent = itemView.findViewById<CardView>(R.id.card_drawing_menu_author_image_main)
             val privacyLevel = itemView.findViewById<TextView>(R.id.card_drawing_menu_date_privacy)
             val popupMenu = itemView.findViewById<ImageButton>(R.id.card_drawing_menu_options)
+            val collaborators = itemView.findViewById<TextView>(R.id.card_drawing_menu_collaborators)
 
-            drawingMenuViewHolder = DrawingMenuViewHolder(name, authorName, drawingDate, imageView, lockIconView, authorImageView, privacyLevel, authorImageViewParent, popupMenu)
+            drawingMenuViewHolder = DrawingMenuViewHolder(name, authorName, drawingDate, imageView, lockIconView, authorImageView, privacyLevel, authorImageViewParent, popupMenu, collaborators)
 
             // click listener for clicking on specific drawing
             itemView.setOnClickListener {
