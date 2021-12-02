@@ -1,5 +1,6 @@
 package com.example.colorimagemobile.adapter
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.MenuItem
@@ -51,6 +52,7 @@ class DrawingMenuRecyclerAdapter(
         return ViewHolder(view)
     }
 
+    @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: DrawingMenuRecyclerAdapter.ViewHolder, position: Int) {
         holder.drawingMenuViewHolder.name.text = drawingMenus[position].drawing.name
         holder.drawingMenuViewHolder.authorName.text = DrawingOwnerService.getUsername(drawingMenus[position].drawing.owner)
@@ -69,7 +71,9 @@ class DrawingMenuRecyclerAdapter(
         holder.drawingMenuViewHolder.privacyLevel.text = drawingMenus[position].drawing.privacyLevel.replaceFirstChar {
             if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString()
         }
-        holder.drawingMenuViewHolder.collaborators.text = "${drawingMenus[position].drawing.collaborators!!.size} collaborators"
+
+        val nbCollaborators = drawingMenus[position].drawing.collaborators!!.size
+        holder.drawingMenuViewHolder.collaborators.text = "${nbCollaborators} collaborator${if (nbCollaborators > 1) "s" else ""}"
 
         if (!DrawingService.isOwner(drawingMenus[position].drawing)) {
             holder.drawingMenuViewHolder.popupMenu.visibility = View.GONE
