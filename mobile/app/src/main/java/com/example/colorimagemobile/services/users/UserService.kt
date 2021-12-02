@@ -17,9 +17,14 @@ object UserService {
     private var updateProfileData : UserModel.UpdateUser
     private lateinit var allUserInfo : ArrayList<UserModel.AllInfo>
     private var actualNbFollowers : Int = 0
+    private var userStatistics : UserModel.Statistics
+
 
     init {
         updateProfileData =UserModel.UpdateUser(null,null,null)
+        userStatistics = UserModel.Statistics(
+            Constants.EMPTY_STRING,
+            0,0,0,0.00,0.00)
     }
 
     fun setAllUserInfo(allInfo:ArrayList<UserModel.AllInfo>){
@@ -119,6 +124,11 @@ object UserService {
         actualNbFollowers--
     }
 
-
+    fun setStat(stat: UserModel.Statistics){
+        userStatistics = stat
+    }
+    fun getStat(): UserModel.Statistics{
+        return userStatistics
+    }
 
 }

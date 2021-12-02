@@ -39,6 +39,10 @@ interface API {
     fun getUserStatus(@Header("Authorization") token: String): Call<HashMap<String, UserModel.STATUS>>
 
     @Headers("Content-Type: application/json")
+    @GET(Constants.ENDPOINTS.USER_PATH+"{id}/statistics")
+    fun getUserStatistics(@Header("Authorization") token: String, @Path ("id") id : String): Call<UserModel.Statistics>
+
+    @Headers("Content-Type: application/json")
     @GET(Constants.ENDPOINTS.USER_PATH+"{id}")
     fun getUserById(@Header("Authorization") token: String, @Path ("id") id : String): Call<UserModel.AllInfoWithData>
 
