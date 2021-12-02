@@ -65,18 +65,18 @@ class UserRepository {
     }
 
     // get user by id
-    fun getUserById(token: String,id:String): MutableLiveData<DataWrapper<UserModel.AllInfo>> {
-        val userData: MutableLiveData<DataWrapper<UserModel.AllInfo>> = MutableLiveData()
+    fun getUserById(token: String,id:String): MutableLiveData<DataWrapper<UserModel.AllInfoWithData>> {
+        val userData: MutableLiveData<DataWrapper<UserModel.AllInfoWithData>> = MutableLiveData()
 
-        httpClient.getUserById(token = "Bearer $token",id).enqueue(object : Callback<UserModel.AllInfo> {
-            override fun onResponse(call: Call<UserModel.AllInfo>, response: Response<UserModel.AllInfo>) {
+        httpClient.getUserById(token = "Bearer $token",id).enqueue(object : Callback<UserModel.AllInfoWithData> {
+            override fun onResponse(call: Call<UserModel.AllInfoWithData>, response: Response<UserModel.AllInfoWithData>) {
                 if (!response.isSuccessful) {
                     userData.value = DataWrapper(null, "An error occurred!", true)
                     return
                 }
                 userData.value = DataWrapper(response.body(), null, false)
             }
-            override fun onFailure(call: Call<UserModel.AllInfo>, t: Throwable) {
+            override fun onFailure(call: Call<UserModel.AllInfoWithData>, t: Throwable) {
                 userData.value = DataWrapper(null, "Failed to get User!", true)
             }
         })
@@ -231,5 +231,22 @@ class UserRepository {
         return unfollowUserLiveData
     }
 
+    fun getUserStatus(): MutableLiveData<DataWrapper<HashMap<String, UserModel.STATUS>>> {
+        val status: MutableLiveData<DataWrapper<HashMap<String, UserModel.STATUS>>> = MutableLiveData()
 
+        httpClient.getUserStatus(token = "Bearer ${UserService.getToken()}").enqueue(object : Callback<HashMap<String, UserModel.STATUS>> {
+            override fun onResponse(call: Call<HashMap<String, UserModel.STATUS>>, response: Response<HashMap<String, UserModel.STATUS>>) {
+                if (!response.isSuccessful) {
+                    status.value = DataWrapper(null, "An error occurred!", true)
+                    return
+                }
+                status.value = DataWrapper(response.body(), null, false)
+            }
+            override fun onFailure(call: Call<HashMap<String, UserModel.STATUS>>, t: Throwable) {
+                status.value = DataWrapper(null, "Failed to get User!", true)
+            }
+        })
+
+        return status
+    }
 }
