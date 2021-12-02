@@ -8,7 +8,7 @@ import com.example.colorimagemobile.models.RectangleData
 import com.example.colorimagemobile.models.SvgStyle
 import com.example.colorimagemobile.services.drawing.Point
 
-class CreateRectangleCommand(rectangles: ArrayList<Rectangle>?): ICreateDrawingCommand {
+class CreateRectangleCommand(rectangles: HashMap<String, Rectangle>?): ICreateDrawingCommand {
 
     private val rectangles = rectangles
 
@@ -30,7 +30,7 @@ class CreateRectangleCommand(rectangles: ArrayList<Rectangle>?): ICreateDrawingC
     override fun execute() {
         if (rectangles?.size == 0) return
 
-        rectangles?.forEach { rectangle ->
+        rectangles?.forEach { (id,rectangle) ->
             if (rectangle.id.isNullOrEmpty()) return@forEach
 
             val style = StringParser.getStyles(rectangle.style)

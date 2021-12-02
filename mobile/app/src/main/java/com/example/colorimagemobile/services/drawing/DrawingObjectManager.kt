@@ -12,7 +12,9 @@ import com.example.colorimagemobile.classes.xml_json.SVGParser
 import com.example.colorimagemobile.interfaces.ICommand
 import com.example.colorimagemobile.models.CustomSVG
 import com.example.colorimagemobile.services.drawing.toolsAttribute.ColorService
+import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
 import com.github.underscore.lodash.U
+import kotlin.system.measureTimeMillis
 
 object DrawingObjectManager {
     private var layerDrawable: LayerDrawable = LayerDrawable(arrayOf<Drawable>())
@@ -88,16 +90,24 @@ object DrawingObjectManager {
         val backgroundColor = svgParser.getBackgroundColor(svgObject.style)
         CanvasService.updateCanvasColor(ColorService.rgbaToInt(backgroundColor))
 
-        // 3. Create layerObjects
-        val createPolylineCommand = CreatePolylineCommand(svgObject.polyline)
-        createPolylineCommand.execute()
+        val polyLineTime = measureTimeMillis{
+            // 3. Create layerObjects
+            val createPolylineCommand = CreatePolylineCommand(svgObject.polyline)
+            createPolylineCommand.execute()
+        }
+        printMsg("PolyLineTime: $polyLineTime")
 
-        val createRectangleCommand = CreateRectangleCommand(svgObject.rect)
-        createRectangleCommand.execute()
-
-        val createEllipseCommand = CreateEllipseCommand(svgObject.ellipse)
-        createEllipseCommand.execute()
-
+        val rectTime = measureTimeMillis {
+            val createRectangleCommand = CreateRectangleCommand(svgObject.rect)
+            createRectangleCommand.execute()
+        }
+        printMsg("rectTime: $rectTime")
+        val ellipseTime = measureTimeMillis {
+            val createEllipseCommand = CreateEllipseCommand(svgObject.ellipse)
+            createEllipseCommand.execute()
+        }
+        printMsg("ellipseTime: $ellipseTime")
+        printMsg("-----------------------")
         // 4. store our "json" object containing every shapes
         DrawingJsonService.setSVGObject(svgObject)
     }
@@ -115,7 +125,7 @@ object DrawingObjectManager {
         // create svg-xml objects based on shapes and attributes
         if (!svgObject.polyline.isNullOrEmpty()) {
             val polylineArrayBuilder = U.arrayBuilder()
-            svgObject.polyline?.forEach { pencil ->
+            svgObject.polyline?.forEach { (id, pencil) ->
                 if (pencil.id == null || pencil.id == "") return@forEach
                 polylineArrayBuilder.add(U.objectBuilder()
                     .add("-id", pencil.id)
@@ -130,7 +140,7 @@ object DrawingObjectManager {
 
         if (!svgObject.rect.isNullOrEmpty()) {
             val rectArrayBuilder = U.arrayBuilder()
-            svgObject.rect?.forEach { rect ->
+            svgObject.rect?.forEach { (id, rect) ->
                 if (rect.id == null || rect.id == "") return@forEach
                 rectArrayBuilder.add(U.objectBuilder()
                     .add("-id", rect.id)
@@ -147,7 +157,7 @@ object DrawingObjectManager {
 
         if (!svgObject.ellipse.isNullOrEmpty()) {
             val ellipseArrayBuilder = U.arrayBuilder()
-            svgObject.ellipse?.forEach { ellipse ->
+            svgObject.ellipse?.forEach { (id, ellipse) ->
                 if (ellipse.id == null || ellipse.id == "") return@forEach
                 ellipseArrayBuilder.add(U.objectBuilder()
                     .add("-id", ellipse.id)

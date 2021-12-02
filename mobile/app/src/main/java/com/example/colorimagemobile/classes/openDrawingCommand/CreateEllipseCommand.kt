@@ -8,7 +8,7 @@ import com.example.colorimagemobile.models.EllipseData
 import com.example.colorimagemobile.models.SvgStyle
 import com.example.colorimagemobile.services.drawing.Point
 
-class CreateEllipseCommand(ellipses: ArrayList<Ellipse>?): ICreateDrawingCommand {
+class CreateEllipseCommand(ellipses: HashMap<String, Ellipse>?): ICreateDrawingCommand {
 
     private val ellipses = ellipses
 
@@ -30,7 +30,7 @@ class CreateEllipseCommand(ellipses: ArrayList<Ellipse>?): ICreateDrawingCommand
     override fun execute() {
         if (ellipses?.size == 0) return
 
-        ellipses?.forEach { ellipse ->
+        ellipses?.forEach { (id, ellipse) ->
             if (ellipse.id.isNullOrEmpty()) return@forEach
 
             val style = StringParser.getStyles(ellipse.style)

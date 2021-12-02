@@ -9,7 +9,7 @@ import com.example.colorimagemobile.models.SvgStyle
 import com.example.colorimagemobile.services.drawing.Point
 import com.example.colorimagemobile.services.drawing.toolsAttribute.ColorService
 
-class CreatePolylineCommand(polyLines: ArrayList<Polyline>?): ICreateDrawingCommand {
+class CreatePolylineCommand(polyLines: HashMap<String, Polyline>?): ICreateDrawingCommand {
 
     private val polyLines = polyLines
 
@@ -30,7 +30,7 @@ class CreatePolylineCommand(polyLines: ArrayList<Polyline>?): ICreateDrawingComm
     override fun execute() {
         if (polyLines?.size == 0) return
 
-        polyLines?.forEach { pencil ->
+        polyLines?.forEach { (id, pencil) ->
 
             // found pencil filled with null attributes, so just a check
             if (pencil.id.isNullOrEmpty()) return@forEach
