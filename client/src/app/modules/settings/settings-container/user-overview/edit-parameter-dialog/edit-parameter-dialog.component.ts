@@ -22,7 +22,7 @@ export class EditParameterDialogComponent implements OnInit {
 
   ngOnInit(): void {
     this.usernameForm = new FormGroup({
-      username: new FormControl("", [
+      username: new FormControl(this.data.username, [
         Validators.required,
         Validators.minLength(3),
       ]),

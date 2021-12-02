@@ -1,6 +1,8 @@
 package com.example.colorimagemobile.models
 
 import com.google.gson.annotations.SerializedName
+import java.util.*
+import kotlin.collections.ArrayList
 
 // class for different uses related to User
 class UserModel {
@@ -20,36 +22,49 @@ class UserModel {
 
     // holds all the data of User
     data class AllInfo(
-        @SerializedName("_id")
         val _id: String,
-
-        @SerializedName("username")
         var username: String,
-
-        @SerializedName("firstName")
         val firstName: String,
-
-        @SerializedName("lastName")
         val lastName: String,
-
-        @SerializedName("password")
         val password: String,
-
-        @SerializedName("email")
         val email: String,
-
-        @SerializedName("description")
         var description: String,
-
-        @SerializedName("teams")
         val teams: ArrayList<String>,
-
-        @SerializedName("drawings")
         val drawings: ArrayList<String>,
-
-        @SerializedName("avatar")
-        var avatar : AvatarModel.AllInfo
+        var avatar : AvatarModel.AllInfo,
+        val posts: ArrayList<String>,
+        var followers: ArrayList<String>,
+        var following: ArrayList<String>,
+        var lastLogin: Date?,
+        var lastLogout: Date?,
+        var collaborationHistory: ArrayList<Any>?,
     )
+
+    // user contains posts and drawings instead of Strings
+    data class AllInfoWithData(
+        val _id: String,
+        var username: String,
+        val firstName: String,
+        val lastName: String,
+        val password: String,
+        val email: String,
+        var description: String,
+        val teams: ArrayList<String>,
+        val drawings: ArrayList<DrawingModel.Drawing>,
+        var avatar : AvatarModel.AllInfo,
+        val posts: ArrayList<PublishedMuseumPostModel>,
+        var followers: ArrayList<String>,
+        var following: ArrayList<String>,
+        var lastLogin: Date?,
+        var lastLogout: Date?,
+        var collaborationHistory: ArrayList<Any>?,
+    )
+
+    enum class STATUS(val status: String) {
+        Online("Online"),
+        Collaborating("Collaborating"),
+        Offline("Offline"),
+    }
 }
 
 

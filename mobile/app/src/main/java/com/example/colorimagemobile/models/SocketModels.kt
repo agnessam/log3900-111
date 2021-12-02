@@ -28,10 +28,10 @@ class RectangleData(
     override var fillOpacity: String,
     override var strokeOpacity: String,
     override var strokeWidth: Int,
-    var x: Int,
-    var y: Int,
-    var width: Int,
-    var height: Int
+    var x: Float,
+    var y: Float,
+    var width: Float,
+    var height: Float
 ): ToolData
 
 class EllipseData(
@@ -41,10 +41,10 @@ class EllipseData(
     override var fillOpacity: String,
     override var strokeOpacity: String,
     override var strokeWidth: Int,
-    var x: Int,
-    var y: Int,
-    var width: Int,
-    var height: Int
+    var x: Float,
+    var y: Float,
+    var width: Float,
+    var height: Float
 ): ToolData
 
 data class SelectionData(val id: String)
@@ -61,8 +61,8 @@ data class InProgressPencil(val id: String, var point: Point)
 data class SyncCreateDrawing(val type: String, val roomName: String, val drawingCommand: ToolData)
 
 data class SyncUpdate(var point: Point)
-data class RectangleUpdate(var x:Int, var y:Int, var width: Int, var height: Int)
-data class EllipseUpdate(var x:Int, var y:Int, var width: Int, var height: Int)
+data class RectangleUpdate(var x:Float, var y:Float, var width: Float, var height: Float)
+data class EllipseUpdate(var x:Float, var y:Float, var width: Float, var height: Float)
 data class SelectionUpdate(var id: String)
 
 data class SyncUpdateDrawing(val type: String, val roomName: String, val drawingCommand: SyncUpdate)

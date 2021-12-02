@@ -1,7 +1,12 @@
 package com.example.colorimagemobile.services.users
 
+import android.content.Context
+import androidx.lifecycle.LifecycleOwner
 import com.example.colorimagemobile.models.AvatarModel
 import com.example.colorimagemobile.models.UserModel
+import com.example.colorimagemobile.repositories.UserRepository
+import com.example.colorimagemobile.utils.CommonFun
+import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
 import com.example.colorimagemobile.utils.Constants
 
 // Singleton User object which is accessible globally
@@ -11,6 +16,7 @@ object UserService {
     private var token : String =Constants.EMPTY_STRING
     private var updateProfileData : UserModel.UpdateUser
     private lateinit var allUserInfo : ArrayList<UserModel.AllInfo>
+    private var actualNbFollowers : Int = 0
 
     init {
         updateProfileData =UserModel.UpdateUser(null,null,null)
@@ -56,8 +62,14 @@ object UserService {
      this.info.avatar = avatar
     }
 
-    fun getUser(position: Int): UserModel.AllInfo {
-        return allUserInfo[position]
+    fun updateUserFollowers(userId: String, newFollower: UserModel.AllInfo) {
+        var user = allUserInfo.find { user -> user._id == userId }
+        user = newFollower
+    }
+
+    fun removeUserFromFollowing(userId: String) {
+        val user = allUserInfo.find {user -> user._id == userId}
+        user?.following = user?.following!!.filter { following -> following != getUserInfo()._id } as ArrayList<String>
     }
 
     fun updateUserAfterUpdate(currentdata: UserModel.UpdateUser){
@@ -69,6 +81,44 @@ object UserService {
         }
 
     }
+
+    fun getCurrentNbFollower(): Int{
+        return actualNbFollowers
+    }
+
+    fun setCurrentNbFollowers(currentValue: Int){
+        actualNbFollowers = currentValue
+    }
+
+    fun followUser(userId: String, context: Context) {
+        UserRepository().followUser(userId).observe(context as LifecycleOwner, {
+            if (it.isError as Boolean) {
+                CommonFun.printToast(context, it.message!!)
+                return@observe
+            }
+
+            val followedUser = it.data as UserModel.AllInfo
+            updateUserFollowers(userId, followedUser)
+//            UserAdapterService.getUserMenuAdapter().notifyItemChanged(position)
+        })
+
+        actualNbFollowers++
+    }
+
+    fun unfollowUser(userId: String, context: Context) {
+        UserRepository().unfollowUser(userId).observe(context as LifecycleOwner, {
+            if (it.isError as Boolean) {
+                CommonFun.printToast(context, it.message!!)
+                return@observe
+            }
+
+            removeUserFromFollowing(userId)
+//            UserAdapterService.getUserMenuAdapter().notifyItemChanged(position)
+        })
+
+        actualNbFollowers--
+    }
+
 
 
 }

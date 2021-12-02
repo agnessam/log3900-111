@@ -88,6 +88,6 @@ object ColorService {
     fun convertOpacityToAndroid(opacity: String): Int {
         if (opacity == "none") return Constants.DRAWING.MAX_OPACITY
 
-        return (opacity.toDouble() * Constants.DRAWING.MAX_OPACITY).toInt()
+        return (opacity.toFloat() * Constants.DRAWING.MAX_OPACITY).toInt()
     }
 }

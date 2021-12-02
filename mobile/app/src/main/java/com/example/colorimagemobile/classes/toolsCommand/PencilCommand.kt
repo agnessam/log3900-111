@@ -33,7 +33,11 @@ class PencilCommand(pencilData: PencilData): ICommand {
     }
 
     fun initializePaint() {
+
         paint.color = ColorService.rgbaToInt(this.pencil.stroke)
+        if(this.pencil.strokeOpacity != "none"){
+            paint.alpha = ColorService.convertOpacityToAndroid(this.pencil.strokeOpacity)
+        }
         paint.style = Paint.Style.STROKE
         paint.strokeJoin = Paint.Join.ROUND
         paint.strokeCap = Paint.Cap.ROUND
@@ -58,8 +62,9 @@ class PencilCommand(pencilData: PencilData): ICommand {
         }
     }
 
-    private fun getPathDrawable(): ShapeDrawable {
-        return DrawingObjectManager.getDrawable(this.layerIndex) as ShapeDrawable
+    private fun getPathDrawable(): ShapeDrawable? {
+        val drawable = DrawingObjectManager.getDrawable(this.layerIndex) ?: return null
+        return drawable as ShapeDrawable
     }
 
     // update canvas
@@ -69,12 +74,14 @@ class PencilCommand(pencilData: PencilData): ICommand {
         )
 
         var shapeDrawable = ShapeDrawable(pathShape)
-        this.getPathDrawable().bounds = this.boundingRectangle
+        if(this.getPathDrawable() == null) return
+
+        this.getPathDrawable()!!.bounds = this.boundingRectangle
         DrawingObjectManager.setDrawable(layerIndex, shapeDrawable)
         PencilService.paths[layerIndex] = path // TODO Try to replace this line for the drawingObjectManager.addCOmmand
         DrawingObjectManager.addCommand(pencil.id, this)
 
-        this.getPathDrawable().paint.set(this.paint)
+        this.getPathDrawable()!!.paint.set(this.paint)
         CanvasUpdateService.invalidate()
     }
 }

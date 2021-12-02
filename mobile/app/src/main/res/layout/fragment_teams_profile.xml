@@ -48,7 +48,7 @@
                     <ImageView
                         android:id="@+id/teamIdImageView"
                         android:layout_width="match_parent"
-                        android:layout_height="80dp"></ImageView>
+                        android:layout_height="80dp" />
 
                 </androidx.cardview.widget.CardView>
 
@@ -58,14 +58,89 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@id/teamIdImageViewCard"
                     android:textAlignment="center"
-                    android:textColor="@color/black" />
+                    android:textColor="@color/primary" />
+
+                <!-- Posts Followers Following header -->
+                <RelativeLayout
+                    android:id="@+id/FollwerFollowingHeaders"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/teamIdNbOfMembers"
+                    android:orientation="horizontal"
+                    android:singleLine="true">
+
+                    <TextView
+                        android:id="@+id/teamIdNbOfPosts"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="40dp"
+                        android:textColor="@color/black"
+                        android:textSize="22sp"
+                        android:textStyle="italic|bold" />
+
+                    <TextView
+                        android:id="@+id/teamIdNbOfFollowers"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:layout_marginStart="20dp"
+                        android:textColor="@color/black"
+                        android:textSize="22sp"
+                        android:textStyle="italic|bold" />
+
+                    <TextView
+                        android:id="@+id/teamIdNbOfFollowing"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginEnd="60dp"
+                        android:textColor="@color/black"
+                        android:textSize="22sp"
+                        android:textStyle="italic|bold" />
+
+
+                </RelativeLayout>
+
+                <!-- Posts Followers Following header -->
+                <RelativeLayout
+                    android:id="@+id/FollwerFollowingvalues"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/FollwerFollowingHeaders"
+                    android:orientation="horizontal"
+                    android:singleLine="true">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="20dp"
+                        android:text="@string/posts"
+                        android:textSize="22sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:text="@string/followers"
+                        android:textSize="22sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginEnd="10dp"
+                        android:text="@string/following"
+                        android:textSize="22sp" />
+
+
+                </RelativeLayout>
 
                 <!--                follow and join teams button-->
                 <RelativeLayout
                     android:id="@+id/teamIdActionContainer"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/teamIdNbOfMembers"
+                    android:layout_below="@id/FollwerFollowingvalues"
                     android:layout_marginTop="30dp">
 
                     <Button
@@ -77,6 +152,19 @@
                         android:text="Follow"
                         android:textColor="@color/white" />
 
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/teamIdUnFollowBtn"
+                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_toLeftOf="@id/teamId_action_empty_space"
+                        android:text="Unfollow"
+                        android:textColor="@color/primary"
+                        android:visibility="gone"
+                        app:cornerRadius="4dp"
+                        app:strokeColor="@color/primary"
+                        app:strokeWidth="1dp" />
+
                     <View
                         android:id="@+id/teamId_action_empty_space"
                         android:layout_width="40dp"
@@ -85,9 +173,9 @@
 
                     <RelativeLayout
                         android:id="@+id/teamIdJoinBtnMain"
-                        android:layout_toRightOf="@id/teamId_action_empty_space"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content">
+                        android:layout_height="wrap_content"
+                        android:layout_toRightOf="@id/teamId_action_empty_space">
 
                         <Button
                             android:id="@+id/teamIdJoinBtn"
@@ -98,13 +186,13 @@
                             android:textColor="@color/white" />
 
                         <com.google.android.material.button.MaterialButton
-                            android:visibility="gone"
                             android:id="@+id/leaveTeamIdBtn"
                             style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Leave"
                             android:textColor="@color/primary"
+                            android:visibility="gone"
                             app:cornerRadius="4dp"
                             app:strokeColor="@color/primary"
                             app:strokeWidth="1dp" />
@@ -113,10 +201,10 @@
 
                     <RelativeLayout
                         android:id="@+id/deleteTeamIdBtnMain"
-                        android:visibility="gone"
-                        android:layout_toRightOf="@id/teamId_action_empty_space"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content">
+                        android:layout_height="wrap_content"
+                        android:layout_toRightOf="@id/teamId_action_empty_space"
+                        android:visibility="gone">
 
                         <Button
                             android:id="@+id/deleteTeamIdBtn"

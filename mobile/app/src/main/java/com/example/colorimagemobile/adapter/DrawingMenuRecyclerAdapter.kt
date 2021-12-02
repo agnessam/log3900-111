@@ -14,7 +14,7 @@ import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.example.colorimagemobile.R
 import com.example.colorimagemobile.bottomsheets.EditDrawingBottomSheet
-import com.example.colorimagemobile.bottomsheets.ProtectedDrawingConfirmationBottomSheet
+import com.example.colorimagemobile.bottomsheets.PasswordConfirmationBottomSheet
 import com.example.colorimagemobile.classes.DateFormatter
 import com.example.colorimagemobile.classes.MyFragmentManager
 import com.example.colorimagemobile.classes.MyPicasso
@@ -22,18 +22,13 @@ import com.example.colorimagemobile.models.DrawingModel
 import com.example.colorimagemobile.models.PrivacyLevel
 import com.example.colorimagemobile.models.recyclerAdapters.DrawingMenuData
 import com.example.colorimagemobile.models.recyclerAdapters.DrawingMenuViewHolder
-import com.example.colorimagemobile.services.drawing.CanvasUpdateService
-import com.example.colorimagemobile.services.drawing.DrawingObjectManager
 import com.example.colorimagemobile.services.drawing.DrawingOwnerService
 import com.example.colorimagemobile.services.drawing.DrawingService
 import com.example.colorimagemobile.services.socket.DrawingSocketService
-import com.example.colorimagemobile.services.users.UserService
-import com.example.colorimagemobile.ui.home.fragments.gallery.GalleryDrawingFragment
+import com.example.colorimagemobile.ui.home.fragments.users.UsersProfileFragment
 import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
 import com.example.colorimagemobile.utils.Constants
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.newSingleThreadContext
 import kotlinx.coroutines.runBlocking
 
 class DrawingMenuRecyclerAdapter(
@@ -86,6 +81,7 @@ class DrawingMenuRecyclerAdapter(
             job.join()
             DrawingSocketService.sendGetUpdateDrawingRequest(drawingMenus, position, destination)
         }
+        DrawingSocketService.setDrawingCommandSocketListeners()
     }
 
     inner class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
@@ -110,8 +106,17 @@ class DrawingMenuRecyclerAdapter(
 
                 if (drawingMenus[position].drawing.privacyLevel == PrivacyLevel.PROTECTED.toString()) {
                     // show password dialog
-                    val passwordConfirmation = ProtectedDrawingConfirmationBottomSheet(activity, drawingMenus[position].drawing.password) { openDrawing(bindingAdapterPosition, itemView.context)}
-                    passwordConfirmation.show(activity.supportFragmentManager, "ProtectedDrawingConfirmationBottomSheet")
+                    val title = "Protected Drawing"
+                    val description = "Enter drawing's password"
+                    val passwordConfirmation = PasswordConfirmationBottomSheet(
+                        activity,
+                        drawingMenus[position].drawing.password,
+                        title,
+                        description,
+                        "Confirm and open",
+                        "Password"
+                    ) { openDrawing(bindingAdapterPosition, itemView.context) }
+                    passwordConfirmation.show(activity.supportFragmentManager, "PasswordConfirmationBottomSheet")
                     return@setOnClickListener
                 }
 
@@ -136,6 +141,11 @@ class DrawingMenuRecyclerAdapter(
                     true
                 })
                 optionMenu.show()
+            }
+
+            authorName.setOnClickListener {
+                val userId = drawingMenus[bindingAdapterPosition].drawing.owner._id
+                MyFragmentManager(activity).openWithData(R.id.main_gallery_fragment, UsersProfileFragment(), Constants.USERS.CURRENT_USER_ID_KEY, userId)
             }
         }
     }

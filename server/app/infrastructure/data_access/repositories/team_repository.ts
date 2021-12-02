@@ -1,12 +1,17 @@
-import { Drawing } from '../../../domain/models/Drawing';
+import { Drawing, DrawingInterface } from '../../../domain/models/Drawing';
 import { Post } from '../../../domain/models/Post';
-import { injectable } from 'inversify';
+import { inject, injectable } from 'inversify';
 import { Team, TeamInterface } from '../../../domain/models/teams';
 import { User, UserInterface } from '../../../domain/models/user';
 import { GenericRepository } from './generic_repository';
+import { TYPES } from '../../../domain/constants/types';
+import { CollaborationTrackerService } from '../../../domain/services/collaboration-tracker.service';
 
 @injectable()
 export class TeamRepository extends GenericRepository<TeamInterface> {
+  @inject(TYPES.CollaborationTrackerService)
+  private collaborationTrackerService: CollaborationTrackerService;
+
   constructor() {
     super(Team);
   }
@@ -74,6 +79,24 @@ export class TeamRepository extends GenericRepository<TeamInterface> {
           if (err || !team) {
             reject(err);
           }
+
+          const drawingToCollaborators: {} =
+            this.collaborationTrackerService.getDrawingCollaborators();
+
+          (team!.drawings as DrawingInterface[]).map((drawing) => {
+            if (drawingToCollaborators[drawing._id] != null) {
+              drawing.set(
+                'collaborators',
+                drawingToCollaborators[drawing._id],
+                { strict: false },
+              );
+            } else {
+              drawing.set('collaborators', [], { strict: false });
+            }
+
+            return drawing;
+          });
+
           resolve(team);
         });
     });
@@ -87,6 +110,17 @@ export class TeamRepository extends GenericRepository<TeamInterface> {
           if (err || !deletedTeam) {
             reject(err);
           }
+
+          User.findByIdAndUpdate(
+            { _id: deletedTeam.owner },
+            { $pull: { teams: deletedTeam._id } },
+            (err: Error) => {
+              if (err) {
+                reject(err);
+              }
+            },
+          );
+
           Drawing.deleteMany({ _id: { $in: deletedTeam.drawings } }, (err) => {
             if (err) {
               reject(err);

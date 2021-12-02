@@ -16,6 +16,5 @@ object SocketManagerService {
         if (DrawingService.getCurrentDrawingID() == null) return
 
         DrawingSocketService.leaveRoom(Constants.SocketRoomInformation(UserService.getUserInfo()._id, DrawingService.getCurrentDrawingID()!!))
-//        DrawingSocketService.disconnect()
     }
 }

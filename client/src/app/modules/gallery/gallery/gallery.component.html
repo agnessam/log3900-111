@@ -27,7 +27,10 @@
       fxFlex.md="50%"
       *ngFor="let drawing of drawings"
     >
-      <app-drawing-card [drawing]="drawing"></app-drawing-card>
+      <app-drawing-card
+        [drawing]="drawing"
+        (deletedDrawingEvent)="deleteDrawingFromView($event)"
+      ></app-drawing-card>
     </div>
   </div>
 </div>

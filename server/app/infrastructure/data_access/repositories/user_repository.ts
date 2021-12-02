@@ -1,12 +1,15 @@
 import { CollaborationHistory } from '../../../domain/models/CollaborationHistory';
 import bcrypt from 'bcrypt';
 import { Request, Response } from 'express';
-import { injectable } from 'inversify';
+import { inject, injectable } from 'inversify';
 import { request, response } from 'inversify-express-utils';
 import mongoose from 'mongoose';
 import { Team } from '../../../domain/models/teams';
 import { User, UserInterface } from '../../../domain/models/user';
 import { GenericRepository } from './generic_repository';
+import { CollaborationTrackerService } from '../../../domain/services/collaboration-tracker.service';
+import { TYPES } from '../../../domain/constants/types';
+import { DrawingInterface } from '../../../domain/models/Drawing';
 
 declare global {
   namespace Express {
@@ -19,6 +22,9 @@ declare global {
 
 @injectable()
 export class UserRepository extends GenericRepository<UserInterface> {
+  @inject(TYPES.CollaborationTrackerService)
+  private collaborationTrackerService: CollaborationTrackerService;
+
   constructor() {
     super(User);
   }
@@ -47,10 +53,26 @@ export class UserRepository extends GenericRepository<UserInterface> {
           populate: { path: 'drawing' },
         })
         .populate({ path: 'drawings', populate: { path: 'owner' } })
+        .populate({ path: 'posts', populate: { path: 'owner' } })
         .exec((err, user) => {
           if (err || !user) {
             reject(err);
           }
+          const drawingToCollaborators: {} =
+            this.collaborationTrackerService.getDrawingCollaborators();
+
+          (user!.drawings as DrawingInterface[]).map((drawing) => {
+            if (drawingToCollaborators[drawing._id] != null) {
+              drawing.set(
+                'collaborators',
+                drawingToCollaborators[drawing._id],
+                { strict: false },
+              );
+            } else {
+              drawing.set('collaborators', [], { strict: false });
+            }
+            return drawing;
+          });
           resolve(user);
         });
     });
@@ -74,13 +96,32 @@ export class UserRepository extends GenericRepository<UserInterface> {
                 $size: '$collaborations',
               },
               averageCollaborationTime: {
-                $avg: {
-                  $map: {
-                    input: '$collaborations',
-                    as: 'e1',
-                    in: '$$e1.timeSpent',
+                $round: [
+                  {
+                    $avg: {
+                      $map: {
+                        input: '$collaborations',
+                        as: 'e1',
+                        in: '$$e1.timeSpent',
+                      },
+                    },
                   },
-                },
+                  2,
+                ],
+              },
+              totalCollaborationTime: {
+                $round: [
+                  {
+                    $sum: {
+                      $map: {
+                        input: '$collaborations',
+                        as: 'e1',
+                        in: '$$e1.timeSpent',
+                      },
+                    },
+                  },
+                  2,
+                ],
               },
             },
           },
@@ -105,13 +146,12 @@ export class UserRepository extends GenericRepository<UserInterface> {
       const validate = await currentUser!.isValidPassword(currentPassword);
       if (!validate) {
         resolve({ err: 'Incorrect password' });
+      } else {
+        const hashedPassword = await bcrypt.hash(newPassword, 10);
+        currentUser!.password = hashedPassword;
+        currentUser!.save();
+        resolve(currentUser);
       }
-
-      const hashedPassword = await bcrypt.hash(newPassword, 10);
-
-      currentUser!.password = hashedPassword;
-      currentUser!.save();
-      resolve(currentUser);
     });
   }
 

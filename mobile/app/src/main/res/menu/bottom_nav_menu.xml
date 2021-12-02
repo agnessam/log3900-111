@@ -17,10 +17,6 @@
         android:title="@string/title_teams" />
 
     <item
-        android:id="@+id/usersFragment"
-        android:icon="@drawable/ic_person"
-        android:title="@string/title_user" />
-    <item
         android:id="@+id/museumFragment"
         android:icon="@drawable/ic_museum"
         android:title="@string/title_museum" />
