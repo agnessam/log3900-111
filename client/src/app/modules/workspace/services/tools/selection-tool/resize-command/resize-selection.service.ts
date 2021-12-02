@@ -10,7 +10,6 @@ import { DrawingSocketService } from "../../../synchronisation/sockets/drawing-s
 
 const DOUBLING_SCALE_MODIFIER = 2;
 const SCALE_POSITIONNER_MODIFIER = 1;
-const SCALE_INVERSER_MODIFIER = -1;
 
 @Injectable({
   providedIn: "root",
@@ -181,32 +180,6 @@ export class ResizeSelectionService {
     this.xInverser = -1;
     this.yInverser = -1;
 
-    if (this.isShift) {
-      if (this.oldRectBox.bottom < offset.y) {
-        newYScale =
-          SCALE_INVERSER_MODIFIER * newYScale +
-          (this.isAlt ? SCALE_POSITIONNER_MODIFIER : 0);
-      }
-      if (this.oldRectBox.right - this.xFactor < offset.x) {
-        newXScale =
-          SCALE_INVERSER_MODIFIER * newXScale +
-          (this.isAlt ? SCALE_POSITIONNER_MODIFIER : 0);
-      }
-      Math.abs(newXScale) <= Math.abs(newYScale)
-        ? (newYScale = newXScale)
-        : (newXScale = newYScale);
-
-      if (this.oldRectBox.bottom < offset.y) {
-        newYScale =
-          SCALE_INVERSER_MODIFIER * newYScale +
-          (this.isAlt ? SCALE_POSITIONNER_MODIFIER : 0);
-      }
-      if (this.oldRectBox.right - this.xFactor < offset.x) {
-        newXScale =
-          SCALE_INVERSER_MODIFIER * newXScale +
-          (this.isAlt ? SCALE_POSITIONNER_MODIFIER : 0);
-      }
-    }
     return {
       xScale: newXScale,
       yScale: newYScale,
@@ -241,32 +214,6 @@ export class ResizeSelectionService {
     this.xInverser = 1;
     this.yInverser = -1;
 
-    if (this.isShift) {
-      if (this.oldRectBox.bottom < offset.y) {
-        newYScale =
-          SCALE_INVERSER_MODIFIER * newYScale +
-          (this.isAlt ? SCALE_POSITIONNER_MODIFIER : 0);
-      }
-      if (this.oldRectBox.left - this.xFactor > offset.x) {
-        newXScale =
-          SCALE_INVERSER_MODIFIER * newXScale +
-          (this.isAlt ? SCALE_POSITIONNER_MODIFIER : 0);
-      }
-      Math.abs(newXScale) <= Math.abs(newYScale)
-        ? (newYScale = newXScale)
-        : (newXScale = newYScale);
-
-      if (this.oldRectBox.bottom < offset.y) {
-        newYScale =
-          SCALE_INVERSER_MODIFIER * newYScale +
-          (this.isAlt ? SCALE_POSITIONNER_MODIFIER : 0);
-      }
-      if (this.oldRectBox.left - this.xFactor > offset.x) {
-        newXScale =
-          SCALE_INVERSER_MODIFIER * newXScale +
-          (this.isAlt ? SCALE_POSITIONNER_MODIFIER : 0);
-      }
-    }
     return {
       xScale: newXScale,
       yScale: newYScale,
@@ -300,32 +247,6 @@ export class ResizeSelectionService {
     this.xInverser = 1;
     this.yInverser = 1;
 
-    if (this.isShift) {
-      if (this.oldRectBox.top > offset.y) {
-        newYScale =
-          SCALE_INVERSER_MODIFIER * newYScale +
-          (this.isAlt ? SCALE_POSITIONNER_MODIFIER : 0);
-      }
-      if (this.oldRectBox.left - this.xFactor > offset.x) {
-        newXScale =
-          SCALE_INVERSER_MODIFIER * newXScale +
-          (this.isAlt ? SCALE_POSITIONNER_MODIFIER : 0);
-      }
-      Math.abs(newXScale) <= Math.abs(newYScale)
-        ? (newYScale = newXScale)
-        : (newXScale = newYScale);
-
-      if (this.oldRectBox.top > offset.y) {
-        newYScale =
-          SCALE_INVERSER_MODIFIER * newYScale +
-          (this.isAlt ? SCALE_POSITIONNER_MODIFIER : 0);
-      }
-      if (this.oldRectBox.left - this.xFactor > offset.x) {
-        newXScale =
-          SCALE_INVERSER_MODIFIER * newXScale +
-          (this.isAlt ? SCALE_POSITIONNER_MODIFIER : 0);
-      }
-    }
     return {
       xScale: newXScale,
       yScale: newYScale,
@@ -358,32 +279,6 @@ export class ResizeSelectionService {
     this.xInverser = -1;
     this.yInverser = 1;
 
-    if (this.isShift) {
-      if (this.oldRectBox.top > offset.y) {
-        newYScale =
-          SCALE_INVERSER_MODIFIER * newYScale +
-          (this.isAlt ? SCALE_POSITIONNER_MODIFIER : 0);
-      }
-      if (this.oldRectBox.right - this.xFactor < offset.x) {
-        newXScale =
-          SCALE_INVERSER_MODIFIER * newXScale +
-          (this.isAlt ? SCALE_POSITIONNER_MODIFIER : 0);
-      }
-      Math.abs(newXScale) <= Math.abs(newYScale)
-        ? (newYScale = newXScale)
-        : (newXScale = newYScale);
-
-      if (this.oldRectBox.top > offset.y) {
-        newYScale =
-          SCALE_INVERSER_MODIFIER * newYScale +
-          (this.isAlt ? SCALE_POSITIONNER_MODIFIER : 0);
-      }
-      if (this.oldRectBox.right - this.xFactor < offset.x) {
-        newXScale =
-          SCALE_INVERSER_MODIFIER * newXScale +
-          (this.isAlt ? SCALE_POSITIONNER_MODIFIER : 0);
-      }
-    }
     return {
       xScale: newXScale,
       yScale: newYScale,
