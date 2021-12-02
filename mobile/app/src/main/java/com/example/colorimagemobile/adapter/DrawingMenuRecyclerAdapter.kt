@@ -110,15 +110,16 @@ class DrawingMenuRecyclerAdapter(
 
                 if (drawingMenus[position].drawing.privacyLevel == PrivacyLevel.PROTECTED.toString()) {
                     // show password dialog
-                    val title = "Protected Drawing"
-                    val description = "Enter drawing's password"
+                    val title = "You're about to join ${drawingMenus[position].drawing.name}'s collaborative session."
+                    val description = "The owner has set the privacy level of this drawing to protected. \n" +
+                            "Enter the correct password to gain access to this session."
                     val passwordConfirmation = PasswordConfirmationBottomSheet(
                         activity,
                         drawingMenus[position].drawing.password,
                         title,
                         description,
-                        "Confirm and open",
-                        "Password"
+                        "Join",
+                        "Enter the session's password"
                     ) { openDrawing(bindingAdapterPosition, itemView.context) }
                     passwordConfirmation.show(activity.supportFragmentManager, "PasswordConfirmationBottomSheet")
                     return@setOnClickListener
