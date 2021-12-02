@@ -116,4 +116,8 @@ export class ChatSocketService extends SocketServiceInterface {
   protected listenDisconnect(socket: Socket) {
     super.listenDisconnect(socket);
   }
+
+  emitLeave(roomName: string) {
+    this.namespace.to(roomName).emit(LEAVE_ROOM_EVENT_NAME, roomName);
+  }
 }

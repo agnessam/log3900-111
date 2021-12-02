@@ -12,10 +12,12 @@ import {
   request,
 } from 'inversify-express-utils';
 import passport from 'passport';
+import { ChatSocketService } from '@app/domain/services/sockets/chat-socket.service';
 
 @controller('/channels', passport.authenticate('jwt', { session: false }))
 export class TextChannelController {
-  @inject(TYPES.TextChannelRepository) public textChannelRepository: TextChannelRepository;
+  @inject(TYPES.TextChannelRepository) private textChannelRepository: TextChannelRepository;
+  @inject(TYPES.ChatSocketService) private chatSocketService: ChatSocketService;
 
   @httpGet('/')
   public async get() {
@@ -34,7 +36,16 @@ export class TextChannelController {
 
   @httpDelete('/:channelId')
   public async deleteChannel(@request() req: Request) {
-    return await this.textChannelRepository.deleteById(req.params.channelId);
+    // TODO: force leave everyone in the room
+    try {
+      const deletedChannel = await this.textChannelRepository.deleteById(req.params.channelId);
+      this.chatSocketService.emitLeave(deletedChannel.name);
+      this.deleteMessages(req);
+      return deletedChannel;
+    } catch (e: any) {
+      console.log("Couldn't delete channel: ", e)
+      return e;
+    }
   }
 
   @httpDelete('/:channelId/messages')

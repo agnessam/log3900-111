@@ -29,6 +29,9 @@ export class ChannelComponent implements OnInit, OnDestroy {
   allChannels: TextChannel[];
   searchedChannels: TextChannel[];
   connectedChannels: TextChannel[];
+  teamChannels: TextChannel[];
+  // only one collaboration channel at a time
+  collaborationChannel : TextChannel;
   searchQuery: string;
   newChannelDialogRef: MatDialogRef<NewChannelComponent>;
   currentDrawingId: string | undefined;
@@ -46,6 +49,7 @@ export class ChannelComponent implements OnInit, OnDestroy {
     this.allChannels = new Array();
     this.searchedChannels = new Array();
     this.allTeams = new Array();
+    this.teamChannels = new Array();
     this.currentDrawingId = undefined;
   }
 
@@ -73,10 +77,10 @@ export class ChannelComponent implements OnInit, OnDestroy {
       },
     });
 
-    this.textChannelService.newChannel.subscribe((newChannel) => {
-      this.allChannels.push(newChannel);
+    this.textChannelService.newTeamChannel.subscribe((teamChannel) => {
+      this.allChannels.push(teamChannel);
       this.resetSearch();
-      this.openChannel(newChannel);
+      this.openChannel(teamChannel);
     });
 
   }

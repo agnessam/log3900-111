@@ -108,7 +108,7 @@ export class NewDrawingComponent implements OnInit {
           this.textChannelService
             .createChannel(response.name, response.owner as string, undefined, response._id)
             .subscribe((channel) => {
-              this.textChannelService.emitNewChannel(channel);
+              this.textChannelService.emitJoinCollaboration(channel);
             });
         }
       });

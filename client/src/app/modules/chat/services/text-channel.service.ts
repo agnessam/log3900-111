@@ -10,9 +10,10 @@ import { TextChannel } from '../models/text-channel.model';
   providedIn: 'root'
 })
 export class TextChannelService {
-  newChannel: Subject<TextChannel>;
+  newTeamChannel: Subject<TextChannel>;
   joinedCollabChannel: ReplaySubject<TextChannel>;
   leftCollabChannel: Subject<TextChannel>;
+  // isOutEvent = new EventEmitter<boolean>();
 
   private endpointUrl: string = environment.serverURL + "/channels";
   private httpHeaders: HttpHeaders = new HttpHeaders().set(
@@ -21,7 +22,8 @@ export class TextChannelService {
   );
 
   constructor(private httpClient: HttpClient) {
-    this.newChannel = new Subject<TextChannel>();
+    this.newTeamChannel = new Subject<TextChannel>();
+    // this.collaborationChannel = new Subject<TextChannel>();
     this.joinedCollabChannel = new ReplaySubject<TextChannel>();
     this.leftCollabChannel = new Subject<TextChannel>();
    }
@@ -97,8 +99,8 @@ export class TextChannelService {
     });
   }
 
-  emitNewChannel(channel: TextChannel): void {
-    this.newChannel.next(channel);
+  emitNewTeamChannel(channel: TextChannel): void {
+    this.newTeamChannel.next(channel);
   }
 
   emitJoinCollaboration(channel: TextChannel): void {

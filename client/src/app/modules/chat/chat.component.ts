@@ -180,7 +180,7 @@ export class ChatComponent implements OnInit, OnDestroy {
     this.isPopoutOpen = true;
   }
 
-  closeChatPopout(_isOut?: boolean) {
+  closeChatPopout() {
     this.isPopoutOpen = false;
     this.ref.detectChanges();
   }

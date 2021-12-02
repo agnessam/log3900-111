@@ -1,5 +1,5 @@
 <div id="chat-popup">
-<app-popout-window #popout (isOutEvent)="closeChatPopout($event)">
+<app-popout-window #popout (isOutEvent)="closeChatPopout()">
   <div class=chat-top>
     <p>{{currentChannel?.name}}</p>
     <div class="chat-menu" [hidden]="isPopoutOpen">
