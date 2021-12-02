@@ -13,11 +13,13 @@ import androidx.cardview.widget.CardView
 import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.example.colorimagemobile.R
+import com.example.colorimagemobile.bottomsheets.ConfirmationBottomSheet
 import com.example.colorimagemobile.bottomsheets.EditDrawingBottomSheet
 import com.example.colorimagemobile.bottomsheets.PasswordConfirmationBottomSheet
 import com.example.colorimagemobile.classes.DateFormatter
 import com.example.colorimagemobile.classes.MyFragmentManager
 import com.example.colorimagemobile.classes.MyPicasso
+import com.example.colorimagemobile.enumerators.ButtonType
 import com.example.colorimagemobile.models.DrawingModel
 import com.example.colorimagemobile.models.PrivacyLevel
 import com.example.colorimagemobile.models.recyclerAdapters.DrawingMenuData
@@ -25,6 +27,7 @@ import com.example.colorimagemobile.models.recyclerAdapters.DrawingMenuViewHolde
 import com.example.colorimagemobile.services.drawing.DrawingOwnerService
 import com.example.colorimagemobile.services.drawing.DrawingService
 import com.example.colorimagemobile.services.socket.DrawingSocketService
+import com.example.colorimagemobile.services.teams.TeamService
 import com.example.colorimagemobile.ui.home.fragments.users.UsersProfileFragment
 import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
 import com.example.colorimagemobile.utils.Constants
@@ -35,7 +38,8 @@ class DrawingMenuRecyclerAdapter(
     val activity: FragmentActivity,
     drawings: ArrayList<DrawingMenuData>,
     val destination: Int,
-    val updateDrawing: (newDrawingInfo: DrawingModel.UpdateDrawing, pos: Int) -> Unit
+    val updateDrawing: (newDrawingInfo: DrawingModel.UpdateDrawing, pos: Int) -> Unit,
+    val deleteDrawing: (drawingId: String, pos: Int) -> Unit
 ): RecyclerView.Adapter<DrawingMenuRecyclerAdapter.ViewHolder>() {
 
     val drawingMenus: ArrayList<DrawingMenuData> = drawings
@@ -134,7 +138,11 @@ class DrawingMenuRecyclerAdapter(
                             updateDrawingBS.show(activity.supportFragmentManager, "EditDrawingBottomSheet")
                         }
                         R.id.delete_drawing -> {
-                            printMsg("delete $bindingAdapterPosition")
+                            val drawing = drawingMenus[bindingAdapterPosition].drawing
+                            val title = "Are you sure you want to delete ${drawing.name}?"
+                            val description = "All data will be lost and permanently erased from ColorImage. This action is irreversible."
+                            val deleteConfirmation = ConfirmationBottomSheet({ deleteDrawing(drawing._id!!, bindingAdapterPosition) }, title, description, "DELETE", ButtonType.DELETE.toString())
+                            deleteConfirmation.show(activity.supportFragmentManager, "ConfirmationBottomSheet")
                         }
                     }
 
