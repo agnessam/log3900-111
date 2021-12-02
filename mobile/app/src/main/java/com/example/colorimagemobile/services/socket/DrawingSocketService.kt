@@ -55,9 +55,7 @@ object DrawingSocketService: AbsSocket(SOCKETS.COLLABORATIVE_DRAWING_NAMESPACE) 
         this.drawingMenus = null
         this.position = null
         this.destination = null
-        hasBeenInitialized = false
 
-        mSocket.off(IN_PROGRESS_DRAWING_EVENT, onProgressDrawing)
         super.leaveRoom(roomInformation)
     }
 
@@ -76,16 +74,18 @@ object DrawingSocketService: AbsSocket(SOCKETS.COLLABORATIVE_DRAWING_NAMESPACE) 
         if(!hasBeenInitialized){
             this.listenUpdateDrawingRequest()
             this.listenFetchDrawingNotification()
-            hasBeenInitialized = true
         }
     }
 
     fun setDrawingCommandSocketListeners(){
-        this.listenInProgressDrawingCommand()
-        this.listenConfirmDrawingCommand()
-        this.listenStartSelectionCommand()
-        this.listenConfirmSelectionCommand()
-        this.listenTransformSelectionCommand()
+        if(!hasBeenInitialized){
+            this.listenInProgressDrawingCommand()
+            this.listenConfirmDrawingCommand()
+            this.listenStartSelectionCommand()
+            this.listenConfirmSelectionCommand()
+            this.listenTransformSelectionCommand()
+            hasBeenInitialized = true
+        }
     }
 
     fun joinCurrentDrawingRoom() {

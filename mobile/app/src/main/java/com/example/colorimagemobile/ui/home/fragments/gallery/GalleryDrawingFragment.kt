@@ -66,17 +66,6 @@ class GalleryDrawingFragment : Fragment(R.layout.fragment_gallery_drawing) {
         }
     }
 
-    private fun connectToSocket() {
-        if (DrawingService.getCurrentDrawingID() != null) {
-            DrawingSocketService.connect()
-            DrawingSocketService.setFragmentActivity(requireActivity())
-
-            val socketInformation =
-                Constants.SocketRoomInformation(UserService.getUserInfo()._id, roomName!!)
-            DrawingSocketService.joinRoom(socketInformation)
-        }
-    }
-
     private fun leaveDrawingRoom() {
         if (roomName == null) return
         SocketManagerService.leaveDrawingRoom()
