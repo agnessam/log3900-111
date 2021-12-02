@@ -33,6 +33,7 @@ import com.example.colorimagemobile.services.museum.MuseumPostService
 import com.example.colorimagemobile.services.teams.TeamService
 import com.example.colorimagemobile.services.users.UserService
 import com.example.colorimagemobile.utils.CommonFun
+import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
 import com.example.colorimagemobile.utils.CommonFun.Companion.printToast
 import com.example.colorimagemobile.utils.CommonFun.Companion.toggleButton
 import com.example.colorimagemobile.utils.Constants
@@ -52,6 +53,8 @@ class TeamsProfileFragment : Fragment(R.layout.fragment_teams_profile) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
+            printMsg("value of teamId ")
+            printMsg("value of teamId "+it.getString(Constants.TEAMS.CURRENT_TEAM_ID_KEY))
             teamId = it.getString(Constants.TEAMS.CURRENT_TEAM_ID_KEY)
         }
     }
@@ -61,8 +64,8 @@ class TeamsProfileFragment : Fragment(R.layout.fragment_teams_profile) {
         myView = view
         recyclerView = myView.findViewById(R.id.teamProfileDrawingsRecycler)
         recyclerView.layoutManager = GridLayoutManager(requireContext(), Constants.NB_DATA_ROWS)
-        updateUI()
-        setListeners()
+//        updateUI()
+//        setListeners()
 
         getCurrentTeam()
     }

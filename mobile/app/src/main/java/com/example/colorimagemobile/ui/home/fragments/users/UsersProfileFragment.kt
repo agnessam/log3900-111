@@ -30,6 +30,7 @@ import com.example.colorimagemobile.services.museum.MuseumAdapters
 import com.example.colorimagemobile.services.museum.MuseumPostService
 import com.example.colorimagemobile.services.users.UserService
 import com.example.colorimagemobile.utils.CommonFun.Companion.hideKeyboard
+import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
 import com.example.colorimagemobile.utils.CommonFun.Companion.printToast
 import com.example.colorimagemobile.utils.Constants
 import com.google.android.material.tabs.TabLayout
@@ -49,19 +50,13 @@ class UsersProfileFragment : Fragment(R.layout.fragment_users_profile) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            // if (UserService.getUserPosition() == null){
-            //     userPosition = UserService.getUserMePosition()
-            //     UserService.setUserPosition(0)
-
-            // }else if(it.getInt(Constants.USERS.CURRENT_USER_ID_KEY)>=0 ){
-            //     userPosition = it.getInt(Constants.USERS.CURRENT_USER_ID_KEY)
-            //     UserService.setUserPosition(userPosition)
-
-            // }
-            // currentUser = UserService.getUser(userPosition!!)
-            // nbFollowers = UserService.getUser(userPosition!!).followers.size
-            // UserService.setCurrentNbFollowers(nbFollowers)
-            userId = it.getString(Constants.USERS.CURRENT_USER_ID_KEY)
+         printMsg("value of id in users profile "+it.getString(Constants.USERS.CURRENT_USER_ID_KEY))
+            if(it.getString(Constants.USERS.CURRENT_USER_ID_KEY)== null){
+                userId = UserService.getUserInfo()._id
+            }
+            else{
+                userId = it.getString(Constants.USERS.CURRENT_USER_ID_KEY)
+            }
         }
     }
 
