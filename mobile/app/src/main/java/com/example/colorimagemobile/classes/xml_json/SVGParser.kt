@@ -6,14 +6,13 @@ import com.github.underscore.lodash.U
 import org.json.JSONArray
 import org.json.JSONObject
 
-class SVGParser<T>(svgAsString: String, classType: Class<T>) {
-    private var svgJSONString = JSONObject(U.xmlToJson(svgAsString).replace("\"-", "\"")).getString("svg")
-    private var svgJSON = JSONObject(svgJSONString)
+class SVGParser<T>(xmlString: String, classType: Class<T>) {
+    private var svgJSON = JSONObject(U.xmlToJson(xmlString).replace("\"-", "\""))["svg"] as JSONObject
     private var svgClass: T? = null
 
     init {
         convertObjectsToList()
-        svgClass = JSONConvertor.getJSONObject(svgJSONString, classType) as T
+        svgClass = JSONConvertor.getJSONObject(this.svgJSON.toString(), classType)
     }
 
     fun String.insert(index: Int, string: String): String {
@@ -21,10 +20,10 @@ class SVGParser<T>(svgAsString: String, classType: Class<T>) {
     }
 
     private fun convertObjectsToList(){
-        checkObjectList("rect")
-        checkObjectList("ellipse")
-        checkObjectList("polyline")
-        svgJSONString = svgJSON.toString()
+        var shapes = arrayOf("rect", "ellipse", "polyline")
+        for(shape in shapes){
+            checkObjectList(shape)
+        }
     }
 
     // if shape has {} format, change to [{}]
