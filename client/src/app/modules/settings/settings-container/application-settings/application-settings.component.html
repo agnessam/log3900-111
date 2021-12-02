@@ -1,0 +1,36 @@
+<div id="user-privacy">
+  <mat-card-title style="padding-left: 50px; padding-bottom: 40px">
+    Application Settings
+  </mat-card-title>
+
+  <div fxLayout="column" fxLayoutAlign="center" fxLayoutGap="50px">
+    <mat-card id="application-settings-card">
+      <mat-card-content>
+        <mat-card-title>Themes</mat-card-title>
+        <br />
+        <div>
+          <mat-card id="privacy">
+            <mat-card-content>
+              <div fxLayout="column" fxLayoutAlign="center">
+                <div fxFlex="33%">
+                  <div fxLayout="row wrap">
+                    <div fxFlex="50%">
+                      <p>Toggle dark theme</p>
+                    </div>
+                    <div fxFlex="50%" class="toggle">
+                      <br />
+                      <mat-slide-toggle
+                        (change)="toggleDarkTheme($event)"
+                        [(ngModel)]="colorSchemeService.currentActive"
+                      ></mat-slide-toggle>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </mat-card-content>
+          </mat-card>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>
