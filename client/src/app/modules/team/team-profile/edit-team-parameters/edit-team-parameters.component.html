@@ -1,0 +1,56 @@
+<h1 mat-dialog-title>
+  Editing the parameters of <i>{{ this.data.name }}</i>
+</h1>
+<form [formGroup]="teamForm" (ngSubmit)="updateTeamParameters()">
+  <div mat-dialog-content>
+    <div>
+      <mat-form-field
+        appearance="outline"
+        class="formInput"
+        style="width: 100%"
+      >
+        <mat-label>Description</mat-label>
+        <input
+          type="text"
+          matInput
+          placeholder="Drawing Name"
+          formControlName="description"
+          [value]="this.data.description"
+        />
+      </mat-form-field>
+    </div>
+    <div>
+      <mat-checkbox
+        (change)="togglePrivacy()"
+        class="limit-checkbox"
+        formControlName="isPrivate"
+        >Set the team as private?</mat-checkbox
+      >
+      <br />
+      <mat-form-field appearance="outline" style="width: 100%">
+        <mat-label>Password</mat-label>
+        <input
+          type="text"
+          matInput
+          placeholder="Team password"
+          formControlName="password"
+        />
+      </mat-form-field>
+    </div>
+  </div>
+</form>
+<div>
+  <mat-dialog-actions align="end">
+    <button
+      mat-raised-button
+      color="primary"
+      type="submit"
+      (click)="updateTeamParameters()"
+    >
+      Update
+    </button>
+    <button mat-raised-button color="accent" (click)="onCancel()">
+      Cancel
+    </button>
+  </mat-dialog-actions>
+</div>
