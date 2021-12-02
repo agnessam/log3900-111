@@ -39,6 +39,8 @@ export class ChatComponent implements OnInit, OnDestroy {
 
   currentChannel: TextChannel | null;
 
+  userLoaded: Promise<boolean>;
+
   constructor(
     private usersService: UsersService,
     private authService: AuthenticationService,
@@ -50,28 +52,31 @@ export class ChatComponent implements OnInit, OnDestroy {
     this.currentChannel = {
       _id: "default",
       name: "General",
-      ownerId: "default"
-    }
+      ownerId: "default",
+    };
   }
 
   ngOnInit(): void {
-    this.usersService.getUser(localStorage.getItem("userId")!).subscribe((user) => {
-      this.user = user;
-    });
+    this.usersService
+      .getUser(localStorage.getItem("userId")!)
+      .subscribe((user) => {
+        this.user = user;
+        this.userLoaded = Promise.resolve(true);
+      });
     this.authService.currentUserObservable.subscribe((user) => {
-      if(!user) {
+      if (!user) {
         this.closeChatPopout();
-        this.closeChat()
+        this.closeChat();
       }
-    })
+    });
     this.openChatRoom();
     this.receiveMessage();
     this.leaveRoom();
     this.chatSocketService.connect();
     this.textChannelService.leftCollabChannel.subscribe(() => {
-      this.closeChatPopout()
+      this.closeChatPopout();
       this.closeChat();
-    })
+    });
   }
 
   ngOnDestroy(): void {
@@ -109,13 +114,9 @@ export class ChatComponent implements OnInit, OnDestroy {
         roomName: channelName,
       });
       this.chatSocketService.messageHistory.subscribe((history) => {
-          if (!history) return;
-          this.messageHistory.set(
-            history[0].roomName,
-            history,
-          );
-        },
-      );
+        if (!history) return;
+        this.messageHistory.set(history[0].roomName, history);
+      });
     }
   }
 
@@ -154,15 +155,15 @@ export class ChatComponent implements OnInit, OnDestroy {
     if (this.message === null || this.message.match(/^ *$/) !== null) return;
 
     if (this.user?.username === null) return;
-      const message: Message = {
-        message: this.message,
-        timestamp: new Date(),
-        author: this.user?.username!,
-        roomId: this.currentChannel?._id!,
-        roomName: this.currentChannel?.name!,
-      };
-      this.chatSocketService.sendMessage(message);
-      this.message = "";
+    const message: Message = {
+      message: this.message,
+      timestamp: new Date(),
+      author: this.user?.username!,
+      roomId: this.currentChannel?._id!,
+      roomName: this.currentChannel?.name!,
+    };
+    this.chatSocketService.sendMessage(message);
+    this.message = "";
   }
 
   minimizeChat(isMinimized: boolean) {
@@ -194,15 +195,22 @@ export class ChatComponent implements OnInit, OnDestroy {
     if (!this.messageHistory.has(this.currentChannel?.name!)) {
       return [];
     }
-    const messageArray = this.messageHistory.get(this.currentChannel?.name!) as Message[];
+    const messageArray = this.messageHistory.get(
+      this.currentChannel?.name!
+    ) as Message[];
     if (!this.loadedHistory) {
-      const loginTimeIndex =
-        messageArray.findIndex((message) => new Date(message.timestamp).getTime() >= new Date(this.user?.lastLogin!).getTime())!;
+      const loginTimeIndex = messageArray.findIndex(
+        (message) =>
+          new Date(message.timestamp).getTime() >=
+          new Date(this.user?.lastLogin!).getTime()
+      )!;
       if (loginTimeIndex === 0) {
         this.loadedHistory = true;
         this.ref.detectChanges();
       }
-      const messagesFromConnection = messageArray.slice(loginTimeIndex === -1 ? messageArray.length: loginTimeIndex);
+      const messagesFromConnection = messageArray.slice(
+        loginTimeIndex === -1 ? messageArray.length : loginTimeIndex
+      );
       return messagesFromConnection!;
     }
     const messages = this.messageHistory.get(this.currentChannel?.name!);
