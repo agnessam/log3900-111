@@ -5,8 +5,7 @@ import android.graphics.Path
 import com.example.colorimagemobile.interfaces.ICommand
 import com.example.colorimagemobile.models.SyncUpdate
 import com.example.colorimagemobile.models.TranslateData
-import com.example.colorimagemobile.services.drawing.CanvasUpdateService
-import com.example.colorimagemobile.services.drawing.DrawingObjectManager
+import com.example.colorimagemobile.services.drawing.*
 
 class TranslateCommand(translateData: TranslateData): ICommand {
     private var deltaX : Int = 0
@@ -14,12 +13,30 @@ class TranslateCommand(translateData: TranslateData): ICommand {
 
     private var commandToTranslate: ICommand? = null
 
+    private var transformationLog: String = ""
+    private var id: String
+
+    val shapeLabel: ShapeLabel?
+
     override fun update(drawingCommand: Any) {
         setTransformation((drawingCommand as TranslateData).deltaX, drawingCommand.deltaY)
     }
 
     init{
         commandToTranslate = DrawingObjectManager.getCommand(translateData.id)
+        shapeLabel = when(commandToTranslate){
+            is PencilCommand -> ShapeLabel.POLYLINE
+            is RectangleCommand -> ShapeLabel.RECTANGLE
+            is EllipseCommand -> ShapeLabel.ELLIPSE
+            else -> null
+        }
+
+        id = translateData.id
+
+        if(!TransformationManager.previousTransformation.containsKey(id)){
+            TransformationManager.previousTransformation[id] = ""
+        }
+        transformationLog = TransformationManager.previousTransformation[id]!!
     }
 
     private fun PencilCommand.translate() {
@@ -58,5 +75,9 @@ class TranslateCommand(translateData: TranslateData): ICommand {
             else -> {}
         }
         CanvasUpdateService.invalidate()
+
+        if(shapeLabel != null){
+            TransformationManager.saveTranslateTransformation(deltaX, deltaY, id, transformationLog, shapeLabel)
+        }
     }
 }

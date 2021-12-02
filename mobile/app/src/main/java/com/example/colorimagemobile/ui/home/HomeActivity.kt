@@ -146,8 +146,8 @@ class HomeActivity : AppCompatActivity() {
             R.id.galleryFragment -> {
                 if (DrawingService.getCurrentDrawingID() != null) {
                     saveDrawing()
-                    DrawingObjectManager.clearLayers()
                     SocketManagerService.leaveDrawingRoom()
+                    DrawingObjectManager.clearLayers()
                     DrawingService.setCurrentDrawingID(null)
                 }
                 bottomNav.selectedItemId = R.id.galleryFragment

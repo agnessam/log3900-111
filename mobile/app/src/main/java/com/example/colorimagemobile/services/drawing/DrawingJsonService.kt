@@ -119,4 +119,27 @@ object DrawingJsonService {
         val ellipse = currentSVGObject?.ellipse?.find { ellipse -> ellipse.id == id }
         ellipse?.style = StringParser.buildStyle(ellipseData as ToolData)
     }
+
+    fun updateShapeTransform(transformString: String, shapeId: String, shapeLabel: ShapeLabel){
+        when(shapeLabel){
+            ShapeLabel.POLYLINE -> {
+                val polyline = currentSVGObject?.polyline?.find { ellipse -> ellipse.id == shapeId }
+                polyline?.transform = transformString
+            }
+            ShapeLabel.ELLIPSE -> {
+                val ellipse = currentSVGObject?.ellipse?.find { ellipse -> ellipse.id == shapeId }
+                ellipse?.transform = transformString
+            }
+            ShapeLabel.RECTANGLE -> {
+                val rect = currentSVGObject?.rect?.find { ellipse -> ellipse.id == shapeId }
+                rect?.transform = transformString
+            }
+        }
+    }
+}
+
+enum class ShapeLabel {
+    POLYLINE,
+    RECTANGLE,
+    ELLIPSE
 }
