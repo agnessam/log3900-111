@@ -8,7 +8,7 @@ export const getDatabaseClient = async (
   dbCluster: string,
 ) => {
   return new Promise<DbClient>((resolve, reject) => {
-    const connectionString = `mongodb+srv://TsPaint:TsPaint@cluster0.eoftn.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
+    const connectionString = `mongodb+srv://${dbUsername}:${dbPassword}@${dbCluster}.mongodb.net/colorimagedb?retryWrites=true&w=majority`;
     mongoose.connect(connectionString);
     const db = mongoose.connection;
 
