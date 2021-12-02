@@ -121,7 +121,7 @@ class UsersProfileFragment : Fragment(R.layout.fragment_users_profile) {
     }
 
     private fun hideShowDescription(){
-        if (UserService.isDescriptionNullOrBlank(userId!!)){
+        if (currentUser.description.isNullOrBlank()){
             descriptionCardView.visibility = View.GONE
         } else {
             descriptionCardView.visibility = View.VISIBLE

@@ -7,14 +7,20 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.cardview.widget.CardView
+import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.example.colorimagemobile.R
+import com.example.colorimagemobile.classes.MyFragmentManager
 import com.example.colorimagemobile.classes.MyPicasso
 import com.example.colorimagemobile.models.UserModel
+import com.example.colorimagemobile.ui.home.fragments.users.UsersProfileFragment
+import com.example.colorimagemobile.utils.Constants
 
 class MembersListRecyclerAdapter(
+    private val fragmentActivity: FragmentActivity,
     private val members: ArrayList<UserModel.AllInfo>,
-    private val userStatus: HashMap<String, UserModel.STATUS>
+    private val userStatus: HashMap<String, UserModel.STATUS>,
+    private val closeSheet: () -> Unit
 ):
     RecyclerView.Adapter<MembersListRecyclerAdapter.ViewHolder>() {
 
@@ -35,7 +41,7 @@ class MembersListRecyclerAdapter(
         val color = when(userStatus[memberId]) {
             UserModel.STATUS.Online -> "#3f51b5"
             UserModel.STATUS.Offline -> "#CCC"
-            else -> "#000000"
+            else -> "#00ff00"
         }
 
         return Color.parseColor(color)
@@ -48,7 +54,9 @@ class MembersListRecyclerAdapter(
 
         init {
             itemView.setOnClickListener {
+                closeSheet()
                 val userId = members[bindingAdapterPosition]._id
+                MyFragmentManager(fragmentActivity).openWithData(R.id.teamsMenuFrameLayout, UsersProfileFragment(), Constants.USERS.CURRENT_USER_ID_KEY, userId)
             }
         }
     }

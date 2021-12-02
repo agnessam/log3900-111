@@ -72,11 +72,6 @@ object UserService {
         user?.following = user?.following!!.filter { following -> following != getUserInfo()._id } as ArrayList<String>
     }
 
-    fun isDescriptionNullOrBlank(userId: String): Boolean {
-        val isMe = allUserInfo.filter { user ->  user._id == userId}
-        return isMe[0].description.isNullOrBlank()
-    }
-
     fun updateUserAfterUpdate(currentdata: UserModel.UpdateUser){
         if (!currentdata.username.isNullOrEmpty()){
             info.username = currentdata.username!!

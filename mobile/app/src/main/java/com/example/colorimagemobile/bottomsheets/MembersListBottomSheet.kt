@@ -40,7 +40,7 @@ class MembersListBottomSheet(
         super.onViewCreated(view, savedInstanceState)
 
         membersListRecyclerView.layoutManager = LinearLayoutManager(view.context)
-        membersListRecyclerView.adapter = MembersListRecyclerAdapter(members, userStatus)
+        membersListRecyclerView.adapter = MembersListRecyclerAdapter(requireActivity(), members, userStatus) { closeSheet() }
         setListeners()
     }
 
