@@ -19,7 +19,8 @@ import kotlinx.android.synthetic.main.bottomsheet_members_list.*
 
 class MembersListBottomSheet(
     private var activity: Activity,
-    private val members: ArrayList<UserModel.AllInfo>
+    private val members: ArrayList<UserModel.AllInfo>,
+    private val userStatus: HashMap<String, UserModel.STATUS>
 ): BottomSheetDialogFragment() {
     private lateinit var dialog: BottomSheetDialog
 
@@ -39,7 +40,7 @@ class MembersListBottomSheet(
         super.onViewCreated(view, savedInstanceState)
 
         membersListRecyclerView.layoutManager = LinearLayoutManager(view.context)
-        membersListRecyclerView.adapter = MembersListRecyclerAdapter(members)
+        membersListRecyclerView.adapter = MembersListRecyclerAdapter(members, userStatus)
         setListeners()
     }
 

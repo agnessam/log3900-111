@@ -59,6 +59,12 @@ class UserModel {
         var lastLogout: Date?,
         var collaborationHistory: ArrayList<Any>?,
     )
+
+    enum class STATUS(val status: String) {
+        Online("Online"),
+        Collaborating("Collaborating"),
+        Offline("Offline"),
+    }
 }
 
 

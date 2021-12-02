@@ -231,5 +231,22 @@ class UserRepository {
         return unfollowUserLiveData
     }
 
+    fun getUserStatus(): MutableLiveData<DataWrapper<HashMap<String, UserModel.STATUS>>> {
+        val status: MutableLiveData<DataWrapper<HashMap<String, UserModel.STATUS>>> = MutableLiveData()
 
+        httpClient.getUserStatus(token = "Bearer ${UserService.getToken()}").enqueue(object : Callback<HashMap<String, UserModel.STATUS>> {
+            override fun onResponse(call: Call<HashMap<String, UserModel.STATUS>>, response: Response<HashMap<String, UserModel.STATUS>>) {
+                if (!response.isSuccessful) {
+                    status.value = DataWrapper(null, "An error occurred!", true)
+                    return
+                }
+                status.value = DataWrapper(response.body(), null, false)
+            }
+            override fun onFailure(call: Call<HashMap<String, UserModel.STATUS>>, t: Throwable) {
+                status.value = DataWrapper(null, "Failed to get User!", true)
+            }
+        })
+
+        return status
+    }
 }

@@ -26,6 +26,7 @@ import com.example.colorimagemobile.models.recyclerAdapters.DrawingMenuData
 import com.example.colorimagemobile.repositories.MuseumRepository
 import com.example.colorimagemobile.repositories.DrawingRepository
 import com.example.colorimagemobile.repositories.TeamRepository
+import com.example.colorimagemobile.repositories.UserRepository
 import com.example.colorimagemobile.services.drawing.DrawingService
 import com.example.colorimagemobile.services.museum.MuseumAdapters
 import com.example.colorimagemobile.services.museum.MuseumPostService
@@ -162,10 +163,19 @@ class TeamsProfileFragment : Fragment(R.layout.fragment_teams_profile) {
             deleteConfirmation.show(parentFragmentManager, "ConfirmationBottomSheet")
         }
 
-        myView.findViewById<TextView>(R.id.teamIdNbOfMembers).setOnClickListener {
-            val membersListBS = MembersListBottomSheet(requireActivity(), currentTeam.members)
+        myView.findViewById<TextView>(R.id.teamIdNbOfMembers).setOnClickListener { openMembersList() }
+    }
+
+    private fun openMembersList() {
+
+        UserRepository().getUserStatus().observe(viewLifecycleOwner, {
+            if (it.isError as Boolean) {
+                return@observe
+            }
+
+            val membersListBS = MembersListBottomSheet(requireActivity(), currentTeam.members, it.data!!)
             membersListBS.show(parentFragmentManager, "MembersListBottomSheet")
-        }
+        })
     }
 
     private fun joinTeam() {
