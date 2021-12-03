@@ -147,12 +147,12 @@ object DrawingJsonService {
             ShapeLabel.ELLIPSE -> {
                 val ellipse = currentSVGObject?.ellipse?.find { ellipse -> ellipse.id == shapeId }
                 ellipse?.style ?: return
-                ellipse.transform = generateNewStrokeColorString(rgbColor, opacity, ellipse.style)
+                ellipse.style = generateNewStrokeColorString(rgbColor, opacity, ellipse.style)
             }
             ShapeLabel.RECTANGLE -> {
                 val rect = currentSVGObject?.rect?.find { ellipse -> ellipse.id == shapeId }
                 rect?.style ?: return
-                rect.transform = generateNewStrokeColorString(rgbColor, opacity, rect.style)
+                rect.style = generateNewStrokeColorString(rgbColor, opacity, rect.style)
             }
         }
     }
@@ -167,12 +167,12 @@ object DrawingJsonService {
             ShapeLabel.ELLIPSE -> {
                 val ellipse = currentSVGObject?.ellipse?.find { ellipse -> ellipse.id == shapeId }
                 ellipse?.style ?: return
-                ellipse.transform = generateNewFillColorString(rgbColor, opacity, ellipse.style)
+                ellipse.style = generateNewFillColorString(rgbColor, opacity, ellipse.style)
             }
             ShapeLabel.RECTANGLE -> {
                 val rect = currentSVGObject?.rect?.find { ellipse -> ellipse.id == shapeId }
                 rect?.style ?: return
-                rect.transform = generateNewFillColorString(rgbColor, opacity, rect.style)
+                rect.style = generateNewFillColorString(rgbColor, opacity, rect.style)
             }
         }
     }
