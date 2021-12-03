@@ -170,7 +170,6 @@ export class NewDrawingComponent implements OnInit {
   ): ValidationErrors | null => {
     let ownerModel = this.ownerModel;
     let ownerId = group.get("owner")?.value;
-    console.log(ownerId);
     if (ownerModel == "Team" && ownerId == "") {
       return { emptyTeam: true };
     } else {
