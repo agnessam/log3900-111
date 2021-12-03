@@ -6,11 +6,11 @@ import { User, UserInterface } from '../../../domain/models/user';
 import { GenericRepository } from './generic_repository';
 import { TYPES } from '../../../domain/constants/types';
 import { CollaborationTrackerService } from '../../../domain/services/collaboration-tracker.service';
-import { ChatSocketService } from '@app/domain/services/sockets/chat-socket.service';
+import { ChatSocketService } from '../../../domain/services/sockets/chat-socket.service';
 import {
   TextChannel,
   TextChannelInterface,
-} from '@app/domain/models/TextChannel';
+} from '../../../domain/models/TextChannel';
 import { TextChannelRepository } from './text_channel_repository';
 
 @injectable()

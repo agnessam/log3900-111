@@ -12,7 +12,7 @@ import {
   request,
 } from 'inversify-express-utils';
 import passport from 'passport';
-import { ChatSocketService } from '@app/domain/services/sockets/chat-socket.service';
+import { ChatSocketService } from '../../domain/services/sockets/chat-socket.service';
 
 @controller('/channels', passport.authenticate('jwt', { session: false }))
 export class TextChannelController {
