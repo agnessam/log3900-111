@@ -12,6 +12,6 @@ export interface PostInterface extends Document {
   comments: CommentInterface[];
   likes: string[];
 
-  createdAt?: string;
+  createdAt: string;
   updatedAt?: string;
 }

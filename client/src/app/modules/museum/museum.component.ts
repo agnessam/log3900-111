@@ -94,4 +94,8 @@ export class MuseumComponent implements OnInit {
       data: post,
     });
   }
+
+  getTime(createdAt: string): string{
+    return createdAt.split("T")[0];
+  }
 }

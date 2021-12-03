@@ -101,4 +101,16 @@ export class PostDialogComponent implements OnInit {
 
   }
 
+  getAvatar(post: PostInterface): string{
+    if( post.ownerModel === "User"){
+      let owner = post.owner as User;
+      return owner.avatar.imageUrl;
+    }
+    return "";
+  }
+
+  getTime(createdAt: string): string{
+    return createdAt.split("T")[0];
+  }
+
 }

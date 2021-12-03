@@ -6,6 +6,7 @@ import { MatIconModule } from "@angular/material/icon";
 import { MuseumDialog } from "./museum-dialog/museum-dialog.component";
 import { AvatarModule } from "ngx-avatar";
 import { CardsModule } from "../cards/cards.module";
+import { MatCardModule } from "@angular/material/card";
 
 @NgModule({
   declarations: [MuseumComponent, MuseumDialog],
@@ -13,6 +14,8 @@ import { CardsModule } from "../cards/cards.module";
      MuseumRoutingModule,
      MatIconModule,
      AvatarModule,
-     CardsModule],
+     CardsModule,
+     MatCardModule
+    ],
 })
 export class MuseumModule {}

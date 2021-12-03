@@ -2,7 +2,71 @@
   <div *ngIf="posts.length != 0; else noPost" >
     <div *ngFor="let post of posts">
       <div class="post">
-        <app-post-card [post]="post" (click)="openPostDialog(post)"></app-post-card>
+        <div class="post-header">
+          <div class="author-picture" *ngIf="post.owner">
+            <ngx-avatar [src]="post.owner.avatar?.imageUrl"></ngx-avatar>
+          </div>
+          <div class="info">
+            <div class="author-text" *ngIf="post.ownerModel === 'User'">
+              {{ post.owner.username }}
+            </div>
+            <div class="author-text" *ngIf="post.ownerModel === 'Team'">
+              {{ post.owner.name }}
+            </div>
+            <div class="time-text" *ngIf="post.owner">{{getTime(post.createdAt)}}</div>
+          </div>
+        </div>
+
+        <div class="post-image">
+          <img [src]="this.transformUri(post.dataUri)" class="image" (click)="openPostDialog(post)">
+
+          <div class="bottom-image">
+            <div class="bottom-group" (click)="toggleLike(post)">
+              <div *ngIf="hasBeenLike(post.likes); else notLikeBlock">
+                <mat-icon>favorite</mat-icon>
+              </div>
+              <ng-template #notLikeBlock>
+                <div>
+                  <mat-icon>favorite_border</mat-icon>
+                </div>
+
+              </ng-template>
+              <div class="nbLike">
+                {{ post.likes.length }}
+              </div>
+
+            </div>
+            <div class="bottom-group">
+              <mat-icon>chat_bubble</mat-icon>
+              <div class="nbLike">
+                {{ post.comments.length }}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div *ngFor="let comment of post.comments">
+          <div class="comment">
+            {{ comment.author?.username }} : {{ comment.content }}
+          </div>
+        </div>
+
+
+      <div class="bottom-comment">
+        <input
+          type="comment"
+          #commentInput
+          [id]="post._id"
+          class="comment-input"
+          autocomplete="off"
+          spellcheck="false"
+          placeholder="Add comment"
+        />
+        <button mat-icon-button id="postbtn" (click)="addComment(post._id)">
+          POST
+        </button>
+       </div>
+
       </div>
     </div>
   </div>
