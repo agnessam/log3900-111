@@ -22,7 +22,7 @@ import { InProgressRectangle, Rectangle } from "./rectangle.model";
 })
 export class ToolRectangleService implements Tools {
   readonly faIcon: IconDefinition = faSquareFull;
-  readonly toolName = "Outil Rectangle";
+  readonly toolName = "Rectangle";
   readonly id = ToolIdConstants.RECTANGLE_ID;
 
   private rectangle: Rectangle | null = null;
@@ -121,7 +121,10 @@ export class ToolRectangleService implements Tools {
 
   /// Quand le bouton de la sourie est relaché, l'objet courrant de l'outil est mis a null.
   onRelease(event: MouseEvent): ICommand | void {
-    this.drawingSocketService.sendConfirmDrawingCommand(this.rectangle, "Rectangle");
+    this.drawingSocketService.sendConfirmDrawingCommand(
+      this.rectangle,
+      "Rectangle"
+    );
     this.isSquare = false;
     this.rectangle = null;
     if (this.rectangleCommand) {

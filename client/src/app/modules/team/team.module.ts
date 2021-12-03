@@ -22,6 +22,8 @@ import { ConfirmLeaveDialogComponent } from "./team-profile/confirm-leave-dialog
 import { MatCheckboxModule } from "@angular/material/checkbox";
 import { ConfirmJoinDialogComponent } from "./team-profile/confirm-join-dialog/confirm-join-dialog.component";
 import { MatBadgeModule } from "@angular/material/badge";
+import { EditTeamParametersComponent } from "./team-profile/edit-team-parameters/edit-team-parameters.component";
+import { MatOptionModule } from "@angular/material/core";
 
 @NgModule({
   declarations: [
@@ -32,6 +34,7 @@ import { MatBadgeModule } from "@angular/material/badge";
     MemberListDialogComponent,
     ConfirmLeaveDialogComponent,
     ConfirmJoinDialogComponent,
+    EditTeamParametersComponent,
   ],
   imports: [
     CommonModule,
@@ -49,6 +52,7 @@ import { MatBadgeModule } from "@angular/material/badge";
     AvatarModule,
     MatCheckboxModule,
     MatBadgeModule,
+    MatOptionModule,
   ],
 })
 export class TeamModule {}

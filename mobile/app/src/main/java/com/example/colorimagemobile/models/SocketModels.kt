@@ -47,6 +47,8 @@ class EllipseData(
     var height: Float
 ): ToolData
 
+data class DeleteData(val id: String)
+
 data class SelectionData(val id: String)
 
 data class ResizeData(val id: String, val xScaled: Float, val yScaled: Float, val xTranslate: Float, val yTranslate: Float, val previousTransform: String)

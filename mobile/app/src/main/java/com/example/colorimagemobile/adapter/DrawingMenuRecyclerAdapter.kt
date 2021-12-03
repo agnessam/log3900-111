@@ -93,8 +93,8 @@ class DrawingMenuRecyclerAdapter(
             }
             job.join()
             DrawingSocketService.sendGetUpdateDrawingRequest(drawingMenus, position, destination)
+            DrawingSocketService.setDrawingCommandSocketListeners()
         }
-        DrawingSocketService.setDrawingCommandSocketListeners()
     }
 
     inner class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {

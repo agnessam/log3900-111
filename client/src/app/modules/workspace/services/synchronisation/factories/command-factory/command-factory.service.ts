@@ -4,7 +4,6 @@ import { ICommand } from "src/app/modules/workspace/interfaces/command.interface
 import {
   DeleteCommand,
   EllipseCommand,
-  EraserCommand,
   PencilCommand,
   RectangleCommand,
   RendererProviderService,
@@ -47,15 +46,6 @@ export class CommandFactoryService {
           commandParameters as Ellipse,
           this.drawingService
         );
-      case "Eraser":
-        let itemsToDelete = new Map<string, SVGElement>();
-        for (const id of <string[]>commandParameters) {
-          const svgElement = this.drawingService.getObject(id);
-          if (svgElement) {
-            itemsToDelete.set(id, svgElement);
-          }
-        }
-        return new EraserCommand(itemsToDelete, this.drawingService);
       case "SelectionStart":
         const selectedShapeId = commandParameters.id;
         const selectedShape = this.drawingService.getObject(selectedShapeId);
@@ -104,20 +94,35 @@ export class CommandFactoryService {
       case "LineWidth":
         const lineWidthShapeId = commandParameters.id;
         const lineWidthShape = this.drawingService.getObject(lineWidthShapeId);
-        if(lineWidthShape == undefined)
+        if (lineWidthShape == undefined)
           throw new Error("Couldn't find the shape you wanted to delete.");
-        return new LineWidthCommand(lineWidthShape, commandParameters.lineWidth, this.rendererService);
+        return new LineWidthCommand(
+          lineWidthShape,
+          commandParameters.lineWidth,
+          this.rendererService
+        );
       case "PrimaryColor":
         const objectToRecolorId = commandParameters.id;
-        const objectToRecolor = this.drawingService.getObject(objectToRecolorId);
-        if(objectToRecolor == undefined)
+        const objectToRecolor =
+          this.drawingService.getObject(objectToRecolorId);
+        if (objectToRecolor == undefined)
           throw new Error("Couldn't find the shape you wanted to delete.");
-        return new PrimaryColorCommand(objectToRecolor, commandParameters.color, commandParameters.opacity);
+        return new PrimaryColorCommand(
+          objectToRecolor,
+          commandParameters.color,
+          commandParameters.opacity
+        );
       case "SecondaryColor":
-        const objectToRecolorSecondary = this.drawingService.objects.get(commandParameters.id);
-        if(objectToRecolorSecondary == undefined)
+        const objectToRecolorSecondary = this.drawingService.objects.get(
+          commandParameters.id
+        );
+        if (objectToRecolorSecondary == undefined)
           throw new Error("Couldn't find the shape you wanted to delete.");
-        return new SecondaryColorCommand(objectToRecolorSecondary, commandParameters.color, commandParameters.opacity);
+        return new SecondaryColorCommand(
+          objectToRecolorSecondary,
+          commandParameters.color,
+          commandParameters.opacity
+        );
       default:
         throw new Error("Unable to create command");
     }
