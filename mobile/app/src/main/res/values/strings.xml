@@ -30,7 +30,7 @@
     <string name="Choose_an_avatar"><b>Choose an avatar !</b></string>
     <string name="choose_an_avatar">Choose an avatar</string>
     <string name="upload_an_avatar">Upload an avatar</string>
-    <string name="Username"><b>Username</b></string>
+    <string name="Username">Username</string>
     <string name="customize">UPDATE PROFILE</string>
     <string name="description"><b>Description</b></string>
     <string name="first_name"><b>First Name</b></string>
@@ -38,9 +38,9 @@
     <string name="last_login"><b>Last Login Date</b></string>
     <string name="last_logout"><b>Last Logout Date</b></string>
     <string name="last_edition_date"><b>Last Edition Date</b></string>
-    <string name="confirm_password"><b>Confirm Password</b></string>
-    <string name="new_password"><b>New Password</b></string>
-    <string name="current_password"><b>Current Password</b></string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="new_password">New Password</string>
+    <string name="current_password">Current Password</string>
     <string name="edit_password">Edit Password</string>
     <string name="history_log">Log History</string>
     <string name="edit_profil">Edit Profile</string>
