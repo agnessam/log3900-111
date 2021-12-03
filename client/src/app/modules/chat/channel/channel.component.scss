@@ -30,7 +30,6 @@
 }
 
 .channel {
-  margin-left: 10px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -38,6 +37,7 @@
 
 .channel:hover {
   cursor: pointer;
+  background: rgba(0, 0, 0, 0.1);
 }
 
 .channel-list {
