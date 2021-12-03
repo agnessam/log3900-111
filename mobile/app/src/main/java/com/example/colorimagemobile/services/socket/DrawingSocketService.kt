@@ -24,6 +24,7 @@ import com.example.colorimagemobile.utils.Constants.SOCKETS.Companion.CONFIRM_SE
 import com.example.colorimagemobile.utils.Constants.SOCKETS.Companion.DELETE_SELECTION_EVENT
 import com.example.colorimagemobile.utils.Constants.SOCKETS.Companion.FETCH_DRAWING_NOTIFICATION
 import com.example.colorimagemobile.utils.Constants.SOCKETS.Companion.IN_PROGRESS_DRAWING_EVENT
+import com.example.colorimagemobile.utils.Constants.SOCKETS.Companion.LINE_WIDTH_EVENT
 import com.example.colorimagemobile.utils.Constants.SOCKETS.Companion.PRIMARY_COLOR_EVENT
 import com.example.colorimagemobile.utils.Constants.SOCKETS.Companion.SECONDARY_COLOR_EVENT
 import com.example.colorimagemobile.utils.Constants.SOCKETS.Companion.START_SELECTION_EVENT
@@ -33,6 +34,7 @@ import com.example.colorimagemobile.utils.Constants.SOCKETS.Companion.UPDATE_DRA
 import io.socket.client.Ack
 import io.socket.emitter.Emitter
 import kotlinx.coroutines.*
+import kotlinx.coroutines.internal.SynchronizedObject
 import org.json.JSONException
 import org.json.JSONObject
 import java.lang.Runnable
@@ -88,6 +90,7 @@ object DrawingSocketService: AbsSocket(SOCKETS.COLLABORATIVE_DRAWING_NAMESPACE) 
             this.listenDeleteSelectionCommand()
             this.listenObjectPrimaryColorChange()
             this.listenObjectSecondaryColorChange()
+            this.listenLineWidthChange()
             drawingHasBeenInitialized = true
         }
     }
@@ -439,5 +442,27 @@ object DrawingSocketService: AbsSocket(SOCKETS.COLLABORATIVE_DRAWING_NAMESPACE) 
         val colorData = ColorData(objectId, color, opacity, roomName!!)
         val jsonSocket = JSONConvertor.convertToJSON(colorData)
         super.emit(SECONDARY_COLOR_EVENT, jsonSocket)
+    }
+
+    private fun listenLineWidthChange() {
+        mSocket.on(LINE_WIDTH_EVENT, lineWidthListener)
+    }
+
+    private var lineWidthListener = Emitter.Listener { args ->
+        fragmentActivity!!.runOnUiThread(Runnable {
+            val  responseJSON = JSONObject(args[0].toString())
+            val lineWidthData = LineWidthData(
+                id =  responseJSON["id"].toString(),
+                roomName = responseJSON["roomName"].toString(),
+                lineWidth = responseJSON["lineWidth"].toString().toInt()
+            )
+            SynchronisationService.setSelectionLineWidth(lineWidthData)
+        })
+    }
+
+    fun sendLineWidthChange(objectId: String, lineWidth: Int) {
+        var lineWidthData = LineWidthData(objectId, roomName!!, lineWidth)
+        val jsonSocket = JSONConvertor.convertToJSON(lineWidthData)
+        super.emit(LINE_WIDTH_EVENT, jsonSocket)
     }
 }
