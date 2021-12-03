@@ -11,6 +11,7 @@ import { TextChannel } from "../models/text-channel.model";
 })
 export class TextChannelService {
   newTeamChannel: Subject<TextChannel>;
+  deletedTeamChannel: Subject<string>;
   joinedCollabChannel: ReplaySubject<TextChannel>;
   leftCollabChannel: Subject<TextChannel>;
 
@@ -22,7 +23,7 @@ export class TextChannelService {
 
   constructor(private httpClient: HttpClient) {
     this.newTeamChannel = new Subject<TextChannel>();
-    // this.collaborationChannel = new Subject<TextChannel>();
+    this.deletedTeamChannel = new Subject<string>();
     this.joinedCollabChannel = new ReplaySubject<TextChannel>();
     this.leftCollabChannel = new Subject<TextChannel>();
   }
@@ -133,6 +134,10 @@ export class TextChannelService {
 
   emitNewTeamChannel(channel: TextChannel): void {
     this.newTeamChannel.next(channel);
+  }
+
+  emitDeleteTeamChannel(channelName: string): void {
+    this.deletedTeamChannel.next(channelName);
   }
 
   emitJoinCollaboration(channel: TextChannel): void {

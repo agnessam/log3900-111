@@ -45,6 +45,5 @@ export class NavbarComponent implements OnInit {
   getChannelsData() {
     this.channelComponent.getPublicChannels();
     this.channelComponent.connectTeamChannels();
-    // this.channelComponent.openDrawingChannel();
   }
 }
