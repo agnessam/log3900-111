@@ -25,6 +25,11 @@ export class TextChannelController {
     return await this.textChannelRepository.getPublicChannels();
   }
 
+  @httpGet('/teams')
+  public async getChannelsByTeamId(@request() req: Request) {
+    return await this.textChannelRepository.getTeamChannels(req.body);
+  }
+
   @httpGet('/:channelId')
   public async getChannelById(@request() req: Request) {
     return await this.textChannelRepository.findById(req.params.channelId);
@@ -44,7 +49,6 @@ export class TextChannelController {
 
   @httpDelete('/:channelId')
   public async deleteChannel(@request() req: Request) {
-    // TODO: force leave everyone in the room
     try {
       const deletedChannel = await this.textChannelRepository.deleteById(
         req.params.channelId,

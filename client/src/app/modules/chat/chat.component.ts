@@ -36,6 +36,7 @@ export class ChatComponent implements OnInit, OnDestroy {
   isMinimized = false;
   isPopoutOpen = false;
   loadedHistory = false;
+  isChatOpen = false;
 
   currentChannel: TextChannel | null;
 
@@ -66,7 +67,6 @@ export class ChatComponent implements OnInit, OnDestroy {
       });
     this.authService.currentUserObservable.subscribe((user) => {
       if (!user) {
-        this.closeChatPopout();
         this.closeChat();
       }
     });
@@ -75,7 +75,6 @@ export class ChatComponent implements OnInit, OnDestroy {
     this.leaveRoom();
     this.chatSocketService.connect();
     this.textChannelService.leftCollabChannel.subscribe(() => {
-      this.closeChatPopout();
       this.closeChat();
     });
   }
@@ -89,7 +88,6 @@ export class ChatComponent implements OnInit, OnDestroy {
     });
     this.chatSocketService.disconnect();
     this.chatSubscription.unsubscribe();
-    this.closeChatPopout();
     this.closeChat();
   }
 
@@ -98,8 +96,7 @@ export class ChatComponent implements OnInit, OnDestroy {
     this.chatService.toggleChatOverlay.subscribe((channel) => {
       this.currentChannel = channel;
       if (!this.isPopoutOpen) {
-        const chat = document.getElementById("chat-popup") as HTMLInputElement;
-        chat.style.display = "block";
+        this.isChatOpen = true;
         this.minimizeChat(false);
       }
       this.scrollDown();
@@ -129,7 +126,6 @@ export class ChatComponent implements OnInit, OnDestroy {
         roomName: channel.name,
       });
       this.currentChannel = null;
-      this.closeChatPopout();
       this.closeChat();
     });
   }
@@ -154,7 +150,7 @@ export class ChatComponent implements OnInit, OnDestroy {
 
   sendMessage() {
     if (this.message === null || this.message.match(/^ *$/) !== null) return;
-
+    console.log(this.user)
     if (this.user?.username === null) return;
     const message: Message = {
       message: this.message,
@@ -172,10 +168,10 @@ export class ChatComponent implements OnInit, OnDestroy {
   }
 
   closeChat() {
-    const chat = document.getElementById("chat-popup") as HTMLInputElement;
-    chat.style.display = "none";
+    this.isChatOpen = false;
     this.currentChannel = null;
     this.loadedHistory = false;
+    this.closeChatPopout();
   }
 
   openChatPopout() {

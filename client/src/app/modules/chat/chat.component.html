@@ -1,4 +1,4 @@
-<div id="chat-popup" *ngIf="userLoaded | async">
+<div id="chat-popup" *ngIf="userLoaded | async" [ngStyle]="{ display: isChatOpen ? 'block' : 'none' }">
   <app-popout-window #popout (isOutEvent)="closeChatPopout()">
     <div class="chat-top">
       <p>{{ currentChannel?.name }}</p>
