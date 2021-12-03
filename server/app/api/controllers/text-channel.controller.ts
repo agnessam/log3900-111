@@ -12,19 +12,34 @@ import {
   request,
 } from 'inversify-express-utils';
 import passport from 'passport';
+import { ChatSocketService } from '../../domain/services/sockets/chat-socket.service';
 
 @controller('/channels', passport.authenticate('jwt', { session: false }))
 export class TextChannelController {
-  @inject(TYPES.TextChannelRepository) public textChannelRepository: TextChannelRepository;
+  @inject(TYPES.TextChannelRepository)
+  private textChannelRepository: TextChannelRepository;
+  @inject(TYPES.ChatSocketService) private chatSocketService: ChatSocketService;
 
   @httpGet('/')
   public async get() {
-    return await this.textChannelRepository.findAll();
+    return await this.textChannelRepository.getPublicChannels();
+  }
+
+  @httpGet('/teams')
+  public async getChannelsByTeamId() {
+    return await this.textChannelRepository.getTeamChannels();
   }
 
   @httpGet('/:channelId')
   public async getChannelById(@request() req: Request) {
     return await this.textChannelRepository.findById(req.params.channelId);
+  }
+
+  @httpGet('/drawings/:drawingId')
+  public async getChannelByDrawingId(@request() req: Request) {
+    return await this.textChannelRepository.getChannelByDrawingId(
+      req.params.drawingId,
+    );
   }
 
   @httpPost('/')
@@ -34,17 +49,32 @@ export class TextChannelController {
 
   @httpDelete('/:channelId')
   public async deleteChannel(@request() req: Request) {
-    return await this.textChannelRepository.deleteById(req.params.channelId);
+    try {
+      const deletedChannel = await this.textChannelRepository.deleteById(
+        req.params.channelId,
+      );
+      this.chatSocketService.emitLeave(deletedChannel.name);
+      this.textChannelRepository.deleteMessages(req.params.id);
+      return deletedChannel;
+    } catch (e: any) {
+      console.log("Couldn't delete channel: ", e);
+      return e;
+    }
   }
 
   @httpDelete('/:channelId/messages')
   public async deleteMessages(@request() req: Request) {
-    return await this.textChannelRepository.deleteMessages(req.params.channelId);
+    return await this.textChannelRepository.deleteMessages(
+      req.params.channelId,
+    );
   }
 
   @httpPatch('/:channelId')
   public async updateChannel(@request() req: Request) {
-    return await this.textChannelRepository.updateById(req.params.channelId, req.body);
+    return await this.textChannelRepository.updateById(
+      req.params.channelId,
+      req.body,
+    );
   }
 
   @httpGet('/:channelId/messages')
@@ -55,7 +85,7 @@ export class TextChannelController {
   @httpGet('/all/search')
   public async searchChannels(@queryParam('q') query: string) {
     const channels = await this.textChannelRepository.findManyByQuery({
-      $or: [{ name: { $regex: new RegExp(query, 'ig') } }],
+      $or: [{ name: { $regex: new RegExp(query, 'ig') }, isPrivate: false }],
     });
     return [...channels];
   }
