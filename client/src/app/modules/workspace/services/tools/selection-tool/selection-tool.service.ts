@@ -20,7 +20,7 @@ import { SynchronisationService } from "../../synchronisation/synchronisation.se
 import { Subject } from "rxjs";
 import { PrimaryColorCommand } from "./primary-color-command/primary-color-command.service";
 import { SecondaryColorCommand } from "./secondary-color-command/secondary-color-command.service";
-import { LineWidthCommand } from "./line-width-command/line-width-command.service"
+import { LineWidthCommand } from "./line-width-command/line-width-command.service";
 
 @Injectable({
   providedIn: "root",
@@ -257,8 +257,8 @@ export class SelectionToolService implements Tools {
 
             const translationSync = {
               id: this.objects[0].id,
-              deltaX: event.movementX,
-              deltaY: event.movementY,
+              deltaX: this.translation.deltaX,
+              deltaY: this.translation.deltaY,
             };
             this.drawingSocketService.sendTransformSelectionCommand(
               translationSync,
@@ -353,9 +353,16 @@ export class SelectionToolService implements Tools {
   setSelectionLineWidth(strokeWidth: number): void {
     if (this.objects.length > 0) {
       const currentObject = this.objects[0];
-      let lineWidthCommand = new LineWidthCommand(currentObject, strokeWidth, this.rendererService);
+      let lineWidthCommand = new LineWidthCommand(
+        currentObject,
+        strokeWidth,
+        this.rendererService
+      );
       lineWidthCommand.execute();
-      this.drawingSocketService.sendSelectionLineWidthChange(currentObject.id, strokeWidth);
+      this.drawingSocketService.sendSelectionLineWidthChange(
+        currentObject.id,
+        strokeWidth
+      );
     }
   }
 
@@ -700,21 +707,36 @@ export class SelectionToolService implements Tools {
     ).getBoundingClientRect().left;
   }
 
-
   setSelectedObjectPrimaryColor(primaryColor: RGB, opacity: number) {
     if (!this.objects || this.objects.length == 0) return;
 
     const selectedObject = this.objects[0];
-    let primaryColorCommand = new PrimaryColorCommand(selectedObject, primaryColor, opacity);
+    let primaryColorCommand = new PrimaryColorCommand(
+      selectedObject,
+      primaryColor,
+      opacity
+    );
     primaryColorCommand.execute();
-    this.drawingSocketService.sendObjectPrimaryColorChange(selectedObject.id, primaryColor, opacity);
+    this.drawingSocketService.sendObjectPrimaryColorChange(
+      selectedObject.id,
+      primaryColor,
+      opacity
+    );
   }
 
   setSelectedObjectSecondaryColor(secondaryColor: RGB, opacity: number) {
     if (!this.objects) return;
     const selectedObject = this.objects[0];
-    let secondaryColorCommand = new SecondaryColorCommand(selectedObject, secondaryColor, opacity);
+    let secondaryColorCommand = new SecondaryColorCommand(
+      selectedObject,
+      secondaryColor,
+      opacity
+    );
     secondaryColorCommand.execute();
-    this.drawingSocketService.sendObjectSecondaryColorChange(selectedObject.id, secondaryColor, opacity);
+    this.drawingSocketService.sendObjectSecondaryColorChange(
+      selectedObject.id,
+      secondaryColor,
+      opacity
+    );
   }
 }
