@@ -36,6 +36,7 @@
             <p>{{ channel.name }}</p>
           </div>
         </div>
+<<<<<<< Updated upstream
       </div>
     </mat-tab>
     <mat-tab label="Connected">
@@ -60,6 +61,32 @@
               <button mat-icon-button (click)="deleteChannel(channel)">
                 <mat-icon>delete</mat-icon>
               </button>
+=======
+      </mat-tab>
+      <mat-tab label="Connected">
+        <div fxLayout="row wrap"
+            fxLayoutAlign="center center" 
+            class="channel-list" 
+            >
+          <div *ngFor="let channel of connectedChannels; trackBy: trackConnectedChannels">
+            <div class="channel" 
+              (mouseover)="toggleChannelButton(channel, true)" 
+              (mouseout)="toggleChannelButton(channel, false)"
+              (click)="openChannel(channel)">
+              <p (click)="openChannel(channel)">{{channel.name}}</p>
+              <div class="deleteChannelBtn" [id]="channel.name">
+                <button mat-icon-button 
+                  (click)="removeChannel(channel)" 
+                  >
+                  <!-- [ngStyle]="{'display': channel.ownerId === this.user?._id ? 'inline' : 'none'}" -->
+                  <mat-icon>clear</mat-icon>
+                </button>
+                <button mat-icon-button (click)="deleteChannel(channel)" >
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </div>
+      
+>>>>>>> Stashed changes
             </div>
           </div>
         </div>

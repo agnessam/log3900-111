@@ -70,11 +70,9 @@ export class ChannelComponent implements OnInit, OnDestroy {
           });
           this.connectedChannels.unshift(general);
         }
-        this.ref.detectChanges();
       },
       complete: () => {
         this.openDrawingChannel();
-        // this.ref.detectChanges();
       },
     });
 
@@ -86,7 +84,6 @@ export class ChannelComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {}
 
   connectTeamChannels(): void {
-    console.log(this.user?.teams!);
     const teamIds = new Array();
     this.usersService
       .getUserTeams(localStorage.getItem("userId")!)
@@ -120,6 +117,10 @@ export class ChannelComponent implements OnInit, OnDestroy {
       this.removeChannel(channel);
     });
   }
+
+  public trackConnectedChannels(index: number, item: TextChannel) {
+    return item.name;
+  }  
 
   // can only delete channel if owner id corresponds to user id
   deleteChannel(channel: TextChannel): void {
