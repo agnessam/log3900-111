@@ -23,7 +23,7 @@ import { NewChannelComponent } from "./new-channel/new-channel.component";
 export class ChannelComponent implements OnInit, OnDestroy {
   @Output() closeChannelList = new EventEmitter<any>();
   user: User | null;
-  allChannels: TextChannel[];
+  publicChannels: TextChannel[];
   searchedChannels: TextChannel[];
   connectedChannels: TextChannel[];
   teamChannels: TextChannel[];
@@ -41,7 +41,7 @@ export class ChannelComponent implements OnInit, OnDestroy {
     private dialog: MatDialog
   ) {
     this.connectedChannels = new Array();
-    this.allChannels = new Array();
+    this.publicChannels = new Array();
     this.searchedChannels = new Array();
     this.teamChannels = new Array();
   }
@@ -52,14 +52,28 @@ export class ChannelComponent implements OnInit, OnDestroy {
         this.user = user;
       },
       complete: () => {
-        this.connectTeamChannels();
+        
       },
     });
+    this.getPublicChannels();
+    this.connectTeamChannels();
+    this.openDrawingChannel();
+    
+    this.textChannelService.newTeamChannel.subscribe((teamChannel) => {
+      this.openChannel(teamChannel);
+    });
+  }
 
+  ngOnDestroy(): void {}
+
+  getPublicChannels(): void {
     this.textChannelService.getChannels().subscribe({
       next: (channels) => {
-        channels.forEach((channel) =>
-          this.allChannels.push(Object.assign({}, channel))
+        channels.forEach((channel) => {
+            if (!this.publicChannels.some((item) => item._id === channel._id)) {
+              this.publicChannels.push(channel);
+            }
+          }
         );
         this.resetSearch();
         const general = channels.find((channel) => channel.name === "General");
@@ -68,23 +82,14 @@ export class ChannelComponent implements OnInit, OnDestroy {
             userId: this.user?._id!,
             roomName: general.name,
           });
+          if (this.connectedChannels.some((channel) => channel._id === general._id)) return;
           this.connectedChannels.unshift(general);
         }
       },
-      complete: () => {
-        this.openDrawingChannel();
-      },
-    });
-
-    this.textChannelService.newTeamChannel.subscribe((teamChannel) => {
-      this.openChannel(teamChannel);
     });
   }
 
-  ngOnDestroy(): void {}
-
   connectTeamChannels(): void {
-    const teamIds = new Array();
     this.usersService
       .getUserTeams(localStorage.getItem("userId")!)
       .subscribe((response) => {
@@ -94,11 +99,14 @@ export class ChannelComponent implements OnInit, OnDestroy {
             userId: this.user?._id!,
             roomName: team.name,
           });
-          teamIds.push(team._id);
         });
+        console.log(response)
+        console.log(this.user?.teams)
         this.textChannelService.getTeamChannels().subscribe((channels) => {
           channels.forEach((channel) => {
-            if (this.user?.teams?.includes(channel.team!)) {
+            if (response.some((userTeam) => userTeam._id === channel.team)
+            && !this.connectedChannels.some((connected) => connected._id === channel._id)) {
+              console.log("pushed channel", channel)
               this.connectedChannels.push(channel);
             }
           });
@@ -118,10 +126,6 @@ export class ChannelComponent implements OnInit, OnDestroy {
     });
   }
 
-  public trackConnectedChannels(index: number, item: TextChannel) {
-    return item.name;
-  }  
-
   // can only delete channel if owner id corresponds to user id
   deleteChannel(channel: TextChannel): void {
     this.textChannelService.deleteChannel(channel._id).subscribe(() => {
@@ -136,8 +140,8 @@ export class ChannelComponent implements OnInit, OnDestroy {
       (x) => x._id === channel._id
     );
     this.connectedChannels.splice(indexConnected, 1);
-    const indexAll = this.allChannels.findIndex((x) => x._id === channel._id);
-    this.allChannels.splice(indexAll, 1);
+    const indexAll = this.publicChannels.findIndex((x) => x._id === channel._id);
+    this.publicChannels.splice(indexAll, 1);
 
     this.chatService.leaveRoomEventEmitter.emit(channel);
   }
@@ -171,7 +175,7 @@ export class ChannelComponent implements OnInit, OnDestroy {
       this.searchQuery === null ||
       this.searchQuery?.match(/^ *$/) !== null
     ) {
-      this.searchedChannels = Object.assign([], this.allChannels);
+      this.searchedChannels = Object.assign([], this.publicChannels);
     } else {
       this.textChannelService
         .searchChannels(this.searchQuery)
@@ -187,7 +191,7 @@ export class ChannelComponent implements OnInit, OnDestroy {
       this.searchQuery === null ||
       this.searchQuery?.match(/^ *$/) !== null
     ) {
-      this.searchedChannels = Object.assign([], this.allChannels);
+      this.searchedChannels = Object.assign([], this.publicChannels);
     }
   }
 
@@ -209,8 +213,8 @@ export class ChannelComponent implements OnInit, OnDestroy {
         return;
       }
 
-      this.allChannels.push(channel);
-      this.searchedChannels = this.allChannels;
+      this.publicChannels.push(channel);
+      this.searchedChannels = this.publicChannels;
       this.closeChannelList.emit();
       // should automatically connect user to socket
       this.connectedChannels.push(channel);
