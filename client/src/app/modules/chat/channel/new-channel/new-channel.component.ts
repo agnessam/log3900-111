@@ -19,7 +19,6 @@ import { TextChannelService } from "../../services/text-channel.service";
 })
 export class NewChannelComponent implements OnInit {
   newDrawingForm: FormGroup;
-  existingChannels: TextChannel[];
 
   matcher = new FormErrorStateMatcher();
 
@@ -40,9 +39,6 @@ export class NewChannelComponent implements OnInit {
       },
       { validators: this.NoDuplicateName }
     );
-    this.textChannelService
-      .getChannels()
-      .subscribe((channels) => (this.existingChannels = channels));
   }
 
   onAccept(): void {

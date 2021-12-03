@@ -215,7 +215,6 @@ export class ChannelComponent implements OnInit, OnDestroy {
       data: this.publicChannels,
     });
     this.newChannelDialogRef.afterClosed().subscribe((channel) => {
-      console.log(channel);
       if (!channel) {
         return;
       }
