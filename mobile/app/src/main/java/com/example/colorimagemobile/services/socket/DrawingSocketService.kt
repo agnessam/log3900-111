@@ -1,10 +1,7 @@
 package com.example.colorimagemobile.services.socket
 
-import android.content.Context
-import android.graphics.Bitmap
 import android.util.Base64
 import androidx.fragment.app.FragmentActivity
-import com.example.colorimagemobile.adapter.DrawingMenuRecyclerAdapter
 import com.example.colorimagemobile.classes.AbsSocket
 import com.example.colorimagemobile.classes.ImageConvertor
 import com.example.colorimagemobile.classes.JSONConvertor
@@ -31,12 +28,10 @@ import com.example.colorimagemobile.utils.Constants.SOCKETS.Companion.TRANSFORM_
 import com.example.colorimagemobile.utils.Constants.SOCKETS.Companion.UPDATE_DRAWING_EVENT
 import com.example.colorimagemobile.utils.Constants.SOCKETS.Companion.UPDATE_DRAWING_NOTIFICATION
 import io.socket.client.Ack
-import io.socket.client.Socket
 import io.socket.emitter.Emitter
 import kotlinx.coroutines.*
 import org.json.JSONException
 import org.json.JSONObject
-import retrofit2.awaitResponse
 import java.lang.Runnable
 import java.nio.charset.StandardCharsets
 
@@ -49,7 +44,8 @@ object DrawingSocketService: AbsSocket(SOCKETS.COLLABORATIVE_DRAWING_NAMESPACE) 
     private var position: Int? = null
     private var destination: Int? = null
 
-    private var hasBeenInitialized = false
+    private var openListenersHaveBeenInstantiated = false
+    private var drawingHasBeenInitialized = false
 
     override fun leaveRoom(roomInformation: Constants.SocketRoomInformation){
 
@@ -72,21 +68,22 @@ object DrawingSocketService: AbsSocket(SOCKETS.COLLABORATIVE_DRAWING_NAMESPACE) 
     }
 
     public override fun setSocketListeners() {
-        if(!hasBeenInitialized){
+        if(!openListenersHaveBeenInstantiated){
             this.listenUpdateDrawingRequest()
             this.listenFetchDrawingNotification()
+            openListenersHaveBeenInstantiated = true
         }
     }
 
     fun setDrawingCommandSocketListeners(){
-        if(!hasBeenInitialized){
+        if(!drawingHasBeenInitialized){
             this.listenInProgressDrawingCommand()
             this.listenConfirmDrawingCommand()
             this.listenStartSelectionCommand()
             this.listenConfirmSelectionCommand()
             this.listenTransformSelectionCommand()
             this.listenDeleteSelectionCommand()
-            hasBeenInitialized = true
+            drawingHasBeenInitialized = true
         }
     }
 
