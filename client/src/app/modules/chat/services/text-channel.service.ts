@@ -43,9 +43,9 @@ export class TextChannelService {
       });
   }
 
-  getTeamChannels(teams: string[]): Observable<TextChannel[]> {
+  getTeamChannels(): Observable<TextChannel[]> {
     return this.httpClient
-      .get<TextChannel[]>(`${this.endpointUrl}/teams`, {teams})
+      .get<TextChannel[]>(`${this.endpointUrl}/teams`)
       .pipe((response) => {
         return response;
       });

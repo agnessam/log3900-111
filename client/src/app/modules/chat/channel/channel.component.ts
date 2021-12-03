@@ -47,15 +47,14 @@ export class ChannelComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.usersService
-      .getUser(localStorage.getItem("userId")!)
-      .subscribe({
-        next: (user) => {
+    this.usersService.getUser(localStorage.getItem("userId")!).subscribe({
+      next: (user) => {
         this.user = user;
-        },
-        complete: () => {
-          this.connectTeamChannels();
-        }});
+      },
+      complete: () => {
+        this.connectTeamChannels();
+      },
+    });
 
     this.textChannelService.getChannels().subscribe({
       next: (channels) => {
@@ -87,30 +86,38 @@ export class ChannelComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {}
 
   connectTeamChannels(): void {
-    console.log(this.user?.teams!)
+    console.log(this.user?.teams!);
     const teamIds = new Array();
-    this.usersService.getUserTeams(localStorage.getItem("userId")!).subscribe((response) => {
-      response.forEach((team) => {
-        // join team channels automatically
-        this.chatSocketService.joinRoom({
-          userId: this.user?._id!,
-          roomName: team.name,
-        });   
-        teamIds.push(team._id);    
-      })
-      this.textChannelService.getTeamChannels(teamIds).subscribe((channels) => {
-        channels.forEach((channel) => this.connectedChannels.push(channel));
-      })
-    });
+    this.usersService
+      .getUserTeams(localStorage.getItem("userId")!)
+      .subscribe((response) => {
+        response.forEach((team) => {
+          // join team channels automatically
+          this.chatSocketService.joinRoom({
+            userId: this.user?._id!,
+            roomName: team.name,
+          });
+          teamIds.push(team._id);
+        });
+        this.textChannelService.getTeamChannels().subscribe((channels) => {
+          channels.forEach((channel) => {
+            if (this.user?.teams?.includes(channel.team!)) {
+              this.connectedChannels.push(channel);
+            }
+          });
+        });
+      });
   }
 
   openDrawingChannel(): void {
     this.textChannelService.joinedCollabChannel.subscribe((channel) => {
       this.openChannel(channel);
+      this.connectedChannels.push(channel);
     });
 
     this.textChannelService.leftCollabChannel.subscribe((channel) => {
       this.resetSearch();
+      this.removeChannel(channel);
     });
   }
 
