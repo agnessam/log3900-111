@@ -1,7 +1,6 @@
 import { DrawingService } from 'src/app/modules/workspace';
-import {Component, OnInit, Inject, ViewChild, ElementRef} from '@angular/core';
+import {Component, OnInit, Inject} from '@angular/core';
 import {MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { PostService } from '../services/post.service';
 import { DrawingHttpClientService } from 'src/app/modules/backend-communication';
 
@@ -12,11 +11,8 @@ import { DrawingHttpClientService } from 'src/app/modules/backend-communication'
 })
 export class MuseumDialog implements OnInit {
 
-  @ViewChild('nameInput', { static: false }) private nameInput: ElementRef<HTMLInputElement>;
-
   constructor(public dialogRef: MatDialogRef<MuseumDialog>,
     @Inject(MAT_DIALOG_DATA) public name: string,
-    private snackBar: MatSnackBar,
     private postService: PostService,
     private drawingService: DrawingService,
     private drawingHttpClient: DrawingHttpClientService,
@@ -26,20 +22,11 @@ export class MuseumDialog implements OnInit {
   }
 
   async onPublishClick(): Promise<void> {
-    const name = this.nameInput.nativeElement.value;
-    this.nameInput.nativeElement.value = '';
-    const isWhitespace = (name || '').trim().length === 0;
-    if (isWhitespace){
-      this.snackBar.open('The name can not be empty', 'Close', { duration: 3000 });
-      return;
-    }
-    else{
-      await this.drawingService.saveDrawing();
+    await this.drawingService.saveDrawing();
       this.drawingHttpClient.getDrawing(this.drawingService.drawingId).subscribe((drawing) => {
         this.postService.publishDrawing(this.drawingService.drawingId, drawing).subscribe((response) => {});
       });
 
-      this.dialogRef.close(name);
-    }
+      this.dialogRef.close();
   }
 }

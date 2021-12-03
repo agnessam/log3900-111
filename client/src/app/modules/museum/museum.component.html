@@ -64,6 +64,7 @@
           autocomplete="off"
           spellcheck="false"
           placeholder="Add comment"
+          (keyup.enter)="addComment(post._id)"
         />
         <button mat-icon-button id="postbtn" (click)="addComment(post._id)">
           POST
