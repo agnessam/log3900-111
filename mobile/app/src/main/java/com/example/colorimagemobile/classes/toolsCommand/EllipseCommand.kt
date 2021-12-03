@@ -1,9 +1,5 @@
 package com.example.colorimagemobile.classes.toolsCommand
 
-import android.graphics.Color
-import android.graphics.Paint
-import android.graphics.Rect
-import android.graphics.RectF
 import android.graphics.*
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.LayerDrawable
@@ -30,8 +26,8 @@ class EllipseCommand(ellipseData: EllipseData): ICommand {
 
     private lateinit var ellipseShape: LayerDrawable
 
-    private var borderPaint: Paint = Paint()
-    private var fillPaint: Paint = Paint()
+    var borderPaint: Paint = Paint()
+    var fillPaint: Paint = Paint()
 
     var borderPath = Path()
     var fillPath = Path()
@@ -47,7 +43,7 @@ class EllipseCommand(ellipseData: EllipseData): ICommand {
         DrawingJsonService.createEllipse(ellipse)
     }
 
-    private fun initializePaint(color: String, opacity: String, defaultColor: Int): Paint{
+    fun initializePaint(color: String, opacity: String, defaultColor: Int): Paint{
         var paint = Paint()
 
         val transformedColor = ColorService.addAlphaToRGBA(color, opacity)

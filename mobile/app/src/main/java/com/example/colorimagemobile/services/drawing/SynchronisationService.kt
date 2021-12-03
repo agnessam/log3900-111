@@ -158,4 +158,14 @@ object SynchronisationService {
         val deleteCommand = CommandFactory.createCommand(deleteSelectionData.type, deleteSelectionData.drawingCommand)
         deleteCommand?.execute()
     }
+
+    fun setObjectPrimaryColor(colorData: ColorData) {
+        val primaryColorCommand = CommandFactory.createCommand("PrimaryColor", colorData)
+        primaryColorCommand?.execute()
+    }
+
+    fun setObjectSecondaryColor(colorData: ColorData) {
+        val secondaryColorCommand = CommandFactory.createCommand("SecondaryColor", colorData)
+        secondaryColorCommand?.execute()
+    }
 }
