@@ -4,6 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import com.example.colorimagemobile.models.*
 import com.example.colorimagemobile.services.RetrofitInstance
 import com.example.colorimagemobile.services.users.UserService
+import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -311,6 +312,7 @@ class UserRepository {
 
             override fun onFailure(call: Call<HTTPResponseModel.UserResponse>, t: Throwable) {
                 updateSettingLiveData.value = DataWrapper(null, "Failed to update search privacy setting!", true)
+
             }
 
         })

@@ -71,7 +71,6 @@ class TeamsProfileFragment : Fragment(R.layout.fragment_teams_profile) {
         
         myView.findViewById<TextView>(R.id.teamIdNameCard).text = currentTeam.name
 
-//        myView.findViewById<ImageView>(R.id.teamIdImageView).
         myView.findViewById<TextView>(R.id.teamIdNbOfMembers).text = "${currentTeam.members.size} members"
         myView.findViewById<TextView>(R.id.teamIdDescription).text = currentTeam.description
 
