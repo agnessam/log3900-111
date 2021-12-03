@@ -27,7 +27,7 @@ export class ResizeCommand implements ICommand {
       drawingCommand.xScaled,
       drawingCommand.yScaled,
       drawingCommand.xTranslate,
-      drawingCommand.yTranslate - 64
+      drawingCommand.yTranslate //- 64
     );
     for (let key_transformation of this.previousTransformation) {
       this.previousTransformation.set(
@@ -59,6 +59,7 @@ export class ResizeCommand implements ICommand {
     xTranslate: number,
     yTranslate: number
   ): void {
+    console.log(yTranslate);
     const scaleString =
       ` translate(${xTranslate} ${yTranslate})` +
       ` scale(${xScaled} ${yScaled})` +
@@ -71,6 +72,7 @@ export class ResizeCommand implements ICommand {
       "transform",
       scaleString + lastTransformation
     );
+    console.log(scaleString + lastTransformation);
   }
 
   undo(): void {

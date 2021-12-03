@@ -86,8 +86,9 @@ export class ResizeSelectionService {
         xScale: 1,
         yScale: 1,
         xTranslate: this.oldRectBox.left - this.xFactor,
-        yTranslate: this.oldRectBox.top,
+        yTranslate: this.oldRectBox.top - 63.98,
       };
+      console.log(`${scaleReturn.xTranslate} ${scaleReturn.yTranslate}`);
 
       switch (this.ctrlPoint) {
         case this.ctrlPointList[0]: {
@@ -143,7 +144,7 @@ export class ResizeSelectionService {
         scaleReturn.xScale,
         scaleReturn.yScale,
         scaleReturn.xTranslate,
-        scaleReturn.yTranslate - 64 // HAHAHAHHAHAHHAHAHAHAHAHAHHAHAHAHAHAHHAHAHHAHAHAHHAHAH
+        scaleReturn.yTranslate //- 64 // HAHAHAHHAHAHHAHAHAHAHAHAHHAHAHAHAHAHHAHAHHAHAHAHHAHAH
       );
 
       this.resizeCommand.execute();
