@@ -18,7 +18,10 @@ export class SelectionToolParameterComponent {
     private selectionService: SelectionToolService,
     private deletingService: DeletingToolService
   ) {
-    this.strokeWidth = new FormControl(1, Validators.min(1));
+    this.strokeWidth = new FormControl(1, [
+      Validators.min(1),
+      Validators.max(50),
+    ]);
     this.form = new FormGroup({
       strokeWidth: this.strokeWidth,
     });
@@ -41,6 +44,8 @@ export class SelectionToolParameterComponent {
   }
 
   changeLineWidth(): void {
-    this.selectionService.setSelectionLineWidth(this.strokeWidth.value);
+    if (this.strokeWidth.value != null) {
+      this.selectionService.setSelectionLineWidth(this.strokeWidth.value);
+    }
   }
 }
