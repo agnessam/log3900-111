@@ -1,6 +1,7 @@
 package com.example.colorimagemobile.ui.home.fragments.gallery.views
 
 import android.content.Context
+import android.graphics.Color
 import android.graphics.Path
 import android.graphics.drawable.Drawable
 import com.example.colorimagemobile.classes.toolsCommand.EllipseCommand
@@ -14,10 +15,7 @@ import com.example.colorimagemobile.services.drawing.CanvasService
 import com.example.colorimagemobile.services.drawing.CanvasUpdateService
 import com.example.colorimagemobile.services.drawing.DrawingObjectManager
 import com.example.colorimagemobile.services.drawing.SynchronisationService
-import com.example.colorimagemobile.services.drawing.toolsAttribute.AnchorIndexes
-import com.example.colorimagemobile.services.drawing.toolsAttribute.LineWidthService
-import com.example.colorimagemobile.services.drawing.toolsAttribute.ResizeSelectionService
-import com.example.colorimagemobile.services.drawing.toolsAttribute.SelectionService
+import com.example.colorimagemobile.services.drawing.toolsAttribute.*
 import com.example.colorimagemobile.services.drawing.toolsAttribute.SelectionService.selectedShape
 import com.example.colorimagemobile.services.drawing.toolsAttribute.SelectionService.selectedShapeIndex
 import com.example.colorimagemobile.services.socket.DrawingSocketService
@@ -86,21 +84,30 @@ class SelectionView(context: Context?): CanvasView(context) {
             val command = DrawingObjectManager.getCommand(index)
             var isInsidePath = false
             var strokeWidth = 0
+            var primaryColor = ColorService.intToRGBA(Color.BLACK)
+            var secondaryColor = ColorService.intToRGBA(Color.WHITE)
             when(command) {
                 is PencilCommand -> {
                     strokeWidth = command.pencil.strokeWidth
+                    primaryColor = command.pencil.stroke
                     isInsidePath = drawBoundingBox(drawable, index, command.path, strokeWidth)
                 }
                 is RectangleCommand -> {
                     strokeWidth = command.rectangle.strokeWidth
+                    primaryColor = command.rectangle.fill
+                    secondaryColor = command.rectangle.stroke
                     isInsidePath = drawBoundingBox(drawable, index, command.borderPath, null)
                 }
                 is EllipseCommand -> {
                     strokeWidth = command.ellipse.strokeWidth
+                    primaryColor = command.ellipse.fill
+                    secondaryColor = command.ellipse.stroke
                     isInsidePath = drawBoundingBox(drawable, index, command.borderPath, null)
                 }
             }
             if(isInsidePath) {
+                SelectionColorService.updatePrimaryColor(primaryColor)
+                SelectionColorService.updateSecondaryColor(secondaryColor)
                 LineWidthService.updateCurrentWidth(strokeWidth)
                 val id = DrawingObjectManager.getUuid(selectedShapeIndex) ?: return
                 this.translateData = TranslateData(

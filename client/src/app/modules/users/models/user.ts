@@ -15,6 +15,7 @@ export interface User {
   email?: string;
   description?: string;
 
+  teams?: string[];
   drawings?: string[] | Drawing[];
   posts?: string[] | Post[];
 

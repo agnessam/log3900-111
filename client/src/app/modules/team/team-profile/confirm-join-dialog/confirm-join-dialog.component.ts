@@ -36,6 +36,7 @@ export class ConfirmJoinDialogComponent implements OnInit {
         });
       });
     }
+
     // Is private
     if (this.teamPasswordForm.value.teamPassword == this.data.team.password) {
       this.teamClient.joinTeam(this.data.team._id).subscribe((team) => {

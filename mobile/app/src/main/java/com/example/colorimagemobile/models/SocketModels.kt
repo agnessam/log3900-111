@@ -1,6 +1,7 @@
 package com.example.colorimagemobile.models
 
 import com.example.colorimagemobile.services.drawing.Point
+import com.example.colorimagemobile.services.drawing.toolsAttribute.RGB
 
 interface ToolData{
     var id: String
@@ -46,6 +47,9 @@ class EllipseData(
     var width: Float,
     var height: Float
 ): ToolData
+
+
+data class ColorData(val id: String, val color: RGB, val opacity: Float, val roomName: String)
 
 data class DeleteData(val id: String)
 

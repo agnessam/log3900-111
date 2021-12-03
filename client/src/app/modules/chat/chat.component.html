@@ -1,5 +1,9 @@
-<div id="chat-popup">
-  <app-popout-window #popout (isOutEvent)="closeChatPopout($event)">
+<div
+  id="chat-popup"
+  *ngIf="userLoaded | async"
+  [ngStyle]="{ display: isChatOpen ? 'block' : 'none' }"
+>
+  <app-popout-window #popout (isOutEvent)="closeChatPopout()">
     <div class="chat-top">
       <p>{{ currentChannel?.name }}</p>
       <div class="chat-menu" [hidden]="isPopoutOpen">
@@ -61,7 +65,9 @@
         <div *ngFor="let m of getMessages()">
           <div [ngClass]="getMessageClass(m.author)">
             <div class="authorName">{{ m.author }}</div>
-            <div class="messageBox">{{ m.message }}</div>
+            <div class="messageBox">
+              {{ m.message }}
+            </div>
             <div class="time">{{ m.timestamp }}</div>
           </div>
         </div>
@@ -79,9 +85,7 @@
             [(ngModel)]="this.message"
             name="new-message"
           />
-          <button mat-icon-button class="icon" type="submit">
-            <mat-icon>send</mat-icon>
-          </button>
+          <button mat-icon-button type="submit">send</button>
         </form>
       </div>
     </div>

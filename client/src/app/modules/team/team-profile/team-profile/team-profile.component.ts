@@ -3,6 +3,7 @@ import { MatDialog, MatDialogRef } from "@angular/material/dialog";
 import { ActivatedRoute } from "@angular/router";
 import { TeamClientService } from "src/app/modules/backend-communication/team-client/team-client.service";
 import { ChatSocketService } from "src/app/modules/chat/services/chat-socket.service";
+import { TextChannelService } from "src/app/modules/chat/services/text-channel.service";
 import { User } from "src/app/modules/users/models/user";
 import { Drawing } from "src/app/shared";
 import { Team } from "src/app/shared/models/team.model";
@@ -32,6 +33,7 @@ export class TeamProfileComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private teamClient: TeamClientService,
+    private textChannelService: TextChannelService,
     private chatSocketService: ChatSocketService,
     private dialog: MatDialog,
     private changeDetectorRef: ChangeDetectorRef
@@ -87,7 +89,7 @@ export class TeamProfileComponent implements OnInit {
     );
     this.openConfirmJoinDialogRef.afterClosed().subscribe((team) => {
       if (!team) return;
-      this.team = team;
+      this.team.members = team.members;
       this.changeDetectorRef.detectChanges();
     });
   }
@@ -97,6 +99,10 @@ export class TeamProfileComponent implements OnInit {
       ConfirmDeleteDialogComponent,
       { data: { team: this.team } }
     );
+
+    this.openConfirmDeleteDialogRef.afterClosed().subscribe(() => {
+      this.textChannelService.emitDeleteTeamChannel(this.team.name);
+    });
   }
 
   openConfirmLeaveDialog() {
@@ -108,7 +114,7 @@ export class TeamProfileComponent implements OnInit {
       if (!team) {
         return;
       }
-      this.team = team;
+      this.team.members = team.members;
       this.chatSocketService.leaveRoom(team.name);
       this.changeDetectorRef.detectChanges();
     });
