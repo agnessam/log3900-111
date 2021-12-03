@@ -103,10 +103,6 @@
         android:name="com.example.colorimagemobile.ui.home.fragments.users.UsersProfileFragment"
         android:label="User Profile"
         tools:layout="@layout/fragment_users_profile">
-        <argument
-            android:name="userId"
-            app:argType="string"
-            android:defaultValue="@{{UserService.getUserInfo()._id}}" />
         <action
             android:id="@+id/action_usersProfileFragment_to_userProfileFragment"
             app:destination="@id/userProfileFragment" />

@@ -34,6 +34,7 @@ import com.example.colorimagemobile.utils.CommonFun.Companion.printToast
 import com.example.colorimagemobile.utils.Constants
 import com.google.android.material.tabs.TabLayout
 import kotlinx.android.synthetic.main.fragment_teams_profile.*
+import kotlinx.android.synthetic.main.fragment_users_profile.*
 
 class UsersProfileFragment : Fragment(R.layout.fragment_users_profile) {
     private var userId: String? = null
@@ -83,7 +84,6 @@ class UsersProfileFragment : Fragment(R.layout.fragment_users_profile) {
             setAllDrawings()
 
             UserService.setCurrentNbFollowers(currentUser.followers.size)
-
             updateUI()
             setListeners()
         })
