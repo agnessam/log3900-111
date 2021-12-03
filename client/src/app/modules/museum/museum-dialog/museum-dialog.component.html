@@ -1,15 +1,42 @@
 <h2 mat-dialog-title>Publishing to the museum!</h2>
-<div mat-dialog-content class="inputDiv">
-  <input
-  type="text"
-  #nameInput
-  id="postName"
-  autocomplete="off"
-  spellcheck="false"
-  placeholder="Enter the drawing name"
-  />
-  <button mat-icon-button class="postbtn" (click)="onPublishClick()">
-    <p>PUBLISH</p>
-  </button>
-</div>
-
+<p>
+  This creates a non-editable version of your drawing that people can checkout!
+</p>
+<p>Users will be able to like and comment on this post.</p>
+<form [formGroup]="postForm" (ngSubmit)="onPublishClick()">
+  <p>
+    <mat-form-field appearance="outline" style="width: 100%">
+      <mat-label>Channel name</mat-label>
+      <input
+        type="text"
+        matInput
+        placeholder="Enter a channel name"
+        formControlName="name"
+      />
+      <mat-error *ngIf="this.postForm.hasError('required', 'name')"
+        >Post name cannot be empty</mat-error
+      >
+      <mat-error *ngIf="this.postForm.hasError('minlength', 'name')"
+        >Post name must contain at least 3 characters</mat-error
+      >
+      <mat-error *ngIf="this.postForm.hasError('maxlength', 'name')"
+        >Post name cannot contain more than 12 characters</mat-error
+      >
+    </mat-form-field>
+  </p>
+  <div>
+    <mat-dialog-actions align="end">
+      <button
+        type="submit"
+        mat-raised-button
+        color="primary"
+        [disabled]="postForm.invalid"
+      >
+        Create
+      </button>
+      <button mat-raised-button color="accent" (click)="onCancel()">
+        Cancel
+      </button>
+    </mat-dialog-actions>
+  </div>
+</form>

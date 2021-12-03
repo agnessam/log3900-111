@@ -1,44 +1,52 @@
-import { DrawingService } from 'src/app/modules/workspace';
-import {Component, OnInit, Inject, ViewChild, ElementRef} from '@angular/core';
-import {MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { PostService } from '../services/post.service';
-import { DrawingHttpClientService } from 'src/app/modules/backend-communication';
+import { Component, Inject, OnInit } from "@angular/core";
+import { FormControl, FormGroup, Validators } from "@angular/forms";
+import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material/dialog";
+import { DrawingHttpClientService } from "src/app/modules/backend-communication";
+import { DrawingService } from "src/app/modules/workspace";
+import { Drawing } from "src/app/shared";
+import { PostService } from "../services/post.service";
 
 @Component({
-  selector: 'app-museum-dialog',
-  templateUrl: './museum-dialog.component.html',
-  styleUrls: ['./museum-dialog.component.scss']
+  selector: "app-museum-dialog",
+  templateUrl: "./museum-dialog.component.html",
+  styleUrls: ["./museum-dialog.component.scss"],
 })
 export class MuseumDialog implements OnInit {
+  postForm: FormGroup;
 
-  @ViewChild('nameInput', { static: false }) private nameInput: ElementRef<HTMLInputElement>;
-
-  constructor(public dialogRef: MatDialogRef<MuseumDialog>,
-    @Inject(MAT_DIALOG_DATA) public name: string,
-    private snackBar: MatSnackBar,
+  constructor(
+    public dialogRef: MatDialogRef<MuseumDialog>,
+    @Inject(MAT_DIALOG_DATA) public data: Drawing,
     private postService: PostService,
     private drawingService: DrawingService,
-    private drawingHttpClient: DrawingHttpClientService,
-    ) { }
+    private drawingHttpClient: DrawingHttpClientService
+  ) {}
 
   ngOnInit(): void {
+    console.log(this.postService);
+    console.log(this.drawingService);
+    console.log(this.drawingHttpClient);
+    this.postForm = new FormGroup({
+      name: new FormControl("", [
+        Validators.required,
+        Validators.minLength(3),
+        Validators.maxLength(12),
+      ]),
+    });
   }
 
   onPublishClick(): void {
-    const name = this.nameInput.nativeElement.value;
-    this.nameInput.nativeElement.value = '';
-    const isWhitespace = (name || '').trim().length === 0;
-    if (isWhitespace){
-      this.snackBar.open('The name can not be empty', 'Close', { duration: 3000 });
-      return;
-    }
-    else{
-      this.drawingHttpClient.getDrawing(this.drawingService.drawingId).subscribe((drawing) => {
-        this.postService.publishDrawing(this.drawingService.drawingId, drawing).subscribe((response) => {});
+    if (this.postForm.invalid) return;
+    this.data.name = this.postForm.value.name;
+    this.postService
+      .publishDrawing(this.data._id, this.data)
+      .subscribe((post) => {
+        this.dialogRef.close(post);
+        this.postForm.reset();
       });
+  }
 
-      this.dialogRef.close(name);
-    }
+  onCancel(): void {
+    this.dialogRef.close();
   }
 }
