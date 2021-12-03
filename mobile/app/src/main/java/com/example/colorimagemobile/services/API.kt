@@ -166,6 +166,9 @@ interface API {
     @DELETE("${Constants.ENDPOINTS.TEAMS}{id}")
     fun deleteTeam(@Header("Authorization") token: String, @Path ("id") id: String): Call<Any>
 
+    @PATCH("${Constants.ENDPOINTS.TEAMS}{id}")
+    fun updateTeam(@Header("Authorization") token: String, @Path ("id") id: String, @Body team: UpdateTeam): Call<Any>
+
     // Search
     @GET(Constants.ENDPOINTS.SEARCH)
     fun getSearchQuery(@Header("Authorization") token: String, @Query ("q") query: String): Call<SearchModel>

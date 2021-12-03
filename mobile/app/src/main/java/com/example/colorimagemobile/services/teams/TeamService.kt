@@ -6,6 +6,7 @@ import androidx.lifecycle.LifecycleOwner
 import com.example.colorimagemobile.R
 import com.example.colorimagemobile.classes.MyFragmentManager
 import com.example.colorimagemobile.models.TeamModel
+import com.example.colorimagemobile.models.UpdateTeam
 import com.example.colorimagemobile.repositories.TeamRepository
 import com.example.colorimagemobile.services.users.UserService
 import com.example.colorimagemobile.ui.home.fragments.teams.TeamsMenuFragment
@@ -60,6 +61,12 @@ object TeamService {
 
             if (it.isError as Boolean) { return@observe }
             MyFragmentManager(context as FragmentActivity).open(R.id.teamsMenuFrameLayout, TeamsMenuFragment())
+        })
+    }
+
+    fun updateTeam(teamId: String, context: Context, newTeamData: UpdateTeam) {
+        TeamRepository().updateTeam(teamId, newTeamData).observe(context as LifecycleOwner, {
+            printToast(context, it.message!!)
         })
     }
 }
