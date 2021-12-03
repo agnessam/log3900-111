@@ -79,6 +79,10 @@ export class ChatComponent implements OnInit, OnDestroy {
     });
   }
 
+  ngAfterViewChecked() {
+    this.scrollDown();
+  }
+
   ngOnDestroy(): void {
     this.messageHistory.forEach((_messages, roomName) => {
       this.chatSocketService.leaveRoom({
@@ -144,13 +148,14 @@ export class ChatComponent implements OnInit, OnDestroy {
   }
 
   scrollDown() {
-    const messageBox = this.chatBox.nativeElement;
-    messageBox.scrollTop = messageBox.scrollHeight;
+    try {
+      const messageBox = this.chatBox.nativeElement;
+      messageBox.scrollTop = messageBox.scrollHeight;
+    } catch (err) {}
   }
 
   sendMessage() {
     if (this.message === null || this.message.match(/^ *$/) !== null) return;
-    console.log(this.user)
     if (this.user?.username === null) return;
     const message: Message = {
       message: this.message,
