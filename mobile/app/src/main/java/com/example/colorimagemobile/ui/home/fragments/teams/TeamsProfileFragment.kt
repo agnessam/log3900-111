@@ -74,7 +74,6 @@ class TeamsProfileFragment : Fragment(R.layout.fragment_teams_profile) {
 //        myView.findViewById<ImageView>(R.id.teamIdImageView).
         myView.findViewById<TextView>(R.id.teamIdNbOfMembers).text = "${currentTeam.members.size} members"
         myView.findViewById<TextView>(R.id.teamIdDescription).text = currentTeam.description
-        myView.findViewById<TextView>(R.id.teamIdNbOfPosts).text = currentTeam.posts.size.toString()
 
         joinBtn = myView.findViewById<Button>(R.id.teamIdJoinBtn)
         leaveBtn = myView.findViewById<Button>(R.id.leaveTeamIdBtn)
