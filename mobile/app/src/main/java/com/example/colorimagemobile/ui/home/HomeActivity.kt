@@ -59,7 +59,7 @@ class HomeActivity : AppCompatActivity() {
         bottomNav = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
 
         setBottomNavigationView()
-        getAllUsers()
+//        getAllUsers()
     }
 
     // side navigation navbar: upon click, change to new fragment
