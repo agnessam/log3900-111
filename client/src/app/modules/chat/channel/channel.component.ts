@@ -132,7 +132,6 @@ export class ChannelComponent implements OnInit, OnDestroy {
   openDrawingChannel(): void {
     this.textChannelService.joinedCollabChannel.subscribe((channel) => {
       this.openChannel(channel);
-      this.connectedChannels.push(channel);
     });
 
     this.textChannelService.leftCollabChannel.subscribe((channel) => {
