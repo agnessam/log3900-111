@@ -40,7 +40,6 @@ export class GalleryComponent implements AfterViewInit {
   }
 
   createNewDrawing() {
-    console.log(this.drawings);
     this.dialog.open(NewDrawingComponent, {});
   }
 

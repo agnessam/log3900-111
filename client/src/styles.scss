@@ -160,6 +160,10 @@ $colorimage-dark-theme: map_merge(
     background-size: cover;
   }
 
+  #channel-overlay {
+    background-color: #424242;
+  }
+
   .login-body {
     background-image: url("./assets/backgrounds/dark-auth-background.png");
     background-position: center;
@@ -199,6 +203,9 @@ $colorimage-dark-theme: map_merge(
     -webkit-box-shadow: none;
     -moz-box-shadow: none;
     box-shadow: none;
+  }
+  #channel-overlay {
+    background-color: #fef9f7;
   }
 
   .mat-card {

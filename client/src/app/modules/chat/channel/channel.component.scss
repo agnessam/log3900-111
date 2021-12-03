@@ -2,17 +2,12 @@
   display: block;
   width: 230px;
   border-radius: 15px;
-  // background-color: #fef9f7;
 }
 
 .btn {
   border-radius: 50%;
   border: none;
   background-color: transparent;
-}
-
-.btn:hover {
-  // background-color: #fae2dd;
 }
 
 .channel-top {
@@ -35,15 +30,14 @@
 }
 
 .channel {
-  margin-left: 10px;
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
 .channel:hover {
-  // color: #da7e70;
   cursor: pointer;
+  background: rgba(0, 0, 0, 0.1);
 }
 
 .channel-list {
@@ -54,6 +48,10 @@
 
 .deleteChannelBtn {
   display: none;
+}
+
+::ng-deep .mat-menu-content {
+  padding: 0px !important;
 }
 
 .modal {
@@ -116,4 +114,13 @@
 
 input[type="text"]:invalid {
   border: 1px solid red;
+}
+
+::ng-deep .mat-menu-content {
+  padding-top: 0px !important;
+  padding-bottom: 0px !important;
+}
+
+::ng-deep .mat-menu-panel {
+  min-height: 48px;
 }

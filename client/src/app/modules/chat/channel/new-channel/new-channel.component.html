@@ -3,7 +3,7 @@
 
 <form [formGroup]="newDrawingForm" (ngSubmit)="onAccept()">
   <p>
-    <mat-form-field appearance="outline">
+    <mat-form-field appearance="outline" style="width: 100%">
       <mat-label>Channel name</mat-label>
       <input
         type="text"
@@ -11,11 +11,32 @@
         placeholder="Enter a channel name"
         formControlName="name"
       />
+      <mat-error
+        *ngIf="this.newDrawingForm.hasError('duplicateChannelName', 'name')"
+        >Channel name already exists</mat-error
+      >
+      <mat-error *ngIf="this.newDrawingForm.hasError('required', 'name')"
+        >Channel name cannot be empty</mat-error
+      >
+      <mat-error *ngIf="this.newDrawingForm.hasError('minlength', 'name')"
+        >Channel name must contain at least 3 characters</mat-error
+      >
+
+      <mat-error *ngIf="this.newDrawingForm.hasError('maxlength', 'name')"
+        >Channel name cannot contain more than 12 characters</mat-error
+      >
     </mat-form-field>
   </p>
   <div>
     <mat-dialog-actions align="end">
-      <button type="submit" mat-raised-button color="primary">Create</button>
+      <button
+        type="submit"
+        mat-raised-button
+        color="primary"
+        [disabled]="newDrawingForm.invalid"
+      >
+        Create
+      </button>
       <button mat-raised-button color="accent" (click)="onCancel()">
         Cancel
       </button>
