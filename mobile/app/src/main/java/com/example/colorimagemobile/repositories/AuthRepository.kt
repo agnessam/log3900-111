@@ -59,13 +59,11 @@ class AuthRepository {
             override fun onResponse(call: Call<Boolean>, response: Response<Boolean>) {
                 // some HTTP error
                 if (!response.isSuccessful) {
-                    printMsg("Logout Response ${response.message()}")
                     authLiveData = false
                     return
                 }
                 // user logout successfully and logoutDate update
                 authLiveData = true
-                printMsg("Logout Response ${response.message()}")
             }
 
             // HTTP failure
