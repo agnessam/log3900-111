@@ -12,7 +12,7 @@ import com.example.colorimagemobile.services.users.UserService
 
 class UsersMenuRecyclerAdapter(
         val layoutID: Int,
-        val openUser: (Int) -> Unit):
+        val openUser: (String) -> Unit):
     RecyclerView.Adapter<UsersMenuRecyclerAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UsersMenuRecyclerAdapter.ViewHolder {
@@ -22,7 +22,6 @@ class UsersMenuRecyclerAdapter(
     override fun onBindViewHolder(holder: UsersMenuRecyclerAdapter.ViewHolder, position: Int) {
         holder.username.text = UserService.getAllUserInfo()[position].username
         MyPicasso().loadImage(UserService.getAllUserInfo()[position].avatar.imageUrl, holder.image)
-
     }
 
     override fun getItemCount(): Int { return UserService.getAllUserInfo().size }
@@ -32,7 +31,10 @@ class UsersMenuRecyclerAdapter(
         var username : TextView = itemView.findViewById(R.id.card_user_username);
 
         init {
-            itemView.setOnClickListener { openUser(bindingAdapterPosition) }
+            itemView.setOnClickListener {
+                val user = UserService.getAllUserInfo()[bindingAdapterPosition]
+                openUser(user._id)
+            }
         }
     }
 }

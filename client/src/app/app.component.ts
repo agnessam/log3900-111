@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from "@angular/core";
 import { MatDialog } from "@angular/material/dialog";
-import { HotkeysService } from 'src/app/modules/workspace';
+import { ColorSchemeService } from "./core/themes/color-scheme.service";
 
 @Component({
   selector: "app-root",
@@ -8,13 +8,23 @@ import { HotkeysService } from 'src/app/modules/workspace';
   templateUrl: "./app.component.html",
 })
 export class AppComponent implements OnInit, OnDestroy {
-  constructor(public dialog: MatDialog, private hotkeyService: HotkeysService) {
-    this.hotkeyService.hotkeysListener();
+  userId: string | null;
+
+  constructor(
+    public dialog: MatDialog,
+    private colorSchemeService: ColorSchemeService
+  ) {
+    this.colorSchemeService.load();
+    this.colorSchemeService.update("light");
   }
 
   openDialog() {}
 
   ngOnInit() {}
+
+  ngAfterViewChecked() {
+    this.userId = localStorage.getItem("userId");
+  }
 
   ngOnDestroy(): void {}
 }

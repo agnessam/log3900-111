@@ -1,26 +1,32 @@
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { Observable, Subject } from 'rxjs';
-import { environment } from 'src/environments/environment';
-import { EditableChannelParameters } from '../models/editable-channel-parameters';
-import { Message } from '../models/message.model';
-import { TextChannel } from '../models/text-channel.model';
+import { HttpClient, HttpHeaders, HttpParams } from "@angular/common/http";
+import { Injectable } from "@angular/core";
+import { Observable, ReplaySubject, Subject } from "rxjs";
+import { environment } from "src/environments/environment";
+import { EditableChannelParameters } from "../models/editable-channel-parameters";
+import { Message } from "../models/message.model";
+import { TextChannel } from "../models/text-channel.model";
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: "root",
 })
 export class TextChannelService {
-  newChannel: Subject<TextChannel>;
+  newTeamChannel: Subject<TextChannel>;
+  deletedTeamChannel: Subject<string>;
+  joinedCollabChannel: ReplaySubject<TextChannel>;
+  leftCollabChannel: Subject<TextChannel>;
 
   private endpointUrl: string = environment.serverURL + "/channels";
   private httpHeaders: HttpHeaders = new HttpHeaders().set(
     "ContentType",
-    "application/x-www-form-urlencoded",
+    "application/x-www-form-urlencoded"
   );
 
   constructor(private httpClient: HttpClient) {
-    this.newChannel = new Subject<TextChannel>();
-   }
+    this.newTeamChannel = new Subject<TextChannel>();
+    this.deletedTeamChannel = new Subject<string>();
+    this.joinedCollabChannel = new ReplaySubject<TextChannel>();
+    this.leftCollabChannel = new Subject<TextChannel>();
+  }
 
   getChannels(): Observable<TextChannel[]> {
     return this.httpClient
@@ -38,22 +44,52 @@ export class TextChannelService {
       });
   }
 
-  createChannel(newName: string, newOwner: string, teamId?: string, drawingId?: string): Observable<TextChannel> {
+  getTeamChannels(): Observable<TextChannel[]> {
     return this.httpClient
-      .post<TextChannel>(this.endpointUrl, {
-        name: newName,
-        ownerId: newOwner,
-        team: teamId,
-        drawing: drawingId,
-      }, {
-        headers: this.httpHeaders,
-      })
+      .get<TextChannel[]>(`${this.endpointUrl}/teams`)
       .pipe((response) => {
         return response;
       });
   }
 
-  updateChannel(channelId: string, channel: EditableChannelParameters): Observable<TextChannel> {
+  getChannelByDrawingId(drawingId: string): Observable<TextChannel> {
+    return this.httpClient
+      .get<TextChannel>(`${this.endpointUrl}/drawings/${drawingId}`)
+      .pipe((response) => {
+        return response;
+      });
+  }
+
+  createChannel(
+    newName: string,
+    newOwner: string,
+    teamId?: string,
+    drawingId?: string,
+    isPrivate: boolean = false
+  ): Observable<TextChannel> {
+    return this.httpClient
+      .post<TextChannel>(
+        this.endpointUrl,
+        {
+          name: newName,
+          ownerId: newOwner,
+          team: teamId,
+          drawing: drawingId,
+          isPrivate: isPrivate,
+        },
+        {
+          headers: this.httpHeaders,
+        }
+      )
+      .pipe((response) => {
+        return response;
+      });
+  }
+
+  updateChannel(
+    channelId: string,
+    channel: EditableChannelParameters
+  ): Observable<TextChannel> {
     return this.httpClient
       .patch<TextChannel>(`${this.endpointUrl}/${channelId}`, channel, {
         headers: this.httpHeaders,
@@ -88,13 +124,27 @@ export class TextChannelService {
   }
 
   searchChannels(query: string): Observable<TextChannel[]> {
-    return this.httpClient.get<TextChannel[]>(`${this.endpointUrl}/all/search`, {
-      params: new HttpParams().set("q", query),
-    });
+    return this.httpClient.get<TextChannel[]>(
+      `${this.endpointUrl}/all/search`,
+      {
+        params: new HttpParams().set("q", query),
+      }
+    );
   }
 
-  emitNewChannel(channel: TextChannel): void {
-    this.newChannel.next(channel);
+  emitNewTeamChannel(channel: TextChannel): void {
+    this.newTeamChannel.next(channel);
   }
 
+  emitDeleteTeamChannel(channelName: string): void {
+    this.deletedTeamChannel.next(channelName);
+  }
+
+  emitJoinCollaboration(channel: TextChannel): void {
+    this.joinedCollabChannel.next(channel);
+  }
+
+  emitLeaveCollaboration(channel: TextChannel): void {
+    this.leftCollabChannel.next(channel);
+  }
 }

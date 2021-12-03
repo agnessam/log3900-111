@@ -1,31 +1,69 @@
-<mat-drawer-container id="settings-container">
-  <mat-drawer mode="side" opened id="settings-drawer">
+<mat-drawer-container id="settings-container" class="mat-app-background">
+  <mat-drawer
+    mode="side"
+    opened
+    id="settings-drawer"
+    class="mat-app-background"
+  >
     <div
       id="settings-options"
       fxLayout="column wrap"
       fxLayoutAlign="center"
       fxLayoutGap="20px"
-      style="padding-top: 50px"
+      style="padding-top: 12%; padding-right: 2%"
     >
       <div fxFlex="30%" style="padding-bottom: 2%">
         <mat-card-title>User settings</mat-card-title>
       </div>
       <div fxFlex="40%">
-        <button mat-button [routerLink]="['/settings/overview']">
+        <button
+          mat-button
+          [routerLink]="['/settings/overview']"
+          class="router-button"
+        >
           My profile
         </button>
       </div>
       <div fxFlex="40%">
-        <button mat-button [routerLink]="['/settings/history']">History</button>
+        <button
+          mat-button
+          [routerLink]="['/settings/privacy']"
+          class="router-button"
+        >
+          Privacy & Safety
+        </button>
       </div>
       <div fxFlex="40%">
-        <button mat-button [routerLink]="['/settings/statistics']">
+        <button
+          mat-button
+          [routerLink]="['/settings/history']"
+          class="router-button"
+        >
+          History
+        </button>
+      </div>
+      <div fxFlex="40%">
+        <button
+          mat-button
+          [routerLink]="['/settings/statistics']"
+          class="router-button"
+        >
           Statistics
+        </button>
+      </div>
+      <hr style="width: 60%" />
+      <div fxFlex="40%">
+        <button
+          mat-button
+          [routerLink]="['/settings/application']"
+          class="router-button"
+        >
+          Application Settings
         </button>
       </div>
     </div>
   </mat-drawer>
-  <mat-drawer-content id="settings">
+  <mat-drawer-content id="settings" class="mat-app-background">
     <router-outlet></router-outlet>
   </mat-drawer-content>
 </mat-drawer-container>

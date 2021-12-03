@@ -74,7 +74,13 @@ class GalleryMenuFragment : Fragment(R.layout.fragment_gallery_menu) {
         recyclerView = galleryView.findViewById<RecyclerView>(R.id.drawingMenuRecyclerView)
         drawingsMenu = DrawingService.getDrawingsBitmap(requireContext(), drawings)
         recyclerView.layoutManager = GridLayoutManager(requireContext(), Constants.NB_DATA_ROWS)
-        recyclerView.adapter = DrawingMenuRecyclerAdapter(requireActivity(), drawingsMenu, R.id.main_gallery_fragment) { updatedDrawing, pos -> updateDrawing(updatedDrawing, pos) }
+        recyclerView.adapter = DrawingMenuRecyclerAdapter(
+            requireActivity(),
+            drawingsMenu,
+            R.id.main_gallery_fragment,
+            { updatedDrawing, pos -> updateDrawing(updatedDrawing, pos) },
+            { drawingId, pos -> deleteDrawing(drawingId, pos) }
+        )
     }
 
     private fun updateDrawing(updatedDrawing: DrawingModel.UpdateDrawing, position: Int) {
@@ -86,6 +92,19 @@ class GalleryMenuFragment : Fragment(R.layout.fragment_gallery_menu) {
 
             drawingsMenu[position] = DrawingService.updateDrawingFromMenu(drawingsMenu[position], updatedDrawing)
             recyclerView.adapter?.notifyItemChanged(position)
+        })
+    }
+
+    private fun deleteDrawing(drawingId: String, position: Int) {
+        drawingRepo.deleteDrawing(drawingId).observe(viewLifecycleOwner, {
+            printToast(requireActivity(), it.message!!)
+
+            if (it.isError as Boolean) {
+                return@observe
+            }
+
+            drawingsMenu.removeAt(position)
+            recyclerView.adapter?.notifyDataSetChanged()
         })
     }
 }

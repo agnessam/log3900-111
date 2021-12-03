@@ -1,9 +1,5 @@
 package com.example.colorimagemobile.classes.toolsCommand
 
-import android.graphics.Color
-import android.graphics.Paint
-import android.graphics.Rect
-import android.graphics.RectF
 import android.graphics.*
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.LayerDrawable
@@ -30,8 +26,8 @@ class EllipseCommand(ellipseData: EllipseData): ICommand {
 
     private lateinit var ellipseShape: LayerDrawable
 
-    private var borderPaint: Paint = Paint()
-    private var fillPaint: Paint = Paint()
+    var borderPaint: Paint = Paint()
+    var fillPaint: Paint = Paint()
 
     var borderPath = Path()
     var fillPath = Path()
@@ -47,7 +43,7 @@ class EllipseCommand(ellipseData: EllipseData): ICommand {
         DrawingJsonService.createEllipse(ellipse)
     }
 
-    private fun initializePaint(color: String, opacity: String, defaultColor: Int): Paint{
+    fun initializePaint(color: String, opacity: String, defaultColor: Int): Paint{
         var paint = Paint()
 
         val transformedColor = ColorService.addAlphaToRGBA(color, opacity)
@@ -80,10 +76,10 @@ class EllipseCommand(ellipseData: EllipseData): ICommand {
 
     fun setEndPoint(endPoint: Point) {
         endingPoint = endPoint
-        ellipse.width = kotlin.math.abs(endingPoint!!.x - startingPoint!!.x).toInt()
-        ellipse.x = ((endingPoint!!.x + startingPoint!!.x) / 2).toInt()
-        ellipse.height = kotlin.math.abs(endingPoint!!.y - startingPoint!!.y).toInt()
-        ellipse.y = ((endingPoint!!.y + startingPoint!!.y) / 2).toInt()
+        ellipse.width = kotlin.math.abs(endingPoint!!.x - startingPoint!!.x)
+        ellipse.x = ((endingPoint!!.x + startingPoint!!.x) / 2)
+        ellipse.height = kotlin.math.abs(endingPoint!!.y - startingPoint!!.y)
+        ellipse.y = ((endingPoint!!.y + startingPoint!!.y) / 2)
 
         DrawingJsonService.updateEllipse(ellipse)
 
@@ -99,8 +95,9 @@ class EllipseCommand(ellipseData: EllipseData): ICommand {
         return ellipseShape.getDrawable(borderEllipseIndex) as ShapeDrawable
     }
 
-    private fun getEllipseDrawable(): LayerDrawable {
-        return DrawingObjectManager.getDrawable(this.layerIndex) as LayerDrawable
+    private fun getEllipseDrawable(): LayerDrawable? {
+        val drawable = DrawingObjectManager.getDrawable(this.layerIndex) ?: return null
+        return drawable as LayerDrawable
     }
 
     override fun update(drawingCommand: Any) {
@@ -115,6 +112,8 @@ class EllipseCommand(ellipseData: EllipseData): ICommand {
     }
 
     override fun execute() {
+        if(this.getEllipseDrawable() == null) return
+
         if(ellipse.stroke != "none"){
             val borderRectPathShape = PathShape(borderPath,
                 CanvasService.extraCanvas.width.toFloat(), CanvasService.extraCanvas.height.toFloat()
@@ -122,7 +121,7 @@ class EllipseCommand(ellipseData: EllipseData): ICommand {
             var borderRectDrawable = ShapeDrawable(borderRectPathShape)
             this.getBorderEllipse().bounds = this.boundingRectangle
 
-            this.getEllipseDrawable().setDrawable(this.borderEllipseIndex, borderRectDrawable)
+            this.getEllipseDrawable()!!.setDrawable(this.borderEllipseIndex, borderRectDrawable)
             this.getBorderEllipse().paint.set(this.borderPaint)
         }
 
@@ -134,11 +133,11 @@ class EllipseCommand(ellipseData: EllipseData): ICommand {
             var fillRectDrawable = ShapeDrawable(fillRectPathShape)
             this.getFillEllipse().bounds = this.boundingRectangle
 
-            this.getEllipseDrawable().setDrawable(this.fillEllipseIndex, fillRectDrawable)
+            this.getEllipseDrawable()!!.setDrawable(this.fillEllipseIndex, fillRectDrawable)
             this.getFillEllipse().paint.set(this.fillPaint)
         }
         
-        this.getEllipseDrawable().bounds = this.boundingRectangle
+        this.getEllipseDrawable()!!.bounds = this.boundingRectangle
         DrawingObjectManager.addCommand(ellipse.id, this)
         DrawingObjectManager.setDrawable(layerIndex, ellipseShape)
         CanvasUpdateService.invalidate()

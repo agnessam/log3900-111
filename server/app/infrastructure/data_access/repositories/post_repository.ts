@@ -52,7 +52,8 @@ export class PostRepository extends GenericRepository<PostInterface> {
   public async getPopulatedPostById(postId: string) {
     return new Promise((resolve, reject) => {
       Post.findById({ _id: postId })
-        .populate({ path: 'comments', populate: { path: 'authorId' } })
+        .populate('owner')
+        .populate({ path: 'comments', populate: { path: 'author' } })
         .exec((err, post) => {
           if (err || !post) {
             reject(err);

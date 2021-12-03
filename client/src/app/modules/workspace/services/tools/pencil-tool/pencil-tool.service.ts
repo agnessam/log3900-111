@@ -20,7 +20,7 @@ import { UuidGeneratorService } from "src/app/shared/id-generator/uuid-generator
   providedIn: "root",
 })
 export class PencilToolService implements Tools {
-  readonly toolName = "Outil Crayon";
+  readonly toolName = "Pencil";
   readonly faIcon: IconDefinition = faPencilAlt;
   readonly id = ToolIdConstants.PENCIL_ID;
   private strokeWidth: FormControl;

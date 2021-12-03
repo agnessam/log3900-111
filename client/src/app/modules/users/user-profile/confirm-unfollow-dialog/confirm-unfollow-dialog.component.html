@@ -1,0 +1,16 @@
+<h1 mat-dialog-title>Are you sure you want to unfollow {{ data.username }}?</h1>
+<div>
+  <mat-dialog-actions align="end">
+    <button
+      mat-raised-button
+      color="primary"
+      type="submit"
+      (click)="unfollowUser()"
+    >
+      Unfollow
+    </button>
+    <button mat-raised-button color="accent" (click)="onCancel()">
+      Cancel
+    </button>
+  </mat-dialog-actions>
+</div>

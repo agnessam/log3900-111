@@ -88,6 +88,23 @@ object ColorService {
     fun convertOpacityToAndroid(opacity: String): Int {
         if (opacity == "none") return Constants.DRAWING.MAX_OPACITY
 
-        return (opacity.toDouble() * Constants.DRAWING.MAX_OPACITY).toInt()
+        return (opacity.toFloat() * Constants.DRAWING.MAX_OPACITY).toInt()
+    }
+
+    fun convertRGBAStringToRGBObject(rgbaColor: String): RGB{
+        var color = rgbaColor.replace("rgba(", "").replace(")", "")
+        val rgbaStrings = color.split(",")
+
+        val r = rgbaStrings[0].trim().toInt()
+        val g = rgbaStrings[1].trim().toInt()
+        val b = rgbaStrings[2].trim().toInt()
+        return RGB(r,g,b)
+    }
+
+    fun convertRGBAndOpacityToRGBAString(rgb: RGB, opacity: Float): String {
+        val newOpacity = convertOpacityToAndroid(opacity.toString())
+        return "rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, $newOpacity)"
     }
 }
+
+data class RGB(val r: Int, val g: Int, val b: Int)

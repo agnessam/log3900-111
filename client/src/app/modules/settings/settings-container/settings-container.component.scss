@@ -1,22 +1,27 @@
 #settings-container {
-  width: 60%;
+  width: 65%;
   height: 80%;
   padding-top: 2%;
   margin: auto;
-  background-color: #fcedea;
+  // background-color: #fcedea;
 }
 
 #settings-drawer {
-  width: 15%;
-  margin-right: 40%;
-  background-color: #fcedea;
+  width: 25%;
+  margin-right: 10%;
+  // background-color: #fcedea;
 }
 
 #settings-options {
   margin: auto;
+  padding-right: 20%;
   text-align: center;
 }
 
 mat-drawer-container {
   flex: 1 1 auto;
+}
+
+.router-button {
+  width: 80%;
 }

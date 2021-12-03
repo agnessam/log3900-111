@@ -8,35 +8,30 @@ import com.example.colorimagemobile.services.drawing.DrawingJsonService
 import com.example.colorimagemobile.services.drawing.DrawingObjectManager
 import com.example.colorimagemobile.services.drawing.toolsAttribute.SelectionService
 
-class DeleteCommand(deletedShape: Drawable): ICommand {
-    private var deletedShape = deletedShape
-
+class DeleteCommand(objectId: String): ICommand {
+    private var id: String = objectId
+    private var deleteShapeLayerIndex: Int = DrawingObjectManager.getLayerIndex(id)
+    var deletedShape: Drawable? = DrawingObjectManager.getDrawable(this.deleteShapeLayerIndex)
     override fun update(drawingCommand: Any) {
-        TODO("Not yet implemented")
+        // No update for deleteCommand
     }
 
     private fun deleteFromJson() {
-        val id = DrawingObjectManager.getUuid(SelectionService.selectedShapeIndex)
 
         when (DrawingObjectManager.getCommand(SelectionService.selectedShapeIndex)) {
-            is PencilCommand -> DrawingJsonService.removePolyline(id!!)
-            is RectangleCommand -> DrawingJsonService.removeRectangle(id!!)
-            is EllipseCommand -> DrawingJsonService.removeEllipse(id!!)
+            is PencilCommand -> DrawingJsonService.removePolyline(id)
+            is RectangleCommand -> DrawingJsonService.removeRectangle(id)
+            is EllipseCommand -> DrawingJsonService.removeEllipse(id)
         }
     }
 
     override fun execute() {
-        if (SelectionService.isShapeInitialized() && deletedShape == SelectionService.selectedShape) {
-            var emptyShapeDrawable = ShapeDrawable()
-            emptyShapeDrawable.paint.alpha = 0
+        var emptyShapeDrawable = ShapeDrawable()
+        emptyShapeDrawable.paint.alpha = 0
 
-            deleteFromJson()
-            DrawingObjectManager.setDrawable(SelectionService.selectedShapeIndex, emptyShapeDrawable)
-            DrawingObjectManager.removeCommand(SelectionService.selectedShapeIndex)
-            SelectionService.selectedShapeIndex = -1
-            SelectionService.selectedShape = ShapeDrawable()
-            SelectionService.clearSelection()
-        }
+        deleteFromJson()
+        DrawingObjectManager.setDrawable(deleteShapeLayerIndex, emptyShapeDrawable)
+        DrawingObjectManager.removeCommand(deleteShapeLayerIndex)
         CanvasUpdateService.invalidate()
     }
 }

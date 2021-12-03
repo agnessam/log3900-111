@@ -18,6 +18,7 @@ import { NewDrawingService } from "./new-drawing.service";
 import { UsersService } from "../users/services/users.service";
 import { Team } from "src/app/shared/models/team.model";
 import { OptionalDrawingParameters } from "./optional-drawing-parameters";
+import { TextChannelService } from "../chat/services/text-channel.service";
 
 const ONE_SECOND = 1000;
 const DEFAULT_DRAWING_WIDTH = 1440;
@@ -42,6 +43,7 @@ export class NewDrawingComponent implements OnInit {
     private colorPickerService: ColorPickerService,
     private drawingHttpClient: DrawingHttpClientService,
     private usersService: UsersService,
+    private textChannelService: TextChannelService,
     private router: Router
   ) {}
 
@@ -100,9 +102,18 @@ export class NewDrawingComponent implements OnInit {
       .subscribe((response) => {
         if (response._id) {
           this.router.navigate([`/drawings/${response._id}`]);
-          this.snackBar.open("Nouveau dessin créé", "", {
+          this.snackBar.open("Succesfully created drawing", "", {
             duration: ONE_SECOND,
           });
+          this.textChannelService
+            .createChannel(
+              response.name,
+              response.owner as string,
+              undefined,
+              response._id,
+              true
+            )
+            .subscribe((channel) => {});
         }
       });
     this.newDrawingService.form.reset();

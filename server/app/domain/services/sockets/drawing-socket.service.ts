@@ -141,7 +141,6 @@ export class DrawingSocketService extends SocketServiceInterface {
 
   private listenInProgressDrawingCommand(socket: Socket): void {
     socket.on(IN_PROGRESS_DRAW_EVENT, (drawingCommand: DrawingCommand) => {
-      console.log(drawingCommand);
       this.emitInProgressDrawingCommand(drawingCommand, socket);
     });
   }
@@ -150,7 +149,6 @@ export class DrawingSocketService extends SocketServiceInterface {
   // Allows users to load what was there.
   private listenConfirmDrawingCommand(socket: Socket): void {
     socket.on(CONFIRM_DRAW_EVENT, (drawingCommand: DrawingCommand) => {
-      console.log(drawingCommand);
       this.emitConfirmDrawingCommand(drawingCommand, socket);
     });
   }
@@ -175,7 +173,6 @@ export class DrawingSocketService extends SocketServiceInterface {
 
   private listenTransformSelectionCommand(socket: Socket): void {
     socket.on(TRANSFORM_SELECTION_EVENT, (selectionCommand: any) => {
-      console.log(selectionCommand);
       this.emitTransformSelectionCommand(selectionCommand, socket);
     });
   }
@@ -299,7 +296,6 @@ export class DrawingSocketService extends SocketServiceInterface {
     drawingCommand: any,
     socket: Socket,
   ): void {
-    console.log(drawingCommand);
     socket
       .to(drawingCommand.roomName)
       .emit(TRANSFORM_SELECTION_EVENT, drawingCommand);

@@ -7,6 +7,7 @@ import com.example.colorimagemobile.interfaces.ICommand
 import com.example.colorimagemobile.models.*
 import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
 import org.json.JSONObject
+import java.net.Socket
 
 object SynchronisationService {
     private var lastXTranslate: Float = 0f
@@ -26,6 +27,7 @@ object SynchronisationService {
     }
 
     fun draw(socketToolArgs: String) {
+        if(!CanvasService.extraCanvasIsIntialized()) return
 
         val drawingCommandJSON = JSONObject(socketToolArgs)
 
@@ -45,37 +47,37 @@ object SynchronisationService {
                     SyncUpdate(newPoint)
                 }
                 "Rectangle" -> {
-                    var x: Int = when(drawingCommand["x"]){
-                      is Double -> (drawingCommand["x"] as Double).toInt()
-                      is Int -> drawingCommand["x"] as Int
+                    var x: Float = when(drawingCommand["x"]){
+                      is Double -> (drawingCommand["x"] as Double).toFloat()
+                      is Int -> (drawingCommand["x"] as Int).toFloat()
                       else -> throw Exception("Rectangle x received isn't a number?")
                     }
 
-                    var y: Int = when(drawingCommand["y"]){
-                        is Double -> (drawingCommand["y"] as Double).toInt()
-                        is Int -> drawingCommand["y"] as Int
+                    var y: Float = when(drawingCommand["y"]){
+                        is Double -> (drawingCommand["y"] as Double).toFloat()
+                        is Int -> (drawingCommand["y"] as Int).toFloat()
                         else -> throw Exception("Rectangle y received isn't a number?")
                     }
 
-                    var width: Int = drawingCommand["width"] as Int
-                    var height: Int = drawingCommand["height"] as Int
+                    var width: Float = (drawingCommand["width"] as Int).toFloat()
+                    var height: Float = (drawingCommand["height"] as Int).toFloat()
                     RectangleUpdate(x, y, width, height)
                 }
                 "Ellipse" -> {
-                    var x: Int = when(drawingCommand["x"]){
-                        is Double -> (drawingCommand["x"] as Double).toInt()
-                        is Int -> drawingCommand["x"] as Int
+                    var x: Float = when(drawingCommand["x"]){
+                        is Double -> (drawingCommand["x"] as Double).toFloat()
+                        is Int -> (drawingCommand["x"] as Int).toFloat()
                         else -> throw Exception("Rectangle x received isn't a number?")
                     }
 
-                    var y: Int = when(drawingCommand["y"]){
-                        is Double -> (drawingCommand["y"] as Double).toInt()
-                        is Int -> drawingCommand["y"] as Int
+                    var y: Float = when(drawingCommand["y"]){
+                        is Double -> (drawingCommand["y"] as Double).toFloat()
+                        is Int -> (drawingCommand["y"] as Int).toFloat()
                         else -> throw Exception("Rectangle y received isn't a number?")
                     }
 
-                    var width: Int = drawingCommand["width"] as Int
-                    var height: Int = drawingCommand["height"] as Int
+                    var width: Float = (drawingCommand["width"] as Int).toFloat()
+                    var height: Float = (drawingCommand["height"] as Int).toFloat()
                     EllipseUpdate(x, y, width, height)
                 }
                 else -> null
@@ -150,5 +152,20 @@ object SynchronisationService {
         }
 
         previewShapes[commandId]?.execute()
+    }
+
+    fun deleteSelection(deleteSelectionData: SocketTool){
+        val deleteCommand = CommandFactory.createCommand(deleteSelectionData.type, deleteSelectionData.drawingCommand)
+        deleteCommand?.execute()
+    }
+
+    fun setObjectPrimaryColor(colorData: ColorData) {
+        val primaryColorCommand = CommandFactory.createCommand("PrimaryColor", colorData)
+        primaryColorCommand?.execute()
+    }
+
+    fun setObjectSecondaryColor(colorData: ColorData) {
+        val secondaryColorCommand = CommandFactory.createCommand("SecondaryColor", colorData)
+        secondaryColorCommand?.execute()
     }
 }

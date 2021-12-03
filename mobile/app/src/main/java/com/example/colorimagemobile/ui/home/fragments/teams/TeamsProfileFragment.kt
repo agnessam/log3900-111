@@ -1,5 +1,6 @@
 package com.example.colorimagemobile.ui.home.fragments.teams
 
+import android.graphics.Color
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.View
@@ -7,29 +8,43 @@ import android.widget.Button
 import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.colorimagemobile.R
 import com.example.colorimagemobile.adapter.DrawingMenuRecyclerAdapter
+import com.example.colorimagemobile.adapter.MuseumPostRecyclerAdapter
+import com.example.colorimagemobile.adapter.PostsMenuRecyclerAdapter
+import com.example.colorimagemobile.classes.NotificationSound.Notification
+import com.example.colorimagemobile.models.*
+import com.example.colorimagemobile.bottomsheets.ConfirmationBottomSheet
+import com.example.colorimagemobile.bottomsheets.MembersListBottomSheet
+import com.example.colorimagemobile.bottomsheets.PasswordConfirmationBottomSheet
 import com.example.colorimagemobile.classes.MyFragmentManager
+import com.example.colorimagemobile.enumerators.ButtonType
 import com.example.colorimagemobile.models.DrawingModel
-import com.example.colorimagemobile.models.TeamModel
 import com.example.colorimagemobile.models.recyclerAdapters.DrawingMenuData
+import com.example.colorimagemobile.repositories.MuseumRepository
 import com.example.colorimagemobile.repositories.DrawingRepository
 import com.example.colorimagemobile.repositories.TeamRepository
+import com.example.colorimagemobile.repositories.UserRepository
 import com.example.colorimagemobile.services.drawing.DrawingService
+import com.example.colorimagemobile.services.museum.MuseumAdapters
+import com.example.colorimagemobile.services.museum.MuseumPostService
 import com.example.colorimagemobile.services.teams.TeamService
 import com.example.colorimagemobile.services.users.UserService
+import com.example.colorimagemobile.utils.CommonFun
 import com.example.colorimagemobile.utils.CommonFun.Companion.printToast
 import com.example.colorimagemobile.utils.CommonFun.Companion.toggleButton
 import com.example.colorimagemobile.utils.Constants
 import com.google.android.material.tabs.TabLayout
 
 class TeamsProfileFragment : Fragment(R.layout.fragment_teams_profile) {
-    private var teamPosition: Int? = null
-    private lateinit var currentTeam: TeamModel
+    private var teamId: String? = null
+    private lateinit var currentTeam: TeamIdModel
     private lateinit var myView: View
     private lateinit var recyclerView: RecyclerView
     private var drawingsMenu: ArrayList<DrawingMenuData> = arrayListOf()
+    private var publishedDrawings: List<PublishedMuseumPostModel> = listOf()
     private lateinit var joinBtn: Button
     private lateinit var leaveBtn: Button
     private lateinit var deleteBtn: Button
@@ -37,8 +52,7 @@ class TeamsProfileFragment : Fragment(R.layout.fragment_teams_profile) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            teamPosition = it.getInt(Constants.TEAMS.CURRENT_TEAM_ID_KEY)
-            currentTeam = TeamService.getTeam(teamPosition!!)
+            teamId = it.getString(Constants.TEAMS.CURRENT_TEAM_ID_KEY)
         }
     }
 
@@ -48,9 +62,7 @@ class TeamsProfileFragment : Fragment(R.layout.fragment_teams_profile) {
         recyclerView = myView.findViewById(R.id.teamProfileDrawingsRecycler)
         recyclerView.layoutManager = GridLayoutManager(requireContext(), Constants.NB_DATA_ROWS)
 
-        updateUI()
-        setListeners()
-        getTeamDrawings()
+        getCurrentTeam()
     }
 
     private fun updateUI() {
@@ -61,6 +73,7 @@ class TeamsProfileFragment : Fragment(R.layout.fragment_teams_profile) {
 //        myView.findViewById<ImageView>(R.id.teamIdImageView).
         myView.findViewById<TextView>(R.id.teamIdNbOfMembers).text = "${currentTeam.members.size} members"
         myView.findViewById<TextView>(R.id.teamIdDescription).text = currentTeam.description
+        myView.findViewById<TextView>(R.id.teamIdNbOfPosts).text = currentTeam.posts.size.toString()
 
         joinBtn = myView.findViewById<Button>(R.id.teamIdJoinBtn)
         leaveBtn = myView.findViewById<Button>(R.id.leaveTeamIdBtn)
@@ -76,12 +89,32 @@ class TeamsProfileFragment : Fragment(R.layout.fragment_teams_profile) {
         }
     }
 
+    private fun getCurrentTeam() {
+        TeamRepository().getTeamById(teamId!!).observe(viewLifecycleOwner, {
+            if (it.isError as Boolean) {
+                printToast(requireContext(), it.message!!)
+                return@observe
+            }
+
+            currentTeam = it.data as TeamIdModel
+            DrawingService.setAllDrawings(it.data.drawings)
+            drawingsMenu = DrawingService.getDrawingsBitmap(requireContext(), currentTeam.drawings)
+            publishedDrawings = currentTeam.posts
+            updateUI()
+            setListeners()
+            setAllDrawings()
+        })
+    }
+
     private fun updateTeamButtons() {
-        if (TeamService.isUserAlreadyTeamMember(teamPosition!!)) {
-            hideJoinBtn()
-        } else {
-            showJoinBtn()
-            checkIsTeamFull(joinBtn)
+        showJoinBtn()
+        checkIsTeamFull(joinBtn)
+
+        currentTeam.members.forEach { member ->
+            if (member._id == UserService.getUserInfo()._id) {
+                hideJoinBtn()
+                return@forEach
+            }
         }
     }
 
@@ -99,6 +132,8 @@ class TeamsProfileFragment : Fragment(R.layout.fragment_teams_profile) {
         currentTeam.memberLimit?.let {
             if (currentTeam.members.size >= currentTeam.memberLimit!!) {
                 toggleButton(button, false)
+                button.alpha = .6f
+                button.setBackgroundColor(Color.rgb(221, 208, 206))
             }
         }
     }
@@ -116,37 +151,160 @@ class TeamsProfileFragment : Fragment(R.layout.fragment_teams_profile) {
         })
 
         joinBtn.setOnClickListener {
-            TeamService.joinTeam(teamPosition!!, requireContext())
-            hideJoinBtn()
+            openJoinModal()
         }
         leaveBtn.setOnClickListener {
-            TeamService.leaveTeam(teamPosition!!, requireContext())
-            showJoinBtn()
+            openLeaveModal()
         }
         deleteBtn.setOnClickListener {
-            TeamService.deleteTeam(teamPosition!!, requireContext())
+            val title = "Are you sure you want to delete ${currentTeam.name}?"
+            val description = "Deleting this team will delete all drawings and publications associated to this team."
+            val deleteConfirmation = ConfirmationBottomSheet({ TeamService.deleteTeam(currentTeam._id, requireContext()) }, title, description, "DELETE", ButtonType.DELETE.toString())
+            deleteConfirmation.show(parentFragmentManager, "ConfirmationBottomSheet")
         }
+
+        myView.findViewById<TextView>(R.id.teamIdNbOfMembers).setOnClickListener { openMembersList() }
     }
 
-    private fun getTeamDrawings() {
-        TeamRepository().getTeamDrawings(currentTeam._id).observe(viewLifecycleOwner, {
+    private fun openMembersList() {
+
+        UserRepository().getUserStatus().observe(viewLifecycleOwner, {
             if (it.isError as Boolean) {
                 return@observe
             }
 
-            val drawings = it.data as List<DrawingModel.Drawing>
-            drawingsMenu = DrawingService.getDrawingsBitmap(requireContext(), drawings)
-            setAllDrawings()
+            val membersListBS = MembersListBottomSheet(requireActivity(), currentTeam.members, it.data!!)
+            membersListBS.show(parentFragmentManager, "MembersListBottomSheet")
         })
     }
 
+    private fun joinTeam() {
+        TeamService.joinTeam(currentTeam._id, requireContext())
+        hideJoinBtn()
+        printToast(requireActivity(), "Successfully joined the team")
+    }
+
+    private fun openJoinModal() {
+        if (currentTeam.isPrivate) {
+            val title = "Are you sure you want join ${currentTeam.name}?"
+            val description = "The owner has set this team to protected. Enter the correct password to join!"
+            val passwordConfirmation = PasswordConfirmationBottomSheet(
+                requireActivity(),
+                currentTeam.password,
+                title,
+                description,
+                "Join",
+                "Enter the team's password"
+            ) { joinTeam() }
+            passwordConfirmation.show(parentFragmentManager, "PasswordConfirmationBottomSheet")
+        } else {
+            val title = "Are you sure you want join ${currentTeam.name}?"
+            val description = "The owner has set this team public. Looks like anyone can join!"
+            val confirmation = ConfirmationBottomSheet({ joinTeam() }, title, description, "Join", ButtonType.PRIMARY.toString())
+            confirmation.show(parentFragmentManager, "ConfirmationBottomSheet")
+        }
+    }
+
+    private fun openLeaveModal() {
+        val title = "Are you sure you want to leave ${currentTeam.name}?"
+        val description = "Leaving this team does not prevent you from rejoining this team later on."
+        val confirmation = ConfirmationBottomSheet({
+            TeamService.leaveTeam(currentTeam._id, requireContext())
+            showJoinBtn()
+        }, title, description, "Leave", ButtonType.PRIMARY.toString())
+        confirmation.show(parentFragmentManager, "ConfirmationBottomSheet")
+    }
+
     private fun setAllDrawings() {
-        recyclerView.adapter = DrawingMenuRecyclerAdapter(requireActivity(), drawingsMenu, R.id.teamsMenuFrameLayout) { updatedDrawing, pos -> updateDrawing(updatedDrawing, pos) }
+        recyclerView.adapter = null
+        recyclerView.adapter = DrawingMenuRecyclerAdapter(
+            requireActivity(),
+            drawingsMenu,
+            R.id.teamsMenuFrameLayout,
+            { updatedDrawing, pos -> updateDrawing(updatedDrawing, pos) },
+            { drawingId, pos -> deleteDrawing(drawingId, pos) }
+        )
     }
 
     private fun setPublishedDrawings() {
-        val drawings = arrayListOf<DrawingMenuData>()
-//        recyclerView.adapter = DrawingMenuRecyclerAdapter(requireActivity(), drawings, R.id.teamsMenuFrameLayout, {_,_ -> {}})
+        recyclerView.adapter = null
+        recyclerView.adapter = PostsMenuRecyclerAdapter({ openPost(it) }, publishedDrawings)
+    }
+
+    private fun openPost(postPosition: Int) {
+        MuseumRepository().getPostById(publishedDrawings[postPosition]._id).observe(viewLifecycleOwner, {
+            if (it.isError as Boolean) {
+                printToast(requireContext(), it.message!!)
+                return@observe
+            }
+
+            val post = it.data as MuseumPostModel
+            MuseumPostService.setPosts(arrayListOf(post))
+
+            val dialog = MuseumPostService.createPostDialog(requireContext(), resources)
+            val recyclerView = dialog.findViewById<RecyclerView>(R.id.dialogRecyclerView)
+            recyclerView.layoutManager = LinearLayoutManager(requireContext())
+            val adapter = MuseumPostRecyclerAdapter(
+                requireContext(),
+                { _, comment -> postComment(postPosition, comment)},
+                { _ -> likePost(postPosition) },
+                { _ -> unlikePost(postPosition) })
+
+            recyclerView.adapter = adapter
+            MuseumAdapters.setPostsAdapter(adapter)
+
+            dialog.show()
+        })
+    }
+
+    private fun postComment(postPosition: Int, newComment: String) {
+        CommonFun.hideKeyboard(requireContext(), myView)
+
+        if (newComment.isEmpty()) {
+            printToast(requireContext(), "Please enter a valid comment!")
+            return
+        }
+
+        val postId = publishedDrawings[postPosition]._id
+        val comment = MuseumPostService.createComment(postId, newComment)
+
+        MuseumRepository().postComment(postId, comment).observe(viewLifecycleOwner, {
+            if (it.isError as Boolean) { return@observe }
+
+            comment.createdAt = it.data?.createdAt
+            MuseumPostService.addCommentToPost(0, comment)
+            publishedDrawings[postPosition].comments.add("New Comment")
+
+            recyclerView.adapter?.notifyItemChanged(postPosition)
+            MuseumAdapters.refreshCommentAdapter(0)
+            Notification().playSound(requireContext())
+        })
+    }
+
+    private fun likePost(postPosition: Int) {
+        MuseumRepository().likePost(publishedDrawings[postPosition]._id).observe(viewLifecycleOwner, {
+            if (it.isError as Boolean) {
+                printToast(requireContext(), it.message!!)
+                return@observe
+            }
+
+            publishedDrawings[postPosition].likes.add(UserService.getUserInfo()._id)
+            recyclerView.adapter?.notifyItemChanged(postPosition)
+            MuseumAdapters.refreshLikeSection(0)
+        })
+    }
+
+    private fun unlikePost(postPosition: Int) {
+        MuseumRepository().unlikePost(publishedDrawings[postPosition]._id).observe(viewLifecycleOwner, { it ->
+            if (it.isError as Boolean) {
+                printToast(requireContext(), it.message!!)
+                return@observe
+            }
+
+            publishedDrawings[postPosition].likes.remove(UserService.getUserInfo()._id)
+            recyclerView.adapter?.notifyItemChanged(postPosition)
+            MuseumAdapters.refreshUnlikeSection(0)
+        })
     }
 
     private fun updateDrawing(updatedDrawing: DrawingModel.UpdateDrawing, position: Int) {
@@ -158,6 +316,19 @@ class TeamsProfileFragment : Fragment(R.layout.fragment_teams_profile) {
 
             drawingsMenu[position] = DrawingService.updateDrawingFromMenu(drawingsMenu[position], updatedDrawing)
             recyclerView.adapter?.notifyItemChanged(position)
+        })
+    }
+
+    private fun deleteDrawing(drawingId: String, pos: Int) {
+        DrawingRepository().deleteDrawing(drawingId).observe(viewLifecycleOwner, {
+            printToast(requireActivity(), it.message!!)
+
+            if (it.isError as Boolean) {
+                return@observe
+            }
+
+            drawingsMenu.removeAt(pos)
+            recyclerView.adapter?.notifyDataSetChanged()
         })
     }
 }

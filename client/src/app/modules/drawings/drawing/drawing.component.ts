@@ -1,6 +1,9 @@
 import { AfterViewInit, Component, OnInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { SocketRoomInformation } from "src/app/shared/socket/socket-room-information";
+import { TextChannel } from "../../chat/models/text-channel.model";
+import { ChatSocketService } from "../../chat/services/chat-socket.service";
+import { TextChannelService } from "../../chat/services/text-channel.service";
 import { DrawingService } from "../../workspace";
 import { DrawingSocketService } from "../../workspace/services/synchronisation/sockets/drawing-socket/drawing-socket.service";
 @Component({
@@ -11,10 +14,14 @@ import { DrawingSocketService } from "../../workspace/services/synchronisation/s
 export class DrawingComponent implements OnInit, AfterViewInit {
   socketInformation: SocketRoomInformation;
   drawingId: string;
+  channelSocketInfo: SocketRoomInformation;
+  collaborationChannel: TextChannel | undefined;
   constructor(
     private route: ActivatedRoute,
     private drawingService: DrawingService,
-    private drawingSocketService: DrawingSocketService
+    private drawingSocketService: DrawingSocketService,
+    private chatSocketService: ChatSocketService,
+    private textChannelService: TextChannelService
   ) {}
 
   ngOnInit(): void {
@@ -27,6 +34,23 @@ export class DrawingComponent implements OnInit, AfterViewInit {
       };
       this.drawingSocketService.connect();
       this.drawingSocketService.joinRoom(this.socketInformation);
+
+      this.textChannelService
+        .getChannelByDrawingId(this.drawingId)
+        .subscribe((channel) => {
+          this.collaborationChannel = channel;
+
+          if (this.collaborationChannel !== undefined) {
+            this.channelSocketInfo = {
+              roomName: this.collaborationChannel.name,
+              userId: localStorage.getItem("userId")!,
+            };
+            this.chatSocketService.joinRoom(this.channelSocketInfo);
+            this.textChannelService.emitJoinCollaboration(
+              this.collaborationChannel
+            );
+          }
+        });
     });
   }
 
@@ -37,5 +61,9 @@ export class DrawingComponent implements OnInit, AfterViewInit {
   ngOnDestroy(): void {
     this.drawingService.saveDrawing();
     this.drawingSocketService.leaveRoom(this.socketInformation);
+    this.chatSocketService.leaveRoom(this.channelSocketInfo);
+    if (this.collaborationChannel !== undefined) {
+      this.textChannelService.emitLeaveCollaboration(this.collaborationChannel);
+    }
   }
 }

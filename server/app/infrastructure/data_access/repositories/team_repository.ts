@@ -1,12 +1,27 @@
-import { Drawing } from '../../../domain/models/Drawing';
+import { Drawing, DrawingInterface } from '../../../domain/models/Drawing';
 import { Post } from '../../../domain/models/Post';
-import { injectable } from 'inversify';
+import { inject, injectable } from 'inversify';
 import { Team, TeamInterface } from '../../../domain/models/teams';
 import { User, UserInterface } from '../../../domain/models/user';
 import { GenericRepository } from './generic_repository';
+import { TYPES } from '../../../domain/constants/types';
+import { CollaborationTrackerService } from '../../../domain/services/collaboration-tracker.service';
+import { ChatSocketService } from '../../../domain/services/sockets/chat-socket.service';
+import {
+  TextChannel,
+  TextChannelInterface,
+} from '../../../domain/models/TextChannel';
+import { TextChannelRepository } from './text_channel_repository';
 
 @injectable()
 export class TeamRepository extends GenericRepository<TeamInterface> {
+  @inject(TYPES.CollaborationTrackerService)
+  private collaborationTrackerService: CollaborationTrackerService;
+
+  @inject(TYPES.ChatSocketService) private chatSocketService: ChatSocketService;
+  @inject(TYPES.TextChannelRepository)
+  private textChannelRepository: TextChannelRepository;
+
   constructor() {
     super(Team);
   }
@@ -74,6 +89,28 @@ export class TeamRepository extends GenericRepository<TeamInterface> {
           if (err || !team) {
             reject(err);
           }
+
+          if (team == null || team == undefined) {
+            return;
+          }
+
+          const drawingToCollaborators: {} =
+            this.collaborationTrackerService.getDrawingCollaborators();
+
+          (team!.drawings as DrawingInterface[]).map((drawing) => {
+            if (drawingToCollaborators[drawing._id] != null) {
+              drawing.set(
+                'collaborators',
+                drawingToCollaborators[drawing._id],
+                { strict: false },
+              );
+            } else {
+              drawing.set('collaborators', [], { strict: false });
+            }
+
+            return drawing;
+          });
+
           resolve(team);
         });
     });
@@ -87,6 +124,17 @@ export class TeamRepository extends GenericRepository<TeamInterface> {
           if (err || !deletedTeam) {
             reject(err);
           }
+
+          User.findByIdAndUpdate(
+            { _id: deletedTeam.owner },
+            { $pull: { teams: deletedTeam._id } },
+            (err: Error) => {
+              if (err) {
+                reject(err);
+              }
+            },
+          );
+
           Drawing.deleteMany({ _id: { $in: deletedTeam.drawings } }, (err) => {
             if (err) {
               reject(err);
@@ -97,6 +145,18 @@ export class TeamRepository extends GenericRepository<TeamInterface> {
               reject(err);
             }
           });
+
+          TextChannel.findOneAndDelete(
+            { team: deletedTeam._id },
+            (err: Error, channel: TextChannelInterface) => {
+              if (err) {
+                reject(err);
+              }
+              this.textChannelRepository.deleteMessages(channel._id);
+              this.chatSocketService.emitLeave(channel.name);
+            },
+          );
+
           resolve(deletedTeam);
         },
       );

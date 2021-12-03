@@ -1,11 +1,12 @@
 import { Injectable } from "@angular/core";
-import { AbstractSocketService, ROOM_EVENT_NAME } from "src/app/shared";
+import { AbstractSocketService, LEAVE_ROOM_EVENT_NAME, ROOM_EVENT_NAME } from "src/app/shared";
 import {
   CHAT_NAMESPACE_NAME,
   TEXT_MESSAGE_EVENT_NAME,
 } from "../constants/socket.constant";
 import { Message } from "../models/message.model";
 import { Subject } from "rxjs";
+import { SocketRoomInformation } from "src/app/shared/socket/socket-room-information";
 
 @Injectable({
   providedIn: "root",
@@ -32,6 +33,7 @@ export class ChatSocketService extends AbstractSocketService {
   protected setSocketListens(): void {
     this.listenMessage();
     this.listenHistory();
+    this.listenLeaveRoom();
   }
 
   private listenMessage(): void {
@@ -43,6 +45,16 @@ export class ChatSocketService extends AbstractSocketService {
   private listenHistory(): void {
     this.namespaceSocket.on(ROOM_EVENT_NAME, (history: Message[]) => {
       this.messageHistory.next(history);
+    });
+  }
+
+  private listenLeaveRoom(): void {
+    this.namespaceSocket.on(LEAVE_ROOM_EVENT_NAME, (roomName: string) => {
+      const socketInformation: SocketRoomInformation = {
+        userId: localStorage.getItem("userId")!,
+        roomName,
+      };
+      this.leaveRoom(socketInformation);
     });
   }
 }

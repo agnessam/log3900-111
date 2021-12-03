@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.Bitmap
 import com.example.colorimagemobile.classes.ImageConvertor
 import com.example.colorimagemobile.models.DrawingModel
+import com.example.colorimagemobile.models.MuseumPostModel
 import com.example.colorimagemobile.models.OwnerModel
 import com.example.colorimagemobile.models.PrivacyLevel
 import com.example.colorimagemobile.models.recyclerAdapters.DrawingMenuData

@@ -11,6 +11,8 @@ export interface Drawing {
   privacyLevel: string;
   password: string;
 
+  collaborators: string[];
+
   createdAt: string;
   updatedAt: string;
 }

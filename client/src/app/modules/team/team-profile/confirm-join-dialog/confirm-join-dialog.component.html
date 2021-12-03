@@ -19,6 +19,12 @@
           placeholder="Team Password"
           formControlName="teamPassword"
         />
+        <mat-error
+          *ngIf="
+            this.teamPasswordForm.hasError('wrongPassword', 'teamPassword')
+          "
+          >You entered the wrong password.</mat-error
+        >
       </mat-form-field>
     </div>
   </form>
