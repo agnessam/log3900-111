@@ -31,6 +31,16 @@ export class TeamClientService {
     );
   }
 
+  updateTeam(teamId: string, team: EditableTeamParameters): Observable<Team> {
+    return this.httpClient
+      .patch<Team>(`${this.TEAM_ENDPOINT}${teamId}`, team)
+      .pipe(
+        map((team) => {
+          return team;
+        })
+      );
+  }
+
   deleteTeam(teamId: string): Observable<Team> {
     return this.httpClient
       .delete<Team>(`${this.TEAM_ENDPOINT}${teamId}`, {})

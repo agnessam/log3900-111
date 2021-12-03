@@ -12,14 +12,13 @@
 }
 
 #titleCard {
-  color: #924642;
+  // color: #924642;
   font-size: 36px;
   padding-top: 1%;
   padding-bottom: 1%;
 }
 
 #login {
-  color: #5b4d5a;
   font-size: 24px;
   padding-bottom: 1%;
 }
@@ -36,17 +35,4 @@
 
 #registerRedirect {
   font-size: 18px;
-}
-
-#registerLink .button {
-  color: #924642;
-}
-
-.login-body {
-  background-image: url(../../../../assets/backgrounds/auth-background.png);
-  background-position: center;
-  -webkit-background-size: cover;
-  -moz-background-size: cover;
-  -o-background-size: cover;
-  background-size: cover;
 }

@@ -1,5 +1,6 @@
 import { Component, OnDestroy, OnInit } from "@angular/core";
 import { MatDialog } from "@angular/material/dialog";
+import { ColorSchemeService } from "./core/themes/color-scheme.service";
 
 @Component({
   selector: "app-root",
@@ -7,7 +8,13 @@ import { MatDialog } from "@angular/material/dialog";
   templateUrl: "./app.component.html",
 })
 export class AppComponent implements OnInit, OnDestroy {
-  constructor(public dialog: MatDialog) {}
+  constructor(
+    public dialog: MatDialog,
+    private colorSchemeService: ColorSchemeService
+  ) {
+    this.colorSchemeService.load();
+    this.colorSchemeService.update("dark");
+  }
 
   openDialog() {}
 
