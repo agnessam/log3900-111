@@ -39,7 +39,7 @@
               mat-button
               [matMenuTriggerFor]="allChannels"
               (click)="$event.stopPropagation()"
-              *ngIf="isOwner(channel.ownerId)"
+              *ngIf="isOwner(channel.ownerId) && !isGeneral(channel.name)"
               class="options-button"
             >
               <mat-icon> more_vert</mat-icon>
@@ -69,7 +69,7 @@
               mat-button
               [matMenuTriggerFor]="menu"
               (click)="$event.stopPropagation()"
-              *ngIf="!channel.isPrivate"
+              *ngIf="!channel.isPrivate && !isGeneral(channel.name)"
               class="options-button"
             >
               <mat-icon> more_vert</mat-icon>
