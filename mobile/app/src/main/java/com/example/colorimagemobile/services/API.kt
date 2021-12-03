@@ -116,6 +116,9 @@ interface API {
     @PATCH("${Constants.ENDPOINTS.ALL_DRAWINGS}{id}")
     fun updateDrawing(@Header("Authorization") token: String, @Path ("id") id: String, @Body drawing: DrawingModel.UpdateDrawing): Call<Any>
 
+    @DELETE("${Constants.ENDPOINTS.ALL_DRAWINGS}{id}")
+    fun deleteDrawing(@Header("Authorization") token: String, @Path ("id") id: String): Call<Any>
+
     @Headers("Content-Type: application/json")
     @POST("${Constants.ENDPOINTS.ALL_DRAWINGS}{id}/publish")
     fun publishDrawing(@Header("Authorization") token: String, @Path ("id") id: String, @Body drawing: DrawingModel.Drawing): Call<Any>

@@ -1,5 +1,6 @@
 package com.example.colorimagemobile.adapter
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.MenuItem
@@ -13,11 +14,13 @@ import androidx.cardview.widget.CardView
 import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.example.colorimagemobile.R
+import com.example.colorimagemobile.bottomsheets.ConfirmationBottomSheet
 import com.example.colorimagemobile.bottomsheets.EditDrawingBottomSheet
 import com.example.colorimagemobile.bottomsheets.PasswordConfirmationBottomSheet
 import com.example.colorimagemobile.classes.DateFormatter
 import com.example.colorimagemobile.classes.MyFragmentManager
 import com.example.colorimagemobile.classes.MyPicasso
+import com.example.colorimagemobile.enumerators.ButtonType
 import com.example.colorimagemobile.models.DrawingModel
 import com.example.colorimagemobile.models.PrivacyLevel
 import com.example.colorimagemobile.models.recyclerAdapters.DrawingMenuData
@@ -25,17 +28,21 @@ import com.example.colorimagemobile.models.recyclerAdapters.DrawingMenuViewHolde
 import com.example.colorimagemobile.services.drawing.DrawingOwnerService
 import com.example.colorimagemobile.services.drawing.DrawingService
 import com.example.colorimagemobile.services.socket.DrawingSocketService
+import com.example.colorimagemobile.services.teams.TeamService
 import com.example.colorimagemobile.ui.home.fragments.users.UsersProfileFragment
 import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
 import com.example.colorimagemobile.utils.Constants
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import java.util.*
+import kotlin.collections.ArrayList
 
 class DrawingMenuRecyclerAdapter(
     val activity: FragmentActivity,
     drawings: ArrayList<DrawingMenuData>,
     val destination: Int,
-    val updateDrawing: (newDrawingInfo: DrawingModel.UpdateDrawing, pos: Int) -> Unit
+    val updateDrawing: (newDrawingInfo: DrawingModel.UpdateDrawing, pos: Int) -> Unit,
+    val deleteDrawing: (drawingId: String, pos: Int) -> Unit
 ): RecyclerView.Adapter<DrawingMenuRecyclerAdapter.ViewHolder>() {
 
     val drawingMenus: ArrayList<DrawingMenuData> = drawings
@@ -45,6 +52,7 @@ class DrawingMenuRecyclerAdapter(
         return ViewHolder(view)
     }
 
+    @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: DrawingMenuRecyclerAdapter.ViewHolder, position: Int) {
         holder.drawingMenuViewHolder.name.text = drawingMenus[position].drawing.name
         holder.drawingMenuViewHolder.authorName.text = DrawingOwnerService.getUsername(drawingMenus[position].drawing.owner)
@@ -60,7 +68,12 @@ class DrawingMenuRecyclerAdapter(
         if (drawingMenus[position].drawing.privacyLevel == PrivacyLevel.PROTECTED.toString())
             holder.drawingMenuViewHolder.lockIconView.visibility = View.VISIBLE
 
-        holder.drawingMenuViewHolder.privacyLevel.text = drawingMenus[position].drawing.privacyLevel
+        holder.drawingMenuViewHolder.privacyLevel.text = drawingMenus[position].drawing.privacyLevel.replaceFirstChar {
+            if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString()
+        }
+
+        val nbCollaborators = drawingMenus[position].drawing.collaborators!!.size
+        holder.drawingMenuViewHolder.collaborators.text = "${nbCollaborators} collaborator${if (nbCollaborators > 1) "s" else ""}"
 
         if (!DrawingService.isOwner(drawingMenus[position].drawing)) {
             holder.drawingMenuViewHolder.popupMenu.visibility = View.GONE
@@ -97,8 +110,9 @@ class DrawingMenuRecyclerAdapter(
             val authorImageViewParent = itemView.findViewById<CardView>(R.id.card_drawing_menu_author_image_main)
             val privacyLevel = itemView.findViewById<TextView>(R.id.card_drawing_menu_date_privacy)
             val popupMenu = itemView.findViewById<ImageButton>(R.id.card_drawing_menu_options)
+            val collaborators = itemView.findViewById<TextView>(R.id.card_drawing_menu_collaborators)
 
-            drawingMenuViewHolder = DrawingMenuViewHolder(name, authorName, drawingDate, imageView, lockIconView, authorImageView, privacyLevel, authorImageViewParent, popupMenu)
+            drawingMenuViewHolder = DrawingMenuViewHolder(name, authorName, drawingDate, imageView, lockIconView, authorImageView, privacyLevel, authorImageViewParent, popupMenu, collaborators)
 
             // click listener for clicking on specific drawing
             itemView.setOnClickListener {
@@ -106,15 +120,16 @@ class DrawingMenuRecyclerAdapter(
 
                 if (drawingMenus[position].drawing.privacyLevel == PrivacyLevel.PROTECTED.toString()) {
                     // show password dialog
-                    val title = "Protected Drawing"
-                    val description = "Enter drawing's password"
+                    val title = "You're about to join ${drawingMenus[position].drawing.name}'s collaborative session."
+                    val description = "The owner has set the privacy level of this drawing to protected. \n" +
+                            "Enter the correct password to gain access to this session."
                     val passwordConfirmation = PasswordConfirmationBottomSheet(
                         activity,
                         drawingMenus[position].drawing.password,
                         title,
                         description,
-                        "Confirm and open",
-                        "Password"
+                        "Join",
+                        "Enter the session's password"
                     ) { openDrawing(bindingAdapterPosition, itemView.context) }
                     passwordConfirmation.show(activity.supportFragmentManager, "PasswordConfirmationBottomSheet")
                     return@setOnClickListener
@@ -134,7 +149,11 @@ class DrawingMenuRecyclerAdapter(
                             updateDrawingBS.show(activity.supportFragmentManager, "EditDrawingBottomSheet")
                         }
                         R.id.delete_drawing -> {
-                            printMsg("delete $bindingAdapterPosition")
+                            val drawing = drawingMenus[bindingAdapterPosition].drawing
+                            val title = "Are you sure you want to delete ${drawing.name}?"
+                            val description = "All data will be lost and permanently erased from ColorImage. This action is irreversible."
+                            val deleteConfirmation = ConfirmationBottomSheet({ deleteDrawing(drawing._id!!, bindingAdapterPosition) }, title, description, "DELETE", ButtonType.DELETE.toString())
+                            deleteConfirmation.show(activity.supportFragmentManager, "ConfirmationBottomSheet")
                         }
                     }
 
