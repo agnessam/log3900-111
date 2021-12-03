@@ -52,12 +52,10 @@
 }
 
 #message {
-  display: flex;
   width: 100%;
-  justify-content: space-between;
-  align-items: center;
-  //background-color: rgba(255,255,255,0.4);
   border-top: 2px black;
+  display: block;
+  text-align: center;
 }
 
 input[type="text"] {
@@ -72,16 +70,17 @@ input[type="text"] {
 }
 
 #new-message-form {
-  background-color: #fef9f7;
-  border-radius: 25px;
+  border-top-left-radius: 25px;
+  border-top-right-radius: 25px;
+  width: 95%;
   display: flex;
-  justify-content: space-between;
-  align-items: center;
 }
 
 #new-message-input {
   border: none;
   background-color: transparent;
+  margin-left: 5%;
+
   width: 100%;
 }
 
@@ -129,4 +128,9 @@ input[type="text"] {
 
 #loadHistory:hover {
   cursor: pointer;
+}
+
+::-webkit-input-placeholder {
+  /* WebKit browsers */
+  margin-left: 5%;
 }

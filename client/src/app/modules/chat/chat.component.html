@@ -73,7 +73,7 @@
         </div>
       </div>
 
-      <div id="message">
+      <div id="message" class="mat-app-background">
         <form id="new-message-form" (ngSubmit)="sendMessage()">
           <input
             type="text"
@@ -85,9 +85,7 @@
             [(ngModel)]="this.message"
             name="new-message"
           />
-          <button mat-icon-button class="icon" type="submit">
-            <mat-icon>send</mat-icon>
-          </button>
+          <button mat-icon-button type="submit">send</button>
         </form>
       </div>
     </div>
