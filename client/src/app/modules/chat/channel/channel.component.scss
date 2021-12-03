@@ -2,17 +2,12 @@
   display: block;
   width: 230px;
   border-radius: 15px;
-  // background-color: #fef9f7;
 }
 
 .btn {
   border-radius: 50%;
   border: none;
   background-color: transparent;
-}
-
-.btn:hover {
-  // background-color: #fae2dd;
 }
 
 .channel-top {
@@ -42,7 +37,6 @@
 }
 
 .channel:hover {
-  // color: #da7e70;
   cursor: pointer;
 }
 
@@ -54,6 +48,10 @@
 
 .deleteChannelBtn {
   display: none;
+}
+
+::ng-deep .mat-menu-content {
+  padding: 0px !important;
 }
 
 .modal {
