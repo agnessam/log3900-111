@@ -143,8 +143,10 @@ class SelectionView(context: Context?): CanvasView(context) {
                 deltaY = (translateData?.deltaY ?: 0f) + dy
             )
             DrawingSocketService.sendTransformSelectionCommand(translateData!!, "Translation")
-            translationCommand = TranslateCommand(translateData!!)
-            translationCommand!!.setTransformation(dx, dy)
+            if(translationCommand == null){
+                translationCommand = TranslateCommand(translateData!!)
+            }
+            translationCommand!!.setTransformation(this.translateData!!.deltaX, this.translateData!!.deltaY)
             translationCommand!!.execute()
 
             SelectionService.resetBoundingBox()
@@ -153,5 +155,6 @@ class SelectionView(context: Context?): CanvasView(context) {
 
     override fun onTouchUp() {
         ResizeSelectionService.onTouchUp()
+        translationCommand = null
     }
 }

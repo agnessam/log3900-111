@@ -8,13 +8,8 @@ import com.example.colorimagemobile.models.TranslateData
 import com.example.colorimagemobile.services.drawing.*
 
 class TranslateCommand(translateData: TranslateData): ICommand {
-
-    companion object{
-        private var objectCurrentTranslate: HashMap<String, Array<Float>> = HashMap()
-    }
-
-    private var deltaX : Float
-    private var deltaY: Float
+    private var deltaX : Float = 0f
+    private var deltaY: Float = 0f
 
     private var commandToTranslate: ICommand? = null
 
@@ -42,13 +37,6 @@ class TranslateCommand(translateData: TranslateData): ICommand {
 
         id = translateData.id
 
-        // Initialize deltaX and deltaY
-        if(!objectCurrentTranslate.containsKey(id) || objectCurrentTranslate[id] == null ){
-            objectCurrentTranslate[id] = arrayOf(0f, 0f)
-        }
-        deltaX = objectCurrentTranslate[id]!![0]
-        deltaY = objectCurrentTranslate[id]!![1]
-
         if(!TransformationManager.previousTransformation.containsKey(id)){
             TransformationManager.previousTransformation[id] = ""
         }
@@ -67,7 +55,7 @@ class TranslateCommand(translateData: TranslateData): ICommand {
     private fun PencilCommand.translate() {
         path = Path(resizeBorderPath!!)
         val translationMatrix = Matrix()
-        translationMatrix.setTranslate(deltaX.toFloat(), deltaY.toFloat())
+        translationMatrix.setTranslate(deltaX, deltaY)
         path.transform(translationMatrix)
         execute()
     }
@@ -93,8 +81,8 @@ class TranslateCommand(translateData: TranslateData): ICommand {
     }
 
     fun setTransformation(x: Float, y: Float) {
-        this.deltaX = x + objectCurrentTranslate[id]!![0]
-        this.deltaY = y + objectCurrentTranslate[id]!![1]
+        this.deltaX = x
+        this.deltaY = y
     }
 
     override fun execute() {
@@ -104,7 +92,6 @@ class TranslateCommand(translateData: TranslateData): ICommand {
             is EllipseCommand -> (commandToTranslate as EllipseCommand).translate()
             else -> {}
         }
-        objectCurrentTranslate[id] = arrayOf(deltaX, deltaY)
         CanvasUpdateService.invalidate()
         if(shapeLabel != null){
             TransformationManager.saveTranslateTransformation(deltaX, deltaY, id, transformationLog, shapeLabel)
