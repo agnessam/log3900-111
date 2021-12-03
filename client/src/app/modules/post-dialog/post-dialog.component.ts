@@ -37,7 +37,6 @@ export class PostDialogComponent implements OnInit {
     this.authenticationService.currentUserObservable.subscribe(
       (user) => (this.user = user),
     );
-    console.log(this.post);
   }
 
   transformUri(){
@@ -55,6 +54,7 @@ export class PostDialogComponent implements OnInit {
       });
     }
     else{
+      this.onAudioPlay();
       this.postService.addLike(userid, this.post._id).subscribe((like) => {
         this.post.likes.push(userid);
       });
