@@ -54,7 +54,7 @@ export class TextChannelController {
         req.params.channelId,
       );
       this.chatSocketService.emitLeave(deletedChannel.name);
-      this.deleteMessages(req);
+      this.textChannelRepository.deleteMessages(req.params.id);
       return deletedChannel;
     } catch (e: any) {
       console.log("Couldn't delete channel: ", e);

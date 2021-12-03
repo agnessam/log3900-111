@@ -6,11 +6,21 @@ import { User, UserInterface } from '../../../domain/models/user';
 import { GenericRepository } from './generic_repository';
 import { TYPES } from '../../../domain/constants/types';
 import { CollaborationTrackerService } from '../../../domain/services/collaboration-tracker.service';
+import { ChatSocketService } from '@app/domain/services/sockets/chat-socket.service';
+import {
+  TextChannel,
+  TextChannelInterface,
+} from '@app/domain/models/TextChannel';
+import { TextChannelRepository } from './text_channel_repository';
 
 @injectable()
 export class TeamRepository extends GenericRepository<TeamInterface> {
   @inject(TYPES.CollaborationTrackerService)
   private collaborationTrackerService: CollaborationTrackerService;
+
+  @inject(TYPES.ChatSocketService) private chatSocketService: ChatSocketService;
+  @inject(TYPES.TextChannelRepository)
+  private textChannelRepository: TextChannelRepository;
 
   constructor() {
     super(Team);
@@ -80,6 +90,10 @@ export class TeamRepository extends GenericRepository<TeamInterface> {
             reject(err);
           }
 
+          if (team == null || team == undefined) {
+            return;
+          }
+
           const drawingToCollaborators: {} =
             this.collaborationTrackerService.getDrawingCollaborators();
 
@@ -131,6 +145,18 @@ export class TeamRepository extends GenericRepository<TeamInterface> {
               reject(err);
             }
           });
+
+          TextChannel.findOneAndDelete(
+            { team: deletedTeam._id },
+            (err: Error, channel: TextChannelInterface) => {
+              if (err) {
+                reject(err);
+              }
+              this.textChannelRepository.deleteMessages(channel._id);
+              this.chatSocketService.emitLeave(channel.name);
+            },
+          );
+
           resolve(deletedTeam);
         },
       );
