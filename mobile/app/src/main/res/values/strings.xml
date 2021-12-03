@@ -35,8 +35,6 @@
     <string name="description"><b>Description</b></string>
     <string name="first_name"><b>First Name</b></string>
     <string name="last_name"><b>Last Name</b></string>
-    <string name="last_login"><b>Last Login Date</b></string>
-    <string name="last_logout"><b>Last Logout Date</b></string>
     <string name="last_edition_date"><b>Last Edition Date</b></string>
     <string name="confirm_password">Confirm Password</string>
     <string name="new_password">New Password</string>
@@ -79,4 +77,9 @@
     <string name="delete">Delete</string>
     <string name="all_drawings">All Drawings</string>
     <string name="published_drawings">Published Drawings</string>
+    <string name="connection_history">Connection History</string>
+    <string name="last_login">Last Login</string>
+    <string name="last_logout">Last Logout</string>
+    <string name="collaboration_history">Collaboration History</string>
+    <string name="user_history">User History</string>
 </resources>

@@ -32,6 +32,7 @@ class accountParameterFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         changeTxtColor(myProfile,privacy,history,stat)
         val editProfileFragment = EditProfileFragment()
         parentFragmentManager.beginTransaction().replace(R.id.newLayout, editProfileFragment)
@@ -39,44 +40,35 @@ class accountParameterFragment : Fragment() {
 
 
         view.findViewById<TextView>(R.id.myProfile).setOnClickListener {
-
             changeTxtColor(myProfile,privacy,history,stat)
-            val editProfileFragment = EditProfileFragment()
-            parentFragmentManager.beginTransaction().replace(R.id.newLayout, editProfileFragment)
+            val editProfile = EditProfileFragment()
+            parentFragmentManager.beginTransaction().replace(R.id.newLayout, editProfile)
                 .commit()
-
         }
 
         view.findViewById<TextView>(R.id.history).setOnClickListener {
-
             changeTxtColor(history,privacy,myProfile,stat)
             val history = HistoryFragment()
             parentFragmentManager.beginTransaction().replace(R.id.newLayout, history)
                 .commit()
-
-
         }
         view.findViewById<TextView>(R.id.stat).setOnClickListener {
-
             changeTxtColor(stat,privacy,myProfile,history)
             val stat = UserStatistic()
             parentFragmentManager.beginTransaction().replace(R.id.newLayout, stat)
                 .commit()
-
-
         }
         view.findViewById<TextView>(R.id.privacy).setOnClickListener {
             changeTxtColor(privacy,stat,myProfile,history)
             val privacyAndSetting = PrivacyAndSafety()
             parentFragmentManager.beginTransaction().replace(R.id.newLayout, privacyAndSetting)
                 .commit()
-
         }
 
     }
 
     private fun changeTxtColor(selectedTxt: TextView, menuTxt1: TextView,menuTxt2: TextView,menuTxt3: TextView) {
-        selectedTxt.setTextColor(Color.parseColor("#FF4040"))
+        selectedTxt.setTextColor(Color.parseColor("#DA7E70"))
         menuTxt1.setTextColor(Color.parseColor("#888888"))
         menuTxt2.setTextColor(Color.parseColor("#888888"))
         menuTxt3.setTextColor(Color.parseColor("#888888"))
