@@ -19,7 +19,7 @@
     <div class="comment-section">
       <div *ngFor="let comment of this.post.comments">
         <div class="comment">
-          {{comment.author.username}} : {{comment.content}}
+          {{comment.author?.username}} : {{comment.content}}
         </div>
       </div>
     </div>
@@ -37,8 +37,8 @@
     <div class="bottom-comment">
       <input type="comment"
                   #commentInput
-                  id = "comment-input"
-                  class="comment-input"
+                  id = "commentInput"
+                  class="commentInput"
                   autocomplete="off"
                   spellcheck="false"
                   placeholder="Add comment"

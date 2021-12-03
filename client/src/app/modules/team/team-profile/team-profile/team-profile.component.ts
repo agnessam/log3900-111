@@ -10,6 +10,8 @@ import { ConfirmDeleteDialogComponent } from "../confirm-delete-dialog/confirm-d
 import { ConfirmJoinDialogComponent } from "../confirm-join-dialog/confirm-join-dialog.component";
 import { ConfirmLeaveDialogComponent } from "../confirm-leave-dialog/confirm-leave-dialog.component";
 import { MemberListDialogComponent } from "../member-list-dialog/member-list-dialog.component";
+import { PostInterface } from "src/app/modules/museum/models/post.model";
+import { PostDialogComponent } from "src/app/modules/post-dialog/post-dialog.component";
 
 @Component({
   selector: "app-team-profile",
@@ -125,5 +127,12 @@ export class TeamProfileComponent implements OnInit {
       1
     );
     this.changeDetectorRef.detectChanges();
+  }
+
+  openPostDialog(post: PostInterface): void {
+    this.dialog.open(PostDialogComponent, {
+      width: '80%',
+      data: post,
+    });
   }
 }

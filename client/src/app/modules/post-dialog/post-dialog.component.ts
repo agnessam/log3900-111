@@ -1,5 +1,5 @@
 import { PostService } from './../museum/services/post.service';
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, OnInit, Inject , ViewChild, ElementRef} from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { PostInterface } from '../museum/models/post.model';
 import { DomSanitizer } from '@angular/platform-browser';
@@ -15,6 +15,7 @@ import { CommentInterface } from '../museum/models/comment.model';
   styleUrls: ['./post-dialog.component.scss']
 })
 export class PostDialogComponent implements OnInit {
+  @ViewChild("commentInput", { static: false }) private commentInput: ElementRef<HTMLInputElement>;
 
   user: User | null;
 
@@ -65,24 +66,19 @@ export class PostDialogComponent implements OnInit {
 
   addComment(){
     if(this.user?._id == null) return;
+    let input = this.commentInput.nativeElement.value;
+    this.commentInput.nativeElement.value = "";
 
-    let input = document.getElementById("comment-input") as HTMLInputElement;
-    let content = input.value;
-    input.value = "";
-
-    const isWhitespace = (content || "").trim().length === 0;
+    const isWhitespace = (input || "").trim().length === 0;
     if (isWhitespace) {
       this.snackBar.open("The comment can not be empty", "Close", {
         duration: 3000,
       });
       return;
     }
-
-    const comment = { content: content, author: this.user, postId: this.post._id} as CommentInterface;
+    const comment = { content: input, author: this.user._id, postId: this.post._id} as CommentInterface;
     this.postService.addComment(this.post._id, comment).subscribe((commentReceive) => {
-      comment.createdAt = "";
       this.post.comments.push(comment)
-
     });
   }
 

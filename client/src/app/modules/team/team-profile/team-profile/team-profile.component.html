@@ -93,7 +93,7 @@
             *ngFor="let post of team.posts"
             class="team-post-card"
           >
-            <app-post-card [post]="post"></app-post-card>
+            <app-post-card [post]="post" (click)="openPostDialog(post)"></app-post-card>
           </div>
         </div>
       </mat-tab>

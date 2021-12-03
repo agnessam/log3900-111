@@ -5,6 +5,8 @@ import { Drawing } from "src/app/shared";
 import { User } from "../models/user";
 import { UsersService } from "../services/users.service";
 import { ConfirmUnfollowDialogComponent } from "./confirm-unfollow-dialog/confirm-unfollow-dialog.component";
+import { PostInterface } from "../../museum/models/post.model";
+import { PostDialogComponent } from "../../post-dialog/post-dialog.component";
 
 @Component({
   selector: "app-user-profile",
@@ -84,5 +86,12 @@ export class UserProfileComponent implements OnInit {
 
   navigateToSettingsPage() {
     this.router.navigate(["/settings/overview"]);
+  }
+
+  openPostDialog(post: PostInterface): void {
+    this.dialog.open(PostDialogComponent, {
+      width: '80%',
+      data: post,
+    });
   }
 }
