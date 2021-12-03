@@ -44,8 +44,8 @@ object SelectionColorService {
             var selectedShapeId = DrawingObjectManager.getUuid(SelectionService.selectedShapeIndex) ?: return
             primaryColorCommand = PrimaryColorCommand(selectedShapeId, newColor)
             primaryColorCommand!!.execute()
-            val rgb = ColorService.convertRGBAStringToRGBObject(newColor)
-            val opacity = ColorService.getAlphaForDesktop(newColor).toFloat()
+            val rgb = ColorService.convertRGBAStringToRGBObject(primaryColorCommand!!.getPrimaryColor())
+            val opacity = ColorService.getAlphaForDesktop(primaryColorCommand!!.getPrimaryColor()).toFloat()
             DrawingSocketService.sendObjectPrimaryColorChange(selectedShapeId, rgb, opacity)
         }
     }
