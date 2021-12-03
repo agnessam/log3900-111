@@ -4,11 +4,9 @@ import android.content.Context
 import androidx.lifecycle.LifecycleOwner
 import com.example.colorimagemobile.models.AvatarModel
 import com.example.colorimagemobile.models.CollaborationHistory
-import com.example.colorimagemobile.models.Privacy
 import com.example.colorimagemobile.models.UserModel
 import com.example.colorimagemobile.repositories.UserRepository
 import com.example.colorimagemobile.utils.CommonFun
-import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
 import com.example.colorimagemobile.utils.Constants
 
 // Singleton User object which is accessible globally

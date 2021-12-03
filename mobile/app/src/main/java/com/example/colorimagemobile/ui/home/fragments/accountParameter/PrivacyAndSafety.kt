@@ -9,13 +9,11 @@ import androidx.lifecycle.LiveData
 import com.example.colorimagemobile.R
 import com.example.colorimagemobile.models.DataWrapper
 import com.example.colorimagemobile.models.HTTPResponseModel
-import com.example.colorimagemobile.models.Privacy
 import com.example.colorimagemobile.models.UserModel
 import com.example.colorimagemobile.repositories.UserRepository
 import com.example.colorimagemobile.services.SharedPreferencesService
 import com.example.colorimagemobile.services.users.UserService
 import com.example.colorimagemobile.utils.CommonFun
-import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
 import com.example.colorimagemobile.utils.CommonFun.Companion.printToast
 
 class PrivacyAndSafety : Fragment(R.layout.fragment_privacy_and_safety) {
@@ -59,7 +57,6 @@ class PrivacyAndSafety : Fragment(R.layout.fragment_privacy_and_safety) {
         switch_lastname = myView.findViewById(R.id.switch_lastname)
 
         val privacy = UserService.getUserInfo().privacySetting
-        printMsg("settings "+privacy)
         switch_email.setChecked(privacy.searchableByEmail)
         switch_firstname.setChecked(privacy.searchableByFirstName)
         switch_lastname.setChecked(privacy.searchableByLastName)
@@ -82,7 +79,6 @@ class PrivacyAndSafety : Fragment(R.layout.fragment_privacy_and_safety) {
         }
         // request successfully
         UserService.updatePrivacySetting(newSetting.privacySetting)
-        printToast(requireContext(),"${newSetting}")
     }
 
 }

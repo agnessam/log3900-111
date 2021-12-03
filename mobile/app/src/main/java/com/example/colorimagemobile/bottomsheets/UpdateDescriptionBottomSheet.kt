@@ -97,7 +97,5 @@ class UpdateDescriptionBottomSheet : BottomSheetDialogFragment() {
             )
             closeSheet()
         }
-
     }
-
 }

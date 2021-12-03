@@ -23,16 +23,6 @@ class SharedPreferencesService(context: Context) {
         }.apply()
     }
 
-    // saves an item with a key to localStorage
-    fun setItem(key: String, value: Boolean) {
-        if (key.isNullOrEmpty()) return
-
-        val editor = sharedPreferences.edit()
-        editor.apply {
-            putBoolean(key, value)
-        }.apply()
-    }
-
     // saves an object with a key to localStorage
     fun setObjectItem(key: String, item: Any) {
         if (key.isNullOrEmpty()) return
@@ -49,11 +39,6 @@ class SharedPreferencesService(context: Context) {
     // retrieves an item from localStorage by key
     fun getItem(key: String): String {
         return sharedPreferences.getString(key, "").toString()
-    }
-
-    // retrieves an item from localStorage by key
-    fun getBooleanItem(key: String): Boolean {
-        return sharedPreferences.getBoolean(key, true )
     }
 
     // retrieves an item from localStorage by key
