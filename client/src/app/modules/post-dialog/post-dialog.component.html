@@ -5,8 +5,10 @@
   <div class="left-section">
 
     <div class="post-header">
-      <div class="author-picture" *ngIf="post.ownerModel === 'User'">
-        <ngx-avatar [src]="getAvatar(post)"></ngx-avatar>
+      <div class="author-picture">
+        <div  *ngIf="post.ownerModel === 'User'">
+          <ngx-avatar [src]="getAvatar(post)"></ngx-avatar>
+        </div>
       </div>
       <div class="info">
         <div class="author-text" *ngIf="post.owner">

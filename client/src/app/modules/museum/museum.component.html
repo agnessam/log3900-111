@@ -45,10 +45,13 @@
           </div>
         </div>
 
-        <div *ngFor="let comment of post.comments">
+        <div *ngFor="let comment of post.comments.slice(0,4)">
           <div class="comment">
             {{ comment.author?.username }} : {{ comment.content }}
           </div>
+        </div>
+        <div class="comment" *ngIf="post.comments.length > 4" >
+          ...
         </div>
 
 
