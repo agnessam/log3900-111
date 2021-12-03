@@ -54,6 +54,7 @@ class GalleryDrawingFragment : Fragment(R.layout.fragment_gallery_drawing) {
         addToolsOnSidebar()
         setToolsListener()
         checkMuseumOwner()
+        ToolTypeService.setCurrentToolType(ToolType.PENCIL)
     }
 
     private fun setCurrentRoomName() {

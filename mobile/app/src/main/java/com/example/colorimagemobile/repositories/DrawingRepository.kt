@@ -102,7 +102,6 @@ class DrawingRepository {
         return liveData
     }
 
-
     fun publishDrawing(drawing: DrawingModel.Drawing): MutableLiveData<DataWrapper<Any>> {
         val drawingLiveData: MutableLiveData<DataWrapper<Any>> = MutableLiveData()
 
@@ -141,5 +140,25 @@ class DrawingRepository {
         })
 
         return drawingLiveData
+    }
+
+    fun deleteDrawing(drawingId: String): MutableLiveData<DataWrapper<Any>> {
+        val liveData: MutableLiveData<DataWrapper<Any>> = MutableLiveData()
+
+        httpClient.deleteDrawing(token = "Bearer ${UserService.getToken()}", drawingId).enqueue(object : Callback<Any> {
+            override fun onResponse(call: Call<Any>, response: Response<Any>) {
+                if (!response.isSuccessful) {
+                    liveData.value = DataWrapper(null, "An error occurred while deleting drawing!", true)
+                    return
+                }
+                liveData.value = DataWrapper(response.body(), "Drawing has successfully been deleted", false)
+            }
+
+            override fun onFailure(call: Call<Any>, t: Throwable) {
+                liveData.value = DataWrapper(null, "Failed to delete drawing!", true)
+            }
+        })
+
+        return liveData
     }
 }
