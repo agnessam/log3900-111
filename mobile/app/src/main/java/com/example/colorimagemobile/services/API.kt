@@ -42,6 +42,13 @@ interface API {
     @GET(Constants.ENDPOINTS.USER_PATH+"{id}/statistics")
     fun getUserStatistics(@Header("Authorization") token: String, @Path ("id") id : String): Call<UserModel.Statistics>
 
+    @PATCH(Constants.ENDPOINTS.USER_PATH+"{id}/changePassword")
+    fun updateUserPassword(@Header("Authorization")token: String, @Path ("id") id : String, @Body  newPassword: UserModel.PasswordUpdate) : Call<HTTPResponseModel.UserResponse>
+
+    @Headers("Content-Type: application/json")
+    @PATCH(Constants.ENDPOINTS.USER_PATH+"{id}")
+    fun updateUserPrivacy(@Header("Authorization")token: String, @Path ("id") id : String, @Body  newUserSetting: Privacy.Setting) : Call<HTTPResponseModel.UserResponse>
+
     @Headers("Content-Type: application/json")
     @GET(Constants.ENDPOINTS.USER_PATH+"{id}")
     fun getUserById(@Header("Authorization") token: String, @Path ("id") id : String): Call<UserModel.AllInfoWithData>

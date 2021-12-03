@@ -12,6 +12,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.cardview.widget.CardView
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import com.example.colorimagemobile.R
@@ -22,18 +23,15 @@ import com.example.colorimagemobile.bottomsheets.UpdateUsernameBottomSheet
 import com.example.colorimagemobile.classes.MyPicasso
 import com.example.colorimagemobile.classes.UpdateUserProfile
 import com.example.colorimagemobile.models.DataWrapper
-import com.example.colorimagemobile.models.HTTPResponseModel
 import com.example.colorimagemobile.models.UserModel
 import com.example.colorimagemobile.httpresponsehandler.GlobalHandler
 import com.example.colorimagemobile.models.AvatarModel
 import com.example.colorimagemobile.repositories.AvatarRepository
-import com.example.colorimagemobile.repositories.UserRepository
 import com.example.colorimagemobile.services.SharedPreferencesService
 import com.example.colorimagemobile.services.avatar.AvatarService
 import com.example.colorimagemobile.services.users.UserService
 import com.example.colorimagemobile.utils.CommonFun
 import com.example.colorimagemobile.utils.CommonFun.Companion.imageView
-import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
 import com.example.colorimagemobile.utils.Constants
 import com.example.colorimagemobile.utils.Constants.Companion.CAMERA_REQUEST_CODE
 import com.karumi.dexter.Dexter
@@ -126,7 +124,6 @@ class EditProfileFragment : Fragment() {
         //set username and description
         inf.findViewById<TextView>(R.id.currentUserUsername).text = UserService.getUserInfo().username
         inf.findViewById<TextView>(R.id.currentUserDescription).text = UserService.getUserInfo().description
-        inf.findViewById<TextView>(R.id.username).text = UserService.getUserInfo().username
         inf.findViewById<TextView>(R.id.firstname).text = UserService.getUserInfo().firstName
         inf.findViewById<TextView>(R.id.lastname).text = UserService.getUserInfo().lastName
         inf.findViewById<TextView>(R.id.email).text = UserService.getUserInfo().email

@@ -39,12 +39,11 @@ class UserRepository {
     }
 
     // update user profile data
-    fun updateUserData(token: String, id: String): MutableLiveData<DataWrapper<HTTPResponseModel.UserResponse>> {
-        newProfileDate = UserService.getNewProfileData()
+    fun updateUserData(dataToUpdate:UserModel.UpdateUser ,token: String, id: String): MutableLiveData<DataWrapper<HTTPResponseModel.UserResponse>> {
 
         val updateLiveData: MutableLiveData<DataWrapper<HTTPResponseModel.UserResponse>> = MutableLiveData()
 
-        httpClient.updateUser(token = "Bearer $token",id, newProfileDate).enqueue(object :
+        httpClient.updateUser(token = "Bearer $token",id, dataToUpdate).enqueue(object :
             Callback<HTTPResponseModel.UserResponse> {
             override fun onResponse(call: Call<HTTPResponseModel.UserResponse>, response: Response<HTTPResponseModel.UserResponse>) {
                 if (!response.isSuccessful) {
@@ -56,7 +55,7 @@ class UserRepository {
             }
 
             override fun onFailure(call: Call<HTTPResponseModel.UserResponse>, t: Throwable) {
-                updateLiveData.value = DataWrapper(null, "Failed to create account!", true)
+                updateLiveData.value = DataWrapper(null, "Failed to update user data!", true)
             }
 
         })
@@ -249,7 +248,7 @@ class UserRepository {
 
         return status
     }
-    // get user by id
+    // get user stat
     fun getUserStatistics(): MutableLiveData<DataWrapper<UserModel.Statistics>> {
         val userData: MutableLiveData<DataWrapper<UserModel.Statistics>> = MutableLiveData()
 
@@ -267,5 +266,55 @@ class UserRepository {
         })
 
         return userData
+    }
+
+    // update user profile password
+    fun updateUserPassword(newPassword: UserModel.PasswordUpdate): MutableLiveData<DataWrapper<HTTPResponseModel.UserResponse>> {
+
+        val updatePasswordLiveData: MutableLiveData<DataWrapper<HTTPResponseModel.UserResponse>> = MutableLiveData()
+
+        httpClient.updateUserPassword(token = "Bearer ${UserService.getToken()}",UserService.getUserInfo()._id, newPassword).enqueue(object :
+            Callback<HTTPResponseModel.UserResponse> {
+            override fun onResponse(call: Call<HTTPResponseModel.UserResponse>, response: Response<HTTPResponseModel.UserResponse>) {
+                if (!response.isSuccessful) {
+                    updatePasswordLiveData.value = DataWrapper(null, "An error occurred!", true)
+                    return
+                }
+                // password successfully update
+                updatePasswordLiveData.value = DataWrapper(response.body(), "", false)
+            }
+
+            override fun onFailure(call: Call<HTTPResponseModel.UserResponse>, t: Throwable) {
+                updatePasswordLiveData.value = DataWrapper(null, "Failed to update password!", true)
+            }
+
+        })
+
+        return updatePasswordLiveData
+    }
+
+    // update privacy
+    fun updateUserPrivacy(newSetting: Privacy.Setting): MutableLiveData<DataWrapper<HTTPResponseModel.UserResponse>> {
+
+        val updateSettingLiveData: MutableLiveData<DataWrapper<HTTPResponseModel.UserResponse>> = MutableLiveData()
+
+        httpClient.updateUserPrivacy(token = "Bearer ${UserService.getToken()}",UserService.getUserInfo()._id, newSetting).enqueue(object :
+            Callback<HTTPResponseModel.UserResponse> {
+            override fun onResponse(call: Call<HTTPResponseModel.UserResponse>, response: Response<HTTPResponseModel.UserResponse>) {
+                if (!response.isSuccessful) {
+                    updateSettingLiveData.value = DataWrapper(null, "An error occurred!", true)
+                    return
+                }
+                // settings successfully update
+                updateSettingLiveData.value = DataWrapper(response.body(), "", false)
+            }
+
+            override fun onFailure(call: Call<HTTPResponseModel.UserResponse>, t: Throwable) {
+                updateSettingLiveData.value = DataWrapper(null, "Failed to update search privacy setting!", true)
+            }
+
+        })
+
+        return updateSettingLiveData
     }
 }

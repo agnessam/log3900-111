@@ -53,7 +53,6 @@ class DrawingMenuRecyclerAdapter(
 
         val avatar = DrawingOwnerService.getAvatar(drawingMenus[position].drawing.owner)
         if (avatar != null) {
-            holder.drawingMenuViewHolder.authorImageViewParent.visibility = View.VISIBLE
             MyPicasso().loadImage(avatar.imageUrl, holder.drawingMenuViewHolder.authorImageView)
         }
 
@@ -94,11 +93,10 @@ class DrawingMenuRecyclerAdapter(
             val imageView = itemView.findViewById<ImageView>(R.id.card_drawing_menu_image)
             val lockIconView = itemView.findViewById<ImageView>(R.id.card_drawing_menu_privacy_icon)
             val authorImageView = itemView.findViewById<ImageView>(R.id.card_drawing_menu_author_image)
-            val authorImageViewParent = itemView.findViewById<CardView>(R.id.card_drawing_menu_author_image_main)
             val privacyLevel = itemView.findViewById<TextView>(R.id.card_drawing_menu_date_privacy)
             val popupMenu = itemView.findViewById<ImageButton>(R.id.card_drawing_menu_options)
 
-            drawingMenuViewHolder = DrawingMenuViewHolder(name, authorName, drawingDate, imageView, lockIconView, authorImageView, privacyLevel, authorImageViewParent, popupMenu)
+            drawingMenuViewHolder = DrawingMenuViewHolder(name, authorName, drawingDate, imageView, lockIconView, authorImageView, privacyLevel, popupMenu)
 
             // click listener for clicking on specific drawing
             itemView.setOnClickListener {

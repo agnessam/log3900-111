@@ -49,7 +49,12 @@ class UsersProfileFragment : Fragment(R.layout.fragment_users_profile) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            userId = it.getString(Constants.USERS.CURRENT_USER_ID_KEY)
+            if(it.getString(Constants.USERS.CURRENT_USER_ID_KEY)== null){
+                userId = UserService.getUserInfo()._id
+            }
+            else{
+                userId = it.getString(Constants.USERS.CURRENT_USER_ID_KEY)
+            }
         }
     }
 

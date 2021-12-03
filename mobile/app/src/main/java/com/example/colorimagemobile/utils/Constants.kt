@@ -14,6 +14,9 @@ class Constants {
         const val AVATAR_ALL_INFO_DEFAULT = true
 
         const val NB_DATA_ROWS = 3
+        const val MINUTES = " minutes"
+        const val NOTIFICATION_URI ="android.resource://com.example.colorimagemobile/raw/pop"
+
     }
 
     class SOCKETS {
@@ -98,6 +101,12 @@ class Constants {
     class SEARCH {
         companion object {
             const val CURRENT_QUERY = "CurrentQueryObject"
+        }
+    }
+
+    class DRAWINGS {
+        companion object {
+            const val CURRENT_DRAWING_ID_KEY = "CurrentDrawing"
         }
     }
 

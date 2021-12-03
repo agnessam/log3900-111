@@ -65,14 +65,11 @@ class accountParameterFragment : Fragment() {
 
 
         }
-
         view.findViewById<TextView>(R.id.privacy).setOnClickListener {
-
             changeTxtColor(privacy,stat,myProfile,history)
             val privacyAndSetting = PrivacyAndSafety()
             parentFragmentManager.beginTransaction().replace(R.id.newLayout, privacyAndSetting)
                 .commit()
-
 
         }
 

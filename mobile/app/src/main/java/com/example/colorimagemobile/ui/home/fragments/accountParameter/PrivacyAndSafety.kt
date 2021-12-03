@@ -78,7 +78,6 @@ class PrivacyAndSafety : Fragment() {
         }
         // request successfully
         UserService.updatePrivacySetting(newSetting)
-        context.let { CommonFun.printToast(it, "Request successful you update your privacy to be ${newSetting}") }
     }
 
 }

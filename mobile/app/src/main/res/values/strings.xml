@@ -41,7 +41,6 @@
     <string name="confirm_password"><b>Confirm Password</b></string>
     <string name="new_password"><b>New Password</b></string>
     <string name="current_password"><b>Current Password</b></string>
-    <string name="change_password">Change Password</string>
     <string name="edit_password">Edit Password</string>
     <string name="history_log">Log History</string>
     <string name="edit_profil">Edit Profile</string>
@@ -60,5 +59,19 @@
     <string name="follow">Follow</string>
     <string name="unfollow">Unfollow</string>
     <string name="display_name">Display name</string>
+    <string name="cancel">Cancel</string>
+    <string name="confirm">Confirm</string>
+    <string name="change_your_username">Change your username</string>
+    <string name="enter_a_new_username">Enter a new username</string>
+    <string name="change_your_description">Change your description</string>
+    <string name="describe_yourself">Describe yourself!</string>
+    <string name="enter_a_description">Enter a description</string>
+    <string name="change_your_password">Change your Password</string>
+    <string name="privacy_safety"><![CDATA[Privacy & Safety]]></string>
+    <string name="info_privacy_lastname_filter">Disabling this setting prevents users by finding you and your drawings with your last name via our search functionality.</string>
+    <string name="info_privacy_firstname_filter">Disabling this setting prevents users by finding you and your drawings with your first name via our search functionality.</string>
+    <string name="info_privacy_email_filter">Disabling this setting prevents users by finding you and your drawings with your e-mail via our search functionality.</string>
     <string name="posts">Posts</string>
+    <string name="password_and_authentification">Password and authentification</string>
+    <string name="change_password">Change Password</string>
 </resources>

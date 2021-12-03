@@ -21,6 +21,5 @@ data class DrawingMenuViewHolder(
     val lockIconView: ImageView,
     val authorImageView: ImageView,
     val privacyLevel: TextView,
-    val authorImageViewParent: CardView,
     val popupMenu: ImageButton
 )
