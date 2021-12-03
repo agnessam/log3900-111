@@ -59,7 +59,6 @@ export class ResizeCommand implements ICommand {
     xTranslate: number,
     yTranslate: number
   ): void {
-    console.log(yTranslate);
     const scaleString =
       ` translate(${xTranslate} ${yTranslate})` +
       ` scale(${xScaled} ${yScaled})` +
@@ -72,7 +71,6 @@ export class ResizeCommand implements ICommand {
       "transform",
       scaleString + lastTransformation
     );
-    console.log(scaleString + lastTransformation);
   }
 
   undo(): void {
