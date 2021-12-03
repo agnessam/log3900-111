@@ -9,26 +9,25 @@
   right: 15px;
   z-index: 9;
   width: 230px;
-  box-shadow :0 0 5px rgba(0,0,0,0.4);
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.4);
   border-top-left-radius: 15px;
   border-top-right-radius: 15px;
-  background: rgba(255,255,255,0.8);
+  background: rgba(255, 255, 255, 0.8);
 }
 
-.chat-top{
-  background-color: rgba(#DEDEDE,0.8);
+.chat-top {
+  background-color: rgba(#dedede, 0.8);
   border-top-left-radius: 15px;
   border-top-right-radius: 15px;
-  display:flex;
+  display: flex;
   width: 100%;
   justify-content: space-between;
   align-items: center;
 }
-.chat-top>:nth-child(1){
+.chat-top > :nth-child(1) {
   width: max-content;
   margin-left: 10px;
 }
-
 
 #chatbox {
   text-align: left;
@@ -39,7 +38,7 @@
   width: 90%;
   overflow-x: hidden;
   overflow-y: auto;
-  background: rgba(255,255,255,0.8);
+  background: rgba(255, 255, 255, 0.8);
 }
 
 .buttonContainer {
@@ -47,13 +46,13 @@
   width: 35px;
   height: 35px;
   border: #924642;
-  &>*{
+  & > * {
     color: #924642;
   }
 }
 
 #message {
-  display:flex;
+  display: flex;
   width: 100%;
   justify-content: space-between;
   align-items: center;
@@ -61,18 +60,18 @@
   border-top: 2px black;
 }
 
-input[type=text]{
+input[type="text"] {
   border: none;
 }
 
-.time{
-  color:grey;
-  font: 10px bold ;
+.time {
+  color: grey;
+  font: 10px bold;
   align-self: flex-end;
-  margin-right:10px;
+  margin-right: 10px;
 }
 
-#new-message-form{
+#new-message-form {
   background-color: #fef9f7;
   border-radius: 25px;
   display: flex;
@@ -80,49 +79,51 @@ input[type=text]{
   align-items: center;
 }
 
-#new-message-input{
+#new-message-input {
   border: none;
   background-color: transparent;
   width: 100%;
 }
 
-#new-message-input:focus{
+#new-message-input:focus {
   outline: none;
 }
 
-.user, .other{
-  display:flex;
+.user,
+.other {
+  display: flex;
   flex-direction: column;
   width: 80%;
   margin-bottom: 8px;
   align-self: flex-end;
 }
 
-.user{
+.user {
   justify-content: right;
 }
 
-.other{
+.other {
   justify-content: left;
 }
 
 .user > .messageBox {
   border-radius: 10px 10px 0px 10px;
-  background-color: #A5A6F6;
+  background-color: #a5a6f6;
 }
 
 .other > .messageBox {
   border-radius: 0px 10px 10px 10px;
-  background-color: #FCEDEA;
+  background-color: #fcedea;
 }
 
 .messageBox {
   width: 90%;
   padding: 10px 5px 10px 5px;
+  word-wrap: break-word;
 }
 
-#chatbox > *{
-  display:flex;
+#chatbox > * {
+  display: flex;
   flex-direction: column;
 }
 
