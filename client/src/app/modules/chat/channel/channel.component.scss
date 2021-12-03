@@ -1,10 +1,9 @@
-#channel-overlay{
+#channel-overlay {
   display: block;
   width: 230px;
   border-radius: 15px;
-  background-color: #fef9f7;
+  // background-color: #fef9f7;
 }
-
 
 .btn {
   border-radius: 50%;
@@ -12,48 +11,48 @@
   background-color: transparent;
 }
 
-.btn:hover{
-  background-color: #fae2dd;
+.btn:hover {
+  // background-color: #fae2dd;
 }
 
-.channel-top{
+.channel-top {
   display: flex;
   width: 100%;
   justify-content: space-between;
   align-items: center;
-  background-color: rgba(#DEDEDE,0.4);
+  // background-color: rgba(#DEDEDE,0.4);
 }
-.channel-top>:nth-child(1){
+.channel-top > :nth-child(1) {
   width: 70%;
   margin-left: 10px;
 }
-.channel-top>:nth-child(3){
+.channel-top > :nth-child(3) {
   margin-right: 10px;
 }
 
 :host ::ng-deep.mat-tab-label {
-  min-width: 50%!important;
+  min-width: 50% !important;
 }
 
-.channel{
+.channel {
   margin-left: 10px;
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
-.channel:hover{
-  color: #da7e70;
+.channel:hover {
+  // color: #da7e70;
   cursor: pointer;
 }
 
-.channel-list{
+.channel-list {
   overflow: auto;
   max-height: 80vh;
   overflow-x: hidden;
 }
 
-.deleteChannelBtn{
+.deleteChannelBtn {
   display: none;
 }
 
@@ -67,33 +66,35 @@
   width: 100%;
   height: calc(100vh - 64px);
   overflow: auto;
-  background-color: rgb(0,0,0);
-  background-color: rgba(0,0,0,0.4);
+  background-color: rgb(0, 0, 0);
+  background-color: rgba(0, 0, 0, 0.4);
 }
 
 /* Modal Content */
 .modal-content {
-  background-color: #FEF9F7;
+  background-color: #fef9f7;
   margin: auto;
   padding: 20px;
   width: 500px;
   border-radius: 20px;
 }
 
-.headerModal, .bottomModal{
+.headerModal,
+.bottomModal {
   display: flex;
   flex-direction: row;
   padding-bottom: 15px;
 
-  :nth-child(1){
+  :nth-child(1) {
     width: 90%;
   }
-  :nth-child(2){
-    width:10%;
+  :nth-child(2) {
+    width: 10%;
   }
 }
 
-#search-bar, #new-channel-form{
+#search-bar,
+#new-channel-form {
   background-color: #fef9f7;
   border-radius: 25px;
   display: flex;
@@ -101,16 +102,18 @@
   align-items: center;
 }
 
-#search-input, #new-channel-input{
+#search-input,
+#new-channel-input {
   border: none;
   background-color: transparent;
   width: 100%;
 }
 
-#search-input:focus, #new-channel-input:focus{
+#search-input:focus,
+#new-channel-input:focus {
   outline: none;
 }
 
-input[type=text]:invalid {
-  border:1px solid red;
+input[type="text"]:invalid {
+  border: 1px solid red;
 }
