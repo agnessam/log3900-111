@@ -1,5 +1,5 @@
 import { PostService } from './services/post.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit,ViewChild, ElementRef} from '@angular/core';
 import { PostInterface } from './models/post.model';
 import { AuthenticationService } from '../authentication';
 import { User } from '../authentication/models/user';
@@ -15,6 +15,8 @@ import { PostDialogComponent} from '../post-dialog/post-dialog.component';
   styleUrls: ['./museum.component.scss']
 })
 export class MuseumComponent implements OnInit {
+  @ViewChild('audioOption') audioPlayerRef: ElementRef;
+
   user: User | null;
   posts: PostInterface[];
 
@@ -76,10 +78,10 @@ export class MuseumComponent implements OnInit {
       });
     }
     else{
+      this.onAudioPlay();
       this.postService.addLike(userid, post._id).subscribe((like) => {
         this.posts.find(postItem => postItem._id === post._id)?.likes.push(userid);
       });
-
     }
   }
 
@@ -97,5 +99,9 @@ export class MuseumComponent implements OnInit {
 
   getTime(createdAt: string): string{
     return createdAt.split("T")[0];
+  }
+
+  onAudioPlay(){
+    this.audioPlayerRef.nativeElement.play();
   }
 }

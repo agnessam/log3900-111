@@ -22,6 +22,10 @@
 
           <div class="bottom-image">
             <div class="bottom-group" (click)="toggleLike(post)">
+              <audio #audioOption>
+                <source src="../../../assets/sound/like.mp3" type="audio/mp3">
+              </audio>
+
               <div *ngIf="hasBeenLike(post.likes); else notLikeBlock">
                 <mat-icon>favorite</mat-icon>
               </div>

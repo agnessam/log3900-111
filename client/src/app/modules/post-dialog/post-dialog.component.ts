@@ -17,6 +17,7 @@ import { Team } from 'src/app/shared/models/team.model';
 })
 export class PostDialogComponent implements OnInit {
   @ViewChild("commentInput", { static: false }) private commentInput: ElementRef<HTMLInputElement>;
+  @ViewChild('audioOption') audioPlayerRef: ElementRef;
 
   user: User | null;
 
@@ -111,6 +112,10 @@ export class PostDialogComponent implements OnInit {
 
   getTime(createdAt: string): string{
     return createdAt.split("T")[0];
+  }
+
+  onAudioPlay(){
+    this.audioPlayerRef.nativeElement.play();
   }
 
 }
