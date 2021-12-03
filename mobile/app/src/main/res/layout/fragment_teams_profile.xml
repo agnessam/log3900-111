@@ -143,28 +143,6 @@
                     android:layout_below="@id/FollwerFollowingvalues"
                     android:layout_marginTop="30dp">
 
-                    <Button
-                        android:id="@+id/teamIdFollowBtn"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_toLeftOf="@id/teamId_action_empty_space"
-                        android:backgroundTint="@color/primary"
-                        android:text="Follow"
-                        android:textColor="@color/white" />
-
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/teamIdUnFollowBtn"
-                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_toLeftOf="@id/teamId_action_empty_space"
-                        android:text="Unfollow"
-                        android:textColor="@color/primary"
-                        android:visibility="gone"
-                        app:cornerRadius="4dp"
-                        app:strokeColor="@color/primary"
-                        app:strokeWidth="1dp" />
-
                     <View
                         android:id="@+id/teamId_action_empty_space"
                         android:layout_width="40dp"
@@ -175,6 +153,7 @@
                         android:id="@+id/teamIdJoinBtnMain"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
                         android:layout_toRightOf="@id/teamId_action_empty_space">
 
                         <Button
@@ -182,7 +161,8 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:backgroundTint="@color/primary"
-                            android:text="Join"
+                            android:layout_centerInParent="true"
+                            android:text="@string/join"
                             android:textColor="@color/white" />
 
                         <com.google.android.material.button.MaterialButton
@@ -190,7 +170,8 @@
                             style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Leave"
+                            android:layout_centerInParent="true"
+                            android:text="@string/leave"
                             android:textColor="@color/primary"
                             android:visibility="gone"
                             app:cornerRadius="4dp"
@@ -211,7 +192,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:backgroundTint="@color/delete"
-                            android:text="Delete"
+                            android:text="@string/delete"
                             android:textColor="@color/white" />
 
                     </RelativeLayout>
@@ -260,12 +241,12 @@
                 <com.google.android.material.tabs.TabItem
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="All Drawings" />
+                    android:text="@string/all_drawings" />
 
                 <com.google.android.material.tabs.TabItem
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Published Drawings" />
+                    android:text="@string/published_drawings" />
             </com.google.android.material.tabs.TabLayout>
 
             <androidx.recyclerview.widget.RecyclerView
@@ -273,7 +254,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_below="@id/teamProfileDrawingsTabLayout"
-                android:padding="4dp"></androidx.recyclerview.widget.RecyclerView>
+                android:padding="4dp" />
 
         </RelativeLayout>
 

@@ -74,4 +74,9 @@
     <string name="posts">Posts</string>
     <string name="password_and_authentification">Password and authentification</string>
     <string name="change_password">Change Password</string>
+    <string name="join">Join</string>
+    <string name="leave">Leave</string>
+    <string name="delete">Delete</string>
+    <string name="all_drawings">All Drawings</string>
+    <string name="published_drawings">Published Drawings</string>
 </resources>
