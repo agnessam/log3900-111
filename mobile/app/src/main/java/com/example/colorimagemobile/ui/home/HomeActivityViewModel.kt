@@ -27,7 +27,7 @@ class HomeActivityViewModel : ViewModel() {
         return userRepository.getUserByToken(token)
     }
 
-    fun logoutUser(user: UserModel.Logout): LiveData<DataWrapper<HTTPResponseModel>> {
+    fun logoutUser(user: UserModel.Logout): Boolean  {
         return authRepository.logoutUser(user)
     }
 

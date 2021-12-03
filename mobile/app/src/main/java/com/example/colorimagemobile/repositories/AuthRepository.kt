@@ -6,6 +6,7 @@ import com.example.colorimagemobile.models.UserModel
 import com.example.colorimagemobile.services.RetrofitInstance
 import com.example.colorimagemobile.models.DataWrapper
 import com.example.colorimagemobile.models.HTTPResponseModel
+import com.example.colorimagemobile.services.users.UserService
 import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
 import com.example.colorimagemobile.utils.Constants.Companion.DEBUG_KEY
 import retrofit2.Call
@@ -51,22 +52,25 @@ class AuthRepository {
     }
 
     // when user logs out
-    fun logoutUser(user: UserModel.Logout): MutableLiveData<DataWrapper<HTTPResponseModel>>  {
-        val authLiveData: MutableLiveData<DataWrapper<HTTPResponseModel>> = MutableLiveData()
+    fun logoutUser(userId: UserModel.Logout): Boolean {
+        var authLiveData: Boolean = false
 
-        httpClient.logoutUser(user).enqueue(object : Callback<Boolean> {
+        httpClient.logoutUser(token = "Bearer ${UserService.getToken()}", userId).enqueue(object : Callback<Boolean> {
             override fun onResponse(call: Call<Boolean>, response: Response<Boolean>) {
+                // some HTTP error
                 if (!response.isSuccessful) {
-                    printMsg(response.message())
-                    authLiveData.value = DataWrapper(null, "An error occurred!", true)
+                    printMsg("Logout Response ${response.message()}")
+                    authLiveData = false
                     return
                 }
-
-                authLiveData.value = DataWrapper(null, "Logging you out ${user.username}!", false)
+                // user logout successfully and logoutDate update
+                authLiveData = true
+                printMsg("Logout Response ${response.message()}")
             }
 
+            // HTTP failure
             override fun onFailure(call: Call<Boolean>, t: Throwable) {
-                authLiveData.value = DataWrapper(null, "Failed to you logout!", true)
+                authLiveData = true
             }
         })
 

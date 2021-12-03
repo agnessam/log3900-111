@@ -295,7 +295,7 @@ class UserRepository {
     }
 
     // update privacy
-    fun updateUserPrivacy(newSetting: Privacy.Setting): MutableLiveData<DataWrapper<HTTPResponseModel.UserResponse>> {
+    fun updateUserPrivacy(newSetting: UserModel.updatePrivacy): MutableLiveData<DataWrapper<HTTPResponseModel.UserResponse>> {
 
         val updateSettingLiveData: MutableLiveData<DataWrapper<HTTPResponseModel.UserResponse>> = MutableLiveData()
 

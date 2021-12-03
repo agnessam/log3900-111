@@ -185,7 +185,7 @@ object UserService {
         return userStatistics
     }
 
-    fun updatePrivacySetting(newSetting : Privacy.Setting ){
+    fun updatePrivacySetting(newSetting : UserModel.privacySetting){
         this.info.privacySetting = newSetting
     }
 
