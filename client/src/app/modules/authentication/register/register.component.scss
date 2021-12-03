@@ -24,18 +24,15 @@
 
 #register-mat-card.mat-card {
   border-radius: 15px;
-  background-color: #fef9f7;
 }
 
-#title-card {
-  color: #924642;
+#titleCard {
   font-size: 36px;
   padding-top: 1%;
   padding-bottom: 1%;
 }
 
 #register-card {
-  color: #5b4d5a;
   font-size: 24px;
   padding-bottom: 1%;
 }
@@ -44,17 +41,12 @@
   font-size: 18px;
 }
 
-#login-link .button {
-  color: #924642;
-}
-
 #register-button {
   text-align: right;
   position: relative;
 }
 
 .register-body {
-  background-image: url("../../../../assets/backgrounds/auth-background.png");
   background-position: center;
   -webkit-background-size: cover;
   -moz-background-size: cover;

@@ -45,8 +45,8 @@ export class ConfirmJoinDialogComponent implements OnInit {
         });
       });
     } else {
-      this.snackbar.open("Wrong password, try again!", "Close", {
-        duration: 1000,
+      this.teamPasswordForm.controls["teamPassword"].setErrors({
+        wrongPassword: true,
       });
       return;
     }

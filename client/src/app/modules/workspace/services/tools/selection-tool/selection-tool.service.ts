@@ -6,7 +6,6 @@ import { ICommand } from "src/app/modules/workspace/interfaces/command.interface
 import { Point, RGB } from "src/app/shared";
 import { Tools } from "../../../interfaces/tools.interface";
 import { DrawingService } from "../../drawing/drawing.service";
-import { KeyCodes } from "../../hotkeys/hotkeys-constants";
 import { OffsetManagerService } from "../../offset-manager/offset-manager.service";
 import { RendererProviderService } from "../../renderer-provider/renderer-provider.service";
 import { DrawingSocketService } from "../../synchronisation/sockets/drawing-socket/drawing-socket.service";
@@ -28,12 +27,10 @@ import { LineWidthCommand } from "./line-width-command/line-width-command.servic
 export class SelectionToolService implements Tools {
   readonly id: number = ToolIdConstants.SELECTION_ID;
   readonly faIcon: IconDefinition = faMousePointer;
-  readonly toolName = "Sélection";
+  readonly toolName = "Selection";
   parameters: FormGroup;
 
   private hasSelectedItems = false;
-  private isAlt = false;
-  private isShift = false;
 
   private pointsSideLength = 10;
   private pointsList: Point[] = [
@@ -72,6 +69,9 @@ export class SelectionToolService implements Tools {
     this.setRectSelection();
     this.setCtrlPoints();
   }
+
+  onKeyDown(_event: KeyboardEvent): void {}
+  onKeyUp(_event: KeyboardEvent): void {}
 
   /// Quand le bouton gauche de la sourie est enfoncé, soit on selectionne un objet, soit on debute une zone de selection
   /// soit on s'aprete a deplacer un ou plusieurs objet ou soit on enleve une selection.
@@ -271,68 +271,6 @@ export class SelectionToolService implements Tools {
     }
   }
 
-  // Alt and shift alter the behavior when resizing
-  // With shift, the resize follows a square transformation
-  // With alt, the size is mirrored on both sides
-  onKeyDown(event: KeyboardEvent): void {
-    if (!this.isAlt) {
-      this.isAlt = event.code === KeyCodes.altR || event.code === KeyCodes.altL;
-    }
-    if (!this.isShift) {
-      this.isShift =
-        event.code === KeyCodes.shiftR || event.code === KeyCodes.shiftL;
-    }
-
-    this.wasMoved = true;
-
-    if (this.isAlt) {
-      this.selectionTransformService.setAlt(true);
-    }
-    if (this.isShift) {
-      this.selectionTransformService.setShift(true);
-      this.setSelection();
-    }
-
-    if (
-      this.selectionTransformService.getCommandType() ===
-      SelectionCommandConstants.RESIZE
-    ) {
-      this.selectionTransformService.resizeWithLastOffset();
-      this.setSelection();
-    }
-  }
-
-  onKeyUp(event: KeyboardEvent): void {
-    if (this.isAlt) {
-      this.isAlt = !(
-        event.code === KeyCodes.altR || event.code === KeyCodes.altL
-      );
-    }
-    if (this.isShift) {
-      this.isShift = !(
-        event.code === KeyCodes.shiftR || event.code === KeyCodes.shiftL
-      );
-    }
-
-    this.wasMoved = true;
-
-    if (!this.isAlt) {
-      this.selectionTransformService.setAlt(false);
-    }
-    if (!this.isShift) {
-      this.selectionTransformService.setShift(false);
-      this.setSelection();
-    }
-
-    if (
-      this.selectionTransformService.getCommandType() ===
-      SelectionCommandConstants.RESIZE
-    ) {
-      this.selectionTransformService.resizeWithLastOffset();
-      this.setSelection();
-    }
-  }
-
   private changeLineWidthParameterComponent(obj: SVGElement): void {
     if (obj.style.strokeWidth != "" || obj.getAttribute("r") != "") {
       const propertyString =
@@ -399,7 +337,7 @@ export class SelectionToolService implements Tools {
         this.rendererService.renderer.setAttribute(point, "transform", "");
       });
 
-      let boundingRect = this.objects[0].getBoundingClientRect();
+      let boundingRect: DOMRect = this.objects[0].getBoundingClientRect();
 
       let x = 0;
       let y = 0;
@@ -418,7 +356,7 @@ export class SelectionToolService implements Tools {
 
       if (this.objects.length === 1 || !this.wasMoved) {
         x = boundingRect.left - this.xFactor() - objStrokeWidth / 2;
-        y = boundingRect.top - objStrokeWidth / 2;
+        y = boundingRect.top - objStrokeWidth / 2 - 64;
         width = boundingRect.width + objStrokeWidth;
         height = boundingRect.height + objStrokeWidth;
       } else {

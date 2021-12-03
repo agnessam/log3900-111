@@ -9,30 +9,36 @@ export class ResizeCommand implements ICommand {
   object: SVGElement;
   private xScaled: number = 1;
   private yScaled: number = 1;
-  private xTranslate: number = 0;  
+  private xTranslate: number = 0;
   private yTranslate: number = 0;
 
   constructor(private renderer: Renderer2, objectList: SVGElement[]) {
     this.object = objectList[0];
     const transform: string | null = this.object.getAttribute("transform");
-      if (transform) {
-        this.previousTransformation.set(this.object.id, transform);
-      } else {
-        this.previousTransformation.set(this.object.id, "");
-      }
+    if (transform) {
+      this.previousTransformation.set(this.object.id, transform);
+    } else {
+      this.previousTransformation.set(this.object.id, "");
+    }
   }
 
   update(drawingCommand: any): void {
-    this.setScales(drawingCommand.xScaled, drawingCommand.yScaled, drawingCommand.xTranslate, drawingCommand.yTranslate)
-    for(let key_transformation of this.previousTransformation){
-      this.previousTransformation.set(key_transformation[0], drawingCommand.previousTransform)
+    this.setScales(
+      drawingCommand.xScaled,
+      drawingCommand.yScaled,
+      drawingCommand.xTranslate,
+      drawingCommand.yTranslate - 64
+    );
+    for (let key_transformation of this.previousTransformation) {
+      this.previousTransformation.set(
+        key_transformation[0],
+        drawingCommand.previousTransform
+      );
     }
   }
 
   getLastTransformation(): string {
-    return this.previousTransformation.get(
-      this.object.id
-    ) as string;
+    return this.previousTransformation.get(this.object.id) as string;
   }
 
   setScales(
@@ -44,7 +50,7 @@ export class ResizeCommand implements ICommand {
     this.xScaled = xScaled;
     this.yScaled = yScaled;
     this.xTranslate = xTranslate;
-    this.yTranslate = yTranslate
+    this.yTranslate = yTranslate;
   }
 
   private resize(
@@ -66,7 +72,7 @@ export class ResizeCommand implements ICommand {
       scaleString + lastTransformation
     );
   }
-  
+
   undo(): void {
     this.renderer.setAttribute(
       this.object,
@@ -76,11 +82,6 @@ export class ResizeCommand implements ICommand {
   }
 
   execute(): void {
-    this.resize(
-      this.xScaled,
-      this.yScaled,
-      this.xTranslate,
-      this.yTranslate
-    );
+    this.resize(this.xScaled, this.yScaled, this.xTranslate, this.yTranslate);
   }
 }

@@ -20,6 +20,7 @@ import { EditDescriptionDialogComponent } from "./settings-container/user-overvi
 import { UserStatisticsComponent } from "./settings-container/user-statistics/user-statistics.component";
 import { UserPrivacyComponent } from "./settings-container/user-privacy/user-privacy.component";
 import { MatSlideToggleModule } from "@angular/material/slide-toggle";
+import { ApplicationSettingsComponent } from './settings-container/application-settings/application-settings.component';
 
 @NgModule({
   declarations: [
@@ -31,6 +32,7 @@ import { MatSlideToggleModule } from "@angular/material/slide-toggle";
     EditDescriptionDialogComponent,
     UserStatisticsComponent,
     UserPrivacyComponent,
+    ApplicationSettingsComponent,
   ],
   imports: [
     CommonModule,
