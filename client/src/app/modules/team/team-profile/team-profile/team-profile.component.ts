@@ -9,6 +9,7 @@ import { Team } from "src/app/shared/models/team.model";
 import { ConfirmDeleteDialogComponent } from "../confirm-delete-dialog/confirm-delete-dialog.component";
 import { ConfirmJoinDialogComponent } from "../confirm-join-dialog/confirm-join-dialog.component";
 import { ConfirmLeaveDialogComponent } from "../confirm-leave-dialog/confirm-leave-dialog.component";
+import { EditTeamParametersComponent } from "../edit-team-parameters/edit-team-parameters.component";
 import { MemberListDialogComponent } from "../member-list-dialog/member-list-dialog.component";
 
 @Component({
@@ -26,6 +27,7 @@ export class TeamProfileComponent implements OnInit {
   openConfirmJoinDialogRef: MatDialogRef<ConfirmJoinDialogComponent>;
   openConfirmLeaveDialogRef: MatDialogRef<ConfirmLeaveDialogComponent>;
   openMemberListDialogRef: MatDialogRef<MemberListDialogComponent>;
+  openEditTeamParametersDialogRef: MatDialogRef<EditTeamParametersComponent>;
 
   constructor(
     private route: ActivatedRoute,
@@ -110,6 +112,22 @@ export class TeamProfileComponent implements OnInit {
       this.chatSocketService.leaveRoom(team.name);
       this.changeDetectorRef.detectChanges();
     });
+  }
+
+  openEditTeamParametersDialog() {
+    this.openEditTeamParametersDialogRef = this.dialog.open(
+      EditTeamParametersComponent,
+      { data: this.team }
+    );
+    this.openEditTeamParametersDialogRef
+      .afterClosed()
+      .subscribe((updatedTeam: Team) => {
+        if (updatedTeam) {
+          this.team.description = updatedTeam.description;
+          this.team.isPrivate = updatedTeam.isPrivate;
+          this.team.password = updatedTeam.password;
+        }
+      });
   }
 
   openMemberList() {
