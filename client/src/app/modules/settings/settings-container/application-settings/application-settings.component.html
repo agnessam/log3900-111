@@ -21,7 +21,7 @@
                       <br />
                       <mat-slide-toggle
                         (change)="toggleDarkTheme($event)"
-                        [(ngModel)]="colorSchemeService.currentActive"
+                        [ngModel]="setCurrentTheme()"
                       ></mat-slide-toggle>
                     </div>
                   </div>

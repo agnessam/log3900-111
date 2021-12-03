@@ -13,7 +13,7 @@ export class AppComponent implements OnInit, OnDestroy {
     private colorSchemeService: ColorSchemeService
   ) {
     this.colorSchemeService.load();
-    this.colorSchemeService.update("dark");
+    this.colorSchemeService.update("light");
   }
 
   openDialog() {}
