@@ -23,6 +23,7 @@
       autocomplete="off"
       spellcheck="false"
       placeholder="Search"
+      class="mat-app-background"
       [(ngModel)]="this.searchQuery"
       name="search"
     />
@@ -41,6 +42,7 @@
     mat-icon-button
     #channelToggle="matMenuTrigger"
     [matMenuTriggerFor]="channels"
+    (click)="getChannelsData()"
   >
     <img src="../../../../assets/svg-icon/chat-icon.svg" />
   </button>

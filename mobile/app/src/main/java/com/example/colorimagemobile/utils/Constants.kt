@@ -33,13 +33,16 @@ class Constants {
             const val UPDATE_DRAWING_NOTIFICATION = "drawing-update-notification"
             const val UPDATE_DRAWING_EVENT = "drawing-update"
             const val FETCH_DRAWING_NOTIFICATION = "drawing-fetch"
+            const val DELETE_SELECTION_EVENT = "selection-delete"
+            const val PRIMARY_COLOR_EVENT = "color-primary-update"
+            const val SECONDARY_COLOR_EVENT = "color-secondary-update"
         }
     }
 
     class URL {
         companion object {
-//            const val SERVER = "http://10.0.2.2:3000"
-        const val SERVER = "http://colorimage.us-east-1.elasticbeanstalk.com"
+            const val SERVER = "http://10.0.2.2:3000"
+//        const val SERVER = "http://colorimage.us-east-1.elasticbeanstalk.com"
         }
     }
 

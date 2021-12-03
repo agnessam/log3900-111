@@ -22,7 +22,7 @@ import { Ellipse } from "./ellipse.model";
 })
 export class ToolEllipseService implements Tools {
   readonly faIcon: IconDefinition = faCircle;
-  readonly toolName = "Outil Ellipse";
+  readonly toolName = "Ellipse";
   readonly id = ToolIdConstants.ELLIPSE_ID;
 
   private ellipse: Ellipse | null = null;
