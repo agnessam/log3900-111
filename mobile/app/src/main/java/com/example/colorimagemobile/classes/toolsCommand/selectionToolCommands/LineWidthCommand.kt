@@ -7,7 +7,7 @@ import com.example.colorimagemobile.services.drawing.DrawingObjectManager
 import com.example.colorimagemobile.services.drawing.toolsAttribute.LineWidthService
 import com.example.colorimagemobile.services.drawing.toolsAttribute.SelectionService
 
-class LineWidthCommand(objectId: Int, private var lineWidth: Int): ICommand {
+class LineWidthCommand(objectId: String, private var lineWidth: Int): ICommand {
     private var commandToChange: ICommand? = null
 
     init {
