@@ -3,12 +3,12 @@ package com.example.colorimagemobile.classes.toolsCommand
 import android.graphics.Color
 import com.example.colorimagemobile.interfaces.ICommand
 import com.example.colorimagemobile.services.drawing.CanvasUpdateService
+import com.example.colorimagemobile.services.drawing.DrawingJsonService
 import com.example.colorimagemobile.services.drawing.DrawingObjectManager
 import com.example.colorimagemobile.services.drawing.toolsAttribute.ColorService
 
-class PrimaryColorCommand(objectId: Int, private var primaryColor: String): ICommand {
+class PrimaryColorCommand(private val objectId: String, private var primaryColor: String): ICommand {
     private var commandToChange: ICommand? = null
-
     init {
         commandToChange = DrawingObjectManager.getCommand(objectId)
     }

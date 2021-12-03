@@ -6,7 +6,7 @@ import com.example.colorimagemobile.services.drawing.CanvasUpdateService
 import com.example.colorimagemobile.services.drawing.DrawingObjectManager
 import com.example.colorimagemobile.services.drawing.toolsAttribute.ColorService
 
-class SecondaryColorCommand(objectId: Int, private var secondaryColor: String): ICommand {
+class SecondaryColorCommand(private val objectId: String, private var secondaryColor: String): ICommand {
     private var commandToChange: ICommand? = null
 
     init {

@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.colorimagemobile.classes.toolsCommand.PrimaryColorCommand
 import com.example.colorimagemobile.classes.toolsCommand.SecondaryColorCommand
+import com.example.colorimagemobile.services.drawing.DrawingObjectManager
 import com.example.colorimagemobile.utils.Constants
 
 // Service to change colors from existing shapes
@@ -39,7 +40,8 @@ object SelectionColorService {
     fun setPrimaryColor(newColor: String) {
         if (SelectionService.selectedShapeIndex != -1) {
             updatePrimaryColor(newColor)
-            primaryColorCommand = PrimaryColorCommand(SelectionService.selectedShapeIndex, newColor)
+            var selectedShapeId = DrawingObjectManager.getUuid(SelectionService.selectedShapeIndex) ?: return
+            primaryColorCommand = PrimaryColorCommand(selectedShapeId, newColor)
             primaryColorCommand!!.execute()
         }
     }
@@ -47,7 +49,8 @@ object SelectionColorService {
     fun setSecondaryColor(newColor: String) {
         if (SelectionService.selectedShapeIndex != -1) {
             updateSecondaryColor(newColor)
-            secondaryColorCommand = SecondaryColorCommand(SelectionService.selectedShapeIndex, newColor)
+            var selectedShapeId = DrawingObjectManager.getUuid(SelectionService.selectedShapeIndex) ?: return
+            secondaryColorCommand = SecondaryColorCommand(selectedShapeId, newColor)
             secondaryColorCommand!!.execute()
         }
     }
