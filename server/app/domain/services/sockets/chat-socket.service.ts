@@ -45,17 +45,21 @@ export class ChatSocketService extends SocketServiceInterface {
         `${message.author} at ${message.timestamp}: ${message.message}`,
       );
       this.emitMessage(message);
-      
+
       this.textChannelRepository
-      .getChannelByName(message.roomName)
-      .then((channel) => {
-        this.textChannelRepository.getMessages(channel._id)
-        .then((messages) => {
-          if (messages && messages.length !== 0){
-            this.emitHistory(message.roomName, messages);
-          }
+        .getChannelByName(message.roomName)
+        .then((channel) => {
+          this.textChannelRepository
+            .getMessages(channel._id)
+            .then((messages) => {
+              if (messages && messages.length !== 0) {
+                this.emitHistory(message.roomName, messages);
+              }
+            });
         })
-      })
+        .catch((err) => {
+          // Let server run
+        });
 
       this.messageRepository.storeMessages(message);
     });
@@ -73,16 +77,17 @@ export class ChatSocketService extends SocketServiceInterface {
       socket.join(socketInformation.roomName);
 
       this.textChannelRepository
-      .getChannelByName(socketInformation.roomName)
-      .then((channel) => {
-        this.textChannelRepository.getMessages(channel._id)
-        .then((messages) => {
-          if (messages && messages.length !== 0){
-            this.emitHistory(socketInformation.roomName, messages);
-          }
-        })
-      })
-      
+        .getChannelByName(socketInformation.roomName)
+        .then((channel) => {
+          this.textChannelRepository
+            .getMessages(channel._id)
+            .then((messages) => {
+              if (messages && messages.length !== 0) {
+                this.emitHistory(socketInformation.roomName, messages);
+              }
+            });
+        });
+
       console.log(
         `number of users in ${socketInformation.roomName} : ${
           this.namespace.adapter.rooms.get(socketInformation.roomName)?.size
@@ -115,5 +120,9 @@ export class ChatSocketService extends SocketServiceInterface {
 
   protected listenDisconnect(socket: Socket) {
     super.listenDisconnect(socket);
+  }
+
+  emitLeave(roomName: string) {
+    this.namespace.to(roomName).emit(LEAVE_ROOM_EVENT_NAME, roomName);
   }
 }

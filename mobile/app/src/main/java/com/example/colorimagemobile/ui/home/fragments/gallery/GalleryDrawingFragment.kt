@@ -54,6 +54,7 @@ class GalleryDrawingFragment : Fragment(R.layout.fragment_gallery_drawing) {
         addToolsOnSidebar()
         setToolsListener()
         checkMuseumOwner()
+        ToolTypeService.setCurrentToolType(ToolType.PENCIL)
     }
 
     private fun setCurrentRoomName() {
@@ -63,17 +64,6 @@ class GalleryDrawingFragment : Fragment(R.layout.fragment_gallery_drawing) {
         if (roomName == null) {
             MyFragmentManager(requireActivity()).open(R.id.main_gallery_fragment, GalleryMenuFragment())
             return
-        }
-    }
-
-    private fun connectToSocket() {
-        if (DrawingService.getCurrentDrawingID() != null) {
-            DrawingSocketService.connect()
-            DrawingSocketService.setFragmentActivity(requireActivity())
-
-            val socketInformation =
-                Constants.SocketRoomInformation(UserService.getUserInfo()._id, roomName!!)
-            DrawingSocketService.joinRoom(socketInformation)
         }
     }
 

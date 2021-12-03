@@ -1,7 +1,6 @@
 import { Component, OnInit } from "@angular/core";
-import { FormGroup, FormControl } from "@angular/forms";
+import { FormGroup, FormControl, Validators } from "@angular/forms";
 import { MatDialogRef } from "@angular/material/dialog";
-import { MatSnackBar } from "@angular/material/snack-bar";
 import { TextChannel } from "../../models/text-channel.model";
 import { TextChannelService } from "../../services/text-channel.service";
 
@@ -16,13 +15,16 @@ export class NewChannelComponent implements OnInit {
 
   constructor(
     private textChannelService: TextChannelService,
-    private dialogRef: MatDialogRef<NewChannelComponent>,
-    private snackBar: MatSnackBar
+    private dialogRef: MatDialogRef<NewChannelComponent>
   ) {}
 
   ngOnInit(): void {
     this.newDrawingForm = new FormGroup({
-      name: new FormControl(""),
+      name: new FormControl("", [
+        Validators.required,
+        Validators.minLength(3),
+        Validators.maxLength(12),
+      ]),
     });
     this.textChannelService
       .getChannels()
@@ -30,21 +32,18 @@ export class NewChannelComponent implements OnInit {
   }
 
   onAccept(): void {
-    const isWhitespace =
-      (this.newDrawingForm.value.name || "").trim().length === 0;
-    if (isWhitespace) {
-      this.snackBar.open("The name cannot be empty", "Close", {
-        duration: 3000,
-      });
-      return;
-    } else if (
+    if (
       this.existingChannels.find(
         (channel) => channel.name === this.newDrawingForm.value.name
       )
     ) {
-      this.snackBar.open("This channel already exists", "Close", {
-        duration: 3000,
+      this.newDrawingForm.controls["name"].setErrors({
+        duplicateChannelName: true,
       });
+      return;
+    }
+
+    if (this.newDrawingForm.invalid) {
       return;
     }
 

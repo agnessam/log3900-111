@@ -173,7 +173,13 @@ class UsersProfileFragment : Fragment(R.layout.fragment_users_profile) {
 
     private fun setAllDrawings() {
         recyclerView.adapter = null
-        recyclerView.adapter = DrawingMenuRecyclerAdapter(requireActivity(), drawingsMenu, R.id.usersMenuFrameLayout) { updatedDrawing, pos -> updateDrawing(updatedDrawing, pos) }
+        recyclerView.adapter = DrawingMenuRecyclerAdapter(
+            requireActivity(),
+            drawingsMenu,
+            R.id.usersMenuFrameLayout,
+            { updatedDrawing, pos -> updateDrawing(updatedDrawing, pos) },
+            { drawingId, pos -> deleteDrawing(drawingId, pos) }
+        )
     }
 
     private fun setPublishedDrawings() {
@@ -266,6 +272,19 @@ class UsersProfileFragment : Fragment(R.layout.fragment_users_profile) {
 
             drawingsMenu[position] = DrawingService.updateDrawingFromMenu(drawingsMenu[position], updatedDrawing)
             recyclerView.adapter?.notifyItemChanged(position)
+        })
+    }
+
+    private fun deleteDrawing(drawingId: String, pos: Int) {
+        DrawingRepository().deleteDrawing(drawingId).observe(viewLifecycleOwner, {
+            printToast(requireActivity(), it.message!!)
+
+            if (it.isError as Boolean) {
+                return@observe
+            }
+
+            drawingsMenu.removeAt(pos)
+            recyclerView.adapter?.notifyDataSetChanged()
         })
     }
 }

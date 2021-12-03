@@ -10,7 +10,7 @@
         }}</mat-card-title>
         <app-avatar
           [currentUser]="currentUser"
-          (currentAvatarChanged)="openSnackBar($event)"
+          (currentAvatarChanged)="updateUserAvatar($event)"
         ></app-avatar>
 
         <div id="user-info">

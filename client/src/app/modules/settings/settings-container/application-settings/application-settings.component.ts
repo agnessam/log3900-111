@@ -13,6 +13,14 @@ export class ApplicationSettingsComponent implements OnInit {
 
   ngOnInit(): void {}
 
+  setCurrentTheme() {
+    if (this.colorSchemeService.currentActive() == "dark") {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   toggleDarkTheme(event: any) {
     if (event.checked) {
       this.colorSchemeService.update("dark");

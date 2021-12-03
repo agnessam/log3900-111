@@ -6,16 +6,18 @@
     android:id="@+id/card_drawing_menu"
     android:layout_margin="5dp"
     app:cardElevation="3dp"
-    app:cardCornerRadius="10dp"
+    app:cardCornerRadius="35dp"
     android:background="@color/black"
     android:layout_centerHorizontal="true"
-    app:contentPadding="4dp">
+    app:cardBackgroundColor="#fef9f7"
+    app:contentPadding="15dp">
 
     <RelativeLayout
         android:id="@+id/card_drawing_menu_parent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
+        android:background="@drawable/drawing_card_border_radius"
         android:padding="15dp">
 
         <RelativeLayout
@@ -42,14 +44,23 @@
                 android:textColor="#6d6d6d"
                 android:textSize="12sp" />
 
+            <TextView
+                android:id="@+id/card_drawing_menu_collaborators"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/card_drawing_menu_date"
+                android:layout_alignParentLeft="true"
+                android:textColor="#6d6d6d"
+                android:textSize="12sp" />
+
             <ImageButton
                 android:id="@+id/card_drawing_menu_options"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
-                android:src="@drawable/ic_more"
-                android:background="?android:attr/selectableItemBackground" />
+                android:background="?android:attr/selectableItemBackground"
+                android:src="@drawable/ic_more" />
 
         </RelativeLayout>
 
@@ -82,7 +93,7 @@
                 <TextView
                     android:id="@+id/card_drawing_menu_author"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="10dp"
