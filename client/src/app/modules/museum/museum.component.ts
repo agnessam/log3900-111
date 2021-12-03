@@ -33,7 +33,7 @@ export class MuseumComponent implements OnInit {
       (user) => (this.user = user),
     );
 
-    this.postService.getPostsByFollowedUsers().subscribe((posts) => {
+    this.postService.getPosts().subscribe((posts) => {
       this.posts = posts;
     });
   }
@@ -58,7 +58,7 @@ export class MuseumComponent implements OnInit {
       return;
     }
 
-    const comment = { content: content, author: this.user._id, postId: postId} as CommentInterface;
+    const comment = { content: content, author: this.user, postId: postId} as CommentInterface;
     this.postService.addComment(postId, comment).subscribe((commentReceive) => {
       comment.createdAt = "";
       this.posts.find(post => post._id === postId)?.comments.push(comment)

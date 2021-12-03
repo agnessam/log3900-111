@@ -6,11 +6,11 @@
 
     <div class="post-header">
       <div class="author-picture" *ngIf="post.owner">
-        <ngx-avatar [src]="post.owner.avatar?.imageUrl"></ngx-avatar>
+        <!--<ngx-avatar [src]="post.owner.avatar?.imageUrl"></ngx-avatar>-->
       </div>
       <div class="info">
         <div class="author-text" *ngIf="post.owner">
-          {{ post.owner.username }}
+          {{ getUsername(post) }}
         </div>
         <div class="time-text" *ngIf="post.owner">{{ post.createdAt }}</div>
       </div>
@@ -19,7 +19,7 @@
     <div class="comment-section">
       <div *ngFor="let comment of this.post.comments">
         <div class="comment">
-          {{comment.author?.username}} : {{comment.content}}
+          {{getAuthorUsername(comment)}} : {{comment.content}}
         </div>
       </div>
     </div>
@@ -29,9 +29,13 @@
         <mat-icon>favorite</mat-icon>
       </div>
       <ng-template #notLikeBlock>
-        <mat-icon>favorite_border</mat-icon>
+        <div>
+          <mat-icon>favorite_border</mat-icon>
+        </div>
       </ng-template>
-      {{ post.likes.length }}
+
+      <div class="nbLike">{{ post.likes.length }}</div>
+
     </div>
 
     <div class="bottom-comment">

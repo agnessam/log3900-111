@@ -25,7 +25,7 @@ export class MuseumDialog implements OnInit {
   ngOnInit(): void {
   }
 
-  onPublishClick(): void {
+  async onPublishClick(): Promise<void> {
     const name = this.nameInput.nativeElement.value;
     this.nameInput.nativeElement.value = '';
     const isWhitespace = (name || '').trim().length === 0;
@@ -34,6 +34,7 @@ export class MuseumDialog implements OnInit {
       return;
     }
     else{
+      await this.drawingService.saveDrawing();
       this.drawingHttpClient.getDrawing(this.drawingService.drawingId).subscribe((drawing) => {
         this.postService.publishDrawing(this.drawingService.drawingId, drawing).subscribe((response) => {});
       });

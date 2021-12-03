@@ -7,6 +7,7 @@ import { AuthenticationService } from '../authentication';
 import { User } from '../authentication/models/user';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { CommentInterface } from '../museum/models/comment.model';
+import { Team } from 'src/app/shared/models/team.model';
 
 
 @Component({
@@ -35,6 +36,7 @@ export class PostDialogComponent implements OnInit {
     this.authenticationService.currentUserObservable.subscribe(
       (user) => (this.user = user),
     );
+    console.log(this.post);
   }
 
   transformUri(){
@@ -76,10 +78,27 @@ export class PostDialogComponent implements OnInit {
       });
       return;
     }
-    const comment = { content: input, author: this.user._id, postId: this.post._id} as CommentInterface;
+    const comment = { content: input, author: this.user, postId: this.post._id} as CommentInterface;
     this.postService.addComment(this.post._id, comment).subscribe((commentReceive) => {
       this.post.comments.push(comment)
     });
+  }
+
+  getAuthorUsername(comment: CommentInterface){
+    let author = comment.author as User;
+    return author.username;
+  }
+
+  getUsername(post: PostInterface): string{
+    if( post.ownerModel === "Team"){
+      let owner = post.owner as Team;
+      return owner.name;
+    }
+    else{
+      let owner = post.owner as User;
+      return owner.username;
+    }
+
   }
 
 }
