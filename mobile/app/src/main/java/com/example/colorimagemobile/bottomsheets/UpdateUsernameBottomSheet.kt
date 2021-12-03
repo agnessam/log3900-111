@@ -92,7 +92,7 @@ class UpdateUsernameBottomSheet : BottomSheetDialogFragment() {
             UpdateUserProfile().updateUserInfo(newUserData).observe(viewLifecycleOwner, { context?.let { it1 -> GlobalHandler().response(it1,it) } })
             UserService.updateMe(newUserData)
             requireActivity().invalidateOptionsMenu()
-            MyFragmentManager(context as FragmentActivity).open(R.id.parameterFragment,
+            MyFragmentManager(context as FragmentActivity).open(R.id.userProfileFragment,
                 accountParameterFragment()
             )
             closeSheet()

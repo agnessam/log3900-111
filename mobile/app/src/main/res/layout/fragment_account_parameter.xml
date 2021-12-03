@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/ic_home_theme"
-    android:id="@+id/parameterFragment"
+    android:id="@+id/userProfileFragment"
     android:orientation="horizontal"
     tools:context=".ui.home.fragments.accountParameter.accountParameterFragment">
 

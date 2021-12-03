@@ -12,7 +12,7 @@ import com.example.colorimagemobile.models.UserModel
 import com.example.colorimagemobile.repositories.UserRepository
 import com.example.colorimagemobile.services.users.UserService
 import com.example.colorimagemobile.ui.userProfile.EditProfileFragment
-import kotlinx.android.synthetic.main.fragment_user_profile.*
+import kotlinx.android.synthetic.main.fragment_account_parameter.*
 
 
 class accountParameterFragment : Fragment() {
@@ -27,7 +27,7 @@ class accountParameterFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_user_profile, container, false)
+        return inflater.inflate(R.layout.fragment_account_parameter, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

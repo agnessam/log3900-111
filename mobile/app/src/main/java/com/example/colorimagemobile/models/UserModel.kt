@@ -60,7 +60,7 @@ class UserModel {
         var following: ArrayList<String>,
         var lastLogin: Date?,
         var lastLogout: Date?,
-        var collaborationHistory: ArrayList<CollaborationHistory.drawingHistory>?,
+        var collaborationHistory: ArrayList<Any>?,
         var privacySetting : Privacy.Setting
     )
 

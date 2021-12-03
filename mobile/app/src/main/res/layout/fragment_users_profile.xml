@@ -152,9 +152,10 @@
                         android:id="@+id/FollowBtn"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_centerInParent="true"
                         android:backgroundTint="@color/primary"
+                        android:layout_centerInParent="true"
                         android:text="Follow"
+                        android:layout_centerHorizontal="true"
                         android:textColor="@color/white" />
 
                     <com.google.android.material.button.MaterialButton
