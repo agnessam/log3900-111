@@ -44,7 +44,10 @@ export class GalleryComponent implements AfterViewInit {
   }
 
   deleteDrawingFromView(deletedDrawing: Drawing) {
-    this.drawings.splice(this.drawings.indexOf(deletedDrawing), 1);
+    this.drawings.splice(
+      this.drawings.findIndex((x) => x._id === deletedDrawing._id),
+      1
+    );
     this.changeDetector.detectChanges();
   }
 
