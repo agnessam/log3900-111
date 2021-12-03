@@ -7,11 +7,21 @@ import { User, UserInterface } from '../../../domain/models/user';
 import { GenericRepository } from './generic_repository';
 import { CollaborationTrackerService } from '../../../domain/services/collaboration-tracker.service';
 import { TYPES } from '../../../domain/constants/types';
+import {
+  TextChannel,
+  TextChannelInterface,
+} from '../../../domain/models/TextChannel';
+import { ChatSocketService } from '../../../domain/services/sockets/chat-socket.service';
+import { TextChannelRepository } from './text_channel_repository';
 
 @injectable()
 export class DrawingRepository extends GenericRepository<DrawingInterface> {
   @inject(TYPES.CollaborationTrackerService)
   private collaborationTrackerService: CollaborationTrackerService;
+
+  @inject(TYPES.ChatSocketService) private chatSocketService: ChatSocketService;
+  @inject(TYPES.TextChannelRepository)
+  private textChannelRepository: TextChannelRepository;
 
   constructor() {
     super(Drawing);
@@ -186,6 +196,17 @@ export class DrawingRepository extends GenericRepository<DrawingInterface> {
               },
             );
           }
+
+          TextChannel.findOneAndDelete(
+            { drawing: deletedDrawing._id },
+            (err: Error, channel: TextChannelInterface) => {
+              if (err) {
+                reject(err);
+              }
+              this.textChannelRepository.deleteMessages(channel._id);
+              this.chatSocketService.emitLeave(channel.name);
+            },
+          );
 
           resolve(deletedDrawing);
         },

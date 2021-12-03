@@ -109,7 +109,6 @@ export class ChannelComponent implements OnInit, OnDestroy {
   openDrawingChannel(): void {
     this.textChannelService.joinedCollabChannel.subscribe((channel) => {
       this.openChannel(channel);
-      this.connectedChannels.push(channel);
     });
 
     this.textChannelService.leftCollabChannel.subscribe((channel) => {
@@ -120,7 +119,7 @@ export class ChannelComponent implements OnInit, OnDestroy {
 
   public trackConnectedChannels(index: number, item: TextChannel) {
     return item.name;
-  }  
+  }
 
   // can only delete channel if owner id corresponds to user id
   deleteChannel(channel: TextChannel): void {

@@ -113,9 +113,7 @@ export class NewDrawingComponent implements OnInit {
               response._id,
               true
             )
-            .subscribe((channel) => {
-              this.textChannelService.emitJoinCollaboration(channel);
-            });
+            .subscribe((channel) => {});
         }
       });
     this.newDrawingService.form.reset();
