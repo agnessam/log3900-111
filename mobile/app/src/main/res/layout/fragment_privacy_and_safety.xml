@@ -77,7 +77,7 @@
             android:layout_marginTop="250dp"
             android:textColor="@color/black"
             android:layout_marginStart="20dp"
-            android:text="Allow users to search you with your first name"/>
+            android:text="Allow users to search you with your last name"/>
 
         <androidx.appcompat.widget.SwitchCompat
             android:id="@+id/switch_lastname"

@@ -3,9 +3,7 @@ package com.example.colorimagemobile.ui.home.fragments.accountParameter
 import android.content.Context
 import android.os.Bundle
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.appcompat.widget.SwitchCompat
 import androidx.lifecycle.LiveData
 import com.example.colorimagemobile.R
@@ -18,7 +16,6 @@ import com.example.colorimagemobile.services.users.UserService
 import com.example.colorimagemobile.utils.CommonFun
 import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
 import com.example.colorimagemobile.utils.CommonFun.Companion.printToast
-import com.example.colorimagemobile.utils.Constants
 
 class PrivacyAndSafety : Fragment(R.layout.fragment_privacy_and_safety) {
      private lateinit var sharedPreferencesService: SharedPreferencesService
@@ -34,8 +31,6 @@ class PrivacyAndSafety : Fragment(R.layout.fragment_privacy_and_safety) {
             newSetting.searchableByFirstName = UserService.getUserInfo().privacySetting.searchableByFirstName
             newSetting.searchableByLastName =UserService.getUserInfo().privacySetting.searchableByLastName
             updatePrivacySetting()
-            sharedPreferencesService.setItem(Constants.STORAGE_KEY.PRIVACY_EMAIL, isEmailAllow)
-            printMsg("value after setting email "+isEmailAllow.toString())
         }
 
         switch_firstname.setOnCheckedChangeListener{ compoundButton,isFirstnameAllow ->
@@ -43,7 +38,6 @@ class PrivacyAndSafety : Fragment(R.layout.fragment_privacy_and_safety) {
             newSetting.searchableByEmail = UserService.getUserInfo().privacySetting.searchableByEmail
             newSetting.searchableByLastName =UserService.getUserInfo().privacySetting.searchableByLastName
             updatePrivacySetting()
-            sharedPreferencesService.setItem(Constants.STORAGE_KEY.PRIVACY_FIRSTNAME, isFirstnameAllow)
         }
 
         switch_lastname.setOnCheckedChangeListener{ compoundButton,isLastNameAllow ->
@@ -51,7 +45,6 @@ class PrivacyAndSafety : Fragment(R.layout.fragment_privacy_and_safety) {
             newSetting.searchableByFirstName = UserService.getUserInfo().privacySetting.searchableByFirstName
             newSetting.searchableByEmail =UserService.getUserInfo().privacySetting.searchableByEmail
             updatePrivacySetting()
-            sharedPreferencesService.setItem(Constants.STORAGE_KEY.PRIVACY_LASTNAME, isLastNameAllow)
         }
 
     }
@@ -63,12 +56,12 @@ class PrivacyAndSafety : Fragment(R.layout.fragment_privacy_and_safety) {
         switch_email = myView.findViewById(R.id.switch_email)
         switch_firstname = myView.findViewById(R.id.switch_firstname)
         switch_lastname = myView.findViewById(R.id.switch_lastname)
-        val emailPrivacy = sharedPreferencesService.getBooleanItem(Constants.STORAGE_KEY.PRIVACY_EMAIL)
-        switch_email.setChecked(emailPrivacy)
-        val firstnamePrivacy = sharedPreferencesService.getBooleanItem(Constants.STORAGE_KEY.PRIVACY_FIRSTNAME)
-        switch_firstname.setChecked(firstnamePrivacy)
-        val lastnamePrivacy = sharedPreferencesService.getBooleanItem(Constants.STORAGE_KEY.PRIVACY_LASTNAME)
-        switch_lastname.setChecked(lastnamePrivacy)
+
+        val privacy = UserService.getUserInfo().privacySetting
+        printMsg("settings "+privacy)
+        switch_email.setChecked(privacy.searchableByEmail)
+        switch_firstname.setChecked(privacy.searchableByFirstName)
+        switch_lastname.setChecked(privacy.searchableByLastName)
         setListeners()
     }
 
