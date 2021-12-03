@@ -34,6 +34,21 @@
         <div *ngFor="let channel of searchedChannels">
           <div class="channel" (click)="openChannel(channel)">
             <p style="margin-left: 10px">{{ channel.name }}</p>
+
+            <button
+              mat-button
+              [matMenuTriggerFor]="allChannels"
+              (click)="$event.stopPropagation()"
+              *ngIf="isOwner(channel.ownerId)"
+              class="options-button"
+            >
+              <mat-icon> more_vert</mat-icon>
+            </button>
+            <mat-menu #allChannels="matMenu">
+              <button mat-menu-item (click)="deleteChannel(channel)">
+                Delete
+              </button>
+            </mat-menu>
           </div>
         </div>
       </div>
@@ -67,6 +82,7 @@
                 mat-menu-item
                 (click)="deleteChannel(channel)"
                 class="delete-button"
+                *ngIf="isOwner(channel.ownerId)"
               >
                 Delete
               </button>
