@@ -13,6 +13,7 @@ import com.example.colorimagemobile.services.drawing.CanvasUpdateService
 import com.example.colorimagemobile.services.drawing.DrawingObjectManager
 import com.example.colorimagemobile.services.drawing.DrawingService
 import com.example.colorimagemobile.services.drawing.SynchronisationService
+import com.example.colorimagemobile.services.drawing.toolsAttribute.RGB
 import com.example.colorimagemobile.services.users.UserService
 import com.example.colorimagemobile.ui.home.fragments.gallery.GalleryDrawingFragment
 import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
@@ -23,6 +24,8 @@ import com.example.colorimagemobile.utils.Constants.SOCKETS.Companion.CONFIRM_SE
 import com.example.colorimagemobile.utils.Constants.SOCKETS.Companion.DELETE_SELECTION_EVENT
 import com.example.colorimagemobile.utils.Constants.SOCKETS.Companion.FETCH_DRAWING_NOTIFICATION
 import com.example.colorimagemobile.utils.Constants.SOCKETS.Companion.IN_PROGRESS_DRAWING_EVENT
+import com.example.colorimagemobile.utils.Constants.SOCKETS.Companion.PRIMARY_COLOR_EVENT
+import com.example.colorimagemobile.utils.Constants.SOCKETS.Companion.SECONDARY_COLOR_EVENT
 import com.example.colorimagemobile.utils.Constants.SOCKETS.Companion.START_SELECTION_EVENT
 import com.example.colorimagemobile.utils.Constants.SOCKETS.Companion.TRANSFORM_SELECTION_EVENT
 import com.example.colorimagemobile.utils.Constants.SOCKETS.Companion.UPDATE_DRAWING_EVENT
@@ -386,5 +389,19 @@ object DrawingSocketService: AbsSocket(SOCKETS.COLLABORATIVE_DRAWING_NAMESPACE) 
         val base64Data = dataURI.replace(ImageConvertor.BASE_64_URI, "");
         val imageBytes = Base64.decode(base64Data, Base64.DEFAULT);
         return String(imageBytes, StandardCharsets.UTF_8)
+    }
+
+    fun sendObjectPrimaryColorChange(objectId: String, color: RGB, opacity: Float) {
+        roomName ?: return
+        val colorData = ColorData(objectId, color, opacity, roomName!!)
+        val jsonSocket = JSONConvertor.convertToJSON(colorData)
+        super.emit(PRIMARY_COLOR_EVENT, jsonSocket)
+    }
+
+    fun sendObjectSecondaryColorChange(objectId: String, color: RGB, opacity: Float) {
+        roomName ?: return
+        val colorData = ColorData(objectId, color, opacity, roomName!!)
+        val jsonSocket = JSONConvertor.convertToJSON(colorData)
+        super.emit(SECONDARY_COLOR_EVENT, jsonSocket)
     }
 }

@@ -34,6 +34,8 @@ class Constants {
             const val UPDATE_DRAWING_EVENT = "drawing-update"
             const val FETCH_DRAWING_NOTIFICATION = "drawing-fetch"
             const val DELETE_SELECTION_EVENT = "selection-delete"
+            const val PRIMARY_COLOR_EVENT = "color-primary-update"
+            const val SECONDARY_COLOR_EVENT = "color-secondary-update"
         }
     }
 

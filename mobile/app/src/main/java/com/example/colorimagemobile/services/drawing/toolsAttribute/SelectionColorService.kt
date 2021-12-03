@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import com.example.colorimagemobile.classes.toolsCommand.PrimaryColorCommand
 import com.example.colorimagemobile.classes.toolsCommand.SecondaryColorCommand
 import com.example.colorimagemobile.services.drawing.DrawingObjectManager
+import com.example.colorimagemobile.services.socket.DrawingSocketService
 import com.example.colorimagemobile.utils.Constants
 
 // Service to change colors from existing shapes
@@ -43,6 +44,9 @@ object SelectionColorService {
             var selectedShapeId = DrawingObjectManager.getUuid(SelectionService.selectedShapeIndex) ?: return
             primaryColorCommand = PrimaryColorCommand(selectedShapeId, newColor)
             primaryColorCommand!!.execute()
+            val rgb = ColorService.convertRGBAStringToRGBObject(newColor)
+            val opacity = ColorService.getAlphaForDesktop(newColor).toFloat()
+            DrawingSocketService.sendObjectPrimaryColorChange(selectedShapeId, rgb, opacity)
         }
     }
 
@@ -52,6 +56,9 @@ object SelectionColorService {
             var selectedShapeId = DrawingObjectManager.getUuid(SelectionService.selectedShapeIndex) ?: return
             secondaryColorCommand = SecondaryColorCommand(selectedShapeId, newColor)
             secondaryColorCommand!!.execute()
+            val rgb = ColorService.convertRGBAStringToRGBObject(newColor)
+            val opacity = ColorService.getAlphaForDesktop(newColor).toFloat()
+            DrawingSocketService.sendObjectSecondaryColorChange(selectedShapeId, rgb, opacity)
         }
     }
 

@@ -90,4 +90,16 @@ object ColorService {
 
         return (opacity.toFloat() * Constants.DRAWING.MAX_OPACITY).toInt()
     }
+
+    fun convertRGBAStringToRGBObject(rgbaColor: String): RGB{
+        var color = rgbaColor.replace("rgba(", "").replace(")", "")
+        val rgbaStrings = color.split(",")
+
+        val r = rgbaStrings[0].trim().toInt()
+        val g = rgbaStrings[1].trim().toInt()
+        val b = rgbaStrings[2].trim().toInt()
+        return RGB(r,g,b)
+    }
 }
+
+data class RGB(val r: Int, val g: Int, val b: Int)
