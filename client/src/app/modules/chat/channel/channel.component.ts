@@ -51,15 +51,22 @@ export class ChannelComponent implements OnInit, OnDestroy {
       next: (user) => {
         this.user = user;
       },
-      complete: () => {},
+      complete: () => {
+        
+      },
     });
     this.getPublicChannels();
     this.connectTeamChannels();
     this.openDrawingChannel();
-
+    
     this.textChannelService.newTeamChannel.subscribe((teamChannel) => {
       this.openChannel(teamChannel);
     });
+
+    this.textChannelService.deletedTeamChannel.subscribe((deletedChannelName) => {
+      const deletedChannel = this.connectedChannels.filter((connected) => connected.name === deletedChannelName);
+      if (deletedChannel.length !== 0) this.removeChannel(deletedChannel[0]);
+    })
   }
 
   ngOnDestroy(): void {}
@@ -68,10 +75,11 @@ export class ChannelComponent implements OnInit, OnDestroy {
     this.textChannelService.getChannels().subscribe({
       next: (channels) => {
         channels.forEach((channel) => {
-          if (!this.publicChannels.some((item) => item._id === channel._id)) {
-            this.publicChannels.push(channel);
+            if (!this.publicChannels.some((item) => item._id === channel._id)) {
+              this.publicChannels.push(channel);
+            }
           }
-        });
+        );
         this.resetSearch();
         const general = channels.find((channel) => channel.name === "General");
         if (general) {
@@ -79,12 +87,7 @@ export class ChannelComponent implements OnInit, OnDestroy {
             userId: this.user?._id!,
             roomName: general.name,
           });
-          if (
-            this.connectedChannels.some(
-              (channel) => channel._id === general._id
-            )
-          )
-            return;
+          if (this.connectedChannels.some((channel) => channel._id === general._id)) return;
           this.connectedChannels.unshift(general);
         }
       },
@@ -102,18 +105,14 @@ export class ChannelComponent implements OnInit, OnDestroy {
             roomName: team.name,
           });
         });
-        console.log(response);
-        console.log(this.user?.teams);
         this.textChannelService.getTeamChannels().subscribe((channels) => {
           channels.forEach((channel) => {
-            if (
-              response.some((userTeam) => userTeam._id === channel.team) &&
-              !this.connectedChannels.some(
-                (connected) => connected._id === channel._id
-              )
-            ) {
-              console.log("pushed channel", channel);
+            const isInConnectedChannels = this.connectedChannels.some((connected) => connected._id === channel._id);
+            const isUserInTeam = response.some((userTeam) => userTeam._id === channel.team)
+            if (isUserInTeam && !isInConnectedChannels) {
               this.connectedChannels.push(channel);
+            } else if (!isUserInTeam && isInConnectedChannels) {
+              this.removeChannel(channel);
             }
           });
         });
@@ -123,6 +122,7 @@ export class ChannelComponent implements OnInit, OnDestroy {
   openDrawingChannel(): void {
     this.textChannelService.joinedCollabChannel.subscribe((channel) => {
       this.openChannel(channel);
+      this.connectedChannels.push(channel);
     });
 
     this.textChannelService.leftCollabChannel.subscribe((channel) => {
@@ -145,9 +145,7 @@ export class ChannelComponent implements OnInit, OnDestroy {
       (x) => x._id === channel._id
     );
     this.connectedChannels.splice(indexConnected, 1);
-    const indexAll = this.publicChannels.findIndex(
-      (x) => x._id === channel._id
-    );
+    const indexAll = this.publicChannels.findIndex((x) => x._id === channel._id);
     this.publicChannels.splice(indexAll, 1);
 
     this.chatService.leaveRoomEventEmitter.emit(channel);
