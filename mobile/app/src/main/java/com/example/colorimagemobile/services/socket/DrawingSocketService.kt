@@ -1,10 +1,7 @@
 package com.example.colorimagemobile.services.socket
 
-import android.content.Context
-import android.graphics.Bitmap
 import android.util.Base64
 import androidx.fragment.app.FragmentActivity
-import com.example.colorimagemobile.adapter.DrawingMenuRecyclerAdapter
 import com.example.colorimagemobile.classes.AbsSocket
 import com.example.colorimagemobile.classes.ImageConvertor
 import com.example.colorimagemobile.classes.JSONConvertor
@@ -23,6 +20,7 @@ import com.example.colorimagemobile.utils.Constants
 import com.example.colorimagemobile.utils.Constants.SOCKETS
 import com.example.colorimagemobile.utils.Constants.SOCKETS.Companion.CONFIRM_DRAWING_EVENT
 import com.example.colorimagemobile.utils.Constants.SOCKETS.Companion.CONFIRM_SELECTION_EVENT
+import com.example.colorimagemobile.utils.Constants.SOCKETS.Companion.DELETE_SELECTION_EVENT
 import com.example.colorimagemobile.utils.Constants.SOCKETS.Companion.FETCH_DRAWING_NOTIFICATION
 import com.example.colorimagemobile.utils.Constants.SOCKETS.Companion.IN_PROGRESS_DRAWING_EVENT
 import com.example.colorimagemobile.utils.Constants.SOCKETS.Companion.START_SELECTION_EVENT
@@ -30,12 +28,10 @@ import com.example.colorimagemobile.utils.Constants.SOCKETS.Companion.TRANSFORM_
 import com.example.colorimagemobile.utils.Constants.SOCKETS.Companion.UPDATE_DRAWING_EVENT
 import com.example.colorimagemobile.utils.Constants.SOCKETS.Companion.UPDATE_DRAWING_NOTIFICATION
 import io.socket.client.Ack
-import io.socket.client.Socket
 import io.socket.emitter.Emitter
 import kotlinx.coroutines.*
 import org.json.JSONException
 import org.json.JSONObject
-import retrofit2.awaitResponse
 import java.lang.Runnable
 import java.nio.charset.StandardCharsets
 
@@ -48,16 +44,15 @@ object DrawingSocketService: AbsSocket(SOCKETS.COLLABORATIVE_DRAWING_NAMESPACE) 
     private var position: Int? = null
     private var destination: Int? = null
 
-    private var hasBeenInitialized = false
+    private var openListenersHaveBeenInstantiated = false
+    private var drawingHasBeenInitialized = false
 
     override fun leaveRoom(roomInformation: Constants.SocketRoomInformation){
 
         this.drawingMenus = null
         this.position = null
         this.destination = null
-        hasBeenInitialized = false
 
-        mSocket.off(IN_PROGRESS_DRAWING_EVENT, onProgressDrawing)
         super.leaveRoom(roomInformation)
     }
 
@@ -73,19 +68,23 @@ object DrawingSocketService: AbsSocket(SOCKETS.COLLABORATIVE_DRAWING_NAMESPACE) 
     }
 
     public override fun setSocketListeners() {
-        if(!hasBeenInitialized){
+        if(!openListenersHaveBeenInstantiated){
             this.listenUpdateDrawingRequest()
             this.listenFetchDrawingNotification()
-            hasBeenInitialized = true
+            openListenersHaveBeenInstantiated = true
         }
     }
 
     fun setDrawingCommandSocketListeners(){
-        this.listenInProgressDrawingCommand()
-        this.listenConfirmDrawingCommand()
-        this.listenStartSelectionCommand()
-        this.listenConfirmSelectionCommand()
-        this.listenTransformSelectionCommand()
+        if(!drawingHasBeenInitialized){
+            this.listenInProgressDrawingCommand()
+            this.listenConfirmDrawingCommand()
+            this.listenStartSelectionCommand()
+            this.listenConfirmSelectionCommand()
+            this.listenTransformSelectionCommand()
+            this.listenDeleteSelectionCommand()
+            drawingHasBeenInitialized = true
+        }
     }
 
     fun joinCurrentDrawingRoom() {
@@ -243,6 +242,35 @@ object DrawingSocketService: AbsSocket(SOCKETS.COLLABORATIVE_DRAWING_NAMESPACE) 
                 }
             })
         }
+
+    fun sendDeleteSelectionCommand(objectToDeleteId: String){
+        val deleteCommand = SocketTool(
+            type = "Delete",
+            roomName = this.roomName as String,
+            drawingCommand = DeleteData(objectToDeleteId),
+        )
+        val jsonSocket = JSONConvertor.convertToJSON(deleteCommand)
+        super.emit(DELETE_SELECTION_EVENT, jsonSocket)
+    }
+
+    private fun listenDeleteSelectionCommand() {
+        mSocket.on(DELETE_SELECTION_EVENT, deleteSelection)
+    }
+
+    private var deleteSelection = Emitter.Listener { args ->
+        fragmentActivity!!.runOnUiThread(Runnable {
+            val  responseJSON = JSONObject(args[0].toString())
+            val deleteSelectionData = SocketTool(
+                type = responseJSON["type"] as String,
+                roomName = responseJSON["roomName"] as String,
+                drawingCommand = JSONConvertor.getJSONObject(
+                    responseJSON["drawingCommand"].toString(),
+                    DeleteData::class.java)
+            )
+
+            SynchronisationService.deleteSelection(deleteSelectionData)
+        })
+    }
 
     private fun listenTransformSelectionCommand() {
         mSocket.on(TRANSFORM_SELECTION_EVENT, transformSelection)
