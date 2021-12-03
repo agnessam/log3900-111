@@ -3,7 +3,9 @@ package com.example.colorimagemobile.classes.toolsCommand
 import android.graphics.Color
 import com.example.colorimagemobile.interfaces.ICommand
 import com.example.colorimagemobile.services.drawing.CanvasUpdateService
+import com.example.colorimagemobile.services.drawing.DrawingJsonService
 import com.example.colorimagemobile.services.drawing.DrawingObjectManager
+import com.example.colorimagemobile.services.drawing.ShapeLabel
 import com.example.colorimagemobile.services.drawing.toolsAttribute.ColorService
 
 class SecondaryColorCommand(private val objectId: String, private var secondaryColor: String): ICommand {
@@ -20,6 +22,7 @@ class SecondaryColorCommand(private val objectId: String, private var secondaryC
     private fun RectangleCommand.setSecondaryColor(newColor: String) {
         rectangle.stroke = newColor
         rectangle.strokeOpacity = ColorService.getAlphaForDesktop(newColor)
+        DrawingJsonService.updateShapeStrokeColor(newColor, rectangle.strokeOpacity, objectId, ShapeLabel.RECTANGLE)
         borderPaint = initializePaint(newColor, rectangle.strokeOpacity, Color.WHITE)
         execute()
     }
@@ -27,6 +30,7 @@ class SecondaryColorCommand(private val objectId: String, private var secondaryC
     private fun EllipseCommand.setSecondaryColor(newColor: String) {
         ellipse.stroke = newColor
         ellipse.strokeOpacity = ColorService.getAlphaForDesktop(newColor)
+        DrawingJsonService.updateShapeStrokeColor(newColor, ellipse.strokeOpacity, objectId, ShapeLabel.ELLIPSE)
         borderPaint = initializePaint(newColor, ellipse.strokeOpacity, Color.WHITE)
         execute()
     }

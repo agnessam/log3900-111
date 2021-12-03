@@ -5,6 +5,7 @@ import com.example.colorimagemobile.interfaces.ICommand
 import com.example.colorimagemobile.services.drawing.CanvasUpdateService
 import com.example.colorimagemobile.services.drawing.DrawingJsonService
 import com.example.colorimagemobile.services.drawing.DrawingObjectManager
+import com.example.colorimagemobile.services.drawing.ShapeLabel
 import com.example.colorimagemobile.services.drawing.toolsAttribute.ColorService
 
 class PrimaryColorCommand(private val objectId: String, private var primaryColor: String): ICommand {
@@ -20,6 +21,7 @@ class PrimaryColorCommand(private val objectId: String, private var primaryColor
     private fun PencilCommand.setPrimaryColor(newColor: String) {
         pencil.stroke = newColor
         pencil.strokeOpacity = ColorService.getAlphaForDesktop(newColor)
+        DrawingJsonService.updateShapeStrokeColor(newColor, pencil.strokeOpacity, objectId, ShapeLabel.POLYLINE)
         initializePaint()
         execute()
     }
@@ -28,6 +30,7 @@ class PrimaryColorCommand(private val objectId: String, private var primaryColor
         rectangle.fill = newColor
         rectangle.fillOpacity = ColorService.getAlphaForDesktop(newColor)
         fillPaint = initializePaint(newColor, rectangle.fillOpacity, Color.BLACK)
+        DrawingJsonService.updateShapeFillColor(newColor, rectangle.fillOpacity, objectId, ShapeLabel.RECTANGLE)
         execute()
     }
 
@@ -35,6 +38,7 @@ class PrimaryColorCommand(private val objectId: String, private var primaryColor
         ellipse.fill = newColor
         ellipse.fillOpacity = ColorService.getAlphaForDesktop(newColor)
         fillPaint = initializePaint(newColor, ellipse.fillOpacity, Color.BLACK)
+        DrawingJsonService.updateShapeFillColor(newColor, ellipse.fillOpacity, objectId, ShapeLabel.ELLIPSE)
         execute()
     }
 
