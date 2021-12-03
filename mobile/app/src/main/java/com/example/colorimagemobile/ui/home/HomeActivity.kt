@@ -27,6 +27,7 @@ import com.example.colorimagemobile.services.SharedPreferencesService
 import com.example.colorimagemobile.services.drawing.DrawingObjectManager
 import com.example.colorimagemobile.services.drawing.DrawingService
 import com.example.colorimagemobile.services.socket.SocketManagerService
+import com.example.colorimagemobile.ui.home.fragments.accountParameter.accountParameterFragmentDirections
 import com.example.colorimagemobile.ui.home.fragments.search.SearchFragment
 import com.example.colorimagemobile.ui.home.fragments.chat.ChatFragmentDirections
 import com.example.colorimagemobile.ui.home.fragments.gallery.GalleryFragmentDirections
@@ -212,7 +213,7 @@ class HomeActivity : AppCompatActivity() {
         val showUserProfileFromGallery = GalleryFragmentDirections.actionGalleryFragmentToShowUserProfileFragment()
         val showUserProfileFromTeam = TeamsFragmentDirections.actionTeamsFragmentToShowUserProfileFragment()
         val showUserProfileFromChat = ChatFragmentDirections.actionChatFragmentToShowUserProfileFragment()
-//        val showUserProfileFromSettings =
+        val showUserProfileFromSettings = accountParameterFragmentDirections.actionUserProfileFragmentToUsersProfileFragment()
         val showUserProfileFromMuseum = MuseumFragmentDirections.actionMuseumFragmentToShowUserProfileFragment()
 
         // redirect from actual page to userProfile
@@ -220,7 +221,7 @@ class HomeActivity : AppCompatActivity() {
             R.id.galleryFragment-> this.findNavController(R.id.fragment).navigate(showUserProfileFromGallery)
             R.id.teamsFragment  -> this.findNavController(R.id.fragment).navigate(showUserProfileFromTeam)
             R.id.chatFragment ->this.findNavController(R.id.fragment).navigate(showUserProfileFromChat)
-//            R.id.userProfileFragment ->this.findNavController(R.id.fragment).navigate(showUserProfileFromSettings)
+            R.id.userProfileFragment ->this.findNavController(R.id.fragment).navigate(showUserProfileFromSettings)
             R.id.museumFragment -> this.findNavController(R.id.fragment).navigate(showUserProfileFromMuseum)
         }
     }

@@ -92,7 +92,11 @@
         tools:layout="@layout/fragment_account_parameter">
         <action
             android:id="@+id/action_userProfileFragment_to_usersProfileFragment"
-            app:destination="@id/usersProfileFragment" />
+            app:destination="@id/usersProfileFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
     </fragment>
     <fragment
         android:id="@+id/usersProfileFragment"
