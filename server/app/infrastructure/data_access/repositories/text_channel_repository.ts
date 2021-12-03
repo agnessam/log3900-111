@@ -2,7 +2,7 @@ import { injectable } from 'inversify';
 import { Message, MessageInterface } from '../../../domain/models/Message';
 import {
   TextChannel,
-  TextChannelInterface
+  TextChannelInterface,
 } from '../../../domain/models/TextChannel';
 import { GenericRepository } from './generic_repository';
 
@@ -71,10 +71,9 @@ export class TextChannelRepository extends GenericRepository<TextChannelInterfac
     });
   }
 
-  public async getTeamChannels(ids: string[]) {
+  public async getTeamChannels() {
     return new Promise((resolve, reject) => {
-      const query = { team: { $in: ids}};
-      TextChannel.find(query as any, (err, channels) => {
+      TextChannel.find({ team: { $exists: true } }, (err, channels) => {
         if (err) {
           reject(err);
         }

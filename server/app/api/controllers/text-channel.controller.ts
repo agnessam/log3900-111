@@ -26,8 +26,8 @@ export class TextChannelController {
   }
 
   @httpGet('/teams')
-  public async getChannelsByTeamId(@request() req: Request) {
-    return await this.textChannelRepository.getTeamChannels(req.body);
+  public async getChannelsByTeamId() {
+    return await this.textChannelRepository.getTeamChannels();
   }
 
   @httpGet('/:channelId')
