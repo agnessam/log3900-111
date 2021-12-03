@@ -86,6 +86,8 @@ object DrawingSocketService: AbsSocket(SOCKETS.COLLABORATIVE_DRAWING_NAMESPACE) 
             this.listenConfirmSelectionCommand()
             this.listenTransformSelectionCommand()
             this.listenDeleteSelectionCommand()
+            this.listenObjectPrimaryColorChange()
+            this.listenObjectSecondaryColorChange()
             drawingHasBeenInitialized = true
         }
     }
@@ -396,6 +398,40 @@ object DrawingSocketService: AbsSocket(SOCKETS.COLLABORATIVE_DRAWING_NAMESPACE) 
         val colorData = ColorData(objectId, color, opacity, roomName!!)
         val jsonSocket = JSONConvertor.convertToJSON(colorData)
         super.emit(PRIMARY_COLOR_EVENT, jsonSocket)
+    }
+
+    private fun listenObjectPrimaryColorChange() {
+        mSocket.on(PRIMARY_COLOR_EVENT, primaryColorListener)
+    }
+
+    private var primaryColorListener = Emitter.Listener { args ->
+        fragmentActivity!!.runOnUiThread(Runnable {
+            val  responseJSON = JSONObject(args[0].toString())
+            val colorData = ColorData(
+                id = responseJSON["id"] as String,
+                color = JSONConvertor.getJSONObject(responseJSON["color"].toString(), RGB::class.java),
+                opacity = responseJSON["opacity"].toString().toFloat(),
+                roomName = responseJSON["roomName"] as String
+            )
+            SynchronisationService.setObjectPrimaryColor(colorData)
+        })
+    }
+
+    private fun listenObjectSecondaryColorChange() {
+        mSocket.on(SECONDARY_COLOR_EVENT, secondaryColorListener)
+    }
+
+    private var secondaryColorListener = Emitter.Listener { args ->
+        fragmentActivity!!.runOnUiThread(Runnable {
+            val  responseJSON = JSONObject(args[0].toString())
+            val colorData = ColorData(
+                id = responseJSON["id"] as String,
+                color = JSONConvertor.getJSONObject(responseJSON["color"].toString(), RGB::class.java),
+                opacity = responseJSON["opacity"].toString().toFloat(),
+                roomName = responseJSON["roomName"] as String
+            )
+            SynchronisationService.setObjectSecondaryColor(colorData)
+        })
     }
 
     fun sendObjectSecondaryColorChange(objectId: String, color: RGB, opacity: Float) {

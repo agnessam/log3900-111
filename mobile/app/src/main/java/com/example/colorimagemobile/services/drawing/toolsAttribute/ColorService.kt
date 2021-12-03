@@ -100,6 +100,11 @@ object ColorService {
         val b = rgbaStrings[2].trim().toInt()
         return RGB(r,g,b)
     }
+
+    fun convertRGBAndOpacityToRGBAString(rgb: RGB, opacity: Float): String {
+        val newOpacity = convertOpacityToAndroid(opacity.toString())
+        return "rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, $newOpacity)"
+    }
 }
 
 data class RGB(val r: Int, val g: Int, val b: Int)

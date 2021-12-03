@@ -6,11 +6,12 @@ import com.example.colorimagemobile.classes.toolsCommand.selectionToolCommands.S
 import com.example.colorimagemobile.interfaces.ICommand
 import com.example.colorimagemobile.models.*
 import com.example.colorimagemobile.services.drawing.DrawingObjectManager
+import com.example.colorimagemobile.services.drawing.toolsAttribute.ColorService
 
 class CommandFactory {
 
     companion object {
-        var nonShapeCommands = arrayOf("SelectionStart", "SelectionResize", "Translation", "Delete")
+        var nonShapeCommands = arrayOf("SelectionStart", "SelectionResize", "Translation", "Delete", "PrimaryColor", "SecondaryColor")
 
         fun createCommand(commandType: String, toolData: Any): ICommand? {
             if( commandType !in nonShapeCommands
@@ -34,6 +35,14 @@ class CommandFactory {
                 }
                 "Delete" -> {
                     return DeleteCommand((toolData as DeleteData).id)
+                }
+                "PrimaryColor" -> {
+                    val newColor = ColorService.convertRGBAndOpacityToRGBAString((toolData as ColorData).color, toolData.opacity)
+                    return PrimaryColorCommand(toolData.id, newColor)
+                }
+                "SecondaryColor" -> {
+                    val newColor = ColorService.convertRGBAndOpacityToRGBAString((toolData as ColorData).color, toolData.opacity)
+                    return SecondaryColorCommand(toolData.id, newColor)
                 }
             }
             return null
