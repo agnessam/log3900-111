@@ -13,6 +13,7 @@ import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatInputModule } from "@angular/material/input";
 import { MatCardModule } from "@angular/material/card";
 import { MatDialogModule } from "@angular/material/dialog";
+import { MatMenuModule } from "@angular/material/menu";
 
 @NgModule({
   declarations: [
@@ -32,6 +33,7 @@ import { MatDialogModule } from "@angular/material/dialog";
     MatInputModule,
     MatCardModule,
     MatDialogModule,
+    MatMenuModule,
   ],
   providers: [TextChannelService],
   exports: [ChatComponent, ChannelComponent],

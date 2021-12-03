@@ -33,7 +33,7 @@
       >
         <div *ngFor="let channel of searchedChannels">
           <div class="channel" (click)="openChannel(channel)">
-            <p>{{ channel.name }}</p>
+            <p style="margin-left: 10px">{{ channel.name }}</p>
           </div>
         </div>
       </div>
@@ -45,22 +45,32 @@
         class="channel-list"
       >
         <div *ngFor="let channel of connectedChannels">
-          <div
-            class="channel"
-            (mouseover)="toggleChannelButton(channel, true)"
-            (mouseout)="toggleChannelButton(channel, false)"
-            (click)="openChannel(channel)"
-          >
-            <p (click)="openChannel(channel)">{{ channel.name }}</p>
-            <div class="deleteChannelBtn" [id]="channel.name">
-              <button mat-icon-button (click)="removeChannel(channel)">
-                <!-- [ngStyle]="{'display': channel.ownerId === this.user?._id ? 'inline' : 'none'}" -->
-                <mat-icon>clear</mat-icon>
+          <div class="channel" (click)="openChannel(channel)">
+            <p (click)="openChannel(channel)" style="margin-left: 10px">
+              {{ channel.name }}
+            </p>
+
+            <button
+              mat-button
+              [matMenuTriggerFor]="menu"
+              (click)="$event.stopPropagation()"
+              *ngIf="!channel.isPrivate"
+              class="options-button"
+            >
+              <mat-icon> more_vert</mat-icon>
+            </button>
+            <mat-menu #menu="matMenu">
+              <button mat-menu-item (click)="removeChannel(channel)">
+                Leave
               </button>
-              <button mat-icon-button (click)="deleteChannel(channel)">
-                <mat-icon>delete</mat-icon>
+              <button
+                mat-menu-item
+                (click)="deleteChannel(channel)"
+                class="delete-button"
+              >
+                Delete
               </button>
-            </div>
+            </mat-menu>
           </div>
         </div>
       </div>
