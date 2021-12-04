@@ -81,6 +81,22 @@ object TextChannelService {
         ChatAdapterService.getChannelListAdapter().notifyDataSetChanged()
     }
 
+    fun getSearchQuery(): String? {
+        return searchQuery
+    }
+
+    fun setSearchQuery(newQuery: String) {
+        searchQuery = newQuery.lowercase()
+    }
+
+    fun clearSearch() {
+        searchQuery = null
+    }
+
+    fun setConnectedChannels(channels: ArrayList<TextChannelModel.AllInfo>) {
+        this.connectedChannels = channels;
+    }
+
     private fun updateCurrentChannel() {
         // set current channel: 0 if only General exists, else last connected channels' position
         val newPosition =  if (connectedChannels.size == 1) 0 else connectedChannels.size - 1
@@ -95,15 +111,5 @@ object TextChannelService {
         }
     }
 
-    fun getSearchQuery(): String? {
-        return searchQuery
-    }
 
-    fun setSearchQuery(newQuery: String) {
-        searchQuery = newQuery.lowercase()
-    }
-
-    fun clearSearch() {
-        searchQuery = null
-    }
 }

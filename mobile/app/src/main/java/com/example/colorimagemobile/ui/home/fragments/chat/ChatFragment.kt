@@ -26,11 +26,15 @@ import com.example.colorimagemobile.services.chat.TextChannelService
 import com.example.colorimagemobile.ui.home.fragments.search.SearchFragment
 import com.example.colorimagemobile.utils.Constants
 import com.example.colorimagemobile.utils.Constants.Companion.GENERAL_CHANNEL_NAME
+import org.w3c.dom.Text
 
 class ChatFragment : Fragment(R.layout.fragment_chat) {
 
     private lateinit var myView: View
     private lateinit var adapter: ChannelsRecyclerAdapter
+    private var isPublicTab = false
+    private var searchedPublicTab = false
+    private var backedUpChannels: ArrayList<TextChannelModel.AllInfo> = ArrayList()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -77,11 +81,13 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
         allBtn.setOnClickListener {
             showAllChannels()
             changeBtnColor(allBtn, connectedBtn)
+            isPublicTab = true
         }
 
         connectedBtn.setOnClickListener {
             showConnectedChannels()
             changeBtnColor(connectedBtn, allBtn)
+            isPublicTab = false
         }
 
         createChannelBtn.setOnClickListener {
@@ -125,7 +131,11 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
 
         searchView.setOnCloseListener(object: SearchView.OnCloseListener {
             override fun onClose(): Boolean {
-//                bottomNav.selectedItemId = navController.currentDestination?.id!!
+                if (searchedPublicTab) {
+                    TextChannelService.setChannels(backedUpChannels)
+                } else {
+                    TextChannelService.setConnectedChannels(backedUpChannels)
+                }
                 return false
             }
         })
@@ -138,21 +148,29 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
             override fun onQueryTextSubmit(query: String): Boolean {
                 TextChannelService.setSearchQuery(query)
                 searchView.clearFocus()
-                getFilteredData()
+                filterData()
                 return true
             }
         })
     }
 
-    private fun getFilteredData() {
+    private fun filterData() {
         val query = TextChannelService.getSearchQuery()
         if (query.isNullOrEmpty()) return
 
         TextChannelRepository().searchChannels(query).observe(this, {
             if (it.isError as Boolean) { return@observe }
 
-            val filteredData = it.data as ArrayList<TextChannelModel.AllInfo>
-//            MyFragmentManager(this).openWithData(R.id.fragment, SearchFragment(), Constants.SEARCH.CURRENT_QUERY, filteredData)
+            // TODO: reset all channels or connected channels after closing search
+            if (isPublicTab) {
+                searchedPublicTab = true
+                backedUpChannels = TextChannelService.getChannels() as ArrayList<TextChannelModel.AllInfo>
+                TextChannelService.setChannels(it.data as ArrayList<TextChannelModel.AllInfo>)
+            } else {
+                searchedPublicTab = false
+                backedUpChannels = TextChannelService.getConnectedChannels()
+                TextChannelService.setConnectedChannels(it.data as ArrayList<TextChannelModel.AllInfo>)
+            }
         })
     }
 }
