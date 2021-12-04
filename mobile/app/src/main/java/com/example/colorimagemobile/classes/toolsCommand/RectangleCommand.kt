@@ -147,10 +147,13 @@ class RectangleCommand(rectangleData: RectangleData): ICommand {
     }
 
     private fun generateFillPath(){
-        var left = rectangle.x + rectangle.strokeWidth
-        var top = rectangle.y + rectangle.strokeWidth
-        var right = rectangle.x + rectangle.width - rectangle.strokeWidth
-        var bottom = rectangle.y + rectangle.height - rectangle.strokeWidth
+        var borderModifier = if(rectangle.stroke == "none") 0 else rectangle.strokeWidth
+
+        var left = rectangle.x + borderModifier
+        var top = rectangle.y + borderModifier
+
+        var right = rectangle.x + rectangle.width - borderModifier
+        var bottom = rectangle.y + rectangle.height - borderModifier
         var rect = RectF(left.toFloat(), top.toFloat(), right.toFloat(), bottom.toFloat())
 
         fillPath = Path()

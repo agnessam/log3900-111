@@ -42,14 +42,13 @@ object SelectionColorService {
         if (SelectionService.selectedShapeIndex != -1) {
             var selectedShapeId = DrawingObjectManager.getUuid(SelectionService.selectedShapeIndex) ?: return
             primaryColorCommand = PrimaryColorCommand(selectedShapeId, newColor)
-            val color = primaryColorCommand!!.getPrimaryColor()
-            if(color != "none") {
+            if(primaryColorCommand!!.getPrimaryColor() != "none") {
                 primaryColorCommand!!.execute()
-                val rgb = ColorService.convertRGBAStringToRGBObject(color)
-                val opacity = ColorService.getAlphaForDesktop(color).toFloat()
+                val rgb = ColorService.convertRGBAStringToRGBObject(newColor)
+                val opacity = ColorService.getAlphaForDesktop(newColor).toFloat()
                 DrawingSocketService.sendObjectPrimaryColorChange(selectedShapeId, rgb, opacity)
+                updatePrimaryColor(newColor)
             }
-            updatePrimaryColor(color)
         }
     }
 
@@ -57,14 +56,13 @@ object SelectionColorService {
         if (SelectionService.selectedShapeIndex != -1) {
             var selectedShapeId = DrawingObjectManager.getUuid(SelectionService.selectedShapeIndex) ?: return
             secondaryColorCommand = SecondaryColorCommand(selectedShapeId, newColor)
-            val color = secondaryColorCommand!!.getSecondaryColor()
-            if(color != "none") {
+            if(secondaryColorCommand!!.getSecondaryColor() != "none") {
                 secondaryColorCommand!!.execute()
-                val rgb = ColorService.convertRGBAStringToRGBObject(color)
-                val opacity = ColorService.getAlphaForDesktop(color).toFloat()
+                val rgb = ColorService.convertRGBAStringToRGBObject(newColor)
+                val opacity = ColorService.getAlphaForDesktop(newColor).toFloat()
                 DrawingSocketService.sendObjectSecondaryColorChange(selectedShapeId, rgb, opacity)
+                updateSecondaryColor(newColor)
             }
-            updateSecondaryColor(color)
         }
     }
 
