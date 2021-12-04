@@ -72,6 +72,7 @@ class ChatMessageBoxFragment : Fragment(R.layout.fragment_chat_message_box) {
 
     private fun updateUI() {
         myView.findViewById<TextView>(R.id.chat_username).text = channel.name
+        myView.findViewById<Button>(R.id.channel_leave_btn).visibility = View.GONE
 
         // show delete button if I created the channel
         if (channel.ownerId == UserService.getUserInfo()._id) {
