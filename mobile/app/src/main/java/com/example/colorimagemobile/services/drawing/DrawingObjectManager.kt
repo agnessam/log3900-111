@@ -4,6 +4,7 @@ import android.graphics.Canvas
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.LayerDrawable
 import com.example.colorimagemobile.classes.ImageConvertor
+import com.example.colorimagemobile.classes.JSONConvertor
 import com.example.colorimagemobile.classes.openDrawingCommand.CreateEllipseCommand
 import com.example.colorimagemobile.classes.openDrawingCommand.CreatePolylineCommand
 import com.example.colorimagemobile.classes.openDrawingCommand.CreateRectangleCommand
@@ -13,6 +14,8 @@ import com.example.colorimagemobile.interfaces.ICommand
 import com.example.colorimagemobile.models.CustomSVG
 import com.example.colorimagemobile.services.drawing.toolsAttribute.ColorService
 import com.github.underscore.lodash.U
+import org.json.JSONObject
+import org.json.XML
 
 object DrawingObjectManager {
     private var layerDrawable: LayerDrawable = LayerDrawable(arrayOf<Drawable>())
