@@ -27,6 +27,9 @@ object TextChannelService {
     fun createNewChannel(newChannel: TextChannelModel.AllInfo) {
         this.publicChannels.add(newChannel)
         this.setCurrentChannel(newChannel)
+
+        val socketInformation = Constants.SocketRoomInformation(UserService.getUserInfo()._id, newChannel.name)
+        ChatSocketService.joinRoom(socketInformation)
     }
 
     fun getPublicChannels(): List<TextChannelModel.AllInfo> {

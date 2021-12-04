@@ -65,17 +65,28 @@ class NewChannelBottomSheet: BottomSheetDialogFragment() {
                 channelLayout.error = "This channel already exists"
                 return@doOnTextChanged
             }
+            if (text.toString().length < 3) {
+                channelLayout.error = "Channel name must contain at least 3 characters"
+                return@doOnTextChanged
+            }
         }
         createChannelForm.setOnTouchListener{v, event -> hideKeyboard(requireContext(),  createChannelForm)}
 
         createChannelBtn.setOnClickListener {
-            if(channelLayout.error.isNullOrBlank() || channelInputName.text.isNullOrEmpty()){
+            if(channelLayout.error != null || channelInputName.text.isNullOrEmpty()){
                 val shake = AnimationUtils.loadAnimation(requireActivity().getApplicationContext(), R.anim.shake)
                 newChannelInputText.startAnimation(shake);
                 return@setOnClickListener
             }
 
-            val newChannel = TextChannelModel.AllInfo(_id = null, name = channelInputName.text.toString(), ownerId = UserService.getUserInfo()._id)
+            val newChannel = TextChannelModel.AllInfo(
+                _id = null,
+                name = channelInputName.text.toString(),
+                ownerId = UserService.getUserInfo()._id,
+                drawing = null,
+                isPrivate = false,
+                team = null
+            )
             createChannel(newChannel)
         }
     }
