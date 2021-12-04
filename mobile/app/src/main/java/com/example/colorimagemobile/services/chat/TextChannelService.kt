@@ -26,6 +26,10 @@ object TextChannelService {
         this.hasConnectedToGeneral = true
     }
 
+    fun resetConnectedChannels() {
+        this.connectedChannels = arrayListOf()
+    }
+
     fun isConnectedToGeneral(): Boolean {
         return this.hasConnectedToGeneral
     }

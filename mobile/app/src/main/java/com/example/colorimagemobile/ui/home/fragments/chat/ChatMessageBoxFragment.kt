@@ -74,10 +74,20 @@ class ChatMessageBoxFragment : Fragment(R.layout.fragment_chat_message_box) {
     private fun updateUI() {
         myView.findViewById<TextView>(R.id.chat_username).text = channel.name
 
+        // set up Recycler View
+        recyclerView.layoutManager = LinearLayoutManager(context)
+        recyclerView.adapter = ChatAdapterService.getChatMsgAdapter()
+
+        // update chat messages
+        var currentChat = filterChatMessage()!!
+        ChatAdapterService.getChatMsgAdapter().setChat(currentChat)
+        scrollDown()
+
         if (channel.name == GENERAL_CHANNEL_NAME) {
             myView.findViewById<Button>(R.id.channel_leave_btn).visibility = View.GONE
             myView.findViewById<Button>(R.id.channel_delete_btn).visibility = View.GONE
            // hideLoadPreviousBtn()
+            return
         }
 
         // show delete button if I created the channel
@@ -100,15 +110,6 @@ class ChatMessageBoxFragment : Fragment(R.layout.fragment_chat_message_box) {
         if (ChatService.shouldHideLoadPreviousBtn(channel.name)) {
             hideLoadPreviousBtn()
         }
-
-        // set up Recycler View
-        recyclerView.layoutManager = LinearLayoutManager(context)
-        recyclerView.adapter = ChatAdapterService.getChatMsgAdapter()
-
-        // update chat messages
-        var currentChat = filterChatMessage()!!
-        ChatAdapterService.getChatMsgAdapter().setChat(currentChat)
-        scrollDown()
     }
 
     private fun filterChatMessage(): MutableSet<ChatSocketModel>? {
