@@ -212,6 +212,8 @@ class HomeActivity : AppCompatActivity() {
 
         // remove items from "local storage"
         sharedPreferencesService.removeItem(Constants.STORAGE_KEY.TOKEN)
+        TextChannelService.resetConnectedChannels()
+        TextChannelService.setCurrentChannel(TextChannelService.getPublicChannels()[0])
 
         redirectTo(this, LoginActivity::class.java)
     }
