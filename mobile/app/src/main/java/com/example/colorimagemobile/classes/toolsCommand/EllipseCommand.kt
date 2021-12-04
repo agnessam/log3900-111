@@ -144,10 +144,12 @@ class EllipseCommand(ellipseData: EllipseData): ICommand {
     }
 
     private fun generateFillPath(){
-        var left = ellipse.x - ellipse.width / 2 + ellipse.strokeWidth
-        var top = ellipse.y - ellipse.height / 2 + ellipse.strokeWidth
-        var right = ellipse.x + ellipse.width / 2 - ellipse.strokeWidth
-        var bottom = ellipse.y + ellipse.height / 2 - ellipse.strokeWidth
+        val modifier = if(ellipse.stroke == "none") 0f else ellipse.strokeWidth.toFloat()
+
+        var left = ellipse.x - ellipse.width / 2 + modifier
+        var top = ellipse.y - ellipse.height / 2 + modifier
+        var right = ellipse.x + ellipse.width / 2 - modifier
+        var bottom = ellipse.y + ellipse.height / 2 - modifier
         var rect = RectF(left.toFloat(), top.toFloat(), right.toFloat(), bottom.toFloat())
 
         fillPath = Path()

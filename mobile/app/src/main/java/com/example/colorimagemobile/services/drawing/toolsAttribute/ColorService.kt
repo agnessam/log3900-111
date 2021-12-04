@@ -41,6 +41,8 @@ object ColorService {
 
     // convert rgb() to Android Color in Integer
     fun rgbaToInt(color: String): Int {
+        if(color == "none") return Color.TRANSPARENT
+
         val rgbValues = color.substring(color.indexOf('(') + 1, color.indexOf(')'))
         val splitRGB = removeWhitespace(rgbValues).split(",")
         var alpha = if (splitRGB.size == 4) {

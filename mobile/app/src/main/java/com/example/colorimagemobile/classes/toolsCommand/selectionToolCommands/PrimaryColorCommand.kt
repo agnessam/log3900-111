@@ -18,6 +18,31 @@ class PrimaryColorCommand(private val objectId: String, private var primaryColor
         TODO("Not yet implemented")
     }
 
+    fun getPrimaryColor(): String {
+        return when(commandToChange){
+            is PencilCommand -> (commandToChange as PencilCommand).getPrimaryColor()
+            is RectangleCommand -> (commandToChange as RectangleCommand).getPrimaryColor()
+            is EllipseCommand -> (commandToChange as EllipseCommand).getPrimaryColor()
+            else -> ColorService.intToRGBA(Color.TRANSPARENT)
+        }
+    }
+
+    private fun PencilCommand.getPrimaryColor(): String{
+        return pencil.stroke
+    }
+
+    private fun RectangleCommand.getPrimaryColor(): String{
+        if(rectangle.fill == "none") return "none"
+        val colorInt = ColorService.rgbaToInt(rectangle.fill)
+        return ColorService.intToRGBA(colorInt)
+    }
+
+    private fun EllipseCommand.getPrimaryColor(): String{
+        if(ellipse.fill == "none") return "none"
+        val colorInt = ColorService.rgbaToInt(ellipse.fill)
+        return ColorService.intToRGBA(colorInt)
+    }
+
     private fun PencilCommand.setPrimaryColor(newColor: String) {
         pencil.stroke = newColor
         pencil.strokeOpacity = ColorService.getAlphaForDesktop(newColor)
@@ -27,19 +52,23 @@ class PrimaryColorCommand(private val objectId: String, private var primaryColor
     }
 
     private fun RectangleCommand.setPrimaryColor(newColor: String) {
-        rectangle.fill = newColor
-        rectangle.fillOpacity = ColorService.getAlphaForDesktop(newColor)
-        fillPaint = initializePaint(newColor, rectangle.fillOpacity, Color.BLACK)
-        DrawingJsonService.updateShapeFillColor(newColor, rectangle.fillOpacity, objectId, ShapeLabel.RECTANGLE)
-        execute()
+        if(rectangle.fill != "none"){
+            rectangle.fill = newColor
+            rectangle.fillOpacity = ColorService.getAlphaForDesktop(newColor)
+            fillPaint = initializePaint(newColor, rectangle.fillOpacity, Color.BLACK)
+            DrawingJsonService.updateShapeFillColor(newColor, rectangle.fillOpacity, objectId, ShapeLabel.RECTANGLE)
+            execute()
+        }
     }
 
     private fun EllipseCommand.setPrimaryColor(newColor: String) {
-        ellipse.fill = newColor
-        ellipse.fillOpacity = ColorService.getAlphaForDesktop(newColor)
-        fillPaint = initializePaint(newColor, ellipse.fillOpacity, Color.BLACK)
-        DrawingJsonService.updateShapeFillColor(newColor, ellipse.fillOpacity, objectId, ShapeLabel.ELLIPSE)
-        execute()
+        if(ellipse.fill != "none"){
+            ellipse.fill = newColor
+            ellipse.fillOpacity = ColorService.getAlphaForDesktop(newColor)
+            fillPaint = initializePaint(newColor, ellipse.fillOpacity, Color.BLACK)
+            DrawingJsonService.updateShapeFillColor(newColor, ellipse.fillOpacity, objectId, ShapeLabel.ELLIPSE)
+            execute()
+        }
     }
 
     override fun execute() {
