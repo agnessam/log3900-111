@@ -48,6 +48,7 @@ class EllipseData(
     var height: Float
 ): ToolData
 
+data class LineWidthData(val id: String, val roomName: String, val lineWidth: Int)
 
 data class ColorData(val id: String, val color: RGB, val opacity: Float, val roomName: String)
 

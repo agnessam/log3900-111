@@ -173,20 +173,6 @@ export class ChannelComponent implements OnInit, OnDestroy {
     this.chatService.leaveRoomEventEmitter.emit(channel);
   }
 
-  toggleChannelButton(channel: TextChannel, mouseover: boolean): void {
-    if (channel.name !== "General") {
-      const btnDiv = document.getElementById(channel.name) as HTMLInputElement;
-      if (mouseover) btnDiv.style.display = "inline";
-      else btnDiv.style.display = "none";
-
-      const deletbtn = btnDiv.children.item(1) as HTMLInputElement;
-      deletbtn.style.display = "none";
-      if (channel.ownerId === this.user?._id) {
-        deletbtn.style.display = "inline";
-      }
-    }
-  }
-
   searchChannels(): void {
     if (
       this.searchQuery === undefined ||
@@ -225,7 +211,9 @@ export class ChannelComponent implements OnInit, OnDestroy {
   }
 
   openAddChannelModal() {
-    this.newChannelDialogRef = this.dialog.open(NewChannelComponent, {});
+    this.newChannelDialogRef = this.dialog.open(NewChannelComponent, {
+      data: this.publicChannels,
+    });
     this.newChannelDialogRef.afterClosed().subscribe((channel) => {
       if (!channel) {
         return;
@@ -239,6 +227,10 @@ export class ChannelComponent implements OnInit, OnDestroy {
       this.chatService.toggleChatOverlay.emit(channel);
       this.ref.detectChanges();
     });
+  }
+
+  isGeneral(channelName: string) {
+    return channelName === "General";
   }
 
   isOwner(channelOwner: string) {

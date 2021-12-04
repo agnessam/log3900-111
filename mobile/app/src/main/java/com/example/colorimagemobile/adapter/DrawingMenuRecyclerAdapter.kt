@@ -22,6 +22,7 @@ import com.example.colorimagemobile.classes.MyFragmentManager
 import com.example.colorimagemobile.classes.MyPicasso
 import com.example.colorimagemobile.enumerators.ButtonType
 import com.example.colorimagemobile.models.DrawingModel
+import com.example.colorimagemobile.models.OwnerModel
 import com.example.colorimagemobile.models.PrivacyLevel
 import com.example.colorimagemobile.models.recyclerAdapters.DrawingMenuData
 import com.example.colorimagemobile.models.recyclerAdapters.DrawingMenuViewHolder
@@ -29,6 +30,7 @@ import com.example.colorimagemobile.services.drawing.DrawingOwnerService
 import com.example.colorimagemobile.services.drawing.DrawingService
 import com.example.colorimagemobile.services.socket.DrawingSocketService
 import com.example.colorimagemobile.services.teams.TeamService
+import com.example.colorimagemobile.ui.home.fragments.teams.TeamsProfileFragment
 import com.example.colorimagemobile.ui.home.fragments.users.UsersProfileFragment
 import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
 import com.example.colorimagemobile.utils.Constants
@@ -163,8 +165,14 @@ class DrawingMenuRecyclerAdapter(
             }
 
             authorName.setOnClickListener {
-                val userId = drawingMenus[bindingAdapterPosition].drawing.owner._id
-                MyFragmentManager(activity).openWithData(R.id.main_gallery_fragment, UsersProfileFragment(), Constants.USERS.CURRENT_USER_ID_KEY, userId)
+                val ownerModel = drawingMenus[bindingAdapterPosition].drawing.ownerModel
+                val ownerId = drawingMenus[bindingAdapterPosition].drawing.owner._id
+
+                if (ownerModel == OwnerModel.USER.toString()) {
+                    MyFragmentManager(activity).openWithData(R.id.main_gallery_fragment, UsersProfileFragment(), Constants.USERS.CURRENT_USER_ID_KEY, ownerId)
+                } else {
+                    MyFragmentManager(activity).openWithData(R.id.main_gallery_fragment, TeamsProfileFragment(), Constants.TEAMS.CURRENT_TEAM_ID_KEY, ownerId)
+                }
             }
         }
     }

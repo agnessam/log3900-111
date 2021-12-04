@@ -26,13 +26,16 @@
       </mat-checkbox>
       <mat-form-field>
         <mat-label>Team name</mat-label>
-        <mat-select formControlName="owner">
+        <mat-select formControlName="owner" [errorStateMatcher]="matcher">
           <mat-option value="{{ team._id }}" *ngFor="let team of teams">{{
             team.name
           }}</mat-option>
         </mat-select>
         <mat-error *ngIf="this.form.hasError('emptyTeam')"
           >You must select a team</mat-error
+        >
+        <mat-error *ngIf="this.form.hasError('noTeamJoined')"
+          >You're not part of any teams!</mat-error
         >
       </mat-form-field>
     </div>
@@ -64,7 +67,11 @@
             matInput
             placeholder="Drawing password"
             formControlName="password"
+            [errorStateMatcher]="passwordMatcher"
           />
+          <mat-error *ngIf="this.form.getError('nonNullPassword')">
+            Password cannot be empty
+          </mat-error>
         </mat-form-field>
       </li>
     </div>
