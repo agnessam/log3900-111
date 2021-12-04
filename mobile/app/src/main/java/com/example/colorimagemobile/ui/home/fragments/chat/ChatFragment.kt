@@ -30,6 +30,10 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
         myView = view
         adapter = ChatAdapterService.getChannelListAdapter()
 
+        ChatService.initChat(requireContext()) { init() }
+    }
+
+    private fun init() {
         setRecyclerView()
         setButtonListeners()
 

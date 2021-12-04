@@ -21,11 +21,9 @@ import com.example.colorimagemobile.httpresponsehandler.GlobalHandler
 import com.example.colorimagemobile.models.*
 import com.example.colorimagemobile.services.users.UserService
 import com.example.colorimagemobile.repositories.SearchRepository
-import com.example.colorimagemobile.repositories.TextChannelRepository
-import com.example.colorimagemobile.repositories.UserRepository
 import com.example.colorimagemobile.services.SearchService
 import com.example.colorimagemobile.services.SharedPreferencesService
-import com.example.colorimagemobile.services.chat.TextChannelService
+import com.example.colorimagemobile.services.chat.ChatService
 import com.example.colorimagemobile.services.drawing.DrawingObjectManager
 import com.example.colorimagemobile.services.drawing.DrawingService
 import com.example.colorimagemobile.services.socket.ChatSocketService
@@ -82,46 +80,7 @@ class HomeActivity : AppCompatActivity() {
     private fun initChat() {
         ChatSocketService.connect()
         ChatSocketService.setFragmentActivity(this)
-
-        // get all public channels
-        TextChannelRepository().getAllTextChannel(UserService.getToken()).observe(this, {
-            if (it.isError as Boolean) { return@observe }
-            val channels = it.data as ArrayList<TextChannelModel.AllInfo>
-            TextChannelService.setPublicChannels(channels)
-
-            channels.forEach { channel ->
-                val socketInformation = Constants.SocketRoomInformation(UserService.getUserInfo()._id, channel.name)
-                ChatSocketService.joinRoom(socketInformation)
-            }
-        })
-
-        // get user teams and connect for each team
-        UserRepository().getUserTeams(UserService.getToken(), UserService.getUserInfo()._id).observe(this, {
-            if (it.isError as Boolean) { return@observe }
-
-            val userTeams = it.data as List<TeamModel>
-            userTeams.forEach { team ->
-                val socketInformation = Constants.SocketRoomInformation(UserService.getUserInfo()._id, team.name)
-                ChatSocketService.joinRoom(socketInformation)
-            }
-
-            TextChannelRepository().getTeamChannels().observe(this, { teamChannels ->
-                if (teamChannels.isError as Boolean) { return@observe }
-                val channels = teamChannels.data as ArrayList<TextChannelModel.AllInfo>
-
-                channels.forEach { channel ->
-                    val isInConnectedChannels = TextChannelService.getConnectedChannels().any { connectedChannel -> connectedChannel._id == channel._id }
-                    val isUserInTeam = userTeams.any { userTeam -> userTeam._id == channel.team }
-
-                    if (isUserInTeam && !isInConnectedChannels) {
-                        TextChannelService.setCurrentChannel(channels[0])
-                        TextChannelService.addToConnectedChannels(channel)
-                    } else if (!isUserInTeam && isInConnectedChannels){
-                        TextChannelService.removeFromConnectedChannels(channel)
-                    }
-                }
-            })
-        })
+        ChatService.initChat(this) { }
     }
 
     // add options to Home Navbar
