@@ -78,7 +78,7 @@ object TextChannelService {
         connectedChannels.remove(channelToRemove)
         val socketInformation = Constants.SocketRoomInformation(UserService.getUserInfo()._id, channelToRemove.name)
         ChatSocketService.leaveRoom(socketInformation)
-        updateCurrentChannel()
+        this.currentChannel = publicChannels[0]
     }
 
     fun deleteChannel(channelToDelete: TextChannelModel.AllInfo) {
@@ -87,6 +87,13 @@ object TextChannelService {
         this.publicChannels.remove(channelToDelete)
         removeFromConnectedChannels(channelToDelete)
         updateCurrentChannel()
+    }
+
+    fun removeChannel(channelName: String?) {
+        if (channelName.isNullOrEmpty()) return
+
+        this.connectedChannels.removeIf { it.name == channelName }
+        this.currentChannel = publicChannels[0]
     }
 
     fun doesChannelExists(channelName: String): Boolean {

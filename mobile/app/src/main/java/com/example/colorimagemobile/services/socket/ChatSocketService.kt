@@ -93,15 +93,11 @@ object ChatSocketService: AbsSocket(SOCKETS.CHAT_NAMESPACE_NAME) {
         Emitter.Listener { args ->
             fragmentActivity!!.runOnUiThread(Runnable {
                 try {
-                    val currentArg = args[0].toString()
-                    printMsg("listenLeaveRoom ${currentArg}")
-//                    val message = JSONConvertor.getJSONObject(currentArg, ChatSocketModel::class.java)
-//                    ChatService.addMessage(message)
-//
-//                    val currentRoom = TextChannelService.getCurrentChannel().name
-//                    if (message.roomName == currentRoom) {
-//                        ChatAdapterService.getChatMsgAdapter().addChatItem(message)
-//                    }
+                    val roomName = args[0].toString()
+                    printMsg("listenLeaveRoom ${roomName}")
+
+                    val socketInformation = Constants.SocketRoomInformation(UserService.getUserInfo()._id, roomName)
+                    ChatSocketService.leaveRoom(socketInformation)
                 } catch (e: JSONException) {
                     printMsg("listenLeaveRoom error: ${e.message}")
                     return@Runnable
