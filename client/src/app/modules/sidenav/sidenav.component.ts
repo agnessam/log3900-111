@@ -56,7 +56,6 @@ export class SidenavComponent {
 
   openMuseumDialog(): void {
     this.dialog.open(MuseumDialog, {
-      width: '500px'
     });
   }
 }

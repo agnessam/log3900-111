@@ -1,6 +1,7 @@
 package com.example.colorimagemobile.services.chat
 
 import com.example.colorimagemobile.models.TextChannelModel
+import com.example.colorimagemobile.services.SearchService
 import com.example.colorimagemobile.services.socket.ChatSocketService
 import com.example.colorimagemobile.services.users.UserService
 import com.example.colorimagemobile.utils.Constants
@@ -10,6 +11,7 @@ object TextChannelService {
     private lateinit var currentChannel: TextChannelModel.AllInfo
     private var allChannels: ArrayList<TextChannelModel.AllInfo>
     private var connectedChannels: ArrayList<TextChannelModel.AllInfo>
+    private var searchQuery: String? = null
 
     init {
         allChannels = arrayListOf()
@@ -91,5 +93,17 @@ object TextChannelService {
             connectedChannels.add(currentChannel)
             ChatService.addChat(currentChannel.name)
         }
+    }
+
+    fun getSearchQuery(): String? {
+        return searchQuery
+    }
+
+    fun setSearchQuery(newQuery: String) {
+        searchQuery = newQuery.lowercase()
+    }
+
+    fun clearSearch() {
+        searchQuery = null
     }
 }
