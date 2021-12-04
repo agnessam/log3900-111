@@ -91,6 +91,11 @@ class ChatMessageBoxFragment : Fragment(R.layout.fragment_chat_message_box) {
             myView.findViewById<Button>(R.id.channel_delete_btn).visibility = View.GONE
         }
 
+        // show leave if channel is public and connected
+        if (!channel.isPrivate && TextChannelService.getConnectedChannels().contains(channel)) {
+            myView.findViewById<Button>(R.id.channel_leave_btn).visibility = View.VISIBLE
+        }
+
         // hide Load Previous Messages button if we have already loaded old messages
         if (ChatService.shouldHideLoadPreviousBtn(channel.name)) {
             hideLoadPreviousBtn()
