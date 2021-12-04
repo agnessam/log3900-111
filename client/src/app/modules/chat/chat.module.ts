@@ -14,6 +14,7 @@ import { MatInputModule } from "@angular/material/input";
 import { MatCardModule } from "@angular/material/card";
 import { MatDialogModule } from "@angular/material/dialog";
 import { MatMenuModule } from "@angular/material/menu";
+import { MatChipsModule } from "@angular/material/chips";
 
 @NgModule({
   declarations: [
@@ -34,6 +35,7 @@ import { MatMenuModule } from "@angular/material/menu";
     MatCardModule,
     MatDialogModule,
     MatMenuModule,
+    MatChipsModule,
   ],
   providers: [TextChannelService],
   exports: [ChatComponent, ChannelComponent],

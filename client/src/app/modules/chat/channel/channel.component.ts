@@ -122,7 +122,7 @@ export class ChannelComponent implements OnInit, OnDestroy {
             if (isUserInTeam && !isInConnectedChannels) {
               this.connectedChannels.push(channel);
             } else if (!isUserInTeam && isInConnectedChannels) {
-              this.removeChannel(channel);
+              this.removeChannel(channel);  
             }
           });
         });

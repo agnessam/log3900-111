@@ -63,8 +63,11 @@
           <div class="channel" (click)="openChannel(channel)">
             <p (click)="openChannel(channel)" style="margin-left: 10px">
               {{ channel.name }}
+              
+              <mat-chip *ngIf="channel.drawing !== undefined">collaboration</mat-chip>
+              <mat-chip *ngIf="channel.team !== undefined" [disabled]="true">team</mat-chip>
             </p>
-
+            
             <button
               mat-button
               [matMenuTriggerFor]="menu"
