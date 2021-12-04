@@ -62,7 +62,7 @@ class NewChannelBottomSheet: BottomSheetDialogFragment() {
                 return@doOnTextChanged
             }
             if (TextChannelService.doesChannelExists(text.toString())) {
-                channelLayout.error = "This channel already exists"
+                channelLayout.error = "A channel with that name already exists"
                 return@doOnTextChanged
             }
             if (text.toString().length < 3) {
