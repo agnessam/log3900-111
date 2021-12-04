@@ -163,14 +163,14 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
 
             // TODO: reset all channels or connected channels after closing search
             if (isPublicTab) {
-                searchedPublicTab = true
                 backedUpChannels = TextChannelService.getChannels() as ArrayList<TextChannelModel.AllInfo>
                 TextChannelService.setChannels(it.data as ArrayList<TextChannelModel.AllInfo>)
             } else {
-                searchedPublicTab = false
                 backedUpChannels = TextChannelService.getConnectedChannels()
                 TextChannelService.setConnectedChannels(it.data as ArrayList<TextChannelModel.AllInfo>)
             }
+            searchedPublicTab = isPublicTab
+            TextChannelService.refreshChannelList()
         })
     }
 }
