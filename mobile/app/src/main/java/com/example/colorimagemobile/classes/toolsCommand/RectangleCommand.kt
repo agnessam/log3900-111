@@ -147,7 +147,7 @@ class RectangleCommand(rectangleData: RectangleData): ICommand {
     }
 
     private fun generateFillPath(){
-        var borderModifier = if(rectangle.stroke == "none") 0 else rectangle.strokeWidth
+        var borderModifier = if(rectangle.stroke == "none") 0f else rectangle.strokeWidth.toFloat()
 
         var left = rectangle.x + borderModifier
         var top = rectangle.y + borderModifier
