@@ -193,8 +193,4 @@ export class DrawingService {
 
     this.drawingEmit.emit(this.drawing);
   }
-
-  publishDrawing():void{
-
-  }
 }
