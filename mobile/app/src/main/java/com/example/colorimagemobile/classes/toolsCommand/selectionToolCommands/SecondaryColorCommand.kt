@@ -19,20 +19,44 @@ class SecondaryColorCommand(private val objectId: String, private var secondaryC
         TODO("Not yet implemented")
     }
 
+    fun getSecondaryColor(): String {
+        return when(commandToChange){
+            is RectangleCommand -> (commandToChange as RectangleCommand).getSecondaryColor()
+            is EllipseCommand -> (commandToChange as EllipseCommand).getSecondaryColor()
+            else -> ColorService.intToRGBA(Color.TRANSPARENT)
+        }
+    }
+
+    private fun RectangleCommand.getSecondaryColor(): String{
+        if(rectangle.stroke == "none") return "none"
+        val colorInt = ColorService.rgbaToInt(rectangle.stroke)
+        return ColorService.intToRGBA(colorInt)
+    }
+
+    private fun EllipseCommand.getSecondaryColor(): String{
+        if(ellipse.stroke == "none") return "none"
+        val colorInt = ColorService.rgbaToInt(ellipse.stroke)
+        return ColorService.intToRGBA(colorInt)
+    }
+
     private fun RectangleCommand.setSecondaryColor(newColor: String) {
-        rectangle.stroke = newColor
-        rectangle.strokeOpacity = ColorService.getAlphaForDesktop(newColor)
-        DrawingJsonService.updateShapeStrokeColor(newColor, rectangle.strokeOpacity, objectId, ShapeLabel.RECTANGLE)
-        borderPaint = initializePaint(newColor, rectangle.strokeOpacity, Color.WHITE)
-        execute()
+        if(rectangle.stroke != "none"){
+            rectangle.stroke = newColor
+            rectangle.strokeOpacity = ColorService.getAlphaForDesktop(newColor)
+            DrawingJsonService.updateShapeStrokeColor(newColor, rectangle.strokeOpacity, objectId, ShapeLabel.RECTANGLE)
+            borderPaint = initializePaint(newColor, rectangle.strokeOpacity, Color.WHITE)
+            execute()
+        }
     }
 
     private fun EllipseCommand.setSecondaryColor(newColor: String) {
-        ellipse.stroke = newColor
-        ellipse.strokeOpacity = ColorService.getAlphaForDesktop(newColor)
-        DrawingJsonService.updateShapeStrokeColor(newColor, ellipse.strokeOpacity, objectId, ShapeLabel.ELLIPSE)
-        borderPaint = initializePaint(newColor, ellipse.strokeOpacity, Color.WHITE)
-        execute()
+        if(ellipse.stroke != "none"){
+            ellipse.stroke = newColor
+            ellipse.strokeOpacity = ColorService.getAlphaForDesktop(newColor)
+            DrawingJsonService.updateShapeStrokeColor(newColor, ellipse.strokeOpacity, objectId, ShapeLabel.ELLIPSE)
+            borderPaint = initializePaint(newColor, ellipse.strokeOpacity, Color.WHITE)
+            execute()
+        }
     }
 
     override fun execute() {
