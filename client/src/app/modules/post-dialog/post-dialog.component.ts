@@ -14,6 +14,7 @@ import { User } from "../authentication/models/user";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { CommentInterface } from "../museum/models/comment.model";
 import { Team } from "src/app/shared/models/team.model";
+import { Router } from "@angular/router";
 
 @Component({
   selector: "app-post-dialog",
@@ -33,7 +34,8 @@ export class PostDialogComponent implements OnInit {
     private sanitizer: DomSanitizer,
     private postService: PostService,
     private authenticationService: AuthenticationService,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -80,8 +82,8 @@ export class PostDialogComponent implements OnInit {
 
     const isWhitespace = (input || "").trim().length === 0;
     if (isWhitespace) {
-      this.snackBar.open("The comment can not be empty", "Close", {
-        duration: 3000,
+      this.snackBar.open("The comment cannot be empty", "Close", {
+        duration: 1000,
       });
       return;
     }
@@ -128,5 +130,30 @@ export class PostDialogComponent implements OnInit {
 
   onAudioPlay() {
     this.audioPlayerRef.nativeElement.play();
+  }
+
+  goToUserProfile(post: PostInterface) {
+    this.router.navigate([`/users/${post.owner._id}`]);
+    this.dialogRef.close();
+  }
+
+  goToTeamProfile(post: PostInterface) {
+    this.router.navigate([`/teams/${post.owner._id}`]);
+
+    this.dialogRef.close();
+  }
+
+  goToOwnerProfile(post: PostInterface) {
+    if (post.ownerModel == "User") {
+      this.goToUserProfile(post);
+    } else {
+      this.goToTeamProfile(post);
+    }
+    this.dialogRef.close();
+  }
+
+  goToUserProfileViaComment(comment: CommentInterface) {
+    this.router.navigate([`/users/${comment.author._id}`]);
+    this.dialogRef.close();
   }
 }

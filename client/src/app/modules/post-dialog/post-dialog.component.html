@@ -5,14 +5,25 @@
     <div class="post-header">
       <div class="author-picture">
         <div *ngIf="post.ownerModel === 'User'">
-          <ngx-avatar [src]="getAvatar(post)"></ngx-avatar>
+          <ngx-avatar
+            [src]="getAvatar(post)"
+            (click)="goToUserProfile(post)"
+          ></ngx-avatar>
         </div>
+
         <div *ngIf="post.ownerModel == 'Team'">
-          <ngx-avatar [name]="getAvatar(post)"></ngx-avatar>
+          <ngx-avatar
+            [name]="getAvatar(post)"
+            (click)="goToTeamProfile(post)"
+          ></ngx-avatar>
         </div>
       </div>
       <div class="info">
-        <div class="author-text" *ngIf="post.owner">
+        <div
+          class="author-text"
+          *ngIf="post.owner"
+          (click)="goToOwnerProfile(post)"
+        >
           {{ getUsername(post) }}
         </div>
         <div class="time-text" *ngIf="post.owner">
@@ -24,7 +35,12 @@
     <div class="comment-section">
       <div *ngFor="let comment of this.post.comments">
         <div class="comment">
-          {{ getAuthorUsername(comment) }} : {{ comment.content }}
+          <span
+            class="username-comment"
+            (click)="goToUserProfileViaComment(comment)"
+            >{{ getAuthorUsername(comment) }}</span
+          >
+          {{ comment.content }}
         </div>
       </div>
     </div>
