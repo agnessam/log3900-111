@@ -1,6 +1,9 @@
 package com.example.colorimagemobile.services.chat
 
+import android.content.Context
+import androidx.lifecycle.LifecycleOwner
 import com.example.colorimagemobile.models.TextChannelModel
+import com.example.colorimagemobile.repositories.TextChannelRepository
 import com.example.colorimagemobile.services.socket.ChatSocketService
 import com.example.colorimagemobile.services.users.UserService
 import com.example.colorimagemobile.utils.Constants
@@ -25,7 +28,7 @@ object TextChannelService {
     }
 
     fun createNewChannel(newChannel: TextChannelModel.AllInfo) {
-        this.publicChannels.add(newChannel)
+        if (!newChannel.isPrivate) this.publicChannels.add(newChannel)
         this.setCurrentChannel(newChannel)
 
         val socketInformation = Constants.SocketRoomInformation(UserService.getUserInfo()._id, newChannel.name)
@@ -94,5 +97,17 @@ object TextChannelService {
             connectedChannels.add(channel)
             ChatService.addChat(channel.name)
         }
+    }
+
+    fun createChannel(channelModel: TextChannelModel.AllInfo, context: Context, callback: () -> Unit) {
+        TextChannelRepository().addChannel(channelModel).observe(context as LifecycleOwner, {
+            if (it.isError as Boolean) {
+                return@observe
+            }
+
+            val channel = it.data as TextChannelModel.AllInfo
+            createNewChannel(channel)
+            callback()
+        })
     }
 }

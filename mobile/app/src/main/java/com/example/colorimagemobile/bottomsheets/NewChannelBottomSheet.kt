@@ -12,12 +12,10 @@ import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.FragmentActivity
 import com.example.colorimagemobile.R
 import com.example.colorimagemobile.models.TextChannelModel
-import com.example.colorimagemobile.repositories.TextChannelRepository
 import com.example.colorimagemobile.services.users.UserService
 import com.example.colorimagemobile.services.chat.ChatService
 import com.example.colorimagemobile.services.chat.TextChannelService
 import com.example.colorimagemobile.utils.CommonFun.Companion.hideKeyboard
-import com.example.colorimagemobile.utils.CommonFun.Companion.printToast
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -87,25 +85,14 @@ class NewChannelBottomSheet: BottomSheetDialogFragment() {
                 isPrivate = false,
                 team = null
             )
-            createChannel(newChannel)
+
+            TextChannelService.createChannel(newChannel, requireContext()) { refreshChat() }
+            closeSheet()
         }
     }
 
-    private fun createChannel(newChannelModel: TextChannelModel.AllInfo) {
-        val channelRepository = TextChannelRepository()
-
-        channelRepository.addChannel(newChannelModel).observe(this, {
-            closeSheet()
-
-            if (it.isError as Boolean) {
-                printToast(requireActivity(), it.message!!)
-                return@observe
-            }
-
-            val channel = it.data as TextChannelModel.AllInfo
-            TextChannelService.createNewChannel(channel)
-            TextChannelService.refreshChannelList()
-            ChatService.refreshChatBox(context as FragmentActivity)
-        })
+    private fun refreshChat() {
+        TextChannelService.refreshChannelList()
+        ChatService.refreshChatBox(context as FragmentActivity)
     }
 }
