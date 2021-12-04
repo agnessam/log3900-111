@@ -11,6 +11,8 @@ import com.example.colorimagemobile.services.users.UserService
 import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
 import com.example.colorimagemobile.utils.Constants
 import com.example.colorimagemobile.utils.Constants.SOCKETS
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import io.socket.emitter.Emitter
 import org.json.JSONException
 import org.json.JSONObject
@@ -36,6 +38,8 @@ object ChatSocketService: AbsSocket(SOCKETS.CHAT_NAMESPACE_NAME) {
 
     override fun setSocketListeners() {
         mSocket.on(SOCKETS.TEXT_MESSAGE_EVENT_NAME, listenMessage)
+        mSocket.on(SOCKETS.ROOM_EVENT_NAME, listenHistory)
+        mSocket.on(SOCKETS.LEAVE_ROOM_EVENT_NAME, listenLeaveRoom)
     }
 
     public override fun emit(event: String, data: Any) {
@@ -54,12 +58,52 @@ object ChatSocketService: AbsSocket(SOCKETS.CHAT_NAMESPACE_NAME) {
                     val message = JSONConvertor.getJSONObject(currentArg, ChatSocketModel::class.java)
                     ChatService.addMessage(message)
 
+                    // update current chat view
                     val currentRoom = TextChannelService.getCurrentChannel().name
                     if (message.roomName == currentRoom) {
                         ChatAdapterService.getChatMsgAdapter().addChatItem(message)
                     }
                 } catch (e: JSONException) {
                     printMsg("listenMessage error: ${e.message}")
+                    return@Runnable
+                }
+            })
+        }
+
+    private val listenHistory =
+        Emitter.Listener { args ->
+            fragmentActivity!!.runOnUiThread(Runnable {
+                try {
+                    val currentArg = args[0].toString()
+                    val typeToken = object : TypeToken<List<ChatSocketModel>>() {}.type
+                    val historyMessages = Gson().fromJson<List<ChatSocketModel>>(currentArg, typeToken)
+
+                    if (historyMessages.isNotEmpty()) {
+                        ChatService.addChat(historyMessages[0].roomName)
+                        ChatService.setMessages(historyMessages[0].roomName, historyMessages.toMutableSet())
+                    }
+                } catch (e: JSONException) {
+                    printMsg("listenHistory error: ${e.message}")
+                    return@Runnable
+                }
+            })
+        }
+
+    private val listenLeaveRoom =
+        Emitter.Listener { args ->
+            fragmentActivity!!.runOnUiThread(Runnable {
+                try {
+                    val currentArg = args[0].toString()
+                    printMsg("listenLeaveRoom ${currentArg}")
+//                    val message = JSONConvertor.getJSONObject(currentArg, ChatSocketModel::class.java)
+//                    ChatService.addMessage(message)
+//
+//                    val currentRoom = TextChannelService.getCurrentChannel().name
+//                    if (message.roomName == currentRoom) {
+//                        ChatAdapterService.getChatMsgAdapter().addChatItem(message)
+//                    }
+                } catch (e: JSONException) {
+                    printMsg("listenLeaveRoom error: ${e.message}")
                     return@Runnable
                 }
             })

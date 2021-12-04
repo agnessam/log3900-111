@@ -14,6 +14,25 @@ import retrofit2.Response
 class TextChannelRepository {
     private val httpClient = RetrofitInstance.HTTP
 
+    fun getTeamChannels(): MutableLiveData<DataWrapper<ArrayList<TextChannelModel.AllInfo>>> {
+        val channelListLiveData: MutableLiveData<DataWrapper<ArrayList<TextChannelModel.AllInfo>>> = MutableLiveData()
+
+        httpClient.getTeamChannels(token = "Bearer ${UserService.getToken()}").enqueue(object : Callback<ArrayList<TextChannelModel.AllInfo>> {
+            override fun onResponse(call: Call<ArrayList<TextChannelModel.AllInfo>>, response: Response<ArrayList<TextChannelModel.AllInfo>>) {
+                if (!response.isSuccessful) {
+                    channelListLiveData.value = DataWrapper(null, "An error occurred while loading getting team channels!", true)
+                    return
+                }
+                channelListLiveData.value = DataWrapper(response.body(), "", false)
+            }
+            override fun onFailure(call: Call<ArrayList<TextChannelModel.AllInfo>>, t: Throwable) {
+                channelListLiveData.value = DataWrapper(null, "Sorry, failed to get team channels!", true)
+            }
+        })
+
+        return channelListLiveData
+    }
+
     fun getTextChannelMessages(channelId: String): MutableLiveData<DataWrapper<ArrayList<ChatSocketModel>>> {
         val channelListLiveData: MutableLiveData<DataWrapper<ArrayList<ChatSocketModel>>> = MutableLiveData()
 

@@ -8,11 +8,11 @@ import com.example.colorimagemobile.utils.Constants
 object TextChannelService {
     private var hasConnectedToGeneral = false
     private lateinit var currentChannel: TextChannelModel.AllInfo
-    private var allChannels: ArrayList<TextChannelModel.AllInfo>
+    private var publicChannels: ArrayList<TextChannelModel.AllInfo>
     private var connectedChannels: ArrayList<TextChannelModel.AllInfo>
 
     init {
-        allChannels = arrayListOf()
+        publicChannels = arrayListOf()
         connectedChannels = arrayListOf()
     }
 
@@ -25,16 +25,16 @@ object TextChannelService {
     }
 
     fun createNewChannel(newChannel: TextChannelModel.AllInfo) {
-        this.allChannels.add(newChannel)
+        this.publicChannels.add(newChannel)
         this.setCurrentChannel(newChannel)
     }
 
-    fun getChannels(): List<TextChannelModel.AllInfo> {
-        return this.allChannels
+    fun getPublicChannels(): List<TextChannelModel.AllInfo> {
+        return this.publicChannels
     }
 
-    fun setChannels(allChannels: ArrayList<TextChannelModel.AllInfo>){
-        this.allChannels = allChannels
+    fun setPublicChannels(newChannels: ArrayList<TextChannelModel.AllInfo>){
+        this.publicChannels = newChannels
     }
 
     fun getCurrentChannel(): TextChannelModel.AllInfo {
@@ -43,12 +43,12 @@ object TextChannelService {
 
     fun setCurrentChannel(newChannel: TextChannelModel.AllInfo) {
         this.currentChannel = newChannel
-        addToConnectedChannels()
+        addToConnectedChannels(this.currentChannel)
     }
 
     fun setCurrentChannelByPosition(position: Int, isAllChannel: Boolean) {
-        this.currentChannel = if (isAllChannel) allChannels[position] else connectedChannels[position]
-        addToConnectedChannels()
+        this.currentChannel = if (isAllChannel) this.publicChannels[position] else connectedChannels[position]
+        addToConnectedChannels(this.currentChannel)
     }
 
     fun getConnectedChannels(): ArrayList<TextChannelModel.AllInfo> {
@@ -65,13 +65,13 @@ object TextChannelService {
     fun deleteChannel(channelToDelete: TextChannelModel.AllInfo) {
         val socketInformation = Constants.SocketRoomInformation(UserService.getUserInfo()._id, channelToDelete.name)
         ChatSocketService.leaveRoom(socketInformation)
-        allChannels.remove(channelToDelete)
+        this.publicChannels.remove(channelToDelete)
         removeFromConnectedChannels(channelToDelete)
         updateCurrentChannel()
     }
 
     fun doesChannelExists(channelName: String): Boolean {
-        val filteredChannel = allChannels.filter { channel -> channel.name == channelName }
+        val filteredChannel = this.publicChannels.filter { channel -> channel.name == channelName }
         return filteredChannel.isNotEmpty()
     }
 
@@ -85,11 +85,11 @@ object TextChannelService {
         setCurrentChannelByPosition(newPosition, false)
     }
 
-    private fun addToConnectedChannels() {
+    fun addToConnectedChannels(channel: TextChannelModel.AllInfo) {
         // add to connected only if user hasn't connected yet
-        if (!connectedChannels.contains(currentChannel)) {
-            connectedChannels.add(currentChannel)
-            ChatService.addChat(currentChannel.name)
+        if (!connectedChannels.contains(channel)) {
+            connectedChannels.add(channel)
+            ChatService.addChat(channel.name)
         }
     }
 }

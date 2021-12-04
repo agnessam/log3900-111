@@ -15,7 +15,7 @@ import kotlin.collections.HashMap
  * hasFetchedOldMsg: Boolean to check if we have already loaded previous messages or not
  * messages: its chat messages
  */
-data class ChatMessage(var hasFetchedOldMsg: Boolean, val messages: MutableSet<ChatSocketModel>)
+data class ChatMessage(var hasFetchedOldMsg: Boolean, var messages: MutableSet<ChatSocketModel>)
 
 object ChatService {
     // roomName: [messages]
@@ -28,9 +28,15 @@ object ChatService {
         }
     }
 
+    fun setMessages(roomName: String, messages: MutableSet<ChatSocketModel>) {
+        channelMessages[roomName]?.messages = messages
+    }
+
     // add message to a room
     fun addMessage(message: ChatSocketModel) {
-        channelMessages[message.roomName]!!.messages.add(message)
+        if (message._id != null) {
+            channelMessages[message.roomName]!!.messages.add(message)
+        }
     }
 
     // get messages of a specific room
@@ -64,7 +70,7 @@ object ChatService {
             message = message,
             timestamp = SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(Date()),
             author = UserService.getUserInfo().username,
-            _roomId = TextChannelService.getCurrentChannel()._id,
+            roomId = TextChannelService.getCurrentChannel()._id,
             roomName = TextChannelService.getCurrentChannel().name
         )
     }

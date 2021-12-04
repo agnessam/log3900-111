@@ -69,6 +69,10 @@ interface API {
     @GET(Constants.ENDPOINTS.TEXT_CHANNEL_PATH + "{channelId}" + "/messages")
     fun getAllTextChannelMessages(@Header("Authorization") token: String, @Path ("channelId") channelId: String): Call<ArrayList<ChatSocketModel>>
 
+    @Headers("Content-Type: application/json")
+    @GET(Constants.ENDPOINTS.TEXT_CHANNEL_PATH + "teams")
+    fun getTeamChannels(@Header("Authorization") token: String): Call<ArrayList<TextChannelModel.AllInfo>>
+
     //  TextChannel region
     @Headers("Content-Type: application/json")
     @GET(Constants.ENDPOINTS.TEXT_CHANNEL_PATH)

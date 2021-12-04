@@ -46,7 +46,6 @@ class ChatMessageBoxFragment : Fragment(R.layout.fragment_chat_message_box) {
         chatMsgEditText = myView.findViewById(R.id.chat_text_input)
         recyclerView = myView.findViewById(R.id.chat_message_recycler_view)
 
-        connectToSocket()
         updateUI()
         setListeners()
     }
@@ -64,14 +63,6 @@ class ChatMessageBoxFragment : Fragment(R.layout.fragment_chat_message_box) {
     // leave sockets here
     private fun closeSockets() {
 //        printMsg("${channel.name} left chat room")
-    }
-
-    private fun connectToSocket() {
-        ChatSocketService.connect()
-        ChatSocketService.setFragmentActivity(requireActivity())
-
-        val socketInformation = Constants.SocketRoomInformation(UserService.getUserInfo()._id, channel.name)
-        ChatSocketService.joinRoom(socketInformation)
     }
 
     private fun updateUI() {
@@ -100,6 +91,7 @@ class ChatMessageBoxFragment : Fragment(R.layout.fragment_chat_message_box) {
         // update chat messages
         val currentChat = ChatService.getChannelMessages(channel.name) as MutableSet<ChatSocketModel>
         ChatAdapterService.getChatMsgAdapter().setChat(currentChat)
+        scrollDown()
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -134,9 +126,9 @@ class ChatMessageBoxFragment : Fragment(R.layout.fragment_chat_message_box) {
         ChatService.refreshChatBox(requireActivity())
         TextChannelService.refreshChannelList()
 
-        channelRepository.deleteChannelById(currentChannel._id as String, currentChannel.name).observe(this, {
-            printToast(requireActivity(), it.message!!)
-        })
+//        channelRepository.deleteChannelById(currentChannel._id as String, currentChannel.name).observe(this, {
+//            printToast(requireActivity(), it.message!!)
+//        })
     }
 
     private fun sendChat() {
