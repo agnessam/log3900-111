@@ -41,10 +41,7 @@ export class TeamMainPageComponent implements OnInit {
   }
 
   openCreateTeamDialog(): void {
-    this.newTeamDialogRef = this.dialog.open(NewTeamComponent, {
-      width: "400px",
-      height: "350px",
-    });
+    this.newTeamDialogRef = this.dialog.open(NewTeamComponent, {});
     this.newTeamDialogRef.afterClosed().subscribe((result) => {
       if (!result) {
         return;

@@ -10,7 +10,7 @@
         placeholder="Team Name"
         formControlName="name"
       />
-      <mat-error *ngIf="this.newTeamForm.hasError('required', 'teamName')"
+      <mat-error *ngIf="this.newTeamForm.hasError('required', 'name')"
         >Team name required
       </mat-error>
     </mat-form-field>
@@ -24,6 +24,9 @@
         placeholder="Description"
         formControlName="description"
       />
+      <mat-error *ngIf="this.newTeamForm.hasError('required', 'description')"
+        >Description required
+      </mat-error>
     </mat-form-field>
   </p>
   <p>
@@ -59,9 +62,23 @@
         placeholder="Team password"
         formControlName="password"
       />
+      <mat-error *ngIf="this.newTeamForm.hasError('required', 'password')"
+        >Password cannot be empty</mat-error
+      >
     </mat-form-field>
   </p>
-  <div>
-    <button type="submit" mat-raised-button color="primary">Create team</button>
-  </div>
+
+  <mat-dialog-actions align="end">
+    <button
+      mat-raised-button
+      color="primary"
+      type="submit"
+      [disabled]="newTeamForm.invalid"
+    >
+      Create
+    </button>
+    <button mat-raised-button color="accent" type="button" (click)="onCancel()">
+      Cancel
+    </button>
+  </mat-dialog-actions>
 </form>
