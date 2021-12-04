@@ -32,11 +32,13 @@ class PrimaryColorCommand(private val objectId: String, private var primaryColor
     }
 
     private fun RectangleCommand.getPrimaryColor(): String{
+        if(rectangle.fill == "none") return "none"
         val colorInt = ColorService.rgbaToInt(rectangle.fill)
         return ColorService.intToRGBA(colorInt)
     }
 
     private fun EllipseCommand.getPrimaryColor(): String{
+        if(ellipse.fill == "none") return "none"
         val colorInt = ColorService.rgbaToInt(ellipse.fill)
         return ColorService.intToRGBA(colorInt)
     }
@@ -60,11 +62,13 @@ class PrimaryColorCommand(private val objectId: String, private var primaryColor
     }
 
     private fun EllipseCommand.setPrimaryColor(newColor: String) {
-        ellipse.fill = newColor
-        ellipse.fillOpacity = ColorService.getAlphaForDesktop(newColor)
-        fillPaint = initializePaint(newColor, ellipse.fillOpacity, Color.BLACK)
-        DrawingJsonService.updateShapeFillColor(newColor, ellipse.fillOpacity, objectId, ShapeLabel.ELLIPSE)
-        execute()
+        if(ellipse.fill != "none"){
+            ellipse.fill = newColor
+            ellipse.fillOpacity = ColorService.getAlphaForDesktop(newColor)
+            fillPaint = initializePaint(newColor, ellipse.fillOpacity, Color.BLACK)
+            DrawingJsonService.updateShapeFillColor(newColor, ellipse.fillOpacity, objectId, ShapeLabel.ELLIPSE)
+            execute()
+        }
     }
 
     override fun execute() {

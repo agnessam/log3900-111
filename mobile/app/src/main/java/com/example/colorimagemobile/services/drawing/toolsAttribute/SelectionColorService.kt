@@ -40,25 +40,31 @@ object SelectionColorService {
 
     fun setPrimaryColor(newColor: String) {
         if (SelectionService.selectedShapeIndex != -1) {
-            updatePrimaryColor(newColor)
             var selectedShapeId = DrawingObjectManager.getUuid(SelectionService.selectedShapeIndex) ?: return
             primaryColorCommand = PrimaryColorCommand(selectedShapeId, newColor)
-            primaryColorCommand!!.execute()
-            val rgb = ColorService.convertRGBAStringToRGBObject(primaryColorCommand!!.getPrimaryColor())
-            val opacity = ColorService.getAlphaForDesktop(primaryColorCommand!!.getPrimaryColor()).toFloat()
-            DrawingSocketService.sendObjectPrimaryColorChange(selectedShapeId, rgb, opacity)
+            val color = primaryColorCommand!!.getPrimaryColor()
+            if(color != "none") {
+                primaryColorCommand!!.execute()
+                val rgb = ColorService.convertRGBAStringToRGBObject(color)
+                val opacity = ColorService.getAlphaForDesktop(color).toFloat()
+                DrawingSocketService.sendObjectPrimaryColorChange(selectedShapeId, rgb, opacity)
+            }
+            updatePrimaryColor(color)
         }
     }
 
     fun setSecondaryColor(newColor: String) {
         if (SelectionService.selectedShapeIndex != -1) {
-            updateSecondaryColor(newColor)
             var selectedShapeId = DrawingObjectManager.getUuid(SelectionService.selectedShapeIndex) ?: return
             secondaryColorCommand = SecondaryColorCommand(selectedShapeId, newColor)
-            secondaryColorCommand!!.execute()
-            val rgb = ColorService.convertRGBAStringToRGBObject(newColor)
-            val opacity = ColorService.getAlphaForDesktop(newColor).toFloat()
-            DrawingSocketService.sendObjectSecondaryColorChange(selectedShapeId, rgb, opacity)
+            val color = secondaryColorCommand!!.getSecondaryColor()
+            if(color != "none") {
+                secondaryColorCommand!!.execute()
+                val rgb = ColorService.convertRGBAStringToRGBObject(color)
+                val opacity = ColorService.getAlphaForDesktop(color).toFloat()
+                DrawingSocketService.sendObjectSecondaryColorChange(selectedShapeId, rgb, opacity)
+            }
+            updateSecondaryColor(color)
         }
     }
 
