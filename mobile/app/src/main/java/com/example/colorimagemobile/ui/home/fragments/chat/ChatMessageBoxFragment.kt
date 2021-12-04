@@ -24,6 +24,7 @@ import com.example.colorimagemobile.services.socket.ChatSocketService
 import com.example.colorimagemobile.utils.CommonFun.Companion.hideKeyboard
 import com.example.colorimagemobile.utils.CommonFun.Companion.onEnterKeyPressed
 import com.example.colorimagemobile.utils.CommonFun.Companion.printToast
+import com.example.colorimagemobile.utils.Constants.Companion.GENERAL_CHANNEL_NAME
 import kotlinx.android.synthetic.main.fragment_chat_message_box.*
 import kotlinx.android.synthetic.main.fragment_edit_profile.*
 import java.time.Instant
@@ -72,7 +73,12 @@ class ChatMessageBoxFragment : Fragment(R.layout.fragment_chat_message_box) {
 
     private fun updateUI() {
         myView.findViewById<TextView>(R.id.chat_username).text = channel.name
-        myView.findViewById<Button>(R.id.channel_leave_btn).visibility = View.GONE
+
+        if (channel.name == GENERAL_CHANNEL_NAME) {
+            myView.findViewById<Button>(R.id.channel_leave_btn).visibility = View.GONE
+            myView.findViewById<Button>(R.id.channel_delete_btn).visibility = View.GONE
+           // hideLoadPreviousBtn()
+        }
 
         // show delete button if I created the channel
         if (channel.ownerId == UserService.getUserInfo()._id) {
@@ -102,6 +108,7 @@ class ChatMessageBoxFragment : Fragment(R.layout.fragment_chat_message_box) {
 
     private fun filterChatMessage(): MutableSet<ChatSocketModel>? {
         if (!ChatService.containsChannel(channel.name)) return mutableSetOf()
+        if (UserService.getUserInfo().lastLogin == null) ChatService.getChannelMessages(channel.name)?.toMutableSet()
 
         val messageObj = ChatService.getChannelMessageObject(channel.name)
         if (!messageObj.hasFetchedOldMsg) {
@@ -115,7 +122,7 @@ class ChatMessageBoxFragment : Fragment(R.layout.fragment_chat_message_box) {
                 hideLoadPreviousBtn()
             }
 
-            return ChatService.getChannelMessages(channel.name)?.filterIndexed { index, _ -> index > loginTimeMsg }?.toMutableSet()
+            if (loginTimeMsg == -1) return mutableSetOf() else  ChatService.getChannelMessages(channel.name)?.filterIndexed { index, _ -> index > loginTimeMsg }?.toMutableSet()
         }
 
         return ChatService.getChannelMessages(channel.name)?.toMutableSet()
