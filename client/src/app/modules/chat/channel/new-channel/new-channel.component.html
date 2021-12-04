@@ -9,6 +9,7 @@
         type="text"
         matInput
         placeholder="Enter a channel name"
+        [errorStateMatcher]="matcher"
         formControlName="name"
       />
       <mat-error
@@ -25,21 +26,22 @@
       <mat-error *ngIf="this.newDrawingForm.hasError('maxlength', 'name')"
         >Channel name cannot contain more than 12 characters</mat-error
       >
+      <mat-error *ngIf="this.newDrawingForm.hasError('duplicateNameError')"
+        >A channel with that name already exists</mat-error
+      >
     </mat-form-field>
   </p>
-  <div>
-    <mat-dialog-actions align="end">
-      <button
-        type="submit"
-        mat-raised-button
-        color="primary"
-        [disabled]="newDrawingForm.invalid"
-      >
-        Create
-      </button>
-      <button mat-raised-button color="accent" (click)="onCancel()">
-        Cancel
-      </button>
-    </mat-dialog-actions>
-  </div>
+  <mat-dialog-actions align="end">
+    <button
+      type="submit"
+      mat-raised-button
+      color="primary"
+      [disabled]="newDrawingForm.invalid"
+    >
+      Create
+    </button>
+    <button mat-raised-button color="accent" type="button" (click)="onCancel()">
+      Cancel
+    </button>
+  </mat-dialog-actions>
 </form>

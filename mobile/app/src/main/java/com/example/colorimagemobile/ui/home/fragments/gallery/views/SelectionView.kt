@@ -112,8 +112,8 @@ class SelectionView(context: Context?): CanvasView(context) {
                 val id = DrawingObjectManager.getUuid(selectedShapeIndex) ?: return
                 this.translateData = TranslateData(
                     id = id,
-                    deltaX = 0,
-                    deltaY = 0
+                    deltaX = 0f,
+                    deltaY = 0f
                 )
                 DrawingSocketService.sendTransformSelectionCommand(translateData!!, "Translation")
                 break
@@ -146,12 +146,14 @@ class SelectionView(context: Context?): CanvasView(context) {
             val id = DrawingObjectManager.getUuid(selectedShapeIndex) ?: return
             this.translateData = TranslateData(
                 id = id,
-                deltaX = (translateData?.deltaX ?: 0) + dx.toInt(),
-                deltaY = (translateData?.deltaY ?: 0) + dy.toInt()
+                deltaX = (translateData?.deltaX ?: 0f) + dx,
+                deltaY = (translateData?.deltaY ?: 0f) + dy
             )
             DrawingSocketService.sendTransformSelectionCommand(translateData!!, "Translation")
-            translationCommand = TranslateCommand(translateData!!)
-            translationCommand!!.setTransformation(dx.toInt(), dy.toInt())
+            if(translationCommand == null){
+                translationCommand = TranslateCommand(translateData!!)
+            }
+            translationCommand!!.setTransformation(this.translateData!!.deltaX, this.translateData!!.deltaY)
             translationCommand!!.execute()
 
             SelectionService.resetBoundingBox()
@@ -160,5 +162,6 @@ class SelectionView(context: Context?): CanvasView(context) {
 
     override fun onTouchUp() {
         ResizeSelectionService.onTouchUp()
+        translationCommand = null
     }
 }

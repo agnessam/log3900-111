@@ -168,4 +168,9 @@ object SynchronisationService {
         val secondaryColorCommand = CommandFactory.createCommand("SecondaryColor", colorData)
         secondaryColorCommand?.execute()
     }
+
+    fun setSelectionLineWidth(lineWidthData: LineWidthData) {
+        val lineWidthCommand = CommandFactory.createCommand("LineWidth", lineWidthData)
+        lineWidthCommand?.execute()
+    }
 }

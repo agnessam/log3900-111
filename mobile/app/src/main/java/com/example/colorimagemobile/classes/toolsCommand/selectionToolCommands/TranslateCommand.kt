@@ -8,15 +8,18 @@ import com.example.colorimagemobile.models.TranslateData
 import com.example.colorimagemobile.services.drawing.*
 
 class TranslateCommand(translateData: TranslateData): ICommand {
-    private var deltaX : Int = 0
-    private var deltaY: Int = 0
+    private var deltaX : Float = 0f
+    private var deltaY: Float = 0f
 
     private var commandToTranslate: ICommand? = null
 
     private var transformationLog: String = ""
     private var id: String
 
-    val shapeLabel: ShapeLabel?
+    private var resizeFillPath: Path? = null
+    private var resizeBorderPath: Path? = null
+
+    private val shapeLabel: ShapeLabel?
 
     override fun update(drawingCommand: Any) {
         setTransformation((drawingCommand as TranslateData).deltaX, drawingCommand.deltaY)
@@ -24,6 +27,7 @@ class TranslateCommand(translateData: TranslateData): ICommand {
 
     init{
         commandToTranslate = DrawingObjectManager.getCommand(translateData.id)
+        resetPathWithShapePath()
         shapeLabel = when(commandToTranslate){
             is PencilCommand -> ShapeLabel.POLYLINE
             is RectangleCommand -> ShapeLabel.RECTANGLE
@@ -39,14 +43,26 @@ class TranslateCommand(translateData: TranslateData): ICommand {
         transformationLog = TransformationManager.previousTransformation[id]!!
     }
 
+    private fun resetPathWithShapePath() {
+        when(commandToTranslate) {
+            is PencilCommand -> (commandToTranslate as PencilCommand).getPath()
+            is EllipseCommand -> (commandToTranslate as EllipseCommand).getPaths()
+            is RectangleCommand -> (commandToTranslate as RectangleCommand).getPaths()
+            else -> null
+        }
+    }
+
     private fun PencilCommand.translate() {
+        path = Path(resizeBorderPath!!)
         val translationMatrix = Matrix()
-        translationMatrix.setTranslate(deltaX.toFloat(), deltaY.toFloat())
+        translationMatrix.setTranslate(deltaX, deltaY)
         path.transform(translationMatrix)
         execute()
     }
 
     private fun RectangleCommand.translate() {
+        fillPath = Path(resizeFillPath!!)
+        borderPath = Path(resizeBorderPath!!)
         val translationMatrix = Matrix()
         translationMatrix.setTranslate(deltaX.toFloat(), deltaY.toFloat())
         borderPath.transform(translationMatrix)
@@ -55,6 +71,8 @@ class TranslateCommand(translateData: TranslateData): ICommand {
     }
 
     private fun EllipseCommand.translate() {
+        fillPath = Path(resizeFillPath!!)
+        borderPath = Path(resizeBorderPath!!)
         val translationMatrix = Matrix()
         translationMatrix.setTranslate(deltaX.toFloat(), deltaY.toFloat())
         borderPath.transform(translationMatrix)
@@ -62,7 +80,7 @@ class TranslateCommand(translateData: TranslateData): ICommand {
         execute()
     }
 
-    fun setTransformation(x: Int, y: Int) {
+    fun setTransformation(x: Float, y: Float) {
         this.deltaX = x
         this.deltaY = y
     }
@@ -75,9 +93,23 @@ class TranslateCommand(translateData: TranslateData): ICommand {
             else -> {}
         }
         CanvasUpdateService.invalidate()
-
         if(shapeLabel != null){
             TransformationManager.saveTranslateTransformation(deltaX, deltaY, id, transformationLog, shapeLabel)
         }
     }
+
+    private fun PencilCommand.getPath(){
+        resizeBorderPath = path
+    }
+
+    private fun EllipseCommand.getPaths(){
+        resizeFillPath = fillPath
+        resizeBorderPath = borderPath
+    }
+
+    private fun RectangleCommand.getPaths(){
+        resizeFillPath = fillPath
+        resizeBorderPath = borderPath
+    }
+
 }

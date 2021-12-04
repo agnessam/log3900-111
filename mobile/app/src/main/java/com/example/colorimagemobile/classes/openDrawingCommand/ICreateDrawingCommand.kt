@@ -60,9 +60,9 @@ interface ICreateDrawingCommand {
 
     private fun parseTranslateCommand(transformString: String, objectId: String):TranslateCommand {
         val (xTranslate, yTranslate) = getXAndYTranslate(transformString)
-        var translateData = TranslateData(objectId, xTranslate.toInt(), yTranslate.toInt())
+        var translateData = TranslateData(objectId, xTranslate, yTranslate)
         var translateCommand = TranslateCommand(translateData)
-        translateCommand.setTransformation(xTranslate.toInt(), yTranslate.toInt())
+        translateCommand.setTransformation(xTranslate, yTranslate)
         return translateCommand
     }
 

@@ -3,6 +3,7 @@ package com.example.colorimagemobile.repositories
 import androidx.lifecycle.MutableLiveData
 import com.example.colorimagemobile.models.ChatSocketModel
 import com.example.colorimagemobile.models.DataWrapper
+import com.example.colorimagemobile.models.SearchModel
 import com.example.colorimagemobile.models.TextChannelModel
 import com.example.colorimagemobile.services.RetrofitInstance
 import com.example.colorimagemobile.services.users.UserService
@@ -102,5 +103,24 @@ class TextChannelRepository {
         })
 
         return deleteChannelData
+    }
+
+    fun searchChannels(query: String): MutableLiveData<DataWrapper<ArrayList<TextChannelModel.AllInfo>>> {
+        val channelsLiveData: MutableLiveData<DataWrapper<ArrayList<TextChannelModel.AllInfo>>> = MutableLiveData()
+
+        httpClient.searchChannels(token = "Bearer ${UserService.getToken()}", query).enqueue(object : Callback<ArrayList<TextChannelModel.AllInfo>> {
+            override fun onResponse(call: Call<ArrayList<TextChannelModel.AllInfo>>, response: Response<ArrayList<TextChannelModel.AllInfo>>) {
+                if (!response.isSuccessful) {
+                    channelsLiveData.value = DataWrapper(null, "An error occurred while fetching channels!", true)
+                    return
+                }
+                channelsLiveData.value = DataWrapper(response.body(), "", false)
+            }
+            override fun onFailure(call: Call<ArrayList<TextChannelModel.AllInfo>>, t: Throwable) {
+                channelsLiveData.value = DataWrapper(null, "Sorry, failed to get fetch channels!", true)
+            }
+        })
+
+        return channelsLiveData
     }
 }

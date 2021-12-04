@@ -10,7 +10,7 @@ import { DrawingSocketService } from "../../../synchronisation/sockets/drawing-s
 
 const DOUBLING_SCALE_MODIFIER = 2;
 const SCALE_POSITIONNER_MODIFIER = 1;
-
+const NAV_BAR_Y_OFFSET = 63.98;
 @Injectable({
   providedIn: "root",
 })
@@ -143,7 +143,7 @@ export class ResizeSelectionService {
         scaleReturn.xScale,
         scaleReturn.yScale,
         scaleReturn.xTranslate,
-        scaleReturn.yTranslate - 64 // HAHAHAHHAHAHHAHAHAHAHAHAHHAHAHAHAHAHHAHAHHAHAHAHHAHAH
+        scaleReturn.yTranslate
       );
 
       this.resizeCommand.execute();
@@ -176,7 +176,8 @@ export class ResizeSelectionService {
 
     const newXTranslate =
       this.oldRectBox.left + this.oldRectBox.width - this.xFactor;
-    const newYTranslate = this.oldRectBox.top + this.oldRectBox.height;
+    const newYTranslate =
+      this.oldRectBox.top + this.oldRectBox.height - NAV_BAR_Y_OFFSET;
 
     this.xInverser = -1;
     this.yInverser = -1;
@@ -193,7 +194,8 @@ export class ResizeSelectionService {
     const newYScale =
       (this.oldRectBox.height - this.delta.y) / this.oldRectBox.height;
 
-    const newYTranslate = this.oldRectBox.top + this.oldRectBox.height;
+    const newYTranslate =
+      this.oldRectBox.top + this.oldRectBox.height - NAV_BAR_Y_OFFSET;
 
     this.yInverser = -1;
     return {
@@ -210,7 +212,8 @@ export class ResizeSelectionService {
     let newYScale =
       (this.oldRectBox.height - this.delta.y) / this.oldRectBox.height;
 
-    const newYTranslate = this.oldRectBox.top + this.oldRectBox.height;
+    const newYTranslate =
+      this.oldRectBox.top + this.oldRectBox.height - NAV_BAR_Y_OFFSET;
 
     this.xInverser = 1;
     this.yInverser = -1;
@@ -252,7 +255,7 @@ export class ResizeSelectionService {
       xScale: newXScale,
       yScale: newYScale,
       xTranslate: oldXTranslate,
-      yTranslate: oldYTranslate,
+      yTranslate: oldYTranslate - NAV_BAR_Y_OFFSET,
     };
   }
 
@@ -264,7 +267,7 @@ export class ResizeSelectionService {
       xScale: scale.xScale,
       yScale: newYScale,
       xTranslate: scale.xTranslate,
-      yTranslate: scale.yTranslate,
+      yTranslate: scale.yTranslate - NAV_BAR_Y_OFFSET,
     };
   }
 
@@ -284,7 +287,7 @@ export class ResizeSelectionService {
       xScale: newXScale,
       yScale: newYScale,
       xTranslate: newXTranslate,
-      yTranslate: oldYTranslate,
+      yTranslate: oldYTranslate - NAV_BAR_Y_OFFSET,
     };
   }
 

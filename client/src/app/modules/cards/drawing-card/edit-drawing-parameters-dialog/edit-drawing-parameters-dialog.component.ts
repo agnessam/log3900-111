@@ -1,8 +1,15 @@
 import { Component, Inject, OnInit } from "@angular/core";
-import { FormControl, FormGroup } from "@angular/forms";
+import {
+  AbstractControl,
+  FormControl,
+  FormGroup,
+  ValidationErrors,
+  ValidatorFn,
+} from "@angular/forms";
 import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material/dialog";
 import { DrawingHttpClientService } from "src/app/modules/backend-communication";
 import { OptionalDrawingParameters } from "src/app/modules/new-drawing/optional-drawing-parameters";
+import { FormErrorStateMatcher } from "src/app/modules/settings/settings-container/user-overview/error-state-matcher/ErrorStateMatcher";
 import { Drawing } from "src/app/shared";
 
 @Component({
@@ -14,6 +21,8 @@ export class EditDrawingParametersDialogComponent implements OnInit {
   privacyLevel: string;
   drawingForm: FormGroup;
 
+  matcher = new FormErrorStateMatcher();
+
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: { drawing: Drawing },
     private dialogRef: MatDialogRef<EditDrawingParametersDialogComponent>,
@@ -23,11 +32,14 @@ export class EditDrawingParametersDialogComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.drawingForm = new FormGroup({
-      name: new FormControl(this.data.drawing.name),
-      privacyLevel: new FormControl(this.data.drawing.privacyLevel),
-      password: new FormControl(this.data.drawing.password),
-    });
+    this.drawingForm = new FormGroup(
+      {
+        name: new FormControl(this.data.drawing.name),
+        privacyLevel: new FormControl(this.data.drawing.privacyLevel),
+        password: new FormControl(this.data.drawing.password),
+      },
+      { validators: this.NonNullPasswordIfProtected }
+    );
 
     if (this.drawingForm.get("privacyLevel")?.value != "protected") {
       this.drawingForm.get("password")?.disable();
@@ -58,4 +70,16 @@ export class EditDrawingParametersDialogComponent implements OnInit {
     this.dialogRef.close();
     this.drawingForm.reset();
   }
+
+  NonNullPasswordIfProtected: ValidatorFn | null = (
+    group: AbstractControl
+  ): ValidationErrors | null => {
+    let privacy = group.get("privacyLevel")?.value;
+    if (privacy == "protected") {
+      if (group.get("password")?.value == "") {
+        return { nullPassword: true };
+      }
+    }
+    return null;
+  };
 }

@@ -93,7 +93,7 @@ export class TeamProfileComponent implements OnInit {
     );
     this.openConfirmJoinDialogRef.afterClosed().subscribe((team) => {
       if (!team) return;
-      this.team = team;
+      this.team.members = team.members;
       this.changeDetectorRef.detectChanges();
     });
   }
@@ -106,7 +106,7 @@ export class TeamProfileComponent implements OnInit {
 
     this.openConfirmDeleteDialogRef.afterClosed().subscribe(() => {
       this.textChannelService.emitDeleteTeamChannel(this.team.name);
-    })
+    });
   }
 
   openConfirmLeaveDialog() {
@@ -118,7 +118,7 @@ export class TeamProfileComponent implements OnInit {
       if (!team) {
         return;
       }
-      this.team = team;
+      this.team.members = team.members;
       this.chatSocketService.leaveRoom(team.name);
       this.changeDetectorRef.detectChanges();
     });
