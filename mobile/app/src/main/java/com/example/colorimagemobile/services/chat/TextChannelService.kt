@@ -53,6 +53,10 @@ object TextChannelService {
         addToConnectedChannels(this.currentChannel)
     }
 
+    fun isConnectedChannelInitialized(): Boolean {
+        return this::currentChannel.isInitialized
+    }
+
     fun setCurrentChannelByPosition(position: Int, isAllChannel: Boolean) {
         this.currentChannel = if (isAllChannel) this.publicChannels[position] else connectedChannels[position]
         addToConnectedChannels(this.currentChannel)

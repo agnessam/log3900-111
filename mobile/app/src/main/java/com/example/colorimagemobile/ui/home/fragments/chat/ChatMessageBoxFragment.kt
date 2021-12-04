@@ -5,10 +5,7 @@ import android.os.Bundle
 import android.view.MotionEvent
 import androidx.fragment.app.Fragment
 import android.view.View
-import android.widget.Button
-import android.widget.EditText
-import android.widget.LinearLayout
-import android.widget.TextView
+import android.widget.*
 import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -44,10 +41,16 @@ class ChatMessageBoxFragment : Fragment(R.layout.fragment_chat_message_box) {
         super.onViewCreated(view, savedInstanceState)
 
         myView = view
-        channel = TextChannelService.getCurrentChannel()
         chatMsgEditText = myView.findViewById(R.id.chat_text_input)
         recyclerView = myView.findViewById(R.id.chat_message_recycler_view)
 
+        if (!TextChannelService.isConnectedChannelInitialized()) {
+            myView.findViewById<RelativeLayout>(R.id.chat_box_container).visibility = View.GONE
+            return
+        }
+
+        myView.findViewById<RelativeLayout>(R.id.chat_box_container).visibility = View.VISIBLE
+        channel = TextChannelService.getCurrentChannel()
         updateUI()
         setListeners()
     }
