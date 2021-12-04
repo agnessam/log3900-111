@@ -1,24 +1,21 @@
-.inputDiv {
-  display: flex;
-  flex-direction: row;
-  padding-bottom: 15px;
-  :nth-child(1){
-    width: 80%;
-  }
-  :nth-child(2){
-    width:20%;
-  }
-}
-
 .postbtn{
-  background-color: transparent;
-  color: #DA7E70;
-  border:none
+  background-color: #DA7E70;
+  color: white;
+  border:none;
+  width: 100px;
+  border-radius: 10px;
 }
 
 .postbtn:hover{
   cursor: pointer;
-  color: #924642;
+  background-color: #924642;
+}
+
+.confirm{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 20px;
 }
 
 #postName{
