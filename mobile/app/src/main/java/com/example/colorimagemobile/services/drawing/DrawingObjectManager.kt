@@ -10,12 +10,17 @@ import com.example.colorimagemobile.classes.openDrawingCommand.CreatePolylineCom
 import com.example.colorimagemobile.classes.openDrawingCommand.CreateRectangleCommand
 import com.example.colorimagemobile.classes.xml_json.SVGBuilder
 import com.example.colorimagemobile.classes.xml_json.SVGParser
+import com.example.colorimagemobile.classes.xml_json.shapes
 import com.example.colorimagemobile.interfaces.ICommand
 import com.example.colorimagemobile.models.CustomSVG
+import com.example.colorimagemobile.models.Ellipse
+import com.example.colorimagemobile.models.Polyline
+import com.example.colorimagemobile.models.Rectangle
 import com.example.colorimagemobile.services.drawing.toolsAttribute.ColorService
 import com.github.underscore.lodash.U
 import org.json.JSONObject
 import org.json.XML
+import java.lang.String.join
 
 object DrawingObjectManager {
     private var layerDrawable: LayerDrawable = LayerDrawable(arrayOf<Drawable>())
@@ -91,15 +96,24 @@ object DrawingObjectManager {
         val backgroundColor = svgParser.getBackgroundColor(svgObject.style)
         CanvasService.updateCanvasColor(ColorService.rgbaToInt(backgroundColor))
 
-        // 3. Create layerObjects
-        val createPolylineCommand = CreatePolylineCommand(svgObject.polyline)
-        createPolylineCommand.execute()
-
-        val createRectangleCommand = CreateRectangleCommand(svgObject.rect)
-        createRectangleCommand.execute()
-
-        val createEllipseCommand = CreateEllipseCommand(svgObject.ellipse)
-        createEllipseCommand.execute()
+        if(svgObject.shapes != null) {
+            for(shape in svgObject.shapes!!){
+                when(shape){
+                    is Polyline -> {
+                        val createPolylineCommand = CreatePolylineCommand(shape)
+                        createPolylineCommand.execute()
+                    }
+                    is Rectangle -> {
+                        val createRectangleCommand = CreateRectangleCommand(shape)
+                        createRectangleCommand.execute()
+                    }
+                    is Ellipse -> {
+                        val createEllipseCommand = CreateEllipseCommand(shape)
+                        createEllipseCommand.execute()
+                    }
+                }
+            }
+        }
 
         // 4. store our "json" object containing every shapes
         DrawingJsonService.setSVGObject(svgObject)
@@ -114,59 +128,98 @@ object DrawingObjectManager {
         rootSVG.addAttr("width", svgObject.width)
         rootSVG.addAttr("height", svgObject.height)
         rootSVG.addAttr("style", svgObject.style)
+        var rootSvgString = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"${svgObject.width}\" height=\"${svgObject.height}\" style=\"${svgObject.style}\">"
 
-        // create svg-xml objects based on shapes and attributes
-        if (!svgObject.polyline.isNullOrEmpty()) {
+        if (!svgObject.shapes.isNullOrEmpty()) {
+
             val polylineArrayBuilder = U.arrayBuilder()
-            svgObject.polyline?.forEach { pencil ->
-                if (pencil.id == null || pencil.id == "") return@forEach
-                polylineArrayBuilder.add(U.objectBuilder()
-                    .add("-id", pencil.id)
-                    .add("-name", pencil.name)
-                    .add("-points", pencil.points)
-                    .add("-style", pencil.style)
-                    .add("-transform", pencil.transform))
+            val rectArrayBuilder = U.arrayBuilder()
+            val ellipseArrayBuilder = U.arrayBuilder()
+
+            svgObject.shapes!!.forEach{ shape ->
+                if (shape.id == null || shape.id == "") return@forEach
+                when(shape){
+                    is Polyline -> {
+                        // to remove
+                        polylineArrayBuilder.add(U.objectBuilder()
+                            .add("-id", shape.id)
+                            .add("-name", shape.name)
+                            .add("-points", shape.points)
+                            .add("-style", shape.style)
+                            .add("-transform", shape.transform))
+
+                        val propertyValuePairs: ArrayList<Pair<String, String>> = arrayListOf(
+                            Pair("id", shape.id),
+                            Pair("name", shape.name),
+                            Pair("points", shape.points),
+                            Pair("style", shape.style),
+                            Pair("transform", shape.transform)
+                        )
+                        val propertiesJoinString = propertyValuePairs.joinToString(separator = " ") { it -> " ${it.first}=\"${it.second}\"" }
+                        rootSvgString += "<polyline $propertiesJoinString ></polyline>"
+                    }
+                    is Rectangle -> {
+                        // to remove
+                        rectArrayBuilder.add(U.objectBuilder()
+                            .add("-id", shape.id)
+                            .add("-name", shape.name)
+                            .add("-x", shape.x)
+                            .add("-y", shape.y)
+                            .add("-width", shape.width)
+                            .add("-height", shape.height)
+                            .add("-style", shape.style)
+                            .add("-transform", shape.transform))
+
+                        val propertyValuePairs: ArrayList<Pair<String, String>> = arrayListOf(
+                            Pair("id", shape.id),
+                            Pair("name", shape.name),
+                            Pair("x", shape.x),
+                            Pair("y", shape.y),
+                            Pair("width", shape.width),
+                            Pair("height", shape.height),
+                            Pair("style", shape.style),
+                            Pair("transform", shape.transform)
+                        )
+                        val propertiesJoinString = propertyValuePairs.joinToString(separator = " ") { it -> "${it.first}=\"${it.second}\"" }
+                        rootSvgString += "<rect $propertiesJoinString ></rect>"
+                    }
+                    is Ellipse -> {
+                        // to remove
+                        ellipseArrayBuilder.add(U.objectBuilder()
+                            .add("-id", shape.id)
+                            .add("-name", shape.name)
+                            .add("-cx", shape.cx)
+                            .add("-cy", shape.cy)
+                            .add("-rx", shape.rx)
+                            .add("-ry", shape.ry)
+                            .add("-width", shape.width)
+                            .add("-height", shape.height)
+                            .add("-style", shape.style)
+                            .add("-transform", shape.transform))
+
+                        val propertyValuePairs: ArrayList<Pair<String, String>> = arrayListOf(
+                            Pair("id", shape.id),
+                            Pair("name", shape.name),
+                            Pair("cx", shape.cx),
+                            Pair("cy", shape.cy),
+                            Pair("rx", shape.rx),
+                            Pair("ry", shape.ry),
+                            Pair("width", shape.width),
+                            Pair("height", shape.height),
+                            Pair("style", shape.style),
+                            Pair("transform", shape.transform)
+                        )
+                        val propertiesJoinString = propertyValuePairs.joinToString(separator = " ") { it -> " ${it.first}=\"${it.second}\"" }
+                        rootSvgString += "<ellipse $propertiesJoinString ></ellipse>"
+                    }
+                }
             }
 
             rootSVG.addArrayAttr("polyline", polylineArrayBuilder)
-        }
-
-        if (!svgObject.rect.isNullOrEmpty()) {
-            val rectArrayBuilder = U.arrayBuilder()
-            svgObject.rect?.forEach { rect ->
-                if (rect.id == null || rect.id == "") return@forEach
-                rectArrayBuilder.add(U.objectBuilder()
-                    .add("-id", rect.id)
-                    .add("-name", rect.name)
-                    .add("-x", rect.x)
-                    .add("-y", rect.y)
-                    .add("-width", rect.width)
-                    .add("-height", rect.height)
-                    .add("-style", rect.style)
-                    .add("-transform", rect.transform))
-            }
             rootSVG.addArrayAttr("rect", rectArrayBuilder)
-        }
-
-        if (!svgObject.ellipse.isNullOrEmpty()) {
-            val ellipseArrayBuilder = U.arrayBuilder()
-            svgObject.ellipse?.forEach { ellipse ->
-                if (ellipse.id == null || ellipse.id == "") return@forEach
-                ellipseArrayBuilder.add(U.objectBuilder()
-                    .add("-id", ellipse.id)
-                    .add("-name", ellipse.name)
-                    .add("-cx", ellipse.cx)
-                    .add("-cy", ellipse.cy)
-                    .add("-rx", ellipse.rx)
-                    .add("-ry", ellipse.ry)
-                    .add("-width", ellipse.width)
-                    .add("-height", ellipse.height)
-                    .add("-style", ellipse.style)
-                    .add("-transform", ellipse.transform))
-            }
             rootSVG.addArrayAttr("ellipse", ellipseArrayBuilder)
         }
-
+        rootSvgString += "</svg>"
         return ImageConvertor.XMLToBase64(rootSVG.getXML())
     }
 }
