@@ -1,8 +1,31 @@
 import { Component, OnInit, ViewEncapsulation } from "@angular/core";
-import { FormControl, FormGroup, Validators } from "@angular/forms";
+import {
+  AbstractControl,
+  FormControl,
+  FormGroup,
+  FormGroupDirective,
+  NgForm,
+  ValidationErrors,
+  ValidatorFn,
+  Validators,
+} from "@angular/forms";
+import { ErrorStateMatcher } from "@angular/material/core";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { Router } from "@angular/router";
 import { AuthenticationService } from "../services/authentication/authentication.service";
+
+export class RegisterErrorStateMatcher implements ErrorStateMatcher {
+  isErrorState(
+    control: FormControl | null,
+    form: FormGroupDirective | NgForm | null
+  ): boolean {
+    const invalidCtrl = !!(
+      (control?.invalid && control?.touched) ||
+      (control?.parent?.invalid && control?.touched)
+    );
+    return invalidCtrl;
+  }
+}
 
 @Component({
   selector: "app-register",
@@ -12,6 +35,7 @@ import { AuthenticationService } from "../services/authentication/authentication
 })
 export class RegisterComponent implements OnInit {
   userRegistration: FormGroup;
+  matcher = new RegisterErrorStateMatcher();
 
   constructor(
     private authenticationService: AuthenticationService,
@@ -20,24 +44,27 @@ export class RegisterComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.userRegistration = new FormGroup({
-      username: new FormControl("", [
-        Validators.required,
-        Validators.minLength(4),
-        Validators.maxLength(12),
-      ]),
-      password: new FormControl("", [
-        Validators.required,
-        Validators.minLength(8),
-      ]),
-      confirmPassword: new FormControl("", Validators.required),
-      email: new FormControl("", [
-        Validators.required,
-        Validators.pattern("^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$"),
-      ]),
-      firstName: new FormControl("", [Validators.required]),
-      lastName: new FormControl("", [Validators.required]),
-    });
+    this.userRegistration = new FormGroup(
+      {
+        username: new FormControl("", [
+          Validators.required,
+          Validators.minLength(4),
+          Validators.maxLength(12),
+        ]),
+        password: new FormControl("", [
+          Validators.required,
+          Validators.minLength(8),
+        ]),
+        confirmPassword: new FormControl("", [Validators.required]),
+        email: new FormControl("", [
+          Validators.required,
+          Validators.pattern("^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$"),
+        ]),
+        firstName: new FormControl("", [Validators.required]),
+        lastName: new FormControl("", [Validators.required]),
+      },
+      { validators: this.checkPasswords }
+    );
   }
 
   onSubmit(): void {
@@ -67,4 +94,12 @@ export class RegisterComponent implements OnInit {
       duration: 3000,
     });
   }
+
+  checkPasswords: ValidatorFn = (
+    group: AbstractControl
+  ): ValidationErrors | null => {
+    let newPassword = group.get("password")?.value;
+    let confirmPassword = group.get("confirmPassword")?.value;
+    return newPassword === confirmPassword ? null : { notSame: true };
+  };
 }
