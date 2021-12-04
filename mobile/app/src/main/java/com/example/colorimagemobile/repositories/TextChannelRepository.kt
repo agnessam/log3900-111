@@ -141,4 +141,25 @@ class TextChannelRepository {
 
         return deleteChannelData
     }
+
+    fun deleteMessages(id: String): MutableLiveData<DataWrapper<Any>> {
+        val deleteChannelData: MutableLiveData<DataWrapper<Any>> = MutableLiveData()
+
+        httpClient.deleteMessages(token = "Bearer ${UserService.getToken()}", id).enqueue(object : Callback<Any> {
+            override fun onResponse(call: Call<Any>, response: Response<Any>) {
+                if (!response.isSuccessful) {
+                    deleteChannelData.value = DataWrapper(null, "An error occurred while deleting channel's messages!", true)
+                    return
+                }
+
+                // channel successfully delete
+                deleteChannelData.value = DataWrapper(response.body(), null, false)
+            }
+            override fun onFailure(call: Call<Any>, t: Throwable) {
+                deleteChannelData.value = DataWrapper(null, "Sorry, failed to delete channel's messages!", true)
+            }
+        })
+
+        return deleteChannelData
+    }
 }

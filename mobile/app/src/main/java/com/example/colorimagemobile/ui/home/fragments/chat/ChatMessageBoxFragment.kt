@@ -69,9 +69,8 @@ class ChatMessageBoxFragment : Fragment(R.layout.fragment_chat_message_box) {
         myView.findViewById<TextView>(R.id.chat_username).text = channel.name
 
         // remove leaveRoom button for General
-        if (channel.name == GENERAL_CHANNEL_NAME) {
+        if (!channel.isPrivate) {
             myView.findViewById<Button>(R.id.channel_leave_btn).visibility = View.GONE
-            hideLoadPreviousBtn()
         }
 
         // hide Load Previous Messages button if we have already loaded old messages
@@ -119,16 +118,17 @@ class ChatMessageBoxFragment : Fragment(R.layout.fragment_chat_message_box) {
     }
 
     private fun deleteChannel() {
-        val channelRepository = TextChannelRepository()
         val currentChannel = TextChannelService.getCurrentChannel()
 
         TextChannelService.deleteChannel(currentChannel)
         ChatService.refreshChatBox(requireActivity())
         TextChannelService.refreshChannelList()
 
-//        channelRepository.deleteChannelById(currentChannel._id as String, currentChannel.name).observe(this, {
-//            printToast(requireActivity(), it.message!!)
-//        })
+        TextChannelRepository().deleteChannelById(currentChannel._id as String, currentChannel.name).observe(context as LifecycleOwner, {
+            printToast(requireActivity(), it.message!!)
+        })
+
+        TextChannelRepository().deleteMessages(currentChannel._id!!).observe(context as LifecycleOwner, { })
     }
 
     private fun sendChat() {

@@ -90,6 +90,10 @@ interface API {
     @DELETE(Constants.ENDPOINTS.TEXT_CHANNEL_PATH + "{channelId}")
     fun deleteChannelById(@Header("Authorization")token: String,@Path ("channelId") channelId: String): Call<TextChannelModel.AllInfo>
 
+    @Headers("Content-Type: application/json")
+    @DELETE(Constants.ENDPOINTS.TEXT_CHANNEL_PATH + "{channelId}/messages")
+    fun deleteMessages(@Header("Authorization")token: String,@Path ("channelId") channelId: String): Call<Any>
+
     // region message
     @Headers("Content-Type: application/json")
     @GET(Constants.ENDPOINTS.MESSAGES_PATH)
