@@ -68,19 +68,20 @@ class ChatMessageBoxFragment : Fragment(R.layout.fragment_chat_message_box) {
     private fun updateUI() {
         myView.findViewById<TextView>(R.id.chat_username).text = channel.name
 
+        // show delete button if I created the channel
+        if (channel.ownerId == UserService.getUserInfo()._id) {
+            myView.findViewById<Button>(R.id.channel_delete_btn).visibility = View.VISIBLE
+        }
+
         // remove leaveRoom button for General
-        if (!channel.isPrivate) {
+        if (channel.isPrivate) {
             myView.findViewById<Button>(R.id.channel_leave_btn).visibility = View.GONE
+            myView.findViewById<Button>(R.id.channel_delete_btn).visibility = View.GONE
         }
 
         // hide Load Previous Messages button if we have already loaded old messages
         if (ChatService.shouldHideLoadPreviousBtn(channel.name)) {
             hideLoadPreviousBtn()
-        }
-
-        // show delete button if I created the channel
-        if (channel.ownerId == UserService.getUserInfo()._id) {
-            myView.findViewById<Button>(R.id.channel_delete_btn).visibility = View.VISIBLE
         }
 
         // set up Recycler View
