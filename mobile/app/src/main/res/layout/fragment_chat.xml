@@ -84,7 +84,7 @@
                 
                 <SearchView
                     android:title="Search"
-                    android:id="@+id/searchIcon"
+                    android:id="@+id/searchChannelsIcon"
                     app:actionViewClass="android.widget.SearchView"
                     android:layout_height="wrap_content"
                     android:layout_width="wrap_content"/>

@@ -31,9 +31,10 @@ import org.w3c.dom.Text
 class ChatFragment : Fragment(R.layout.fragment_chat) {
 
     private lateinit var myView: View
+    private lateinit var searchView: SearchView
     private lateinit var adapter: ChannelsRecyclerAdapter
-    private var isPublicTab = false
-    private var searchedPublicTab = false
+    private var isPublicTab = true
+    private var searchedPublicTab = true
     private var backedUpChannels: ArrayList<TextChannelModel.AllInfo> = ArrayList()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -41,6 +42,7 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
 
         myView = view
         adapter = ChatAdapterService.getChannelListAdapter()
+        setSearchIcon(view)
 
         ChatService.initChat(requireContext()) { init() }
     }
@@ -88,12 +90,14 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
     }
 
     private fun showAllChannels() {
+        if (this.sea)
         adapter.setData(TextChannelService.getPublicChannels() as ArrayList<TextChannelModel.AllInfo>)
+        adapter.setData(this.backedUpChannels)
         adapter.setIsAllChannels(true)
     }
 
     private fun showConnectedChannels() {
-        adapter.setData(TextChannelService.getConnectedChannels())
+//        adapter.setData(TextChannelService.getConnectedChannels())
         adapter.setIsAllChannels(false)
     }
 
@@ -116,14 +120,14 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
         }
     }
 
-    private fun setSearchIcon(menu: Menu?) {
-        val searchView = menu?.findItem(R.id.searchIcon)?.actionView as SearchView
-        searchView.queryHint = "Quick Search"
+    private fun setSearchIcon(view: View) {
+        searchView = view.findViewById(R.id.searchChannelsIcon)
+        searchView.queryHint = "Search channels"
 
         searchView.setOnCloseListener(object: SearchView.OnCloseListener {
             override fun onClose(): Boolean {
                 if (searchedPublicTab) {
-                    TextChannelService.setChannels(backedUpChannels)
+                    TextChannelService.setPublicChannels(backedUpChannels)
                 } else {
                     TextChannelService.setConnectedChannels(backedUpChannels)
                 }
@@ -152,15 +156,14 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
         TextChannelRepository().searchChannels(query).observe(this, {
             if (it.isError as Boolean) { return@observe }
 
-            // TODO: reset all channels or connected channels after closing search
-            if (isPublicTab) {
-                backedUpChannels = TextChannelService.getChannels() as ArrayList<TextChannelModel.AllInfo>
-                TextChannelService.setChannels(it.data as ArrayList<TextChannelModel.AllInfo>)
+            if (this.isPublicTab) {
+                this.backedUpChannels = TextChannelService.getPublicChannels() as ArrayList<TextChannelModel.AllInfo>
+                TextChannelService.setPublicChannels(it.data as ArrayList<TextChannelModel.AllInfo>)
             } else {
-                backedUpChannels = TextChannelService.getConnectedChannels()
+                this.backedUpChannels = TextChannelService.getConnectedChannels()
                 TextChannelService.setConnectedChannels(it.data as ArrayList<TextChannelModel.AllInfo>)
             }
-            searchedPublicTab = isPublicTab
+            this.searchedPublicTab = this.isPublicTab
             TextChannelService.refreshChannelList()
         })
     }
