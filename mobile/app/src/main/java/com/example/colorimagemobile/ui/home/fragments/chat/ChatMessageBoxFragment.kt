@@ -27,9 +27,11 @@ import com.example.colorimagemobile.services.socket.ChatSocketService
 import com.example.colorimagemobile.utils.CommonFun.Companion.hideKeyboard
 import com.example.colorimagemobile.utils.CommonFun.Companion.onEnterKeyPressed
 import com.example.colorimagemobile.utils.CommonFun.Companion.printToast
-import com.example.colorimagemobile.utils.Constants
-import com.example.colorimagemobile.utils.Constants.Companion.GENERAL_CHANNEL_NAME
 import kotlinx.android.synthetic.main.fragment_chat_message_box.*
+import kotlinx.android.synthetic.main.fragment_edit_profile.*
+import java.time.Instant
+import java.util.*
+import kotlin.collections.ArrayList
 
 class ChatMessageBoxFragment : Fragment(R.layout.fragment_chat_message_box) {
 
@@ -89,9 +91,30 @@ class ChatMessageBoxFragment : Fragment(R.layout.fragment_chat_message_box) {
         recyclerView.adapter = ChatAdapterService.getChatMsgAdapter()
 
         // update chat messages
-        val currentChat = ChatService.getChannelMessages(channel.name) as MutableSet<ChatSocketModel>
+        var currentChat = filterChatMessage()!!
         ChatAdapterService.getChatMsgAdapter().setChat(currentChat)
         scrollDown()
+    }
+
+    private fun filterChatMessage(): MutableSet<ChatSocketModel>? {
+        if (!ChatService.containsChannel(channel.name)) return mutableSetOf()
+
+        val messageObj = ChatService.getChannelMessageObject(channel.name)
+        if (!messageObj.hasFetchedOldMsg) {
+
+            val loginTimeMsg = messageObj.messages.indexOfLast { msg ->
+                Instant.parse(msg.timestamp) >= UserService.getUserInfo().lastLogin?.toInstant()
+            }
+
+            if (loginTimeMsg == 0) {
+                ChatService.setHasFetchedMessages(channel.name)
+                hideLoadPreviousBtn()
+            }
+
+            return ChatService.getChannelMessages(channel.name)?.filterIndexed { index, _ -> index > loginTimeMsg }?.toMutableSet()
+        }
+
+        return ChatService.getChannelMessages(channel.name)?.toMutableSet()
     }
 
     @SuppressLint("ClickableViewAccessibility")

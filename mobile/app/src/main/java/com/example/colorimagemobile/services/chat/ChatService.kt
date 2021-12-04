@@ -15,6 +15,8 @@ import com.example.colorimagemobile.services.users.UserService
 import com.example.colorimagemobile.ui.home.fragments.chat.ChatMessageBoxFragment
 import com.example.colorimagemobile.utils.Constants
 import java.text.SimpleDateFormat
+import java.time.Instant
+import java.time.format.DateTimeFormatter
 import java.util.*
 import kotlin.collections.HashMap
 
@@ -36,6 +38,8 @@ object ChatService {
         }
     }
 
+    fun containsChannel(roomName: String): Boolean = this.channelMessages.containsKey(roomName)
+
     fun setMessages(roomName: String, messages: MutableSet<ChatSocketModel>) {
         channelMessages[roomName]?.messages = messages
     }
@@ -45,6 +49,10 @@ object ChatService {
         if (message._id != null) {
             channelMessages[message.roomName]!!.messages.add(message)
         }
+    }
+
+    fun getChannelMessageObject(roomName: String): ChatMessage {
+        return channelMessages[roomName]!!
     }
 
     // get messages of a specific room
@@ -76,7 +84,7 @@ object ChatService {
         return ChatSocketModel(
             _id = null,
             message = message,
-            timestamp = SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(Date()),
+            timestamp = DateTimeFormatter.ISO_INSTANT.format(Instant.now()),
             author = UserService.getUserInfo().username,
             roomId = TextChannelService.getCurrentChannel()._id,
             roomName = TextChannelService.getCurrentChannel().name
