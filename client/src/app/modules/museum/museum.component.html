@@ -18,7 +18,11 @@
         </div>
 
         <div class="post-image">
-          <img [src]="this.transformUri(post.dataUri)" class="image" (click)="openPostDialog(post)">
+          <div class="image">
+            <img src="../../../assets/effect/like.gif" class="likeEffect" #likeEffect>
+            <img [src]="this.transformUri(post.dataUri)" class="drawing" (click)="openPostDialog(post)">
+
+          </div>
 
           <div class="bottom-image">
             <div class="bottom-group" (click)="toggleLike(post)">

@@ -16,6 +16,7 @@ import { PostDialogComponent} from '../post-dialog/post-dialog.component';
 })
 export class MuseumComponent implements OnInit {
   @ViewChild('audioOption') audioPlayerRef: ElementRef;
+  @ViewChild('likeEffect') likeEffect: ElementRef<HTMLInputElement>;
 
   user: User | null;
   posts: PostInterface[];
@@ -78,7 +79,7 @@ export class MuseumComponent implements OnInit {
       });
     }
     else{
-      this.onAudioPlay();
+      this.effect();
       this.postService.addLike(userid, post._id).subscribe((like) => {
         this.posts.find(postItem => postItem._id === post._id)?.likes.push(userid);
       });
@@ -101,7 +102,9 @@ export class MuseumComponent implements OnInit {
     return createdAt.split("T")[0];
   }
 
-  onAudioPlay(){
+  effect(){
     this.audioPlayerRef.nativeElement.play();
+    this.likeEffect.nativeElement.style.display = "block";
+
   }
 }
