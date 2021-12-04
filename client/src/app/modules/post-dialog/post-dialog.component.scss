@@ -1,4 +1,4 @@
-#post{
+#post {
   display: flex;
   flex-direction: row;
 }
@@ -11,85 +11,76 @@
   box-shadow: 5px 5px 5px 5px rgba(0, 0, 0, 0.2);
 }
 
-.left-section{
+.left-section {
   margin-left: 20px;
   flex: 1;
 }
 
-.post-header{
+.post-header {
   margin-bottom: 15px;
   align-items: center;
 }
 
-
-.post-header{
+.post-header {
   display: flex;
   flex-direction: row;
   margin-bottom: 20px;
 }
 
-.author-picture{
-  border-radius: 50%;
-  background-color: #da7e70;
-  height: 50px;
-  width: 50px;
-  margin-right: 4px;
+.info {
+  margin-left: 15px;
 }
 
-.info{
-margin-left:15px;
-}
-
-.author-text{
+.author-text {
   font-size: 16px;
 }
 
-.time-text{
+.time-text {
   font-size: 11px;
-  color: #5B4D5A;
+  color: #5b4d5a;
 }
-.comment-section{
+.comment-section {
   height: 500px;
   overflow: auto;
 }
-.comment{
+.comment {
   color: rgba(0, 0, 0, 0.6);
   font-size: 16px;
   padding-bottom: 4px;
 }
 
-.bottom-comment{
+.bottom-comment {
   background-color: white;
   height: 50px;
   width: 100%;
-  display:flex;
+  display: flex;
   justify-content: center;
   align-self: center;
 }
 
-.commentInput{
+.commentInput {
   border: none;
   background-color: transparent;
   width: 80%;
   padding: 3px;
 }
 
-.commentInput:focus{
-  outline:none
+.commentInput:focus {
+  outline: none;
 }
 
-#postbtn{
+#postbtn {
   background-color: transparent;
-  color: #DA7E70;
-  border:none
+  color: #da7e70;
+  border: none;
 }
 
-#postbtn:hover{
+#postbtn:hover {
   cursor: pointer;
 }
 
-.like{
-  display:flex;
+.like {
+  display: flex;
   align-self: center;
   margin-right: 10px;
   margin-top: 10px;
@@ -97,7 +88,7 @@ margin-left:15px;
   padding-top: 10px;
 }
 
-.nbLike{
+.nbLike {
   display: flex;
   justify-content: center;
   align-items: center;

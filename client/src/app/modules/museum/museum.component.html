@@ -1,10 +1,17 @@
 <div id="museum">
-  <div *ngIf="posts.length != 0; else noPost" >
+  <div *ngIf="posts.length != 0; else noPost">
     <div *ngFor="let post of posts">
       <div class="post">
         <div class="post-header">
           <div class="author-picture" *ngIf="post.owner">
-            <ngx-avatar [src]="post.owner.avatar?.imageUrl"></ngx-avatar>
+            <ngx-avatar
+              [src]="post.owner.avatar?.imageUrl"
+              *ngIf="post.ownerModel == 'User'"
+            ></ngx-avatar>
+            <ngx-avatar
+              [name]="post.owner.name"
+              *ngIf="post.ownerModel == 'Team'"
+            ></ngx-avatar>
           </div>
           <div class="info">
             <div class="author-text" *ngIf="post.ownerModel === 'User'">
@@ -13,17 +20,23 @@
             <div class="author-text" *ngIf="post.ownerModel === 'Team'">
               {{ post.owner.name }}
             </div>
-            <div class="time-text" *ngIf="post.owner">{{getTime(post.createdAt)}}</div>
+            <div class="time-text" *ngIf="post.owner">
+              {{ getTime(post.createdAt) }}
+            </div>
           </div>
         </div>
 
         <div class="post-image">
-          <img [src]="this.transformUri(post.dataUri)" class="image" (click)="openPostDialog(post)">
+          <img
+            [src]="this.transformUri(post.dataUri)"
+            class="image"
+            (click)="openPostDialog(post)"
+          />
 
           <div class="bottom-image">
             <div class="bottom-group" (click)="toggleLike(post)">
               <audio #audioOption>
-                <source src="../../../assets/sound/like.mp3" type="audio/mp3">
+                <source src="../../../assets/sound/like.mp3" type="audio/mp3" />
               </audio>
 
               <div *ngIf="hasBeenLike(post.likes); else notLikeBlock">
@@ -33,12 +46,10 @@
                 <div>
                   <mat-icon>favorite_border</mat-icon>
                 </div>
-
               </ng-template>
               <div class="nbLike">
                 {{ post.likes.length }}
               </div>
-
             </div>
             <div class="bottom-group">
               <mat-icon>chat_bubble</mat-icon>
@@ -49,38 +60,32 @@
           </div>
         </div>
 
-        <div *ngFor="let comment of post.comments.slice(0,4)">
+        <div *ngFor="let comment of post.comments.slice(0, 4)">
           <div class="comment">
             {{ comment.author?.username }} : {{ comment.content }}
           </div>
         </div>
-        <div class="comment" *ngIf="post.comments.length > 4" >
-          ...
+        <div class="comment" *ngIf="post.comments.length > 4">...</div>
+
+        <div class="bottom-comment">
+          <input
+            type="comment"
+            #commentInput
+            [id]="post._id"
+            class="comment-input"
+            autocomplete="off"
+            spellcheck="false"
+            placeholder="Add comment"
+            (keyup.enter)="addComment(post._id)"
+          />
+          <button mat-icon-button id="postbtn" (click)="addComment(post._id)">
+            POST
+          </button>
         </div>
-
-
-      <div class="bottom-comment">
-        <input
-          type="comment"
-          #commentInput
-          [id]="post._id"
-          class="comment-input"
-          autocomplete="off"
-          spellcheck="false"
-          placeholder="Add comment"
-          (keyup.enter)="addComment(post._id)"
-        />
-        <button mat-icon-button id="postbtn" (click)="addComment(post._id)">
-          POST
-        </button>
-       </div>
-
       </div>
     </div>
   </div>
   <ng-template #noPost>
-    <div class="advice">
-      Start by following other users
-    </div>
+    <div class="advice">Start by following other users</div>
   </ng-template>
 </div>
