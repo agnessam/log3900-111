@@ -92,9 +92,6 @@ dependencies {
     //coil
     implementation("io.coil-kt:coil:1.1.1")
 
-//    // likeButton effect
-//    implementation 'com.github.jd-alexander:LikeButton:0.2.3'
-
     // for notification sound
     implementation('org.jetbrains.kotlin:kotlin-stdlib:1.5.0')
 
