@@ -44,6 +44,10 @@ object ChatService {
         channelMessages[roomName]?.messages = messages
     }
 
+    fun resetMessageHistory() {
+        channelMessages = HashMap()
+    }
+
     // add message to a room
     fun addMessage(message: ChatSocketModel) {
         if (message._id != null) {

@@ -214,6 +214,7 @@ class HomeActivity : AppCompatActivity() {
         sharedPreferencesService.removeItem(Constants.STORAGE_KEY.TOKEN)
         TextChannelService.resetConnectedChannels()
         TextChannelService.setCurrentChannel(TextChannelService.getPublicChannels()[0])
+        ChatService.resetMessageHistory()
 
         redirectTo(this, LoginActivity::class.java)
     }
