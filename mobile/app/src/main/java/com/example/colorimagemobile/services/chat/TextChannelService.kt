@@ -10,6 +10,7 @@ import com.example.colorimagemobile.utils.Constants
 
 object TextChannelService {
     private var hasConnectedToGeneral = false
+    private lateinit var collaborationChannel: TextChannelModel.AllInfo
     private lateinit var currentChannel: TextChannelModel.AllInfo
     private var publicChannels: ArrayList<TextChannelModel.AllInfo>
     private var connectedChannels: ArrayList<TextChannelModel.AllInfo>
@@ -55,6 +56,14 @@ object TextChannelService {
     fun setCurrentChannelByPosition(position: Int, isAllChannel: Boolean) {
         this.currentChannel = if (isAllChannel) this.publicChannels[position] else connectedChannels[position]
         addToConnectedChannels(this.currentChannel)
+    }
+
+    fun setCollaborationChannel(channel: TextChannelModel.AllInfo) {
+        this.collaborationChannel = channel
+    }
+
+    fun getCollaborationChannel(): TextChannelModel.AllInfo {
+        return this.collaborationChannel
     }
 
     fun getConnectedChannels(): ArrayList<TextChannelModel.AllInfo> {

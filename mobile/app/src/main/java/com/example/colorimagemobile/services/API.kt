@@ -73,6 +73,10 @@ interface API {
     @GET(Constants.ENDPOINTS.TEXT_CHANNEL_PATH + "teams")
     fun getTeamChannels(@Header("Authorization") token: String): Call<ArrayList<TextChannelModel.AllInfo>>
 
+    @Headers("Content-Type: application/json")
+    @GET(Constants.ENDPOINTS.TEXT_CHANNEL_PATH + "drawings/{id}")
+    fun getChannelByDrawingId(@Header("Authorization") token: String, @Path ("id") id: String): Call<TextChannelModel.AllInfo>
+
     //  TextChannel region
     @Headers("Content-Type: application/json")
     @GET(Constants.ENDPOINTS.TEXT_CHANNEL_PATH)

@@ -33,6 +33,25 @@ class TextChannelRepository {
         return channelListLiveData
     }
 
+    fun getChannelByDrawingId(drawingId: String): MutableLiveData<DataWrapper<TextChannelModel.AllInfo>> {
+        val channelListLiveData: MutableLiveData<DataWrapper<TextChannelModel.AllInfo>> = MutableLiveData()
+
+        httpClient.getChannelByDrawingId(token = "Bearer ${UserService.getToken()}", drawingId).enqueue(object : Callback<TextChannelModel.AllInfo> {
+            override fun onResponse(call: Call<TextChannelModel.AllInfo>, response: Response<TextChannelModel.AllInfo>) {
+                if (!response.isSuccessful) {
+                    channelListLiveData.value = DataWrapper(null, "An error occurred while loading getting getChannelByDrawingId!", true)
+                    return
+                }
+                channelListLiveData.value = DataWrapper(response.body(), "", false)
+            }
+            override fun onFailure(call: Call<TextChannelModel.AllInfo>, t: Throwable) {
+                channelListLiveData.value = DataWrapper(null, "Sorry, failed to get getChannelByDrawingId!", true)
+            }
+        })
+
+        return channelListLiveData
+    }
+
     fun getTextChannelMessages(channelId: String): MutableLiveData<DataWrapper<ArrayList<ChatSocketModel>>> {
         val channelListLiveData: MutableLiveData<DataWrapper<ArrayList<ChatSocketModel>>> = MutableLiveData()
 

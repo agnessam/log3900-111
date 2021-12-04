@@ -24,6 +24,7 @@ import com.example.colorimagemobile.repositories.SearchRepository
 import com.example.colorimagemobile.services.SearchService
 import com.example.colorimagemobile.services.SharedPreferencesService
 import com.example.colorimagemobile.services.chat.ChatService
+import com.example.colorimagemobile.services.chat.TextChannelService
 import com.example.colorimagemobile.services.drawing.DrawingObjectManager
 import com.example.colorimagemobile.services.drawing.DrawingService
 import com.example.colorimagemobile.services.socket.ChatSocketService
@@ -68,6 +69,7 @@ class HomeActivity : AppCompatActivity() {
         // remove every socket events
         bottomNav.setOnItemSelectedListener {
             SocketManagerService.disconnectFromAll()
+            TextChannelService.removeFromConnectedChannels(TextChannelService.getCollaborationChannel())
             return@setOnItemSelectedListener true
         }
 
