@@ -5,10 +5,7 @@ import android.os.Bundle
 import android.view.MotionEvent
 import androidx.fragment.app.Fragment
 import android.view.View
-import android.widget.Button
-import android.widget.EditText
-import android.widget.LinearLayout
-import android.widget.TextView
+import android.widget.*
 import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -27,9 +24,12 @@ import com.example.colorimagemobile.services.socket.ChatSocketService
 import com.example.colorimagemobile.utils.CommonFun.Companion.hideKeyboard
 import com.example.colorimagemobile.utils.CommonFun.Companion.onEnterKeyPressed
 import com.example.colorimagemobile.utils.CommonFun.Companion.printToast
-import com.example.colorimagemobile.utils.Constants
 import com.example.colorimagemobile.utils.Constants.Companion.GENERAL_CHANNEL_NAME
 import kotlinx.android.synthetic.main.fragment_chat_message_box.*
+import kotlinx.android.synthetic.main.fragment_edit_profile.*
+import java.time.Instant
+import java.util.*
+import kotlin.collections.ArrayList
 
 class ChatMessageBoxFragment : Fragment(R.layout.fragment_chat_message_box) {
 
@@ -42,11 +42,16 @@ class ChatMessageBoxFragment : Fragment(R.layout.fragment_chat_message_box) {
         super.onViewCreated(view, savedInstanceState)
 
         myView = view
-        channel = TextChannelService.getCurrentChannel()
         chatMsgEditText = myView.findViewById(R.id.chat_text_input)
         recyclerView = myView.findViewById(R.id.chat_message_recycler_view)
 
-        connectToSocket()
+        if (!TextChannelService.isConnectedChannelInitialized()) {
+            myView.findViewById<RelativeLayout>(R.id.chat_box_container).visibility = View.GONE
+            return
+        }
+
+        myView.findViewById<RelativeLayout>(R.id.chat_box_container).visibility = View.VISIBLE
+        channel = TextChannelService.getCurrentChannel()
         updateUI()
         setListeners()
     }
@@ -66,26 +71,13 @@ class ChatMessageBoxFragment : Fragment(R.layout.fragment_chat_message_box) {
 //        printMsg("${channel.name} left chat room")
     }
 
-    private fun connectToSocket() {
-        ChatSocketService.connect()
-        ChatSocketService.setFragmentActivity(requireActivity())
-
-        val socketInformation = Constants.SocketRoomInformation(UserService.getUserInfo()._id, channel.name)
-        ChatSocketService.joinRoom(socketInformation)
-    }
-
     private fun updateUI() {
         myView.findViewById<TextView>(R.id.chat_username).text = channel.name
 
-        // remove leaveRoom button for General
         if (channel.name == GENERAL_CHANNEL_NAME) {
             myView.findViewById<Button>(R.id.channel_leave_btn).visibility = View.GONE
-            hideLoadPreviousBtn()
-        }
-
-        // hide Load Previous Messages button if we have already loaded old messages
-        if (ChatService.shouldHideLoadPreviousBtn(channel.name)) {
-            hideLoadPreviousBtn()
+            myView.findViewById<Button>(R.id.channel_delete_btn).visibility = View.GONE
+           // hideLoadPreviousBtn()
         }
 
         // show delete button if I created the channel
@@ -93,13 +85,52 @@ class ChatMessageBoxFragment : Fragment(R.layout.fragment_chat_message_box) {
             myView.findViewById<Button>(R.id.channel_delete_btn).visibility = View.VISIBLE
         }
 
+        // remove leaveRoom button for General
+        if (channel.isPrivate) {
+            myView.findViewById<Button>(R.id.channel_leave_btn).visibility = View.GONE
+            myView.findViewById<Button>(R.id.channel_delete_btn).visibility = View.GONE
+        }
+
+        // show leave if channel is public and connected
+        if (!channel.isPrivate && TextChannelService.getConnectedChannels().contains(channel)) {
+            myView.findViewById<Button>(R.id.channel_leave_btn).visibility = View.VISIBLE
+        }
+
+        // hide Load Previous Messages button if we have already loaded old messages
+        if (ChatService.shouldHideLoadPreviousBtn(channel.name)) {
+            hideLoadPreviousBtn()
+        }
+
         // set up Recycler View
         recyclerView.layoutManager = LinearLayoutManager(context)
         recyclerView.adapter = ChatAdapterService.getChatMsgAdapter()
 
         // update chat messages
-        val currentChat = ChatService.getChannelMessages(channel.name) as MutableSet<ChatSocketModel>
+        var currentChat = filterChatMessage()!!
         ChatAdapterService.getChatMsgAdapter().setChat(currentChat)
+        scrollDown()
+    }
+
+    private fun filterChatMessage(): MutableSet<ChatSocketModel>? {
+        if (!ChatService.containsChannel(channel.name)) return mutableSetOf()
+        if (UserService.getUserInfo().lastLogin == null) ChatService.getChannelMessages(channel.name)?.toMutableSet()
+
+        val messageObj = ChatService.getChannelMessageObject(channel.name)
+        if (!messageObj.hasFetchedOldMsg) {
+
+            val loginTimeMsg = messageObj.messages.indexOfLast { msg ->
+                Instant.parse(msg.timestamp) >= UserService.getUserInfo().lastLogin?.toInstant()
+            }
+
+            if (loginTimeMsg == 0) {
+                ChatService.setHasFetchedMessages(channel.name)
+                hideLoadPreviousBtn()
+            }
+
+            if (loginTimeMsg == -1) return mutableSetOf() else  ChatService.getChannelMessages(channel.name)?.filterIndexed { index, _ -> index > loginTimeMsg }?.toMutableSet()
+        }
+
+        return ChatService.getChannelMessages(channel.name)?.toMutableSet()
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -127,16 +158,17 @@ class ChatMessageBoxFragment : Fragment(R.layout.fragment_chat_message_box) {
     }
 
     private fun deleteChannel() {
-        val channelRepository = TextChannelRepository()
         val currentChannel = TextChannelService.getCurrentChannel()
 
         TextChannelService.deleteChannel(currentChannel)
         ChatService.refreshChatBox(requireActivity())
         TextChannelService.refreshChannelList()
 
-        channelRepository.deleteChannelById(currentChannel._id as String, currentChannel.name).observe(this, {
+        TextChannelRepository().deleteChannelById(currentChannel._id as String, currentChannel.name).observe(context as LifecycleOwner, {
             printToast(requireActivity(), it.message!!)
         })
+
+        TextChannelRepository().deleteMessages(currentChannel._id!!).observe(context as LifecycleOwner, { })
     }
 
     private fun sendChat() {

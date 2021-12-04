@@ -42,26 +42,17 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
         myView = view
         adapter = ChatAdapterService.getChannelListAdapter()
 
-        getAllChannels()
-
-        // means its not the first time we are opening the chat
-        if (TextChannelService.getChannels().isNotEmpty()) {
-            ChatService.refreshChatBox(requireActivity())
-        }
+        ChatService.initChat(requireContext()) { init() }
     }
 
-    private fun getAllChannels() {
-        TextChannelRepository().getAllTextChannel(UserService.getToken()).observe(context as LifecycleOwner, {
-            if (it.isError as Boolean) {
-                return@observe
-            }
+    private fun init() {
+        setRecyclerView()
+        setButtonListeners()
 
-            val channels = it.data as ArrayList<TextChannelModel.AllInfo>
-            TextChannelService.setChannels(channels)
-            setRecyclerView()
-            setButtonListeners()
-            addDefaultChannel(channels)
-        })
+        // means its not the first time we are opening the chat
+        if (TextChannelService.getPublicChannels().isNotEmpty()) {
+            ChatService.refreshChatBox(requireActivity())
+        }
     }
 
     private fun setRecyclerView() {
@@ -97,7 +88,7 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
     }
 
     private fun showAllChannels() {
-        adapter.setData(TextChannelService.getChannels() as ArrayList<TextChannelModel.AllInfo>)
+        adapter.setData(TextChannelService.getPublicChannels() as ArrayList<TextChannelModel.AllInfo>)
         adapter.setIsAllChannels(true)
     }
 
