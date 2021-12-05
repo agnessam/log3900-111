@@ -20,8 +20,10 @@ import com.example.colorimagemobile.classes.MyFragmentManager
 import com.example.colorimagemobile.classes.xml_json.SVGBuilder
 import com.example.colorimagemobile.models.DrawingModel
 import com.example.colorimagemobile.models.TeamModel
+import com.example.colorimagemobile.models.TextChannelModel
 import com.example.colorimagemobile.repositories.DrawingRepository
 import com.example.colorimagemobile.repositories.UserRepository
+import com.example.colorimagemobile.services.chat.TextChannelService
 import com.example.colorimagemobile.services.drawing.CanvasUpdateService
 import com.example.colorimagemobile.services.drawing.DrawingObjectManager
 import com.example.colorimagemobile.services.drawing.DrawingService
@@ -218,6 +220,16 @@ class NewDrawingMenuBottomSheet: BottomSheetDialogFragment() {
                 DrawingObjectManager.createDrawableObjects(svgString)
                 MyFragmentManager(context as FragmentActivity).open(R.id.main_gallery_fragment, GalleryDrawingFragment())
                 CanvasUpdateService.invalidate()
+
+                val newChannel = TextChannelModel.AllInfo(
+                    _id = null,
+                    name = drawing.name,
+                    ownerId = drawing.owner._id,
+                    drawing = drawing._id,
+                    isPrivate = true,
+                    team = null
+                )
+                TextChannelService.createChannel(newChannel, requireContext()) {  }
             }
         })
     }
