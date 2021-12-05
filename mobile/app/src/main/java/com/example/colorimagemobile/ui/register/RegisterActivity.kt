@@ -81,11 +81,13 @@ class RegisterActivity : AppCompatActivity() {
         inputLayout.error = formValidator.getWhitespaceText(text)
 
         formValidator.validateEmail(FormIndexes.EMAIL.index)
+        formValidator.validateUsernameLength(FormIndexes.USERNAME.index)
+        formValidator.validatePasswordLength(FormIndexes.PASSWORD.index)
+        formValidator.validatePasswordLength(FormIndexes.PASSWORD_CONFIRMATION.index)
         val containsError = formValidator.containsError()
         val invalidInputLength = formValidator.isInputEmpty(resources.getString(R.string.required))
-        val isInputLengthShortOrTooLong = formValidator.isInputLengthShortOrTooLong(resources.getString(R.string.lengthIncorrect))
 
-        canSubmit = !containsError && !invalidInputLength && !isInputLengthShortOrTooLong
+        canSubmit = !containsError && !invalidInputLength
 
     }
 

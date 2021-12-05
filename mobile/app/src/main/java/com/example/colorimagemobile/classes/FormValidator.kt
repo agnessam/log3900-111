@@ -1,6 +1,7 @@
 package com.example.colorimagemobile.classes
 
 import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
+import com.example.colorimagemobile.utils.Constants
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 
@@ -51,22 +52,18 @@ class FormValidator(layouts: ArrayList<TextInputLayout>, inputs: ArrayList<TextI
         this.layouts[emailIndex].error = if (isEmailValid) "" else "Invalid Email Address"
     }
 
-    fun isInputLengthShortOrTooLong(lengthIncorrectString: String): Boolean {
-        var isInputLengthInvalid: Boolean = false
+    // check if username length is valid
+    fun validateUsernameLength(usernameIndex: Int) {
+        val username = this.inputs[usernameIndex].text.toString()
+        val isUsernameInvalid = username.length < Constants.MIN_LENGTH || username.length> Constants.MAX_LENGTH;
+        this.layouts[usernameIndex].error = if (!isUsernameInvalid) "" else "The username length should be min 4 and max 12 characters"
+    }
 
-        this.inputs.forEachIndexed { index, input ->
-            var helperText: String = ""
-
-            if (input.text!!.length <4 || input.text!!.length >14) {
-                isInputLengthInvalid = true
-                helperText = lengthIncorrectString
-            }
-
-            // show or hide invalid length keyword below inputs
-            this.layouts[index].helperText = helperText
-        }
-
-        return isInputLengthInvalid
+    // check if password is valid
+    fun validatePasswordLength(passwordIndex: Int) {
+        val password= this.inputs[passwordIndex].text.toString()
+        val isPasswordInvalid = password.length < Constants.PASSWORD_MIN_LENGTH;
+        this.layouts[passwordIndex].error = if (!isPasswordInvalid) "" else "The password length should be at least 8 characters"
     }
 
     fun isInputLengthShort(lengthShortString: String): Boolean {
