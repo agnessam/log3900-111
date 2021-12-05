@@ -50,7 +50,14 @@
                 <ImageView
                     android:id="@+id/postImage"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
+                    android:layout_height="match_parent"/>
+
+                <pl.droidsonroids.gif.GifImageView
+                    android:id="@+id/likeEffect"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/like"
+                    android:alpha="0"/>
 
             </androidx.cardview.widget.CardView>
 
