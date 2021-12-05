@@ -6,16 +6,23 @@ import androidx.fragment.app.Fragment
 import android.view.View
 import android.widget.RelativeLayout
 import android.widget.TextView
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.colorimagemobile.R
+import com.example.colorimagemobile.adapter.DrawingMenuRecyclerAdapter
+import com.example.colorimagemobile.models.DrawingModel
 import com.example.colorimagemobile.models.SearchModel
+import com.example.colorimagemobile.models.recyclerAdapters.DrawingMenuData
+import com.example.colorimagemobile.repositories.DrawingRepository
 import com.example.colorimagemobile.services.SearchService
+import com.example.colorimagemobile.services.drawing.DrawingService
 import com.example.colorimagemobile.services.teams.TeamAdapterService
 import com.example.colorimagemobile.services.teams.TeamService
 import com.example.colorimagemobile.services.users.UserAdapterService
 import com.example.colorimagemobile.services.users.UserService
 import com.example.colorimagemobile.utils.CommonFun
+import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
 import com.example.colorimagemobile.utils.Constants
 import com.google.android.material.tabs.TabLayout
 import kotlinx.android.synthetic.main.fragment_search.*
@@ -64,6 +71,16 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
     // add DrawingRecyclerAdapter
     private fun setDrawings() {
         if (validateSearchUI(queryObject.drawings.size, "drawings")) { return }
+
+        DrawingService.setAllDrawings(queryObject.drawings)
+        val drawingsMenu = DrawingService.getDrawingsBitmap(requireContext(), queryObject.drawings)
+        recyclerView.layoutManager = GridLayoutManager(requireContext(), Constants.NB_DATA_ROWS)
+        recyclerView.adapter = DrawingMenuRecyclerAdapter(
+            requireActivity(),
+            drawingsMenu,
+            R.id.searchMainFragment,
+            { updatedDrawing, pos -> updateDrawing(updatedDrawing, pos, drawingsMenu) },
+            { drawingId, pos -> deleteDrawing(drawingId, pos, drawingsMenu) })
     }
 
     private fun setUsers() {
@@ -106,5 +123,30 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
     private fun showEmptyResult() {
         noResultParent.visibility = View.VISIBLE
         recyclerView.visibility = View.GONE
+    }
+
+    private fun updateDrawing(updatedDrawing: DrawingModel.UpdateDrawing, position: Int, drawingsMenu: ArrayList<DrawingMenuData>) {
+        DrawingRepository().updateDrawing(drawingsMenu[position].drawing._id!!, updatedDrawing).observe(viewLifecycleOwner, {
+            if (it.isError as Boolean) {
+                CommonFun.printToast(requireActivity(), it.message!!)
+                return@observe
+            }
+
+            drawingsMenu[position] = DrawingService.updateDrawingFromMenu(drawingsMenu[position], updatedDrawing)
+            recyclerView.adapter?.notifyItemChanged(position)
+        })
+    }
+
+    private fun deleteDrawing(drawingId: String, position: Int, drawingsMenu: ArrayList<DrawingMenuData>) {
+        DrawingRepository().deleteDrawing(drawingId).observe(viewLifecycleOwner, {
+            CommonFun.printToast(requireActivity(), it.message!!)
+
+            if (it.isError as Boolean) {
+                return@observe
+            }
+
+            drawingsMenu.removeAt(position)
+            recyclerView.adapter?.notifyDataSetChanged()
+        })
     }
 }

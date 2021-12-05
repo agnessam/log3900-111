@@ -3,10 +3,23 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/userprofile"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".ui.home.fragments.users.UsersProfileFragment">
 
+    <TextView
+        android:id="@+id/loadingUserProfileText"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:textSize="27sp"
+        android:background="@color/mainTheme"
+        android:text="LOADING USER PROFILE..."
+        android:textStyle="bold|italic"
+        android:textAlignment="center" />
+
     <RelativeLayout
+        android:id="@+id/userProfileView"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -87,8 +100,8 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
                         android:layout_marginEnd="60dp"
-                        android:textSize="22sp"
                         android:textColor="@color/black"
+                        android:textSize="22sp"
                         android:textStyle="italic|bold" />
 
 
@@ -152,10 +165,9 @@
                         android:id="@+id/FollowBtn"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:backgroundTint="@color/primary"
                         android:layout_centerInParent="true"
+                        android:backgroundTint="@color/primary"
                         android:text="Follow"
-                        android:layout_centerHorizontal="true"
                         android:textColor="@color/white" />
 
                     <com.google.android.material.button.MaterialButton

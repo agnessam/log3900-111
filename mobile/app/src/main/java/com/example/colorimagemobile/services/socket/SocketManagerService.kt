@@ -1,5 +1,6 @@
 package com.example.colorimagemobile.services.socket
 
+import com.example.colorimagemobile.services.chat.TextChannelService
 import com.example.colorimagemobile.services.drawing.DrawingService
 import com.example.colorimagemobile.services.users.UserService
 import com.example.colorimagemobile.utils.Constants
@@ -16,5 +17,6 @@ object SocketManagerService {
         if (DrawingService.getCurrentDrawingID() == null) return
 
         DrawingSocketService.leaveRoom(Constants.SocketRoomInformation(UserService.getUserInfo()._id, DrawingService.getCurrentDrawingID()!!))
+        TextChannelService.removeFromConnectedChannels(TextChannelService.getCollaborationChannel())
     }
 }

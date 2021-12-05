@@ -12,12 +12,10 @@ import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.FragmentActivity
 import com.example.colorimagemobile.R
 import com.example.colorimagemobile.models.TextChannelModel
-import com.example.colorimagemobile.repositories.TextChannelRepository
 import com.example.colorimagemobile.services.users.UserService
 import com.example.colorimagemobile.services.chat.ChatService
 import com.example.colorimagemobile.services.chat.TextChannelService
 import com.example.colorimagemobile.utils.CommonFun.Companion.hideKeyboard
-import com.example.colorimagemobile.utils.CommonFun.Companion.printToast
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -62,39 +60,39 @@ class NewChannelBottomSheet: BottomSheetDialogFragment() {
                 return@doOnTextChanged
             }
             if (TextChannelService.doesChannelExists(text.toString())) {
-                channelLayout.error = "This channel already exists"
+                channelLayout.error = "A channel with that name already exists"
+                return@doOnTextChanged
+            }
+            if (text.toString().length < 3) {
+                channelLayout.error = "Channel name must contain at least 3 characters"
                 return@doOnTextChanged
             }
         }
         createChannelForm.setOnTouchListener{v, event -> hideKeyboard(requireContext(),  createChannelForm)}
 
         createChannelBtn.setOnClickListener {
-            if(channelLayout.error.isNullOrBlank() || channelInputName.text.isNullOrEmpty()){
+            if(channelLayout.error != null || channelInputName.text.isNullOrEmpty()){
                 val shake = AnimationUtils.loadAnimation(requireActivity().getApplicationContext(), R.anim.shake)
                 newChannelInputText.startAnimation(shake);
                 return@setOnClickListener
             }
 
-            val newChannel = TextChannelModel.AllInfo(_id = null, name = channelInputName.text.toString(), ownerId = UserService.getUserInfo()._id)
-            createChannel(newChannel)
+            val newChannel = TextChannelModel.AllInfo(
+                _id = null,
+                name = channelInputName.text.toString(),
+                ownerId = UserService.getUserInfo()._id,
+                drawing = null,
+                isPrivate = false,
+                team = null
+            )
+
+            TextChannelService.createChannel(newChannel, requireContext()) { refreshChat() }
+            closeSheet()
         }
     }
 
-    private fun createChannel(newChannelModel: TextChannelModel.AllInfo) {
-        val channelRepository = TextChannelRepository()
-
-        channelRepository.addChannel(newChannelModel).observe(this, {
-            closeSheet()
-
-            if (it.isError as Boolean) {
-                printToast(requireActivity(), it.message!!)
-                return@observe
-            }
-
-            val channel = it.data as TextChannelModel.AllInfo
-            TextChannelService.createNewChannel(channel)
-            TextChannelService.refreshChannelList()
-            ChatService.refreshChatBox(context as FragmentActivity)
-        })
+    private fun refreshChat() {
+        TextChannelService.refreshChannelList()
+        ChatService.refreshChatBox(context as FragmentActivity)
     }
 }

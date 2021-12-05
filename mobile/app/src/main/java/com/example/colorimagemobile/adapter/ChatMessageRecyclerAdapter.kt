@@ -48,8 +48,10 @@ class ChatMessageRecyclerAdapter(): RecyclerView.Adapter<ChatMessageRecyclerAdap
 
     // add only one message
     fun addChatItem(message: ChatSocketModel) {
-        chatMessages.add(message)
-        notifyItemChanged(chatMessages.size - 1)
+        if (this::chatMessages.isInitialized) {
+            chatMessages.add(message)
+            notifyItemChanged(chatMessages.size - 1)
+        }
     }
 
     // calculate whose chat it is
