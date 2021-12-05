@@ -81,7 +81,14 @@
                         app:cornerRadius="0dp"
                         android:text="CONNECTED" />
                 </LinearLayout>
-
+                
+                <SearchView
+                    android:title="Search"
+                    android:id="@+id/searchIcon"
+                    app:actionViewClass="android.widget.SearchView"
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"/>
+                
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/ChannelRecycleView"
                     android:layout_width="match_parent"

@@ -91,6 +91,9 @@ interface API {
     @DELETE(Constants.ENDPOINTS.TEXT_CHANNEL_PATH + "{channelId}")
     fun deleteChannelById(@Header("Authorization")token: String,@Path ("channelId") channelId: String): Call<TextChannelModel.AllInfo>
 
+    @GET(Constants.ENDPOINTS.TEXT_CHANNEL_PATH + "all/search")
+    fun searchChannels(@Header("Authorization") token: String, @Query ("q") query: String): Call<ArrayList<TextChannelModel.AllInfo>>
+
     // region message
     @Headers("Content-Type: application/json")
     @GET(Constants.ENDPOINTS.MESSAGES_PATH)
@@ -174,6 +177,9 @@ interface API {
 
     @DELETE("${Constants.ENDPOINTS.TEAMS}{id}")
     fun deleteTeam(@Header("Authorization") token: String, @Path ("id") id: String): Call<Any>
+
+    @PATCH("${Constants.ENDPOINTS.TEAMS}{id}")
+    fun updateTeam(@Header("Authorization") token: String, @Path ("id") id: String, @Body team: UpdateTeam): Call<Any>
 
     // Search
     @GET(Constants.ENDPOINTS.SEARCH)

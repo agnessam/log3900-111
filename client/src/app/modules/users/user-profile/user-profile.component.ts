@@ -5,6 +5,9 @@ import { Drawing } from "src/app/shared";
 import { User } from "../models/user";
 import { UsersService } from "../services/users.service";
 import { ConfirmUnfollowDialogComponent } from "./confirm-unfollow-dialog/confirm-unfollow-dialog.component";
+import { PostInterface } from "../../museum/models/post.model";
+import { PostDialogComponent } from "../../post-dialog/post-dialog.component";
+import { PostService } from "../../museum/services/post.service";
 
 @Component({
   selector: "app-user-profile",
@@ -24,7 +27,8 @@ export class UserProfileComponent implements OnInit {
     private router: Router,
     private usersService: UsersService,
     private dialog: MatDialog,
-    private changeDetector: ChangeDetectorRef
+    private changeDetector: ChangeDetectorRef,
+    private postService:PostService
   ) {
     this.activatedRoute.params.subscribe((params) => {
       this.userId = localStorage.getItem("userId")!;
@@ -84,5 +88,14 @@ export class UserProfileComponent implements OnInit {
 
   navigateToSettingsPage() {
     this.router.navigate(["/settings/overview"]);
+  }
+
+  openPostDialog(post: PostInterface): void {
+    this.postService.getPostById(post._id).subscribe((postReceive) => {
+      this.dialog.open(PostDialogComponent, {
+        width: '80%',
+        data: postReceive,
+      });
+    });
   }
 }

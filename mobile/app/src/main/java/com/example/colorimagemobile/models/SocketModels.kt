@@ -48,6 +48,7 @@ class EllipseData(
     var height: Float
 ): ToolData
 
+data class LineWidthData(val id: String, val roomName: String, val lineWidth: Int)
 
 data class ColorData(val id: String, val color: RGB, val opacity: Float, val roomName: String)
 
@@ -57,7 +58,7 @@ data class SelectionData(val id: String)
 
 data class ResizeData(val id: String, val xScaled: Float, val yScaled: Float, val xTranslate: Float, val yTranslate: Float, val previousTransform: String)
 
-data class TranslateData(val id: String, val deltaX: Int, val deltaY: Int)
+data class TranslateData(val id: String, val deltaX: Float, val deltaY: Float)
 
 data class SocketTool(val type: String, val roomName: String, val drawingCommand: Any)
 

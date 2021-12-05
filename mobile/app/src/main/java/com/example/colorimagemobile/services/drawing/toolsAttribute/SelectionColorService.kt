@@ -40,25 +40,29 @@ object SelectionColorService {
 
     fun setPrimaryColor(newColor: String) {
         if (SelectionService.selectedShapeIndex != -1) {
-            updatePrimaryColor(newColor)
             var selectedShapeId = DrawingObjectManager.getUuid(SelectionService.selectedShapeIndex) ?: return
             primaryColorCommand = PrimaryColorCommand(selectedShapeId, newColor)
-            primaryColorCommand!!.execute()
-            val rgb = ColorService.convertRGBAStringToRGBObject(newColor)
-            val opacity = ColorService.getAlphaForDesktop(newColor).toFloat()
-            DrawingSocketService.sendObjectPrimaryColorChange(selectedShapeId, rgb, opacity)
+            if(primaryColorCommand!!.getPrimaryColor() != "none") {
+                primaryColorCommand!!.execute()
+                val rgb = ColorService.convertRGBAStringToRGBObject(newColor)
+                val opacity = ColorService.getAlphaForDesktop(newColor).toFloat()
+                DrawingSocketService.sendObjectPrimaryColorChange(selectedShapeId, rgb, opacity)
+                updatePrimaryColor(newColor)
+            }
         }
     }
 
     fun setSecondaryColor(newColor: String) {
         if (SelectionService.selectedShapeIndex != -1) {
-            updateSecondaryColor(newColor)
             var selectedShapeId = DrawingObjectManager.getUuid(SelectionService.selectedShapeIndex) ?: return
             secondaryColorCommand = SecondaryColorCommand(selectedShapeId, newColor)
-            secondaryColorCommand!!.execute()
-            val rgb = ColorService.convertRGBAStringToRGBObject(newColor)
-            val opacity = ColorService.getAlphaForDesktop(newColor).toFloat()
-            DrawingSocketService.sendObjectSecondaryColorChange(selectedShapeId, rgb, opacity)
+            if(secondaryColorCommand!!.getSecondaryColor() != "none") {
+                secondaryColorCommand!!.execute()
+                val rgb = ColorService.convertRGBAStringToRGBObject(newColor)
+                val opacity = ColorService.getAlphaForDesktop(newColor).toFloat()
+                DrawingSocketService.sendObjectSecondaryColorChange(selectedShapeId, rgb, opacity)
+                updateSecondaryColor(newColor)
+            }
         }
     }
 

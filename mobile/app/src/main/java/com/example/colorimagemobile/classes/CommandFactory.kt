@@ -11,7 +11,7 @@ import com.example.colorimagemobile.services.drawing.toolsAttribute.ColorService
 class CommandFactory {
 
     companion object {
-        var nonShapeCommands = arrayOf("SelectionStart", "SelectionResize", "Translation", "Delete", "PrimaryColor", "SecondaryColor")
+        var nonShapeCommands = arrayOf("SelectionStart", "SelectionResize", "Translation", "Delete", "PrimaryColor", "SecondaryColor", "LineWidth")
 
         fun createCommand(commandType: String, toolData: Any): ICommand? {
             if( commandType !in nonShapeCommands
@@ -43,6 +43,9 @@ class CommandFactory {
                 "SecondaryColor" -> {
                     val newColor = ColorService.convertRGBAndOpacityToRGBAString((toolData as ColorData).color, toolData.opacity)
                     return SecondaryColorCommand(toolData.id, newColor)
+                }
+                "LineWidth" -> {
+                    return LineWidthCommand((toolData as LineWidthData).id, toolData.lineWidth)
                 }
             }
             return null

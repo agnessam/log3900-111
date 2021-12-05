@@ -1,5 +1,5 @@
 import { Component } from "@angular/core";
-import { FormGroup } from "@angular/forms";
+import { FormControl, FormGroup, Validators } from "@angular/forms";
 import {
   DeletingToolService,
   SelectionToolService,
@@ -12,11 +12,23 @@ import {
 })
 export class SelectionToolParameterComponent {
   form: FormGroup;
+  private strokeWidth: FormControl;
 
   constructor(
     private selectionService: SelectionToolService,
     private deletingService: DeletingToolService
-  ) {}
+  ) {
+    this.strokeWidth = new FormControl(1, [
+      Validators.min(1),
+      Validators.max(50),
+    ]);
+    this.form = new FormGroup({
+      strokeWidth: this.strokeWidth,
+    });
+    this.selectionService.lineWidthSubject.subscribe((lineWidth: number) => {
+      this.strokeWidth.setValue(lineWidth);
+    });
+  }
 
   get toolName(): string {
     return this.selectionService.toolName;
@@ -29,5 +41,11 @@ export class SelectionToolParameterComponent {
   /// SelectAll
   deleteSelection(): void {
     this.deletingService.deleteSelection();
+  }
+
+  changeLineWidth(): void {
+    if (this.strokeWidth.value != null) {
+      this.selectionService.setSelectionLineWidth(this.strokeWidth.value);
+    }
   }
 }

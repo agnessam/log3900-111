@@ -27,7 +27,7 @@ export class ResizeCommand implements ICommand {
       drawingCommand.xScaled,
       drawingCommand.yScaled,
       drawingCommand.xTranslate,
-      drawingCommand.yTranslate - 64
+      drawingCommand.yTranslate
     );
     for (let key_transformation of this.previousTransformation) {
       this.previousTransformation.set(

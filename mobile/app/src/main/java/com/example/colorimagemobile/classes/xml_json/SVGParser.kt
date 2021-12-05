@@ -1,73 +1,34 @@
 package com.example.colorimagemobile.classes.xml_json
 
 import com.example.colorimagemobile.classes.JSONConvertor
-import com.github.underscore.lodash.U
 import org.json.JSONArray
 import org.json.JSONObject
+import org.json.XML
 
-class SVGParser<T>(svgAsString: String, classType: Class<T>) {
-    private var svgAsString = svgAsString
+val shapes = arrayOf("rect", "polyline", "ellipse")
+class SVGParser<T>(xmlString: String, private val classType: Class<T>) {
     private var svgClass: T? = null
-    private val classType = classType
+    private val svgJSON: JSONObject = (XML.toJSONObject(xmlString))["svg"] as JSONObject
 
     init {
-        parseIntoCustomSVG()
-    }
-
-    // converts string to { svg: {} }
-    fun getJSON(): String {
-        return U.xmlToJson(svgAsString)
-    }
-
-    // convert json to <svg></svg>
-    fun getXML(): String {
-        return U.jsonToXml(getJSON())
-    }
-
-    // remove useless substrings or modify string
-    private fun modifyExtras(): String {
-        var svgString = getJSON()
-        svgString = svgString.replace("\"-", "\"")
-
-        return svgString
-    }
-
-    // convert the string JSON to our own model
-    private fun parseIntoCustomSVG() {
-        val svgString = modifyExtras()
-        val wholeSVGJson = JSONObject(svgString).getString("svg")
-        var svgJSON = JSONObject(wholeSVGJson)
-        val svgListJSON = convertObjectsToList(svgJSON.toString())
-
-        svgClass = JSONConvertor.getJSONObject(svgListJSON, classType) as T
+        for(shape in shapes) checkObjectList(shape)
+        svgClass = JSONConvertor.getJSONObject(svgJSON.toString(), classType) as T
     }
 
     fun String.insert(index: Int, string: String): String {
         return this.substring(0, index) + string + this.substring(index, this.length)
     }
 
-    private fun convertObjectsToList(svgJson: String): String {
-        var currentSVG = svgJson
-        currentSVG = checkObjectList(currentSVG, "rect")
-        currentSVG = checkObjectList(currentSVG, "ellipse")
-        currentSVG = checkObjectList(currentSVG, "polyline")
-
-        return currentSVG
-    }
-
     // if shape has {} format, change to [{}]
-    private fun checkObjectList(svgJson: String, shape: String): String {
-        if (!JSONObject(svgJson).has(shape)) return svgJson
+    private fun checkObjectList(shape: String){
+        if(!svgJSON.has(shape)) return
 
-        var shapeJson = JSONObject(svgJson).getString(shape)
-
-        if (shapeJson.startsWith("{")) {
-            var arrayJSON = JSONObject(svgJson).remove(shape)
-            arrayJSON = JSONObject(svgJson).put(shape, JSONArray().put(JSONObject(shapeJson)))
-            return arrayJSON.toString()
+        if(svgJSON[shape] !is JSONArray){
+            var jsonObject = svgJSON.getJSONObject(shape)
+            var newJSONArray = JSONArray().put(jsonObject)
+            svgJSON.remove(shape)
+            svgJSON.put(shape, newJSONArray)
         }
-
-        return svgJson
     }
 
     fun getCustomSVG(): T {

@@ -39,6 +39,7 @@ class Constants {
             const val DELETE_SELECTION_EVENT = "selection-delete"
             const val PRIMARY_COLOR_EVENT = "color-primary-update"
             const val SECONDARY_COLOR_EVENT = "color-secondary-update"
+            const val LINE_WIDTH_EVENT = "line-width-update"
         }
     }
 

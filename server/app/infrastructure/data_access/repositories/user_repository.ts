@@ -58,6 +58,12 @@ export class UserRepository extends GenericRepository<UserInterface> {
           if (err || !user) {
             reject(err);
           }
+
+          if (user == null) {
+            reject(err);
+            return;
+          }
+
           const drawingToCollaborators: {} =
             this.collaborationTrackerService.getDrawingCollaborators();
 

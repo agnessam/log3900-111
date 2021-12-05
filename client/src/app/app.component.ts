@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from "@angular/core";
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from "@angular/core";
 import { MatDialog } from "@angular/material/dialog";
 import { ColorSchemeService } from "./core/themes/color-scheme.service";
 
@@ -12,7 +12,8 @@ export class AppComponent implements OnInit, OnDestroy {
 
   constructor(
     public dialog: MatDialog,
-    private colorSchemeService: ColorSchemeService
+    private colorSchemeService: ColorSchemeService,
+    private changeDetector: ChangeDetectorRef
   ) {
     this.colorSchemeService.load();
     this.colorSchemeService.update("light");
@@ -24,6 +25,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
   ngAfterViewChecked() {
     this.userId = localStorage.getItem("userId");
+    this.changeDetector.detectChanges();
   }
 
   ngOnDestroy(): void {}

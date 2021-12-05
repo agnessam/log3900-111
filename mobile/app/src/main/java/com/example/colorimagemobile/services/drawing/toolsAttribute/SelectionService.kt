@@ -216,16 +216,6 @@ object SelectionService {
                 boundingBox.bottom.toInt(),
                 strokeWidth
             )
-            when(command) {
-                is RectangleCommand -> {
-                    command.setStartPoint(Point(boundingBox.left, boundingBox.top))
-                    command.setEndPoint(Point(boundingBox.right, boundingBox.bottom))
-                }
-                is EllipseCommand -> {
-                    command.setStartPoint(Point(boundingBox.left, boundingBox.top))
-                    command.setEndPoint(Point(boundingBox.right, boundingBox.bottom))
-                }
-            }
         }
     }
 

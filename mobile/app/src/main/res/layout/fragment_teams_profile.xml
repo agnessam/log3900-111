@@ -50,6 +50,16 @@
 
                 </RelativeLayout>
 
+                <!-- Posts Followers Following header -->
+                <RelativeLayout
+                    android:id="@+id/FollwerFollowingvalues"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/FollwerFollowingHeaders"
+                    android:orientation="horizontal"
+                    android:singleLine="true">
+
+                </RelativeLayout>
 
                 <!--                follow and join teams button-->
                 <RelativeLayout
@@ -59,25 +69,38 @@
                     android:layout_below="@id/teamIdNbOfMembers"
                     android:layout_marginTop="30dp">
 
-                    <View
-                        android:id="@+id/teamId_action_empty_space"
-                        android:layout_width="40dp"
-                        android:layout_height="1dp"
-                        android:layout_centerHorizontal="true" />
-
                     <RelativeLayout
                         android:id="@+id/teamIdJoinBtnMain"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_toRightOf="@id/teamId_action_empty_space">
+                        android:layout_centerHorizontal="true">
+
+                        <Button
+                            android:id="@+id/teamIdJoinBtn"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:backgroundTint="@color/primary"
+                            android:text="Join Team"
+                            android:textColor="@color/white" />
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/leaveTeamIdBtn"
+                            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Leave Team"
+                            android:textColor="@color/primary"
+                            android:visibility="gone"
+                            app:cornerRadius="4dp"
+                            app:strokeColor="@color/primary"
+                            app:strokeWidth="1dp" />
 
                     </RelativeLayout>
 
                     <RelativeLayout
                         android:id="@+id/deleteTeamIdBtnMain"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_toRightOf="@id/teamId_action_empty_space"
                         android:visibility="gone">
 
                         <Button
@@ -85,7 +108,23 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:backgroundTint="@color/delete"
-                            android:text="@string/delete"
+                            android:text="Delete"
+                            android:layout_toRightOf="@id/teamId_edit_empty_space"
+                            android:textColor="@color/white" />
+
+                        <View
+                            android:id="@+id/teamId_edit_empty_space"
+                            android:layout_width="40dp"
+                            android:layout_height="1dp"
+                            android:layout_centerHorizontal="true" />
+
+                        <Button
+                            android:id="@+id/teamIdEditBtn"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_toLeftOf="@id/teamId_edit_empty_space"
+                            android:backgroundTint="@color/primary"
+                            android:text="Edit Team"
                             android:textColor="@color/white" />
 
                     </RelativeLayout>
