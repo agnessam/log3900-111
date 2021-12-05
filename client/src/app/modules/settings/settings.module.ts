@@ -20,7 +20,8 @@ import { EditDescriptionDialogComponent } from "./settings-container/user-overvi
 import { UserStatisticsComponent } from "./settings-container/user-statistics/user-statistics.component";
 import { UserPrivacyComponent } from "./settings-container/user-privacy/user-privacy.component";
 import { MatSlideToggleModule } from "@angular/material/slide-toggle";
-import { ApplicationSettingsComponent } from './settings-container/application-settings/application-settings.component';
+import { ApplicationSettingsComponent } from "./settings-container/application-settings/application-settings.component";
+import { CardsModule } from "../cards/cards.module";
 
 @NgModule({
   declarations: [
@@ -49,6 +50,7 @@ import { ApplicationSettingsComponent } from './settings-container/application-s
     MatSnackBarModule,
     MatSlideToggleModule,
     FormsModule,
+    CardsModule,
   ],
 })
 export class SettingsModule {}

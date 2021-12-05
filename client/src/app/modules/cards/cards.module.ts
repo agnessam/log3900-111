@@ -16,7 +16,7 @@ import { MatOptionModule } from "@angular/material/core";
 import { MatSelectModule } from "@angular/material/select";
 import { PostCardComponent } from "./post-card/post-card.component";
 import { FlexLayoutModule } from "@angular/flex-layout";
-import { ConfirmDeleteDrawingDialogComponent } from './drawing-card/confirm-delete-drawing-dialog/confirm-delete-drawing-dialog.component';
+import { ConfirmDeleteDrawingDialogComponent } from "./drawing-card/confirm-delete-drawing-dialog/confirm-delete-drawing-dialog.component";
 
 @NgModule({
   declarations: [
