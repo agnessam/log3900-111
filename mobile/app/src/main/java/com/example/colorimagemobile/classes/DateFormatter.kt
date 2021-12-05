@@ -14,5 +14,14 @@ class DateFormatter {
             val date: Date = inputFormat.parse(dateString)!!
             return outputFormat.format(date)
         }
+
+        fun getPostDate(postDate: Date): String {
+            val dateFormatter = DateFormat.getDateTimeInstance(
+                DateFormat.LONG,
+                DateFormat.LONG,
+                Locale.US);
+
+            return dateFormatter.format(postDate)
+        }
     }
 }

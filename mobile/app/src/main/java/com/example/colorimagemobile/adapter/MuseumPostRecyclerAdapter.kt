@@ -8,14 +8,16 @@ import android.widget.*
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.colorimagemobile.R
+import com.example.colorimagemobile.classes.DateFormatter
 import com.example.colorimagemobile.classes.ImageConvertor
 import com.example.colorimagemobile.classes.MyPicasso
+import com.example.colorimagemobile.services.drawing.DrawingOwnerService
 import com.example.colorimagemobile.services.museum.MuseumAdapters
 import com.example.colorimagemobile.services.museum.MuseumPostService
 import com.example.colorimagemobile.utils.CommonFun
 import com.example.colorimagemobile.utils.CommonFun.Companion.hideKeyboard
 import com.example.colorimagemobile.utils.CommonFun.Companion.onEnterKeyPressed
-import kotlinx.android.synthetic.main.recycler_museum_posts.*
+import de.hdodenhof.circleimageview.CircleImageView
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
@@ -52,6 +54,14 @@ class MuseumPostRecyclerAdapter(
 
         holder.museumCurrentNb.text = "#${position + 1}"
         holder.museumName.text = currentPost.name
+        holder.authorName.text = DrawingOwnerService.getUsername(currentPost.owner)
+        holder.postDate.text = DateFormatter.getPostDate(currentPost.createdAt!!)
+
+        val avatar = DrawingOwnerService.getAvatar(currentPost.owner)
+        if (avatar != null) {
+            holder.authorImageView.visibility = View.VISIBLE
+            MyPicasso().loadImage(avatar.imageUrl, holder.authorImageView)
+        }
 
         // set like heart
         val nbLikes = currentPost.likes.size
@@ -84,6 +94,9 @@ class MuseumPostRecyclerAdapter(
 
         val unlikeBtn: ImageButton = itemView.findViewById(R.id.museum_post_like_outline)
         val likeBtn: ImageButton = itemView.findViewById(R.id.museum_post_like_filled)
+        val authorImageView = itemView.findViewById<CircleImageView>(R.id.museum_post_author_circular_image)
+        val authorName = itemView.findViewById<TextView>(R.id.museum_post_author_name)
+        val postDate = itemView.findViewById<TextView>(R.id.museum_post_date)
 
         init {
             postCommentButton.setOnClickListener {
