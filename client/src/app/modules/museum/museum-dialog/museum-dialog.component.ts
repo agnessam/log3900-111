@@ -24,7 +24,7 @@ export class MuseumDialog implements OnInit {
     await this.drawingService.saveDrawing();
     this.drawingHttpClient.getDrawing(this.drawingId).subscribe((drawing) => {
       this.postService
-        .publishDrawing(this.drawingService.drawingId, drawing)
+        .publishDrawing(this.drawingId, drawing)
         .subscribe((response) => {
           this.dialogRef.close();
         });
