@@ -4,8 +4,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/ic_home_theme"
+    android:id="@+id/userProfileFragment"
     android:orientation="horizontal"
-    tools:context=".ui.home.fragments.userProfile.UserProfileFragment">
+    tools:context=".ui.home.fragments.accountParameter.accountParameterFragment">
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -20,38 +21,47 @@
             android:layout_height="wrap_content"
             android:layout_margin="20dp"
             android:text="@string/compte_parameter"
-            android:textColor="#EC407A"
+            android:textColor="@color/black"
+            android:textStyle="bold"
             android:textSize="30sp" />
 
         <TextView
-            android:id="@+id/modifyprofile"
+            android:id="@+id/myProfile"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="20dp"
-            android:text="@string/edit_profil"
-            android:textSize="30sp" />
-
+            android:text="My Profile"
+            android:textSize="20sp" />
         <TextView
-            android:id="@+id/password"
+            android:id="@+id/privacy"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="20dp"
-            android:text="@string/edit_password"
-            android:textSize="30sp" />
+            android:text="@string/privacy_safety"
+            android:textSize="20sp" />
 
         <TextView
-            android:id="@+id/historique"
+            android:id="@+id/history"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="20dp"
             android:text="@string/history_log"
-            android:textSize="30sp" />
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/stat"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp"
+            android:text="Statistics"
+            android:textSize="20sp" />
+
+
 
     </LinearLayout>
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/newLayout"
-        android:layout_margin="20dp"
-        android:background="@color/mainTheme"
+        android:layout_margin="10dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 

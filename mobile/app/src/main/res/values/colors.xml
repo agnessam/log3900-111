@@ -26,4 +26,5 @@
     <color name="dangerText">#762a3b</color>
 
     <color name="delete">#de000d</color>
+    <color name="transparency">#00FFFFFF</color>
 </resources>

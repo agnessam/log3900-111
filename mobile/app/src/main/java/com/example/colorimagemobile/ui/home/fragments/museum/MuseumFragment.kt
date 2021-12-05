@@ -3,6 +3,10 @@ package com.example.colorimagemobile.ui.home.fragments.museum
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.View
+import android.widget.ImageView
+import android.widget.RelativeLayout
+import androidx.cardview.widget.CardView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSnapHelper
@@ -16,6 +20,7 @@ import com.example.colorimagemobile.repositories.MuseumRepository
 import com.example.colorimagemobile.services.museum.MuseumAdapters
 import com.example.colorimagemobile.services.museum.MuseumPostService
 import com.example.colorimagemobile.utils.CommonFun.Companion.hideKeyboard
+import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
 import com.example.colorimagemobile.utils.CommonFun.Companion.printToast
 import kotlinx.android.synthetic.main.recycler_museum_posts.*
 
@@ -25,13 +30,13 @@ class MuseumFragment : Fragment(R.layout.fragment_museum) {
     private lateinit var posts: ArrayList<MuseumPostModel>
     private lateinit var recyclerView: RecyclerView
 
+
     @SuppressLint("ClickableViewAccessibility")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         myView = view
         recyclerView = myView.findViewById<RecyclerView>(R.id.museumPostsRecyclerView)
-
         getAllPosts()
     }
 
@@ -57,6 +62,7 @@ class MuseumFragment : Fragment(R.layout.fragment_museum) {
             val snapHelper: SnapHelper = LinearSnapHelper()
             snapHelper.attachToRecyclerView(recyclerView)
         })
+
     }
 
     private fun postComment(position: Int, newComment: String) {
@@ -82,15 +88,14 @@ class MuseumFragment : Fragment(R.layout.fragment_museum) {
 
     private fun likePost(position: Int) {
         val postId = posts[position]._id
-
         MuseumRepository().likePost(postId).observe(viewLifecycleOwner, {
             if (it.isError as Boolean) {
                 printToast(requireContext(), it.message!!)
                 return@observe
             }
-
             MuseumPostService.likePost(position)
             MuseumAdapters.refreshLikeSection(position)
+
         })
     }
 

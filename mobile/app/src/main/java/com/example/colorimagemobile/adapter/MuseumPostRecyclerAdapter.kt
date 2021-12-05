@@ -9,10 +9,18 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.colorimagemobile.R
 import com.example.colorimagemobile.classes.ImageConvertor
+import com.example.colorimagemobile.classes.MyPicasso
 import com.example.colorimagemobile.services.museum.MuseumAdapters
 import com.example.colorimagemobile.services.museum.MuseumPostService
+import com.example.colorimagemobile.utils.CommonFun
 import com.example.colorimagemobile.utils.CommonFun.Companion.hideKeyboard
 import com.example.colorimagemobile.utils.CommonFun.Companion.onEnterKeyPressed
+import kotlinx.android.synthetic.main.recycler_museum_posts.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlin.system.measureTimeMillis
 
 class MuseumPostRecyclerAdapter(
     context: Context,
@@ -68,6 +76,7 @@ class MuseumPostRecyclerAdapter(
         val commentRecyclerView: RecyclerView = itemView.findViewById(R.id.museum_comments_recycler_view)
         private val commentEditText: EditText = itemView.findViewById(R.id.post_comment_input)
         private val postCommentButton: Button = itemView.findViewById(R.id.post_comment_btn)
+        val likeEffect : ImageView = itemView.findViewById(R.id.likeEffect)
 
         val unlikeBtn: ImageButton = itemView.findViewById(R.id.museum_post_like_outline)
         val likeBtn: ImageButton = itemView.findViewById(R.id.museum_post_like_filled)
@@ -87,10 +96,23 @@ class MuseumPostRecyclerAdapter(
             }
 
             // wants to like
-            unlikeBtn.setOnClickListener { likePost(bindingAdapterPosition) }
+            unlikeBtn.setOnClickListener {
+                CommonFun.printMsg("inside like")
+                likeEffect.setAlpha(0.7f)
+                likePost(bindingAdapterPosition)
+                GlobalScope.launch(Dispatchers.IO) {
+                    val time = measureTimeMillis {
+                        timeToShowEffect()
+                    }
+                    likeEffect.setAlpha(0.0f)
+                }
+            }
 
             // wants to unlike
             likeBtn.setOnClickListener { unlikePost(bindingAdapterPosition) }
         }
+    }
+     private suspend fun timeToShowEffect(){
+         delay(1000L)
     }
 }

@@ -39,6 +39,7 @@ import com.example.colorimagemobile.utils.CommonFun.Companion.printToast
 import com.example.colorimagemobile.utils.CommonFun.Companion.toggleButton
 import com.example.colorimagemobile.utils.Constants
 import com.google.android.material.tabs.TabLayout
+import kotlinx.android.synthetic.main.fragment_teams_profile.*
 
 class TeamsProfileFragment : Fragment(R.layout.fragment_teams_profile) {
     private var teamId: String? = null
@@ -72,7 +73,6 @@ class TeamsProfileFragment : Fragment(R.layout.fragment_teams_profile) {
         
         myView.findViewById<TextView>(R.id.teamIdNameCard).text = currentTeam.name
 
-//        myView.findViewById<ImageView>(R.id.teamIdImageView).
         myView.findViewById<TextView>(R.id.teamIdNbOfMembers).text = "${currentTeam.members.size} members"
         myView.findViewById<TextView>(R.id.teamIdDescription).text = currentTeam.description
 
@@ -89,6 +89,8 @@ class TeamsProfileFragment : Fragment(R.layout.fragment_teams_profile) {
             myView.findViewById<RelativeLayout>(R.id.deleteTeamIdBtnMain).visibility = View.GONE
             updateTeamButtons()
         }
+
+        hideShowDescription()
     }
 
     private fun getCurrentTeam() {
@@ -137,6 +139,13 @@ class TeamsProfileFragment : Fragment(R.layout.fragment_teams_profile) {
                 button.alpha = .6f
                 button.setBackgroundColor(Color.rgb(221, 208, 206))
             }
+        }
+    }
+    private fun hideShowDescription(){
+        if (currentTeam.description.isNullOrBlank()){
+            teamIdDescriptionCardView.visibility = View.GONE
+        } else {
+            teamIdDescriptionCardView.visibility = View.VISIBLE
         }
     }
 
