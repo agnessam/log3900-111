@@ -54,17 +54,20 @@ class MuseumPostRecyclerAdapter(
         holder.museumName.text = currentPost.name
 
         // set like heart
-        if (MuseumPostService.hasLiked(currentPost)) showFilledLike(holder) else hideFilledLike(holder)
+        val nbLikes = currentPost.likes.size
+        if (MuseumPostService.hasLiked(currentPost)) showFilledLike(holder, nbLikes) else hideFilledLike(holder, nbLikes)
     }
 
-    fun showFilledLike(holder: ViewHolder) {
+    fun showFilledLike(holder: ViewHolder, nbLikes: Int) {
         holder.unlikeBtn.visibility = View.GONE
         holder.likeBtn.visibility = View.VISIBLE
+        holder.postLikes.text = nbLikes.toString()
     }
 
-    fun hideFilledLike(holder: ViewHolder) {
+    fun hideFilledLike(holder: ViewHolder, nbLikes: Int) {
         holder.unlikeBtn.visibility = View.VISIBLE
         holder.likeBtn.visibility = View.GONE
+        holder.postLikes.text = nbLikes.toString()
     }
 
     override fun getItemCount(): Int { return MuseumPostService.getPosts().size }
@@ -77,6 +80,7 @@ class MuseumPostRecyclerAdapter(
         private val commentEditText: EditText = itemView.findViewById(R.id.post_comment_input)
         private val postCommentButton: Button = itemView.findViewById(R.id.post_comment_btn)
         val likeEffect : ImageView = itemView.findViewById(R.id.likeEffect)
+        val postLikes = itemView.findViewById<TextView>(R.id.museum_post_like_nb)
 
         val unlikeBtn: ImageButton = itemView.findViewById(R.id.museum_post_like_outline)
         val likeBtn: ImageButton = itemView.findViewById(R.id.museum_post_like_filled)

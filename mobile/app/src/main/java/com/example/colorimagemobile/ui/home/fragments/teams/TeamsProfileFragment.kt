@@ -313,7 +313,7 @@ class TeamsProfileFragment : Fragment(R.layout.fragment_teams_profile) {
 
             publishedDrawings[postPosition].likes.add(UserService.getUserInfo()._id)
             recyclerView.adapter?.notifyItemChanged(postPosition)
-            MuseumAdapters.refreshLikeSection(0)
+            MuseumAdapters.refreshLikeSection(0, publishedDrawings[postPosition].likes.size)
         })
     }
 
@@ -326,7 +326,7 @@ class TeamsProfileFragment : Fragment(R.layout.fragment_teams_profile) {
 
             publishedDrawings[postPosition].likes.remove(UserService.getUserInfo()._id)
             recyclerView.adapter?.notifyItemChanged(postPosition)
-            MuseumAdapters.refreshUnlikeSection(0)
+            MuseumAdapters.refreshUnlikeSection(0, publishedDrawings[postPosition].likes.size)
         })
     }
 

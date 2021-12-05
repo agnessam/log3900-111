@@ -20,6 +20,10 @@ object MuseumPostService {
         return posts
     }
 
+    fun getPostLikes(position: Int): Int {
+        return posts[position].likes.size
+    }
+
     fun likePost(position: Int) {
         posts[position].likes.add(UserService.getUserInfo()._id)
     }

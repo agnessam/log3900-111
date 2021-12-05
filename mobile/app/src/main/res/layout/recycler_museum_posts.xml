@@ -95,12 +95,11 @@
                             android:textStyle="bold" />
 
                         <RelativeLayout
+                            android:layout_toLeftOf="@id/museum_post_like_nb"
                             android:id="@+id/museum_post_like"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentRight="true"
-                            android:layout_marginRight="5dp"
-                            android:layout_centerVertical="true">
+                            android:layout_centerVertical="true"
+                            android:layout_height="wrap_content" >
 
                             <ImageButton
                                 android:id="@+id/museum_post_like_outline"
@@ -117,6 +116,17 @@
                                 android:background="#EEE"
                                 android:src="@drawable/ic_heart_filled" />
                         </RelativeLayout>
+
+                        <TextView
+                            android:id="@+id/museum_post_like_nb"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:gravity="center"
+                            android:layout_centerVertical="true"
+                            android:layout_marginRight="5dp"
+                            android:layout_marginLeft="3dp"
+                            android:textSize="16sp"
+                            android:layout_alignParentRight="true" />
 
                     </RelativeLayout>
 
