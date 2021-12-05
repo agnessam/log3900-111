@@ -1,9 +1,11 @@
-<mat-card class="mat-elevation-z2">
+<mat-card (click)="goToTeam()" style="cursor: pointer">
   <mat-card-header>
-    <mat-card-title (click)="goToTeam()">{{ team.name }} </mat-card-title>
+    <mat-card-title>
+      <ngx-avatar [name]="team.name"> </ngx-avatar>
+    </mat-card-title>
 
     <mat-card-content>
-      <p>{{ team.description }}</p>
+      <p mat-card-title>{{ team.name }}</p>
     </mat-card-content>
   </mat-card-header>
 </mat-card>

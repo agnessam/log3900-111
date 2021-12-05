@@ -33,7 +33,7 @@ export class ChangePasswordDialogComponent implements OnInit {
           Validators.required,
           Validators.minLength(8),
         ]),
-        confirmPassword: new FormControl(""),
+        confirmPassword: new FormControl("", Validators.required),
       },
       { validators: this.checkPasswords }
     );
