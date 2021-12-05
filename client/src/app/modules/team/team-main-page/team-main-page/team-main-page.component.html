@@ -9,7 +9,7 @@
         color="secondary"
         (click)="toggleProtectedTeams()"
       >
-        Show protected teams
+        {{ showProtectedTeams ? "Show all teams" : "Show protected teams"}}
       </button>
     </div>
     <div fxFlex="30%" id="create-button">
