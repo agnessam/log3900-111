@@ -25,6 +25,7 @@ import com.example.colorimagemobile.services.SearchService
 import com.example.colorimagemobile.services.SharedPreferencesService
 import com.example.colorimagemobile.services.drawing.DrawingObjectManager
 import com.example.colorimagemobile.services.drawing.DrawingService
+import com.example.colorimagemobile.services.drawing.TransformationManager
 import com.example.colorimagemobile.services.socket.SocketManagerService
 import com.example.colorimagemobile.ui.home.fragments.search.SearchFragment
 import com.example.colorimagemobile.ui.home.fragments.chat.ChatFragmentDirections
@@ -149,6 +150,7 @@ class HomeActivity : AppCompatActivity() {
                     SocketManagerService.leaveDrawingRoom()
                     DrawingObjectManager.clearLayers()
                     DrawingService.setCurrentDrawingID(null)
+                    TransformationManager.clearPreviousTransformations()
                 }
                 bottomNav.selectedItemId = R.id.galleryFragment
                 true

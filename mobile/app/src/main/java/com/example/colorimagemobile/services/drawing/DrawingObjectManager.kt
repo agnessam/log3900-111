@@ -123,31 +123,14 @@ object DrawingObjectManager {
     fun getDrawingDataURI(): String {
         val svgObject = DrawingJsonService.getSvgObject()!!
 
-        // svg attribute
-        val rootSVG = SVGBuilder("svg")
-        rootSVG.addAttr("width", svgObject.width)
-        rootSVG.addAttr("height", svgObject.height)
-        rootSVG.addAttr("style", svgObject.style)
         var rootSvgString = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"${svgObject.width}\" height=\"${svgObject.height}\" style=\"${svgObject.style}\">"
 
         if (!svgObject.shapes.isNullOrEmpty()) {
-
-            val polylineArrayBuilder = U.arrayBuilder()
-            val rectArrayBuilder = U.arrayBuilder()
-            val ellipseArrayBuilder = U.arrayBuilder()
 
             svgObject.shapes!!.forEach{ shape ->
                 if (shape.id == null || shape.id == "") return@forEach
                 when(shape){
                     is Polyline -> {
-                        // to remove
-                        polylineArrayBuilder.add(U.objectBuilder()
-                            .add("-id", shape.id)
-                            .add("-name", shape.name)
-                            .add("-points", shape.points)
-                            .add("-style", shape.style)
-                            .add("-transform", shape.transform))
-
                         val propertyValuePairs: ArrayList<Pair<String, String>> = arrayListOf(
                             Pair("id", shape.id),
                             Pair("name", shape.name),
@@ -159,17 +142,6 @@ object DrawingObjectManager {
                         rootSvgString += "<polyline $propertiesJoinString ></polyline>"
                     }
                     is Rectangle -> {
-                        // to remove
-                        rectArrayBuilder.add(U.objectBuilder()
-                            .add("-id", shape.id)
-                            .add("-name", shape.name)
-                            .add("-x", shape.x)
-                            .add("-y", shape.y)
-                            .add("-width", shape.width)
-                            .add("-height", shape.height)
-                            .add("-style", shape.style)
-                            .add("-transform", shape.transform))
-
                         val propertyValuePairs: ArrayList<Pair<String, String>> = arrayListOf(
                             Pair("id", shape.id),
                             Pair("name", shape.name),
@@ -184,19 +156,6 @@ object DrawingObjectManager {
                         rootSvgString += "<rect $propertiesJoinString ></rect>"
                     }
                     is Ellipse -> {
-                        // to remove
-                        ellipseArrayBuilder.add(U.objectBuilder()
-                            .add("-id", shape.id)
-                            .add("-name", shape.name)
-                            .add("-cx", shape.cx)
-                            .add("-cy", shape.cy)
-                            .add("-rx", shape.rx)
-                            .add("-ry", shape.ry)
-                            .add("-width", shape.width)
-                            .add("-height", shape.height)
-                            .add("-style", shape.style)
-                            .add("-transform", shape.transform))
-
                         val propertyValuePairs: ArrayList<Pair<String, String>> = arrayListOf(
                             Pair("id", shape.id),
                             Pair("name", shape.name),
@@ -214,12 +173,8 @@ object DrawingObjectManager {
                     }
                 }
             }
-
-            rootSVG.addArrayAttr("polyline", polylineArrayBuilder)
-            rootSVG.addArrayAttr("rect", rectArrayBuilder)
-            rootSVG.addArrayAttr("ellipse", ellipseArrayBuilder)
         }
         rootSvgString += "</svg>"
-        return ImageConvertor.XMLToBase64(rootSVG.getXML())
+        return ImageConvertor.XMLToBase64(rootSvgString)
     }
 }
