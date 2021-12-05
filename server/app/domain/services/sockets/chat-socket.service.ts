@@ -68,7 +68,6 @@ export class ChatSocketService extends SocketServiceInterface {
             .getMessages(channel._id)
             .then((messages) => {
               if (messages && messages.length !== 0) {
-                console.log('emitting history', messages);
                 this.emitHistory(socketInformation.roomName, messages);
               }
             });
