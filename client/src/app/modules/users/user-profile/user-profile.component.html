@@ -65,7 +65,7 @@
       <mat-tab label="Posts">
         <div fxLayout="row wrap" id="posts">
           <div fxFlex="33%" *ngFor="let post of user.posts">
-            <app-post-card [post]="post"></app-post-card>
+            <app-post-card [post]="post" (click)="openPostDialog(post)"></app-post-card>
           </div>
         </div>
       </mat-tab>

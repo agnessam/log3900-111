@@ -3,10 +3,10 @@
   <mat-tab-group mat-align-tabs="start">
     <mat-tab label="Drawings">
       <div fxLayout="row wrap" class="search-result">
-        <div *ngIf="searchResults.drawings.length == 0">
+        <div *ngIf="filteredDrawings.length == 0">
           <p>Couldn't find any drawings corresponding to that search.</p>
         </div>
-        <div fxFlex="33%" *ngFor="let drawing of searchResults.drawings">
+        <div fxFlex="33%" *ngFor="let drawing of filteredDrawings">
           <app-drawing-card
             [drawing]="drawing"
             (deleteDrawingEvent)="deleteDrawingFromView($event)"
@@ -15,25 +15,29 @@
       </div>
     </mat-tab>
     <mat-tab label="Users">
-      <div fxLayout="row" fxLayoutAlign="center center" class="search-result">
+      <div fxLayout="row wrap" fxLayoutGap="15px" class="search-result">
         <div *ngIf="searchResults.users.length == 0">
           <p>Couldn't find any users corresponding to that search.</p>
         </div>
-        <div fxFlex="100%" *ngFor="let user of searchResults.users">
+        <div
+          fxFlex="100%"
+          *ngFor="let user of searchResults.users"
+          style="padding-top: 10px"
+        >
           <app-user-card [user]="user"></app-user-card>
         </div>
       </div>
     </mat-tab>
     <mat-tab label="Teams">
-      <div
-        fxLayout="row wrap"
-        fxLayoutAlign="center center"
-        class="search-result"
-      >
+      <div fxLayout="row wrap" class="search-result">
         <div *ngIf="searchResults.teams.length == 0">
           <p>Couldn't find any teams correpsonding to that search.</p>
         </div>
-        <div fxFlex="100%" *ngFor="let team of searchResults.teams">
+        <div
+          fxFlex="100%"
+          *ngFor="let team of searchResults.teams"
+          style="padding-top: 10px"
+        >
           <app-team-card [team]="team"></app-team-card>
         </div>
       </div>

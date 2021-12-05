@@ -1,0 +1,81 @@
+<div id="post">
+  <div class="image">
+    <img src="../../../assets/effect/like.gif" class="likeEffect" #like>
+    <img [src]="this.transformUri()" class="drawing">
+  </div>
+
+  <div class="left-section">
+    <div class="post-header">
+      <div class="author-picture">
+        <div *ngIf="post.ownerModel === 'User'">
+          <ngx-avatar
+            [src]="getAvatar(post)"
+            (click)="goToUserProfile(post)"
+          ></ngx-avatar>
+        </div>
+
+        <div *ngIf="post.ownerModel == 'Team'">
+          <ngx-avatar
+            [name]="getAvatar(post)"
+            (click)="goToTeamProfile(post)"
+          ></ngx-avatar>
+        </div>
+      </div>
+      <div class="info">
+        <div
+          class="author-text"
+          *ngIf="post.owner"
+          (click)="goToOwnerProfile(post)"
+        >
+          {{ getUsername(post) }}
+        </div>
+        <div class="time-text" *ngIf="post.owner">
+          {{ getTime(post.createdAt) }}
+        </div>
+      </div>
+    </div>
+
+    <div class="comment-section">
+      <div *ngFor="let comment of this.post.comments">
+        <div class="comment">
+          <span
+            class="username-comment"
+            (click)="goToUserProfileViaComment(comment)"
+            >{{ getAuthorUsername(comment) }}</span
+          >
+          {{ comment.content }}
+        </div>
+      </div>
+    </div>
+
+    <div class="like" (click)="toggleLike()">
+      <audio #audioOption>
+        <source src="../../../assets/sound/like.mp3" type="audio/mp3" />
+      </audio>
+      <div *ngIf="hasBeenLike(post.likes); else notLikeBlock">
+        <mat-icon>favorite</mat-icon>
+      </div>
+      <ng-template #notLikeBlock>
+        <div>
+          <mat-icon>favorite_border</mat-icon>
+        </div>
+      </ng-template>
+
+      <div class="nbLike">{{ post.likes.length }}</div>
+    </div>
+
+    <div class="bottom-comment">
+      <input
+        type="comment"
+        #commentInput
+        id="commentInput"
+        class="commentInput"
+        autocomplete="off"
+        spellcheck="false"
+        placeholder="Add comment"
+        (keyup.enter)="addComment()"
+      />
+      <button mat-icon-button id="postbtn" (click)="addComment()">POST</button>
+    </div>
+  </div>
+</div>

@@ -5,8 +5,10 @@ import androidx.fragment.app.Fragment
 import android.view.View
 import android.widget.Button
 import android.widget.ImageView
+import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.cardview.widget.CardView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -34,6 +36,7 @@ import com.example.colorimagemobile.utils.CommonFun.Companion.printToast
 import com.example.colorimagemobile.utils.Constants
 import com.google.android.material.tabs.TabLayout
 import kotlinx.android.synthetic.main.fragment_teams_profile.*
+import kotlinx.android.synthetic.main.fragment_users_profile.*
 
 class UsersProfileFragment : Fragment(R.layout.fragment_users_profile) {
     private var userId: String? = null
@@ -45,11 +48,18 @@ class UsersProfileFragment : Fragment(R.layout.fragment_users_profile) {
     private lateinit var followBtn: Button
     private lateinit var unfollewBtn: Button
     private lateinit var descriptionCardView : CardView
+    private lateinit var userprofile: ConstraintLayout
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            userId = it.getString(Constants.USERS.CURRENT_USER_ID_KEY)
+            if(it.getString(Constants.USERS.CURRENT_USER_ID_KEY)== null){
+                userId = UserService.getUserInfo()._id
+            }
+            else{
+                userId = it.getString(Constants.USERS.CURRENT_USER_ID_KEY)
+            }
         }
     }
 
@@ -58,11 +68,14 @@ class UsersProfileFragment : Fragment(R.layout.fragment_users_profile) {
         myView = view
         recyclerView = myView.findViewById(R.id.userProfileDrawingsRecycler)
         recyclerView.layoutManager = GridLayoutManager(requireContext(), Constants.NB_DATA_ROWS)
-
+        userprofile = view.findViewById(R.id.userprofile)
         getCurrentUser()
     }
 
     private fun getCurrentUser() {
+        userprofile.findViewById<TextView>(R.id.loadingUserProfileText).visibility = View.VISIBLE
+        userprofile.findViewById<RelativeLayout>(R.id.userProfileView).visibility = View.GONE
+
         UserRepository().getUserById(UserService.getToken(), userId!!).observe(viewLifecycleOwner, {
             if (it.isError as Boolean) {
                 printToast(requireContext(), it.message!!)
@@ -78,9 +91,11 @@ class UsersProfileFragment : Fragment(R.layout.fragment_users_profile) {
             setAllDrawings()
 
             UserService.setCurrentNbFollowers(currentUser.followers.size)
-
             updateUI()
             setListeners()
+            userprofile.findViewById<TextView>(R.id.loadingUserProfileText).visibility = View.GONE
+            userprofile.findViewById<RelativeLayout>(R.id.userProfileView).visibility = View.VISIBLE
+
         })
     }
 

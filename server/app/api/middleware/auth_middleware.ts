@@ -14,7 +14,7 @@ export const passportRegisterMiddleware = () => {
     'register',
     new localStrategy.Strategy(
       {
-        usernameField: 'username',
+        usernameField: 'email',
         passwordField: 'password',
         passReqToCallback: true,
       },
@@ -41,14 +41,14 @@ export const passportLoginMiddleware = () => {
     'login',
     new localStrategy.Strategy(
       {
-        usernameField: 'username',
+        usernameField: 'email',
         passwordField: 'password',
       },
       async (username, password, done) => {
         try {
-          const user = await User.findOne({ username });
+          const user = await User.findOne({ email: username });
           if (!user) {
-            return done({ message: 'Username not found' }, false, undefined);
+            return done({ message: 'Email was not found' }, false, undefined);
           }
 
           const validate = await user.isValidPassword(password);

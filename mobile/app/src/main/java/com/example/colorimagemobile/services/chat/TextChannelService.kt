@@ -3,8 +3,8 @@ package com.example.colorimagemobile.services.chat
 import android.content.Context
 import androidx.lifecycle.LifecycleOwner
 import com.example.colorimagemobile.models.TextChannelModel
-import com.example.colorimagemobile.repositories.TextChannelRepository
 import com.example.colorimagemobile.services.SearchService
+import com.example.colorimagemobile.repositories.TextChannelRepository
 import com.example.colorimagemobile.services.socket.ChatSocketService
 import com.example.colorimagemobile.services.users.UserService
 import com.example.colorimagemobile.utils.Constants
@@ -16,7 +16,6 @@ object TextChannelService {
     private var publicChannels: ArrayList<TextChannelModel.AllInfo>
     private var connectedChannels: ArrayList<TextChannelModel.AllInfo>
     private var searchQuery: String? = null
-//    private var searchedPublicChannels: ArrayList<TextChannelModel.AllInfo>
 
     init {
         publicChannels = arrayListOf()

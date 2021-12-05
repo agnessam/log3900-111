@@ -218,8 +218,9 @@ class ChatMessageBoxFragment : Fragment(R.layout.fragment_chat_message_box) {
     }
 
     private fun leaveRoom() {
-        TextChannelService.removeFromConnectedChannels(channel)
-
+        TextChannelService.removeFromConnectedChannels(TextChannelService.getCurrentChannel())
+        TextChannelService.setCurrentChannel(TextChannelService.getPublicChannels()[0])
+        
         // update UI
         ChatService.refreshChatBox(requireActivity())
         TextChannelService.refreshChannelList()
