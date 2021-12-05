@@ -16,10 +16,12 @@ object TextChannelService {
     private var publicChannels: ArrayList<TextChannelModel.AllInfo>
     private var connectedChannels: ArrayList<TextChannelModel.AllInfo>
     private var searchQuery: String? = null
+    private var backedUpPublicChannels: ArrayList<TextChannelModel.AllInfo>
 
     init {
         publicChannels = arrayListOf()
         connectedChannels = arrayListOf()
+        backedUpPublicChannels = arrayListOf()
     }
 
     fun connectToGeneral() {
@@ -123,13 +125,13 @@ object TextChannelService {
         searchQuery = null
     }
 
-//    fun setSearchedPublicChannels(channels: ArrayList<TextChannelModel.AllInfo>) {
-//        searchedPublicChannels = channels
-//    }
-//
-//    fun setConnectedChannels(channels: ArrayList<TextChannelModel.AllInfo>) {
-//        this.connectedChannels = channels;
-//    }
+    fun getBackedUpChannels(): ArrayList<TextChannelModel.AllInfo> {
+        return this.backedUpPublicChannels
+    }
+
+    fun setBackedUpChannels(newChannels: ArrayList<TextChannelModel.AllInfo>){
+        this.backedUpPublicChannels = newChannels
+    }
 
     private fun updateCurrentChannel() {
         // set current channel: 0 if only General exists, else last connected channels' position
