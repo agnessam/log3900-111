@@ -76,11 +76,20 @@ export class ChannelComponent implements OnInit, OnDestroy {
   getPublicChannels(): void {
     this.textChannelService.getChannels().subscribe({
       next: (channels) => {
-        channels.forEach((channel) => {
-          if (!this.publicChannels.some((item) => item._id === channel._id)) {
-            this.publicChannels.push(channel);
+        this.publicChannels = channels;
+        // Check if there were any deleted channels in which we were connected
+        this.connectedChannels.forEach((connectedChannel) => {
+          if (
+            !this.publicChannels.some(
+              (channel) => channel._id == connectedChannel._id
+            )
+          ) {
+            if (!connectedChannel.isPrivate) {
+              this.removeChannelFromView(connectedChannel);
+            }
           }
         });
+
         this.resetSearch();
         const general = channels.find((channel) => channel.name === "General");
         if (general) {
@@ -92,8 +101,9 @@ export class ChannelComponent implements OnInit, OnDestroy {
             this.connectedChannels.some(
               (channel) => channel._id === general._id
             )
-          )
+          ) {
             return;
+          }
           this.connectedChannels.unshift(general);
         }
       },
@@ -162,6 +172,13 @@ export class ChannelComponent implements OnInit, OnDestroy {
     this.chatService.leaveRoomEventEmitter.emit(channel);
 
     this.closeChannelList.emit();
+  }
+
+  removeChannelFromView(channel: TextChannel): void {
+    const index = this.connectedChannels.findIndex(
+      (x) => x._id === channel._id
+    );
+    this.connectedChannels.splice(index, 1);
   }
 
   removeChannel(channel: TextChannel): void {

@@ -72,7 +72,6 @@ export class ChatComponent implements OnInit, OnDestroy {
     });
     this.openChatRoom();
     this.receiveMessage();
-    this.leaveRoom();
     this.chatSocketService.connect();
     this.textChannelService.leftCollabChannel.subscribe(() => {
       this.closeChat();
@@ -96,7 +95,6 @@ export class ChatComponent implements OnInit, OnDestroy {
   }
 
   openChatRoom() {
-    // might want to run these in parallel (fork?)
     this.chatService.toggleChatOverlay.subscribe((channel) => {
       this.currentChannel = channel;
       if (!this.isPopoutOpen) {
@@ -117,7 +115,9 @@ export class ChatComponent implements OnInit, OnDestroy {
       });
       this.chatSocketService.messageHistory.subscribe((history) => {
         if (!history) return;
+        console.log(history);
         this.messageHistory.set(history[0].roomName, history);
+        this.getMessages();
       });
     }
   }
@@ -138,8 +138,7 @@ export class ChatComponent implements OnInit, OnDestroy {
     // appends every message from every roomname
     this.chatSubscription = this.chatSocketService.chatSubject.subscribe({
       next: (message) => {
-        this.joinRoom(message.roomName);
-        if (!this.messageHistory.get(message.roomName)?.includes(message)) {
+        if (this.messageHistory.get(message.roomName)) {
           this.messageHistory.get(message.roomName)?.push(message);
         }
         this.scrollDown();
@@ -164,6 +163,9 @@ export class ChatComponent implements OnInit, OnDestroy {
       roomId: this.currentChannel?._id!,
       roomName: this.currentChannel?.name!,
     };
+    if (this.messageHistory.get(message.roomName)) {
+      this.messageHistory.get(message.roomName)?.push(message);
+    }
     this.chatSocketService.sendMessage(message);
     this.message = "";
   }
