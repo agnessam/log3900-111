@@ -17,6 +17,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
 class CollaborationHistoryRecyclerAdapter(
+    val activity: FragmentActivity,
     drawings: ArrayList<DrawingMenuData>,
     val destination: Int,
     val updateDrawing: (newDrawingInfo: DrawingModel.UpdateDrawing, pos: Int) -> Unit
