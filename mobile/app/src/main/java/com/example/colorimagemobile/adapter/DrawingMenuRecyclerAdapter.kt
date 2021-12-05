@@ -98,6 +98,17 @@ class DrawingMenuRecyclerAdapter(
         }
     }
 
+    private fun openProfile(position: Int) {
+        val ownerModel = drawingMenus[position].drawing.ownerModel
+        val ownerId = drawingMenus[position].drawing.owner._id
+
+        if (ownerModel == OwnerModel.USER.toString()) {
+            MyFragmentManager(activity).openWithData(R.id.main_gallery_fragment, UsersProfileFragment(), Constants.USERS.CURRENT_USER_ID_KEY, ownerId)
+        } else {
+            MyFragmentManager(activity).openWithData(R.id.main_gallery_fragment, TeamsProfileFragment(), Constants.TEAMS.CURRENT_TEAM_ID_KEY, ownerId)
+        }
+    }
+
     inner class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
         val drawingMenuViewHolder: DrawingMenuViewHolder
 
@@ -162,15 +173,12 @@ class DrawingMenuRecyclerAdapter(
                 optionMenu.show()
             }
 
-            authorName.setOnClickListener {
-                val ownerModel = drawingMenus[bindingAdapterPosition].drawing.ownerModel
-                val ownerId = drawingMenus[bindingAdapterPosition].drawing.owner._id
+            authorImageView.setOnClickListener {
+                openProfile(bindingAdapterPosition)
+            }
 
-                if (ownerModel == OwnerModel.USER.toString()) {
-                    MyFragmentManager(activity).openWithData(R.id.main_gallery_fragment, UsersProfileFragment(), Constants.USERS.CURRENT_USER_ID_KEY, ownerId)
-                } else {
-                    MyFragmentManager(activity).openWithData(R.id.main_gallery_fragment, TeamsProfileFragment(), Constants.TEAMS.CURRENT_TEAM_ID_KEY, ownerId)
-                }
+            authorName.setOnClickListener {
+                openProfile(bindingAdapterPosition)
             }
         }
     }
