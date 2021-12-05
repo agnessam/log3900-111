@@ -15,6 +15,7 @@ import com.example.colorimagemobile.models.DataWrapper
 import com.example.colorimagemobile.models.HTTPResponseModel
 import com.example.colorimagemobile.services.SharedPreferencesService
 import com.example.colorimagemobile.ui.home.HomeActivity
+import com.example.colorimagemobile.ui.register.FormIndexes
 import com.example.colorimagemobile.ui.register.RegisterActivity
 import com.example.colorimagemobile.utils.CommonFun.Companion.hideKeyboard
 import com.example.colorimagemobile.utils.CommonFun.Companion.onEnterKeyPressed
@@ -33,9 +34,9 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var binding: ActivityLoginBinding
     private lateinit var formValidator: FormValidator
     private var canSubmit: Boolean = true
+
     enum class FormIndexes(val index: Int) {
-        EMAIL(1),
-        PASSWORD(2),
+        EMAIL(0),
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -67,7 +68,7 @@ class LoginActivity : AppCompatActivity() {
     // handles UI error messages depending on form errors
     private fun handleInputError(text: CharSequence?, inputLayout: TextInputLayout) {
         inputLayout.error = formValidator.getWhitespaceText(text)
-
+        formValidator.validateEmail(FormIndexes.EMAIL.index)
         val containsError = formValidator.containsError()
         val invalidInputLength = formValidator.isInputEmpty(resources.getString(R.string.required))
 
@@ -84,7 +85,7 @@ class LoginActivity : AppCompatActivity() {
         }
         val user = UserModel.Login(binding.emailInputText.text.toString(), binding.passwordInputText.text.toString())
         
-        // username ok -> make HTTP POST request
+        // email ok -> make HTTP POST request
         val loginObserver = loginActivityViewModel.loginUser(user)
         loginObserver.observe(this, { handleLoginResponse(it) })
     }
