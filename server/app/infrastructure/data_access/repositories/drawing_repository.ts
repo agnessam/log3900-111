@@ -176,9 +176,14 @@ export class DrawingRepository extends GenericRepository<DrawingInterface> {
           }
 
           if (deletedDrawing.ownerModel == 'User') {
-            User.findById(
+            User.findByIdAndUpdate(
               { _id: deletedDrawing.owner },
-              { $pull: { drawings: deletedDrawing._id } },
+              {
+                $pull: {
+                  drawings: { $in: deletedDrawing._id },
+                  collaborationHistory: { drawing: deletedDrawing._id },
+                },
+              },
               (err: Error) => {
                 if (err) {
                   reject(err);
@@ -186,7 +191,7 @@ export class DrawingRepository extends GenericRepository<DrawingInterface> {
               },
             );
           } else {
-            Team.findById(
+            Team.findByIdAndUpdate(
               { _id: deletedDrawing.owner },
               { $pull: { drawings: deletedDrawing._id } },
               (err: Error) => {

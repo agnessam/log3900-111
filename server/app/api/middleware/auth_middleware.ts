@@ -21,6 +21,19 @@ export const passportRegisterMiddleware = () => {
       async (req, username, password, done) => {
         try {
           const user = await User.create(req.body);
+
+          User.updateOne(
+            { _id: user._id },
+            { lastLogin: new Date() },
+            (err: Error, user: any) => {},
+          );
+
+          const statusService = container.get(
+            TYPES.StatusService,
+          ) as StatusService;
+
+          statusService.updateStatus(user._id.toString(), STATUS.Online);
+
           return done(null, user, {
             message: 'Account created succesfully.',
           });
