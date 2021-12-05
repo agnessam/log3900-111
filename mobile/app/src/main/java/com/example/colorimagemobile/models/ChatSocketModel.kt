@@ -5,6 +5,6 @@ data class ChatSocketModel(
     val message: String,
     val timestamp: String,
     val author: String,
-    val _roomId: String?,
+    val roomId: String?,
     val roomName: String
 )

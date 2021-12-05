@@ -59,7 +59,7 @@ export class AuthenticationService {
   public login(username: string, password: string) {
     const loginEndpoint = this.endpointUrl + "login";
     return this.httpClient
-      .post<any>(loginEndpoint, { username: username, password: password })
+      .post<any>(loginEndpoint, { email: username, password: password })
       .pipe(
         map((response) => {
           if (response.error) {

@@ -76,12 +76,12 @@
                             android:textStyle="italic"/>
                     </LinearLayout>
 
-                    <!--            username-->
+                    <!--            email-->
                     <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/usernameInputLayout"
+                        android:id="@+id/emailInputLayout"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Username"
+                        android:hint="Email"
                         app:counterEnabled="true"
                         app:helperText="@string/required"
                         app:errorEnabled="true"
@@ -92,7 +92,7 @@
                         android:layout_marginTop="30dp">
 
                         <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/usernameInputText"
+                            android:id="@+id/emailInputText"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:maxLines="1"

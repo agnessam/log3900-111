@@ -5,5 +5,5 @@ import java.io.Serializable
 data class SearchModel (
     val users: ArrayList<UserModel.AllInfo>,
     val teams: ArrayList<TeamModel>,
-    val drawings: ArrayList<DrawingModel.CreateDrawing>
+    val drawings: ArrayList<DrawingModel.Drawing>
 ): Serializable

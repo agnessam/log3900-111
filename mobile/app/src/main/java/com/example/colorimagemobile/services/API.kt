@@ -16,10 +16,8 @@ interface API {
     @POST(Constants.ENDPOINTS.LOGIN_USER)
     fun loginUser(@Body user: UserModel.Login): Call<HTTPResponseModel.LoginResponse>
 
-    @Headers("Content-Type: application/json")
     @POST(Constants.ENDPOINTS.LOGOUT_USER)
-    fun logoutUser(@Body user: UserModel.Logout): Call<Boolean>
-
+    fun logoutUser(@Header("Authorization") token: String,@Body userId: UserModel.Logout): Call<Boolean>
 
     // register region
     @Headers("Content-Type: application/json")
@@ -37,6 +35,17 @@ interface API {
     @Headers("Content-Type: application/json")
     @GET("${Constants.ENDPOINTS.USER_PATH}status")
     fun getUserStatus(@Header("Authorization") token: String): Call<HashMap<String, UserModel.STATUS>>
+
+    @Headers("Content-Type: application/json")
+    @GET(Constants.ENDPOINTS.USER_PATH+"{id}/statistics")
+    fun getUserStatistics(@Header("Authorization") token: String, @Path ("id") id : String): Call<UserModel.Statistics>
+
+    @PATCH(Constants.ENDPOINTS.USER_PATH+"{id}/changePassword")
+    fun updateUserPassword(@Header("Authorization")token: String, @Path ("id") id : String, @Body  newPassword: UserModel.PasswordUpdate) : Call<HTTPResponseModel.UserResponse>
+
+    @Headers("Content-Type: application/json")
+    @PATCH(Constants.ENDPOINTS.USER_PATH+"{id}")
+    fun updateUserPrivacy(@Header("Authorization")token: String, @Path ("id") id : String, @Body  newUserSetting: UserModel.updatePrivacy) : Call<HTTPResponseModel.UserResponse>
 
     @Headers("Content-Type: application/json")
     @GET(Constants.ENDPOINTS.USER_PATH+"{id}")
@@ -69,6 +78,14 @@ interface API {
     @GET(Constants.ENDPOINTS.TEXT_CHANNEL_PATH + "{channelId}" + "/messages")
     fun getAllTextChannelMessages(@Header("Authorization") token: String, @Path ("channelId") channelId: String): Call<ArrayList<ChatSocketModel>>
 
+    @Headers("Content-Type: application/json")
+    @GET(Constants.ENDPOINTS.TEXT_CHANNEL_PATH + "teams")
+    fun getTeamChannels(@Header("Authorization") token: String): Call<ArrayList<TextChannelModel.AllInfo>>
+
+    @Headers("Content-Type: application/json")
+    @GET(Constants.ENDPOINTS.TEXT_CHANNEL_PATH + "drawings/{id}")
+    fun getChannelByDrawingId(@Header("Authorization") token: String, @Path ("id") id: String): Call<TextChannelModel.AllInfo>
+
     //  TextChannel region
     @Headers("Content-Type: application/json")
     @GET(Constants.ENDPOINTS.TEXT_CHANNEL_PATH)
@@ -84,6 +101,10 @@ interface API {
 
     @GET(Constants.ENDPOINTS.TEXT_CHANNEL_PATH + "all/search")
     fun searchChannels(@Header("Authorization") token: String, @Query ("q") query: String): Call<ArrayList<TextChannelModel.AllInfo>>
+    
+    @Headers("Content-Type: application/json")
+    @DELETE(Constants.ENDPOINTS.TEXT_CHANNEL_PATH + "{channelId}/messages")
+    fun deleteMessages(@Header("Authorization")token: String,@Path ("channelId") channelId: String): Call<Any>
 
     // region message
     @Headers("Content-Type: application/json")

@@ -16,6 +16,7 @@ import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.colorimagemobile.R
@@ -25,14 +26,19 @@ import com.example.colorimagemobile.classes.tools.ToolsFactory
 import com.example.colorimagemobile.enumerators.ToolType
 import com.example.colorimagemobile.models.DrawingModel
 import com.example.colorimagemobile.models.OwnerModel
+import com.example.colorimagemobile.models.TextChannelModel
 import com.example.colorimagemobile.repositories.DrawingRepository
+import com.example.colorimagemobile.repositories.TextChannelRepository
+import com.example.colorimagemobile.services.chat.TextChannelService
 import com.example.colorimagemobile.services.drawing.DrawingObjectManager
 import com.example.colorimagemobile.services.drawing.DrawingService
 import com.example.colorimagemobile.services.drawing.ToolTypeService
 import com.example.colorimagemobile.services.drawing.toolsAttribute.SelectionService
+import com.example.colorimagemobile.services.socket.ChatSocketService
 import com.example.colorimagemobile.services.socket.DrawingSocketService
 import com.example.colorimagemobile.services.socket.SocketManagerService
 import com.example.colorimagemobile.services.users.UserService
+import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
 import com.example.colorimagemobile.utils.CommonFun.Companion.printToast
 import com.example.colorimagemobile.utils.Constants
 
@@ -55,6 +61,7 @@ class GalleryDrawingFragment : Fragment(R.layout.fragment_gallery_drawing) {
         setToolsListener()
         checkMuseumOwner()
         ToolTypeService.setCurrentToolType(ToolType.PENCIL)
+        initChat()
     }
 
     private fun setCurrentRoomName() {
@@ -85,6 +92,19 @@ class GalleryDrawingFragment : Fragment(R.layout.fragment_gallery_drawing) {
     override fun onDestroy() {
         super.onDestroy()
         this.leaveDrawingRoom()
+    }
+
+    private fun initChat() {
+        TextChannelRepository().getChannelByDrawingId(DrawingService.getCurrentDrawingID()!!).observe(context as LifecycleOwner, {
+            if (it.isError as Boolean) return@observe
+
+            val channel = it.data as TextChannelModel.AllInfo
+            TextChannelService.setCollaborationChannel(channel)
+
+            if (channel._id != null) {
+                TextChannelService.createNewChannel(channel)
+            }
+        })
     }
 
     private fun checkMuseumOwner() {
