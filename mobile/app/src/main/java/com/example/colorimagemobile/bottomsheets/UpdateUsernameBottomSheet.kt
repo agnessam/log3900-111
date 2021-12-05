@@ -75,7 +75,7 @@ class UpdateUsernameBottomSheet : BottomSheetDialogFragment() {
                 usernameLayout.error = "The name can not be empty"
                 return@doOnTextChanged
             } else if (text.length<Constants.MIN_LENGTH || text.length > Constants.MAX_LENGTH){
-                usernameLayout.error = "The name length should be min 4 and max 14"
+                usernameLayout.error = "The name length should be min 4 and max 12 characters"
                 return@doOnTextChanged
             }
         }

@@ -22,6 +22,7 @@ import com.example.colorimagemobile.services.users.UserService
 import com.example.colorimagemobile.utils.CommonFun.Companion.hideKeyboard
 import com.example.colorimagemobile.utils.CommonFun.Companion.printToast
 import com.example.colorimagemobile.utils.CommonFun.Companion.toggleButton
+import com.example.colorimagemobile.utils.Constants
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -80,12 +81,15 @@ class NewTeamBottomSheet: BottomSheetDialogFragment() {
     @SuppressLint("ClickableViewAccessibility")
     private fun setListeners() {
         nameInput.doOnTextChanged { text, _, _, _ ->
-            nameLayout.error = if (text.toString().isEmpty()) "Team name can't be empty" else null
+            nameLayout.error = if (text.toString().isEmpty()) "Team name required"
+                               else if (text.toString().length < Constants.MIN_LENGTH || text.toString().length> Constants.MAX_LENGTH)
+                                   "Team name length should be min 4 and max 12 characters"
+                               else null
             updateCreateBtn()
         }
 
         descriptionInput.doOnTextChanged { text, _, _, _ ->
-            descriptionLayout.error = if (text.toString().isEmpty()) "Team description can't be empty" else null
+            descriptionLayout.error = if (text.toString().isEmpty()) "Description required" else null
             updateCreateBtn()
         }
 
