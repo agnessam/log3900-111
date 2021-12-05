@@ -2,6 +2,7 @@ import { Component, OnInit, Output } from "@angular/core";
 import { Avatar } from "src/app/shared/models/avatar.model";
 import { EventEmitter } from "@angular/core";
 import { AvatarClientService } from "../../../backend-communication/avatar-client/avatar-client.service";
+import { MatSnackBar } from "@angular/material/snack-bar";
 
 @Component({
   selector: "app-file-upload",
@@ -14,7 +15,10 @@ export class FileUploadComponent implements OnInit {
 
   @Output() uploadedAvatarEvent = new EventEmitter<Avatar>();
 
-  constructor(private avatarClient: AvatarClientService) {}
+  constructor(
+    private avatarClient: AvatarClientService,
+    private snackbar: MatSnackBar
+  ) {}
 
   ngOnInit(): void {}
 
@@ -26,11 +30,14 @@ export class FileUploadComponent implements OnInit {
       this.formData = new FormData();
       this.formData.append("avatar", file);
 
-      this.avatarClient
-        .uploadAvatar(this.formData)
-        .subscribe((uploadedAvatar) => {
+      this.avatarClient.uploadAvatar(this.formData).subscribe(
+        (uploadedAvatar) => {
           this.uploadedAvatarEvent.emit(uploadedAvatar);
-        });
+        },
+        (err) => {
+          this.snackbar.open(err.error.message, "Close", { duration: 3000 });
+        }
+      );
     }
   }
 }
