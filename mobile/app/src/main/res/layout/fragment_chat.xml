@@ -44,7 +44,7 @@
                     android:backgroundTint="@color/primary"
                     android:drawableEnd="@drawable/ic_add"
                     android:text="Add"
-                    android:textColor="@color/black" />
+                    android:textColor="@color/black"/>
 
             </RelativeLayout>
 

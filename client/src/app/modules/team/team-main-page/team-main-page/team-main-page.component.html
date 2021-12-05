@@ -3,6 +3,15 @@
     <div fxFlex="30%" id="section">
       <h1>Collaborations Teams</h1>
     </div>
+    <div fxFlex="30%" id="protected-button">
+      <button
+        mat-raised-button
+        color="secondary"
+        (click)="toggleProtectedTeams()"
+      >
+        {{ showProtectedTeams ? "Show all teams" : "Show protected teams"}}
+      </button>
+    </div>
     <div fxFlex="30%" id="create-button">
       <button
         mat-raised-button
@@ -15,6 +24,7 @@
   </div>
   <br />
   <div fxLayout="row wrap" fxLayout.sm="columnm wrap" fxLayoutGap="33px grid">
+    <ng-container *ngIf="!showProtectedTeams; else protected" >
     <div
       class="team-card"
       fxFlex="33%"
@@ -34,5 +44,27 @@
         </mat-card-content>
       </mat-card>
     </div>
+  </ng-container>
+  <ng-template #protected>
+    <div
+      class="team-card"
+      fxFlex="33%"
+      fxFlex.xs="100%"
+      fxFlex.sm="50%"
+      *ngFor="let team of protectedTeams"
+    >
+      <mat-card class="mat-elevation-z2 team">
+        <mat-card-header>
+          <mat-card-title (click)="goToTeam(team._id)"
+            >{{ team.name }}
+          </mat-card-title>
+        </mat-card-header>
+
+        <mat-card-content>
+          <p>{{ team.description }}</p>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </ng-template>
   </div>
 </div>
