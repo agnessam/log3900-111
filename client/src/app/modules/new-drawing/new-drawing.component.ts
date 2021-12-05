@@ -34,7 +34,6 @@ export class NewDrawingComponent implements OnInit {
   teams: Team[] = [];
 
   matcher = new FormErrorStateMatcher();
-  passwordMatcher = new FormErrorStateMatcher();
 
   ownerModel: string = "User";
   privacyLevel = "public";
@@ -55,19 +54,22 @@ export class NewDrawingComponent implements OnInit {
   ngOnInit(): void {
     this.form = new FormGroup(
       {
-        name: new FormControl("", Validators.required),
+        name: new FormControl("", [
+          Validators.required,
+          Validators.minLength(4),
+          Validators.maxLength(12),
+        ]),
         ownerModel: new FormControl(""),
         owner: new FormControl({ value: "", disabled: true }),
         privacyLevel: new FormControl("public"),
-        password: new FormControl({ value: "", disabled: true }),
+        password: new FormControl(
+          { value: "", disabled: true },
+          Validators.required
+        ),
         color: this.colorPickerService.colorForm,
       },
       {
-        validators: [
-          this.NonEmptyPassword,
-          this.NonEmptyTeam,
-          this.NoTeamJoined,
-        ],
+        validators: [this.NonEmptyTeam, this.NoTeamJoined],
       }
     );
     this.dialogRef.afterOpened().subscribe(() => this.onResize());
@@ -175,17 +177,5 @@ export class NewDrawingComponent implements OnInit {
     } else {
       return null;
     }
-  };
-
-  NonEmptyPassword: ValidatorFn = (
-    group: AbstractControl
-  ): ValidationErrors | null => {
-    const privacyLevel = group.get("privacyLevel")?.value;
-    if (privacyLevel == "public" || privacyLevel == "private") return null;
-    const password = group.get("password")?.value;
-    if (privacyLevel == "protected" && password == "") {
-      return { nonNullPassword: true };
-    }
-    return null;
   };
 }

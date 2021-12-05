@@ -13,7 +13,14 @@
           formControlName="name"
         />
         <mat-error *ngIf="this.form.getError('required', 'name')"
-          >A drawing name is required.</mat-error
+          >Drawing name is required</mat-error
+        >
+
+        <mat-error *ngIf="this.form.getError('minlength', 'name')"
+          >Drawing name must contain atleast 4 characters</mat-error
+        >
+        <mat-error *ngIf="this.form.getError('maxlength', 'name')"
+          >Drawing name cannot contain more than 12 characters</mat-error
         >
       </mat-form-field>
     </div>
@@ -21,8 +28,7 @@
       <h1 mat-dialog-title>Assign the owner of the drawing.</h1>
       <p>By default, the owner of the drawing is assigned to you, the user.</p>
       <mat-checkbox (change)="toggleOwnerModel()" style="padding-bottom: 10px">
-        Would you like to assign this drawing to one of your collaboration
-        teams?
+        Assign this drawing to a collaboration team
       </mat-checkbox>
       <mat-form-field>
         <mat-label>Team name</mat-label>
@@ -67,9 +73,8 @@
             matInput
             placeholder="Drawing password"
             formControlName="password"
-            [errorStateMatcher]="passwordMatcher"
           />
-          <mat-error *ngIf="this.form.getError('nonNullPassword')">
+          <mat-error *ngIf="this.form.getError('required', 'password')">
             Password cannot be empty
           </mat-error>
         </mat-form-field>
