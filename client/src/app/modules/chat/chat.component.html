@@ -68,7 +68,9 @@
             <div class="messageBox">
               {{ m.message }}
             </div>
-            <div class="time">{{ m.timestamp }}</div>
+            <div class="time">
+              {{ transformDate(m.timestamp) | date: "medium" }}
+            </div>
           </div>
         </div>
       </div>

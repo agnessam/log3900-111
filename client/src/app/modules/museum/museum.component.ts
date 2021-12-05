@@ -16,7 +16,7 @@ import { Router } from "@angular/router";
   styleUrls: ["./museum.component.scss"],
 })
 export class MuseumComponent implements OnInit {
-  @ViewChild('audioOption') audioPlayerRef: ElementRef;
+  @ViewChild("audioOption") audioPlayerRef: ElementRef;
 
   user: User | null;
   posts: PostInterface[];
@@ -85,8 +85,7 @@ export class MuseumComponent implements OnInit {
           .find((postItem) => postItem._id === post._id)
           ?.likes.splice(index, 1);
       });
-    }
-    else{
+    } else {
       this.effect(post._id);
       this.postService.addLike(userid, post._id).subscribe((like) => {
         this.posts
@@ -108,15 +107,13 @@ export class MuseumComponent implements OnInit {
     });
   }
 
-  getTime(createdAt: string): string {
-    return createdAt.split("T")[0];
-  }
-
-  effect(postId:string){
+  effect(postId: string) {
     this.audioPlayerRef.nativeElement.play();
-    let postLiked = document.getElementById(postId+':like') as HTMLInputElement;
+    let postLiked = document.getElementById(
+      postId + ":like"
+    ) as HTMLInputElement;
     postLiked.style.display = "block";
-    setTimeout(()=>{
+    setTimeout(() => {
       postLiked.style.display = "none";
     }, 1400);
   }

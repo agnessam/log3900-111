@@ -1,7 +1,7 @@
 <div id="post">
   <div class="image">
-    <img src="../../../assets/effect/like.gif" class="likeEffect" #like>
-    <img [src]="this.transformUri()" class="drawing">
+    <img src="../../../assets/effect/like.gif" class="likeEffect" #like />
+    <img [src]="this.transformUri()" class="drawing" />
   </div>
 
   <div class="left-section">
@@ -30,7 +30,7 @@
           {{ getUsername(post) }}
         </div>
         <div class="time-text" *ngIf="post.owner">
-          {{ getTime(post.createdAt) }}
+          {{ post.createdAt | date: "medium" }}
         </div>
       </div>
     </div>

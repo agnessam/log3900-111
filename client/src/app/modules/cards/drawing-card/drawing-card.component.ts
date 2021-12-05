@@ -120,4 +120,8 @@ export class DrawingCardComponent implements OnInit {
   capitalizeFirstLetter(string: string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
   }
+
+  transformDate(date: string) {
+    return new Date(date);
+  }
 }
