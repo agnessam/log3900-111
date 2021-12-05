@@ -47,7 +47,13 @@ class LineWidthCommand(objectId: String, private var lineWidth: Int): ICommand {
         ellipse.strokeWidth = newValue
         DrawingJsonService.updateEllipseWidth(ellipse)
 
-//        setEndPoint(endingPoint!!)
+        var fillBounds = RectF()
+        resizeBorderPath!!.computeBounds(fillBounds, true)
+        traceFillPath(fillBounds.left, fillBounds.top, fillBounds.right, fillBounds.bottom)
+
+        var borderBounds = RectF()
+        resizeBorderPath!!.computeBounds(borderBounds, true)
+        traceBorderPath(borderBounds.left, borderBounds.top, borderBounds.right, borderBounds.bottom)
         execute()
     }
 
