@@ -18,6 +18,7 @@ class Constants {
         const val NOTIFICATION_URI ="android.resource://com.example.colorimagemobile/raw/pop"
         const val MIN_LENGTH = 4
         const val MAX_LENGTH = 14
+        const val EMAIL_MIN_LENGTH = 8
 
     }
 

@@ -68,4 +68,21 @@ class FormValidator(layouts: ArrayList<TextInputLayout>, inputs: ArrayList<TextI
 
         return isInputLengthInvalid
     }
+
+    fun isInputLengthShort(lengthShortString: String): Boolean {
+        var isInputLengthShort: Boolean = false
+
+        this.inputs.forEachIndexed { index, input ->
+            var helperText: String = ""
+
+            if (input.text!!.length <8) {
+                isInputLengthShort = true
+                helperText = lengthShortString
+            }
+
+            this.layouts[index].helperText = helperText
+        }
+
+        return isInputLengthShort
+    }
 }
