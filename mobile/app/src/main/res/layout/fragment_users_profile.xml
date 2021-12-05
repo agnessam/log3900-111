@@ -66,23 +66,14 @@
 
                 </androidx.cardview.widget.CardView>
 
-                <!-- Posts Followers Following header -->
+                <!-- Followers header -->
                 <RelativeLayout
-                    android:id="@+id/FollwerFollowingHeaders"
+                    android:id="@+id/FollwerHeaders"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/userIdImageViewCard"
                     android:orientation="horizontal"
                     android:singleLine="true">
-
-                    <TextView
-                        android:id="@+id/userIdNbOfPosts"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="40dp"
-                        android:textColor="@color/black"
-                        android:textSize="22sp"
-                        android:textStyle="italic|bold" />
 
                     <TextView
                         android:id="@+id/userIdNbOfFollowers"
@@ -94,48 +85,23 @@
                         android:textSize="22sp"
                         android:textStyle="italic|bold" />
 
-                    <TextView
-                        android:id="@+id/userIdNbOfFollowing"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentEnd="true"
-                        android:layout_marginEnd="60dp"
-                        android:textColor="@color/black"
-                        android:textSize="22sp"
-                        android:textStyle="italic|bold" />
-
 
                 </RelativeLayout>
 
-                <!-- Posts Followers Following header -->
+                <!-- Followers Following  -->
                 <RelativeLayout
-                    android:id="@+id/FollwerFollowingvalues"
+                    android:id="@+id/Follwervalues"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/FollwerFollowingHeaders"
+                    android:layout_below="@id/FollwerHeaders"
                     android:orientation="horizontal"
                     android:singleLine="true">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="20dp"
-                        android:text="@string/posts"
-                        android:textSize="22sp" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
                         android:layout_centerInParent="true"
                         android:text="@string/followers"
-                        android:textSize="22sp" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentEnd="true"
-                        android:layout_marginEnd="10dp"
-                        android:text="@string/following"
                         android:textSize="22sp" />
 
 
@@ -146,7 +112,7 @@
                     android:id="@+id/userIdActionContainer"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/FollwerFollowingvalues"
+                    android:layout_below="@id/Follwervalues"
                     android:layout_marginTop="30dp">
 
                     <View

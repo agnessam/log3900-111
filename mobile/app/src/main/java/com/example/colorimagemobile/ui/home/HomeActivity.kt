@@ -269,16 +269,4 @@ class HomeActivity : AppCompatActivity() {
             MyFragmentManager(this).openWithData(R.id.fragment, SearchFragment(), Constants.SEARCH.CURRENT_QUERY, filteredData)
         })
     }
-
-    private fun getAllUsers() {
-        UserRepository().getAllUser(UserService.getToken()).observe(this,{ it ->
-            // some error occurred during HTTP request
-            if (it.isError as Boolean) {
-                CommonFun.printToast(this, it.message!!)
-                return@observe
-            }
-            val users = it.data as ArrayList<UserModel.AllInfo>
-            UserService.setAllUserInfo(users)
-        })
-    }
 }
