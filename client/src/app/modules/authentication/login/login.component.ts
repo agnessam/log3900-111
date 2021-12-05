@@ -1,6 +1,5 @@
 import { Component, OnInit, ViewEncapsulation } from "@angular/core";
-import { FormGroup, FormControl } from "@angular/forms";
-import { MatSnackBar } from "@angular/material/snack-bar";
+import { FormGroup, FormControl, Validators } from "@angular/forms";
 import { Router } from "@angular/router";
 import { AuthenticationService } from "../services/authentication/authentication.service";
 
@@ -15,14 +14,13 @@ export class LoginComponent implements OnInit {
 
   constructor(
     private router: Router,
-    private authenticationService: AuthenticationService,
-    private snackBar: MatSnackBar
+    private authenticationService: AuthenticationService
   ) {}
 
   ngOnInit(): void {
     this.loginForm = new FormGroup({
-      email: new FormControl(""),
-      password: new FormControl(""),
+      email: new FormControl("", Validators.required),
+      password: new FormControl("", Validators.required),
     });
   }
 
@@ -35,9 +33,15 @@ export class LoginComponent implements OnInit {
       .login(this.loginForm.value.email, this.loginForm.value.password)
       .subscribe((response) => {
         if (response.error) {
-          this.snackBar.open(response.error, "Close", {
-            duration: 3000,
-          });
+          if (response.error == "Email was not found") {
+            this.loginForm.controls["email"].setErrors({
+              emailUnfindable: true,
+            });
+          } else if (response.error == "Wrong password") {
+            this.loginForm.controls["password"].setErrors({
+              wrongPassword: true,
+            });
+          }
         } else {
           this.router.navigate([""]);
         }
