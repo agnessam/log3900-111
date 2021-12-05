@@ -33,7 +33,10 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var binding: ActivityLoginBinding
     private lateinit var formValidator: FormValidator
     private var canSubmit: Boolean = true
-
+    enum class FormIndexes(val index: Int) {
+        EMAIL(1),
+        PASSWORD(2),
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,8 +44,8 @@ class LoginActivity : AppCompatActivity() {
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
         sharedPreferencesService = SharedPreferencesService(this)
-        val loginLayouts = arrayListOf<TextInputLayout>(binding.usernameInputLayout, binding.passwordInputLayout)
-        val loginInputs = arrayListOf<TextInputEditText>(binding.usernameInputText, binding.passwordInputText)
+        val loginLayouts = arrayListOf<TextInputLayout>(binding.emailInputLayout, binding.passwordInputLayout)
+        val loginInputs = arrayListOf<TextInputEditText>(binding.emailInputText, binding.passwordInputText)
         formValidator = FormValidator(loginLayouts, loginInputs)
         setListeners()
     }
@@ -53,11 +56,11 @@ class LoginActivity : AppCompatActivity() {
         binding.registerBtn.setOnClickListener { redirectTo(this, RegisterActivity::class.java) }
         binding.loginMain.setOnTouchListener { v, event -> hideKeyboard(this,binding.loginMain) }
 
-        onEnterKeyPressed(binding.usernameInputText) { executeLogin() }
+        onEnterKeyPressed(binding.emailInputText) { executeLogin() }
         onEnterKeyPressed(binding.passwordInputText) { executeLogin() }
 
         // inputs error handling
-        binding.usernameInputText.doOnTextChanged { text, start, before, count ->  handleInputError(text, binding.usernameInputLayout) }
+        binding.emailInputText.doOnTextChanged { text, start, before, count ->  handleInputError(text, binding.emailInputLayout) }
         binding.passwordInputText.doOnTextChanged { text, start, before, count ->  handleInputError(text, binding.passwordInputLayout)}
     }
 
@@ -72,14 +75,14 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun executeLogin() {
-        handleInputError(binding.usernameInputText.text, binding.usernameInputLayout)
+        handleInputError(binding.emailInputText.text, binding.emailInputLayout)
         handleInputError(binding.passwordInputText.text, binding.passwordInputLayout)
         if (!canSubmit) {
             val shake = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.shake)
             loginForm.startAnimation(shake);
             return
         }
-        val user = UserModel.Login(binding.usernameInputText.text.toString(), binding.passwordInputText.text.toString())
+        val user = UserModel.Login(binding.emailInputText.text.toString(), binding.passwordInputText.text.toString())
         
         // username ok -> make HTTP POST request
         val loginObserver = loginActivityViewModel.loginUser(user)
