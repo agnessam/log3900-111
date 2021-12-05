@@ -1,8 +1,8 @@
 import { User } from "../../users/models/user";
 
-export interface CommentInterface extends Document {
+export interface CommentInterface {
   content: string;
-  author: string | User;
+  author: User;
   postId: string;
 
   createdAt?: string;

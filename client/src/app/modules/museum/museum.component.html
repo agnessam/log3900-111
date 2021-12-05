@@ -1,14 +1,114 @@
 <div id="museum">
-  <div *ngIf="posts.length != 0; else noPost" >
-    <div *ngFor="let post of posts">
-      <div class="post">
-        <app-post-card [post]="post" (click)="openPostDialog(post)"></app-post-card>
+  <div *ngFor="let post of posts">
+    <div class="post">
+      <div class="post-header">
+        <div class="author-picture" *ngIf="post.owner">
+          <ngx-avatar
+            [src]="post.owner.avatar?.imageUrl"
+            *ngIf="post.ownerModel == 'User'"
+            (click)="goToUserProfile(post)"
+          ></ngx-avatar>
+          <ngx-avatar
+            [name]="post.owner.name"
+            *ngIf="post.ownerModel == 'Team'"
+            (click)="goToTeamProfile(post)"
+          ></ngx-avatar>
+        </div>
+        <div class="info">
+          <div
+            class="author-text"
+            *ngIf="post.ownerModel === 'User'"
+            (click)="goToUserProfile(post)"
+          >
+            {{ post.owner.username }}
+          </div>
+          <div
+            class="author-text"
+            *ngIf="post.ownerModel === 'Team'"
+            (click)="goToTeamProfile(post)"
+          >
+            {{ post.owner.name }}
+          </div>
+          <div class="time-text" *ngIf="post.owner">
+            {{ post.createdAt | date: "medium" }}
+          </div>
+        </div>
+      </div>
+
+      <div class="post-image">
+        <div class="image">
+          <img
+            src="../../../assets/effect/like.gif"
+            class="likeEffect"
+            [id]="post._id + ':like'"
+          />
+          <img
+            [src]="this.transformUri(post.dataUri)"
+            class="drawing"
+            (click)="openPostDialog(post)"
+          />
+        </div>
+
+        <div class="bottom-image">
+          <div class="bottom-group" (click)="toggleLike(post)">
+            <audio #audioOption>
+              <source src="../../../assets/sound/like.mp3" type="audio/mp3" />
+            </audio>
+
+            <div *ngIf="hasBeenLike(post.likes); else notLikeBlock">
+              <mat-icon>favorite</mat-icon>
+            </div>
+            <ng-template #notLikeBlock>
+              <div>
+                <mat-icon>favorite_border</mat-icon>
+              </div>
+            </ng-template>
+            <div class="nbLike">
+              {{ post.likes.length }}
+            </div>
+          </div>
+          <div class="bottom-group">
+            <mat-icon>chat_bubble</mat-icon>
+            <div class="nbLike">
+              {{ post.comments.length }}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div *ngFor="let comment of post.comments.slice(0, 4)">
+        <div class="comment">
+          <span
+            class="username-comment"
+            (click)="goToUserProfileViaComment(comment)"
+            >{{ comment.author?.username }}</span
+          >
+          {{ comment.content }}
+        </div>
+      </div>
+      <div
+        class="view-remaining-comments"
+        *ngIf="post.comments.length > 4"
+        (click)="openPostDialog(post)"
+      >
+        View all {{ post.comments.length }} comments
+      </div>
+
+      <div class="bottom-comment">
+        <input
+          type="comment"
+          #commentInput
+          [id]="post._id"
+          class="comment-input"
+          autocomplete="off"
+          spellcheck="false"
+          placeholder="Add comment"
+          (keyup.enter)="addComment(post._id)"
+        />
+        <button mat-icon-button id="postbtn" (click)="addComment(post._id)">
+          POST
+        </button>
       </div>
     </div>
   </div>
-  <ng-template #noPost>
-    <div class="advice">
-      Start by following other users
-    </div>
-  </ng-template>
 </div>

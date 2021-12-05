@@ -1,5 +1,5 @@
 import { PostService } from "./services/post.service";
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, ViewChild, ElementRef } from "@angular/core";
 import { PostInterface } from "./models/post.model";
 import { AuthenticationService } from "../authentication";
 import { User } from "../authentication/models/user";
@@ -8,6 +8,7 @@ import { CommentInterface } from "./models/comment.model";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { MatDialog } from "@angular/material/dialog";
 import { PostDialogComponent } from "../post-dialog/post-dialog.component";
+import { Router } from "@angular/router";
 
 @Component({
   selector: "app-museum",
@@ -15,6 +16,8 @@ import { PostDialogComponent } from "../post-dialog/post-dialog.component";
   styleUrls: ["./museum.component.scss"],
 })
 export class MuseumComponent implements OnInit {
+  @ViewChild("audioOption") audioPlayerRef: ElementRef;
+
   user: User | null;
   posts: PostInterface[];
 
@@ -23,7 +26,8 @@ export class MuseumComponent implements OnInit {
     private postService: PostService,
     private sanitizer: DomSanitizer,
     private snackBar: MatSnackBar,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    private router: Router
   ) {
     this.posts = new Array();
   }
@@ -33,9 +37,6 @@ export class MuseumComponent implements OnInit {
       (user) => (this.user = user)
     );
 
-    // this.postService.getPostsByFollowedUsers().subscribe((posts) => {
-    //   this.posts = posts;
-    // });
     this.postService.getPosts().subscribe((posts) => {
       this.posts = posts;
     });
@@ -63,7 +64,7 @@ export class MuseumComponent implements OnInit {
 
     const comment = {
       content: content,
-      author: this.user._id,
+      author: this.user,
       postId: postId,
     } as CommentInterface;
     this.postService.addComment(postId, comment).subscribe((commentReceive) => {
@@ -85,6 +86,7 @@ export class MuseumComponent implements OnInit {
           ?.likes.splice(index, 1);
       });
     } else {
+      this.effect(post._id);
       this.postService.addLike(userid, post._id).subscribe((like) => {
         this.posts
           .find((postItem) => postItem._id === post._id)
@@ -103,5 +105,28 @@ export class MuseumComponent implements OnInit {
       width: "80%",
       data: post,
     });
+  }
+
+  effect(postId: string) {
+    this.audioPlayerRef.nativeElement.play();
+    let postLiked = document.getElementById(
+      postId + ":like"
+    ) as HTMLInputElement;
+    postLiked.style.display = "block";
+    setTimeout(() => {
+      postLiked.style.display = "none";
+    }, 1400);
+  }
+
+  goToUserProfile(post: PostInterface) {
+    this.router.navigate([`/users/${post.owner._id}`]);
+  }
+
+  goToTeamProfile(post: PostInterface) {
+    this.router.navigate([`/teams/${post.owner._id}`]);
+  }
+
+  goToUserProfileViaComment(comment: CommentInterface) {
+    this.router.navigate([`/users/${comment.author._id}`]);
   }
 }

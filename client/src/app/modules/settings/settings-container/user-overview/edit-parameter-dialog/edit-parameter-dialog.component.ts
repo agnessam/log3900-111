@@ -24,7 +24,8 @@ export class EditParameterDialogComponent implements OnInit {
     this.usernameForm = new FormGroup({
       username: new FormControl(this.data.username, [
         Validators.required,
-        Validators.minLength(3),
+        Validators.minLength(4),
+        Validators.maxLength(12),
       ]),
     });
   }

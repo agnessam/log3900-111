@@ -14,6 +14,7 @@ import { EditTeamParametersComponent } from "../edit-team-parameters/edit-team-p
 import { MemberListDialogComponent } from "../member-list-dialog/member-list-dialog.component";
 import { PostInterface } from "src/app/modules/museum/models/post.model";
 import { PostDialogComponent } from "src/app/modules/post-dialog/post-dialog.component";
+import { PostService } from "src/app/modules/museum/services/post.service";
 
 @Component({
   selector: "app-team-profile",
@@ -38,7 +39,8 @@ export class TeamProfileComponent implements OnInit {
     private textChannelService: TextChannelService,
     private chatSocketService: ChatSocketService,
     private dialog: MatDialog,
-    private changeDetectorRef: ChangeDetectorRef
+    private changeDetectorRef: ChangeDetectorRef,
+    private postService:PostService,
   ) {}
 
   ngOnInit(): void {
@@ -91,7 +93,7 @@ export class TeamProfileComponent implements OnInit {
     );
     this.openConfirmJoinDialogRef.afterClosed().subscribe((team) => {
       if (!team) return;
-      this.team = team;
+      this.team.members = team.members;
       this.changeDetectorRef.detectChanges();
     });
   }
@@ -104,7 +106,7 @@ export class TeamProfileComponent implements OnInit {
 
     this.openConfirmDeleteDialogRef.afterClosed().subscribe(() => {
       this.textChannelService.emitDeleteTeamChannel(this.team.name);
-    })
+    });
   }
 
   openConfirmLeaveDialog() {
@@ -116,7 +118,7 @@ export class TeamProfileComponent implements OnInit {
       if (!team) {
         return;
       }
-      this.team = team;
+      this.team.members = team.members;
       this.chatSocketService.leaveRoom(team.name);
       this.changeDetectorRef.detectChanges();
     });
@@ -154,9 +156,11 @@ export class TeamProfileComponent implements OnInit {
   }
 
   openPostDialog(post: PostInterface): void {
-    this.dialog.open(PostDialogComponent, {
-      width: '80%',
-      data: post,
+    this.postService.getPostById(post._id).subscribe((postReceive) => {
+      this.dialog.open(PostDialogComponent, {
+        width: '80%',
+        data: postReceive,
+      });
     });
   }
 }

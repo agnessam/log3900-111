@@ -40,7 +40,11 @@
             matInput
             placeholder="Drawing password"
             formControlName="password"
+            [errorStateMatcher]="matcher"
           />
+          <mat-error *ngIf="this.drawingForm.getError('nullPassword')"
+            >Password cannot be empty</mat-error
+          >
         </mat-form-field>
       </li>
     </div>
@@ -52,6 +56,7 @@
       mat-raised-button
       color="primary"
       type="submit"
+      [disabled]="this.drawingForm.invalid"
       (click)="updateDrawingParameters()"
     >
       Update

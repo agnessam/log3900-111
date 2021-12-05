@@ -1,7 +1,8 @@
-<mat-grid-list cols="1" rowHeight="100%">
+<mat-grid-list cols="1" rowHeight="90%">
   <mat-grid-tile>
     <mat-card>
       <mat-card-title id="title-card">Tell us about yourself</mat-card-title>
+      <br />
       <mat-card-content>
         <app-avatar
           [currentUser]="currentUser"
@@ -15,11 +16,11 @@
           <div id="user-description-input">
             <mat-form-field appearance="outline">
               <mat-label>Description</mat-label>
-              <textarea
+              <input
                 matInput
                 placeholder="Description"
                 formControlName="description"
-              ></textarea>
+              />
             </mat-form-field>
           </div>
           <div id="skip-redirect">
@@ -30,7 +31,7 @@
           </div>
           <div id="customize-button" class="button">
             <button type="submit" mat-raised-button color="primary">
-              Customize
+              Confirm
             </button>
           </div>
         </form>

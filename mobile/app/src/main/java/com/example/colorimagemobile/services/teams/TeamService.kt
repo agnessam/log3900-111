@@ -6,7 +6,10 @@ import androidx.lifecycle.LifecycleOwner
 import com.example.colorimagemobile.R
 import com.example.colorimagemobile.classes.MyFragmentManager
 import com.example.colorimagemobile.models.TeamModel
+import com.example.colorimagemobile.models.UpdateTeam
 import com.example.colorimagemobile.repositories.TeamRepository
+import com.example.colorimagemobile.services.chat.ChatService
+import com.example.colorimagemobile.services.chat.TextChannelService
 import com.example.colorimagemobile.services.users.UserService
 import com.example.colorimagemobile.ui.home.fragments.teams.TeamsMenuFragment
 import com.example.colorimagemobile.utils.CommonFun.Companion.printToast
@@ -60,6 +63,13 @@ object TeamService {
 
             if (it.isError as Boolean) { return@observe }
             MyFragmentManager(context as FragmentActivity).open(R.id.teamsMenuFrameLayout, TeamsMenuFragment())
+            TextChannelService.removeChannel(allTeams.find { team -> team._id == teamId }?.name)
+        })
+    }
+
+    fun updateTeam(teamId: String, context: Context, newTeamData: UpdateTeam) {
+        TeamRepository().updateTeam(teamId, newTeamData).observe(context as LifecycleOwner, {
+            printToast(context, it.message!!)
         })
     }
 }

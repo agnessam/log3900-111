@@ -11,4 +11,24 @@
   </button>
   <br />
   <br />
+  <div [formGroup]="form">
+    <div>
+      <mat-form-field>
+        <mat-label>Stroke width</mat-label>
+        <input
+          id="strokeInput"
+          matInput
+          matTextareaAutosize
+          formControlName="strokeWidth"
+          type="number"
+          placeholder="Stroke width"
+          min="1"
+          max="50"
+          oninput="validity.valid||(value='1');"
+          onblur="validity.valid||(value='1');"
+          (ngModelChange)="changeLineWidth()"
+        />
+      </mat-form-field>
+    </div>
+  </div>
 </div>

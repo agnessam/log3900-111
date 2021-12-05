@@ -19,13 +19,13 @@ class SearchRepository {
         httpClient.getSearchQuery(token = "Bearer ${UserService.getToken()}", query).enqueue(object : Callback<SearchModel> {
             override fun onResponse(call: Call<SearchModel>, response: Response<SearchModel>) {
                 if (!response.isSuccessful) {
-                    teamsLiveData.value = DataWrapper(null, "An error occurred while fetching all teams!", true)
+                    teamsLiveData.value = DataWrapper(null, "An error occurred while searching for ${query}!", true)
                     return
                 }
                 teamsLiveData.value = DataWrapper(response.body(), "", false)
             }
             override fun onFailure(call: Call<SearchModel>, t: Throwable) {
-                teamsLiveData.value = DataWrapper(null, "Sorry, failed to get fetch teams messages!", true)
+                teamsLiveData.value = DataWrapper(null, "Sorry, failed to get search for ${query}!", true)
             }
         })
 

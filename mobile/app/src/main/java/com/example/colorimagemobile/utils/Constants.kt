@@ -14,6 +14,9 @@ class Constants {
         const val AVATAR_ALL_INFO_DEFAULT = true
 
         const val NB_DATA_ROWS = 3
+        const val MINUTES = " minutes"
+        const val NOTIFICATION_URI ="android.resource://com.example.colorimagemobile/raw/pop"
+
     }
 
     class SOCKETS {
@@ -36,6 +39,7 @@ class Constants {
             const val DELETE_SELECTION_EVENT = "selection-delete"
             const val PRIMARY_COLOR_EVENT = "color-primary-update"
             const val SECONDARY_COLOR_EVENT = "color-secondary-update"
+            const val LINE_WIDTH_EVENT = "line-width-update"
         }
     }
 
@@ -103,11 +107,20 @@ class Constants {
         }
     }
 
+    class DRAWINGS {
+        companion object {
+            const val CURRENT_DRAWING_ID_KEY = "CurrentDrawing"
+        }
+    }
+
     // sharedPreferences keys
     class STORAGE_KEY {
         companion object {
             const val MAIN = "localStorage"
             const val TOKEN = "token"
+            const val PRIVACY_EMAIL = "searchByEmail"
+            const val PRIVACY_FIRSTNAME = "searchByFirstname"
+            const val PRIVACY_LASTNAME = "searchByLastname"
         }
     }
 

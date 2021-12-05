@@ -21,7 +21,7 @@ export class LoginComponent implements OnInit {
 
   ngOnInit(): void {
     this.loginForm = new FormGroup({
-      username: new FormControl(""),
+      email: new FormControl(""),
       password: new FormControl(""),
     });
   }
@@ -32,7 +32,7 @@ export class LoginComponent implements OnInit {
     }
 
     this.authenticationService
-      .login(this.loginForm.value.username, this.loginForm.value.password)
+      .login(this.loginForm.value.email, this.loginForm.value.password)
       .subscribe((response) => {
         if (response.error) {
           this.snackBar.open(response.error, "Close", {

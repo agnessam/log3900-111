@@ -41,8 +41,8 @@ object SynchronisationService {
             var updateData = when(toolType){
                 "Pencil" -> {
                     var point = JSONObject(drawingCommand["point"].toString())
-                    var x: Float = (point["x"] as Int).toFloat()
-                    var y: Float = (point["y"] as Int).toFloat()
+                    var x: Float = point["x"].toString().toFloat()
+                    var y: Float = point["y"].toString().toFloat()
                     var newPoint = Point(x, y)
                     SyncUpdate(newPoint)
                 }
@@ -167,5 +167,10 @@ object SynchronisationService {
     fun setObjectSecondaryColor(colorData: ColorData) {
         val secondaryColorCommand = CommandFactory.createCommand("SecondaryColor", colorData)
         secondaryColorCommand?.execute()
+    }
+
+    fun setSelectionLineWidth(lineWidthData: LineWidthData) {
+        val lineWidthCommand = CommandFactory.createCommand("LineWidth", lineWidthData)
+        lineWidthCommand?.execute()
     }
 }

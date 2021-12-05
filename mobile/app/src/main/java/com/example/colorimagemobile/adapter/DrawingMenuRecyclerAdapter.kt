@@ -22,6 +22,7 @@ import com.example.colorimagemobile.classes.MyFragmentManager
 import com.example.colorimagemobile.classes.MyPicasso
 import com.example.colorimagemobile.enumerators.ButtonType
 import com.example.colorimagemobile.models.DrawingModel
+import com.example.colorimagemobile.models.OwnerModel
 import com.example.colorimagemobile.models.PrivacyLevel
 import com.example.colorimagemobile.models.recyclerAdapters.DrawingMenuData
 import com.example.colorimagemobile.models.recyclerAdapters.DrawingMenuViewHolder
@@ -29,6 +30,7 @@ import com.example.colorimagemobile.services.drawing.DrawingOwnerService
 import com.example.colorimagemobile.services.drawing.DrawingService
 import com.example.colorimagemobile.services.socket.DrawingSocketService
 import com.example.colorimagemobile.services.teams.TeamService
+import com.example.colorimagemobile.ui.home.fragments.teams.TeamsProfileFragment
 import com.example.colorimagemobile.ui.home.fragments.users.UsersProfileFragment
 import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
 import com.example.colorimagemobile.utils.Constants
@@ -61,7 +63,6 @@ class DrawingMenuRecyclerAdapter(
 
         val avatar = DrawingOwnerService.getAvatar(drawingMenus[position].drawing.owner)
         if (avatar != null) {
-            holder.drawingMenuViewHolder.authorImageViewParent.visibility = View.VISIBLE
             MyPicasso().loadImage(avatar.imageUrl, holder.drawingMenuViewHolder.authorImageView)
         }
 
@@ -107,12 +108,11 @@ class DrawingMenuRecyclerAdapter(
             val imageView = itemView.findViewById<ImageView>(R.id.card_drawing_menu_image)
             val lockIconView = itemView.findViewById<ImageView>(R.id.card_drawing_menu_privacy_icon)
             val authorImageView = itemView.findViewById<ImageView>(R.id.card_drawing_menu_author_image)
-            val authorImageViewParent = itemView.findViewById<CardView>(R.id.card_drawing_menu_author_image_main)
             val privacyLevel = itemView.findViewById<TextView>(R.id.card_drawing_menu_date_privacy)
             val popupMenu = itemView.findViewById<ImageButton>(R.id.card_drawing_menu_options)
             val collaborators = itemView.findViewById<TextView>(R.id.card_drawing_menu_collaborators)
 
-            drawingMenuViewHolder = DrawingMenuViewHolder(name, authorName, drawingDate, imageView, lockIconView, authorImageView, privacyLevel, authorImageViewParent, popupMenu, collaborators)
+            drawingMenuViewHolder = DrawingMenuViewHolder(name, authorName, drawingDate, imageView, lockIconView, authorImageView, privacyLevel, popupMenu, collaborators)
 
             // click listener for clicking on specific drawing
             itemView.setOnClickListener {
@@ -163,8 +163,14 @@ class DrawingMenuRecyclerAdapter(
             }
 
             authorName.setOnClickListener {
-                val userId = drawingMenus[bindingAdapterPosition].drawing.owner._id
-                MyFragmentManager(activity).openWithData(R.id.main_gallery_fragment, UsersProfileFragment(), Constants.USERS.CURRENT_USER_ID_KEY, userId)
+                val ownerModel = drawingMenus[bindingAdapterPosition].drawing.ownerModel
+                val ownerId = drawingMenus[bindingAdapterPosition].drawing.owner._id
+
+                if (ownerModel == OwnerModel.USER.toString()) {
+                    MyFragmentManager(activity).openWithData(R.id.main_gallery_fragment, UsersProfileFragment(), Constants.USERS.CURRENT_USER_ID_KEY, ownerId)
+                } else {
+                    MyFragmentManager(activity).openWithData(R.id.main_gallery_fragment, TeamsProfileFragment(), Constants.TEAMS.CURRENT_TEAM_ID_KEY, ownerId)
+                }
             }
         }
     }

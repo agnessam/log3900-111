@@ -19,6 +19,7 @@ import { UsersService } from "../users/services/users.service";
 import { Team } from "src/app/shared/models/team.model";
 import { OptionalDrawingParameters } from "./optional-drawing-parameters";
 import { TextChannelService } from "../chat/services/text-channel.service";
+import { FormErrorStateMatcher } from "../settings/settings-container/user-overview/error-state-matcher/ErrorStateMatcher";
 
 const ONE_SECOND = 1000;
 const DEFAULT_DRAWING_WIDTH = 1440;
@@ -31,6 +32,9 @@ const DEFAULT_DRAWING_HEIGHT = 900;
 export class NewDrawingComponent implements OnInit {
   form: FormGroup;
   teams: Team[] = [];
+
+  matcher = new FormErrorStateMatcher();
+  passwordMatcher = new FormErrorStateMatcher();
 
   ownerModel: string = "User";
   privacyLevel = "public";
@@ -53,14 +57,18 @@ export class NewDrawingComponent implements OnInit {
       {
         name: new FormControl("", Validators.required),
         ownerModel: new FormControl(""),
-        owner: new FormControl({ value: "", disabled: true }, [
-          this.NonEmptyTeam,
-        ]),
+        owner: new FormControl({ value: "", disabled: true }),
         privacyLevel: new FormControl("public"),
         password: new FormControl({ value: "", disabled: true }),
         color: this.colorPickerService.colorForm,
       },
-      { validators: [this.NonEmptyPassword, this.NonEmptyTeam] }
+      {
+        validators: [
+          this.NonEmptyPassword,
+          this.NonEmptyTeam,
+          this.NoTeamJoined,
+        ],
+      }
     );
     this.dialogRef.afterOpened().subscribe(() => this.onResize());
     this.colorPickerService.setFormColor(DEFAULT_RGB_COLOR, DEFAULT_ALPHA);
@@ -148,11 +156,20 @@ export class NewDrawingComponent implements OnInit {
     this.newDrawingService.onResize();
   }
 
+  NoTeamJoined: ValidatorFn = (
+    group: AbstractControl
+  ): ValidationErrors | null => {
+    if (this.teams.length == 0 && this.ownerModel == "Team") {
+      return { noTeamJoined: true };
+    }
+    return null;
+  };
+
   NonEmptyTeam: ValidatorFn = (
     group: AbstractControl
   ): ValidationErrors | null => {
     let ownerModel = this.ownerModel;
-    let ownerId = group.get("ownerId")?.value;
+    let ownerId = group.get("owner")?.value;
     if (ownerModel == "Team" && ownerId == "") {
       return { emptyTeam: true };
     } else {
@@ -164,9 +181,10 @@ export class NewDrawingComponent implements OnInit {
     group: AbstractControl
   ): ValidationErrors | null => {
     const privacyLevel = group.get("privacyLevel")?.value;
+    if (privacyLevel == "public" || privacyLevel == "private") return null;
     const password = group.get("password")?.value;
     if (privacyLevel == "protected" && password == "") {
-      return { required: true };
+      return { nonNullPassword: true };
     }
     return null;
   };

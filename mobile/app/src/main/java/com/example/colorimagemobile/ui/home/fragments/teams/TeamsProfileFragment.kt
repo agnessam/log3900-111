@@ -17,6 +17,7 @@ import com.example.colorimagemobile.adapter.PostsMenuRecyclerAdapter
 import com.example.colorimagemobile.classes.NotificationSound.Notification
 import com.example.colorimagemobile.models.*
 import com.example.colorimagemobile.bottomsheets.ConfirmationBottomSheet
+import com.example.colorimagemobile.bottomsheets.EditTeamBottomSheet
 import com.example.colorimagemobile.bottomsheets.MembersListBottomSheet
 import com.example.colorimagemobile.bottomsheets.PasswordConfirmationBottomSheet
 import com.example.colorimagemobile.classes.MyFragmentManager
@@ -33,10 +34,12 @@ import com.example.colorimagemobile.services.museum.MuseumPostService
 import com.example.colorimagemobile.services.teams.TeamService
 import com.example.colorimagemobile.services.users.UserService
 import com.example.colorimagemobile.utils.CommonFun
+import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
 import com.example.colorimagemobile.utils.CommonFun.Companion.printToast
 import com.example.colorimagemobile.utils.CommonFun.Companion.toggleButton
 import com.example.colorimagemobile.utils.Constants
 import com.google.android.material.tabs.TabLayout
+import kotlinx.android.synthetic.main.fragment_teams_profile.*
 
 class TeamsProfileFragment : Fragment(R.layout.fragment_teams_profile) {
     private var teamId: String? = null
@@ -70,16 +73,15 @@ class TeamsProfileFragment : Fragment(R.layout.fragment_teams_profile) {
         
         myView.findViewById<TextView>(R.id.teamIdNameCard).text = currentTeam.name
 
-//        myView.findViewById<ImageView>(R.id.teamIdImageView).
         myView.findViewById<TextView>(R.id.teamIdNbOfMembers).text = "${currentTeam.members.size} members"
         myView.findViewById<TextView>(R.id.teamIdDescription).text = currentTeam.description
-        myView.findViewById<TextView>(R.id.teamIdNbOfPosts).text = currentTeam.posts.size.toString()
 
         joinBtn = myView.findViewById<Button>(R.id.teamIdJoinBtn)
         leaveBtn = myView.findViewById<Button>(R.id.leaveTeamIdBtn)
         deleteBtn = myView.findViewById<Button>(R.id.deleteTeamIdBtn)
 
         if (currentTeam.owner == UserService.getUserInfo()._id) {
+            leaveBtn.visibility = View.GONE
             myView.findViewById<RelativeLayout>(R.id.teamIdJoinBtnMain).visibility = View.GONE
             myView.findViewById<RelativeLayout>(R.id.deleteTeamIdBtnMain).visibility = View.VISIBLE
         } else {
@@ -87,6 +89,8 @@ class TeamsProfileFragment : Fragment(R.layout.fragment_teams_profile) {
             myView.findViewById<RelativeLayout>(R.id.deleteTeamIdBtnMain).visibility = View.GONE
             updateTeamButtons()
         }
+
+        hideShowDescription()
     }
 
     private fun getCurrentTeam() {
@@ -137,6 +141,13 @@ class TeamsProfileFragment : Fragment(R.layout.fragment_teams_profile) {
             }
         }
     }
+    private fun hideShowDescription(){
+        if (currentTeam.description.isNullOrBlank()){
+            teamIdDescriptionCardView.visibility = View.GONE
+        } else {
+            teamIdDescriptionCardView.visibility = View.VISIBLE
+        }
+    }
 
     private fun setListeners() {
         myView.findViewById<TabLayout>(R.id.teamProfileDrawingsTabLayout).addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
@@ -164,10 +175,14 @@ class TeamsProfileFragment : Fragment(R.layout.fragment_teams_profile) {
         }
 
         myView.findViewById<TextView>(R.id.teamIdNbOfMembers).setOnClickListener { openMembersList() }
+
+        myView.findViewById<Button>(R.id.teamIdEditBtn).setOnClickListener {
+            val updateTeam = EditTeamBottomSheet(requireActivity(), currentTeam) { updateTeam(it) }
+            updateTeam.show(parentFragmentManager, "EditTeamBottomSheet")
+        }
     }
 
     private fun openMembersList() {
-
         UserRepository().getUserStatus().observe(viewLifecycleOwner, {
             if (it.isError as Boolean) {
                 return@observe
@@ -176,6 +191,14 @@ class TeamsProfileFragment : Fragment(R.layout.fragment_teams_profile) {
             val membersListBS = MembersListBottomSheet(requireActivity(), currentTeam.members, it.data!!)
             membersListBS.show(parentFragmentManager, "MembersListBottomSheet")
         })
+    }
+
+    private fun updateTeam(updateTeamData: UpdateTeam) {
+        currentTeam.description = updateTeamData.description
+        currentTeam.isPrivate = updateTeamData.isPrivate
+        currentTeam.password = updateTeamData.password
+        myView.findViewById<TextView>(R.id.teamIdDescription).text = currentTeam.description
+        TeamService.updateTeam(currentTeam._id, requireContext(), updateTeamData)
     }
 
     private fun joinTeam() {
