@@ -16,6 +16,7 @@ class Constants {
         const val NB_DATA_ROWS = 3
         const val MINUTES = " minutes"
         const val NOTIFICATION_URI ="android.resource://com.example.colorimagemobile/raw/pop"
+        const val TEAM_FULL ="Team full"
 
     }
 

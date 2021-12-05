@@ -34,7 +34,6 @@ import com.example.colorimagemobile.services.museum.MuseumPostService
 import com.example.colorimagemobile.services.teams.TeamService
 import com.example.colorimagemobile.services.users.UserService
 import com.example.colorimagemobile.utils.CommonFun
-import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
 import com.example.colorimagemobile.utils.CommonFun.Companion.printToast
 import com.example.colorimagemobile.utils.CommonFun.Companion.toggleButton
 import com.example.colorimagemobile.utils.Constants
@@ -135,6 +134,7 @@ class TeamsProfileFragment : Fragment(R.layout.fragment_teams_profile) {
     private fun checkIsTeamFull(button: Button) {
         currentTeam.memberLimit?.let {
             if (currentTeam.members.size >= currentTeam.memberLimit!!) {
+                button.setText(Constants.TEAM_FULL)
                 toggleButton(button, false)
                 button.alpha = .6f
                 button.setBackgroundColor(Color.rgb(221, 208, 206))
