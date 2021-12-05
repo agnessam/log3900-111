@@ -113,6 +113,6 @@ class MuseumPostRecyclerAdapter(
         }
     }
      private suspend fun timeToShowEffect(){
-         delay(1000L)
+         delay(3000L)
     }
 }
