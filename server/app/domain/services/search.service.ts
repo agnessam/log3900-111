@@ -40,7 +40,6 @@ export class SearchService implements SearchServiceInterface {
 
   async search(query: string): Promise<any> {
     const date = this.extractDate(query);
-    console.log(date);
 
     // Find with username
     const users = await this.userRepository.findManyByQuery({
@@ -162,7 +161,6 @@ export class SearchService implements SearchServiceInterface {
     let date: [Date, string] | null;
 
     const hyphenDate = query.split('-');
-    console.log(hyphenDate);
     date = this.extractSymbolDate(hyphenDate);
     if (date != null && date[0] != null) return date;
 
@@ -180,13 +178,10 @@ export class SearchService implements SearchServiceInterface {
 
   private extractSymbolDate(items: string[]): [Date, string] | null {
     if (items.length != 3) return null;
-    console.log(items);
 
     // Check if it's AAAA-MM-DD or DD-MM-AAAA
     const validFormatAndType = this.validateSymbolDateFormat(items);
     if (validFormatAndType == null) return null;
-
-    console.log(validFormatAndType);
 
     let year: number;
     let month: number;
@@ -270,7 +265,6 @@ export class SearchService implements SearchServiceInterface {
     if (year > 1979) {
       if (month > 0 && month <= 12) {
         if (day > 0 && day < 31) {
-          console.log('haah');
           return '1';
         }
       }
