@@ -34,7 +34,6 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var formValidator: FormValidator
     private var canSubmit: Boolean = true
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         globalHandler = GlobalHandler()
@@ -50,6 +49,7 @@ class LoginActivity : AppCompatActivity() {
     @SuppressLint("ClickableViewAccessibility")
     private fun setListeners() {
         binding.loginBtn.setOnClickListener { executeLogin() }
+        binding.loginGetStarted.setOnClickListener { redirectTo(this, RegisterActivity::class.java) }
         binding.registerBtn.setOnClickListener { redirectTo(this, RegisterActivity::class.java) }
         binding.loginMain.setOnTouchListener { v, event -> hideKeyboard(this,binding.loginMain) }
 
