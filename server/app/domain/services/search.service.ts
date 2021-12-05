@@ -40,6 +40,7 @@ export class SearchService implements SearchServiceInterface {
 
   async search(query: string): Promise<any> {
     const date = this.extractDate(query);
+    console.log(date);
 
     // Find with username
     const users = await this.userRepository.findManyByQuery({
@@ -141,6 +142,15 @@ export class SearchService implements SearchServiceInterface {
   }
 
   private extractDate(query: string): Date | null {
+    // Do a split to check if it's in a 22 november 2021 or november 22 format.
+    let date: Date | null;
+    const items = query.split(' ');
+    date = this.extractNameDate(items);
+    return date;
+
+    const dateItems = query.split('-');
+    console.log(dateItems);
+
     // Check if it's a month
     let month = null;
     if (query.toLowerCase() in MONTH) {
@@ -148,6 +158,34 @@ export class SearchService implements SearchServiceInterface {
       return new Date(2021, month);
     }
 
+    return null;
+  }
+
+  private extractNameDate(items: string[]): Date | null {
+    if (items.length == 1) {
+      if (items[0].toLowerCase() in MONTH) {
+        console.log(MONTH[items[0].toLowerCase()]);
+        return new Date(2021, MONTH[items[0].toLowerCase()]);
+      }
+    } else if (items.length == 2) {
+      let month: [number, number] | null = this.getMonthFromQuery(items);
+      if (!month) return null; // Invalid date found
+      return new Date(
+        2021,
+        month[0],
+        parseInt(items[items.length - month[1] - 1]),
+      );
+    }
+    return null;
+  }
+
+  // Takes in a splitted string in any AAAA-MM-DD or DD-MM-AAAA and returns the month
+  private getMonthFromQuery(items: string[]): [number, number] | null {
+    for (let i = 0; i < items.length; ++i) {
+      if (items[i].toLowerCase() in MONTH) {
+        return [MONTH[items[i].toLowerCase()], i];
+      }
+    }
     return null;
   }
 }
