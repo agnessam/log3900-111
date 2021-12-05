@@ -18,11 +18,7 @@ export class MuseumDialog implements OnInit {
     private drawingHttpClient: DrawingHttpClientService
   ) {}
 
-  ngOnInit(): void {
-    console.log(this.postService);
-    console.log(this.drawingService);
-    console.log(this.drawingHttpClient);
-  }
+  ngOnInit(): void {}
 
   async onPublishClick(): Promise<void> {
     await this.drawingService.saveDrawing();
