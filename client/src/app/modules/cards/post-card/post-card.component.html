@@ -12,7 +12,9 @@
       <div class="post-name">
         {{ post.name }}
       </div>
-      <p class="post-creation-date">{{ post.createdAt.toString() }}</p>
+      <p class="post-creation-date">
+        {{ post.createdAt.toString() | date: "medium" }}
+      </p>
     </mat-card-title>
     <div class="post-stats">
       <div class="inline-block-child">

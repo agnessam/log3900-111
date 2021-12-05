@@ -18,7 +18,7 @@
                     </div>
                     <div fxFlex="50%">
                       <p>
-                        {{ currentUser.lastLogin }}
+                        {{ currentUser.lastLogin | date: "medium" }}
                       </p>
                     </div>
                   </div>
@@ -30,7 +30,7 @@
                     </div>
                     <div fxFlex="50%">
                       <p>
-                        {{ currentUser.lastLogout }}
+                        {{ currentUser.lastLogout | date: "medium" }}
                       </p>
                     </div>
                   </div>
@@ -70,7 +70,9 @@
                     </div>
                     <div fxFlex="50%">
                       <p>
-                        {{ collaborationHistory.collaboratedAt }}
+                        {{
+                          collaborationHistory.collaboratedAt | date: "medium"
+                        }}
                       </p>
                     </div>
                   </div>
