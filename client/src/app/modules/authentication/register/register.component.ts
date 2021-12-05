@@ -36,6 +36,13 @@ export class RegisterComponent implements OnInit {
   userRegistration: FormGroup;
   matcher = new RegisterErrorStateMatcher();
 
+  firstNameFormField :HTMLInputElement;
+  lastNameFormField :HTMLInputElement;
+  usernameFormField :HTMLInputElement;
+  emailFormField :HTMLInputElement;
+  passwordFormField :HTMLInputElement;
+  confirmPasswordFormField :HTMLInputElement;
+
   constructor(
     private authenticationService: AuthenticationService,
     private router: Router
@@ -63,6 +70,13 @@ export class RegisterComponent implements OnInit {
       },
       { validators: this.checkPasswords }
     );
+
+    this.firstNameFormField = document.getElementById("firstNameFormField") as HTMLInputElement;
+    this.lastNameFormField = document.getElementById("lastNameFormField") as HTMLInputElement;
+    this.usernameFormField = document.getElementById("usernameFormField") as HTMLInputElement;
+    this.emailFormField = document.getElementById("emailFormField") as HTMLInputElement;
+    this.passwordFormField = document.getElementById("passwordFormField") as HTMLInputElement;
+    this.confirmPasswordFormField = document.getElementById("confirmPasswordFormField") as HTMLInputElement;
   }
 
   onSubmit(): void {
@@ -80,10 +94,12 @@ export class RegisterComponent implements OnInit {
       .subscribe((response) => {
         if (response.error) {
           if ((response.error as string).includes("username")) {
+            this.shake(this.usernameFormField);
             this.userRegistration.controls["username"].setErrors({
               duplicateUsername: true,
             });
           } else if ((response.error as string).includes("email")) {
+            this.shake(this.emailFormField);
             this.userRegistration.controls["email"].setErrors({
               duplicateEmail: true,
             });
@@ -101,4 +117,11 @@ export class RegisterComponent implements OnInit {
     let confirmPassword = group.get("confirmPassword")?.value;
     return newPassword === confirmPassword ? null : { notSame: true };
   };
+
+  shake(formField: HTMLInputElement){
+    formField.classList.add('shake');
+    setTimeout(() => {
+      formField.classList.remove('shake');
+    }, 1000);
+  }
 }
