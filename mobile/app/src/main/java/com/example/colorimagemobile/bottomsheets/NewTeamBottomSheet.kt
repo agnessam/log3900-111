@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AnimationUtils
 import android.widget.Button
 import android.widget.CheckBox
 import androidx.core.widget.doOnTextChanged
@@ -21,7 +22,6 @@ import com.example.colorimagemobile.services.teams.TeamService
 import com.example.colorimagemobile.services.users.UserService
 import com.example.colorimagemobile.utils.CommonFun.Companion.hideKeyboard
 import com.example.colorimagemobile.utils.CommonFun.Companion.printToast
-import com.example.colorimagemobile.utils.CommonFun.Companion.toggleButton
 import com.example.colorimagemobile.utils.Constants
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -29,6 +29,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import kotlinx.android.synthetic.main.bottomsheet_create_team.*
+import kotlinx.android.synthetic.main.fragment_update_username_bottom_sheet.*
 
 class NewTeamBottomSheet: BottomSheetDialogFragment() {
     private lateinit var createTeamBtn: Button
@@ -72,7 +73,6 @@ class NewTeamBottomSheet: BottomSheetDialogFragment() {
 
         createTeamBtn = view.findViewById(R.id.createTeamBtn)
 
-        toggleButton(createTeamBtn, false)
         toggleEditText(passwordInput, false)
         toggleEditText(memberLimitInput, false)
         setListeners()
@@ -85,12 +85,10 @@ class NewTeamBottomSheet: BottomSheetDialogFragment() {
                                else if (text.toString().length < Constants.MIN_LENGTH || text.toString().length> Constants.MAX_LENGTH)
                                    "Team name length should be min 4 and max 12 characters"
                                else null
-            updateCreateBtn()
         }
 
         descriptionInput.doOnTextChanged { text, _, _, _ ->
             descriptionLayout.error = if (text.toString().isEmpty()) "Description required" else null
-            updateCreateBtn()
         }
 
         newTeamForm.setOnTouchListener{_, _ -> hideKeyboard(requireContext(), newTeamForm)}
@@ -103,18 +101,21 @@ class NewTeamBottomSheet: BottomSheetDialogFragment() {
         editText.isEnabled = value
     }
 
-    // activate/deactivate button depending on input fields
-    private fun updateCreateBtn() {
-        val areLayoutsValid = nameLayout.error == null && descriptionLayout.error == null
-        val areInputsValid = nameInput.text!!.isNotEmpty() && descriptionInput.text!!.isNotEmpty()
-        toggleButton(createTeamBtn, areLayoutsValid && areInputsValid)
-    }
-
     private fun createTeam() {
         val password = if (privateCheckbox.isChecked) passwordInput.text.toString() else null
+        val areLayoutsValid = nameLayout.error == null && descriptionLayout.error == null
+        val areInputsValid = nameInput.text!!.isNotEmpty() && descriptionInput.text!!.isNotEmpty()
 
         if (privateCheckbox.isChecked && password.isNullOrEmpty()) {
             passwordLayout.error = "Password can't be empty"
+            val shake = AnimationUtils.loadAnimation(requireActivity().getApplicationContext(), R.anim.shake)
+            newTeamForm.startAnimation(shake);
+            return
+        }
+
+        if(!areLayoutsValid || !areInputsValid){
+            val shake = AnimationUtils.loadAnimation(requireActivity().getApplicationContext(), R.anim.shake)
+            newTeamForm.startAnimation(shake);
             return
         }
 
