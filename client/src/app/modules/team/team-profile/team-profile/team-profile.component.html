@@ -71,9 +71,14 @@
   <br />
   <!-- TODO: Add the teams drawings here -->
   <div id="team-drawings">
-    <mat-tab-group mat-align-tabs="center">
+    <mat-tab-group mat-align-tabs="center" dynamicHeight>
       <mat-tab label="Drawings">
-        <div fxLayout="row wrap" id="drawings" fxLayout.sm="column wrap">
+        <div
+          fxLayout="row wrap"
+          id="drawings"
+          fxLayout.sm="column wrap"
+          fxLayoutGap="33px grid"
+        >
           <div
             fxFlex="33%"
             fxFlex.sm="100%"
@@ -89,7 +94,12 @@
         </div>
       </mat-tab>
       <mat-tab label="Posts">
-        <div fxLayout="row wrap" id="posts" fxLayout.sm="column wrap">
+        <div
+          fxLayout="row wrap"
+          id="posts"
+          fxLayout.sm="column wrap"
+          fxLayoutGap="33px grid"
+        >
           <div
             fxFlex="33%"
             fxFlex.sm="100%"
@@ -97,7 +107,10 @@
             *ngFor="let post of team.posts"
             class="team-post-card"
           >
-            <app-post-card [post]="post" (click)="openPostDialog(post)"></app-post-card>
+            <app-post-card
+              [post]="post"
+              (click)="openPostDialog(post)"
+            ></app-post-card>
           </div>
         </div>
       </mat-tab>
