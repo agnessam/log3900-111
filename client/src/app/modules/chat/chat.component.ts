@@ -218,4 +218,8 @@ export class ChatComponent implements OnInit, OnDestroy {
     const messages = this.messageHistory.get(this.currentChannel?.name!);
     return messages!;
   }
+
+  transformDate(date: string) {
+    return new Date(date);
+  }
 }

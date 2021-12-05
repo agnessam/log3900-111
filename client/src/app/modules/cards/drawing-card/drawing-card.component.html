@@ -13,7 +13,9 @@
         {{ drawing.name }}
       </div>
 
-      <p class="drawing-creation-date">{{ drawing.createdAt.toString() }}</p>
+      <p class="drawing-creation-date">
+        {{ drawing.createdAt | date: "medium" }}
+      </p>
       <p class="drawing-collaborators">
         {{ drawing.collaborators.length }} collaborators
       </p>

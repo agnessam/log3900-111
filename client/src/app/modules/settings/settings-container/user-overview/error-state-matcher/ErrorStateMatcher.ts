@@ -6,11 +6,11 @@ export class FormErrorStateMatcher implements ErrorStateMatcher {
     control: FormControl | null,
     form: FormGroupDirective | NgForm | null
   ): boolean {
-    const invalidCtrl = !!(control?.invalid && control?.parent?.dirty);
-    const invalidParent = !!(
-      control?.parent?.invalid && control?.parent?.dirty
+    const invalidCtrl = !!(
+      (control?.invalid && control?.touched) ||
+      (control?.parent?.invalid && control?.touched)
     );
 
-    return invalidCtrl || invalidParent;
+    return invalidCtrl;
   }
 }

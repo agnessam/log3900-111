@@ -24,6 +24,15 @@
                         placeholder="First name"
                         formControlName="firstName"
                       />
+                      <mat-error
+                        *ngIf="
+                          this.userRegistration.hasError(
+                            'required',
+                            'firstName'
+                          )
+                        "
+                        >First name is required</mat-error
+                      >
                     </mat-form-field>
                   </p>
                 </td>
@@ -37,6 +46,12 @@
                         placeholder="Last Name"
                         formControlName="lastName"
                       />
+                      <mat-error
+                        *ngIf="
+                          this.userRegistration.hasError('required', 'lastName')
+                        "
+                        >Last name is required</mat-error
+                      >
                     </mat-form-field>
                   </p>
                 </td>
@@ -51,6 +66,22 @@
                   placeholder="Username"
                   formControlName="username"
                 />
+                <mat-error
+                  *ngIf="this.userRegistration.hasError('required', 'username')"
+                  >Username is required</mat-error
+                >
+                <mat-error
+                  *ngIf="
+                    this.userRegistration.hasError('minlength', 'username')
+                  "
+                  >Username needs to be atleast 4 characters</mat-error
+                >
+                <mat-error
+                  *ngIf="
+                    this.userRegistration.hasError('maxlength', 'username')
+                  "
+                  >Username cannot have more than 12 characters</mat-error
+                >
               </mat-form-field>
             </p>
             <p>
@@ -62,6 +93,14 @@
                   placeholder="Email Address"
                   formControlName="email"
                 />
+                <mat-error
+                  *ngIf="this.userRegistration.hasError('required', 'email')"
+                  >Email is required</mat-error
+                >
+                <mat-error
+                  *ngIf="this.userRegistration.hasError('pattern', 'email')"
+                  >Email isn't a valid email</mat-error
+                >
               </mat-form-field>
             </p>
 
@@ -77,6 +116,22 @@
                         placeholder="Password"
                         formControlName="password"
                       />
+                      <mat-error
+                        *ngIf="
+                          this.userRegistration.hasError(
+                            'minlength',
+                            'password'
+                          )
+                        "
+                        >Password needs to have minimum length of 8
+                        characters</mat-error
+                      >
+                      <mat-error
+                        *ngIf="
+                          this.userRegistration.hasError('required', 'password')
+                        "
+                        >Password is required</mat-error
+                      >
                     </mat-form-field>
                   </p>
                 </td>
@@ -89,7 +144,21 @@
                         matInput
                         placeholder="Confirm Password"
                         formControlName="confirmPassword"
+                        [errorStateMatcher]="matcher"
                       />
+                      <mat-error
+                        *ngIf="
+                          this.userRegistration.hasError(
+                            'required',
+                            'confirmPassword'
+                          )
+                        "
+                        >Confirm your password</mat-error
+                      >
+                      <mat-error
+                        *ngIf="this.userRegistration.hasError('notSame')"
+                        >Passwords do not match</mat-error
+                      >
                     </mat-form-field>
                   </p>
                 </td>

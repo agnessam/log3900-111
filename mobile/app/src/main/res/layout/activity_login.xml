@@ -76,28 +76,25 @@
                             android:textStyle="italic"/>
                     </LinearLayout>
 
-                    <!--            username-->
+                    <!--            email-->
                     <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/usernameInputLayout"
+                        android:id="@+id/emailInputLayout"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Username"
-                        app:counterEnabled="true"
+                        android:hint="Email"
                         app:helperText="@string/required"
                         app:errorEnabled="true"
                         app:helperTextTextColor="#ff0000"
                         app:errorIconDrawable="@drawable/ic_error"
-                        app:counterMaxLength="@integer/maxInputLength"
                         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                         android:layout_marginTop="30dp">
 
                         <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/usernameInputText"
+                            android:id="@+id/emailInputText"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:maxLines="1"
-                            android:inputType="text"
-                            android:maxLength="@integer/maxInputLength" />
+                            android:inputType="textEmailAddress" />
 
                     </com.google.android.material.textfield.TextInputLayout>
 

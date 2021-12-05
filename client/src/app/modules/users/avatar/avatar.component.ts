@@ -38,7 +38,7 @@ export class AvatarComponent implements OnInit {
   openChooseAvatarDialog() {
     this.avatarClient.getDefaultAvatars().subscribe((response) => {
       this.chooseAvatarDialogRef = this.dialog.open(AvatarDialogComponent, {
-        width: "500px",
+        width: "475px",
         height: "700px",
         data: {
           avatars: response,

@@ -23,13 +23,20 @@ export class NewTeamComponent implements OnInit {
 
   ngOnInit(): void {
     this.newTeamForm = new FormGroup({
-      name: new FormControl(""),
-      description: new FormControl(""),
+      name: new FormControl("", [
+        Validators.required,
+        Validators.minLength(4),
+        Validators.maxLength(12),
+      ]),
+      description: new FormControl("", Validators.required),
       memberLimit: new FormControl({ value: 1, disabled: true }, [
         Validators.min(1),
       ]),
       isPrivate: new FormControl(false),
-      password: new FormControl({ value: "", disabled: true }),
+      password: new FormControl(
+        { value: "", disabled: true },
+        Validators.required
+      ),
     });
   }
 

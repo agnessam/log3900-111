@@ -14,13 +14,26 @@ export const passportRegisterMiddleware = () => {
     'register',
     new localStrategy.Strategy(
       {
-        usernameField: 'username',
+        usernameField: 'email',
         passwordField: 'password',
         passReqToCallback: true,
       },
       async (req, username, password, done) => {
         try {
           const user = await User.create(req.body);
+
+          User.updateOne(
+            { _id: user._id },
+            { lastLogin: new Date() },
+            (err: Error, user: any) => {},
+          );
+
+          const statusService = container.get(
+            TYPES.StatusService,
+          ) as StatusService;
+
+          statusService.updateStatus(user._id.toString(), STATUS.Online);
+
           return done(null, user, {
             message: 'Account created succesfully.',
           });
@@ -41,14 +54,14 @@ export const passportLoginMiddleware = () => {
     'login',
     new localStrategy.Strategy(
       {
-        usernameField: 'username',
+        usernameField: 'email',
         passwordField: 'password',
       },
       async (username, password, done) => {
         try {
-          const user = await User.findOne({ username });
+          const user = await User.findOne({ email: username });
           if (!user) {
-            return done({ message: 'Username not found' }, false, undefined);
+            return done({ message: 'Email was not found' }, false, undefined);
           }
 
           const validate = await user.isValidPassword(password);

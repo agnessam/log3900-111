@@ -15,6 +15,20 @@
             placeholder="Username"
             formControlName="username"
           />
+          <mat-error *ngIf="this.usernameForm.hasError('required', 'username')">
+            Username cannot be empty
+          </mat-error>
+
+          <mat-error
+            *ngIf="this.usernameForm.hasError('minlength', 'username')"
+          >
+            Username must contain atleast 4 characters
+          </mat-error>
+          <mat-error
+            *ngIf="this.usernameForm.hasError('maxlength', 'username')"
+          >
+            Username cannot contain more than 12 characters
+          </mat-error>
         </mat-form-field>
       </p>
     </div>

@@ -1,6 +1,9 @@
 import { Component, OnInit } from "@angular/core";
+import { MatDialog, MatDialogRef } from "@angular/material/dialog";
 import { Router } from "@angular/router";
+import { JoinDrawingDialogComponent } from "src/app/modules/cards/drawing-card/join-drawing-dialog/join-drawing-dialog.component";
 import { UsersService } from "src/app/modules/users/services/users.service";
+import { Drawing } from "src/app/shared";
 
 @Component({
   selector: "app-user-history",
@@ -8,10 +11,16 @@ import { UsersService } from "src/app/modules/users/services/users.service";
   styleUrls: ["./user-history.component.scss"],
 })
 export class UserHistoryComponent implements OnInit {
-  userLoaded: Promise<boolean>;
   currentUser: any;
+  userLoaded: Promise<boolean>;
 
-  constructor(private usersService: UsersService, private router: Router) {
+  joinDrawingDialogRef: MatDialogRef<JoinDrawingDialogComponent>;
+
+  constructor(
+    private usersService: UsersService,
+    private dialog: MatDialog,
+    private router: Router
+  ) {
     this.usersService
       .getUser(localStorage.getItem("userId")!)
       .subscribe((user) => {
@@ -22,7 +31,13 @@ export class UserHistoryComponent implements OnInit {
 
   ngOnInit(): void {}
 
-  goToDrawing(drawingId: string) {
-    this.router.navigate([`/drawings/${drawingId}`]);
+  goToDrawing(drawing: Drawing) {
+    if (drawing.privacyLevel == "protected") {
+      this.joinDrawingDialogRef = this.dialog.open(JoinDrawingDialogComponent, {
+        data: { drawing: drawing },
+      });
+    } else {
+      this.router.navigate([`/drawings/${drawing._id}`]);
+    }
   }
 }

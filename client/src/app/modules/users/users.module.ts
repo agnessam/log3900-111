@@ -23,6 +23,7 @@ import { FlexLayoutModule } from "@angular/flex-layout";
 import { MatTabsModule } from "@angular/material/tabs";
 import { CardsModule } from "../cards/cards.module";
 import { ConfirmUnfollowDialogComponent } from "./user-profile/confirm-unfollow-dialog/confirm-unfollow-dialog.component";
+import { MatSnackBarModule } from "@angular/material/snack-bar";
 
 @NgModule({
   declarations: [
@@ -50,6 +51,7 @@ import { ConfirmUnfollowDialogComponent } from "./user-profile/confirm-unfollow-
     FlexLayoutModule,
     MatTabsModule,
     CardsModule,
+    MatSnackBarModule,
   ],
   providers: [
     {

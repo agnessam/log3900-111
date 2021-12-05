@@ -51,9 +51,9 @@
   </div>
   <br />
   <div id="user-drawings">
-    <mat-tab-group mat-align-tabs="center">
+    <mat-tab-group mat-align-tabs="center" dynamicHeight>
       <mat-tab label="Drawings">
-        <div fxLayout="row wrap" id="drawings">
+        <div fxLayout="row wrap" id="drawings" fxLayoutGap="33px grid">
           <div fxFlex="33%" *ngFor="let drawing of user.drawings">
             <app-drawing-card
               [drawing]="drawing"
@@ -63,9 +63,12 @@
         </div>
       </mat-tab>
       <mat-tab label="Posts">
-        <div fxLayout="row wrap" id="posts">
+        <div fxLayout="row wrap" id="posts" fxLayoutGap="33px grid">
           <div fxFlex="33%" *ngFor="let post of user.posts">
-            <app-post-card [post]="post" (click)="openPostDialog(post)"></app-post-card>
+            <app-post-card
+              [post]="post"
+              (click)="openPostDialog(post)"
+            ></app-post-card>
           </div>
         </div>
       </mat-tab>
