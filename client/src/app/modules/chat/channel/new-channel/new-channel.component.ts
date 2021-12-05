@@ -33,7 +33,7 @@ export class NewChannelComponent implements OnInit {
       {
         name: new FormControl("", [
           Validators.required,
-          Validators.minLength(3),
+          Validators.minLength(4),
           Validators.maxLength(12),
         ]),
       },

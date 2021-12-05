@@ -13,6 +13,13 @@
       <mat-error *ngIf="this.newTeamForm.hasError('required', 'name')"
         >Team name required
       </mat-error>
+
+      <mat-error *ngIf="this.newTeamForm.hasError('minlength', 'name')"
+        >Team name must contain atleast 4 characters
+      </mat-error>
+      <mat-error *ngIf="this.newTeamForm.hasError('maxlength', 'name')"
+        >Team name cannot contain more than 12 characters
+      </mat-error>
     </mat-form-field>
   </p>
   <p>
@@ -31,7 +38,7 @@
   </p>
   <p>
     <mat-checkbox (change)="toggleMemberLimit()" class="limit-checkbox"
-      >Limit the number of members that can join?</mat-checkbox
+      >Limit the number of members that can join</mat-checkbox
     >
     <mat-form-field appearance="outline">
       <mat-label>Member limit</mat-label>
@@ -52,7 +59,7 @@
       (change)="togglePrivacy()"
       class="limit-checkbox"
       formControlName="isPrivate"
-      >Set the team as private?</mat-checkbox
+      >Set the team as private</mat-checkbox
     >
     <mat-form-field appearance="outline">
       <mat-label>Password</mat-label>
