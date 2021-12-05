@@ -1,9 +1,13 @@
-import { Component } from "@angular/core";
+import { Component, Input } from "@angular/core";
 import { MatButtonToggleChange } from "@angular/material/button-toggle";
 import { SidenavService } from "./services/sidenav/sidenav.service";
 import { Tools, ToolsService } from "src/app/modules/workspace";
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog } from "@angular/material/dialog";
 import { MuseumDialog } from "../museum/museum-dialog/museum-dialog.component";
+import { Drawing } from "src/app/shared";
+import { DrawingHttpClientService } from "../backend-communication";
+import { User } from "../users/models/user";
+import { Team } from "src/app/shared/models/team.model";
 
 @Component({
   selector: "app-sidenav",
@@ -11,11 +15,24 @@ import { MuseumDialog } from "../museum/museum-dialog/museum-dialog.component";
   styleUrls: ["./sidenav.component.scss"],
 })
 export class SidenavComponent {
+  @Input() drawingId: string;
+  drawing: Drawing;
+
+  drawingLoaded: Promise<boolean>;
+
   constructor(
     private sideNavService: SidenavService,
     private toolService: ToolsService,
-    public dialog: MatDialog,
+    private drawingClient: DrawingHttpClientService,
+    public dialog: MatDialog
   ) {}
+
+  ngOnInit() {
+    this.drawingClient.getDrawing(this.drawingId).subscribe((drawing) => {
+      this.drawing = drawing;
+      this.drawingLoaded = Promise.resolve(true);
+    });
+  }
 
   get currentToolId(): number {
     return this.toolService.selectedToolId;
@@ -55,7 +72,15 @@ export class SidenavComponent {
   }
 
   openMuseumDialog(): void {
-    this.dialog.open(MuseumDialog, {
-    });
+    this.dialog.open(MuseumDialog, { data: this.drawingId });
+  }
+
+  isOwner(): boolean {
+    const userId = localStorage.getItem("userId")!;
+    if (this.drawing.ownerModel == "User") {
+      return (this.drawing.owner as User)._id == userId;
+    }
+
+    return ((this.drawing.owner as Team).members as string[]).includes(userId);
   }
 }

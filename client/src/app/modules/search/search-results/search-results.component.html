@@ -1,8 +1,8 @@
 <div id="search" *ngIf="searchCompleted | async" class="mat-app-background">
   <p mat-card-title>Search results for {{ this.searchQuery }}</p>
-  <mat-tab-group mat-align-tabs="start">
+  <mat-tab-group mat-align-tabs="start" dynamicHeight>
     <mat-tab label="Drawings">
-      <div fxLayout="row wrap" class="search-result">
+      <div fxLayout="row wrap" class="search-result" fxLayoutGap="33px grid">
         <div *ngIf="filteredDrawings.length == 0">
           <p>Couldn't find any drawings corresponding to that search.</p>
         </div>

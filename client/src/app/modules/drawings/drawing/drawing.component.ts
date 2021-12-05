@@ -15,6 +15,7 @@ export class DrawingComponent implements OnInit, AfterViewInit {
   socketInformation: SocketRoomInformation;
   drawingId: string;
   channelSocketInfo: SocketRoomInformation;
+
   collaborationChannel: TextChannel | undefined;
   constructor(
     private route: ActivatedRoute,
