@@ -18,6 +18,8 @@ export class SidenavComponent {
   @Input() drawingId: string;
   drawing: Drawing;
 
+  drawingLoaded: Promise<boolean>;
+
   constructor(
     private sideNavService: SidenavService,
     private toolService: ToolsService,
@@ -28,7 +30,7 @@ export class SidenavComponent {
   ngOnInit() {
     this.drawingClient.getDrawing(this.drawingId).subscribe((drawing) => {
       this.drawing = drawing;
-      console.log(this.drawing);
+      this.drawingLoaded = Promise.resolve(true);
     });
   }
 
@@ -70,7 +72,7 @@ export class SidenavComponent {
   }
 
   openMuseumDialog(): void {
-    this.dialog.open(MuseumDialog, { data: this.drawing });
+    this.dialog.open(MuseumDialog, { data: this.drawingId });
   }
 
   isOwner(): boolean {

@@ -34,7 +34,7 @@
       mat-icon-button
       matTooltip="Publish to museum"
       (click)="openMuseumDialog()"
-      *ngIf="isOwner()"
+      *ngIf="(drawingLoaded | async) && isOwner()"
     >
       <mat-icon>museum</mat-icon>
     </button>

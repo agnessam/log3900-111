@@ -12,7 +12,7 @@ import { DrawingHttpClientService } from "src/app/modules/backend-communication"
 export class MuseumDialog implements OnInit {
   constructor(
     public dialogRef: MatDialogRef<MuseumDialog>,
-    @Inject(MAT_DIALOG_DATA) public name: string,
+    @Inject(MAT_DIALOG_DATA) public drawingId: string,
     private postService: PostService,
     private drawingService: DrawingService,
     private drawingHttpClient: DrawingHttpClientService
@@ -26,13 +26,13 @@ export class MuseumDialog implements OnInit {
 
   async onPublishClick(): Promise<void> {
     await this.drawingService.saveDrawing();
-    this.drawingHttpClient
-      .getDrawing(this.drawingService.drawingId)
-      .subscribe((drawing) => {
-        this.postService
-          .publishDrawing(this.drawingService.drawingId, drawing)
-          .subscribe((response) => {});
-      });
+    this.drawingHttpClient.getDrawing(this.drawingId).subscribe((drawing) => {
+      this.postService
+        .publishDrawing(this.drawingService.drawingId, drawing)
+        .subscribe((response) => {
+          this.dialogRef.close();
+        });
+    });
   }
 
   onCancel(): void {
