@@ -33,9 +33,10 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
     private lateinit var myView: View
     private lateinit var searchView: SearchView
     private lateinit var adapter: ChannelsRecyclerAdapter
-    private var isPublicTab = true
-    private var searchedPublicTab = true
-    private var backedUpChannels: ArrayList<TextChannelModel.AllInfo> = ArrayList()
+//    private var searchedPublicTab = true
+    private var isSearching = false
+    private var backedUpPublicChannels: ArrayList<TextChannelModel.AllInfo> = ArrayList()
+//    private var backedUpConnectedChannels: ArrayList<TextChannelModel.AllInfo> = ArrayList()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -43,6 +44,8 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
         myView = view
         adapter = ChatAdapterService.getChannelListAdapter()
         setSearchIcon(view)
+
+
 
         ChatService.initChat(requireContext()) { init() }
     }
@@ -74,13 +77,13 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
         allBtn.setOnClickListener {
             showAllChannels()
             changeBtnColor(allBtn, connectedBtn)
-            isPublicTab = true
+            myView.findViewById<SearchView>(R.id.searchChannelsIcon).visibility = View.VISIBLE
         }
 
         connectedBtn.setOnClickListener {
             showConnectedChannels()
             changeBtnColor(connectedBtn, allBtn)
-            isPublicTab = false
+            myView.findViewById<SearchView>(R.id.searchChannelsIcon).visibility = View.GONE
         }
 
         createChannelBtn.setOnClickListener {
@@ -90,14 +93,16 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
     }
 
     private fun showAllChannels() {
-        if (this.sea)
-        adapter.setData(TextChannelService.getPublicChannels() as ArrayList<TextChannelModel.AllInfo>)
-        adapter.setData(this.backedUpChannels)
+        if (!isSearching) {
+            adapter.setData(TextChannelService.getPublicChannels() as ArrayList<TextChannelModel.AllInfo>)
+        } else {
+            adapter.setData(this.backedUpPublicChannels)
+        }
         adapter.setIsAllChannels(true)
     }
 
     private fun showConnectedChannels() {
-//        adapter.setData(TextChannelService.getConnectedChannels())
+        adapter.setData(TextChannelService.getConnectedChannels())
         adapter.setIsAllChannels(false)
     }
 
@@ -126,11 +131,11 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
 
         searchView.setOnCloseListener(object: SearchView.OnCloseListener {
             override fun onClose(): Boolean {
-                if (searchedPublicTab) {
-                    TextChannelService.setPublicChannels(backedUpChannels)
-                } else {
-                    TextChannelService.setConnectedChannels(backedUpChannels)
+                if (isSearching) {
+                    TextChannelService.setPublicChannels(backedUpPublicChannels)
+                    TextChannelService.refreshChannelList()
                 }
+                isSearching = false
                 return false
             }
         })
@@ -144,6 +149,7 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
                 TextChannelService.setSearchQuery(query)
                 searchView.clearFocus()
                 filterData()
+                isSearching = true
                 return true
             }
         })
@@ -156,14 +162,9 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
         TextChannelRepository().searchChannels(query).observe(this, {
             if (it.isError as Boolean) { return@observe }
 
-            if (this.isPublicTab) {
-                this.backedUpChannels = TextChannelService.getPublicChannels() as ArrayList<TextChannelModel.AllInfo>
-                TextChannelService.setPublicChannels(it.data as ArrayList<TextChannelModel.AllInfo>)
-            } else {
-                this.backedUpChannels = TextChannelService.getConnectedChannels()
-                TextChannelService.setConnectedChannels(it.data as ArrayList<TextChannelModel.AllInfo>)
-            }
-            this.searchedPublicTab = this.isPublicTab
+            this.backedUpPublicChannels = TextChannelService.getPublicChannels() as ArrayList<TextChannelModel.AllInfo>
+            TextChannelService.setPublicChannels(it.data as ArrayList<TextChannelModel.AllInfo>)
+
             TextChannelService.refreshChannelList()
         })
     }

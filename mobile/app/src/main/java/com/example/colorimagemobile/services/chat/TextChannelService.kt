@@ -16,6 +16,7 @@ object TextChannelService {
     private var publicChannels: ArrayList<TextChannelModel.AllInfo>
     private var connectedChannels: ArrayList<TextChannelModel.AllInfo>
     private var searchQuery: String? = null
+//    private var searchedPublicChannels: ArrayList<TextChannelModel.AllInfo>
 
     init {
         publicChannels = arrayListOf()
@@ -123,9 +124,13 @@ object TextChannelService {
         searchQuery = null
     }
 
-    fun setConnectedChannels(channels: ArrayList<TextChannelModel.AllInfo>) {
-        this.connectedChannels = channels;
-    }
+//    fun setSearchedPublicChannels(channels: ArrayList<TextChannelModel.AllInfo>) {
+//        searchedPublicChannels = channels
+//    }
+//
+//    fun setConnectedChannels(channels: ArrayList<TextChannelModel.AllInfo>) {
+//        this.connectedChannels = channels;
+//    }
 
     private fun updateCurrentChannel() {
         // set current channel: 0 if only General exists, else last connected channels' position
