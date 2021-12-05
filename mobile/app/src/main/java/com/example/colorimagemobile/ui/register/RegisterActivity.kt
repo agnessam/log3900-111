@@ -83,9 +83,9 @@ class RegisterActivity : AppCompatActivity() {
         formValidator.validateEmail(FormIndexes.EMAIL.index)
         val containsError = formValidator.containsError()
         val invalidInputLength = formValidator.isInputEmpty(resources.getString(R.string.required))
+        val isInputLengthShortOrTooLong = formValidator.isInputLengthShortOrTooLong(resources.getString(R.string.lengthIncorrect))
 
-        // activate/deactivate login button if form contains error or one of the inputs is empty
-        canSubmit = !containsError && !invalidInputLength
+        canSubmit = !containsError && !invalidInputLength && !isInputLengthShortOrTooLong
 
     }
 

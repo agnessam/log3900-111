@@ -1,5 +1,6 @@
 package com.example.colorimagemobile.classes
 
+import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 
@@ -48,5 +49,23 @@ class FormValidator(layouts: ArrayList<TextInputLayout>, inputs: ArrayList<TextI
         val email = this.inputs[emailIndex].text.toString()
         val isEmailValid = android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
         this.layouts[emailIndex].error = if (isEmailValid) "" else "Invalid Email Address"
+    }
+
+    fun isInputLengthShortOrTooLong(lengthIncorrectString: String): Boolean {
+        var isInputLengthInvalid: Boolean = false
+
+        this.inputs.forEachIndexed { index, input ->
+            var helperText: String = ""
+
+            if (input.text!!.length <4 || input.text!!.length >14) {
+                isInputLengthInvalid = true
+                helperText = lengthIncorrectString
+            }
+
+            // show or hide invalid length keyword below inputs
+            this.layouts[index].helperText = helperText
+        }
+
+        return isInputLengthInvalid
     }
 }
