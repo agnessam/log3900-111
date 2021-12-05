@@ -78,6 +78,14 @@ interface API {
     @GET(Constants.ENDPOINTS.TEXT_CHANNEL_PATH + "{channelId}" + "/messages")
     fun getAllTextChannelMessages(@Header("Authorization") token: String, @Path ("channelId") channelId: String): Call<ArrayList<ChatSocketModel>>
 
+    @Headers("Content-Type: application/json")
+    @GET(Constants.ENDPOINTS.TEXT_CHANNEL_PATH + "teams")
+    fun getTeamChannels(@Header("Authorization") token: String): Call<ArrayList<TextChannelModel.AllInfo>>
+
+    @Headers("Content-Type: application/json")
+    @GET(Constants.ENDPOINTS.TEXT_CHANNEL_PATH + "drawings/{id}")
+    fun getChannelByDrawingId(@Header("Authorization") token: String, @Path ("id") id: String): Call<TextChannelModel.AllInfo>
+
     //  TextChannel region
     @Headers("Content-Type: application/json")
     @GET(Constants.ENDPOINTS.TEXT_CHANNEL_PATH)
@@ -93,6 +101,10 @@ interface API {
 
     @GET(Constants.ENDPOINTS.TEXT_CHANNEL_PATH + "all/search")
     fun searchChannels(@Header("Authorization") token: String, @Query ("q") query: String): Call<ArrayList<TextChannelModel.AllInfo>>
+    
+    @Headers("Content-Type: application/json")
+    @DELETE(Constants.ENDPOINTS.TEXT_CHANNEL_PATH + "{channelId}/messages")
+    fun deleteMessages(@Header("Authorization")token: String,@Path ("channelId") channelId: String): Call<Any>
 
     // region message
     @Headers("Content-Type: application/json")

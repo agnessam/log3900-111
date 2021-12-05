@@ -13,7 +13,9 @@ import androidx.lifecycle.LifecycleOwner
 import com.example.colorimagemobile.R
 import com.example.colorimagemobile.models.CreateTeamModel
 import com.example.colorimagemobile.models.TeamModel
+import com.example.colorimagemobile.models.TextChannelModel
 import com.example.colorimagemobile.repositories.TeamRepository
+import com.example.colorimagemobile.services.chat.TextChannelService
 import com.example.colorimagemobile.services.teams.TeamAdapterService
 import com.example.colorimagemobile.services.teams.TeamService
 import com.example.colorimagemobile.services.users.UserService
@@ -131,6 +133,17 @@ class NewTeamBottomSheet: BottomSheetDialogFragment() {
             val team = it.data as TeamModel
             TeamService.addTeam(team)
             TeamAdapterService.getTeamMenuAdapter().notifyDataSetChanged()
+
+            val newChannel = TextChannelModel.AllInfo(
+                _id = null,
+                name = team.name,
+                ownerId = team.owner,
+                drawing = null,
+                isPrivate = true,
+                team = team._id
+            )
+
+            TextChannelService.createChannel(newChannel, requireContext()) {  }
             closeSheet()
         })
     }

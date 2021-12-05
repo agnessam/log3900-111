@@ -24,8 +24,11 @@ import com.example.colorimagemobile.repositories.SearchRepository
 import com.example.colorimagemobile.repositories.UserRepository
 import com.example.colorimagemobile.services.SearchService
 import com.example.colorimagemobile.services.SharedPreferencesService
+import com.example.colorimagemobile.services.chat.ChatService
+import com.example.colorimagemobile.services.chat.TextChannelService
 import com.example.colorimagemobile.services.drawing.DrawingObjectManager
 import com.example.colorimagemobile.services.drawing.DrawingService
+import com.example.colorimagemobile.services.socket.ChatSocketService
 import com.example.colorimagemobile.services.socket.SocketManagerService
 import com.example.colorimagemobile.ui.home.fragments.accountParameter.accountParameterFragmentDirections
 import com.example.colorimagemobile.ui.home.fragments.search.SearchFragment
@@ -59,7 +62,7 @@ class HomeActivity : AppCompatActivity() {
         bottomNav = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
 
         setBottomNavigationView()
-//        getAllUsers()
+        initChat()
     }
 
     // side navigation navbar: upon click, change to new fragment
@@ -67,6 +70,7 @@ class HomeActivity : AppCompatActivity() {
         // remove every socket events
         bottomNav.setOnItemSelectedListener {
             SocketManagerService.disconnectFromAll()
+            TextChannelService.removeFromConnectedChannels(TextChannelService.getCollaborationChannel())
             return@setOnItemSelectedListener true
         }
 
@@ -74,6 +78,12 @@ class HomeActivity : AppCompatActivity() {
             R.id.galleryFragment, R.id.chatFragment, R.id.usersFragment, R.id.museumFragment))
         setupActionBarWithNavController(navController, appBarConfiguration)
         bottomNav.setupWithNavController(navController)
+    }
+
+    private fun initChat() {
+        ChatSocketService.connect()
+        ChatSocketService.setFragmentActivity(this)
+        ChatService.initChat(this) { }
     }
 
     // add options to Home Navbar
@@ -204,6 +214,8 @@ class HomeActivity : AppCompatActivity() {
 
         // remove items from "local storage"
         sharedPreferencesService.removeItem(Constants.STORAGE_KEY.TOKEN)
+        TextChannelService.resetConnectedChannels()
+        TextChannelService.setCurrentChannel(TextChannelService.getPublicChannels()[0])
 
         redirectTo(this, LoginActivity::class.java)
     }
