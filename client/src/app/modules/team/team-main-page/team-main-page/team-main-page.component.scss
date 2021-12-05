@@ -14,15 +14,12 @@
   height: 150px;
   width: 400px;
   max-width: 400px;
+  cursor: pointer;
 }
 
 .team-card {
   justify-content: center;
   align-items: center;
-}
-
-mat-card-title {
-  cursor: pointer;
 }
 
 mat-card {
