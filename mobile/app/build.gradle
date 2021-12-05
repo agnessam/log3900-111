@@ -16,6 +16,7 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        vectorDrawables.useSupportLibrary = true
     }
 
     buildTypes {
@@ -95,5 +96,8 @@ dependencies {
 
     // for notification sound
     implementation('org.jetbrains.kotlin:kotlin-stdlib:1.5.0')
+
+    // for adding gif heart effect when liking an image in the museum
+    implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.0'
 
 }

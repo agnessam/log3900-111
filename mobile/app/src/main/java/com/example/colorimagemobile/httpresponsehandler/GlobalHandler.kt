@@ -14,7 +14,5 @@ class GlobalHandler{
             context?.let { CommonFun.printToast(it, HTTPResponse.message as String) }
             return
         }
-        // request successfully
-        context?.let { CommonFun.printToast(it, "Request succeed") }
     }
 }
