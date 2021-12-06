@@ -1,5 +1,6 @@
 package com.example.colorimagemobile.ui.home.fragments.gallery
 
+import android.content.res.ColorStateList
 import android.graphics.Color
 import android.graphics.drawable.ShapeDrawable
 import android.os.Bundle
@@ -15,6 +16,7 @@ import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -41,6 +43,7 @@ import com.example.colorimagemobile.services.users.UserService
 import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
 import com.example.colorimagemobile.utils.CommonFun.Companion.printToast
 import com.example.colorimagemobile.utils.Constants
+import com.google.android.material.button.MaterialButton
 
 class GalleryDrawingFragment : Fragment(R.layout.fragment_gallery_drawing) {
     private lateinit var galleryDrawingFragment: ConstraintLayout;
@@ -143,7 +146,9 @@ class GalleryDrawingFragment : Fragment(R.layout.fragment_gallery_drawing) {
     }
 
     private fun createSideButton(icon: Int): Button {
-        val toolBtn = Button(context)
+        val toolBtn = MaterialButton(requireContext(), null, R.attr.materialButtonOutlinedStyle).apply {
+            strokeColor = ColorStateList.valueOf(ContextCompat.getColor(context, R.color.primary))
+        }
 
         val layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
         layoutParams.setMargins(10, 8, 10, 8)

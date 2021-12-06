@@ -72,8 +72,10 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
     private fun setDrawings() {
         if (validateSearchUI(queryObject.drawings.size, "drawings")) { return }
 
-        DrawingService.setAllDrawings(queryObject.drawings)
-        val drawingsMenu = DrawingService.getDrawingsBitmap(requireContext(), queryObject.drawings)
+        val drawings = DrawingService.filterDrawingsByPrivacy(queryObject.drawings)
+        DrawingService.setAllDrawings(drawings)
+
+        val drawingsMenu = DrawingService.getDrawingsBitmap(requireContext(), drawings)
         recyclerView.layoutManager = GridLayoutManager(requireContext(), Constants.NB_DATA_ROWS)
         recyclerView.adapter = DrawingMenuRecyclerAdapter(
             requireActivity(),

@@ -20,6 +20,7 @@ import com.example.colorimagemobile.classes.MyFragmentManager
 import com.example.colorimagemobile.models.recyclerAdapters.DrawingMenuData
 import com.example.colorimagemobile.services.drawing.DrawingService
 import com.example.colorimagemobile.utils.CommonFun.Companion.printToast
+import kotlinx.android.synthetic.main.fragment_gallery_menu.*
 import kotlin.collections.ArrayList
 
 class GalleryMenuFragment : Fragment(R.layout.fragment_gallery_menu) {
@@ -49,6 +50,10 @@ class GalleryMenuFragment : Fragment(R.layout.fragment_gallery_menu) {
         createDrawingBtn.setOnClickListener {
             val newDrawingMenu = NewDrawingMenuBottomSheet()
             newDrawingMenu.show(parentFragmentManager, "NewDrawingBottomSheetDialog")
+        }
+
+        drawingProtectedToggle.setOnCheckedChangeListener { _, isChecked ->
+            (recyclerView.adapter as DrawingMenuRecyclerAdapter).shouldFilterProtectedDrawings(isChecked, drawingsMenu)
         }
     }
 

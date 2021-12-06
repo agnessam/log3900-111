@@ -54,6 +54,7 @@ class LoginActivity : AppCompatActivity() {
     @SuppressLint("ClickableViewAccessibility")
     private fun setListeners() {
         binding.loginBtn.setOnClickListener { executeLogin() }
+        binding.loginGetStarted.setOnClickListener { redirectTo(this, RegisterActivity::class.java) }
         binding.registerBtn.setOnClickListener { redirectTo(this, RegisterActivity::class.java) }
         binding.loginMain.setOnTouchListener { v, event -> hideKeyboard(this,binding.loginMain) }
 
