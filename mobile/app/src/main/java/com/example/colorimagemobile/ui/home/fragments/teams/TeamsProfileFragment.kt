@@ -236,6 +236,7 @@ class TeamsProfileFragment : Fragment(R.layout.fragment_teams_profile) {
             val confirmation = ConfirmationBottomSheet({ joinTeam() }, title, description, "Join", ButtonType.PRIMARY.toString())
             confirmation.show(parentFragmentManager, "ConfirmationBottomSheet")
         }
+        updateUI()
     }
 
     private fun openLeaveModal() {
@@ -247,6 +248,7 @@ class TeamsProfileFragment : Fragment(R.layout.fragment_teams_profile) {
             showJoinBtn()
         }, title, description, "Leave", ButtonType.PRIMARY.toString())
         confirmation.show(parentFragmentManager, "ConfirmationBottomSheet")
+        updateUI()
     }
 
     private fun setAllDrawings() {
