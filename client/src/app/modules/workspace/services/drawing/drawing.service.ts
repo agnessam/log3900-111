@@ -1,6 +1,12 @@
-import { EventEmitter, Injectable, Output, Renderer2, Directive } from '@angular/core';
-import { DEFAULT_RGB_COLOR, RGB, DEFAULT_ALPHA, RGBA } from 'src/app/shared';
-import { DrawingHttpClientService } from 'src/app/modules/backend-communication';
+import {
+  EventEmitter,
+  Injectable,
+  Output,
+  Renderer2,
+  Directive,
+} from "@angular/core";
+import { DEFAULT_RGB_COLOR, RGB, DEFAULT_ALPHA, RGBA } from "src/app/shared";
+import { DrawingHttpClientService } from "src/app/modules/backend-communication";
 
 /// Service qui contient les fonction pour dessiner a l'écran
 @Directive()
@@ -25,7 +31,10 @@ export class DrawingService {
 
   private objectList: Map<string, SVGElement>;
 
-  constructor(public renderer: Renderer2, private drawingHttpClientService:DrawingHttpClientService) {
+  constructor(
+    public renderer: Renderer2,
+    private drawingHttpClientService: DrawingHttpClientService
+  ) {
     this.objectList = new Map<string, SVGElement>();
   }
 
@@ -119,25 +128,36 @@ export class DrawingService {
     return this.getDrawingDataUriBase64();
   }
 
-  async saveDrawing(): Promise<void>{
+  async saveDrawing(): Promise<void> {
     let dataUri = this.getDrawingDataUriBase64();
-    await this.drawingHttpClientService.updateDrawing(this.drawingId, dataUri).toPromise();
+    await this.drawingHttpClientService
+      .updateDrawing(this.drawingId, dataUri)
+      .toPromise();
   }
 
   /// Get drawing svg uri
   private getDrawingDataUriBase64(): string {
-    return (
-      "data:image/svg+xml;base64," +
-      btoa(new XMLSerializer().serializeToString(this.drawing))
-    );
+    let deletionDiv = document.createElement("div");
+    deletionDiv.innerHTML = new XMLSerializer().serializeToString(this.drawing);
+    const tagsToIgnore = ["g", "polygon"];
+    for (let tag of tagsToIgnore) {
+      let groups = deletionDiv.getElementsByTagName(tag);
+      while (groups[0]) {
+        groups[0].parentNode?.removeChild(groups[0]);
+      }
+    }
+    let previewBoxes = deletionDiv.getElementsByClassName("preview");
+    while (previewBoxes[0]) {
+      previewBoxes[0].parentNode?.removeChild(previewBoxes[0]);
+    }
+    const xmlString = deletionDiv.innerHTML;
+    return "data:image/svg+xml;base64," + btoa(xmlString);
   }
 
-  getSvgFromDataUri(dataUri: string): SVGElement{
+  getSvgFromDataUri(dataUri: string): SVGElement {
     let svgDomString = atob(dataUri.replace("data:image/svg+xml;base64,", ""));
-    return new DOMParser().parseFromString(
-      svgDomString,
-      "image/svg+xml"
-    ).children[0] as SVGElement;
+    return new DOMParser().parseFromString(svgDomString, "image/svg+xml")
+      .children[0] as SVGElement;
   }
 
   openSvgFromDataUri(dataUri: string): void {
