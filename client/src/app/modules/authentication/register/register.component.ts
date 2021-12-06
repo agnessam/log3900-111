@@ -75,6 +75,9 @@ export class RegisterComponent implements OnInit {
   isPasswordValid :boolean = true;
   isConfirmPasswordValid :boolean = true;
 
+  usernameError:boolean=false;
+  emailError:boolean= false;
+
   constructor(
     private authenticationService: AuthenticationService,
     private router: Router
@@ -117,14 +120,19 @@ export class RegisterComponent implements OnInit {
         this.userRegistration.value.lastName
       )
       .subscribe((response) => {
+        this.usernameError =false;
+        this.emailError=false;
+
         if (response.error) {
           if ((response.error as string).includes("username")) {
+            this.usernameError =true;
             this.isUsernameValid = !this.isUsernameValid;
             this.userRegistration.controls["username"].setErrors({
               duplicateUsername: true,
             });
 
           } else if ((response.error as string).includes("email")) {
+            this.emailError=true;
             this.isEmailValid = !this.isEmailValid;
             this.userRegistration.controls["email"].setErrors({
               duplicateEmail: true,
@@ -153,13 +161,15 @@ export class RegisterComponent implements OnInit {
       this.isLastNameValid = !this.isLastNameValid;
     }
     if(this.userRegistration.hasError('required', 'username') ||
-      this.userRegistration.hasError('minLength', 'username') ||
-      this.userRegistration.hasError('maxLength', 'username'))
+      this.userRegistration.hasError('minlength', 'username') ||
+      this.userRegistration.hasError('maxlength', 'username') ||
+      this.usernameError)
     {
       this.isUsernameValid = !this.isUsernameValid;
     }
     if(this.userRegistration.hasError('required', 'email') ||
-      this.userRegistration.hasError('pattern', 'email'))
+      this.userRegistration.hasError('pattern', 'email') ||
+      this.emailError)
     {
       this.isEmailValid = !this.isEmailValid;
     }
