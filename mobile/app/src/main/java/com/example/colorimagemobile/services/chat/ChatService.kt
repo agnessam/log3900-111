@@ -3,6 +3,8 @@ package com.example.colorimagemobile.services.chat
 import android.content.Context
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.example.colorimagemobile.R
 import com.example.colorimagemobile.classes.MyFragmentManager
 import com.example.colorimagemobile.models.ChatSocketModel
@@ -30,8 +32,17 @@ data class ChatMessage(var hasFetchedOldMsg: Boolean, var messages: MutableSet<C
 
 object ChatService {
     // roomName: [messages]
+    private var newMsgLiveData: MutableLiveData<Boolean> = MutableLiveData()
     private var channelMessages: HashMap<String, ChatMessage> = HashMap()
     var unreadChannels: ArrayList<String> = ArrayList()
+
+    fun setNewMsgLiveData(newValue: Boolean) {
+        newMsgLiveData.value = newValue
+    }
+
+    fun getNewMsgLiveData(): LiveData<Boolean> {
+        return newMsgLiveData
+    }
 
     // create message list for specific room
     fun addChat(name: String) {

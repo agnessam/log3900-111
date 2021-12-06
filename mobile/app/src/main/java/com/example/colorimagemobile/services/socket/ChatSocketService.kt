@@ -70,6 +70,7 @@ object ChatSocketService: AbsSocket(SOCKETS.CHAT_NAMESPACE_NAME) {
                         }
 
                         if (TextChannelService.isInConnectedChannels(message.roomName)) {
+                            ChatService.setNewMsgLiveData(true)
                             Notification().playNewMessageSound(fragmentActivity!!.applicationContext)
                         }
                     }
