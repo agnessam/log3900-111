@@ -26,7 +26,7 @@ class PrivacyAndSafety : Fragment(R.layout.fragment_privacy_and_safety) {
 
     private fun setListeners(){
         switch_email.setOnCheckedChangeListener{ compoundButton,isEmailAllow ->
-            newSetting.privacySetting.searchableByEmail = UserService.getUserInfo().privacySetting.searchableByEmail
+            newSetting.privacySetting.searchableByEmail = isEmailAllow
             newSetting.privacySetting.searchableByFirstName = UserService.getUserInfo().privacySetting.searchableByFirstName
             newSetting.privacySetting.searchableByLastName =UserService.getUserInfo().privacySetting.searchableByLastName
             updatePrivacySetting()
