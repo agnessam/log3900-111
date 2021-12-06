@@ -45,8 +45,6 @@ import top.defaults.colorpicker.ColorPickerView
 
 class NewDrawingMenuBottomSheet: BottomSheetDialogFragment() {
     private lateinit var createDrawingBtn: Button
-    private lateinit var widthLayout: TextInputLayout
-    private lateinit var heightLayout: TextInputLayout
     private lateinit var dialog: BottomSheetDialog
     private lateinit var assignToInput: AutoCompleteTextView
     private lateinit var privacyInput: AutoCompleteTextView
