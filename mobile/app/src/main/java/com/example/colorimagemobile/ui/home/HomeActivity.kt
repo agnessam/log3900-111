@@ -90,7 +90,7 @@ class HomeActivity : AppCompatActivity() {
             ChatService.getNewMsgLiveData().observe(this, { isNewMessage ->
                 val chatItem = bottomNav.menu.getItem(1)
 
-                val newIcon = if (isNewMessage) R.drawable.ic_chat else R.drawable.ic_baseline_mark_unread_chat_alt_24
+                val newIcon = if (isNewMessage) R.drawable.ic_baseline_mark_unread_chat_alt_24 else R.drawable.ic_chat
                 chatItem.icon = VectorDrawableCompat.create(resources, newIcon, null)
             })
         }

@@ -67,6 +67,9 @@ class ChannelsRecyclerAdapter():
                     TextChannelService.setCurrentChannelByPosition(currentPosition, isAllChannels)
                     ChatService.unreadChannels.remove(TextChannelService.getCurrentChannel().name)
                     unreadChannels.remove(TextChannelService.getCurrentChannel().name)
+                    if (ChatService.unreadChannels.size == 0) {
+                        ChatService.setNewMsgLiveData(false)
+                    }
                 }
                 TextChannelService.refreshChannelList()
                 ChatService.refreshChatBox(itemView.context as FragmentActivity)

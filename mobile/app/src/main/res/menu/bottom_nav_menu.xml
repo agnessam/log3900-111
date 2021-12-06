@@ -11,11 +11,6 @@
         android:icon="@drawable/ic_chat"
         android:title="@string/title_chat"/>
 
-<!--    <item-->
-<!--        android:id="@+id/chatFragmentNotification"-->
-<!--        android:icon="@drawable/ic_baseline_mark_unread_chat_alt_24"-->
-<!--        android:title="Unread Chat"/>-->
-
     <item
         android:id="@+id/teamsFragment"
         android:icon="@drawable/ic_teams"
