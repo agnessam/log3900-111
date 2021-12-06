@@ -44,29 +44,13 @@ export class ChatSocketService extends SocketServiceInterface {
       console.log(
         `${message.author} at ${message.timestamp}: ${message.message}`,
       );
-      this.emitMessage(message);
-
-      this.textChannelRepository
-        .getChannelByName(message.roomName)
-        .then((channel) => {
-          this.textChannelRepository
-            .getMessages(channel._id)
-            .then((messages) => {
-              if (messages && messages.length !== 0) {
-                this.emitHistory(message.roomName, messages);
-              }
-            });
-        })
-        .catch((err) => {
-          // Let server run
-        });
-
-      this.messageRepository.storeMessages(message);
+      this.messageRepository.create(message);
+      this.emitMessage(socket, message);
     });
   }
 
-  private emitMessage(message: MessageInterface): void {
-    this.namespace.to(message.roomName).emit(TEXT_MESSAGE_EVENT_NAME, message);
+  private emitMessage(socket: Socket, message: MessageInterface): void {
+    socket.to(message.roomName).emit(TEXT_MESSAGE_EVENT_NAME, message);
   }
 
   protected listenRoom(socket: Socket) {
@@ -74,6 +58,7 @@ export class ChatSocketService extends SocketServiceInterface {
       console.log(
         `${socketInformation.userId} has joined room ${socketInformation.roomName}`,
       );
+
       socket.join(socketInformation.roomName);
 
       this.textChannelRepository
@@ -86,7 +71,8 @@ export class ChatSocketService extends SocketServiceInterface {
                 this.emitHistory(socketInformation.roomName, messages);
               }
             });
-        });
+        })
+        .catch((err) => {});
 
       console.log(
         `number of users in ${socketInformation.roomName} : ${

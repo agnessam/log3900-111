@@ -1,5 +1,9 @@
 import { Injectable } from "@angular/core";
-import { AbstractSocketService, LEAVE_ROOM_EVENT_NAME, ROOM_EVENT_NAME } from "src/app/shared";
+import {
+  AbstractSocketService,
+  LEAVE_ROOM_EVENT_NAME,
+  ROOM_EVENT_NAME,
+} from "src/app/shared";
 import {
   CHAT_NAMESPACE_NAME,
   TEXT_MESSAGE_EVENT_NAME,

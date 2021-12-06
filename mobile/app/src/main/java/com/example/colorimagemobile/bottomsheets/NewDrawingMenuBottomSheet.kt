@@ -45,12 +45,11 @@ import top.defaults.colorpicker.ColorPickerView
 
 class NewDrawingMenuBottomSheet: BottomSheetDialogFragment() {
     private lateinit var createDrawingBtn: Button
-    private lateinit var widthLayout: TextInputLayout
-    private lateinit var heightLayout: TextInputLayout
     private lateinit var dialog: BottomSheetDialog
     private lateinit var assignToInput: AutoCompleteTextView
     private lateinit var privacyInput: AutoCompleteTextView
     private lateinit var passwordLayout: TextInputLayout
+    private lateinit var drawingNameLayout: TextInputLayout
 
     private val USER_ME = "Me"
     private var drawingName = ""
@@ -76,6 +75,7 @@ class NewDrawingMenuBottomSheet: BottomSheetDialogFragment() {
         assignToInput = view.findViewById(R.id.newDrawingOwnerAutoCompleteTextView)
         privacyInput = view.findViewById(R.id.newDrawingPrivacyAutoCompleteTextView)
         passwordLayout = view.findViewById(R.id.newDrawingPasswordLayout)
+        drawingNameLayout = view.findViewById(R.id.newDrawingNameLayout)
 
         fetchTeams()
         setPrivacyInput()
@@ -113,11 +113,15 @@ class NewDrawingMenuBottomSheet: BottomSheetDialogFragment() {
         colorPicker.subscribe { newColor, _, _ -> color = ColorService.intToRGBA(newColor) }
         createNewDrawingForm.setOnTouchListener{_, _ -> hideKeyboard(requireContext(), createNewDrawingForm)}
         view.findViewById<TextInputEditText>(R.id.newDrawingPasswordInputText).doOnTextChanged { text, _, _, _ -> drawingPassword = text.toString() }
-        view.findViewById<TextInputEditText>(R.id.newDrawingNameInputText).doOnTextChanged { text, _, _, _ -> drawingName = text.toString() }
+        view.findViewById<TextInputEditText>(R.id.newDrawingNameInputText).doOnTextChanged { text, _, _, _ ->
+            drawingName = text.toString()
+            drawingNameLayout.error = if ((text.toString().length < Constants.MIN_LENGTH) || (text.toString().length>Constants.MAX_LENGTH)) "The name length should be min 4 and max 12 characters"
+            else null
+        }
         privacyInput.setOnItemClickListener { _, _, _, _ -> togglePasswordInput(isProtected()) }
 
         view.findViewById<Button>(R.id.createDrawingBtn).setOnClickListener {
-            if (drawingName == "" || (isProtected() && drawingPassword == "")) {
+            if (drawingName == "" || (isProtected() && drawingPassword == "") || drawingName.length < Constants.MIN_LENGTH || drawingName.length < Constants.MAX_LENGTH) {
                 val shake = AnimationUtils.loadAnimation(requireActivity().getApplicationContext(), R.anim.shake)
                 createNewDrawingForm.startAnimation(shake);
                     return@setOnClickListener

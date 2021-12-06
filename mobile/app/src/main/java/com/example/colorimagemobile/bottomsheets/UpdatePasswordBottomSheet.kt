@@ -95,7 +95,8 @@ class UpdatePasswordBottomSheet : BottomSheetDialogFragment(){
         inputLayout.error = formValidator.getWhitespaceText(text)
         val containsError = formValidator.containsError()
         val invalidInputLength = formValidator.isInputEmpty(resources.getString(R.string.required))
-        validForm = !containsError && !invalidInputLength
+        val InputLengthShort = formValidator.isInputLengthShort(resources.getString(R.string.lengthShort))
+        validForm = !containsError && !invalidInputLength && !InputLengthShort
     }
 
     private fun NewPasswordMatch(): Boolean{

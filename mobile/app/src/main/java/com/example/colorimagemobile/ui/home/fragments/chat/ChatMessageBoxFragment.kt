@@ -174,7 +174,6 @@ class ChatMessageBoxFragment : Fragment(R.layout.fragment_chat_message_box) {
 
     private fun sendChat() {
         val msg = chatMsgEditText.text.toString()
-//        closeKeyboard(requireActivity())
 
         if (msg.isEmpty()) {
             printToast(requireContext(), "Please enter a valid message")
@@ -187,6 +186,14 @@ class ChatMessageBoxFragment : Fragment(R.layout.fragment_chat_message_box) {
 
         chatMsgEditText.text = null
 
+        ChatService.addMessage(newMessage)
+        if (TextChannelService.isConnectedChannelInitialized()) {
+            // update current chat view
+            val currentRoom = TextChannelService.getCurrentChannel().name
+            if (newMessage.roomName == currentRoom) {
+                ChatAdapterService.getChatMsgAdapter().addChatItem(newMessage)
+            }
+        }
         // scroll down if I send the message
         if (newMessage.author == UserService.getUserInfo().username) {
             scrollDown()

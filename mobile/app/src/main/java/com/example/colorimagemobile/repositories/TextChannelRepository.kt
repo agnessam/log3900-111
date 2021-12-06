@@ -3,7 +3,6 @@ package com.example.colorimagemobile.repositories
 import androidx.lifecycle.MutableLiveData
 import com.example.colorimagemobile.models.ChatSocketModel
 import com.example.colorimagemobile.models.DataWrapper
-import com.example.colorimagemobile.models.SearchModel
 import com.example.colorimagemobile.models.TextChannelModel
 import com.example.colorimagemobile.services.RetrofitInstance
 import com.example.colorimagemobile.services.users.UserService
@@ -161,7 +160,7 @@ class TextChannelRepository {
 
         return channelsLiveData
     }
-    
+
     fun deleteMessages(id: String): MutableLiveData<DataWrapper<Any>> {
         val deleteChannelData: MutableLiveData<DataWrapper<Any>> = MutableLiveData()
 

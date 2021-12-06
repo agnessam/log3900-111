@@ -110,6 +110,7 @@ export class TeamProfileComponent implements OnInit {
 
     this.openConfirmDeleteDialogRef.afterClosed().subscribe(() => {
       this.textChannelService.emitDeleteTeamChannel(this.team.name);
+      this.textChannelService.emitCloseChat();
     });
   }
 
@@ -124,6 +125,7 @@ export class TeamProfileComponent implements OnInit {
       }
       this.team.members = team.members;
       this.chatSocketService.leaveRoom(team.name);
+      this.textChannelService.emitCloseChat();
       this.changeDetectorRef.detectChanges();
     });
   }
