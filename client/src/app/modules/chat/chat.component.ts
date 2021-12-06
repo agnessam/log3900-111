@@ -32,6 +32,8 @@ export class ChatComponent implements OnInit, OnDestroy {
   @ViewChild("chatBox", { static: false })
   private chatBox: ElementRef<HTMLInputElement>;
 
+  shouldScroll: boolean = true;
+
   message = "";
   // saves connected rooms and message history from connection
   messageHistory: Map<string, Message[]> = new Map();
@@ -76,7 +78,6 @@ export class ChatComponent implements OnInit, OnDestroy {
     });
     this.openChatRoom();
     this.receiveMessage();
-    this.leaveRoom();
     this.chatSocketService.connect();
     this.textChannelService.leftCollabChannel.subscribe(() => {
       this.closeChat();
@@ -84,7 +85,10 @@ export class ChatComponent implements OnInit, OnDestroy {
   }
 
   ngAfterViewChecked() {
-    this.scrollDown();
+    if (this.shouldScroll) {
+      this.scrollDown();
+      this.shouldScroll = false;
+    }
   }
 
   ngOnDestroy(): void {
@@ -100,7 +104,6 @@ export class ChatComponent implements OnInit, OnDestroy {
   }
 
   openChatRoom() {
-    // might want to run these in parallel (fork?)
     this.chatService.toggleChatOverlay.subscribe((channel) => {
       this.currentChannel = channel;
       if (!this.isPopoutOpen) {
@@ -122,6 +125,8 @@ export class ChatComponent implements OnInit, OnDestroy {
       this.chatSocketService.messageHistory.subscribe((history) => {
         if (!history) return;
         this.messageHistory.set(history[0].roomName, history);
+        this.shouldScroll = true;
+        this.getMessages();
       });
     }
   }
@@ -142,11 +147,10 @@ export class ChatComponent implements OnInit, OnDestroy {
     // appends every message from every roomname
     this.chatSubscription = this.chatSocketService.chatSubject.subscribe({
       next: (message) => {
-        this.joinRoom(message.roomName);
-        if (!this.messageHistory.get(message.roomName)?.includes(message)) {
+        if (this.messageHistory.get(message.roomName)) {
           this.messageHistory.get(message.roomName)?.push(message);
         }
-        this.scrollDown();
+        this.shouldScroll = true;
       },
     });
   }
@@ -154,7 +158,7 @@ export class ChatComponent implements OnInit, OnDestroy {
   scrollDown() {
     try {
       const messageBox = this.chatBox.nativeElement;
-      messageBox.scrollTop = messageBox.scrollHeight;
+      messageBox.scrollTop = messageBox.scrollHeight + 73;
     } catch (err) {}
   }
 
@@ -168,7 +172,11 @@ export class ChatComponent implements OnInit, OnDestroy {
       roomId: this.currentChannel?._id!,
       roomName: this.currentChannel?.name!,
     };
+    if (this.messageHistory.get(message.roomName)) {
+      this.messageHistory.get(message.roomName)?.push(message);
+    }
     this.chatSocketService.sendMessage(message);
+    this.shouldScroll = true;
     this.message = "";
   }
 

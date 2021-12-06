@@ -49,7 +49,6 @@ export class SearchResultsComponent implements OnInit {
   }
 
   filterPrivateDrawings(drawings: Drawing[]) {
-    console.log(drawings);
     for (let drawing of drawings) {
       if (this.hasPermission(drawing)) {
         this.filteredDrawings.push(drawing);
@@ -68,7 +67,6 @@ export class SearchResultsComponent implements OnInit {
     }
 
     if (drawing.ownerModel == "Team") {
-      console.log(drawing.owner);
       if (((drawing.owner as Team).members as string[]).includes(this.userId)) {
         return true;
       }
