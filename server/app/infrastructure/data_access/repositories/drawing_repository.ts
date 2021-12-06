@@ -209,7 +209,6 @@ export class DrawingRepository extends GenericRepository<DrawingInterface> {
               {
                 $pull: {
                   drawings: { $in: deletedDrawing._id },
-                  collaborationHistory: { drawing: deletedDrawing._id },
                 },
               },
               (err: Error) => {
@@ -229,6 +228,22 @@ export class DrawingRepository extends GenericRepository<DrawingInterface> {
               },
             );
           }
+
+          User.updateMany(
+            {},
+            {
+              $pull: {
+                collaborationHistory: {
+                  drawing: deletedDrawing._id,
+                },
+              },
+            },
+            (err: Error) => {
+              if (err) {
+                reject(err);
+              }
+            },
+          );
 
           TextChannel.findOneAndDelete(
             { drawing: deletedDrawing._id },

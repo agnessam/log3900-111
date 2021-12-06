@@ -17,6 +17,9 @@ object SocketManagerService {
         if (DrawingService.getCurrentDrawingID() == null) return
 
         DrawingSocketService.leaveRoom(Constants.SocketRoomInformation(UserService.getUserInfo()._id, DrawingService.getCurrentDrawingID()!!))
-        TextChannelService.removeFromConnectedChannels(TextChannelService.getCollaborationChannel())
+
+        if (TextChannelService.isCollaborationChannelInitialized()){
+            TextChannelService.removeFromConnectedChannels(TextChannelService.getCollaborationChannel())
+        }
     }
 }
