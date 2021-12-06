@@ -6,6 +6,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.ImageView
+import android.widget.RelativeLayout
 import android.widget.SearchView
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
@@ -13,6 +14,7 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
+import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat
 import com.example.colorimagemobile.ui.login.LoginActivity
 import com.example.colorimagemobile.R
 import com.example.colorimagemobile.classes.MyFragmentManager
@@ -84,7 +86,14 @@ class HomeActivity : AppCompatActivity() {
     private fun initChat() {
         ChatSocketService.connect()
         ChatSocketService.setFragmentActivity(this)
-        ChatService.initChat(this) { }
+        ChatService.initChat(this) {
+            ChatService.getNewMsgLiveData().observe(this, { isNewMessage ->
+                val chatItem = bottomNav.menu.getItem(1)
+
+                val newIcon = if (isNewMessage) R.drawable.ic_chat else R.drawable.ic_baseline_mark_unread_chat_alt_24
+                chatItem.icon = VectorDrawableCompat.create(resources, newIcon, null)
+            })
+        }
     }
 
     // add options to Home Navbar
