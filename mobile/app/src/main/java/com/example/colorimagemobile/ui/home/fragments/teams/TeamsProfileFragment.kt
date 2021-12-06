@@ -332,8 +332,9 @@ class TeamsProfileFragment : Fragment(R.layout.fragment_teams_profile) {
 
     private fun updateDrawing(updatedDrawing: DrawingModel.UpdateDrawing, position: Int) {
         DrawingRepository().updateDrawing(drawingsMenu[position].drawing._id!!, updatedDrawing).observe(viewLifecycleOwner, {
+            printToast(requireActivity(), it.message!!)
+
             if (it.isError as Boolean) {
-                printToast(requireActivity(), it.message!!)
                 return@observe
             }
 

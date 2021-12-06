@@ -31,6 +31,7 @@
         android:layout_marginTop="20px"
         android:layout_alignParentRight="true"
         app:helperTextTextColor="#ff0000"
+        app:helperText="@string/required"
         app:errorIconDrawable="@drawable/ic_error"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 

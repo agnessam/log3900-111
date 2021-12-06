@@ -91,7 +91,7 @@ class DrawingRepository {
                     liveData.value = DataWrapper(null, "An error occurred while updating drawing!", true)
                     return
                 }
-                liveData.value = DataWrapper(response.body(), null, false)
+                liveData.value = DataWrapper(response.body(), "Drawing has successfully been updated", false)
             }
 
             override fun onFailure(call: Call<Any>, t: Throwable) {
