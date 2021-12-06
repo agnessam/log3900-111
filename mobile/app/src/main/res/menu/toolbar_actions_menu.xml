@@ -4,7 +4,7 @@
     android:layout_alignParentBottom="true">
 
      <item   
-        android:title="Search"
+        android:title="@string/search"
         android:id="@+id/searchIcon"
         app:showAsAction="ifRoom|withText"
         app:actionViewClass="android.widget.SearchView" />
