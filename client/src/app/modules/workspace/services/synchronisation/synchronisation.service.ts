@@ -17,8 +17,19 @@ export class SynchronisationService {
     private drawingService: DrawingService
   ) {}
 
+  private removePreviewBox(id: string) {
+    if (this.rectangleSelections.get(id) != undefined) {
+      this.rendererService.renderer.removeChild(
+        this.drawingService.drawing,
+        this.rectangleSelections.get(id)?.rectSelection
+      );
+    }
+    this.rectangleSelections.delete(id);
+  }
+
   removeFromPreview(id: string): boolean {
     if (this.previewShapes.has(id)) {
+      this.removePreviewBox(id);
       this.previewShapes.delete(id);
       return true;
     }
@@ -63,10 +74,12 @@ export class SynchronisationService {
       selectionCommandData.drawingCommand.id,
       selectionCommand
     );
+
+    this.resetPreviewBox(selectionCommandData.drawingCommand.id);
   }
 
   confirmSelection(confirmSelectionData: SocketTool) {
-    this.previewShapes.delete(confirmSelectionData.drawingCommand.id);
+    this.removeFromPreview(confirmSelectionData.drawingCommand.id);
   }
 
   transformSelection(transformSelectionData: SocketTool) {
@@ -81,32 +94,7 @@ export class SynchronisationService {
         transformSelectionData.drawingCommand
       );
 
-      if (this.rectangleSelections.has(commandId)) {
-        this.rendererService.renderer.removeChild(
-          this.drawingService.drawing,
-          this.rectangleSelections.get(commandId)?.rectSelection
-        );
-      }
-
-      // Set rect for object
-      let selectedObject = this.drawingService.getObject(commandId);
-      if (
-        !this.rectangleSelections.has(commandId) &&
-        selectedObject != undefined
-      ) {
-        let rectSVGShapePair: RectSVGShapePair = {
-          rectSelection: this.rendererService.renderer.createElement(
-            "rect",
-            "svg"
-          ),
-          selectedShape: selectedObject,
-        };
-        this.rectangleSelections.set(commandId, rectSVGShapePair);
-      }
-      let rectangleSelection = this.rectangleSelections.get(commandId);
-      if (rectangleSelection != undefined) {
-        this.setRectSelection(rectangleSelection);
-      }
+      this.resetPreviewBox(commandId);
 
       if (transformationCommand instanceof command!.constructor) {
         command!.update(transformSelectionData.drawingCommand);
@@ -118,12 +106,43 @@ export class SynchronisationService {
     this.previewShapes.get(commandId)!.execute();
   }
 
+  private resetPreviewBox(commandId: string) {
+    if (this.rectangleSelections.has(commandId)) {
+      this.rendererService.renderer.removeChild(
+        this.drawingService.drawing,
+        this.rectangleSelections.get(commandId)?.rectSelection
+      );
+    }
+
+    // Set rect for object
+    let selectedObject = this.drawingService.getObject(commandId);
+    if (
+      !this.rectangleSelections.has(commandId) &&
+      selectedObject != undefined
+    ) {
+      let rectSVGShapePair: RectSVGShapePair = {
+        rectSelection: this.rendererService.renderer.createElement(
+          "rect",
+          "svg"
+        ),
+        selectedShape: selectedObject,
+      };
+      this.rectangleSelections.set(commandId, rectSVGShapePair);
+    }
+    let rectangleSelection = this.rectangleSelections.get(commandId);
+    if (rectangleSelection != undefined) {
+      this.setRectSelection(rectangleSelection);
+    }
+  }
+
   deleteSelection(deleteSelectionData: SocketTool): void {
     let transformCommand = this.commandFactory.createCommand(
       deleteSelectionData.type,
       deleteSelectionData.drawingCommand
     );
     transformCommand.execute();
+
+    this.removePreviewBox(deleteSelectionData.drawingCommand.id);
   }
 
   setSelectionLineWidth(lineWidthData: LineWidth): void {
@@ -186,12 +205,12 @@ export class SynchronisationService {
     this.rendererService.renderer.setStyle(
       rectSVGShapePair.rectSelection,
       "stroke",
-      `rgba(200, 0, 200, 0.5)`
+      `rgba(0, 0, 255, 0.5)`
     );
     this.rendererService.renderer.setStyle(
       rectSVGShapePair.rectSelection,
       "stroke-width",
-      `5`
+      `10`
     );
     this.rendererService.renderer.setStyle(
       rectSVGShapePair.rectSelection,
