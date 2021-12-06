@@ -182,6 +182,8 @@ export class SynchronisationService {
     let boundingRect: DOMRect =
       rectSVGShapePair.selectedShape.getBoundingClientRect();
 
+    const modifier =
+      parseInt(rectSVGShapePair.selectedShape.style.strokeWidth) / 2;
     this.rendererService.renderer.setAttribute(
       rectSVGShapePair.rectSelection,
       "class",
@@ -193,23 +195,24 @@ export class SynchronisationService {
       `${
         boundingRect.left -
         (this.drawingService.drawing as SVGSVGElement).getBoundingClientRect()
-          .left
+          .left -
+        modifier
       }`
     );
     this.rendererService.renderer.setAttribute(
       rectSVGShapePair.rectSelection,
       "y",
-      `${boundingRect.top - 64}`
+      `${boundingRect.top - 64 - modifier}`
     );
     this.rendererService.renderer.setAttribute(
       rectSVGShapePair.rectSelection,
       "width",
-      `${boundingRect.width}`
+      `${boundingRect.width + modifier * 2}`
     );
     this.rendererService.renderer.setAttribute(
       rectSVGShapePair.rectSelection,
       "height",
-      `${boundingRect.height}`
+      `${boundingRect.height + modifier * 2}`
     );
     this.rendererService.renderer.setStyle(
       rectSVGShapePair.rectSelection,
@@ -219,7 +222,7 @@ export class SynchronisationService {
     this.rendererService.renderer.setStyle(
       rectSVGShapePair.rectSelection,
       "stroke-width",
-      `10`
+      `5`
     );
     this.rendererService.renderer.setStyle(
       rectSVGShapePair.rectSelection,

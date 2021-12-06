@@ -28,6 +28,7 @@ import com.example.colorimagemobile.services.chat.ChatService
 import com.example.colorimagemobile.services.chat.TextChannelService
 import com.example.colorimagemobile.services.drawing.DrawingObjectManager
 import com.example.colorimagemobile.services.drawing.DrawingService
+import com.example.colorimagemobile.services.drawing.PreviewBoxManager
 import com.example.colorimagemobile.services.drawing.TransformationManager
 import com.example.colorimagemobile.services.socket.ChatSocketService
 import com.example.colorimagemobile.services.socket.SocketManagerService
@@ -163,6 +164,7 @@ class HomeActivity : AppCompatActivity() {
                     DrawingObjectManager.clearLayers()
                     DrawingService.setCurrentDrawingID(null)
                     TransformationManager.clearPreviousTransformations()
+                    PreviewBoxManager.clearPreviewBoxes()
                 }
                 bottomNav.selectedItemId = R.id.galleryFragment
                 true
