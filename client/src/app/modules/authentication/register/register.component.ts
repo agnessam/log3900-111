@@ -89,7 +89,7 @@ export class RegisterComponent implements OnInit {
             });
           }
         } else {
-          this.router.navigate(["/users/customize"]);
+          this.router.navigate(["/gallery"]);
         }
       });
   }
