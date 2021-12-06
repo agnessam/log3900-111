@@ -116,10 +116,12 @@ object SynchronisationService {
         )
         this.previewShapes[(selectionCommandData.drawingCommand as SelectionData).id] =
             selectionCommand!!
+        DrawingObjectManager.modifyPreviewBox(selectionCommandData.drawingCommand.id)
     }
 
     fun confirmSelection(confirmSelectionData: SocketTool) {
         this.previewShapes.remove((confirmSelectionData.drawingCommand as SelectionData).id)
+        DrawingObjectManager.removePreviewBox(confirmSelectionData.drawingCommand.id)
     }
 
     fun transformSelection(transformSelectionData: SocketTool) {
@@ -136,6 +138,8 @@ object SynchronisationService {
                     previewShapes[commandId] = transformCommand as TranslateCommand
                 }
             }
+            DrawingObjectManager.modifyPreviewBox(commandId)
+
             if(transformCommand == null || command == null) return
 
             if(transformCommand.javaClass == command.javaClass){
@@ -162,6 +166,7 @@ object SynchronisationService {
     fun deleteSelection(deleteSelectionData: SocketTool){
         val deleteCommand = CommandFactory.createCommand(deleteSelectionData.type, deleteSelectionData.drawingCommand)
         deleteCommand?.execute()
+        DrawingObjectManager.removePreviewBox((deleteSelectionData.drawingCommand as DeleteData).id)
     }
 
     fun setObjectPrimaryColor(colorData: ColorData) {
