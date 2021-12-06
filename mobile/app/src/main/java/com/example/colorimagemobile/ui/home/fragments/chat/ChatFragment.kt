@@ -29,7 +29,6 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         myView = view
         adapter = ChatAdapterService.getChannelListAdapter()
         setSearchIcon(view)
@@ -82,11 +81,13 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
     private fun showAllChannels() {
         adapter.setData(TextChannelService.getPublicChannels() as ArrayList<TextChannelModel.AllInfo>)
         adapter.setIsAllChannels(true)
+        adapter.setUnreadChannels(ArrayList())
     }
 
     private fun showConnectedChannels() {
         adapter.setData(TextChannelService.getConnectedChannels())
         adapter.setIsAllChannels(false)
+        adapter.setUnreadChannels(ChatService.unreadChannels)
     }
 
     private fun changeBtnColor(selectedBtn: Button, normalBtn: Button) {
