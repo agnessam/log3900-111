@@ -34,10 +34,6 @@ import com.example.colorimagemobile.ui.home.fragments.gallery.GalleryDrawingFrag
 import com.example.colorimagemobile.utils.CommonFun.Companion.hideKeyboard
 import com.example.colorimagemobile.utils.CommonFun.Companion.printToast
 import com.example.colorimagemobile.utils.Constants
-import com.example.colorimagemobile.utils.Constants.DRAWING.Companion.MAX_HEIGHT
-import com.example.colorimagemobile.utils.Constants.DRAWING.Companion.MAX_WIDTH
-import com.example.colorimagemobile.utils.Constants.DRAWING.Companion.MIN_HEIGHT
-import com.example.colorimagemobile.utils.Constants.DRAWING.Companion.MIN_WIDTH
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -59,8 +55,6 @@ class NewDrawingMenuBottomSheet: BottomSheetDialogFragment() {
     private val USER_ME = "Me"
     private var drawingName = ""
     private var drawingPassword = ""
-    private var widthValue = 0
-    private var heightValue = 0
     private var userTeams: List<TeamModel> = arrayListOf()
     private val privacyList = arrayListOf<String>("public", "private", "protected")
 
@@ -79,8 +73,6 @@ class NewDrawingMenuBottomSheet: BottomSheetDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         createDrawingBtn = view.findViewById(R.id.createDrawingBtn)
-        widthLayout = view.findViewById(R.id.newDrawingWidthInputLayout)
-        heightLayout = view.findViewById(R.id.newDrawingHeightInputLayout)
         assignToInput = view.findViewById(R.id.newDrawingOwnerAutoCompleteTextView)
         privacyInput = view.findViewById(R.id.newDrawingPrivacyAutoCompleteTextView)
         passwordLayout = view.findViewById(R.id.newDrawingPasswordLayout)
@@ -124,20 +116,8 @@ class NewDrawingMenuBottomSheet: BottomSheetDialogFragment() {
         view.findViewById<TextInputEditText>(R.id.newDrawingNameInputText).doOnTextChanged { text, _, _, _ -> drawingName = text.toString() }
         privacyInput.setOnItemClickListener { _, _, _, _ -> togglePasswordInput(isProtected()) }
 
-        // width input validation
-        view.findViewById<TextInputEditText>(R.id.newDrawingWidthInputText).doOnTextChanged { text, _, _, _ ->
-            widthValue = getCurrentValue(text)
-            widthLayout.error = getErrorMessage(widthValue, MIN_WIDTH, MAX_WIDTH)
-        }
-
-        // height input validation
-        view.findViewById<TextInputEditText>(R.id.newDrawingHeightInputText).doOnTextChanged { text, _, _, _ ->
-            heightValue = getCurrentValue(text)
-            heightLayout.error = getErrorMessage(heightValue, MIN_HEIGHT, MAX_HEIGHT)
-        }
-
         view.findViewById<Button>(R.id.createDrawingBtn).setOnClickListener {
-            if (widthValue == 0 || heightValue == 0 || drawingName == "" || (isProtected() && drawingPassword == "")) {
+            if (drawingName == "" || (isProtected() && drawingPassword == "")) {
                 val shake = AnimationUtils.loadAnimation(requireActivity().getApplicationContext(), R.anim.shake)
                 createNewDrawingForm.startAnimation(shake);
                     return@setOnClickListener
@@ -157,22 +137,6 @@ class NewDrawingMenuBottomSheet: BottomSheetDialogFragment() {
         passwordLayout.isEnabled = shouldEnable
     }
 
-    // read input field and convert to int
-    private fun getCurrentValue(text: CharSequence?): Int {
-        val currentText = text!!.toString()
-        return if(currentText == "") 0 else currentText.toInt()
-    }
-
-    // check input field's value range
-    private fun getErrorMessage(currentValue: Int, min: Int, max: Int): String? {
-        return if (currentValue < min || currentValue > max) getSizeError(min, max) else null
-    }
-
-    // error to show if input is invalid
-    private fun getSizeError(min: Int, max: Int): String {
-        return "Value must be between ${min}px and ${max}px"
-    }
-
     private fun getOwnerModel(): Pair<String, String> {
         val assignToValue = assignToInput.text.toString()
         val ownerModel = if (assignToValue == USER_ME) "User" else "Team"
@@ -190,8 +154,8 @@ class NewDrawingMenuBottomSheet: BottomSheetDialogFragment() {
     private fun createDrawing(color: String) {
         // create SVG object
         val svgBuilder = SVGBuilder("svg")
-        svgBuilder.addAttr("width", widthValue)
-        svgBuilder.addAttr("height", heightValue)
+        svgBuilder.addAttr("width", Constants.DRAWING.DEFAULT_WIDTH)
+        svgBuilder.addAttr("height", Constants.DRAWING.DEFAULT_HEIGHT)
         svgBuilder.addAttr("style", "background-color: $color")
 
         val base64 = ImageConvertor.XMLToBase64(svgBuilder.getXML())
