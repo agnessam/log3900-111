@@ -106,8 +106,6 @@
                         android:hint="Password"
                         app:helperText="@string/required"
                         app:helperTextTextColor="#ff0000"
-                        app:counterEnabled="true"
-                        app:counterMaxLength="@integer/maxInputLength"
                         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                         app:endIconMode="password_toggle"
                         android:layout_marginTop="30dp">

@@ -27,7 +27,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Channel name"
-        app:helperText="@string/required"
         app:errorEnabled="true"
         android:layout_marginTop="20px"
         android:layout_alignParentRight="true"
