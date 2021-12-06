@@ -49,13 +49,14 @@
         </RelativeLayout>
 
         <CheckBox
+            android:visibility="gone"
             android:id="@+id/drawingProtectedToggle"
-            android:layout_below="@id/drawingMenuHeader"
-            android:buttonTint="@color/primary"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_below="@id/drawingMenuHeader"
             android:layout_centerHorizontal="true"
-            android:text="Show Protected Drawings only"/>
+            android:buttonTint="@color/primary"
+            android:text="Show Protected Drawings only" />
 
         <View
             android:id="@+id/drawingMenuHeaderBorder"
