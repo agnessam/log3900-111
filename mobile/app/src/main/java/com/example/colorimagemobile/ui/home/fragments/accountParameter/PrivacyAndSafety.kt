@@ -14,7 +14,6 @@ import com.example.colorimagemobile.repositories.UserRepository
 import com.example.colorimagemobile.services.SharedPreferencesService
 import com.example.colorimagemobile.services.users.UserService
 import com.example.colorimagemobile.utils.CommonFun
-import com.example.colorimagemobile.utils.CommonFun.Companion.printToast
 
 class PrivacyAndSafety : Fragment(R.layout.fragment_privacy_and_safety) {
      private lateinit var sharedPreferencesService: SharedPreferencesService

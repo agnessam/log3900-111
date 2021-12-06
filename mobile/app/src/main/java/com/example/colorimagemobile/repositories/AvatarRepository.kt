@@ -66,25 +66,4 @@ class AvatarRepository {
         return avatarUploadData
     }
 
-    // add avatar
-    fun postAvatar(avatar: AvatarModel.AllInfo): MutableLiveData<DataWrapper<AvatarModel.AllInfo>> {
-        val avatarData: MutableLiveData<DataWrapper<AvatarModel.AllInfo>> = MutableLiveData()
-
-        httpClient.postAvatar(token = "Bearer $token",avatar).enqueue(object : Callback<AvatarModel.AllInfo> {
-            override fun onResponse(call: Call<AvatarModel.AllInfo>, response: Response<AvatarModel.AllInfo>) {
-                if (!response.isSuccessful) {
-                    avatarData.value = DataWrapper(null, "An error occurred!", true)
-                    return
-                }
-                // avatar successfully add
-                avatarData.value = DataWrapper(response.body(), "", false)
-            }
-            override fun onFailure(call: Call<AvatarModel.AllInfo>, t: Throwable) {
-                avatarData.value = DataWrapper(null, "Failed to add avatar!", true)
-            }
-        })
-
-        return avatarData
-    }
-
 }

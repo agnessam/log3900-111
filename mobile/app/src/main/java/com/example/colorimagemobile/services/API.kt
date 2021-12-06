@@ -159,9 +159,6 @@ interface API {
     @POST(Constants.ENDPOINTS.AVATAR_PATH+"/upload")
     fun uploadAvatar(@Header("Authorization") token: String, @Part filePart: MultipartBody.Part?): Call<AvatarModel.AllInfo>
 
-    @Headers("Content-Type: application/json")
-    @POST(Constants.ENDPOINTS.AVATAR_PATH)
-    fun postAvatar(@Header("Authorization") token: String, @Body newAvatar: AvatarModel.AllInfo): Call<AvatarModel.AllInfo>
     // teams
     @GET("${Constants.ENDPOINTS.TEAMS}{id}/drawings")
     fun getTeamDrawings(@Header("Authorization") token: String, @Path ("id") id: String): Call<List<DrawingModel.Drawing>>
