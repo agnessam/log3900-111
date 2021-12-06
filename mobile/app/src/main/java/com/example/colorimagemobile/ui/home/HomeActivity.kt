@@ -21,7 +21,6 @@ import com.example.colorimagemobile.httpresponsehandler.GlobalHandler
 import com.example.colorimagemobile.models.*
 import com.example.colorimagemobile.services.users.UserService
 import com.example.colorimagemobile.repositories.SearchRepository
-import com.example.colorimagemobile.repositories.UserRepository
 import com.example.colorimagemobile.services.BottomNavService
 import com.example.colorimagemobile.services.SearchService
 import com.example.colorimagemobile.services.SharedPreferencesService
@@ -61,6 +60,7 @@ class HomeActivity : AppCompatActivity() {
         homeViewModel = ViewModelProvider(this).get(HomeActivityViewModel::class.java)
         sharedPreferencesService = SharedPreferencesService(this)
 
+        CommonFun.setActionBarColor(supportActionBar)
         navController = findNavController(R.id.fragment)
         bottomNav = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
         BottomNavService.setNav(bottomNav)

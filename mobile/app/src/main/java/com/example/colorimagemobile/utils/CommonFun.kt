@@ -6,12 +6,15 @@ import android.content.ClipData
 import android.content.Context
 import android.content.Context.INPUT_METHOD_SERVICE
 import android.content.Intent
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.util.Log
 import android.view.KeyEvent
 import android.view.MenuItem
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
+import androidx.appcompat.app.ActionBar
 import androidx.appcompat.view.menu.ActionMenuItemView
 import androidx.fragment.app.FragmentActivity
 import com.example.colorimagemobile.utils.Constants.Companion.DEBUG_KEY
@@ -81,6 +84,11 @@ class CommonFun {
             button.alpha = if (shouldEnable) 1f else .4f
             button.isClickable = shouldEnable
             button.isEnabled = shouldEnable
+        }
+
+        fun setActionBarColor(actionBar: ActionBar?) {
+            if (actionBar == null) return
+            actionBar?.setBackgroundDrawable(ColorDrawable(Color.parseColor("#FCEDEA")))
         }
     }
 }
