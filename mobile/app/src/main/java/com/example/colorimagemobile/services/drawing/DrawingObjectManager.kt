@@ -136,7 +136,7 @@ object DrawingObjectManager {
                             Pair("name", shape.name),
                             Pair("points", shape.points),
                             Pair("style", shape.style),
-                            Pair("transform", shape.transform)
+                            Pair("transform", if(shape.transform == null) "" else shape.transform)
                         )
                         val propertiesJoinString = propertyValuePairs.joinToString(separator = " ") { it -> " ${it.first}=\"${it.second}\"" }
                         rootSvgString += "<polyline $propertiesJoinString ></polyline>"
@@ -150,7 +150,7 @@ object DrawingObjectManager {
                             Pair("width", shape.width),
                             Pair("height", shape.height),
                             Pair("style", shape.style),
-                            Pair("transform", shape.transform)
+                            Pair("transform", if(shape.transform == null) "" else shape.transform)
                         )
                         val propertiesJoinString = propertyValuePairs.joinToString(separator = " ") { it -> "${it.first}=\"${it.second}\"" }
                         rootSvgString += "<rect $propertiesJoinString ></rect>"
@@ -166,7 +166,7 @@ object DrawingObjectManager {
                             Pair("width", shape.width),
                             Pair("height", shape.height),
                             Pair("style", shape.style),
-                            Pair("transform", shape.transform)
+                            Pair("transform", if(shape.transform == null) "" else shape.transform)
                         )
                         val propertiesJoinString = propertyValuePairs.joinToString(separator = " ") { it -> " ${it.first}=\"${it.second}\"" }
                         rootSvgString += "<ellipse $propertiesJoinString ></ellipse>"
