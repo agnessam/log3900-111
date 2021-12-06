@@ -44,14 +44,13 @@ class HistoryFragment : Fragment(R.layout.fragment_user_profile_history) {
             Constants.EMPTY_STRING -> {}
             Constants.NULL -> {}
             else->{
-//                val loginDate = DateFormatter.getDate(UserService.getUserInfo().lastLogin.toString())
                 myView.findViewById<TextView>(R.id.userLastLogin).text = UserService.getUserInfo().lastLogin.toString()}
         }
+
         when(UserService.getUserInfo().lastLogout){
             null -> {}
             else->{
-                val logoutDate = UserService.getUserInfo().lastLogout.toString()
-                myView.findViewById<TextView>(R.id.userlastLogout).text = logoutDate}
+                myView.findViewById<TextView>(R.id.userlastLogout).text = UserService.getUserInfo().lastLogout.toString()}
         }
 
         bitmapOfdrawingToOpen = arrayListOf()
@@ -69,9 +68,9 @@ class HistoryFragment : Fragment(R.layout.fragment_user_profile_history) {
         recyclerView.adapter = CollaborationHistoryRecyclerAdapter(
             requireActivity(),
             bitmapOfdrawingToOpen,
-            R.id.collaborationFrameLayout,
-            { updatedDrawing, pos -> updateDrawing(updatedDrawing, pos) })
-
+            R.id.collaborationFrameLayout)
+//            ,
+//            { updatedDrawing, pos -> updateDrawing(updatedDrawing, pos) })
     }
 
     private fun getAllDrawings() {
@@ -88,17 +87,17 @@ class HistoryFragment : Fragment(R.layout.fragment_user_profile_history) {
         })
     }
 
-    private fun updateDrawing(updatedDrawing: DrawingModel.UpdateDrawing, position: Int) {
-        DrawingRepository().updateDrawing(bitmapOfdrawingToOpen[position].drawing._id!!, updatedDrawing).observe(viewLifecycleOwner, {
-            if (it.isError as Boolean) {
-                CommonFun.printToast(requireActivity(), it.message!!)
-                return@observe
-            }
-
-            bitmapOfdrawingToOpen[position] = DrawingService.updateDrawingFromMenu(bitmapOfdrawingToOpen[position], updatedDrawing)
-            recyclerView.adapter?.notifyItemChanged(position)
-        })
-    }
+//    private fun updateDrawing(updatedDrawing: DrawingModel.UpdateDrawing, position: Int) {
+//        DrawingRepository().updateDrawing(bitmapOfdrawingToOpen[position].drawing._id!!, updatedDrawing).observe(viewLifecycleOwner, {
+//            if (it.isError as Boolean) {
+//                CommonFun.printToast(requireActivity(), it.message!!)
+//                return@observe
+//            }
+//
+//            bitmapOfdrawingToOpen[position] = DrawingService.updateDrawingFromMenu(bitmapOfdrawingToOpen[position], updatedDrawing)
+//            recyclerView.adapter?.notifyItemChanged(position)
+//        })
+//    }
 
 
 }

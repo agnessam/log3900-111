@@ -19,6 +19,7 @@ import com.example.colorimagemobile.bottomsheets.NewDrawingMenuBottomSheet
 import com.example.colorimagemobile.classes.MyFragmentManager
 import com.example.colorimagemobile.models.recyclerAdapters.DrawingMenuData
 import com.example.colorimagemobile.services.drawing.DrawingService
+import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
 import com.example.colorimagemobile.utils.CommonFun.Companion.printToast
 import kotlinx.android.synthetic.main.fragment_gallery_menu.*
 import kotlin.collections.ArrayList
@@ -38,7 +39,7 @@ class GalleryMenuFragment : Fragment(R.layout.fragment_gallery_menu) {
         sharedPreferencesService = context?.let { SharedPreferencesService(it) }!!
         galleryView = view.findViewById(R.id.galleryMenuView)
         drawings = arrayListOf()
-
+        printMsg("inside onviewcreated de gallery menu fragment")
         MyFragmentManager(requireActivity()).hideBackButton()
         DrawingService.setCurrentDrawingID(null)
         setListeners()
@@ -77,8 +78,11 @@ class GalleryMenuFragment : Fragment(R.layout.fragment_gallery_menu) {
     // display all existing drawings in menu
     private fun renderDrawings() {
         recyclerView = galleryView.findViewById<RecyclerView>(R.id.drawingMenuRecyclerView)
+        printMsg("before gallery get bitmap call call with allargument")
         drawingsMenu = DrawingService.getDrawingsBitmap(requireContext(), drawings)
         recyclerView.layoutManager = GridLayoutManager(requireContext(), Constants.NB_DATA_ROWS)
+        printMsg("before gallery recycler call with allargument")
+        printMsg("drawings value "+drawingsMenu)
         recyclerView.adapter = DrawingMenuRecyclerAdapter(
             requireActivity(),
             drawingsMenu,
@@ -89,6 +93,7 @@ class GalleryMenuFragment : Fragment(R.layout.fragment_gallery_menu) {
     }
 
     private fun updateDrawing(updatedDrawing: DrawingModel.UpdateDrawing, position: Int) {
+        printMsg("bupdate drawing de gallery")
         drawingRepo.updateDrawing(drawingsMenu[position].drawing._id!!, updatedDrawing).observe(viewLifecycleOwner, {
             if (it.isError as Boolean) {
                 printToast(requireActivity(), it.message!!)

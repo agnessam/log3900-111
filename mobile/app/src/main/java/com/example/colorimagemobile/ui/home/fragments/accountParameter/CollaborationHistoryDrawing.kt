@@ -10,7 +10,7 @@ class CollaborationHistoryDrawing : Fragment(R.layout.fragment_collaboration_his
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        MyFragmentManager(requireActivity()).open(R.id.collaborationFrameLayout, HistoryFragment())
+        MyFragmentManager(requireActivity()).open(R.id.collaborationFrameLayout,HistoryDrawingFragment())
     }
 
 

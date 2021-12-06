@@ -23,7 +23,7 @@ class CollaborationHistoryRecyclerAdapter(
     val activity: FragmentActivity,
     drawings: ArrayList<DrawingMenuData>,
     val destination: Int,
-    val updateDrawing: (newDrawingInfo: DrawingModel.UpdateDrawing, pos: Int) -> Unit
+//    val updateDrawing: (newDrawingInfo: DrawingModel.UpdateDrawing, pos: Int) -> Unit
 ) :
     RecyclerView.Adapter<CollaborationHistoryRecyclerAdapter.ViewHolder>() {
 
@@ -38,7 +38,7 @@ class CollaborationHistoryRecyclerAdapter(
     // populate each data to cardView
     override fun onBindViewHolder(holder: CollaborationHistoryRecyclerAdapter.ViewHolder, position: Int) {
         holder.drawingName.text = drawings[position].drawing.name
-        holder.dateOfCollaboration.text = DateFormatter.getDate(UserService.getCollaborationToShow()[position].collaboratedAt.toString())
+        holder.dateOfCollaboration.text = UserService.getCollaborationToShow()[position].collaboratedAt.toString()
     }
 
     // identify how many item we pass to view holder

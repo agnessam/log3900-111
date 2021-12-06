@@ -128,35 +128,23 @@ object DrawingService {
     }
 
     fun setCollaborationDrawingObject(){
-
-        printMsg("value of collabhistory ids : "+UserService.getIdCollaborationToShow() )
-
-        val collabIdToshowFirst = UserService.getIdCollaborationToShow()[0]
-        val collabIdToshowSecond = UserService.getIdCollaborationToShow()[1]
-        val collabIdToshowThird = UserService.getIdCollaborationToShow()[2]
-
         when(UserService.getUserInfo().collaborationHistory!!.size){
             0->{}
-            1->{    firstDrawing = allDrawings.find { drawing -> drawing._id == collabIdToshowFirst }!!
-                    userCollaborationDrawings = arrayListOf(firstDrawing)}
-            2->{    firstDrawing = allDrawings.find { drawing -> drawing._id == collabIdToshowFirst  }!!
-                    secondDrawing = allDrawings.find { drawing -> drawing._id == collabIdToshowSecond }!!
-                    userCollaborationDrawings = arrayListOf(firstDrawing,secondDrawing)
+            1->{val firstDrawing = allDrawings.find { drawing -> drawing._id == UserService.getIdCollaborationToShow()[0] }!!
+                userCollaborationDrawings = arrayListOf(firstDrawing)}
+            2->{ val firstDrawing = allDrawings.find { drawing -> drawing._id == UserService.getIdCollaborationToShow()[0] }!!
+                val secondDrawing = allDrawings.find { drawing -> drawing._id == UserService.getIdCollaborationToShow()[1] }!!
+                userCollaborationDrawings = arrayListOf(firstDrawing,secondDrawing)
             }
             else->{
-//                    firstDrawing = allDrawings.find { drawing -> drawing._id == collabIdToshow[0] }!!
-//                    secondDrawing = allDrawings.find { drawing -> drawing._id == collabIdToshow[1] }!!
-//                    thirdDrawing = allDrawings.find { drawing -> drawing._id == collabIdToshow[2] }!!
-////                    userCollaborationDrawings = arrayListOf(firstDrawing,secondDrawing,thirdDrawing )
-
-                userCollaborationDrawings.add(allDrawings.find { drawing -> drawing._id == collabIdToshowFirst }!!)
-                userCollaborationDrawings.add(allDrawings.find { drawing -> drawing._id == collabIdToshowSecond }!!)
-                userCollaborationDrawings.add(allDrawings.find { drawing -> drawing._id == collabIdToshowThird }!!)
+                val firstDrawing = allDrawings.find { drawing -> drawing._id == UserService.getIdCollaborationToShow()[0] }!!
+                val secondDrawing = allDrawings.find { drawing -> drawing._id == UserService.getIdCollaborationToShow()[1] }!!
+                val thirdDrawing = allDrawings.find { drawing -> drawing._id == UserService.getIdCollaborationToShow()[2] }!!
+                userCollaborationDrawings = arrayListOf(firstDrawing,secondDrawing,thirdDrawing )
             }
         }
-
-        printMsg("value of userCollabdrawing : "+userCollaborationDrawings)
     }
+
 
     fun setCollabHistoryDrawingsBitmap(collabHistoryDrawingsBitmap:ArrayList<DrawingMenuData> ){
         this.collabHistoryDrawingsBitmap = collabHistoryDrawingsBitmap
