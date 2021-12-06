@@ -149,6 +149,7 @@ export class TeamProfileComponent implements OnInit {
   openMemberList() {
     this.openMemberListDialogRef = this.dialog.open(MemberListDialogComponent, {
       width: "400px",
+      height: "608px",
       data: { members: this.team.members },
     });
   }
