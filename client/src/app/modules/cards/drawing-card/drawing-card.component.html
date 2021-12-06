@@ -7,9 +7,9 @@
     class="drawing-img"
   />
 
-  <div class="drawing-overlay">
+  <div class="drawing-overlay" (click)="goToDrawing()">
     <mat-card-title>
-      <div class="drawing-name" (click)="goToDrawing()">
+      <div class="drawing-name">
         {{ drawing.name }}
       </div>
 
@@ -29,6 +29,7 @@
           mat-icon-button
           [matMenuTriggerFor]="menu"
           aria-label="Example icon button with a vertical three dot icon"
+          (click)="$event.stopPropagation()"
         >
           <mat-icon id="settings-icon">more_vert</mat-icon>
         </button>
@@ -47,7 +48,7 @@
       <div
         class="drawing-owner"
         *ngIf="isUser(drawing.owner)"
-        (click)="goToUserProfile()"
+        (click)="goToUserProfile(); $event.stopPropagation()"
       >
         <ngx-avatar
           [src]="$any(drawing.owner).avatar.imageUrl"
@@ -60,7 +61,7 @@
       <div
         class="drawing-owner"
         *ngIf="isTeam(drawing.owner)"
-        (click)="goToTeamProfile()"
+        (click)="goToTeamProfile(); $event.stopPropagation()"
       >
         <ngx-avatar
           [name]="$any(drawing.owner).name"

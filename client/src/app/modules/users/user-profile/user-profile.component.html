@@ -54,7 +54,7 @@
     <mat-tab-group mat-align-tabs="center" dynamicHeight>
       <mat-tab label="Drawings">
         <div fxLayout="row wrap" id="drawings" fxLayoutGap="33px grid">
-          <div fxFlex="33%" *ngFor="let drawing of user.drawings">
+          <div fxFlex="33%" *ngFor="let drawing of filteredDrawings">
             <app-drawing-card
               [drawing]="drawing"
               (deletedDrawingEvent)="deleteDrawingFromView($event)"

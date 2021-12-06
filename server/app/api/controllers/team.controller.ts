@@ -21,6 +21,11 @@ export class TeamController {
     return await this.teamRepository.findAll();
   }
 
+  @httpGet('/protected')
+  public async getProtectedTeams() {
+    return await this.teamRepository.getProtectedTeams();
+  }
+
   @httpGet('/:teamId')
   public async getTeamById(@request() req: Request) {
     return await this.teamRepository.getTeam(req.params.teamId);

@@ -66,6 +66,7 @@
 
     <CheckBox
         android:id="@+id/createMemberLimitCheckbox"
+        android:buttonTint="@color/primary"
         android:layout_marginTop="30px"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -100,6 +101,7 @@
     <CheckBox
         android:id="@+id/createTeamPrivateCheckbox"
         android:layout_marginTop="20px"
+        android:buttonTint="@color/primary"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Set the team as private?" />

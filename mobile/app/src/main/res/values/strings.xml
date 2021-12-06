@@ -84,4 +84,5 @@
     <string name="user_history">User History</string>
     <string name="lengthIncorrect">* Min 4 and Max 14 characters</string>
     <string name="lengthShort">* Min 8 characters</string>
+    <string name="search">Search</string>
 </resources>

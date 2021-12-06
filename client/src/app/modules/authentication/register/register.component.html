@@ -82,6 +82,15 @@
                   "
                   >Username cannot have more than 12 characters</mat-error
                 >
+                <mat-error
+                  *ngIf="
+                    this.userRegistration.hasError(
+                      'duplicateUsername',
+                      'username'
+                    )
+                  "
+                  >Username already exists</mat-error
+                >
               </mat-form-field>
             </p>
             <p>
@@ -100,6 +109,12 @@
                 <mat-error
                   *ngIf="this.userRegistration.hasError('pattern', 'email')"
                   >Email isn't a valid email</mat-error
+                >
+                <mat-error
+                  *ngIf="
+                    this.userRegistration.hasError('duplicateEmail', 'email')
+                  "
+                  >Email already exists</mat-error
                 >
               </mat-form-field>
             </p>
