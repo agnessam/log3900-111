@@ -3,19 +3,37 @@ package com.example.colorimagemobile.services.drawing
 import android.content.Context
 import android.graphics.Bitmap
 import com.example.colorimagemobile.classes.ImageConvertor
-import com.example.colorimagemobile.models.DrawingModel
-import com.example.colorimagemobile.models.MuseumPostModel
-import com.example.colorimagemobile.models.OwnerModel
-import com.example.colorimagemobile.models.PrivacyLevel
+import com.example.colorimagemobile.models.*
 import com.example.colorimagemobile.models.recyclerAdapters.DrawingMenuData
 import com.example.colorimagemobile.services.users.UserService
+import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
+import com.example.colorimagemobile.utils.Constants
 
 object DrawingService {
 
     private var allDrawings: List<DrawingModel.Drawing> = arrayListOf()
     private var currentDrawingID: String? = null
-    private var userCollaborationDrawings: List<DrawingModel.Drawing> = arrayListOf()
+    private var userCollaborationDrawings: ArrayList<DrawingModel.Drawing> = arrayListOf()
     private var collabHistoryDrawingsBitmap : ArrayList<DrawingMenuData> = arrayListOf()
+    private lateinit var firstDrawing: DrawingModel.Drawing
+    private var secondDrawing :DrawingModel.Drawing = DrawingModel.Drawing (
+        Constants.EMPTY_STRING,
+        Constants.EMPTY_STRING,
+        DrawingOwner(Constants.EMPTY_STRING,
+            AvatarModel.AllInfo(
+                Constants.EMPTY_STRING,
+                Constants.EMPTY_STRING,
+                false),
+            Constants.EMPTY_STRING,
+            Constants.EMPTY_STRING),
+        Constants.EMPTY_STRING,
+        Constants.EMPTY_STRING,
+        Constants.EMPTY_STRING,
+        Constants.EMPTY_STRING,
+        Constants.EMPTY_STRING,
+        Constants.EMPTY_STRING,
+        arrayListOf())
+    private lateinit var thirdDrawing : DrawingModel.Drawing
 
     fun setCurrentDrawingID(drawingId: String?) {
         currentDrawingID = drawingId
@@ -105,30 +123,44 @@ object DrawingService {
     fun getDrawing(position: Int): DrawingModel.Drawing{
         return  allDrawings[position]
     }
-    fun getCollaborationDrawingObject(): List<DrawingModel.Drawing> {
+    fun getCollaborationDrawingObject(): ArrayList<DrawingModel.Drawing> {
         return userCollaborationDrawings
     }
 
     fun setCollaborationDrawingObject(){
+
+        printMsg("value of collabhistory ids : "+UserService.getIdCollaborationToShow() )
+
+        val collabIdToshowFirst = UserService.getIdCollaborationToShow()[0]
+        val collabIdToshowSecond = UserService.getIdCollaborationToShow()[1]
+        val collabIdToshowThird = UserService.getIdCollaborationToShow()[2]
+
         when(UserService.getUserInfo().collaborationHistory!!.size){
             0->{}
-            1->{val firstDrawing = allDrawings.find { drawing -> drawing._id == UserService.getIdCollaborationToShow()[0] }!!
-                userCollaborationDrawings = arrayListOf(firstDrawing)}
-            2->{ val firstDrawing = allDrawings.find { drawing -> drawing._id == UserService.getIdCollaborationToShow()[0] }!!
-                val secondDrawing = allDrawings.find { drawing -> drawing._id == UserService.getIdCollaborationToShow()[1] }!!
-                userCollaborationDrawings = arrayListOf(firstDrawing,secondDrawing)
+            1->{    firstDrawing = allDrawings.find { drawing -> drawing._id == collabIdToshowFirst }!!
+                    userCollaborationDrawings = arrayListOf(firstDrawing)}
+            2->{    firstDrawing = allDrawings.find { drawing -> drawing._id == collabIdToshowFirst  }!!
+                    secondDrawing = allDrawings.find { drawing -> drawing._id == collabIdToshowSecond }!!
+                    userCollaborationDrawings = arrayListOf(firstDrawing,secondDrawing)
             }
             else->{
-                val firstDrawing = allDrawings.find { drawing -> drawing._id == UserService.getIdCollaborationToShow()[0] }!!
-                val secondDrawing = allDrawings.find { drawing -> drawing._id == UserService.getIdCollaborationToShow()[1] }!!
-                val thirdDrawing = allDrawings.find { drawing -> drawing._id == UserService.getIdCollaborationToShow()[2] }!!
-                userCollaborationDrawings = arrayListOf(firstDrawing,secondDrawing,thirdDrawing )
+//                    firstDrawing = allDrawings.find { drawing -> drawing._id == collabIdToshow[0] }!!
+//                    secondDrawing = allDrawings.find { drawing -> drawing._id == collabIdToshow[1] }!!
+//                    thirdDrawing = allDrawings.find { drawing -> drawing._id == collabIdToshow[2] }!!
+////                    userCollaborationDrawings = arrayListOf(firstDrawing,secondDrawing,thirdDrawing )
+
+                userCollaborationDrawings.add(allDrawings.find { drawing -> drawing._id == collabIdToshowFirst }!!)
+                userCollaborationDrawings.add(allDrawings.find { drawing -> drawing._id == collabIdToshowSecond }!!)
+                userCollaborationDrawings.add(allDrawings.find { drawing -> drawing._id == collabIdToshowThird }!!)
             }
         }
+
+        printMsg("value of userCollabdrawing : "+userCollaborationDrawings)
     }
 
     fun setCollabHistoryDrawingsBitmap(collabHistoryDrawingsBitmap:ArrayList<DrawingMenuData> ){
         this.collabHistoryDrawingsBitmap = collabHistoryDrawingsBitmap
+        printMsg("value of userCollabdrawingBitmap : "+this.collabHistoryDrawingsBitmap)
     }
 
     fun getCollabHistoryDrawingsBitmap(): ArrayList<DrawingMenuData>{
