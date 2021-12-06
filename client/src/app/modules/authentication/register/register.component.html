@@ -16,7 +16,7 @@
               <tr>
                 <td>
                   <p>
-                    <mat-form-field appearance="outline" class="form-input" id='firstNameFormField'>
+                    <mat-form-field appearance="outline" class="form-input" [@shakeit]="isFirstNameValid ? 'shake1' : 'shake2'">
                       <mat-label>First Name</mat-label>
                       <input
                         type="text"
@@ -38,7 +38,7 @@
                 </td>
                 <td>
                   <p>
-                    <mat-form-field appearance="outline" class="form-input" id="lastNameFormField">
+                    <mat-form-field appearance="outline" class="form-input" [@shakeit]="isLastNameValid ? 'shake1' : 'shake2'">
                       <mat-label>Last Name</mat-label>
                       <input
                         type="text"
@@ -58,7 +58,7 @@
               </tr>
             </table>
             <p>
-              <mat-form-field appearance="outline" class="form-input" id="usernameFormField">
+              <mat-form-field appearance="outline" class="form-input" [@shakeit]="isUsernameValid ? 'shake1' : 'shake2'">
                 <mat-label>Username</mat-label>
                 <input
                   type="text"
@@ -94,7 +94,7 @@
               </mat-form-field>
             </p>
             <p>
-              <mat-form-field appearance="outline" class="form-input" id="emailFormField">
+              <mat-form-field appearance="outline" class="form-input" [@shakeit]="isEmailValid ? 'shake1' : 'shake2'">
                 <mat-label>Email Address</mat-label>
                 <input
                   type="text"
@@ -123,7 +123,7 @@
               <tr>
                 <td>
                   <p>
-                    <mat-form-field appearance="outline" class="form-input" id="passwordFormField">
+                    <mat-form-field appearance="outline" class="form-input" [@shakeit]="isPasswordValid ?'shake1' : 'shake2'">
                       <mat-label>Password</mat-label>
                       <input
                         type="password"
@@ -152,7 +152,7 @@
                 </td>
                 <td>
                   <p>
-                    <mat-form-field appearance="outline" class="form-input" id="confirmPasswordFormField">
+                    <mat-form-field appearance="outline" class="form-input" [@shakeit]="isConfirmPasswordValid ? 'shake1' : 'shake2'">
                       <mat-label>Confirm Password</mat-label>
                       <input
                         type="password"
@@ -188,7 +188,7 @@
               </p>
             </div>
             <div id="register-button" class="button">
-              <button type="submit" mat-raised-button color="primary">
+              <button type="submit" mat-raised-button color="primary" (click)="validate()">
                 Register
               </button>
             </div>

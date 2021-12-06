@@ -12,6 +12,7 @@ import {
 import { ErrorStateMatcher } from "@angular/material/core";
 import { Router } from "@angular/router";
 import { AuthenticationService } from "../services/authentication/authentication.service";
+import { trigger,state,style,transition,animate,keyframes } from    '@angular/animations';
 
 export class RegisterErrorStateMatcher implements ErrorStateMatcher {
   isErrorState(
@@ -30,18 +31,49 @@ export class RegisterErrorStateMatcher implements ErrorStateMatcher {
   selector: "app-register",
   templateUrl: "./register.component.html",
   styleUrls: ["./register.component.scss"],
+  animations: [
+    trigger('shakeit', [
+        state('shake1', style({
+            transform: 'scale(1)',
+        })),
+        state('shake2', style({
+            transform: 'scale(1)',
+        })),
+        transition('shake1 => shake2', animate('1000ms ease-in',     keyframes([
+          style({transform: 'translate3d(-1px, 0, 0)', offset: 0.1}),
+          style({transform: 'translate3d(2px, 0, 0)', offset: 0.2}),
+          style({transform: 'translate3d(-4px, 0, 0)', offset: 0.3}),
+          style({transform: 'translate3d(4px, 0, 0)', offset: 0.4}),
+          style({transform: 'translate3d(-4px, 0, 0)', offset: 0.5}),
+          style({transform: 'translate3d(4px, 0, 0)', offset: 0.6}),
+          style({transform: 'translate3d(-4px, 0, 0)', offset: 0.7}),
+          style({transform: 'translate3d(2px, 0, 0)', offset: 0.8}),
+          style({transform: 'translate3d(-1px, 0, 0)', offset: 0.9}),
+        ]))),
+        transition('shake2 => shake1', animate('1000ms ease-in',     keyframes([
+          style({transform: 'translate3d(-1px, 0, 0)', offset: 0.1}),
+          style({transform: 'translate3d(2px, 0, 0)', offset: 0.2}),
+          style({transform: 'translate3d(-4px, 0, 0)', offset: 0.3}),
+          style({transform: 'translate3d(4px, 0, 0)', offset: 0.4}),
+          style({transform: 'translate3d(-4px, 0, 0)', offset: 0.5}),
+          style({transform: 'translate3d(4px, 0, 0)', offset: 0.6}),
+          style({transform: 'translate3d(-4px, 0, 0)', offset: 0.7}),
+          style({transform: 'translate3d(2px, 0, 0)', offset: 0.8}),
+          style({transform: 'translate3d(-1px, 0, 0)', offset: 0.9}),
+        ]))),
+  ])],
   encapsulation: ViewEncapsulation.None,
 })
 export class RegisterComponent implements OnInit {
   userRegistration: FormGroup;
   matcher = new RegisterErrorStateMatcher();
 
-  firstNameFormField :HTMLInputElement;
-  lastNameFormField :HTMLInputElement;
-  usernameFormField :HTMLInputElement;
-  emailFormField :HTMLInputElement;
-  passwordFormField :HTMLInputElement;
-  confirmPasswordFormField :HTMLInputElement;
+  isFirstNameValid :boolean = true;
+  isLastNameValid :boolean = true;
+  isUsernameValid :boolean = true;
+  isEmailValid :boolean = true;
+  isPasswordValid :boolean = true;
+  isConfirmPasswordValid :boolean = true;
 
   constructor(
     private authenticationService: AuthenticationService,
@@ -70,13 +102,6 @@ export class RegisterComponent implements OnInit {
       },
       { validators: this.checkPasswords }
     );
-
-    this.firstNameFormField = document.getElementById("firstNameFormField") as HTMLInputElement;
-    this.lastNameFormField = document.getElementById("lastNameFormField") as HTMLInputElement;
-    this.usernameFormField = document.getElementById("usernameFormField") as HTMLInputElement;
-    this.emailFormField = document.getElementById("emailFormField") as HTMLInputElement;
-    this.passwordFormField = document.getElementById("passwordFormField") as HTMLInputElement;
-    this.confirmPasswordFormField = document.getElementById("confirmPasswordFormField") as HTMLInputElement;
   }
 
   onSubmit(): void {
@@ -94,15 +119,17 @@ export class RegisterComponent implements OnInit {
       .subscribe((response) => {
         if (response.error) {
           if ((response.error as string).includes("username")) {
-            this.shake(this.usernameFormField);
+            this.isUsernameValid = !this.isUsernameValid;
             this.userRegistration.controls["username"].setErrors({
               duplicateUsername: true,
             });
+
           } else if ((response.error as string).includes("email")) {
-            this.shake(this.emailFormField);
+            this.isEmailValid = !this.isEmailValid;
             this.userRegistration.controls["email"].setErrors({
               duplicateEmail: true,
             });
+
           }
         } else {
           this.router.navigate(["/users/customize"]);
@@ -118,10 +145,31 @@ export class RegisterComponent implements OnInit {
     return newPassword === confirmPassword ? null : { notSame: true };
   };
 
-  shake(formField: HTMLInputElement){
-    formField.classList.add('shake');
-    setTimeout(() => {
-      formField.classList.remove('shake');
-    }, 1000);
+  validate(){
+    if(this.userRegistration.hasError('required', 'firstName')){
+      this.isFirstNameValid = !this.isFirstNameValid;
+    }
+    if(this.userRegistration.hasError('required', 'lastName')){
+      this.isLastNameValid = !this.isLastNameValid;
+    }
+    if(this.userRegistration.hasError('required', 'username') ||
+      this.userRegistration.hasError('minLength', 'username') ||
+      this.userRegistration.hasError('maxLength', 'username'))
+    {
+      this.isUsernameValid = !this.isUsernameValid;
+    }
+    if(this.userRegistration.hasError('required', 'email') ||
+      this.userRegistration.hasError('pattern', 'email'))
+    {
+      this.isEmailValid = !this.isEmailValid;
+    }
+    if(this.userRegistration.hasError('required', 'password') ||
+      this.userRegistration.hasError('minlength', 'password')){
+      this.isPasswordValid = !this.isPasswordValid;
+    }
+    if(this.userRegistration.hasError('notSame')){
+      this.isConfirmPasswordValid = !this.isConfirmPasswordValid;
+    }
+
   }
 }
