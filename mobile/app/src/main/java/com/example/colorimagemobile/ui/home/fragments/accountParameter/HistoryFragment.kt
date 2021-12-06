@@ -68,9 +68,8 @@ class HistoryFragment : Fragment(R.layout.fragment_user_profile_history) {
         recyclerView.adapter = CollaborationHistoryRecyclerAdapter(
             requireActivity(),
             bitmapOfdrawingToOpen,
-            R.id.collaborationFrameLayout)
-//            ,
-//            { updatedDrawing, pos -> updateDrawing(updatedDrawing, pos) })
+            R.id.collaborationFrameLayout,
+            { updatedDrawing, pos -> updateDrawing(updatedDrawing, pos) })
     }
 
     private fun getAllDrawings() {
@@ -87,17 +86,17 @@ class HistoryFragment : Fragment(R.layout.fragment_user_profile_history) {
         })
     }
 
-//    private fun updateDrawing(updatedDrawing: DrawingModel.UpdateDrawing, position: Int) {
-//        DrawingRepository().updateDrawing(bitmapOfdrawingToOpen[position].drawing._id!!, updatedDrawing).observe(viewLifecycleOwner, {
-//            if (it.isError as Boolean) {
-//                CommonFun.printToast(requireActivity(), it.message!!)
-//                return@observe
-//            }
-//
-//            bitmapOfdrawingToOpen[position] = DrawingService.updateDrawingFromMenu(bitmapOfdrawingToOpen[position], updatedDrawing)
-//            recyclerView.adapter?.notifyItemChanged(position)
-//        })
-//    }
+    private fun updateDrawing(updatedDrawing: DrawingModel.UpdateDrawing, position: Int) {
+        DrawingRepository().updateDrawing(bitmapOfdrawingToOpen[position].drawing._id!!, updatedDrawing).observe(viewLifecycleOwner, {
+            if (it.isError as Boolean) {
+                CommonFun.printToast(requireActivity(), it.message!!)
+                return@observe
+            }
+
+            bitmapOfdrawingToOpen[position] = DrawingService.updateDrawingFromMenu(bitmapOfdrawingToOpen[position], updatedDrawing)
+            recyclerView.adapter?.notifyItemChanged(position)
+        })
+    }
 
 
 }

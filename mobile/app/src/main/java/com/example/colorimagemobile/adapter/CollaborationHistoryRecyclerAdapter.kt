@@ -4,12 +4,14 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.example.colorimagemobile.R
 import com.example.colorimagemobile.bottomsheets.PasswordConfirmationBottomSheet
 import com.example.colorimagemobile.classes.DateFormatter
+import com.example.colorimagemobile.classes.MyPicasso
 import com.example.colorimagemobile.models.DrawingModel
 import com.example.colorimagemobile.models.PrivacyLevel
 import com.example.colorimagemobile.models.recyclerAdapters.DrawingMenuData
@@ -23,7 +25,7 @@ class CollaborationHistoryRecyclerAdapter(
     val activity: FragmentActivity,
     drawings: ArrayList<DrawingMenuData>,
     val destination: Int,
-//    val updateDrawing: (newDrawingInfo: DrawingModel.UpdateDrawing, pos: Int) -> Unit
+    val updateDrawing: (newDrawingInfo: DrawingModel.UpdateDrawing, pos: Int) -> Unit
 ) :
     RecyclerView.Adapter<CollaborationHistoryRecyclerAdapter.ViewHolder>() {
 
@@ -39,6 +41,7 @@ class CollaborationHistoryRecyclerAdapter(
     override fun onBindViewHolder(holder: CollaborationHistoryRecyclerAdapter.ViewHolder, position: Int) {
         holder.drawingName.text = drawings[position].drawing.name
         holder.dateOfCollaboration.text = UserService.getCollaborationToShow()[position].collaboratedAt.toString()
+        holder.drawingview.setImageBitmap(drawings[position].imageBitmap)
     }
 
     // identify how many item we pass to view holder
@@ -62,6 +65,7 @@ class CollaborationHistoryRecyclerAdapter(
     inner class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
         var drawingName : TextView = itemView.findViewById(R.id.drawingName);
         var dateOfCollaboration : TextView = itemView.findViewById(R.id.dateOfCollaboration);
+        var drawingview : ImageView = itemView.findViewById(R.id.card_avatar_view)
 
         init {
 

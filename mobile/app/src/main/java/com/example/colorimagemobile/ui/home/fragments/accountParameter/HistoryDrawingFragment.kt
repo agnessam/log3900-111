@@ -9,6 +9,7 @@ class HistoryDrawingFragment : Fragment(R.layout.fragment_history_drawing) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+//        MyFragmentManager(requireActivity()).open(R.id.collaborationFrameLayout,HistoryDrawingFragment())
 
     }
 
