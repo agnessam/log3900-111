@@ -45,7 +45,7 @@ export class DrawingController {
 
   @httpPatch('/:drawingId')
   public async updateDrawing(@request() req: Request) {
-    return await this.drawingRepository.updateById(
+    return await this.drawingRepository.updateDrawing(
       req.params.drawingId,
       req.body,
     );

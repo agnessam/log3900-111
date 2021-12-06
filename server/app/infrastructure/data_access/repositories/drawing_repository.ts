@@ -166,6 +166,34 @@ export class DrawingRepository extends GenericRepository<DrawingInterface> {
     });
   }
 
+  public async updateDrawing(drawingId: string, drawing: DrawingInterface) {
+    return new Promise<DrawingInterface>((resolve, reject) => {
+      Drawing.findByIdAndUpdate(
+        { _id: drawingId },
+        drawing,
+        { new: true },
+        (err: Error, updatedDrawing: DrawingInterface) => {
+          if (err) {
+            reject(err);
+          }
+
+          TextChannel.findOneAndUpdate(
+            { drawing: updatedDrawing._id },
+            { $set: { name: updatedDrawing.name } },
+            { new: true },
+            (err: Error) => {
+              if (err) {
+                reject(err);
+              }
+            },
+          );
+
+          resolve(updatedDrawing);
+        },
+      );
+    });
+  }
+
   public async deleteDrawing(drawingId: string) {
     return new Promise<DrawingInterface>((resolve, reject) => {
       Drawing.findOneAndDelete(

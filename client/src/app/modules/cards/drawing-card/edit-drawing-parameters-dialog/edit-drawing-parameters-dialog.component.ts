@@ -5,6 +5,7 @@ import {
   FormGroup,
   ValidationErrors,
   ValidatorFn,
+  Validators,
 } from "@angular/forms";
 import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material/dialog";
 import { DrawingHttpClientService } from "src/app/modules/backend-communication";
@@ -34,7 +35,11 @@ export class EditDrawingParametersDialogComponent implements OnInit {
   ngOnInit(): void {
     this.drawingForm = new FormGroup(
       {
-        name: new FormControl(this.data.drawing.name),
+        name: new FormControl(this.data.drawing.name, [
+          Validators.required,
+          Validators.min(4),
+          Validators.maxLength(12),
+        ]),
         privacyLevel: new FormControl(this.data.drawing.privacyLevel),
         password: new FormControl(this.data.drawing.password),
       },

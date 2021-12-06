@@ -117,7 +117,10 @@ export class ChatComponent implements OnInit, OnDestroy {
       });
       this.chatSocketService.messageHistory.subscribe((history) => {
         if (!history) return;
-        this.messageHistory.set(history[0].roomName, history);
+        console.log(history);
+        this.messageHistory.set(channelName, history);
+        console.log(history);
+        console.log(this.messageHistory);
       });
     }
   }
