@@ -38,7 +38,7 @@
       <div class="post-image">
         <div class="image">
           <img
-            src="../../../assets/effect/like.gif"
+            [src]="transformUri('https://drive.google.com/uc?export=view&id=1K6mqiimWxQW6gbK1z6hhAjVRDaou37Ao')"
             class="likeEffect"
             [id]="post._id + ':like'"
           />
@@ -52,7 +52,7 @@
         <div class="bottom-image">
           <div class="bottom-group" (click)="toggleLike(post)">
             <audio #audioOption>
-              <source src="../../../assets/sound/like.mp3" type="audio/mp3" />
+              <source [src]='transformUri("https://drive.google.com/uc?export=view&id=1qC-P51_ux9UEB10wA_33ZXfRGvEavzwz")' type="audio/mp3" />
             </audio>
 
             <div *ngIf="hasBeenLike(post.likes); else notLikeBlock">
