@@ -21,68 +21,16 @@ import com.example.colorimagemobile.models.Rectangle
 import com.example.colorimagemobile.services.drawing.toolsAttribute.ColorService
 
 object DrawingObjectManager {
-    private var previewBoxDrawables: LayerDrawable = LayerDrawable(arrayOf<Drawable>())
     private var layerDrawable: LayerDrawable = LayerDrawable(arrayOf<Drawable>())
     private var commandList: HashMap<String,ICommand> = HashMap()
     private var layerIdUuidMap: HashMap<Int, String> = HashMap()
-    private var uuidPreviewBoxDrawableMap: HashMap<String, Int> = HashMap()
-
-    fun modifyPreviewBox(id: String) {
-        var previewBoxIndex = uuidPreviewBoxDrawableMap[id]
-        if(previewBoxIndex is Int){
-            var previewBox = previewBoxDrawables.getDrawable(previewBoxIndex)
-            previewBox.bounds = (getShapeBounds(id) ?: return)
-        }
-        else{
-            addPreviewBox(id)
-        }
-        CanvasUpdateService.invalidate()
-    }
-
-    fun removePreviewBox(id: String){
-        var emptyShapeDrawable = ShapeDrawable()
-        emptyShapeDrawable.paint.alpha = 0
-        var index = uuidPreviewBoxDrawableMap[id]
-        if(index != null) previewBoxDrawables.setDrawable(index ,emptyShapeDrawable)
-        uuidPreviewBoxDrawableMap.remove(id)
-        CanvasUpdateService.invalidate()
-    }
-
-    private fun getShapeBounds(id: String): Rect? {
-        var shapeBounds = RectF()
-        when(commandList[id]) {
-            is PencilCommand -> (commandList[id] as PencilCommand).path.computeBounds(shapeBounds, true)
-            is RectangleCommand -> (commandList[id] as RectangleCommand).borderPath.computeBounds(shapeBounds, true)
-            is EllipseCommand -> (commandList[id] as EllipseCommand).borderPath.computeBounds(shapeBounds, true)
-            else -> return null
-        }
-        var rect = Rect()
-        shapeBounds.roundOut(rect)
-        return rect
-    }
-
-    private fun addPreviewBox(id: String){
-        var rectDrawable = ShapeDrawable(RectShape())
-
-        rectDrawable.bounds = (getShapeBounds(id) ?: return)
-
-        var paint = Paint()
-        paint.color = Color.BLUE
-        paint.alpha = 180
-        paint.strokeWidth = 5f
-        paint.style = Paint.Style.STROKE
-        paint.pathEffect = DashPathEffect(floatArrayOf(10f,10f), 0f)
-        rectDrawable.paint.set(paint)
-
-        uuidPreviewBoxDrawableMap[id] = previewBoxDrawables.addLayer(rectDrawable)
-    }
 
     var numberOfLayers: Int = 0
         get() = layerDrawable.numberOfLayers
 
     fun draw(canvas: Canvas){
         layerDrawable.draw(canvas)
-        previewBoxDrawables.draw(canvas)
+        PreviewBoxManager.draw(canvas)
     }
 
     fun setDrawable(layerIndex:Int, drawable:Drawable){
