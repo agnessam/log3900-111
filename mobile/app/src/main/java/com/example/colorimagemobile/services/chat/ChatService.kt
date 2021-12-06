@@ -18,6 +18,7 @@ import java.text.SimpleDateFormat
 import java.time.Instant
 import java.time.format.DateTimeFormatter
 import java.util.*
+import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 
 /**
@@ -30,6 +31,7 @@ data class ChatMessage(var hasFetchedOldMsg: Boolean, var messages: MutableSet<C
 object ChatService {
     // roomName: [messages]
     private var channelMessages: HashMap<String, ChatMessage> = HashMap()
+    var unreadChannels: ArrayList<String> = ArrayList()
 
     // create message list for specific room
     fun addChat(name: String) {

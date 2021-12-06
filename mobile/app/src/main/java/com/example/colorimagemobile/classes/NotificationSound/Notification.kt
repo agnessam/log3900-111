@@ -9,7 +9,15 @@ class Notification {
 
     fun playSound(context: Context){
         try{
-            val defaultSoundUri : Uri = Uri.parse(Constants.NOTIFICATION_URI)
+            val defaultSoundUri : Uri = Uri.parse(Constants.POST_SOUND)
+            val r = RingtoneManager.getRingtone(context, defaultSoundUri)
+            r.play()
+        } catch (e: Exception){e.printStackTrace()}
+    }
+
+    fun playNewMessageSound(context: Context) {
+        try{
+            val defaultSoundUri : Uri = Uri.parse(Constants.NEW_MESSAGE_SOUND)
             val r = RingtoneManager.getRingtone(context, defaultSoundUri)
             r.play()
         } catch (e: Exception){e.printStackTrace()}

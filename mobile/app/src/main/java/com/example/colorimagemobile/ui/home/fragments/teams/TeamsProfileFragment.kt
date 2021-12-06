@@ -73,7 +73,11 @@ class TeamsProfileFragment : Fragment(R.layout.fragment_teams_profile) {
         
         myView.findViewById<TextView>(R.id.teamIdNameCard).text = currentTeam.name
 
-        myView.findViewById<TextView>(R.id.teamIdNbOfMembers).text = "${currentTeam.members.size} members"
+        if (currentTeam.members.size > 1) {
+            myView.findViewById<TextView>(R.id.teamIdNbOfMembers).text = "${currentTeam.members.size} members"
+        } else {
+            myView.findViewById<TextView>(R.id.teamIdNbOfMembers).text = "${currentTeam.members.size} member"
+        }
         myView.findViewById<TextView>(R.id.teamIdDescription).text = currentTeam.description
 
         joinBtn = myView.findViewById<Button>(R.id.teamIdJoinBtn)
@@ -226,6 +230,7 @@ class TeamsProfileFragment : Fragment(R.layout.fragment_teams_profile) {
             val confirmation = ConfirmationBottomSheet({ joinTeam() }, title, description, "Join", ButtonType.PRIMARY.toString())
             confirmation.show(parentFragmentManager, "ConfirmationBottomSheet")
         }
+        updateUI()
     }
 
     private fun openLeaveModal() {
@@ -236,6 +241,7 @@ class TeamsProfileFragment : Fragment(R.layout.fragment_teams_profile) {
             showJoinBtn()
         }, title, description, "Leave", ButtonType.PRIMARY.toString())
         confirmation.show(parentFragmentManager, "ConfirmationBottomSheet")
+        updateUI()
     }
 
     private fun setAllDrawings() {
