@@ -1,5 +1,6 @@
 import { Injectable } from "@angular/core";
 import { Color, LineWidth } from "src/app/shared";
+import { TranslateCommand } from "../..";
 import { DrawingService, RendererProviderService } from "../..";
 import { ICommand } from "../../interfaces/command.interface";
 import { SocketTool } from "../tools/socket-tool";
@@ -94,6 +95,14 @@ export class SynchronisationService {
         transformSelectionData.drawingCommand
       );
 
+      if (command! instanceof TranslateCommand) {
+        if (
+          transformSelectionData.drawingCommand.deltaX == 0 &&
+          transformSelectionData.drawingCommand.deltaY == 0
+        ) {
+          this.previewShapes.set(commandId, transformationCommand);
+        }
+      }
       this.resetPreviewBox(commandId);
 
       if (transformationCommand instanceof command!.constructor) {
