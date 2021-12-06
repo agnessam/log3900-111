@@ -31,19 +31,21 @@ mat-card-title {
 
 #gallery-header {
   min-width: 75%;
-  padding-bottom: 30px;
+  padding-bottom: 15px;
 }
 
 #create-button {
   text-align: center;
 }
 
-#protectedOption{
+.info{
   display: flex;
   align-items: center;
   justify-content: center;
+  padding-bottom: 15px;
 }
 
-.checkbox{
-  margin-left: 15px;
+#section{
+  text-align: right;
+  padding-right: 30px;
 }

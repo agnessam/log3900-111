@@ -2,10 +2,15 @@
   <div id="gallery-header" fxLayout="row" fxLayoutAlign="center center">
     <div fxFlex="30%" id="section" class="mat-app-background">
       <h1>Gallery</h1>
-      <p>
-        Welcome to the gallery! This is where you can see and join the drawings
-        that users are working on!
-      </p>
+    </div>
+    <div fxFlex="30%" id="protected-button">
+      <button
+        mat-raised-button
+        color="secondary"
+        (click)="toggleProtectedDrawing()"
+      >
+        {{ showProtectedDrawing ? "Show all drawings" : "Show protected drawings" }}
+      </button>
     </div>
     <div fxFlex="30%" id="create-button">
       <button mat-raised-button color="primary" (click)="createNewDrawing()">
@@ -13,11 +18,11 @@
       </button>
     </div>
   </div>
-  <div id="protectedOption">
-    <p>Show Protected Drawings Only</p>
-    <mat-checkbox class="checkbox"
-    color="accent"
-    (change)="toggleProtectedDrawing($event.checked)"></mat-checkbox>
+  <div class="info">
+    <p>
+      Welcome to the gallery! This is where you can see and join the drawings
+      that users are working on!
+    </p>
   </div>
   <hr />
   <div

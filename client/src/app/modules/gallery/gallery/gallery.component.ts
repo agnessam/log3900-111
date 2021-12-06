@@ -18,6 +18,8 @@ export class GalleryComponent implements AfterViewInit {
   drawingsAll: Array<Drawing> = [];
   drawingsProtected: Array<Drawing> = [];
 
+  showProtectedDrawing:boolean =false;
+
   userId: string;
   constructor(
     private dialog: MatDialog,
@@ -78,8 +80,9 @@ export class GalleryComponent implements AfterViewInit {
     return false;
   }
 
-  toggleProtectedDrawing(showProtectedOnly: boolean){
-    if(showProtectedOnly){
+  toggleProtectedDrawing(){
+    this.showProtectedDrawing = !this.showProtectedDrawing
+    if(this.showProtectedDrawing){
       this.drawings = this.drawingsProtected;
     }
     else{
