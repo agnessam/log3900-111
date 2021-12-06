@@ -14,7 +14,6 @@ import com.example.colorimagemobile.utils.Constants
 object UserService {
     private lateinit var info: UserModel.AllInfo
     private var token : String =Constants.EMPTY_STRING
-    private var updateProfileData : UserModel.UpdateUser
     private lateinit var allUserInfo : ArrayList<UserModel.AllInfo>
     private var actualNbFollowers : Int = 0
     private var userStatistics : UserModel.Statistics
@@ -23,7 +22,6 @@ object UserService {
 
 
     init {
-        updateProfileData =UserModel.UpdateUser(null,null,null)
         collaborationHistoryToShow = arrayListOf()
         collaborationHistoryDrawingId = arrayListOf()
         userStatistics = UserModel.Statistics(
@@ -39,24 +37,12 @@ object UserService {
         return allUserInfo
     }
 
-    fun setNewProfileData (newValues: UserModel.UpdateUser){
-        updateProfileData = newValues
-    }
-
-    fun getNewProfileData(): UserModel.UpdateUser{
-        return updateProfileData
-    }
-
     fun setUserInfo(newUserInfo: UserModel.AllInfo) {
         info = newUserInfo
     }
 
     fun getUserInfo(): UserModel.AllInfo {
         return info
-    }
-
-    fun isNull(): Boolean {
-        return !UserService::info.isInitialized
     }
 
     fun setToken(token:String){
@@ -69,26 +55,6 @@ object UserService {
 
     fun setUserAvatar(avatar: AvatarModel.AllInfo){
      this.info.avatar = avatar
-    }
-
-    fun updateUserFollowers(userId: String, newFollower: UserModel.AllInfo) {
-        var user = allUserInfo.find { user -> user._id == userId }
-        user = newFollower
-    }
-
-    fun removeUserFromFollowing(userId: String) {
-        val user = allUserInfo.find {user -> user._id == userId}
-        user?.following = user?.following!!.filter { following -> following != getUserInfo()._id } as ArrayList<String>
-    }
-
-    fun updateUserAfterUpdate(currentdata: UserModel.UpdateUser){
-        if (!currentdata.username.isNullOrEmpty()){
-            info.username = currentdata.username!!
-        }
-        if (!currentdata.description.isNullOrEmpty()){
-            info.description = currentdata.description!!
-        }
-
     }
 
     fun getCurrentNbFollower(): Int{
@@ -105,10 +71,6 @@ object UserService {
                 CommonFun.printToast(context, it.message!!)
                 return@observe
             }
-
-            val followedUser = it.data as UserModel.AllInfo
-            updateUserFollowers(userId, followedUser)
-//            UserAdapterService.getUserMenuAdapter().notifyItemChanged(position)
         })
 
         actualNbFollowers++
@@ -120,9 +82,6 @@ object UserService {
                 CommonFun.printToast(context, it.message!!)
                 return@observe
             }
-
-            removeUserFromFollowing(userId)
-//            UserAdapterService.getUserMenuAdapter().notifyItemChanged(position)
         })
 
         actualNbFollowers--

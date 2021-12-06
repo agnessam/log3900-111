@@ -26,6 +26,7 @@ import kotlinx.android.synthetic.main.bottomsheet_create_channel.*
 import kotlinx.android.synthetic.main.fragment_edit_profile.*
 import kotlinx.android.synthetic.main.fragment_update_username_bottom_sheet.*
 import com.example.colorimagemobile.ui.home.fragments.accountParameter.accountParameterFragment
+import com.example.colorimagemobile.utils.Constants
 
 
 class UpdateUsernameBottomSheet : BottomSheetDialogFragment() {
@@ -72,6 +73,9 @@ class UpdateUsernameBottomSheet : BottomSheetDialogFragment() {
             usernameLayout.error = ""
             if (text.isNullOrEmpty()) {
                 usernameLayout.error = "The name can not be empty"
+                return@doOnTextChanged
+            } else if (text.length<Constants.MIN_LENGTH || text.length > Constants.MAX_LENGTH){
+                usernameLayout.error = "The name length should be min 4 and max 12 characters"
                 return@doOnTextChanged
             }
         }
