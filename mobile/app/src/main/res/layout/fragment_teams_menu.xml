@@ -4,8 +4,7 @@
     android:layout_height="match_parent"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<androidx.constraintlayout.widget.ConstraintLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.home.fragments.teams.TeamsMenuFragment">
@@ -15,6 +14,14 @@
         android:layout_height="match_parent"
         android:id="@+id/teamMenu"
         android:padding="8dp">
+        <Button
+            android:id="@+id/showProtectedBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:backgroundTint="@color/white"
+            android:textColor="@color/black"
+            android:text="Show protected" />
 
         <Button
             android:id="@+id/newTeamBtn"
@@ -28,19 +35,20 @@
             android:id="@+id/loadingTeamsText"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:gravity="center"
-            android:textSize="27sp"
-            android:text="LOADING TEAMS .."
-            android:textStyle="bold|italic"
             android:layout_below="@id/newTeamBtn"
-            android:textAlignment="center" />
+            android:layout_marginTop="-42dp"
+            android:gravity="center"
+            android:text="LOADING TEAMS .."
+            android:textAlignment="center"
+            android:textSize="27sp"
+            android:textStyle="bold|italic" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/teamsMenuRecyclerView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
             android:layout_below="@id/newTeamBtn"
+            android:layout_centerInParent="true"
             android:layout_marginTop="20px">
 
         </androidx.recyclerview.widget.RecyclerView>

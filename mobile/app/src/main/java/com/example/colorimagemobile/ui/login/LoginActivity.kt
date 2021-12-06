@@ -37,6 +37,7 @@ class LoginActivity : AppCompatActivity() {
 
     enum class FormIndexes(val index: Int) {
         EMAIL(0),
+        PASSWORD(1)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -54,6 +55,7 @@ class LoginActivity : AppCompatActivity() {
     @SuppressLint("ClickableViewAccessibility")
     private fun setListeners() {
         binding.loginBtn.setOnClickListener { executeLogin() }
+        binding.loginGetStarted.setOnClickListener { redirectTo(this, RegisterActivity::class.java) }
         binding.registerBtn.setOnClickListener { redirectTo(this, RegisterActivity::class.java) }
         binding.loginMain.setOnTouchListener { v, event -> hideKeyboard(this,binding.loginMain) }
 
@@ -69,6 +71,7 @@ class LoginActivity : AppCompatActivity() {
     private fun handleInputError(text: CharSequence?, inputLayout: TextInputLayout) {
         inputLayout.error = formValidator.getWhitespaceText(text)
         formValidator.validateEmail(FormIndexes.EMAIL.index)
+        formValidator.validatePasswordLength(FormIndexes.PASSWORD.index)
         val containsError = formValidator.containsError()
         val invalidInputLength = formValidator.isInputEmpty(resources.getString(R.string.required))
 

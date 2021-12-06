@@ -23,6 +23,9 @@ import { NewChannelComponent } from "./new-channel/new-channel.component";
 export class ChannelComponent implements OnInit, OnDestroy {
   @Output() closeChannelList = new EventEmitter<any>();
   user: User | null;
+
+  userId: string;
+
   publicChannels: TextChannel[];
   searchedChannels: TextChannel[];
   connectedChannels: TextChannel[];
@@ -47,7 +50,8 @@ export class ChannelComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.usersService.getUser(localStorage.getItem("userId")!).subscribe({
+    this.userId = localStorage.getItem("userId")!;
+    this.usersService.getUser(this.userId).subscribe({
       next: (user) => {
         this.user = user;
       },
@@ -85,7 +89,7 @@ export class ChannelComponent implements OnInit, OnDestroy {
         const general = channels.find((channel) => channel.name === "General");
         if (general) {
           this.chatSocketService.joinRoom({
-            userId: this.user?._id!,
+            userId: this.userId,
             roomName: general.name,
           });
           if (
@@ -101,32 +105,30 @@ export class ChannelComponent implements OnInit, OnDestroy {
   }
 
   connectTeamChannels(): void {
-    this.usersService
-      .getUserTeams(localStorage.getItem("userId")!)
-      .subscribe((response) => {
-        response.forEach((team) => {
-          // join team channels automatically
-          this.chatSocketService.joinRoom({
-            userId: this.user?._id!,
-            roomName: team.name,
-          });
-        });
-        this.textChannelService.getTeamChannels().subscribe((channels) => {
-          channels.forEach((channel) => {
-            const isInConnectedChannels = this.connectedChannels.some(
-              (connected) => connected._id === channel._id
-            );
-            const isUserInTeam = response.some(
-              (userTeam) => userTeam._id === channel.team
-            );
-            if (isUserInTeam && !isInConnectedChannels) {
-              this.connectedChannels.push(channel);
-            } else if (!isUserInTeam && isInConnectedChannels) {
-              this.removeChannel(channel);
-            }
-          });
+    this.usersService.getUserTeams(this.userId).subscribe((response) => {
+      response.forEach((team) => {
+        // join team channels automatically
+        this.chatSocketService.joinRoom({
+          userId: this.userId,
+          roomName: team.name,
         });
       });
+      this.textChannelService.getTeamChannels().subscribe((channels) => {
+        channels.forEach((channel) => {
+          const isInConnectedChannels = this.connectedChannels.some(
+            (connected) => connected._id === channel._id
+          );
+          const isUserInTeam = response.some(
+            (userTeam) => userTeam._id === channel.team
+          );
+          if (isUserInTeam && !isInConnectedChannels) {
+            this.connectedChannels.push(channel);
+          } else if (!isUserInTeam && isInConnectedChannels) {
+            this.removeChannel(channel);
+          }
+        });
+      });
+    });
   }
 
   openDrawingChannel(): void {

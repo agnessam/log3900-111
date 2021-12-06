@@ -144,14 +144,29 @@ class EllipseCommand(ellipseData: EllipseData): ICommand {
     }
 
     private fun generateFillPath(){
-        val modifier = if(ellipse.stroke == "none") 0f else ellipse.strokeWidth.toFloat()
+        var left = ellipse.x - ellipse.width / 2
+        var top = ellipse.y - ellipse.height / 2
+        var right = ellipse.x + ellipse.width / 2
+        var bottom = ellipse.y + ellipse.height / 2
+        traceFillPath(left, top, right, bottom)
+    }
 
-        var left = ellipse.x - ellipse.width / 2 + modifier
-        var top = ellipse.y - ellipse.height / 2 + modifier
-        var right = ellipse.x + ellipse.width / 2 - modifier
-        var bottom = ellipse.y + ellipse.height / 2 - modifier
-        var rect = RectF(left.toFloat(), top.toFloat(), right.toFloat(), bottom.toFloat())
+    private fun modifyBounds(left: Float, top: Float, right: Float, bottom: Float): RectF{
+        var borderModifier = if(ellipse.stroke == "none") 0f else ellipse.strokeWidth.toFloat()
 
+        var rect = RectF(left, top, right, bottom)
+        rect.left += borderModifier
+        rect.top += borderModifier
+
+        rect.right -= borderModifier
+        rect.bottom -= borderModifier
+        if(rect.right < rect.left) rect.right = rect.left
+        if(rect.bottom < rect.top) rect.bottom = rect.top
+        return rect
+    }
+
+    fun traceFillPath(left: Float, top: Float, right: Float, bottom: Float){
+        var rect = modifyBounds(left, top, right, bottom)
         fillPath = Path()
         fillPath.addOval(rect, Path.Direction.CW)
     }
@@ -161,8 +176,11 @@ class EllipseCommand(ellipseData: EllipseData): ICommand {
         var top = ellipse.y - ellipse.height / 2
         var right = ellipse.x + ellipse.width / 2
         var bottom = ellipse.y + ellipse.height / 2
-        var rect = RectF(left.toFloat(), top.toFloat(), right.toFloat(), bottom.toFloat())
+        traceBorderPath(left, top, right, bottom)
+    }
 
+    fun traceBorderPath(left: Float, top: Float, right: Float, bottom: Float){
+        var rect = RectF(left, top, right, bottom)
         borderPath = Path()
 
         borderPath.addOval(rect, Path.Direction.CW)

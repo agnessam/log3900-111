@@ -17,6 +17,13 @@
                   placeholder="Email"
                   formControlName="email"
                 />
+                <mat-error *ngIf="this.loginForm.hasError('required', 'email')"
+                  >Email cannot be empty</mat-error
+                >
+                <mat-error
+                  *ngIf="this.loginForm.hasError('emailUnfindable', 'email')"
+                  >Email doesn't exist</mat-error
+                >
               </mat-form-field>
             </p>
             <p>
@@ -28,6 +35,14 @@
                   placeholder="Password"
                   formControlName="password"
                 />
+                <mat-error
+                  *ngIf="this.loginForm.hasError('required', 'password')"
+                  >Password cannot be empty</mat-error
+                >
+                <mat-error
+                  *ngIf="this.loginForm.hasError('wrongPassword', 'password')"
+                  >Wrong password</mat-error
+                >
               </mat-form-field>
             </p>
 

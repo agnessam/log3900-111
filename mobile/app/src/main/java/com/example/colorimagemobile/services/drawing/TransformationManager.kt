@@ -7,6 +7,10 @@ import com.example.colorimagemobile.classes.toolsCommand.RectangleCommand
 object TransformationManager {
     var previousTransformation: HashMap<String, String> = HashMap()
 
+    fun clearPreviousTransformations() {
+        previousTransformation = HashMap()
+    }
+
     fun saveTranslateTransformation(deltaX: Float, deltaY: Float, id: String, transformationLog: String, shapeLabel: ShapeLabel){
         val currentTransformation = " translate($deltaX $deltaY)"
         previousTransformation[id] = currentTransformation + transformationLog

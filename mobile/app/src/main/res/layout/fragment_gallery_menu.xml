@@ -19,17 +19,17 @@
         <RelativeLayout
             android:id="@+id/drawingMenuHeader"
             android:layout_width="650dp"
-            android:layout_centerHorizontal="true"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true">
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_toLeftOf="@id/drawingMenuHeaderEmptySpace"
                 android:text="Welcome to the gallery! This is where you can see and join the drawings that users are working on!"
-                android:textSize="16sp"
                 android:textAlignment="center"
                 android:textColor="@color/black"
-                android:layout_toLeftOf="@id/drawingMenuHeaderEmptySpace" />
+                android:textSize="16sp" />
 
             <View
                 android:id="@+id/drawingMenuHeaderEmptySpace"
@@ -41,16 +41,25 @@
                 android:id="@+id/newDrawingBtn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:backgroundTint="@color/primary"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
+                android:backgroundTint="@color/primary"
                 android:text="Create a Drawing" />
 
         </RelativeLayout>
 
+        <CheckBox
+            android:id="@+id/drawingProtectedToggle"
+            android:layout_below="@id/drawingMenuHeader"
+            android:buttonTint="@color/primary"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:text="Show Protected Drawings only"/>
+
         <View
             android:id="@+id/drawingMenuHeaderBorder"
-            android:layout_below="@id/drawingMenuHeader"
+            android:layout_below="@id/drawingProtectedToggle"
             android:layout_width="920dp"
             android:layout_marginTop="10dp"
             android:layout_centerHorizontal="true"

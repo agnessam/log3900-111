@@ -101,7 +101,7 @@ interface API {
 
     @GET(Constants.ENDPOINTS.TEXT_CHANNEL_PATH + "all/search")
     fun searchChannels(@Header("Authorization") token: String, @Query ("q") query: String): Call<ArrayList<TextChannelModel.AllInfo>>
-    
+
     @Headers("Content-Type: application/json")
     @DELETE(Constants.ENDPOINTS.TEXT_CHANNEL_PATH + "{channelId}/messages")
     fun deleteMessages(@Header("Authorization")token: String,@Path ("channelId") channelId: String): Call<Any>
@@ -174,6 +174,9 @@ interface API {
 
     @GET(Constants.ENDPOINTS.TEAMS)
     fun getAllTeams(@Header("Authorization") token: String): Call<ArrayList<TeamModel>>
+
+    @GET("${Constants.ENDPOINTS.TEAMS}protected")
+    fun getProtectedTeams(@Header("Authorization") token: String): Call<ArrayList<TeamModel>>
 
     @Headers("Content-Type: application/json")
     @POST("${Constants.ENDPOINTS.TEAMS}{id}/join")

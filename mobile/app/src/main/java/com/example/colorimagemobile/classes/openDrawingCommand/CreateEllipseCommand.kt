@@ -8,9 +8,7 @@ import com.example.colorimagemobile.models.EllipseData
 import com.example.colorimagemobile.models.SvgStyle
 import com.example.colorimagemobile.services.drawing.Point
 
-class CreateEllipseCommand(ellipses: ArrayList<Ellipse>?): ICreateDrawingCommand {
-
-    private val ellipses = ellipses
+class CreateEllipseCommand(private val ellipse: Ellipse?): ICreateDrawingCommand {
 
     override fun createData(style: SvgStyle): EllipseData {
         return EllipseData(
@@ -28,33 +26,31 @@ class CreateEllipseCommand(ellipses: ArrayList<Ellipse>?): ICreateDrawingCommand
     }
 
     override fun execute() {
-        if (ellipses?.size == 0) return
+        ellipse ?: return
 
-        ellipses?.forEach { ellipse ->
-            if (ellipse.id.isNullOrEmpty()) return@forEach
+        if (ellipse.id.isNullOrEmpty()) return
 
-            val style = StringParser.getStyles(ellipse.style)
-            val ellipseData = createData(style)
+        val style = StringParser.getStyles(ellipse.style)
+        val ellipseData = createData(style)
 
-            // add ellipse attributes
-            ellipseData.id = ellipse.id
-            ellipseData.width = StringParser.removePX(ellipse.width).toFloat()
-            ellipseData.height = StringParser.removePX(ellipse.height).toFloat()
-            ellipseData.x = StringParser.removePX(ellipse.cx).toFloat() - StringParser.removePX(ellipse.rx).toFloat()
-            ellipseData.y = StringParser.removePX(ellipse.cy).toFloat() - StringParser.removePX(ellipse.ry).toFloat()
+        // add ellipse attributes
+        ellipseData.id = ellipse.id
+        ellipseData.width = StringParser.removePX(ellipse.width).toFloat()
+        ellipseData.height = StringParser.removePX(ellipse.height).toFloat()
+        ellipseData.x = StringParser.removePX(ellipse.cx).toFloat() - StringParser.removePX(ellipse.rx).toFloat()
+        ellipseData.y = StringParser.removePX(ellipse.cy).toFloat() - StringParser.removePX(ellipse.ry).toFloat()
 
-            // create ending point and execute command to draw
-            val command = CommandFactory.createCommand("Ellipse", ellipseData) as EllipseCommand
-            val endPoint = Point(
-                (StringParser.removePX(ellipse.cx).toFloat() + StringParser.removePX(ellipse.rx).toFloat()),
-                (StringParser.removePX(ellipse.cy).toFloat() + StringParser.removePX(ellipse.ry).toFloat()))
+        // create ending point and execute command to draw
+        val command = CommandFactory.createCommand("Ellipse", ellipseData) as EllipseCommand
+        val endPoint = Point(
+            (StringParser.removePX(ellipse.cx).toFloat() + StringParser.removePX(ellipse.rx).toFloat()),
+            (StringParser.removePX(ellipse.cy).toFloat() + StringParser.removePX(ellipse.ry).toFloat()))
 
-            command.setEndPoint(endPoint)
-            command.execute()
+        command.setEndPoint(endPoint)
+        command.execute()
 
-            if(ellipse.transform != null) {
-                transformShape(ellipse.transform, ellipse.id)
-            }
+        if(ellipse.transform != null) {
+            transformShape(ellipse.transform, ellipse.id)
         }
     }
 }

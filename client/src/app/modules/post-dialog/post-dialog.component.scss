@@ -4,7 +4,7 @@
 }
 
 .image {
-  position:relative;
+  position: relative;
   align-items: center;
   justify-content: center;
   display: flex;
@@ -12,7 +12,7 @@
   height: 670px;
 }
 
-.drawing{
+.drawing {
   top: 0;
   left: 0;
   width: 100%;
@@ -21,7 +21,7 @@
   box-shadow: 1px 1px 1px 1px rgba(0, 0, 0, 0.1);
 }
 
-.likeEffect{
+.likeEffect {
   position: absolute;
   display: none;
 }
@@ -72,9 +72,10 @@
   height: 500px;
   overflow: auto;
 }
+
 .comment {
   font-size: 16px;
-  padding-bottom: 4px;
+  padding-bottom: 8px;
 }
 
 .bottom-comment {

@@ -95,6 +95,9 @@ class MuseumFragment : Fragment(R.layout.fragment_museum) {
             }
             MuseumPostService.likePost(position)
             MuseumAdapters.refreshLikeSection(position, MuseumPostService.getPostLikes(position))
+            // MuseumAdapters.refreshLikeSection(position)
+            Notification().playSound(requireContext())
+
         })
     }
 

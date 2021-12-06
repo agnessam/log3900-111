@@ -63,8 +63,8 @@ class NewChannelBottomSheet: BottomSheetDialogFragment() {
                 channelLayout.error = "A channel with that name already exists"
                 return@doOnTextChanged
             }
-            if (text.toString().length < 3) {
-                channelLayout.error = "Channel name must contain at least 3 characters"
+            if (text.toString().length < 4) {
+                channelLayout.error = "Channel name must contain at least 4 characters"
                 return@doOnTextChanged
             }
         }

@@ -16,10 +16,12 @@ object TextChannelService {
     private var publicChannels: ArrayList<TextChannelModel.AllInfo>
     private var connectedChannels: ArrayList<TextChannelModel.AllInfo>
     private var searchQuery: String? = null
+    private var backedUpPublicChannels: ArrayList<TextChannelModel.AllInfo>
 
     init {
         publicChannels = arrayListOf()
         connectedChannels = arrayListOf()
+        backedUpPublicChannels = arrayListOf()
     }
 
     fun connectToGeneral() {
@@ -68,6 +70,10 @@ object TextChannelService {
         addToConnectedChannels(this.currentChannel)
     }
 
+    fun isCollaborationChannelInitialized(): Boolean {
+        return this::collaborationChannel.isInitialized
+    }
+
     fun setCollaborationChannel(channel: TextChannelModel.AllInfo) {
         this.collaborationChannel = channel
     }
@@ -111,6 +117,26 @@ object TextChannelService {
         ChatAdapterService.getChannelListAdapter().notifyDataSetChanged()
     }
 
+    fun getSearchQuery(): String? {
+        return searchQuery
+    }
+
+    fun setSearchQuery(newQuery: String) {
+        searchQuery = newQuery.lowercase()
+    }
+
+    fun clearSearch() {
+        searchQuery = null
+    }
+
+    fun getBackedUpChannels(): ArrayList<TextChannelModel.AllInfo> {
+        return this.backedUpPublicChannels
+    }
+
+    fun setBackedUpChannels(newChannels: ArrayList<TextChannelModel.AllInfo>){
+        this.backedUpPublicChannels = newChannels
+    }
+
     private fun updateCurrentChannel() {
         // set current channel: 0 if only General exists, else last connected channels' position
         val newPosition =  if (connectedChannels.size == 1) 0 else connectedChannels.size - 1
@@ -125,18 +151,6 @@ object TextChannelService {
         }
     }
 
-    fun getSearchQuery(): String? {
-        return searchQuery
-    }
-
-    fun setSearchQuery(newQuery: String) {
-        searchQuery = newQuery.lowercase()
-    }
-
-    fun clearSearch() {
-        searchQuery = null
-    }
-    
     fun createChannel(channelModel: TextChannelModel.AllInfo, context: Context, callback: () -> Unit) {
         TextChannelRepository().addChannel(channelModel).observe(context as LifecycleOwner, {
             if (it.isError as Boolean) {
