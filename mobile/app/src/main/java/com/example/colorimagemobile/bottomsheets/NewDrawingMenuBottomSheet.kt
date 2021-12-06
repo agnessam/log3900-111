@@ -121,7 +121,7 @@ class NewDrawingMenuBottomSheet: BottomSheetDialogFragment() {
         privacyInput.setOnItemClickListener { _, _, _, _ -> togglePasswordInput(isProtected()) }
 
         view.findViewById<Button>(R.id.createDrawingBtn).setOnClickListener {
-            if (drawingName == "" || (isProtected() && drawingPassword == "") || drawingName.length < Constants.MIN_LENGTH || drawingName.length < Constants.MAX_LENGTH) {
+            if (drawingName == "" || (isProtected() && drawingPassword == "") || drawingName.length < Constants.MIN_LENGTH || drawingName.length > Constants.MAX_LENGTH) {
                 val shake = AnimationUtils.loadAnimation(requireActivity().getApplicationContext(), R.anim.shake)
                 createNewDrawingForm.startAnimation(shake);
                     return@setOnClickListener

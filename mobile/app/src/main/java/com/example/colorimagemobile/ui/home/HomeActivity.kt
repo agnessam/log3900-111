@@ -22,6 +22,7 @@ import com.example.colorimagemobile.models.*
 import com.example.colorimagemobile.services.users.UserService
 import com.example.colorimagemobile.repositories.SearchRepository
 import com.example.colorimagemobile.repositories.UserRepository
+import com.example.colorimagemobile.services.BottomNavService
 import com.example.colorimagemobile.services.SearchService
 import com.example.colorimagemobile.services.SharedPreferencesService
 import com.example.colorimagemobile.services.chat.ChatService
@@ -62,6 +63,7 @@ class HomeActivity : AppCompatActivity() {
 
         navController = findNavController(R.id.fragment)
         bottomNav = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
+        BottomNavService.setNav(bottomNav)
 
         setBottomNavigationView()
         initChat()
