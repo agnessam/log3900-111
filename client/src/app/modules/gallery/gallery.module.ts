@@ -10,6 +10,7 @@ import { WorkspaceModule } from "../workspace/workspace.module";
 import { FlexLayoutModule } from "@angular/flex-layout";
 import { MatCardModule } from "@angular/material/card";
 import { CardsModule } from "../cards/cards.module";
+import { MatCheckboxModule } from "@angular/material/checkbox";
 
 @NgModule({
   declarations: [GalleryComponent],
@@ -24,6 +25,7 @@ import { CardsModule } from "../cards/cards.module";
     FlexLayoutModule,
     MatCardModule,
     CardsModule,
+    MatCheckboxModule,
   ],
 })
 export class GalleryModule {}

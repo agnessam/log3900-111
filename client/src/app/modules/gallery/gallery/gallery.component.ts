@@ -15,6 +15,9 @@ import { User } from "../../users/models/user";
 export class GalleryComponent implements AfterViewInit {
   drawings: Array<Drawing> = [];
 
+  drawingsAll: Array<Drawing> = [];
+  drawingsProtected: Array<Drawing> = [];
+
   userId: string;
   constructor(
     private dialog: MatDialog,
@@ -30,6 +33,11 @@ export class GalleryComponent implements AfterViewInit {
       for (let drawing of response) {
         if (this.hasPermission(drawing)) {
           this.drawings.push(drawing);
+
+          this.drawingsAll.push(drawing);
+          if(drawing.privacyLevel === 'protected'){
+            this.drawingsProtected.push(drawing);
+          }
         }
       }
     });
@@ -68,5 +76,14 @@ export class GalleryComponent implements AfterViewInit {
     }
 
     return false;
+  }
+
+  toggleProtectedDrawing(showProtectedOnly: boolean){
+    if(showProtectedOnly){
+      this.drawings = this.drawingsProtected;
+    }
+    else{
+      this.drawings =  this.drawingsAll;
+    }
   }
 }

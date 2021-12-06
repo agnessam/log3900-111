@@ -13,6 +13,12 @@
       </button>
     </div>
   </div>
+  <div id="protectedOption">
+    <p>Show Protected Drawings Only</p>
+    <mat-checkbox class="checkbox"
+    color="accent"
+    (change)="toggleProtectedDrawing($event.checked)"></mat-checkbox>
+  </div>
   <hr />
   <div
     id="drawingsContainer"
