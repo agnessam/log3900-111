@@ -1,26 +1,24 @@
 package com.example.colorimagemobile.services.drawing
 
-import android.graphics.Canvas
+import android.graphics.*
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.LayerDrawable
+import android.graphics.drawable.ShapeDrawable
+import android.graphics.drawable.shapes.RectShape
 import com.example.colorimagemobile.classes.ImageConvertor
-import com.example.colorimagemobile.classes.JSONConvertor
 import com.example.colorimagemobile.classes.openDrawingCommand.CreateEllipseCommand
 import com.example.colorimagemobile.classes.openDrawingCommand.CreatePolylineCommand
 import com.example.colorimagemobile.classes.openDrawingCommand.CreateRectangleCommand
-import com.example.colorimagemobile.classes.xml_json.SVGBuilder
+import com.example.colorimagemobile.classes.toolsCommand.EllipseCommand
+import com.example.colorimagemobile.classes.toolsCommand.PencilCommand
+import com.example.colorimagemobile.classes.toolsCommand.RectangleCommand
 import com.example.colorimagemobile.classes.xml_json.SVGParser
-import com.example.colorimagemobile.classes.xml_json.shapes
 import com.example.colorimagemobile.interfaces.ICommand
 import com.example.colorimagemobile.models.CustomSVG
 import com.example.colorimagemobile.models.Ellipse
 import com.example.colorimagemobile.models.Polyline
 import com.example.colorimagemobile.models.Rectangle
 import com.example.colorimagemobile.services.drawing.toolsAttribute.ColorService
-import com.github.underscore.lodash.U
-import org.json.JSONObject
-import org.json.XML
-import java.lang.String.join
 
 object DrawingObjectManager {
     private var layerDrawable: LayerDrawable = LayerDrawable(arrayOf<Drawable>())
@@ -30,9 +28,9 @@ object DrawingObjectManager {
     var numberOfLayers: Int = 0
         get() = layerDrawable.numberOfLayers
 
-
     fun draw(canvas: Canvas){
         layerDrawable.draw(canvas)
+        PreviewBoxManager.draw(canvas)
     }
 
     fun setDrawable(layerIndex:Int, drawable:Drawable){

@@ -12,6 +12,7 @@ import {
 import { ErrorStateMatcher } from "@angular/material/core";
 import { Router } from "@angular/router";
 import { AuthenticationService } from "../services/authentication/authentication.service";
+import { trigger,state,style,transition,animate,keyframes } from    '@angular/animations';
 
 export class RegisterErrorStateMatcher implements ErrorStateMatcher {
   isErrorState(
@@ -30,11 +31,52 @@ export class RegisterErrorStateMatcher implements ErrorStateMatcher {
   selector: "app-register",
   templateUrl: "./register.component.html",
   styleUrls: ["./register.component.scss"],
+  animations: [
+    trigger('shakeit', [
+        state('shake1', style({
+            transform: 'scale(1)',
+        })),
+        state('shake2', style({
+            transform: 'scale(1)',
+        })),
+        transition('shake1 => shake2', animate('1000ms ease-in',     keyframes([
+          style({transform: 'translate3d(-1px, 0, 0)', offset: 0.1}),
+          style({transform: 'translate3d(2px, 0, 0)', offset: 0.2}),
+          style({transform: 'translate3d(-4px, 0, 0)', offset: 0.3}),
+          style({transform: 'translate3d(4px, 0, 0)', offset: 0.4}),
+          style({transform: 'translate3d(-4px, 0, 0)', offset: 0.5}),
+          style({transform: 'translate3d(4px, 0, 0)', offset: 0.6}),
+          style({transform: 'translate3d(-4px, 0, 0)', offset: 0.7}),
+          style({transform: 'translate3d(2px, 0, 0)', offset: 0.8}),
+          style({transform: 'translate3d(-1px, 0, 0)', offset: 0.9}),
+        ]))),
+        transition('shake2 => shake1', animate('1000ms ease-in',     keyframes([
+          style({transform: 'translate3d(-1px, 0, 0)', offset: 0.1}),
+          style({transform: 'translate3d(2px, 0, 0)', offset: 0.2}),
+          style({transform: 'translate3d(-4px, 0, 0)', offset: 0.3}),
+          style({transform: 'translate3d(4px, 0, 0)', offset: 0.4}),
+          style({transform: 'translate3d(-4px, 0, 0)', offset: 0.5}),
+          style({transform: 'translate3d(4px, 0, 0)', offset: 0.6}),
+          style({transform: 'translate3d(-4px, 0, 0)', offset: 0.7}),
+          style({transform: 'translate3d(2px, 0, 0)', offset: 0.8}),
+          style({transform: 'translate3d(-1px, 0, 0)', offset: 0.9}),
+        ]))),
+  ])],
   encapsulation: ViewEncapsulation.None,
 })
 export class RegisterComponent implements OnInit {
   userRegistration: FormGroup;
   matcher = new RegisterErrorStateMatcher();
+
+  isFirstNameValid :boolean = true;
+  isLastNameValid :boolean = true;
+  isUsernameValid :boolean = true;
+  isEmailValid :boolean = true;
+  isPasswordValid :boolean = true;
+  isConfirmPasswordValid :boolean = true;
+
+  usernameError:boolean=false;
+  emailError:boolean= false;
 
   constructor(
     private authenticationService: AuthenticationService,
@@ -78,15 +120,24 @@ export class RegisterComponent implements OnInit {
         this.userRegistration.value.lastName
       )
       .subscribe((response) => {
+        this.usernameError =false;
+        this.emailError=false;
+
         if (response.error) {
           if ((response.error as string).includes("username")) {
+            this.usernameError =true;
+            this.isUsernameValid = !this.isUsernameValid;
             this.userRegistration.controls["username"].setErrors({
               duplicateUsername: true,
             });
+
           } else if ((response.error as string).includes("email")) {
+            this.emailError=true;
+            this.isEmailValid = !this.isEmailValid;
             this.userRegistration.controls["email"].setErrors({
               duplicateEmail: true,
             });
+
           }
         } else {
           this.router.navigate(["/gallery"]);
@@ -101,4 +152,34 @@ export class RegisterComponent implements OnInit {
     let confirmPassword = group.get("confirmPassword")?.value;
     return newPassword === confirmPassword ? null : { notSame: true };
   };
+
+  validate(){
+    if(this.userRegistration.hasError('required', 'firstName')){
+      this.isFirstNameValid = !this.isFirstNameValid;
+    }
+    if(this.userRegistration.hasError('required', 'lastName')){
+      this.isLastNameValid = !this.isLastNameValid;
+    }
+    if(this.userRegistration.hasError('required', 'username') ||
+      this.userRegistration.hasError('minlength', 'username') ||
+      this.userRegistration.hasError('maxlength', 'username') ||
+      this.usernameError)
+    {
+      this.isUsernameValid = !this.isUsernameValid;
+    }
+    if(this.userRegistration.hasError('required', 'email') ||
+      this.userRegistration.hasError('pattern', 'email') ||
+      this.emailError)
+    {
+      this.isEmailValid = !this.isEmailValid;
+    }
+    if(this.userRegistration.hasError('required', 'password') ||
+      this.userRegistration.hasError('minlength', 'password')){
+      this.isPasswordValid = !this.isPasswordValid;
+    }
+    if(this.userRegistration.hasError('notSame')){
+      this.isConfirmPasswordValid = !this.isConfirmPasswordValid;
+    }
+
+  }
 }

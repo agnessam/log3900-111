@@ -9,7 +9,11 @@
         <mat-card-content>
           <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" id="loginForm">
             <p>
-              <mat-form-field appearance="outline" class="formInput">
+              <mat-form-field
+                appearance="outline"
+                class="formInput"
+                [@shakeit]="isEmailValid ? 'shake1' : 'shake2'"
+              >
                 <mat-label>Email</mat-label>
                 <input
                   type="text"
@@ -27,7 +31,11 @@
               </mat-form-field>
             </p>
             <p>
-              <mat-form-field appearance="outline" class="formInput">
+              <mat-form-field
+                appearance="outline"
+                class="formInput"
+                [@shakeit]="isPasswordValid ? 'shake1' : 'shake2'"
+              >
                 <mat-label>Password</mat-label>
                 <input
                   type="password"
