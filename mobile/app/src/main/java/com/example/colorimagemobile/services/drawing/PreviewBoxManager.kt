@@ -14,6 +14,11 @@ object PreviewBoxManager {
     private var uuidPreviewBoxDrawableMap: HashMap<String, Int> = HashMap()
 
     fun clearPreviewBoxes() {
+        for(i in 0 until previewBoxDrawables.numberOfLayers){
+            var emptyShapeDrawable = ShapeDrawable()
+            emptyShapeDrawable.paint.alpha = 0
+            previewBoxDrawables.setDrawable(i, emptyShapeDrawable)
+        }
         previewBoxDrawables = LayerDrawable(arrayOf<Drawable>())
         uuidPreviewBoxDrawableMap = HashMap()
     }
