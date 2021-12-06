@@ -20,6 +20,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import com.example.colorimagemobile.utils.CommonFun.Companion.printToast
+import com.example.colorimagemobile.utils.Constants
 import kotlinx.android.synthetic.main.bottomsheet_password_confirmation.*
 
 class PasswordConfirmationBottomSheet(
@@ -66,7 +67,8 @@ class PasswordConfirmationBottomSheet(
     @SuppressLint("ClickableViewAccessibility")
     private fun setListeners() {
         passwordInput.doOnTextChanged { text, _, _, _ ->
-            passwordLayout.error = if (text.toString().isEmpty()) "Password can't be empty" else null
+            passwordLayout.error = if (text.toString().isEmpty()) "Password can't be empty"
+            else null
         }
 
         confirmPasswordForm.setOnTouchListener{_, _ -> hideKeyboard(activity, confirmPasswordForm) }

@@ -97,9 +97,11 @@ class MuseumPostRecyclerAdapter(
 
             // wants to like
             unlikeBtn.setOnClickListener {
-                CommonFun.printMsg("inside like")
+
                 likeEffect.setAlpha(0.7f)
+
                 likePost(bindingAdapterPosition)
+
                 GlobalScope.launch(Dispatchers.IO) {
                     val time = measureTimeMillis {
                         timeToShowEffect()
@@ -113,6 +115,6 @@ class MuseumPostRecyclerAdapter(
         }
     }
      private suspend fun timeToShowEffect(){
-         delay(1000L)
+         delay(2000L)
     }
 }
