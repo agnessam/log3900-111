@@ -1,6 +1,6 @@
 import { HttpClient, HttpHeaders, HttpParams } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { Observable, ReplaySubject, Subject } from "rxjs";
+import { Observable, Subject } from "rxjs";
 import { environment } from "src/environments/environment";
 import { EditableChannelParameters } from "../models/editable-channel-parameters";
 import { Message } from "../models/message.model";
@@ -12,7 +12,7 @@ import { TextChannel } from "../models/text-channel.model";
 export class TextChannelService {
   newTeamChannel: Subject<TextChannel>;
   deletedTeamChannel: Subject<string>;
-  joinedCollabChannel: ReplaySubject<TextChannel>;
+  joinedCollabChannel: Subject<TextChannel>;
   leftCollabChannel: Subject<TextChannel>;
   closeChatEvent: Subject<boolean>;
 
@@ -25,7 +25,7 @@ export class TextChannelService {
   constructor(private httpClient: HttpClient) {
     this.newTeamChannel = new Subject<TextChannel>();
     this.deletedTeamChannel = new Subject<string>();
-    this.joinedCollabChannel = new ReplaySubject<TextChannel>();
+    this.joinedCollabChannel = new Subject<TextChannel>();
     this.leftCollabChannel = new Subject<TextChannel>();
     this.closeChatEvent = new Subject<boolean>();
   }
