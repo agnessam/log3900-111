@@ -139,13 +139,16 @@ export class DrawingService {
   private getDrawingDataUriBase64(): string {
     let deletionDiv = document.createElement("div");
     deletionDiv.innerHTML = new XMLSerializer().serializeToString(this.drawing);
-    let groups = deletionDiv.getElementsByTagName("g");
-    while (groups[0]) {
-      groups[0].parentNode?.removeChild(groups[0]);
+    const tagsToIgnore = ["g", "polygon"];
+    for (let tag of tagsToIgnore) {
+      let groups = deletionDiv.getElementsByTagName(tag);
+      while (groups[0]) {
+        groups[0].parentNode?.removeChild(groups[0]);
+      }
     }
-    let polygons = deletionDiv.getElementsByTagName("polygon");
-    while (polygons[0]) {
-      polygons[0].parentNode?.removeChild(polygons[0]);
+    let previewBoxes = deletionDiv.getElementsByClassName("preview");
+    while (previewBoxes[0]) {
+      previewBoxes[0].parentNode?.removeChild(previewBoxes[0]);
     }
     const xmlString = deletionDiv.innerHTML;
     return "data:image/svg+xml;base64," + btoa(xmlString);
