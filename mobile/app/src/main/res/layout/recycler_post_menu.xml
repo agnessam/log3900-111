@@ -36,8 +36,8 @@
         <ImageView
             android:id="@+id/card_post_menu_image"
             android:layout_width="match_parent"
-            android:layout_below="@id/card_post_menu_header"
             android:layout_height="300dp"
+            android:layout_below="@id/card_post_menu_header"
             android:layout_gravity="center" />
 
         <RelativeLayout
