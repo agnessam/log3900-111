@@ -81,6 +81,9 @@ export class ChatComponent implements OnInit, OnDestroy {
     this.textChannelService.leftCollabChannel.subscribe(() => {
       this.closeChat();
     });
+    this.textChannelService.closeChatEvent.subscribe(() => {
+      this.closeChat();
+    });
   }
 
   ngAfterViewChecked() {

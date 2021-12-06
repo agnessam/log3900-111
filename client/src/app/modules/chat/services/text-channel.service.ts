@@ -14,6 +14,7 @@ export class TextChannelService {
   deletedTeamChannel: Subject<string>;
   joinedCollabChannel: ReplaySubject<TextChannel>;
   leftCollabChannel: Subject<TextChannel>;
+  closeChatEvent: Subject<boolean>;
 
   private endpointUrl: string = environment.serverURL + "/channels";
   private httpHeaders: HttpHeaders = new HttpHeaders().set(
@@ -26,6 +27,7 @@ export class TextChannelService {
     this.deletedTeamChannel = new Subject<string>();
     this.joinedCollabChannel = new ReplaySubject<TextChannel>();
     this.leftCollabChannel = new Subject<TextChannel>();
+    this.closeChatEvent = new Subject<boolean>();
   }
 
   getChannels(): Observable<TextChannel[]> {
@@ -146,5 +148,9 @@ export class TextChannelService {
 
   emitLeaveCollaboration(channel: TextChannel): void {
     this.leftCollabChannel.next(channel);
+  }
+
+  emitCloseChat(): void {
+    this.closeChatEvent.next(true);
   }
 }
