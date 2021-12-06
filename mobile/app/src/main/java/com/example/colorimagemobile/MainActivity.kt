@@ -9,6 +9,7 @@ import com.example.colorimagemobile.services.SharedPreferencesService
 import com.example.colorimagemobile.services.users.UserService
 import com.example.colorimagemobile.ui.home.HomeActivity
 import com.example.colorimagemobile.ui.login.LoginActivity
+import com.example.colorimagemobile.utils.CommonFun
 import com.example.colorimagemobile.utils.CommonFun.Companion.printToast
 import com.example.colorimagemobile.utils.CommonFun.Companion.redirectTo
 import com.example.colorimagemobile.utils.Constants
@@ -23,6 +24,7 @@ class MainActivity : AppCompatActivity() {
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        CommonFun.setActionBarColor(supportActionBar)
 
         sharedPreferencesService = SharedPreferencesService(this)
         val token = sharedPreferencesService.getItem(Constants.STORAGE_KEY.TOKEN)

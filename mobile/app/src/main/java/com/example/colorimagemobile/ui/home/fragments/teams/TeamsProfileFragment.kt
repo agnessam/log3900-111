@@ -136,8 +136,10 @@ class TeamsProfileFragment : Fragment(R.layout.fragment_teams_profile) {
         currentTeam.memberLimit?.let {
             if (currentTeam.members.size >= currentTeam.memberLimit!!) {
                 toggleButton(button, false)
-                button.alpha = .6f
+                button.alpha = .8f
                 button.setBackgroundColor(Color.rgb(221, 208, 206))
+                button.text = "Team Full"
+                button.setTextColor(Color.parseColor("#505050"))
             }
         }
     }

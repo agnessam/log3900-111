@@ -17,6 +17,7 @@ import com.example.colorimagemobile.services.SharedPreferencesService
 import com.example.colorimagemobile.ui.home.HomeActivity
 import com.example.colorimagemobile.ui.register.FormIndexes
 import com.example.colorimagemobile.ui.register.RegisterActivity
+import com.example.colorimagemobile.utils.CommonFun
 import com.example.colorimagemobile.utils.CommonFun.Companion.hideKeyboard
 import com.example.colorimagemobile.utils.CommonFun.Companion.onEnterKeyPressed
 import com.example.colorimagemobile.utils.CommonFun.Companion.printToast
@@ -45,6 +46,8 @@ class LoginActivity : AppCompatActivity() {
         globalHandler = GlobalHandler()
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        CommonFun.setActionBarColor(supportActionBar)
+
         sharedPreferencesService = SharedPreferencesService(this)
         val loginLayouts = arrayListOf<TextInputLayout>(binding.emailInputLayout, binding.passwordInputLayout)
         val loginInputs = arrayListOf<TextInputEditText>(binding.emailInputText, binding.passwordInputText)

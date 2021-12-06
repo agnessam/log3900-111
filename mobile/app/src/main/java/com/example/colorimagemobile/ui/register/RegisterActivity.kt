@@ -18,6 +18,7 @@ import com.example.colorimagemobile.models.HTTPResponseModel
 import com.example.colorimagemobile.services.SharedPreferencesService
 import com.example.colorimagemobile.ui.home.HomeActivity
 import com.example.colorimagemobile.ui.login.LoginActivity
+import com.example.colorimagemobile.utils.CommonFun
 import com.example.colorimagemobile.utils.CommonFun.Companion.hideKeyboard
 import com.example.colorimagemobile.utils.CommonFun.Companion.printToast
 import com.example.colorimagemobile.utils.CommonFun.Companion.redirectTo
@@ -51,6 +52,7 @@ class RegisterActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityRegisterBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        CommonFun.setActionBarColor(supportActionBar)
 
         registerViewModel = ViewModelProvider(this).get(RegisterActivityViewModel::class.java)
         sharedPreferencesService = SharedPreferencesService(this)
