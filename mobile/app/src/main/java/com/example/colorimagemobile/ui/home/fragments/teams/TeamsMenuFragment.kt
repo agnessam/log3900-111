@@ -20,12 +20,14 @@ import com.example.colorimagemobile.utils.Constants
 class TeamsMenuFragment : Fragment(R.layout.fragment_teams_menu) {
 
     private lateinit var myView: View
+    private lateinit var showProtectedBtn: Button
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         myView = view
         MyFragmentManager(requireActivity()).hideBackButton()
+
         getAllTeams()
         setListeners()
     }
@@ -35,12 +37,49 @@ class TeamsMenuFragment : Fragment(R.layout.fragment_teams_menu) {
             val newTeamBS = NewTeamBottomSheet()
             newTeamBS.show(parentFragmentManager, "NewTeamBottomSheet")
         }
+
+        showProtectedBtn = myView.findViewById(R.id.showProtectedBtn) as Button
+        showProtectedBtn.setOnClickListener {
+            TeamService.showProtectedTeams = !TeamService.showProtectedTeams
+
+            if (TeamService.showProtectedTeams) {
+                getProtectedTeams()
+                showProtectedBtn.setText("Show all teams")
+            } else {
+                getAllTeams()
+                showProtectedBtn.setText("Show protected teams")
+            }
+        }
     }
 
     private fun getAllTeams() {
         myView.findViewById<TextView>(R.id.loadingTeamsText).visibility = View.VISIBLE
 
         TeamRepository().getAllTeams().observe(viewLifecycleOwner, { it ->
+            // some error occurred during HTTP request
+            if (it.isError as Boolean) {
+                CommonFun.printToast(requireContext(), it.message!!)
+                return@observe
+            }
+
+            myView.findViewById<TextView>(R.id.loadingTeamsText).visibility = View.GONE
+
+            val teams = it.data as ArrayList<TeamModel>
+            TeamService.setAllTeams(teams)
+
+            val recyclerView = myView.findViewById<RecyclerView>(R.id.teamsMenuRecyclerView)
+            recyclerView.layoutManager = GridLayoutManager(requireContext(), Constants.NB_DATA_ROWS)
+
+            val adapter = TeamAdapterService.createAdapter(requireActivity(), R.layout.recycler_team_menu, R.id.teamsMenuFrameLayout)
+            recyclerView.adapter = adapter
+            TeamAdapterService.setAdapter(adapter)
+        })
+    }
+
+    private fun getProtectedTeams() {
+        myView.findViewById<TextView>(R.id.loadingTeamsText).visibility = View.VISIBLE
+
+        TeamRepository().getProtectedTeams().observe(viewLifecycleOwner, { it ->
             // some error occurred during HTTP request
             if (it.isError as Boolean) {
                 CommonFun.printToast(requireContext(), it.message!!)

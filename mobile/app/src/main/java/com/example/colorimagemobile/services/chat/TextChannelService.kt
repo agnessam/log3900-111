@@ -68,6 +68,10 @@ object TextChannelService {
         addToConnectedChannels(this.currentChannel)
     }
 
+    fun isCollaborationChannelInitialized(): Boolean {
+        return this::collaborationChannel.isInitialized
+    }
+
     fun setCollaborationChannel(channel: TextChannelModel.AllInfo) {
         this.collaborationChannel = channel
     }

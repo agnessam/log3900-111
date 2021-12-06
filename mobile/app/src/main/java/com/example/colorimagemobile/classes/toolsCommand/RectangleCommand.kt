@@ -147,15 +147,30 @@ class RectangleCommand(rectangleData: RectangleData): ICommand {
     }
 
     private fun generateFillPath(){
+        var left = rectangle.x
+        var top = rectangle.y
+
+        var right = rectangle.x + rectangle.width
+        var bottom = rectangle.y + rectangle.height
+        traceFillPath(left, top, right, bottom)
+    }
+
+    private fun modifyBounds(left: Float, top: Float, right: Float, bottom: Float): RectF{
         var borderModifier = if(rectangle.stroke == "none") 0f else rectangle.strokeWidth.toFloat()
 
-        var left = rectangle.x + borderModifier
-        var top = rectangle.y + borderModifier
+        var rect = RectF(left, top, right, bottom)
+        rect.left += borderModifier
+        rect.top += borderModifier
 
-        var right = rectangle.x + rectangle.width - borderModifier
-        var bottom = rectangle.y + rectangle.height - borderModifier
-        var rect = RectF(left.toFloat(), top.toFloat(), right.toFloat(), bottom.toFloat())
+        rect.right -= borderModifier
+        rect.bottom -= borderModifier
+        if(rect.right < rect.left) rect.right = rect.left
+        if(rect.bottom < rect.top) rect.bottom = rect.top
+        return rect
+    }
 
+    fun traceFillPath(left: Float, top: Float, right: Float, bottom: Float){
+        var rect = modifyBounds(left, top, right, bottom)
         fillPath = Path()
         fillPath.addRect(rect, Path.Direction.CW)
     }
@@ -165,8 +180,12 @@ class RectangleCommand(rectangleData: RectangleData): ICommand {
         var top = rectangle.y
         var right = rectangle.x + rectangle.width
         var bottom = rectangle.y + rectangle.height
-        var rect = RectF(left.toFloat(), top.toFloat(), right.toFloat(), bottom.toFloat())
 
+        traceBorderPath(left, top, right, bottom)
+    }
+
+    fun traceBorderPath(left: Float, top: Float, right: Float, bottom: Float){
+        var rect = RectF(left, top, right, bottom)
         borderPath = Path()
 
         borderPath.addRect(rect, Path.Direction.CW)

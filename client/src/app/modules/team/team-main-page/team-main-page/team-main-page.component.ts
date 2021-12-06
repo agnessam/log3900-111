@@ -15,6 +15,8 @@ import { NewTeamComponent } from "../../new-team/new-team.component";
 export class TeamMainPageComponent implements OnInit {
   gridColumns: number = 3;
   teams: Array<Team> = new Array();
+  protectedTeams: Array<Team> = new Array();
+  showProtectedTeams = false;
 
   newTeamDialogRef: MatDialogRef<NewTeamComponent>;
 
@@ -27,14 +29,32 @@ export class TeamMainPageComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.teamClient.getTeams().subscribe((response) => {
-      response.forEach((team) => {
-        this.teams.push(team);
-      });
-    });
+    this.getTeams();
   }
 
   ngAfterViewInit(): void {}
+
+  getTeams(): void {
+    this.teamClient.getTeams().subscribe((response) => {
+      this.teams = Object.assign([], response);
+    });
+  }
+
+  getProtectedTeams(): void {
+    this.teamClient.getProtectedTeams().subscribe((response) => {
+        this.protectedTeams = Object.assign([], response);
+      });
+  }
+
+  toggleProtectedTeams(): void {
+    this.showProtectedTeams = !this.showProtectedTeams;
+
+    if (this.showProtectedTeams) {
+      this.getProtectedTeams();
+    } else {
+      this.getTeams();
+    }
+  }
 
   goToTeam(teamId: string): void {
     this.router.navigate([`/teams/${teamId}`]);
@@ -48,6 +68,7 @@ export class TeamMainPageComponent implements OnInit {
       }
 
       this.teams.push(result);
+      if (this.showProtectedTeams && result.isPrivate) this.protectedTeams.push(result);
       this.textChannelService
         .createChannel(result.name, result.owner, result._id, undefined, true)
         .subscribe((channel) => {

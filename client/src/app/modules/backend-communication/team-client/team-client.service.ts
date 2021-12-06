@@ -19,6 +19,10 @@ export class TeamClientService {
     return this.httpClient.get<Team[]>(this.TEAM_ENDPOINT);
   }
 
+  getProtectedTeams(): Observable<Team[]> {
+    return this.httpClient.get<Team[]>(this.TEAM_ENDPOINT + "protected");
+  }
+
   getTeam(teamId: string): Observable<Team> {
     return this.httpClient.get<Team>(`${this.TEAM_ENDPOINT}${teamId}`);
   }

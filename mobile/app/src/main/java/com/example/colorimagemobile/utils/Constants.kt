@@ -78,11 +78,8 @@ class Constants {
 
     class DRAWING {
         companion object {
-            const val MIN_WIDTH = 10
-            const val MAX_WIDTH = 2440
-
-            const val MIN_HEIGHT = 10
-            const val MAX_HEIGHT = 1215
+            const val DEFAULT_WIDTH = 1440
+            const val DEFAULT_HEIGHT = 900
 
             const val MAX_OPACITY = 255
             const val PRIMARY_COLOR = "rgba(67, 118, 169, 255)" // blue-ish
