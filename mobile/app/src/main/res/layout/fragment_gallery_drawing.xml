@@ -23,9 +23,9 @@
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/drawingToolsRecyclerView"
-                    android:layout_above="@id/canvas_tools"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"></androidx.recyclerview.widget.RecyclerView>
+                    android:layout_height="match_parent"
+                    android:layout_above="@id/canvas_tools"></androidx.recyclerview.widget.RecyclerView>
 
                 <LinearLayout
                     android:id="@+id/canvas_tools"

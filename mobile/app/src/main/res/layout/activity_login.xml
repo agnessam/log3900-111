@@ -82,12 +82,10 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="Email"
-                        app:counterEnabled="true"
                         app:helperText="@string/required"
                         app:errorEnabled="true"
                         app:helperTextTextColor="#ff0000"
                         app:errorIconDrawable="@drawable/ic_error"
-                        app:counterMaxLength="@integer/maxInputLength"
                         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                         android:layout_marginTop="30dp">
 
@@ -96,8 +94,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:maxLines="1"
-                            android:inputType="text"
-                            android:maxLength="@integer/maxInputLength" />
+                            android:inputType="textEmailAddress" />
 
                     </com.google.android.material.textfield.TextInputLayout>
 
@@ -136,6 +133,7 @@
                             android:textColor="@color/mainColor"
                             android:text="@string/new_message"/>
                         <TextView
+                            android:id="@+id/loginGetStarted"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textColor="@color/primary"

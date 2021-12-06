@@ -44,6 +44,9 @@
             >{{ getAuthorUsername(comment) }}</span
           >
           {{ comment.content }}
+          <span style="float: right; font-size: 11px">{{
+            comment.createdAt | date: "medium"
+          }}</span>
         </div>
       </div>
     </div>

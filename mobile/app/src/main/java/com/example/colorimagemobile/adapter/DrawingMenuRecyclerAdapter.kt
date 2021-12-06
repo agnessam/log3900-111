@@ -6,11 +6,7 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageButton
-import android.widget.ImageView
-import android.widget.PopupMenu
-import android.widget.TextView
-import androidx.cardview.widget.CardView
+import android.widget.*
 import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.example.colorimagemobile.R
@@ -29,10 +25,8 @@ import com.example.colorimagemobile.models.recyclerAdapters.DrawingMenuViewHolde
 import com.example.colorimagemobile.services.drawing.DrawingOwnerService
 import com.example.colorimagemobile.services.drawing.DrawingService
 import com.example.colorimagemobile.services.socket.DrawingSocketService
-import com.example.colorimagemobile.services.teams.TeamService
 import com.example.colorimagemobile.ui.home.fragments.teams.TeamsProfileFragment
 import com.example.colorimagemobile.ui.home.fragments.users.UsersProfileFragment
-import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
 import com.example.colorimagemobile.utils.Constants
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
@@ -47,7 +41,7 @@ class DrawingMenuRecyclerAdapter(
     val deleteDrawing: (drawingId: String, pos: Int) -> Unit
 ): RecyclerView.Adapter<DrawingMenuRecyclerAdapter.ViewHolder>() {
 
-    val drawingMenus: ArrayList<DrawingMenuData> = drawings
+    var drawingMenus: ArrayList<DrawingMenuData> = drawings
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DrawingMenuRecyclerAdapter.ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout. recycler_drawing_menu, parent, false)
@@ -60,14 +54,16 @@ class DrawingMenuRecyclerAdapter(
         holder.drawingMenuViewHolder.authorName.text = DrawingOwnerService.getUsername(drawingMenus[position].drawing.owner)
         holder.drawingMenuViewHolder.drawingDate.text = DateFormatter.getDate(drawingMenus[position].drawing.createdAt!!)
         holder.drawingMenuViewHolder.image.setImageBitmap(drawingMenus[position].imageBitmap)
+        holder.drawingMenuViewHolder.lockIconView.visibility = View.GONE
 
         val avatar = DrawingOwnerService.getAvatar(drawingMenus[position].drawing.owner)
         if (avatar != null) {
             MyPicasso().loadImage(avatar.imageUrl, holder.drawingMenuViewHolder.authorImageView)
         }
 
-        if (drawingMenus[position].drawing.privacyLevel == PrivacyLevel.PROTECTED.toString())
+        if (drawingMenus[position].drawing.privacyLevel == PrivacyLevel.PROTECTED.toString()) {
             holder.drawingMenuViewHolder.lockIconView.visibility = View.VISIBLE
+        }
 
         holder.drawingMenuViewHolder.privacyLevel.text = drawingMenus[position].drawing.privacyLevel.replaceFirstChar {
             if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString()
@@ -83,6 +79,16 @@ class DrawingMenuRecyclerAdapter(
 
     override fun getItemCount(): Int { return drawingMenus.size }
 
+    fun shouldFilterProtectedDrawings(isToggled: Boolean, parentDrawingMenus: ArrayList<DrawingMenuData>) {
+        drawingMenus = if (isToggled) {
+            parentDrawingMenus.filter { drawing -> drawing.drawing.privacyLevel == PrivacyLevel.PROTECTED.toString() } as ArrayList<DrawingMenuData>
+        } else {
+            parentDrawingMenus
+        }
+
+        notifyDataSetChanged()
+    }
+
     private fun openDrawing(position: Int, context: Context) {
         // Set current room to drawing id
         DrawingService.setCurrentDrawingID(drawingMenus[position].drawing._id)
@@ -95,6 +101,17 @@ class DrawingMenuRecyclerAdapter(
             job.join()
             DrawingSocketService.sendGetUpdateDrawingRequest(drawingMenus, position, destination)
             DrawingSocketService.setDrawingCommandSocketListeners()
+        }
+    }
+
+    private fun openProfile(position: Int) {
+        val ownerModel = drawingMenus[position].drawing.ownerModel
+        val ownerId = drawingMenus[position].drawing.owner._id
+
+        if (ownerModel == OwnerModel.USER.toString()) {
+            MyFragmentManager(activity).openWithData(R.id.main_gallery_fragment, UsersProfileFragment(), Constants.USERS.CURRENT_USER_ID_KEY, ownerId)
+        } else {
+            MyFragmentManager(activity).openWithData(R.id.main_gallery_fragment, TeamsProfileFragment(), Constants.TEAMS.CURRENT_TEAM_ID_KEY, ownerId)
         }
     }
 
@@ -162,15 +179,12 @@ class DrawingMenuRecyclerAdapter(
                 optionMenu.show()
             }
 
-            authorName.setOnClickListener {
-                val ownerModel = drawingMenus[bindingAdapterPosition].drawing.ownerModel
-                val ownerId = drawingMenus[bindingAdapterPosition].drawing.owner._id
+            authorImageView.setOnClickListener {
+                openProfile(bindingAdapterPosition)
+            }
 
-                if (ownerModel == OwnerModel.USER.toString()) {
-                    MyFragmentManager(activity).openWithData(R.id.main_gallery_fragment, UsersProfileFragment(), Constants.USERS.CURRENT_USER_ID_KEY, ownerId)
-                } else {
-                    MyFragmentManager(activity).openWithData(R.id.main_gallery_fragment, TeamsProfileFragment(), Constants.TEAMS.CURRENT_TEAM_ID_KEY, ownerId)
-                }
+            authorName.setOnClickListener {
+                openProfile(bindingAdapterPosition)
             }
         }
     }

@@ -166,6 +166,17 @@ export class DrawingRepository extends GenericRepository<DrawingInterface> {
     });
   }
 
+  public async updateDrawing(drawingId: string, drawing: DrawingInterface) {
+    return new Promise<DrawingInterface>((resolve, reject) => {
+      Drawing.findByIdAndUpdate(
+        { _id: drawingId },
+        drawing,
+        { new: true },
+        (err: Error, drawing: DrawingInterface) => {},
+      );
+    });
+  }
+
   public async deleteDrawing(drawingId: string) {
     return new Promise<DrawingInterface>((resolve, reject) => {
       Drawing.findOneAndDelete(
@@ -181,7 +192,6 @@ export class DrawingRepository extends GenericRepository<DrawingInterface> {
               {
                 $pull: {
                   drawings: { $in: deletedDrawing._id },
-                  collaborationHistory: { drawing: deletedDrawing._id },
                 },
               },
               (err: Error) => {
@@ -201,6 +211,22 @@ export class DrawingRepository extends GenericRepository<DrawingInterface> {
               },
             );
           }
+
+          User.updateMany(
+            {},
+            {
+              $pull: {
+                collaborationHistory: {
+                  drawing: deletedDrawing._id,
+                },
+              },
+            },
+            (err: Error) => {
+              if (err) {
+                reject(err);
+              }
+            },
+          );
 
           TextChannel.findOneAndDelete(
             { drawing: deletedDrawing._id },

@@ -16,6 +16,7 @@ import com.example.colorimagemobile.utils.CommonFun.Companion.printToast
 
 object TeamService {
     private var allTeams: ArrayList<TeamModel> = arrayListOf()
+    var showProtectedTeams = false
 
     fun setAllTeams(newTeams: ArrayList<TeamModel>) {
         allTeams = newTeams
@@ -30,7 +31,10 @@ object TeamService {
     }
 
     fun addTeam(team: TeamModel) {
-        allTeams.add(team)
+        // if showing protected teams, only add to all teams if team is private
+        if (!showProtectedTeams || (showProtectedTeams && team.isPrivate)) {
+            allTeams.add(team)
+        }
     }
 
     fun updateTeamByPosition(position: Int, newTeam: TeamModel) {

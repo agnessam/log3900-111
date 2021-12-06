@@ -22,8 +22,10 @@ import { PostService } from "src/app/modules/museum/services/post.service";
   styleUrls: ["./team-profile.component.scss"],
 })
 export class TeamProfileComponent implements OnInit {
+  userId: string;
   teamId: string;
   team: Team;
+  filteredDrawings: Drawing[] = [];
 
   teamLoaded: Promise<boolean>;
 
@@ -40,14 +42,16 @@ export class TeamProfileComponent implements OnInit {
     private chatSocketService: ChatSocketService,
     private dialog: MatDialog,
     private changeDetectorRef: ChangeDetectorRef,
-    private postService:PostService,
+    private postService: PostService
   ) {}
 
   ngOnInit(): void {
     this.route.params.subscribe((params) => {
+      this.userId = localStorage.getItem("userId")!;
       this.teamId = params["id"];
       this.teamClient.getTeam(this.teamId).subscribe((team) => {
         this.team = team;
+        this.filterPrivateDrawings(this.team.drawings as Drawing[]);
         this.teamLoaded = Promise.resolve(true);
       });
     });
@@ -148,8 +152,8 @@ export class TeamProfileComponent implements OnInit {
   }
 
   deleteDrawingFromView(deletedDrawing: Drawing) {
-    this.team.drawings.splice(
-      (this.team.drawings as Drawing[]).indexOf(deletedDrawing),
+    this.filteredDrawings.splice(
+      this.filteredDrawings.findIndex((x) => x._id === deletedDrawing._id),
       1
     );
     this.changeDetectorRef.detectChanges();
@@ -158,9 +162,36 @@ export class TeamProfileComponent implements OnInit {
   openPostDialog(post: PostInterface): void {
     this.postService.getPostById(post._id).subscribe((postReceive) => {
       this.dialog.open(PostDialogComponent, {
-        width: '80%',
+        width: "80%",
         data: postReceive,
       });
     });
+  }
+
+  filterPrivateDrawings(drawings: Drawing[]) {
+    for (let drawing of drawings) {
+      if (this.hasPermission(drawing)) {
+        this.filteredDrawings.push(drawing);
+      }
+    }
+  }
+
+  hasPermission(drawing: Drawing): boolean {
+    if (drawing.privacyLevel != "private") return true;
+
+    if (
+      drawing.ownerModel == "User" &&
+      (drawing.owner as User)._id == this.userId
+    ) {
+      return true;
+    }
+
+    if (drawing.ownerModel == "Team") {
+      if (((drawing.owner as Team).members as string[]).includes(this.userId)) {
+        return true;
+      }
+    }
+
+    return false;
   }
 }

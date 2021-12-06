@@ -8,6 +8,7 @@ import { ConfirmUnfollowDialogComponent } from "./confirm-unfollow-dialog/confir
 import { PostInterface } from "../../museum/models/post.model";
 import { PostDialogComponent } from "../../post-dialog/post-dialog.component";
 import { PostService } from "../../museum/services/post.service";
+import { Team } from "src/app/shared/models/team.model";
 
 @Component({
   selector: "app-user-profile",
@@ -17,6 +18,7 @@ import { PostService } from "../../museum/services/post.service";
 export class UserProfileComponent implements OnInit {
   user: User;
   userId: string;
+  filteredDrawings: Drawing[] = [];
 
   userLoaded: Promise<boolean>;
 
@@ -28,13 +30,14 @@ export class UserProfileComponent implements OnInit {
     private usersService: UsersService,
     private dialog: MatDialog,
     private changeDetector: ChangeDetectorRef,
-    private postService:PostService
+    private postService: PostService
   ) {
     this.activatedRoute.params.subscribe((params) => {
       this.userId = localStorage.getItem("userId")!;
       const currentUserId = params["id"];
       this.usersService.getUser(currentUserId).subscribe((user) => {
         this.user = user;
+        this.filterPrivateDrawings(this.user.drawings as Drawing[]);
         this.userLoaded = Promise.resolve(true);
       });
     });
@@ -71,8 +74,8 @@ export class UserProfileComponent implements OnInit {
   }
 
   deleteDrawingFromView(deletedDrawing: Drawing) {
-    this.user.drawings!.splice(
-      (this.user.drawings! as Drawing[]).indexOf(deletedDrawing),
+    this.filteredDrawings.splice(
+      this.filteredDrawings.findIndex((x) => x._id === deletedDrawing._id),
       1
     );
     this.changeDetector.detectChanges();
@@ -93,9 +96,37 @@ export class UserProfileComponent implements OnInit {
   openPostDialog(post: PostInterface): void {
     this.postService.getPostById(post._id).subscribe((postReceive) => {
       this.dialog.open(PostDialogComponent, {
-        width: '80%',
+        width: "80%",
         data: postReceive,
       });
     });
+  }
+
+  filterPrivateDrawings(drawings: Drawing[]) {
+    console.log(drawings);
+    for (let drawing of drawings) {
+      if (this.hasPermission(drawing)) {
+        this.filteredDrawings.push(drawing);
+      }
+    }
+  }
+
+  hasPermission(drawing: Drawing): boolean {
+    if (drawing.privacyLevel != "private") return true;
+
+    if (
+      drawing.ownerModel == "User" &&
+      (drawing.owner as User)._id == this.userId
+    ) {
+      return true;
+    }
+
+    if (drawing.ownerModel == "Team") {
+      if (((drawing.owner as Team).members as string[]).includes(this.userId)) {
+        return true;
+      }
+    }
+
+    return false;
   }
 }

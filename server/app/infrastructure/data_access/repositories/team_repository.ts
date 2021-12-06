@@ -41,6 +41,15 @@ export class TeamRepository extends GenericRepository<TeamInterface> {
     });
   }
 
+  public async getProtectedTeams(): Promise<TeamInterface[]> {
+    return new Promise((resolve, reject) => {
+      Team.find({ isPrivate: true }, (err, teams) => {
+        if (err) reject(err);
+        resolve(teams);
+      });
+    });
+  }
+
   public async createTeam(team: TeamInterface): Promise<TeamInterface> {
     return new Promise<TeamInterface>((resolve, reject) => {
       const newTeam = new Team({

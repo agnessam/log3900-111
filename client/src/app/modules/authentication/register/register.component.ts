@@ -10,7 +10,6 @@ import {
   Validators,
 } from "@angular/forms";
 import { ErrorStateMatcher } from "@angular/material/core";
-import { MatSnackBar } from "@angular/material/snack-bar";
 import { Router } from "@angular/router";
 import { AuthenticationService } from "../services/authentication/authentication.service";
 
@@ -39,8 +38,7 @@ export class RegisterComponent implements OnInit {
 
   constructor(
     private authenticationService: AuthenticationService,
-    private router: Router,
-    private snackBar: MatSnackBar
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -69,7 +67,6 @@ export class RegisterComponent implements OnInit {
 
   onSubmit(): void {
     if (this.userRegistration.invalid) {
-      this.openSnackBar("Something's wrong...");
       return;
     }
     this.authenticationService
@@ -82,17 +79,19 @@ export class RegisterComponent implements OnInit {
       )
       .subscribe((response) => {
         if (response.error) {
-          this.openSnackBar(response.error);
+          if ((response.error as string).includes("username")) {
+            this.userRegistration.controls["username"].setErrors({
+              duplicateUsername: true,
+            });
+          } else if ((response.error as string).includes("email")) {
+            this.userRegistration.controls["email"].setErrors({
+              duplicateEmail: true,
+            });
+          }
         } else {
           this.router.navigate(["/users/customize"]);
         }
       });
-  }
-
-  openSnackBar(message: string): void {
-    this.snackBar.open(message, "Close", {
-      duration: 3000,
-    });
   }
 
   checkPasswords: ValidatorFn = (

@@ -82,4 +82,5 @@
     <string name="last_logout">Last Logout</string>
     <string name="collaboration_history">Collaboration History</string>
     <string name="user_history">User History</string>
+    <string name="search">Search</string>
 </resources>

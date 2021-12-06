@@ -58,10 +58,12 @@ object ChatSocketService: AbsSocket(SOCKETS.CHAT_NAMESPACE_NAME) {
                     val message = JSONConvertor.getJSONObject(currentArg, ChatSocketModel::class.java)
                     ChatService.addMessage(message)
 
-                    // update current chat view
-                    val currentRoom = TextChannelService.getCurrentChannel().name
-                    if (message.roomName == currentRoom) {
-                        ChatAdapterService.getChatMsgAdapter().addChatItem(message)
+                    if (TextChannelService.isConnectedChannelInitialized()) {
+                        // update current chat view
+                        val currentRoom = TextChannelService.getCurrentChannel().name
+                        if (message.roomName == currentRoom) {
+                            ChatAdapterService.getChatMsgAdapter().addChatItem(message)
+                        }
                     }
                 } catch (e: JSONException) {
                     printMsg("listenMessage error: ${e.message}")

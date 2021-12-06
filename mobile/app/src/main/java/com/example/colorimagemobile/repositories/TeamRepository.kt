@@ -88,6 +88,25 @@ class TeamRepository {
         return teamsLiveData
     }
 
+    fun getProtectedTeams(): MutableLiveData<DataWrapper<ArrayList<TeamModel>>> {
+        val protectedTeamsLiveData: MutableLiveData<DataWrapper<ArrayList<TeamModel>>> = MutableLiveData()
+
+        httpClient.getProtectedTeams(token = "Bearer ${UserService.getToken()}").enqueue(object : Callback<ArrayList<TeamModel>> {
+            override fun onResponse(call: Call<ArrayList<TeamModel>>, response: Response<ArrayList<TeamModel>>) {
+                if (!response.isSuccessful) {
+                    protectedTeamsLiveData.value = DataWrapper(null, "An error occurred while fetching protected teams!", true)
+                    return
+                }
+                protectedTeamsLiveData.value = DataWrapper(response.body(), "", false)
+            }
+            override fun onFailure(call: Call<ArrayList<TeamModel>>, t: Throwable) {
+                protectedTeamsLiveData.value = DataWrapper(null, "Sorry, failed to get fetch protected messages!", true)
+            }
+        })
+
+        return protectedTeamsLiveData
+    }
+
     fun joinTeam(teamId: String): MutableLiveData<DataWrapper<TeamModel>> {
         val joinTeamLiveData: MutableLiveData<DataWrapper<TeamModel>> = MutableLiveData()
 

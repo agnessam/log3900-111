@@ -37,15 +37,18 @@
                     android:textColor="@color/black"
                     android:textSize="20sp" />
 
-                <Button
+                <com.google.android.material.button.MaterialButton
                     android:id="@+id/channel_load_more_btn"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_toLeftOf="@id/channel_leave_btn_main"
-                    android:backgroundTint="#0b96cf"
                     android:drawableEnd="@drawable/ic_message_plus"
                     android:text="Load previous messages"
-                    android:textColor="#c5e7e8" />
+                    android:textColor="@color/primary"
+                    app:cornerRadius="4dp"
+                    app:strokeColor="@color/primary"
+                    app:strokeWidth="1dp" />
 
                 <RelativeLayout
                     android:id="@+id/channel_leave_btn_main"

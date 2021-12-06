@@ -25,6 +25,9 @@ import { TextChannelService } from "./services/text-channel.service";
 // tslint:disable: no-non-null-assertion
 export class ChatComponent implements OnInit, OnDestroy {
   user: User | null;
+
+  userId: string;
+
   chatSubscription: Subscription;
   @ViewChild("chatBox", { static: false })
   private chatBox: ElementRef<HTMLInputElement>;
@@ -52,6 +55,7 @@ export class ChatComponent implements OnInit, OnDestroy {
     private textChannelService: TextChannelService,
     private ref: ChangeDetectorRef
   ) {
+    this.userId = localStorage.getItem("userId")!;
     this.currentChannel = {
       _id: "default",
       name: "General",
@@ -90,7 +94,7 @@ export class ChatComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.messageHistory.forEach((_messages, roomName) => {
       this.chatSocketService.leaveRoom({
-        userId: this.user!._id!,
+        userId: this.userId,
         roomName: roomName,
       });
     });
@@ -115,7 +119,7 @@ export class ChatComponent implements OnInit, OnDestroy {
     if (!this.messageHistory.has(channelName)) {
       this.messageHistory.set(channelName, new Array());
       this.chatSocketService.joinRoom({
-        userId: this.user?._id!,
+        userId: this.userId,
         roomName: channelName,
       });
       this.chatSocketService.messageHistory.subscribe((history) => {
@@ -131,7 +135,7 @@ export class ChatComponent implements OnInit, OnDestroy {
     this.chatService.leaveRoomEventEmitter.subscribe((channel) => {
       this.messageHistory.delete(channel.name);
       this.chatSocketService.leaveRoom({
-        userId: this.user?._id!,
+        userId: this.userId,
         roomName: channel.name,
       });
       this.currentChannel = null;

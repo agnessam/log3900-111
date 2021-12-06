@@ -2,6 +2,7 @@ package com.example.colorimagemobile.services.drawing
 
 import com.example.colorimagemobile.classes.CommandFactory
 import com.example.colorimagemobile.classes.JSONConvertor
+import com.example.colorimagemobile.classes.toolsCommand.TranslateCommand
 import com.example.colorimagemobile.classes.toolsCommand.selectionToolCommands.ResizeCommand
 import com.example.colorimagemobile.interfaces.ICommand
 import com.example.colorimagemobile.models.*
@@ -130,7 +131,11 @@ object SynchronisationService {
         if(this.isShapeInPreview(commandId)){
             var command = previewShapes[commandId]
             var transformCommand = CommandFactory.createCommand(transformSelectionData.type, transformSelectionData.drawingCommand)
-
+            if(transformSelectionData.drawingCommand is TranslateData){
+                if(transformSelectionData.drawingCommand.deltaX == 0f && transformSelectionData.drawingCommand.deltaY == 0f){
+                    previewShapes[commandId] = transformCommand as TranslateCommand
+                }
+            }
             if(transformCommand == null || command == null) return
 
             if(transformCommand.javaClass == command.javaClass){
