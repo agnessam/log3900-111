@@ -47,8 +47,8 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/post_comment_author"
             android:layout_toRightOf="@id/post_comment_author_image"
-            android:textSize="16sp"
-            android:textColor="#000" />
+            android:textColor="#000"
+            android:textSize="16sp" />
 
     </RelativeLayout>
 

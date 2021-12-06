@@ -28,11 +28,11 @@ object MuseumAdapters {
         postsLikes[position] = holder
     }
 
-    fun refreshLikeSection(position: Int) {
-        if (postsLikes[position] != null) postsAdapter.showFilledLike(postsLikes[position]!!)
+    fun refreshLikeSection(position: Int, nbLikes: Int) {
+        if (postsLikes[position] != null) postsAdapter.showFilledLike(postsLikes[position]!!, nbLikes)
     }
 
-    fun refreshUnlikeSection(position: Int) {
-        if (postsLikes[position] != null) postsAdapter.hideFilledLike(postsLikes[position]!!)
+    fun refreshUnlikeSection(position: Int, nbLikes: Int) {
+        if (postsLikes[position] != null) postsAdapter.hideFilledLike(postsLikes[position]!!, nbLikes)
     }
 }

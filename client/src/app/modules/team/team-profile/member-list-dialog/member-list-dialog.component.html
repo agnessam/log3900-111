@@ -22,9 +22,10 @@
                 >{{ member.username }}</mat-card-title
               >
               <mat-card-subtitle>
-                <p>
+                <p *ngIf="this.getStatusColor(member._id); else offline">
                   {{ getOnlineStatus(member._id) }}
                 </p>
+                <p #offline>Offline</p>
               </mat-card-subtitle>
             </div>
           </mat-card-header>

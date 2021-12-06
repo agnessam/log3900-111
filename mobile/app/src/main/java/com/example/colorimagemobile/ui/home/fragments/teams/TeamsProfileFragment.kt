@@ -51,6 +51,7 @@ class TeamsProfileFragment : Fragment(R.layout.fragment_teams_profile) {
     private lateinit var joinBtn: Button
     private lateinit var leaveBtn: Button
     private lateinit var deleteBtn: Button
+    private var membersNb = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -72,13 +73,9 @@ class TeamsProfileFragment : Fragment(R.layout.fragment_teams_profile) {
         MyFragmentManager(requireActivity()).showBackButton()
         
         myView.findViewById<TextView>(R.id.teamIdNameCard).text = currentTeam.name
-
-        if (currentTeam.members.size > 1) {
-            myView.findViewById<TextView>(R.id.teamIdNbOfMembers).text = "${currentTeam.members.size} members"
-        } else {
-            myView.findViewById<TextView>(R.id.teamIdNbOfMembers).text = "${currentTeam.members.size} member"
-        }
         myView.findViewById<TextView>(R.id.teamIdDescription).text = currentTeam.description
+        membersNb = currentTeam.members.size
+        setTeamMembersText()
 
         joinBtn = myView.findViewById<Button>(R.id.teamIdJoinBtn)
         leaveBtn = myView.findViewById<Button>(R.id.leaveTeamIdBtn)
@@ -95,6 +92,10 @@ class TeamsProfileFragment : Fragment(R.layout.fragment_teams_profile) {
         }
 
         hideShowDescription()
+    }
+
+    fun setTeamMembersText() {
+        myView.findViewById<TextView>(R.id.teamIdNbOfMembers).text = "$membersNb member${if (membersNb > 1) "s" else ""}"
     }
 
     private fun getCurrentTeam() {
@@ -129,19 +130,23 @@ class TeamsProfileFragment : Fragment(R.layout.fragment_teams_profile) {
     private fun hideJoinBtn() {
         joinBtn.visibility = View.GONE
         leaveBtn.visibility = View.VISIBLE
+        setTeamMembersText()
     }
 
     private fun showJoinBtn() {
         joinBtn.visibility = View.VISIBLE
         leaveBtn.visibility = View.GONE
+        setTeamMembersText()
     }
 
     private fun checkIsTeamFull(button: Button) {
         currentTeam.memberLimit?.let {
             if (currentTeam.members.size >= currentTeam.memberLimit!!) {
                 toggleButton(button, false)
-                button.alpha = .6f
+                button.alpha = .8f
                 button.setBackgroundColor(Color.rgb(221, 208, 206))
+                button.text = "Team Full"
+                button.setTextColor(Color.parseColor("#505050"))
             }
         }
     }
@@ -207,6 +212,7 @@ class TeamsProfileFragment : Fragment(R.layout.fragment_teams_profile) {
 
     private fun joinTeam() {
         TeamService.joinTeam(currentTeam._id, requireContext())
+        membersNb++
         hideJoinBtn()
         printToast(requireActivity(), "Successfully joined the team")
     }
@@ -238,6 +244,7 @@ class TeamsProfileFragment : Fragment(R.layout.fragment_teams_profile) {
         val description = "Leaving this team does not prevent you from rejoining this team later on."
         val confirmation = ConfirmationBottomSheet({
             TeamService.leaveTeam(currentTeam._id, requireContext())
+            membersNb--
             showJoinBtn()
         }, title, description, "Leave", ButtonType.PRIMARY.toString())
         confirmation.show(parentFragmentManager, "ConfirmationBottomSheet")
@@ -319,7 +326,7 @@ class TeamsProfileFragment : Fragment(R.layout.fragment_teams_profile) {
 
             publishedDrawings[postPosition].likes.add(UserService.getUserInfo()._id)
             recyclerView.adapter?.notifyItemChanged(postPosition)
-            MuseumAdapters.refreshLikeSection(0)
+            MuseumAdapters.refreshLikeSection(0, publishedDrawings[postPosition].likes.size)
         })
     }
 
@@ -332,14 +339,15 @@ class TeamsProfileFragment : Fragment(R.layout.fragment_teams_profile) {
 
             publishedDrawings[postPosition].likes.remove(UserService.getUserInfo()._id)
             recyclerView.adapter?.notifyItemChanged(postPosition)
-            MuseumAdapters.refreshUnlikeSection(0)
+            MuseumAdapters.refreshUnlikeSection(0, publishedDrawings[postPosition].likes.size)
         })
     }
 
     private fun updateDrawing(updatedDrawing: DrawingModel.UpdateDrawing, position: Int) {
         DrawingRepository().updateDrawing(drawingsMenu[position].drawing._id!!, updatedDrawing).observe(viewLifecycleOwner, {
+            printToast(requireActivity(), it.message!!)
+
             if (it.isError as Boolean) {
-                printToast(requireActivity(), it.message!!)
                 return@observe
             }
 

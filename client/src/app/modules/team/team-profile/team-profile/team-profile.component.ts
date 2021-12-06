@@ -110,6 +110,7 @@ export class TeamProfileComponent implements OnInit {
 
     this.openConfirmDeleteDialogRef.afterClosed().subscribe(() => {
       this.textChannelService.emitDeleteTeamChannel(this.team.name);
+      this.textChannelService.emitCloseChat();
     });
   }
 
@@ -124,6 +125,7 @@ export class TeamProfileComponent implements OnInit {
       }
       this.team.members = team.members;
       this.chatSocketService.leaveRoom(team.name);
+      this.textChannelService.emitCloseChat();
       this.changeDetectorRef.detectChanges();
     });
   }
@@ -147,6 +149,7 @@ export class TeamProfileComponent implements OnInit {
   openMemberList() {
     this.openMemberListDialogRef = this.dialog.open(MemberListDialogComponent, {
       width: "400px",
+      height: "608px",
       data: { members: this.team.members },
     });
   }

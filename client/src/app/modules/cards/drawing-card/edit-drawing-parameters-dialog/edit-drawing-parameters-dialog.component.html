@@ -17,6 +17,15 @@
           formControlName="name"
           [value]="this.data.drawing.name"
         />
+        <mat-error *ngIf="this.drawingForm.hasError('required', 'name')"
+          >Drawing name is required</mat-error
+        >
+        <mat-error *ngIf="this.drawingForm.hasError('minlength', 'name')"
+          >Drawing name must contain atleast 4 characters</mat-error
+        >
+        <mat-error *ngIf="this.drawingForm.hasError('maxlength', 'name')"
+          >Drawing name cannot contain more than 12 characters</mat-error
+        >
       </mat-form-field>
     </div>
     <div>

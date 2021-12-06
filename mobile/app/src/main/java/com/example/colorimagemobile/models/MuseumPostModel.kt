@@ -1,5 +1,8 @@
 package com.example.colorimagemobile.models
 
+import java.util.*
+import kotlin.collections.ArrayList
+
 data class CommentInterface(
     val content: String,
     val author: UserModel.AllInfo,
@@ -11,12 +14,12 @@ data class CommentInterface(
 data class MuseumPostModel(
     val _id: String,
     val dataUri: String,
-    val owner: UserModel.AllInfo,
+    val owner: DrawingOwner,
     val ownerModel: String,
     val name: String,
     val comments: ArrayList<CommentInterface>,
     val likes: ArrayList<String>,
-    var createdAt: String?,
+    var createdAt: Date?,
     val updatedAt: String?,
 )
 

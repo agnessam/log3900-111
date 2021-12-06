@@ -2,6 +2,7 @@ package com.example.colorimagemobile.services.socket
 
 import android.util.Base64
 import androidx.fragment.app.FragmentActivity
+import com.example.colorimagemobile.R
 import com.example.colorimagemobile.classes.AbsSocket
 import com.example.colorimagemobile.classes.ImageConvertor
 import com.example.colorimagemobile.classes.JSONConvertor
@@ -9,6 +10,7 @@ import com.example.colorimagemobile.classes.MyFragmentManager
 import com.example.colorimagemobile.models.*
 import com.example.colorimagemobile.models.recyclerAdapters.DrawingMenuData
 import com.example.colorimagemobile.repositories.DrawingRepository
+import com.example.colorimagemobile.services.BottomNavService
 import com.example.colorimagemobile.services.drawing.CanvasUpdateService
 import com.example.colorimagemobile.services.drawing.DrawingObjectManager
 import com.example.colorimagemobile.services.drawing.DrawingService
@@ -382,7 +384,7 @@ object DrawingSocketService: AbsSocket(SOCKETS.COLLABORATIVE_DRAWING_NAMESPACE) 
             withContext(Dispatchers.Main){
                 processUpdateDrawingRequestCallbackJob.join()
                 DrawingObjectManager.createDrawableObjects(drawingMenus[position].svgString)
-                MyFragmentManager(context).open(destination, GalleryDrawingFragment())
+                MyFragmentManager(context).open(R.id.fragment, GalleryDrawingFragment())
                 CanvasUpdateService.asyncInvalidate()
             }
         }

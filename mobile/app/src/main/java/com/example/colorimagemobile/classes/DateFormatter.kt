@@ -14,5 +14,22 @@ class DateFormatter {
             val date: Date = inputFormat.parse(dateString)!!
             return outputFormat.format(date)
         }
+
+        fun getChatDate(dateString: String): String {
+            val outputFormat: DateFormat = SimpleDateFormat("MMM dd, yyyy, hh:mm:ss aa", Locale.US)
+            val inputFormat: DateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSX", Locale.US)
+
+            val date: Date = inputFormat.parse(dateString)!!
+            return outputFormat.format(date)
+        }
+
+        fun getPostDate(postDate: Date): String {
+            val dateFormatter = DateFormat.getDateTimeInstance(
+                DateFormat.LONG,
+                DateFormat.LONG,
+                Locale.US);
+
+            return dateFormatter.format(postDate)
+        }
     }
 }

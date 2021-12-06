@@ -82,6 +82,9 @@ export class ChatComponent implements OnInit, OnDestroy {
     this.textChannelService.leftCollabChannel.subscribe(() => {
       this.closeChat();
     });
+    this.textChannelService.closeChatEvent.subscribe(() => {
+      this.closeChat();
+    });
   }
 
   ngAfterViewChecked() {
@@ -124,7 +127,7 @@ export class ChatComponent implements OnInit, OnDestroy {
       });
       this.chatSocketService.messageHistory.subscribe((history) => {
         if (!history) return;
-        this.messageHistory.set(history[0].roomName, history);
+        this.messageHistory.set(channelName, history);
         this.shouldScroll = true;
         this.getMessages();
       });

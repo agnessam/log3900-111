@@ -23,13 +23,14 @@ import com.example.colorimagemobile.httpresponsehandler.GlobalHandler
 import com.example.colorimagemobile.models.*
 import com.example.colorimagemobile.services.users.UserService
 import com.example.colorimagemobile.repositories.SearchRepository
-import com.example.colorimagemobile.repositories.UserRepository
+import com.example.colorimagemobile.services.BottomNavService
 import com.example.colorimagemobile.services.SearchService
 import com.example.colorimagemobile.services.SharedPreferencesService
 import com.example.colorimagemobile.services.chat.ChatService
 import com.example.colorimagemobile.services.chat.TextChannelService
 import com.example.colorimagemobile.services.drawing.DrawingObjectManager
 import com.example.colorimagemobile.services.drawing.DrawingService
+import com.example.colorimagemobile.services.drawing.PreviewBoxManager
 import com.example.colorimagemobile.services.drawing.TransformationManager
 import com.example.colorimagemobile.services.socket.ChatSocketService
 import com.example.colorimagemobile.services.socket.SocketManagerService
@@ -61,8 +62,10 @@ class HomeActivity : AppCompatActivity() {
         homeViewModel = ViewModelProvider(this).get(HomeActivityViewModel::class.java)
         sharedPreferencesService = SharedPreferencesService(this)
 
+        CommonFun.setActionBarColor(supportActionBar)
         navController = findNavController(R.id.fragment)
         bottomNav = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
+        BottomNavService.setNav(bottomNav)
 
         setBottomNavigationView()
         initChat()
@@ -172,6 +175,7 @@ class HomeActivity : AppCompatActivity() {
                     DrawingObjectManager.clearLayers()
                     DrawingService.setCurrentDrawingID(null)
                     TransformationManager.clearPreviousTransformations()
+                    PreviewBoxManager.clearPreviewBoxes()
                 }
                 bottomNav.selectedItemId = R.id.galleryFragment
                 true

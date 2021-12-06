@@ -172,7 +172,24 @@ export class DrawingRepository extends GenericRepository<DrawingInterface> {
         { _id: drawingId },
         drawing,
         { new: true },
-        (err: Error, drawing: DrawingInterface) => {},
+        (err: Error, updatedDrawing: DrawingInterface) => {
+          if (err) {
+            reject(err);
+          }
+
+          TextChannel.findOneAndUpdate(
+            { drawing: updatedDrawing._id },
+            { $set: { name: updatedDrawing.name } },
+            { new: true },
+            (err: Error) => {
+              if (err) {
+                reject(err);
+              }
+            },
+          );
+
+          resolve(updatedDrawing);
+        },
       );
     });
   }

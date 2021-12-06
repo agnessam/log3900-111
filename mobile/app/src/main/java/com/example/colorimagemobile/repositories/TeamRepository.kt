@@ -173,7 +173,7 @@ class TeamRepository {
                     joinTeamLiveData.value = DataWrapper(null, "An error occurred while deleting team!", true)
                     return
                 }
-                joinTeamLiveData.value = DataWrapper(response.body(), "Team successfully deleted", false)
+                joinTeamLiveData.value = DataWrapper(response.body(), "Team has successfully been deleted", false)
             }
             override fun onFailure(call: Call<Any>, t: Throwable) {
                 joinTeamLiveData.value = DataWrapper(null, "Sorry, failed to delete team!", true)
@@ -192,7 +192,7 @@ class TeamRepository {
                     joinTeamLiveData.value = DataWrapper(null, "An error occurred while updating team!", true)
                     return
                 }
-                joinTeamLiveData.value = DataWrapper(response.body(), "Team successfully updated", false)
+                joinTeamLiveData.value = DataWrapper(response.body(), "Team has successfully been updated", false)
             }
             override fun onFailure(call: Call<Any>, t: Throwable) {
                 joinTeamLiveData.value = DataWrapper(null, "Sorry, failed to update team!", true)
