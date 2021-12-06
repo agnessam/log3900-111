@@ -1,9 +1,9 @@
 import { Injectable } from "@angular/core";
 import { Color, LineWidth } from "src/app/shared";
+import { TranslateCommand } from "../..";
 import { ICommand } from "../../interfaces/command.interface";
 import { SocketTool } from "../tools/socket-tool";
 import { CommandFactoryService } from "./factories/command-factory/command-factory.service";
-
 
 @Injectable({
   providedIn: "root",
@@ -11,8 +11,7 @@ import { CommandFactoryService } from "./factories/command-factory/command-facto
 export class SynchronisationService {
   previewShapes: Map<string, ICommand> = new Map<string, ICommand>();
 
-  constructor(private commandFactory: CommandFactoryService) 
-  {}
+  constructor(private commandFactory: CommandFactoryService) {}
 
   removeFromPreview(id: string): boolean {
     if (this.previewShapes.has(id)) {
@@ -78,6 +77,15 @@ export class SynchronisationService {
         transformSelectionData.drawingCommand
       );
 
+      if (command! instanceof TranslateCommand) {
+        if (
+          transformSelectionData.drawingCommand.deltaX == 0 &&
+          transformSelectionData.drawingCommand.deltaY == 0
+        ) {
+          this.previewShapes.set(commandId, transformationCommand);
+        }
+      }
+
       if (transformationCommand instanceof command!.constructor) {
         command!.update(transformSelectionData.drawingCommand);
       } else {
@@ -105,18 +113,27 @@ export class SynchronisationService {
     transformCommand.execute();
   }
 
-  setSelectionLineWidth(lineWidthData:LineWidth): void {
-    let lineWidthCommand = this.commandFactory.createCommand("LineWidth", lineWidthData);
+  setSelectionLineWidth(lineWidthData: LineWidth): void {
+    let lineWidthCommand = this.commandFactory.createCommand(
+      "LineWidth",
+      lineWidthData
+    );
     lineWidthCommand.execute();
   }
 
-  setObjectPrimaryColor(colorData:Color): void {
-    const primaryColorCommand = this.commandFactory.createCommand("PrimaryColor", colorData);
+  setObjectPrimaryColor(colorData: Color): void {
+    const primaryColorCommand = this.commandFactory.createCommand(
+      "PrimaryColor",
+      colorData
+    );
     primaryColorCommand.execute();
   }
 
-  setObjectSecondaryColor(colorData:Color): void {
-    const secondaryColorCommand = this.commandFactory.createCommand("SecondaryColor", colorData);
-    secondaryColorCommand.execute()
+  setObjectSecondaryColor(colorData: Color): void {
+    const secondaryColorCommand = this.commandFactory.createCommand(
+      "SecondaryColor",
+      colorData
+    );
+    secondaryColorCommand.execute();
   }
 }
