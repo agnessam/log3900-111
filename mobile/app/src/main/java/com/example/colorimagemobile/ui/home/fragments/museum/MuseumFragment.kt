@@ -94,7 +94,8 @@ class MuseumFragment : Fragment(R.layout.fragment_museum) {
                 return@observe
             }
             MuseumPostService.likePost(position)
-            MuseumAdapters.refreshLikeSection(position)
+            MuseumAdapters.refreshLikeSection(position, MuseumPostService.getPostLikes(position))
+            // MuseumAdapters.refreshLikeSection(position)
             Notification().playSound(requireContext())
 
         })
@@ -110,7 +111,7 @@ class MuseumFragment : Fragment(R.layout.fragment_museum) {
             }
 
             MuseumPostService.unlikePost(position)
-            MuseumAdapters.refreshUnlikeSection(position)
+            MuseumAdapters.refreshUnlikeSection(position, MuseumPostService.getPostLikes(position))
         })
     }
 }
