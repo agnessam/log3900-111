@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.colorimagemobile.R
+import com.example.colorimagemobile.classes.DateFormatter
 import com.example.colorimagemobile.models.ChatSocketModel
 import com.example.colorimagemobile.services.users.UserService
 
@@ -32,7 +33,7 @@ class ChatMessageRecyclerAdapter(): RecyclerView.Adapter<ChatMessageRecyclerAdap
     override fun onBindViewHolder(holder: ChatMessageRecyclerAdapter.ViewHolder, position: Int) {
         holder.author.text = chatMessages.elementAt(position).author
         holder.message.text = chatMessages.elementAt(position).message
-        holder.timestamp.text = chatMessages.elementAt(position).timestamp
+        holder.timestamp.text = DateFormatter.getChatDate(chatMessages.elementAt(position).timestamp)
     }
 
     // how many items we pass to our view holder
