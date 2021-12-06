@@ -90,8 +90,9 @@ class GalleryMenuFragment : Fragment(R.layout.fragment_gallery_menu) {
 
     private fun updateDrawing(updatedDrawing: DrawingModel.UpdateDrawing, position: Int) {
         drawingRepo.updateDrawing(drawingsMenu[position].drawing._id!!, updatedDrawing).observe(viewLifecycleOwner, {
+            printToast(requireActivity(), it.message!!)
+
             if (it.isError as Boolean) {
-                printToast(requireActivity(), it.message!!)
                 return@observe
             }
 

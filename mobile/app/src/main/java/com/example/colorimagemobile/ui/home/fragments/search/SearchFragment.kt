@@ -129,8 +129,9 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
 
     private fun updateDrawing(updatedDrawing: DrawingModel.UpdateDrawing, position: Int, drawingsMenu: ArrayList<DrawingMenuData>) {
         DrawingRepository().updateDrawing(drawingsMenu[position].drawing._id!!, updatedDrawing).observe(viewLifecycleOwner, {
+            CommonFun.printToast(requireActivity(), it.message!!)
+
             if (it.isError as Boolean) {
-                CommonFun.printToast(requireActivity(), it.message!!)
                 return@observe
             }
 
