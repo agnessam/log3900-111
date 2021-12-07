@@ -136,7 +136,6 @@ class EditProfileFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        printMsg("user default avatar "+UserService.getUserInfo().avatar)
         getAllAvatar()
 
     }
