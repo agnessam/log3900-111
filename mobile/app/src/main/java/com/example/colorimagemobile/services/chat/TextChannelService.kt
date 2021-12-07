@@ -105,7 +105,6 @@ object TextChannelService {
         ChatSocketService.leaveRoom(socketInformation)
         this.publicChannels.remove(channelToDelete)
         removeFromConnectedChannels(channelToDelete)
-        updateCurrentChannel()
     }
 
     fun removeChannel(channelName: String?) {
@@ -142,12 +141,6 @@ object TextChannelService {
 
     fun setBackedUpChannels(newChannels: ArrayList<TextChannelModel.AllInfo>){
         this.backedUpPublicChannels = newChannels
-    }
-
-    private fun updateCurrentChannel() {
-        // set current channel: 0 if only General exists, else last connected channels' position
-        val newPosition =  if (connectedChannels.size == 1) 0 else connectedChannels.size - 1
-        setCurrentChannelByPosition(newPosition, false)
     }
 
     fun addToConnectedChannels(channel: TextChannelModel.AllInfo) {

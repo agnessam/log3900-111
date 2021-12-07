@@ -18,6 +18,7 @@ class ChannelsRecyclerAdapter():
 
     private var isAllChannels = true
     private var currentPosition: Int = -1
+    private var currentChannel: String = "General"
     private lateinit var channels: ArrayList<TextChannelModel.AllInfo>
     private var unreadChannels: ArrayList<String> = ArrayList()
 
@@ -29,7 +30,7 @@ class ChannelsRecyclerAdapter():
     override fun onBindViewHolder(holder: ChannelsRecyclerAdapter.ViewHolder, position: Int) {
         holder.chanelName.text = channels[position].name
 
-        val backgroundColor = if (position == currentPosition) "#f5f5f5" else "#ffffff"
+        val backgroundColor = if (channels[position].name == currentChannel) "#f5f5f5" else "#ffffff"
         holder.chanelName.setBackgroundColor(Color.parseColor(backgroundColor))
         if (!isAllChannels && unreadChannels.contains(channels[position].name)) {
             holder.chanelName.setCompoundDrawablesWithIntrinsicBounds(0, 0,
@@ -41,6 +42,10 @@ class ChannelsRecyclerAdapter():
 
     override fun getItemCount(): Int {
        return channels.size
+    }
+
+    fun setCurrentChannelName(name: String) {
+        currentChannel = name
     }
 
     fun setData(newChannels: ArrayList<TextChannelModel.AllInfo>) {
@@ -65,8 +70,10 @@ class ChannelsRecyclerAdapter():
                 currentPosition = bindingAdapterPosition
                 if (currentPosition != -1) {
                     TextChannelService.setCurrentChannelByPosition(currentPosition, isAllChannels)
+                    currentChannel = TextChannelService.getCurrentChannel().name
                     ChatService.unreadChannels.remove(TextChannelService.getCurrentChannel().name)
                     unreadChannels.remove(TextChannelService.getCurrentChannel().name)
+                    notifyItemChanged(currentPosition)
                     if (ChatService.unreadChannels.size == 0) {
                         ChatService.setNewMsgLiveData(false)
                     }

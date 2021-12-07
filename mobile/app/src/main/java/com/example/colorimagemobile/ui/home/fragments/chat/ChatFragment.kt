@@ -44,6 +44,8 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
         if (TextChannelService.getPublicChannels().isNotEmpty()) {
             ChatService.refreshChatBox(requireActivity())
         }
+
+        addDefaultChannel()
     }
 
     private fun setRecyclerView() {
@@ -96,10 +98,10 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
     }
 
     // add channel named General as connected! usually its the first channel in the list
-    private fun addDefaultChannel(channels: ArrayList<TextChannelModel.AllInfo>) {
+    private fun addDefaultChannel() {
         if (TextChannelService.isConnectedToGeneral()) return
 
-        channels.forEach {
+        TextChannelService.getPublicChannels().forEach {
             if (it.name == GENERAL_CHANNEL_NAME) {
                 TextChannelService.setCurrentChannel(it)
                 TextChannelService.connectToGeneral()
