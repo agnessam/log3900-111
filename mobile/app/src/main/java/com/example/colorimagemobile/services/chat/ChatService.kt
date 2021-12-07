@@ -110,11 +110,6 @@ object ChatService {
             if (it.isError as Boolean) { return@observe }
             val channels = it.data as ArrayList<TextChannelModel.AllInfo>
             TextChannelService.setPublicChannels(channels)
-
-            channels.forEach { channel ->
-                val socketInformation = Constants.SocketRoomInformation(UserService.getUserInfo()._id, channel.name)
-                ChatSocketService.joinRoom(socketInformation)
-            }
         })
 
         // get user teams and connect for each team

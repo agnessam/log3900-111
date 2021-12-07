@@ -114,7 +114,9 @@ class ChatMessageBoxFragment : Fragment(R.layout.fragment_chat_message_box) {
 
     private fun filterChatMessage(): MutableSet<ChatSocketModel>? {
         if (!ChatService.containsChannel(channel.name)) return mutableSetOf()
-        if (UserService.getUserInfo().lastLogin == null) ChatService.getChannelMessages(channel.name)?.toMutableSet()
+        if (UserService.getUserInfo().lastLogin == null) {
+            return ChatService.getChannelMessages(channel.name)?.toMutableSet()
+        }
 
         val messageObj = ChatService.getChannelMessageObject(channel.name)
         if (!messageObj.hasFetchedOldMsg) {
@@ -162,6 +164,8 @@ class ChatMessageBoxFragment : Fragment(R.layout.fragment_chat_message_box) {
         val currentChannel = TextChannelService.getCurrentChannel()
 
         TextChannelService.deleteChannel(currentChannel)
+        TextChannelService.setCurrentChannel(TextChannelService.getPublicChannels()[0])
+        ChatAdapterService.getChannelListAdapter().setCurrentChannelName(TextChannelService.getPublicChannels()[0].name)
         ChatService.refreshChatBox(requireActivity())
         TextChannelService.refreshChannelList()
 
@@ -227,6 +231,7 @@ class ChatMessageBoxFragment : Fragment(R.layout.fragment_chat_message_box) {
     private fun leaveRoom() {
         TextChannelService.removeFromConnectedChannels(TextChannelService.getCurrentChannel())
         TextChannelService.setCurrentChannel(TextChannelService.getPublicChannels()[0])
+        ChatAdapterService.getChannelListAdapter().setCurrentChannelName(TextChannelService.getPublicChannels()[0].name)
         
         // update UI
         ChatService.refreshChatBox(requireActivity())

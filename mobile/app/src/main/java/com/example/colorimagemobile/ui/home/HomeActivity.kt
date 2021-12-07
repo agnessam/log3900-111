@@ -26,6 +26,7 @@ import com.example.colorimagemobile.repositories.SearchRepository
 import com.example.colorimagemobile.services.BottomNavService
 import com.example.colorimagemobile.services.SearchService
 import com.example.colorimagemobile.services.SharedPreferencesService
+import com.example.colorimagemobile.services.chat.ChatAdapterService
 import com.example.colorimagemobile.services.chat.ChatService
 import com.example.colorimagemobile.services.chat.TextChannelService
 import com.example.colorimagemobile.services.drawing.DrawingObjectManager
@@ -231,6 +232,7 @@ class HomeActivity : AppCompatActivity() {
         sharedPreferencesService.removeItem(Constants.STORAGE_KEY.TOKEN)
         TextChannelService.resetConnectedChannels()
         TextChannelService.setCurrentChannel(TextChannelService.getPublicChannels()[0])
+        ChatAdapterService.getChannelListAdapter().setCurrentChannelName(TextChannelService.getPublicChannels()[0].name)
 
         redirectTo(this, LoginActivity::class.java)
     }
