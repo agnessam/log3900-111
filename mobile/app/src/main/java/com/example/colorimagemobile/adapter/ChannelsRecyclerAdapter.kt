@@ -12,6 +12,9 @@ import com.example.colorimagemobile.classes.NotificationSound.Notification
 import com.example.colorimagemobile.models.TextChannelModel
 import com.example.colorimagemobile.services.chat.ChatService
 import com.example.colorimagemobile.services.chat.TextChannelService
+import com.example.colorimagemobile.services.socket.ChatSocketService
+import com.example.colorimagemobile.services.users.UserService
+import com.example.colorimagemobile.utils.Constants
 
 class ChannelsRecyclerAdapter():
     RecyclerView.Adapter<ChannelsRecyclerAdapter.ViewHolder>() {
@@ -71,6 +74,8 @@ class ChannelsRecyclerAdapter():
                 if (currentPosition != -1) {
                     TextChannelService.setCurrentChannelByPosition(currentPosition, isAllChannels)
                     currentChannel = TextChannelService.getCurrentChannel().name
+                    val socketInformation = Constants.SocketRoomInformation(UserService.getUserInfo()._id, currentChannel)
+                    ChatSocketService.joinRoom(socketInformation)
                     ChatService.unreadChannels.remove(TextChannelService.getCurrentChannel().name)
                     unreadChannels.remove(TextChannelService.getCurrentChannel().name)
                     notifyItemChanged(currentPosition)
