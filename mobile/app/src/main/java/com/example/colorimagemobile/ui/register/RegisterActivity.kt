@@ -151,6 +151,7 @@ class RegisterActivity : AppCompatActivity() {
         // save users info and token and redirect to /Home
         UserService.setToken(response.token)
         UserService.setUserInfo(response.user)
+        UserService.setLoginDate()
         sharedPreferencesService.setItem(Constants.STORAGE_KEY.TOKEN, response.token)
         redirectTo(this@RegisterActivity, HomeActivity::class.java)
     }

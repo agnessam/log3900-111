@@ -8,6 +8,9 @@ import com.example.colorimagemobile.models.UserModel
 import com.example.colorimagemobile.repositories.UserRepository
 import com.example.colorimagemobile.utils.CommonFun
 import com.example.colorimagemobile.utils.Constants
+import java.time.Instant
+import java.util.*
+import kotlin.collections.ArrayList
 
 // Singleton User object which is accessible globally
 
@@ -43,6 +46,10 @@ object UserService {
 
     fun getUserInfo(): UserModel.AllInfo {
         return info
+    }
+
+    fun setLoginDate() {
+        info.lastLogin = Date()
     }
 
     fun setToken(token:String){

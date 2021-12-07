@@ -29,7 +29,6 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         myView = view
         adapter = ChatAdapterService.getChannelListAdapter()
         setSearchIcon(view)
@@ -45,6 +44,8 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
         if (TextChannelService.getPublicChannels().isNotEmpty()) {
             ChatService.refreshChatBox(requireActivity())
         }
+
+        addDefaultChannel()
     }
 
     private fun setRecyclerView() {
@@ -82,11 +83,13 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
     private fun showAllChannels() {
         adapter.setData(TextChannelService.getPublicChannels() as ArrayList<TextChannelModel.AllInfo>)
         adapter.setIsAllChannels(true)
+        adapter.setUnreadChannels(ArrayList())
     }
 
     private fun showConnectedChannels() {
         adapter.setData(TextChannelService.getConnectedChannels())
         adapter.setIsAllChannels(false)
+        adapter.setUnreadChannels(ChatService.unreadChannels)
     }
 
     private fun changeBtnColor(selectedBtn: Button, normalBtn: Button) {
@@ -95,10 +98,10 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
     }
 
     // add channel named General as connected! usually its the first channel in the list
-    private fun addDefaultChannel(channels: ArrayList<TextChannelModel.AllInfo>) {
+    private fun addDefaultChannel() {
         if (TextChannelService.isConnectedToGeneral()) return
 
-        channels.forEach {
+        TextChannelService.getPublicChannels().forEach {
             if (it.name == GENERAL_CHANNEL_NAME) {
                 TextChannelService.setCurrentChannel(it)
                 TextChannelService.connectToGeneral()

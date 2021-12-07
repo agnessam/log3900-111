@@ -8,16 +8,22 @@ import android.widget.TextView
 import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.example.colorimagemobile.R
+import com.example.colorimagemobile.classes.NotificationSound.Notification
 import com.example.colorimagemobile.models.TextChannelModel
 import com.example.colorimagemobile.services.chat.ChatService
 import com.example.colorimagemobile.services.chat.TextChannelService
+import com.example.colorimagemobile.services.socket.ChatSocketService
+import com.example.colorimagemobile.services.users.UserService
+import com.example.colorimagemobile.utils.Constants
 
 class ChannelsRecyclerAdapter():
     RecyclerView.Adapter<ChannelsRecyclerAdapter.ViewHolder>() {
 
     private var isAllChannels = true
     private var currentPosition: Int = -1
+    private var currentChannel: String = "General"
     private lateinit var channels: ArrayList<TextChannelModel.AllInfo>
+    private var unreadChannels: ArrayList<String> = ArrayList()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ChannelsRecyclerAdapter.ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.recycler_chat_channels, parent,false)
@@ -27,12 +33,22 @@ class ChannelsRecyclerAdapter():
     override fun onBindViewHolder(holder: ChannelsRecyclerAdapter.ViewHolder, position: Int) {
         holder.chanelName.text = channels[position].name
 
-        val backgroundColor = if (position == currentPosition) "#f5f5f5" else "#ffffff"
+        val backgroundColor = if (channels[position].name == currentChannel) "#f5f5f5" else "#ffffff"
         holder.chanelName.setBackgroundColor(Color.parseColor(backgroundColor))
+        if (!isAllChannels && unreadChannels.contains(channels[position].name)) {
+            holder.chanelName.setCompoundDrawablesWithIntrinsicBounds(0, 0,
+                R.drawable.ic_baseline_circle_24, 0)
+        } else {
+            holder.chanelName.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0)
+        }
     }
 
     override fun getItemCount(): Int {
        return channels.size
+    }
+
+    fun setCurrentChannelName(name: String) {
+        currentChannel = name
     }
 
     fun setData(newChannels: ArrayList<TextChannelModel.AllInfo>) {
@@ -44,14 +60,29 @@ class ChannelsRecyclerAdapter():
         this.isAllChannels = isAll
     }
 
+    fun setUnreadChannels(channels: ArrayList<String>) {
+        unreadChannels = channels
+        notifyDataSetChanged()
+    }
+
     inner class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView){
          var chanelName : TextView = itemView.findViewById<TextView>(R.id.channel_name);
 
         init {
             itemView.setOnClickListener {
                 currentPosition = bindingAdapterPosition
-
-                TextChannelService.setCurrentChannelByPosition(currentPosition, isAllChannels)
+                if (currentPosition != -1) {
+                    TextChannelService.setCurrentChannelByPosition(currentPosition, isAllChannels)
+                    currentChannel = TextChannelService.getCurrentChannel().name
+                    val socketInformation = Constants.SocketRoomInformation(UserService.getUserInfo()._id, currentChannel)
+                    ChatSocketService.joinRoom(socketInformation)
+                    ChatService.unreadChannels.remove(TextChannelService.getCurrentChannel().name)
+                    unreadChannels.remove(TextChannelService.getCurrentChannel().name)
+                    notifyItemChanged(currentPosition)
+                    if (ChatService.unreadChannels.size == 0) {
+                        ChatService.setNewMsgLiveData(false)
+                    }
+                }
                 TextChannelService.refreshChannelList()
                 ChatService.refreshChatBox(itemView.context as FragmentActivity)
             }

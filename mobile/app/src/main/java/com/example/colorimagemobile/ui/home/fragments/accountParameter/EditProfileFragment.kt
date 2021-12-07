@@ -12,7 +12,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.cardview.widget.CardView
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import com.example.colorimagemobile.R
@@ -32,6 +31,7 @@ import com.example.colorimagemobile.services.avatar.AvatarService
 import com.example.colorimagemobile.services.users.UserService
 import com.example.colorimagemobile.utils.CommonFun
 import com.example.colorimagemobile.utils.CommonFun.Companion.imageView
+import com.example.colorimagemobile.utils.CommonFun.Companion.printMsg
 import com.example.colorimagemobile.utils.Constants
 import com.example.colorimagemobile.utils.Constants.Companion.CAMERA_REQUEST_CODE
 import com.karumi.dexter.Dexter
@@ -82,7 +82,8 @@ class EditProfileFragment : Fragment() {
         val inf = inflater.inflate(R.layout.fragment_edit_profile, container, false)
 
         // hideKeyboard listeners
-        inf.findViewById<View>(R.id.editprofileview).setOnTouchListener { v, event -> CommonFun.hideKeyboard(requireContext(), editprofileview)}
+        inf.findViewById<View>(R.id.editprofileview).setOnTouchListener {
+                v, event -> CommonFun.hideKeyboard(requireContext(), editprofileview)}
 
         //avatar
         inf.findViewById<View>(R.id.upload_avatar_from_camera).setOnClickListener {
@@ -150,60 +151,25 @@ class EditProfileFragment : Fragment() {
         })
     }
 
-    // update profile with the data enter
-    private fun update(){
-        var countExistingAvatar : Int = 0
-        for(indices in AvatarService.getAvatars().indices){
-            if (AvatarService.getCurrentAvatar() != AvatarService.getAvatars()[indices]){
-                countExistingAvatar++
-            }
-        }
-        if (countExistingAvatar == 0){
-            postAvatar(AvatarService.getCurrentAvatar()).observe(viewLifecycleOwner, { handleResponse(it) })
-        }
-
-        //update avatar
-        if(AvatarService.getCurrentAvatar().imageUrl!= Constants.EMPTY_STRING){
-            currentAvatar = AvatarService.getCurrentAvatar()
-            newUserData.avatar = currentAvatar
-            UserService.setUserAvatar(currentAvatar)
-        }
-        UpdateUserProfile().updateUserInfo(newUserData).observe(viewLifecycleOwner, { context?.let { it1 ->globalHandler.response(it1,it) } })
-        requireActivity().invalidateOptionsMenu()
-    }
-
+    // update user profile with new avatar
     private fun updateAvatar(){
-        var countExistingAvatar : Int = 0
-        for(indices in AvatarService.getAvatars().indices){
-            if (AvatarService.getCurrentAvatar() != AvatarService.getAvatars()[indices]){
-                countExistingAvatar++
-            }
-        }
-        if (countExistingAvatar == 0){
-            postAvatar(AvatarService.getCurrentAvatar()).observe(viewLifecycleOwner, { handleResponse(it) })
-        }
-        //update avatar
         if(AvatarService.getCurrentAvatar().imageUrl!= Constants.EMPTY_STRING){
             currentAvatar = AvatarService.getCurrentAvatar()
             newUserData.avatar = currentAvatar
             UserService.setUserAvatar(currentAvatar)}
 
-        UpdateUserProfile().updateUserInfo(newUserData).observe(viewLifecycleOwner, { context?.let { it1 ->globalHandler.response(it1,it) } })
+        UpdateUserProfile().updateUserInfo(newUserData).observe(viewLifecycleOwner,
+            { context?.let { it1 ->globalHandler.response(it1,it) } })
         requireActivity().invalidateOptionsMenu()
 
     }
 
-    //call retrofit request to upload image and get imageUrl from amazon S3
+    //call retrofit request to upload image and get imageUrl from amazon bucket S3
     private fun uploadAvatar(file: File):LiveData<DataWrapper<AvatarModel.AllInfo>> {
         return AvatarRepository().uploadAvatar(file)
     }
 
-    //call retrofit request to database to post the image to the avatar collection
-    private fun postAvatar(avatar: AvatarModel.AllInfo):LiveData<DataWrapper<AvatarModel.AllInfo>>{
-        return AvatarRepository().postAvatar(avatar)
-    }
-
-    // handler for response postAvatar  and uploadAvatar
+    // handler for response uploadAvatar
     private fun handleResponse(HTTPResponse: DataWrapper<AvatarModel.AllInfo>) {
         if (HTTPResponse.isError as Boolean) {
             CommonFun.printToast(requireContext(), HTTPResponse.message as String)
@@ -219,9 +185,9 @@ class EditProfileFragment : Fragment() {
             file!!.createNewFile()
 
             //Convert bitmap to byte array
-            val bos = ByteArrayOutputStream()
-            bitmap.compress(Bitmap.CompressFormat.PNG, 0, bos)
-            val bitmapData = bos.toByteArray()
+            val byteArrayOutputStream = ByteArrayOutputStream()
+            bitmap.compress(Bitmap.CompressFormat.PNG, 0, byteArrayOutputStream)
+            val bitmapData = byteArrayOutputStream.toByteArray()
             //write the bytes in file
             val fos = FileOutputStream(file)
             fos.write(bitmapData)

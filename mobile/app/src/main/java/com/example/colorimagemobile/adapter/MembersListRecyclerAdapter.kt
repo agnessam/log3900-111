@@ -32,6 +32,7 @@ class MembersListRecyclerAdapter(
     override fun onBindViewHolder(holder: MembersListRecyclerAdapter.ViewHolder, position: Int) {
         holder.memberName.text = members[position].username
         holder.status.setCardBackgroundColor(getStatusColor(members[position]._id))
+        holder.statusText.text = userStatus[members[position]._id]?.status
         MyPicasso().loadImage(members[position].avatar.imageUrl, holder.memberImage)
     }
 
@@ -39,9 +40,9 @@ class MembersListRecyclerAdapter(
 
     private fun getStatusColor(memberId: String): Int {
         val color = when(userStatus[memberId]) {
-            UserModel.STATUS.Online -> "#3f51b5"
-            UserModel.STATUS.Offline -> "#CCCCCC"
-            else -> "#00ff00"
+            UserModel.STATUS.Online -> "#0ff00"
+            UserModel.STATUS.Offline -> "#ff0000"
+            else -> "#f4b6b0"
         }
 
         return Color.parseColor(color)
@@ -51,6 +52,7 @@ class MembersListRecyclerAdapter(
         var memberName : TextView = itemView.findViewById(R.id.card_member_username);
         var memberImage : ImageView = itemView.findViewById(R.id.card_member_imageview);
         val status: CardView = itemView.findViewById(R.id.card_member_status)
+        var statusText: TextView = itemView.findViewById(R.id.card_member_status_text)
 
         init {
             itemView.setOnClickListener {
