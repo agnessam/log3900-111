@@ -22,8 +22,8 @@ import { TextChannelService } from "../chat/services/text-channel.service";
 import { FormErrorStateMatcher } from "../settings/settings-container/user-overview/error-state-matcher/ErrorStateMatcher";
 
 const ONE_SECOND = 1000;
-const DEFAULT_DRAWING_WIDTH = 1440;
-const DEFAULT_DRAWING_HEIGHT = 900;
+const DEFAULT_DRAWING_WIDTH = 1860;
+const DEFAULT_DRAWING_HEIGHT = 1000;
 @Component({
   selector: "app-new-drawing",
   templateUrl: "./new-drawing.component.html",
