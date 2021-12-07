@@ -53,6 +53,11 @@ export class PostDialogComponent implements OnInit {
     return safeDataUri;
   }
 
+  transformUrl(url:string) {
+    let safeDataUri = this.sanitizer.bypassSecurityTrustUrl(url);
+    return safeDataUri;
+  }
+
   toggleLike() {
     const userid = (this.user as User)._id;
 
